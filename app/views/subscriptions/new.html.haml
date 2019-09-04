@@ -233,7 +233,6 @@
 
     $('#pay-with-card').click(); // To open the stripe card section on page load
 
-
     $('#all-plans').collapse({
       toggle: false
     });
@@ -332,7 +331,7 @@
         success: function(data, status, xhr){
           if(data.status == 'incomplete'){
             handlePayment(data.client_secret, data.subscription_id)
-          }else if(data.status == 'active'){
+          } else if(data.status == 'active'){
             window.location.replace("#{personal_upgrade_complete_url(@subscription.completion_guid)}");
           }
         },
@@ -372,6 +371,7 @@
 
     function resetForm(error){
       $('#card_submit').show();
+      $('#plans-options').prop('disabled', false);
       $('#paypal_submit').show();
       $('.custom-check').prop('disabled', false);
       $('#card_submit').prop('disabled', false);

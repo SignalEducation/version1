@@ -12,10 +12,14 @@ class StripeSubscriptionService < StripeService
   def change_plan(new_plan_id)
     new_subscription_plan = SubscriptionPlan.find(new_plan_id)
 
-    new_subscription = create_new_subscription(new_subscription_plan)
-    new_subscription.start
-    update_old_subscription(new_subscription)
-    new_subscription
+    new_sub, stripe_sub = create_new_subscription(new_subscription_plan)
+    update_old_subscription(new_sub)
+    if stripe_sub.status == 'active'
+      new_sub.start
+    elsif stripe_sub.status == 'past_due'
+      new_sub.mark_payment_action_required
+    end
+    [new_sub, { status: :ok }]
   end
 
   def create_and_return_subscription(stripe_token, coupon)
@@ -23,11 +27,10 @@ class StripeSubscriptionService < StripeService
                                        source: stripe_token)
 
     stripe_subscription = create_stripe_subscription(customer.id, coupon)
-    client_secret       = stripe_subscription.latest_invoice[:payment_intent][:client_secret]
-    subscription_object = merge_subscription_data(stripe_subscription, customer, coupon)
-    [subscription_object, { client_secret: client_secret, status: :ok }]
+    subscription_object = merge_subscription_data(stripe_subscription, customer)
+    [subscription_object, { status: :ok }]
   rescue Stripe::CardError => e
-    [subscription_object, { error: e, error_message: e.message, status: :error }]
+    raise_subscription_error(e, __method__.to_s, :custom, e.message)
   end
 
   def cancel_subscription(immediately: false)
@@ -56,15 +59,14 @@ class StripeSubscriptionService < StripeService
 
   def create_new_subscription(new_plan)
     stripe_sub = get_updated_stripe_subscription(new_plan)
-    Subscription.create!(
+    [Subscription.create!(
       user_id: @subscription.user_id, subscription_plan_id: new_plan.id,
       complimentary: false, livemode: stripe_sub.plan[:livemode],
       stripe_status: stripe_sub.status, changed_from: @subscription,
       stripe_guid: stripe_sub.id, next_renewal_date: renewal_date(stripe_sub),
-      stripe_customer_id: @subscription.stripe_customer_id
-    )
-  rescue ActiveRecord::RecordInvalid, StandardError => e
-    raise_subscription_error(e, __method__.to_s, :sub_change)
+      stripe_customer_id: @subscription.stripe_customer_id,
+      client_secret: stripe_sub.latest_invoice[:payment_intent][:client_secret]
+    ), stripe_sub]
   end
 
   def create_stripe_subscription(stripe_customer_id, coupon)
@@ -75,7 +77,7 @@ class StripeSubscriptionService < StripeService
       coupon: coupon.try(:code), trial_end: 'now',
       expand: ['latest_invoice.payment_intent']
     )
-  rescue Stripe::CardError => e
+  rescue Stripe::CardError, Stripe::StripeError => e
     raise_subscription_error(e.json_body[:error], __method__.to_s, :decline)
   end
 
@@ -83,21 +85,21 @@ class StripeSubscriptionService < StripeService
     stripe_sub = retrieve_subscription
     Stripe::Subscription.update(
       @subscription.stripe_guid,
-      items: { id: stripe_sub&.items&.first&.id, plan: new_sub_plan.stripe_guid },
-      prorate: true
+      items: [{ id: stripe_sub&.items&.first&.id, plan: new_sub_plan.stripe_guid }],
+      prorate: true, expand: ['latest_invoice.payment_intent']
     )
-  rescue Stripe::CardError => e
+  rescue Stripe::StripeError => e
     raise_subscription_error(e.json_body[:error], __method__.to_s, :generic)
   end
 
-  def merge_subscription_data(stripe_sub, customer, coupon)
+  def merge_subscription_data(stripe_sub, customer)
     @subscription.assign_attributes(
       complimentary: false, livemode: stripe_sub.plan[:livemode],
-      stripe_status: stripe_sub.status,
-      stripe_guid: stripe_sub.id, next_renewal_date: renewal_date(stripe_sub),
-      stripe_customer_id: customer.id, coupon_id: coupon.try(:id),
+      stripe_status: stripe_sub.status, stripe_customer_id: customer.id,
+      next_renewal_date: renewal_date(stripe_sub), stripe_guid: stripe_sub.id,
       stripe_customer_data: customer.to_hash.deep_dup,
-      payment_intent: stripe_sub.latest_invoice[:payment_intent][:status]
+      payment_intent: stripe_sub.latest_invoice[:payment_intent][:status],
+      client_secret: stripe_sub.latest_invoice[:payment_intent][:client_secret]
     )
 
     @subscription

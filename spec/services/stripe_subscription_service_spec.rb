@@ -21,16 +21,24 @@ describe StripeSubscriptionService, type: :service do
   describe '#change_plan' do
     let(:sub_plan) { create(:subscription_plan) }
     let(:new_sub) { create(:subscription, subscription_plan_id: sub_plan.id) }
+    let(:stripe_sub) { 
+      double(
+        latest_invoice: { payment_intent: { client_secret: 'cs_123456' }},
+        status: 'active'
+      )
+    }
 
     it 'calls #create_new_subscription' do
       allow(subject).to receive(:update_old_subscription)
-      expect(subject).to receive(:create_new_subscription).and_return(new_sub)
+      expect(subject).to receive(:create_new_subscription).
+                           and_return([new_sub, stripe_sub])
 
       subject.change_plan(sub_plan.id)
     end
 
     it 'starts the new subscription' do
-      allow(subject).to receive(:create_new_subscription).and_return(new_sub)
+      allow(subject).to receive(:create_new_subscription).
+                          and_return([new_sub, stripe_sub])
       allow(subject).to receive(:update_old_subscription)
       expect_any_instance_of(Subscription).to receive(:start)
 
@@ -38,17 +46,37 @@ describe StripeSubscriptionService, type: :service do
     end
 
     it 'calls #update_old_subscription' do
-      allow(subject).to receive(:create_new_subscription).and_return(new_sub)
+      allow(subject).to receive(:create_new_subscription).
+                          and_return([new_sub, stripe_sub])
       expect(subject).to receive(:update_old_subscription)
 
       subject.change_plan(sub_plan.id)
     end
 
-    it 'returns a subscription object' do
-      allow(subject).to receive(:create_new_subscription).and_return(new_sub)
+    it 'returns a subscription and stripe object' do
+      allow(subject).to receive(:create_new_subscription).
+                          and_return([new_sub, stripe_sub])
       allow(subject).to receive(:update_old_subscription)
 
-      expect(subject.change_plan(sub_plan.id)).to be_kind_of Subscription
+      expect(subject.change_plan(sub_plan.id)).to be_kind_of Array
+    end
+
+    describe 'for payments failing 3DS' do
+      let(:stripe_sub_3ds) { 
+        double(
+          latest_invoice: { payment_intent: { client_secret: 'cs_123456' }},
+          status: 'past_due'
+        )
+      }
+      
+      it 'calls #mark_payment_action_required on the subscription' do
+        allow(subject).to receive(:create_new_subscription).
+                          and_return([new_sub, stripe_sub_3ds])
+        allow(subject).to receive(:update_old_subscription)
+        expect_any_instance_of(Subscription).to receive(:mark_payment_action_required)
+
+        subject.change_plan(sub_plan.id)
+      end
     end
   end
 
@@ -95,8 +123,7 @@ describe StripeSubscriptionService, type: :service do
       expect(subject.create_and_return_subscription('sk_test_token', nil)).to(
         include(
           a_kind_of(Subscription),
-          { client_secret: stripe_sub.latest_invoice.payment_intent
-                            .client_secret, status: :ok }
+          { status: :ok }
         )
       )
     end
@@ -208,7 +235,7 @@ describe StripeSubscriptionService, type: :service do
     let(:stripe_sub) {
       JSON.parse(
         File.read(
-          Rails.root.join('spec/fixtures/stripe/create_subscription_response.json')
+          Rails.root.join('spec/fixtures/stripe/create_sub_with_payment_intent.json')
         ), object_class: OpenStruct
       )
     }
@@ -283,7 +310,7 @@ describe StripeSubscriptionService, type: :service do
     it 'assigns attributes to the subscription' do
       expect(test_sub).to receive(:assign_attributes)
 
-      subject.send(:merge_subscription_data, stripe_sub, customer, nil)
+      subject.send(:merge_subscription_data, stripe_sub, customer)
     end
   end
 

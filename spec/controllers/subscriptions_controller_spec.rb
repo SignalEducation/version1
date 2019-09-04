@@ -29,6 +29,7 @@
 require 'rails_helper'
 
 describe SubscriptionsController, type: :controller do
+  render_views
   before :each do
     allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
   end
@@ -114,6 +115,7 @@ describe SubscriptionsController, type: :controller do
     let(:data) { { client_secret: Faker::Alphanumeric.alphanumeric, status: :ok } }
 
     before(:each) do
+      valid_subscription.client_secret = data[:client_secret]
       activate_authlogic
       UserSession.create!(basic_student)
       valid_subscription.start
@@ -166,8 +168,9 @@ describe SubscriptionsController, type: :controller do
         }
         stub_subscription_post_request(post_url, post_request_body, post_response_body)
 
-        post :create, params: { subscription: upgrade_params.merge(subscription_plan_id: subscription_plan_gbp_m.id, user_id: basic_student.id),
+        post :create, format: 'json', params: { subscription: upgrade_params.merge(subscription_plan_id: subscription_plan_gbp_m.id, user_id: basic_student.id),
                                 "payment-options": 'stripe' }
+
         body = JSON.parse(response.body)
 
         expect(flash[:success]).to be_nil
@@ -180,7 +183,7 @@ describe SubscriptionsController, type: :controller do
       end
 
       it 'should respond with Error Your request was declined. T&Cs false' do
-        post :create, params: { subscription: invalid_upgrade_params_1, user_id: basic_student.id, "payment-options": 'stripe' }
+        post :create, format: 'json', params: { subscription: invalid_upgrade_params_1, user_id: basic_student.id, "payment-options": 'stripe' }
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to eq('Sorry! The data entered is not valid. Please contact us for assistance.')
         expect(response.status).to eq(302)
@@ -189,7 +192,7 @@ describe SubscriptionsController, type: :controller do
       end
 
       it 'should respond with Error Your request was declined. With Bad params' do
-        post :create, params: { subscription: invalid_upgrade_params_2, user_id: basic_student.id, "payment-options": 'stripe'  }
+        post :create, format: 'json', params: { subscription: invalid_upgrade_params_2, user_id: basic_student.id, "payment-options": 'stripe'  }
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to eq('Sorry! The data entered is not valid. Please contact us for assistance.')
         expect(response.status).to eq(302)
@@ -228,7 +231,7 @@ describe SubscriptionsController, type: :controller do
         }
         stub_subscription_post_request(post_url, post_request_body, post_response_body)
 
-        post :create, params: { subscription: upgrade_params, "payment-options": 'stripe' }
+        post :create, format: 'json', params: { subscription: upgrade_params, "payment-options": 'stripe' }
         body = JSON.parse(response.body)
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil

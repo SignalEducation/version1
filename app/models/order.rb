@@ -69,6 +69,10 @@ class Order < ApplicationRecord
       transition %i[pending errored] => :completed
     end
 
+    event :mark_pending do
+      transition all => :pending
+    end
+
     event :mark_payment_action_required do
       transition all => :pending_3d_secure
     end
@@ -102,7 +106,6 @@ class Order < ApplicationRecord
 
   def confirm_payment_intent
     StripeService.new.confirm_purchase(self)
-    confirm_3d_secure
   end
 
   def destroyable?
@@ -126,8 +129,7 @@ class Order < ApplicationRecord
   end
 
   def stripe?
-    stripe_client_secret.present? || stripe_payment_intent_id.present? ||
-      stripe_payment_method_id.present?
+    stripe_payment_intent_id.present? || stripe_payment_method_id.present?
   end
 
   def generate_invoice
