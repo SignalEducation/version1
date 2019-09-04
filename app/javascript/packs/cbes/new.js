@@ -1,5 +1,5 @@
 import Vue from 'vue/dist/vue.js';
-import App from '../../app'
+import App from '../../App'
 
 new Vue({
   template: "",

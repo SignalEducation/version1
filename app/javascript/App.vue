@@ -2,24 +2,21 @@
     <div class="panel-body no-top-padding">
 
         <div>
-            <div v-if="cbeButton === true" class="mb-2">
+            <div v-if="this.$store.state.cbeDetailsSaved === true" class="mb-2">
                 <b-button v-b-toggle.collapse-cbe variant="primary">
                     <span class="when-opened">Close</span> <span class="when-closed">Open</span> CBE Details
                 </b-button>
             </div>
+
             <b-collapse visible id="collapse-cbe" class="mb-2">
                 <b-card>
-                    <div v-show="this.$store.state.showCBEDetails">
-                        <CBEDetails></CBEDetails>
-                    </div>
-                    <!-- Save CBE -->
-                    <button v-on:click="saveNewCBE" class="btn btn-primary">Save CBE</button>
+                    <CBEDetails></CBEDetails>
                 </b-card>
             </b-collapse>
         </div>
 
 
-        <div v-if="cbeButton === true" role="tablist" class="pt-5">
+        <div v-if="this.$store.state.cbeDetailsSaved === true" role="tablist" class="pt-5">
             <div v-for="(section, index) in sections">
                 <b-card no-body class="mb-1">
                     <b-card-header header-tag="header" class="p-1" role="tab">
@@ -52,8 +49,6 @@
                                 <button v-on:click="makeCBEQuestionVisible" class="btn btn-secondary">Add Question</button>
                             </div>
 
-
-                            <button class="btn btn-secondary">Edit Section</button>
                         </b-card-body>
                     </b-collapse>
                 </b-card>
@@ -75,43 +70,17 @@
 
 
 
-        <!--
-        <div class="form-group">
-            <label for="colFormLabelSm">New Section</label>
-            <div class="input-group input-group-lg">
-                <input v-model="newSection" @keyup.enter="saveSection" placeholder="Section" class="form-control" />
+        <!-- Add Section
+            <div v-if="cbeSectionButton === true" class="mt-4">
+                <button v-on:click="makeCBESectionVisible" class="btn btn-secondary">Add Section</button>
             </div>
-            <button class="btn btn-primary" @click="saveSection">Save Section</button>
-        </div>
-
-
-        <div v-show="this.$store.state.showSections">
-            <CBESection></CBESection>
-        </div>
         -->
-        <!-- Add Section -->
-        <div v-if="cbeSectionButton === true" class="mt-4">
-            <button v-on:click="makeCBESectionVisible" class="btn btn-secondary">Add Section</button>
-        </div>
 
-
-        <!--
-
-        <div v-show="this.$store.state.showQuestions">
-          <button v-on:click="makeQuestionSelectionVisible" class="btn btn-secondary">Add Question</button>
-        </div>
-
-        <div v-show="showQuestionSelection">
-          <QuestionsList></QuestionsList>
-        </div>
-
-        -->
 
   </div>
 </template>
 
 <script>
-    import axios from "axios";
     import CBEDetails from "./components/CBEDetails";
     import CBESection from "./components/CBESection";
     import CBEQuestion from "./components/CBEQuestion";
@@ -122,50 +91,13 @@
         CBESection,
         CBEQuestion
       },
-      mounted() {
-        this.makeCBEDetailsVisible();
-      },
-
       data: function() {
         return {
-          createdCBE: [],
-          cbeQuestionValid: false,
-          cbeDetails: [],
-          showCBEDetails: false,
-          showCBESection: false,
-          showSubjects: true,
-          cbeButton: false,
-          cbeSectionButton: false,
-          sections: [],
-          sectionsCount: 0,
-          sectionName: null,
-          sectionScore: null,
-          sectionKind: null,
-          sectionContent: null,
-          createdSection: null,
-          showQuestionSelection: false,
-          cbeQuestionButton: false,
+            cbeDetails: [],
+            sections: [],
         };
       },
-      events: {
-        eventShowCBESections: function(data) {
-          this.makeCBESectionVisible;
-        }
-      },
-      computed: {
-        currentCBEId() {
-          return this.$store.state.currentCbeId;
-        }
-      },
       methods: {
-        makeCBEDetailsVisible: function(page, index) {
-            this.$store.state.showCBEDetails = true;
-            this.showCBEDetails = true;
-        },
-        makeCBESectionVisible: function(page, index) {
-          this.$store.state.showSections = true;
-          this.showCBESection = true;
-        },
         updateSections: function(data) {
             this.sections.push(data);
         },
@@ -185,40 +117,8 @@
                 this.$set(currentSection, 'questions', []);
             }
             currentSection.questions.push(data);
-        },
-        saveNewCBE: function(page, index) {
-            this.cbeDetails = {};
-            console.log(this.$store.state.cbeSubjectCourseId);
-            this.cbeDetails["name"] = this.$store.state.cbeName;
-            this.cbeDetails["agreement_content"] = this.$store.state.cbeAgreementContent;
-            this.cbeDetails["exam_time"] = this.$store.state.cbeExamTime;
-            this.cbeDetails["score"] = this.$store.state.cbeScore;
-            this.cbeDetails["subject_course_id"] = this.$store.state.cbeSubjectCourseId;
-
-            axios
-                .post("http://localhost:3000/api/v1/cbes/", { cbe: this.cbeDetails })
-                .then(response => {
-                  console.log(response.status);
-                  this.createdCBE = response.data;
-                  this.$store.commit("setCurrentCbeId", this.createdCBE.id);
-                  console.log(this.createdCBE.id);
-                  console.log(this.$store.state.currentCbeId);
-                  if (this.createdCBE.id > 0) {
-                    this.cbeButton = true;
-                  }
-                })
-                .catch(error => {
-                  console.log(error);
-                });
-        },
+        }
 
       }
     };
 </script>
-
-<style scoped>
-p {
-  font-size: 2em;
-  text-align: center;
-}
-</style>

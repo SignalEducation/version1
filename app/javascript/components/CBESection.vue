@@ -3,22 +3,22 @@
     <div class="col-sm-12">
       <h4>Section</h4>
       <div class="form-group">
-        <label for="colFormLabelSm">Name</label>
+        <label for="sectionName">Name</label>
         <div class="input-group input-group-lg">
-          <input v-model="sectionName" placeholder="Name" class="form-control" />
+          <input v-model="name" placeholder="Name" class="form-control" id="sectionName" />
         </div>
       </div>
       <div class="form-group">
-        <label for="colFormLabelSm">Score</label>
+        <label for="sectionScore">Score</label>
         <div class="input-group input-group-lg">
-          <input v-model="sectionScore" placeholder="Score" class="form-control" />
+          <input v-model="score" placeholder="Score" class="form-control" id="sectionScore" />
         </div>
       </div>
       <!--
       <div class="form-group">
         <label for="colFormLabelSm">Section Label</label>
         <div class="input-group input-group-lg">
-          <select v-model="sectionKind" class="form-control custom-select">
+          <select v-model="kind" class="form-control custom-select">
             <option class="col-md-8" v-for="kind in sectionKinds" v-bind:value="kind.id">
               {{ kind.name }}
             </option>
@@ -27,9 +27,9 @@
       </div>
       -->
       <div class="form-group">
-        <label for="colFormLabelSm">Content</label>
+        <label for="sectionContent">Content</label>
         <div class="input-group input-group-lg">
-          <input v-model="sectionContent" placeholder="Content" class="form-control" />
+          <input v-model="content" placeholder="Content" class="form-control" id="sectionContent" />
         </div>
       </div>
 
@@ -50,45 +50,33 @@
     data: function() {
       return {
         sectionDetails: {},
-        sectionName: null,
-        sectionScore: null,
-        sectionKind: null,
-        sectionContent: null,
-        createdSection: null,
-        sectionKinds: [],
-        showCBEQuestion: false,
-        cbeQuestionButton: false
+        name: null,
+        score: null,
+        kind: null,
+        content: null,
+        sectionKinds: []
       };
     },
     methods: {
-      makeCBEQuestionVisible: function(page, index) {
-        this.$store.state.showQuestions = true;
-        this.showCBEQuestion = true;
-      },
-
-      saveSection: function(page, index) {
-        this.sectionDetails["name"] = this.sectionName;
-        this.sectionDetails["score"] = this.sectionScore;
-        this.sectionDetails["content"] = this.sectionContent;
-        this.sectionDetails["cbe_id"] = this.$store.state.currentCbeId;
-
+      saveSection: function() {
+        this.sectionDetails["name"] = this.name;
+        this.sectionDetails["score"] = this.score;
+        this.sectionDetails["content"] = this.content;
+        this.sectionDetails["cbe_id"] = this.$store.state.cbeId;
 
         axios
           .post(
-            "/api/v1/cbes/"+ this.$store.state.currentCbeId + '/sections', { cbe_section: this.sectionDetails }
+            "/api/v1/cbes/"+ this.$store.state.cbeId + '/sections', { cbe_section: this.sectionDetails }
           )
           .then(response => {
             this.createdSection = response.data;
-            this.$store.commit("setCurrentSectionId", this.createdSection.id);
-            console.log(this.createdSection.id);
-            if (this.$store.state.currentSectionId > 0) {
-              this.cbeQuestionButton = true;
+            if (this.createdSection.id > 0) {
               this.sectionDetails["id"] = this.createdSection.id;
               this.$emit('add-section', this.sectionDetails);
               this.sectionDetails = {};
-              this.sectionName = null;
-              this.sectionScore = null;
-              this.sectionContent = null;
+              this.name = null;
+              this.score = null;
+              this.content = null;
             }
           })
           .catch(error => {

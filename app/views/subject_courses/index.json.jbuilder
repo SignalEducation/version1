@@ -1,3 +1,4 @@
 json.array! @subject_courses do |subject_course|
-  json.call(subject_course, :id, :name)
+  json.value subject_course.id
+  json.text subject_course.name
 end
