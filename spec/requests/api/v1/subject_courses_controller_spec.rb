@@ -15,8 +15,8 @@ RSpec.describe 'Api::V1::SubjectCoursesController', type: :request do
         body = JSON.parse(response.body)
 
         expect(body.size).to eq(5)
-        expect(body.map { |j| j['id'] }).to match_array(subject_courses.pluck(:id))
-        expect(body.map { |j| j['name'] }).to match_array(subject_courses.pluck(:name))
+        expect(body.map { |j| j['value'] }).to match_array(subject_courses.pluck(:id))
+        expect(body.map { |j| j['text'] }).to match_array(subject_courses.pluck(:name))
       end
     end
 
