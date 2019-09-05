@@ -13,7 +13,7 @@
                     =subscription.user_readable_name
 
                   %span.badge.badge-warning.align-middle
-                    =subscription.state.capitalize
+                    =subscription.pending_3d_secure? ? 'Payment Error' : subscription.state.capitalize
 
                 %p.mb-1
                   Subscription created on
@@ -24,7 +24,12 @@
                     =subscription.stripe? ? 'Credit card' : "PayPal"
 
               .col-md-4.text-md-right
-                %button.btn.btn-secondary.btn-sm.js-show-hide-details.collapsed.sub-details{"aria-controls" => "#sub-#{subscription.id}", "aria-expanded" => "false", "data-target" => "#sub-#{subscription.id}", "data-toggle" => "collapse"}
+                -if subscription.pending_3d_secure? && subscription.pending_3ds_invoice
+                  =link_to show_invoice_url(subscription.pending_3ds_invoice&.sca_verification_guid) do
+                    .btn.btn-secondary
+                      Authenticate
+                -else
+                  %button.btn.btn-secondary.btn-sm.js-show-hide-details.collapsed.sub-details{"aria-controls" => "#sub-#{subscription.id}", "aria-expanded" => "false", "data-target" => "#sub-#{subscription.id}", "data-toggle" => "collapse"}
 
             .collapse{id: "sub-#{subscription.id}"}
               .pt-5.pb-4
@@ -56,7 +61,7 @@
                           %th PDF
                       %tbody
                         -subscription.invoices.each do |invoice|
-                          - unless invoice.status == 'Pending'
+                          - unless invoice.status == 'Pending' && !invoice.requires_3d_secure
                             %tr
                               %td=invoice.id
                               %td=humanize_datetime(invoice.issued_at)
@@ -74,16 +79,15 @@
                                     .btn.btn-link.btn-xs
                                       View
 
-
                 %div.mr-3.mb-4
                   =link_to 'View All Invoices', user_invoices_path(current_user)
                 %div
                   -if subscription.can_change_plan?
-                    =link_to 'Change Subscription Plan', new_subscriptions_plan_change_path(id: subscription.id), class: 'btn btn-primary btn-xs', style: 'vertical-align: top;'
+                    =link_to 'Change Subscription Plan', new_subscription_plan_changes_path(subscription), class: 'btn btn-primary btn-xs', style: 'vertical-align: top;'
                   -if subscription.paused?
                     =link_to 'Reactivate Subscription', subscriptions_suspension_path(id: subscription.id), method: :delete, class: 'btn btn-secondary btn-xs', style: 'vertical-align: top;'
                   -if !subscription.cancelled?
-                    =link_to 'Cancel Subscription', new_subscriptions_cancellation_path(id: subscription.id), class: 'btn btn-danger btn-xs', style: 'vertical-align: top;'
+                    =link_to 'Cancel Subscription', new_subscription_cancellation_path(subscription), class: 'btn btn-danger btn-xs', style: 'vertical-align: top;'
                   -else
                     =link_to 'Renew Subscription', subscription_checkout_special_link(subscription.subscription_plan.exam_body_id), class: 'btn btn-primary btn-xs', style: 'vertical-align: top;'
 

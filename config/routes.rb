@@ -39,15 +39,14 @@ Rails.application.routes.draw do
         put 'un_cancel'
         get 'execute'
         get 'unapproved'
+        post 'status_from_stripe'
       end
-    end
-
-    namespace :subscriptions do
-      resources :cancellations, only: [:new, :create]
-      resources :plan_changes, only: [:show, :new, :create] do
-        post :status_from_stripe, on: :member
+      scope module: 'subscriptions' do
+        resources :cancellations, only: [:new, :create]
+        resource :plan_changes, only: [:show, :new, :create] do
+          post :status_from_stripe, on: :member
+        end
       end
-      post 'status_from_stripe'
     end
 
     resources :subscription_management do

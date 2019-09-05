@@ -32,7 +32,7 @@ class Subscription < ApplicationRecord
 
   serialize :stripe_customer_data, Hash
   attr_accessor :use_paypal, :paypal_approval_url, :cancelling_subscription,
-                :payment_intent, :client_secret
+                :payment_intent_status, :client_secret
 
   delegate :currency, to: :subscription_plan
 
@@ -47,6 +47,7 @@ class Subscription < ApplicationRecord
   belongs_to :coupon, optional: true
   belongs_to :changed_from, class_name: 'Subscription', foreign_key: :changed_from_id, optional: true
 
+  has_one :changed_to, class_name: 'Subscription', foreign_key: 'changed_from_id', inverse_of: :changed_from
   has_one :student_access
   has_one :exam_body, through: :subscription_plan
 
@@ -160,6 +161,15 @@ class Subscription < ApplicationRecord
   # CLASS METHODS ==============================================================
 
   # INSTANCE METHODS ===========================================================
+
+  def take_appropriate_action(status)
+    case status
+    when 'active'
+      start
+    when 'past_due'
+      mark_payment_action_required
+    end
+  end
 
   def cancel_by_user
     if stripe_customer_id && stripe_guid
@@ -311,6 +321,10 @@ class Subscription < ApplicationRecord
     self.record_error
   end
 
+  def pending_3ds_invoice
+    invoices.find_by(requires_3d_secure: true)
+  end
+
   def reactivation_options
     SubscriptionPlan
       .where(
@@ -429,7 +443,7 @@ class Subscription < ApplicationRecord
   def update_subscription_status
     if stripe_status == 'active'
       start
-    elsif payment_intent == 'requires_action'
+    elsif payment_intent_status == 'requires_action'
       mark_payment_action_required
     end
   end
