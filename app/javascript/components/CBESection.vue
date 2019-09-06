@@ -1,45 +1,43 @@
 <template>
-  <div class="form-row form-horizontal">
+  <div class="row ">
     <div class="col-sm-12">
-      <h4>Section</h4>
       <div class="form-group">
         <label for="sectionName">Name</label>
         <div class="input-group input-group-lg">
           <input v-model="name" placeholder="Name" class="form-control" id="sectionName" />
         </div>
       </div>
+    </div>
+    <div class="col-sm-12">
+      <div class="form-group">
+        <label for="sectionKindSelect">Section Type</label>
+        <b-form-select v-model="kind" :options="sectionKinds" id="sectionKindSelect" class="input-group input-group-lg">
+          <template slot="first">
+            <option :value="null" disabled>-- Please select a type --</option>
+          </template>
+        </b-form-select>
+      </div>
+    </div>
+    <div class="col-sm-12">
       <div class="form-group">
         <label for="sectionScore">Score</label>
         <div class="input-group input-group-lg">
           <input v-model="score" placeholder="Score" class="form-control" id="sectionScore" />
         </div>
       </div>
-      <!--
+    </div>
+    <div class="col-sm-12">
       <div class="form-group">
-        <label for="colFormLabelSm">Section Label</label>
+        <label for="sectionContent">Cover Page Content</label>
         <div class="input-group input-group-lg">
-          <select v-model="kind" class="form-control custom-select">
-            <option class="col-md-8" v-for="kind in sectionKinds" v-bind:value="kind.id">
-              {{ kind.name }}
-            </option>
-          </select>
+          <textarea v-model="content" placeholder="Content" class="form-control" id="sectionContent" ></textarea>
         </div>
-      </div>
-      -->
-      <div class="form-group">
-        <label for="sectionContent">Content</label>
-        <div class="input-group input-group-lg">
-          <input v-model="content" placeholder="Content" class="form-control" id="sectionContent" />
-        </div>
-      </div>
-
-      <div>
-        <button v-on:click="saveSection" class="btn btn-primary">Save Section</button>
       </div>
     </div>
 
-
-
+    <div>
+      <button v-on:click="saveSection" class="btn btn-primary">Save Section</button>
+    </div>
   </div>
 </template>
 
@@ -54,13 +52,14 @@
         score: null,
         kind: null,
         content: null,
-        sectionKinds: []
+        sectionKinds: [ 'objective', 'objective_test_case', 'constructed_response' ]
       };
     },
     methods: {
       saveSection: function() {
         this.sectionDetails["name"] = this.name;
         this.sectionDetails["score"] = this.score;
+        this.sectionDetails["kind"] = this.kind;
         this.sectionDetails["content"] = this.content;
         this.sectionDetails["cbe_id"] = this.$store.state.cbeId;
 
@@ -75,6 +74,7 @@
               this.$emit('add-section', this.sectionDetails);
               this.sectionDetails = {};
               this.name = null;
+              this.kind = null;
               this.score = null;
               this.content = null;
             }
