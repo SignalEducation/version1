@@ -26,6 +26,7 @@ module Api
             :kind,
             :content,
             :score,
+            :cbe_scenario_id,
             :cbe_section_id
           )
         end
