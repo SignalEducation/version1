@@ -1,33 +1,36 @@
 <template>
-  <div class="form-row form-horizontal">
-    <div class="col-sm-12">
-      <h4>Question</h4>
-
+  <div class="row ">
+    <div class="col-sm-6">
       <div class="form-group">
-        <label for="colFormLabelSm">Kind</label>
-        <div class="input-group input-group-lg">
-          <input v-model="questionKind" placeholder="Kind" class="form-control" />
-        </div>
+        <label for="questionKindSelect">Question Type</label>
+        <b-form-select v-model="questionKind" :options="questionKinds" id="questionKindSelect" class="input-group input-group-lg">
+          <template slot="first">
+            <option :value="null" disabled>-- Please select a type --</option>
+          </template>
+        </b-form-select>
       </div>
+    </div>
+    <div class="col-sm-6">
       <div class="form-group">
-        <label for="colFormLabelSm">Content</label>
-        <div class="input-group input-group-lg">
-          <input v-model="questionContent" placeholder="Content" class="form-control"/>
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="colFormLabelSm">Score</label>
-        <div class="input-group input-group-lg">
+        <label for="questionScore">Score</label>
+        <div class="input-group input-group-lg" id="questionScore">
           <input v-model="questionScore" placeholder="Score" class="form-control"/>
         </div>
       </div>
-
-
-      <div class="form-group">
-        <button v-on:click="saveQuestion" class="btn btn-primary">Save Question</button>
-      </div>
-
     </div>
+    <div class="col-sm-12">
+      <div class="form-group">
+        <label for="questionContent">Content</label>
+        <div class="input-group input-group-lg" id="questionContent">
+          <textarea v-model="questionContent" placeholder="Content" class="form-control"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <button v-on:click="saveQuestion" class="btn btn-primary">Save Question</button>
+    </div>
+
   </div>
 </template>
 
@@ -35,14 +38,25 @@
   import axios from "axios";
 
   export default {
-    props: ['sectionId'],
+    props: ['sectionId', 'scenarioId'],
     data: function() {
       return {
         questionDetails: {},
         questionKind: null,
         questionContent: null,
         questionScore: null,
-        selectedSelectQuestion: null
+        selectedSelectQuestion: null,
+        questionKinds: [
+          'multiple_choice',
+          'multiple_response',
+          'complete',
+          'fill_in_the_blank',
+          'drag_drop',
+          'dropdown_list',
+          'hot_spot',
+          'spreadsheet',
+          'open'
+        ]
       };
     },
     methods: {
@@ -52,16 +66,16 @@
         this.questionDetails['content'] = this.questionContent;
         this.questionDetails['score'] = this.questionScore;
         this.questionDetails['cbe_section_id'] = this.sectionId;
-
-        //this.$store.commit('addCbeQuestion', this.questionDetails);
+        this.questionDetails['cbe_scenario_id'] = this.scenarioId;
+        console.log(this.questionDetails);
 
         axios
-          .post("http://localhost:3000/api/v1/cbe/questions/", {
+          .post("/api/v1/cbe/questions/", {
             question: this.questionDetails
           })
           .then(response => {
-            console.log(response.status);
-            console.log(response.data);
+            this.createdQuestion = response.data;
+            this.questionDetails["id"] = this.createdQuestion.id;
             this.$emit('add-question', this.questionDetails);
             this.questionDetails = {};
             this.questionKind = '';
