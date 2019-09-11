@@ -11,6 +11,16 @@ module Api
         @cbe = ::Cbe.find(params[:id])
       end
 
+      def update
+        @cbe =  ::Cbe.find(params[:id])
+        @cbe.update(cbe_params)
+      end
+
+      def update
+        @cbe = ::Cbe.find(params[:id])
+        @cbe.update(cbe_params)
+      end
+
       def create
         @cbe = ::Cbe.new(cbe_params)
 

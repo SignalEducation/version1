@@ -153,29 +153,29 @@
 </template>
 
 <script>
-import CBEDetails from "./components/CBEDetails";
-import CBESection from "./components/CBESection";
-import CBEScenario from "./components/CBEScenario";
-import CBEQuestion from "./components/CBEQuestion";
+import CBEDetails from './components/CBEDetails';
+import CBESection from './components/CBESection';
+import CBEScenario from './components/CBEScenario';
+import CBEQuestion from './components/CBEQuestion';
 
 export default {
   components: {
     CBEDetails,
     CBESection,
     CBEScenario,
-    CBEQuestion
+    CBEQuestion,
   },
-  data: function() {
+  data() {
     return {
         cbeDetails: [],
         sections: [],
     };
   },
   methods: {
-    updateSections: function(data) {
+    updateSections(data) {
         this.sections.push(data);
     },
-    updateScenarios: function(data) {
+    updateScenarios(data) {
         let sectionIndex = 0;
         this.sections.forEach((s, i) => {
             if (s.id === data.cbe_section_id) {
@@ -192,7 +192,7 @@ export default {
         }
         currentSection.scenarios.push(data);
     },
-    updateQuestions: function(data) {
+    updateQuestions(data) {
         let sectionIndex = 0;
         this.sections.forEach((s, i) => {
             if (s.id === data.cbe_section_id) {
@@ -209,7 +209,7 @@ export default {
         }
         currentSection.questions.push(data);
     },
-    updateScenarioQuestions: function(data) {
+    updateScenarioQuestions(data) {
         let scenarioIndex = 0;
         let sectionIndex = 0;
 
@@ -234,8 +234,8 @@ export default {
             this.$set(currentScenario, 'questions', []);
         }
         currentScenario.questions.push(data);
-    }
+    },
 
-  }
+  },
 };
 </script>
