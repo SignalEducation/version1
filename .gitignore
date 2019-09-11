@@ -80,3 +80,8 @@ public/packs/*
 
 # redis db
 dump.rdb
+
+#eslint config file
+.eslintrc.js
+
+package-lock.json

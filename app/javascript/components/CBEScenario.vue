@@ -3,31 +3,41 @@
     <div class="col-sm-12">
       <div class="form-group">
         <label for="scenarioContent">Content</label>
-        <div class="input-group input-group-lg" id="scenarioContent">
-          <textarea v-model="scenarioContent" placeholder="Content" class="form-control"></textarea>
+        <div
+          class="input-group input-group-lg"
+          id="scenarioContent"
+        >
+          <textarea
+            v-model="scenarioContent"
+            placeholder="Content"
+            class="form-control"
+          ></textarea>
         </div>
       </div>
     </div>
 
     <div class="form-group">
-      <button v-on:click="saveScenario" class="btn btn-primary">Save Scenario</button>
+      <button
+        v-on:click="saveScenario"
+        class="btn btn-primary"
+      >Save Scenario</button>
     </div>
   </div>
 </template>
 
 <script>
-import axios from "axios";
+import axios from 'axios';
 
 export default {
   props: ['sectionId'],
-  data: function() {
+  data() {
     return {
       scenarioDetails: {},
       scenarioContent: null
     };
   },
   methods: {
-    saveScenario: function() {
+    saveScenario() {
       this.scenarioDetails = {};
       this.scenarioDetails['content'] = this.scenarioContent;
       this.scenarioDetails['cbe_section_id'] = this.sectionId;
@@ -46,7 +56,7 @@ export default {
         .catch(error => {
           console.log(error);
         });
-    }
-  }
+    },
+  },
 };
 </script>
