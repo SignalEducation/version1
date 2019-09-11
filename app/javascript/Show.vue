@@ -64,7 +64,7 @@ import axios from 'axios';
 
 export default {
   mounted() {
-    this.fetchCbes();
+    this.fetchCbe();
   },
   data() {
     return {
@@ -87,10 +87,24 @@ export default {
     showField(name) {
       return this.cbe[name] === '' || this.editField === name;
     },
+    // fetches all cbes
     // eslint-disable-next-line no-unused-vars
-    fetchCbes(page, index) {
+    fetchAllCbes(page, index) {
       axios
         .get('http://localhost:3000/api/v1/cbes/')
+        .then((response) => {
+          // this.$store.questionTypes = response.data
+          this.options = response.data;
+        })
+        .catch((e) => {
+          // eslint-disable-next-line no-console
+          console.log(`Error${e}`);
+        });
+    },
+    // eslint-disable-next-line no-unused-vars
+    fetchCbe(page, index) {
+      axios
+        .get('http://localhost:3000/api/v1/cbes/show/4')
         .then((response) => {
           // this.$store.questionTypes = response.data
           this.options = response.data;

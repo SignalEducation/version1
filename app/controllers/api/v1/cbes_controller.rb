@@ -7,6 +7,10 @@ module Api
         @cbes = ::Cbe.all
       end
 
+      def show
+        @cbes = ::Cbe.find(id)
+      end
+
       def create
         @cbe = ::Cbe.new(cbe_params)
 

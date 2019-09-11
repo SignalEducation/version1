@@ -19,7 +19,7 @@ Rails.application.routes.draw do
 
     namespace :v1, constraints: ApiConstraint.new(version: 1) do
       namespace :cbe, format: 'json' do
-        resources :questions, only: [:index, :create]
+        resources :questions, only: [:index, :create, :show]
         resources :scenarios, only: :create
       end
 
