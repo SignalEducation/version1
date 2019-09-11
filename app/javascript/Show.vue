@@ -1,43 +1,113 @@
 <template>
   <div>
     <h1> Edit CBE Details</h1>
-    <label for="cbe-name">CBE</label>
-    <div class="field">
-      <span
-        class="field-value"
-        v-show="!showField('name')"
-        @click="focusField('name')"
-      >{{cbe.name}}</span>
-      <input
-        v-model="cbe.name"
-        v-show="showField('name')"
-        id="cbe-name"
-        type="text"
-        class="field-value form-control"
-        @focus="focusField('name')"
-        @blur="blurField"
-      />
-    </div>
 
-    <label for="cbe-id">CBE Section</label>
-    <div class="field">
-      <span
-        class="field-value"
-        v-show="!showField('id')"
-        @click="focusField('id')"
-      >{{cbe.id}}</span>
-      <input
-        v-model="cbe.id"
-        v-show="showField('id')"
-        type="id"
-        class="field-value form-control"
-        @focus="focusField('id')"
-        @blur="blurField"
-      />
+    <div class="row ">
+      <div class="col-sm-6">
+        <label for="cbe-name">CBE</label>
+        <div class="field">
+          <span
+            class="field-value"
+            v-show="!showField('name')"
+            @click="focusField('name')"
+          >{{cbe.name}}</span>
+          <input
+            v-model="cbe.name"
+            v-show="showField('name')"
+            id="cbe-name"
+            type="text"
+            class="field-value form-control"
+            @focus="focusField('name')"
+            @blur="blurField"
+          />
+        </div>
+      </div>
 
-      <span></span>
 
-    </div>
+    </div> <!-- row -->
+
+    <div class="row ">
+      <div class="col-sm-6">
+        <label for="cbe-title">Title</label>
+        <div class="field">
+          <span
+            class="field-value"
+            v-show="!showField('cbe-title')"
+            @click="focusField('cbe-title')"
+          >{{cbe.title}}</span>
+          <input
+            v-model="cbe.title"
+            v-show="showField('cbe-title')"
+            id="cbe-title"
+            type="text"
+            class="field-value form-control"
+            @focus="focusField('cbe-title')"
+            @blur="blurField"
+          />
+        </div>
+      </div>
+
+      <div class="col-sm-6">
+        <label for="content">Content</label>
+        <div class="field">
+          <span
+            class="field-value"
+            v-show="!showField('content')"
+            @click="focusField('content')"
+          >{{cbe.content}}</span>
+          <input
+            v-model="cbe.content"
+            v-show="showField('content')"
+            type="content"
+            class="field-value form-control"
+            @focus="focusField('content')"
+            @blur="blurField"
+          />
+        </div>
+      </div>
+    </div> <!-- row -->
+
+    <div class="row ">
+      <div class="col-sm-6">
+        <label for="agreement_content">Agreement Content</label>
+        <div class="field">
+          <span
+            class="field-value"
+            v-show="!showField('agreement_content')"
+            @click="focusField('agreement_content')"
+          >{{cbe.agreement_content}}</span>
+          <input
+            v-model="cbe.agreement_content"
+            v-show="showField('agreement_content')"
+            id="agreement_content"
+            type="text"
+            class="field-value form-control"
+            @focus="focusField('agreement_content')"
+            @blur="blurField"
+          />
+        </div>
+      </div>
+
+      <div class="col-sm-6">
+        <label for="exam_time">Exam Time</label>
+        <div class="field">
+          <span
+            class="field-value"
+            v-show="!showField('exam_time')"
+            @click="focusField('exam_time')"
+          >{{cbe.exam_time}}</span>
+          <input
+            v-model="cbe.exam_time"
+            v-show="showField('exam_time')"
+            type="exam_time"
+            class="field-value form-control"
+            @focus="focusField('exam_time')"
+            @blur="blurField"
+          />
+        </div>
+      </div>
+    </div> <!-- row -->
+
   </div>
 </template>
 
@@ -51,10 +121,7 @@ export default {
   },
   data() {
     return {
-      cbe: {
-        name: 'CBE 1',
-        id: '1',
-      },
+      cbe: {},
       editField: '',
       options: [],
       selectedCbe: '',
