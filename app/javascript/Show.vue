@@ -1,80 +1,200 @@
 <template>
   <div>
-    <h1>CBE settings</h1>
-    <label for="cbe-name">CBE</label>
-    <div class="field">
-      <span class="field-value" v-show="!showField('name')" @click="focusField('name')">{{cbe.name}}</span>
-      <input v-model="cbe.name" v-show="showField('name')" id="cbe-name" type="text" class="field-value form-control" @focus="focusField('name')" @blur="blurField"/>
-    </div>
+    <h1> Edit CBE Details </h1>
+    <div class="row ">
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label
+            for="subjectCoursesSelect"
+            class="input-group input-group-lg"
+          >Course</label>
 
-    <label for="cbe-id">CBE Section</label>
-    <div class="field">
-      <span class="field-value" v-show="!showField('id')" @click="focusField('id')">{{cbe.id}}</span>
-      <input v-model="cbe.id" v-show="showField('id')" type="id" class="field-value form-control" @focus="focusField('id')" @blur="blurField"/>
-
-      <span></span>
-      <div class="row">
-        <div class="col-sm-10">
-          <div class="form-group">
-            <select v-model="selectedCbe" class="form-control custom-select">
-              <option class="col-md-8" v-for="option in options" v-bind:value="option.id">
-                {{option.name}}
-              </option>
-            </select>
-          </div>
+          <select
+            v-model="subject_course_id"
+            class="input-group input-group-lg"
+          >
+            <option
+              v-for="course in subjectCourses"
+              v-bind:value="course.value"
+              v-bind:key="course.value"
+            >
+              {{ course.text }}
+            </option>
+          </select>
         </div>
       </div>
+
+      <div class="col-sm-6 ">
+        <b-form-group
+          id="checkbox-input-group"
+          class="mt-5 mx-4"
+        >
+          <b-form-checkbox
+            v-model="active"
+            id="active-checkbox"
+          >Active</b-form-checkbox>
+        </b-form-group>
+      </div>
+
+    </div> <!-- row -->
+
+    <div class="row ">
+      <div class="col-sm-6">
+        <label for="name">Name</label>
+        <div class="field">
+          <span
+            class="field-value"
+            v-show="!showField('name')"
+            @click="focusField('name')"
+          >{{cbe.name}}</span>
+          <input
+            v-model="cbe.name"
+            v-show="showField('name')"
+            type="name"
+            class="field-value form-control"
+            @focus="focusField('name')"
+            @blur="blurField"
+          />
+        </div>
+      </div>
+    </div> <!-- row -->
+
+    <div class="row ">
+      <div class="col-sm-6">
+        <label for="agreement_content">Agreement Text</label>
+        <div class="field">
+          <span
+            class="field-value"
+            v-show="!showField('agreement_content')"
+            @click="focusField('agreement_content')"
+          >{{cbe.agreement_content}}</span>
+          <input
+            v-model="cbe.agreement_content"
+            v-show="showField('agreement_content')"
+            id="agreement_content"
+            type="text"
+            class="field-value form-control"
+            @focus="focusField('agreement_content')"
+            @blur="blurField"
+          />
+        </div>
+      </div>
+
+      <div class="col-sm-6">
+        <label for="exam_time">Time</label>
+        <div class="field">
+          <span
+            class="field-value"
+            v-show="!showField('exam_time')"
+            @click="focusField('exam_time')"
+          >{{cbe.exam_time}}</span>
+          <input
+            v-model="cbe.exam_time"
+            v-show="showField('exam_time')"
+            type="exam_time"
+            class="field-value form-control"
+            @focus="focusField('exam_time')"
+            @blur="blurField"
+          />
+        </div>
+      </div>
+    </div> <!-- row -->
+
+    <div class="row mt-3">
+      <div class="col-sm-12">
+        <!-- Save CBE -->
+        <button
+          v-on:click="saveForm"
+          class="btn btn-primary"
+        >Save</button>
+      </div>
     </div>
+
   </div>
 </template>
 
 <script>
-import splitPane from "vue-splitpane";
-import axios from "axios";
+import axios from 'axios';
 
 export default {
   mounted() {
-    this.fetchCbes();
+    this.getSubjects();
+    this.getCBEId();
+    this.fetchCbe();
   },
   data() {
     return {
-      cbe: {
-        name: "CBE 1",
-        id: "1"
-      },
-      editField: "",
+      cbe: {},
+      editField: '',
       options: [],
-      selectedCbe: ""
+      selectedCbe: '',
+      cbe_id: null,
+      subjectCourses: [],
+      subject_course_id: null,
+      active: false,
     };
   },
   methods: {
+    getSubjects() {
+      axios
+        .get('/api/v1/subject_courses/')
+        .then((response) => {
+          this.subjectCourses = response.data;
+        })
+        // eslint-disable-next-line no-unused-vars
+        .catch((e) => {});
+    },
     focusField(name) {
       this.editField = name;
     },
     blurField() {
-      this.editField = "";
+      this.editField = '';
     },
     showField(name) {
-      return this.cbe[name] == "" || this.editField == name;
+      return this.cbe[name] === '' || this.editField === name;
     },
-    fetchCbes: function(page, index) {
+    getCBEId() {
+      const url = document.URL;
+      this.cbe_id = url.substr(url.lastIndexOf('/') + 1);
+    },
+    // eslint-disable-next-line no-unused-vars
+    fetchCbe(page, index) {
       axios
-        .get("http://localhost:3000/api/v1/cbes/")
-        .then(response => {
-          // this.$store.questionTypes = response.data
-          this.options = response.data;
+        .get(`http://localhost:3000/api/v1/cbes/${this.cbe_id}`)
+        .then((response) => {
+          this.cbe = response.data;
+          this.subject_course_id = this.cbe.subject_course.id;
+          this.active = this.cbe.active;
+          this.$store.commit('setCurrentCbe', this.cbe);
         })
-        .catch(e => {
-          console.log("Error" + e);
+        // eslint-disable-next-line no-unused-vars
+        .catch((e) => {
         });
-    }
-  }
+    },
+    saveForm() {
+      this.cbe.active = this.active;
+      this.cbe.subject_course_id = this.subject_course_id;
+      this.$store.commit('setCurrentCbe', this.cbe);
+      axios
+        .patch(`http://localhost:3000/api/v1/cbes/${this.cbe_id}`, {
+          cbe: this.cbe,
+        })
+        .then((response) => {
+          this.cbe = response.data;
+          this.$store.commit('setCurrentCbe', this.cbe);
+          window.location.reload();
+        })
+        // eslint-disable-next-line no-unused-vars
+        .catch((e) => {
+        });
+    },
+  },
 };
 </script>
 
 <style scoped>
-  p {
-    font-size: 2em;
-    text-align: center;
-  }
+p {
+  font-size: 2em;
+  text-align: center;
+}
 </style>

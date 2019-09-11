@@ -85,3 +85,8 @@ yarn-debug.log*
 
 # redis db
 dump.rdb
+
+#eslint config file
+.eslintrc.js
+
+package-lock.json
