@@ -5,14 +5,14 @@
 // like app/views/layouts/application.html.erb.
 // All it does is render <div>Hello Vue</div> at the bottom of the page.
 
-import Vue from 'vue'
+import Vue from 'vue';
+import splitPane from 'vue-splitpane'
 import App from '../App'
 import Show from '../Show'
 import store from '../store/index'
 
-import splitPane from 'vue-splitpane'
-import VueRouter from 'vue-router'
-import BootstrapVue from 'bootstrap-vue'
+import VueRouter from 'vue-router';
+import BootstrapVue from 'bootstrap-vue';
 
 Vue.component('split-pane', splitPane);
 Vue.use(VueRouter);
@@ -21,26 +21,26 @@ Vue.use(BootstrapVue);
 
 document.addEventListener('DOMContentLoaded', () => {
   const element = document.getElementById('cbes-new-view');
-  if (element != null){
+  if (element != null) {
     const vue = new Vue({
-      store: store,
+      store,
       el: element,
       template: '<App/>',
       components: { App },
-      render: h => h(App)
-    })
+      render: (h) => h(App),
+    });
   }
 });
 
 document.addEventListener('DOMContentLoaded', () => {
   const element = document.getElementById('cbes-show-view');
-  if (element != null){
+  if (element != null) {
     const vue = new Vue({
-      store: store,
+      store,
       el: element,
       template: '<Show/>',
       components: { Show },
-      render: h => h(Show)
-    })
+      render: (h) => h(Show),
+    });
   }
 });

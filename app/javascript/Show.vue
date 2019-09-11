@@ -114,7 +114,10 @@ export default {
         .get(`http://localhost:3000/api/v1/cbes/${this.cbe_id}`)
         .then((response) => {
           this.cbe = response.data;
+          this.$store.commit('setCurrentCbe', this.cbe);
           console.log(this.cbe);
+          console.log('------');
+          console.log(this.$store.state.cbeDetails.currentCbe);
         })
         .catch((e) => {
           // eslint-disable-next-line no-console
