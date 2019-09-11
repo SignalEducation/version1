@@ -192,6 +192,7 @@ export default {
         .then((response) => {
           this.cbe = response.data;
           this.$store.commit('setCurrentCbe', this.cbe);
+          window.location.reload();
         })
         .catch((e) => {
           // eslint-disable-next-line no-console
