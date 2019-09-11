@@ -42,6 +42,11 @@
     webpack "^3.12.0"
     webpack-manifest-plugin "^1.3.2"
 
+"@tinymce/tinymce-vue@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@tinymce/tinymce-vue/-/tinymce-vue-3.0.1.tgz#c606b5d6b0704a7fc1efdf96ef6080cdc23c88f3"
+  integrity sha512-UnS1YTmzlASA/G23v8zZFgmjR34BSzMkYDSkGOe4ZqWDkz2uwHmiC1sNQj/70DVWG9br8cTPVjUhgOn/b+3ygQ==
+
 "@types/q@^1.5.1":
   version "1.5.2"
   resolved "https://registry.yarnpkg.com/@types/q/-/q-1.5.2.tgz#690a1475b84f2a884fd07cd797c00f5f31356ea8"
