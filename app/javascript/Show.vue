@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>CBE settings</h1>
+    <h1> Edit CBE Details</h1>
     <label for="cbe-name">CBE</label>
     <div class="field">
       <span
@@ -36,25 +36,7 @@
       />
 
       <span></span>
-      <div class="row">
-        <div class="col-sm-10">
-          <div class="form-group">
-            <select
-              v-model="selectedCbe"
-              class="form-control custom-select"
-            >
-              <option
-                class="col-md-8"
-                v-for="option in options"
-                v-bind:value="option.id"
-                v-bind:key="option.id"
-              >
-                {{option.name}}
-              </option>
-            </select>
-          </div>
-        </div>
-      </div>
+
     </div>
   </div>
 </template>
@@ -64,7 +46,6 @@ import axios from 'axios';
 
 export default {
   mounted() {
-    console.log('IN Mount');
     this.getCBEId();
     this.fetchCbe();
   },
@@ -115,9 +96,6 @@ export default {
         .then((response) => {
           this.cbe = response.data;
           this.$store.commit('setCurrentCbe', this.cbe);
-          console.log(this.cbe);
-          console.log('------');
-          console.log(this.$store.state.cbeDetails.currentCbe);
         })
         .catch((e) => {
           // eslint-disable-next-line no-console
