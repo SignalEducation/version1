@@ -181,14 +181,25 @@ export default {
         });
     },
 
-
     saveForm() {
       console.log(this.cbe);
       this.$store.commit('setCurrentCbe', this.cbe);
       console.log(this.$store.state.cbeDetails.currentCbe);
-    },
 
+
+      axios
+        .patch(`http://localhost:3000/api/v1/cbes/${this.cbe_id}`, { cbe: this.cbe })
+        .then((response) => {
+          this.cbe = response.data;
+          this.$store.commit('setCurrentCbe', this.cbe);
+        })
+        .catch((e) => {
+          // eslint-disable-next-line no-console
+          console.log(`Error${e}`);
+        });
+    },
   },
+
 };
 </script>
 

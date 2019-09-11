@@ -8,9 +8,12 @@ module Api
       end
 
       def show
-        puts params[:id]
-        #binding.pry
         @cbe = ::Cbe.find(params[:id].to_i)
+      end
+
+      def update
+        @cbe = ::Cbe.find(params[:id].to_i)
+        @cbe.update_attributes(cbe_params)
       end
 
       def create
