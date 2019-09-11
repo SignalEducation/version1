@@ -108,6 +108,17 @@
       </div>
     </div> <!-- row -->
 
+
+    <div class="row mt-3">
+      <div class="col-sm-12">
+        <!-- Save CBE -->
+        <button
+          v-on:click="saveForm"
+          class="btn btn-primary"
+        >Save</button>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -169,6 +180,14 @@ export default {
           console.log(`Error${e}`);
         });
     },
+
+
+    saveForm() {
+      console.log(this.cbe);
+      this.$store.commit('setCurrentCbe', this.cbe);
+      console.log(this.$store.state.cbeDetails.currentCbe);
+    },
+
   },
 };
 </script>
