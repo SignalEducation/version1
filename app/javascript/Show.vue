@@ -64,6 +64,8 @@ import axios from 'axios';
 
 export default {
   mounted() {
+    console.log('IN Mount');
+    this.getCBEId();
     this.fetchCbe();
   },
   data() {
@@ -75,6 +77,7 @@ export default {
       editField: '',
       options: [],
       selectedCbe: '',
+      cbe_id: null,
     };
   },
   methods: {
@@ -101,13 +104,17 @@ export default {
           console.log(`Error${e}`);
         });
     },
+    getCBEId() {
+      const url = document.URL;
+      this.cbe_id = url.substr(url.lastIndexOf('/') + 1);
+    },
     // eslint-disable-next-line no-unused-vars
     fetchCbe(page, index) {
       axios
-        .get('http://localhost:3000/api/v1/cbes/show/4')
+        .get(`http://localhost:3000/api/v1/cbes/${this.cbe_id}`)
         .then((response) => {
-          // this.$store.questionTypes = response.data
-          this.options = response.data;
+          this.cbe = response.data;
+          console.log(this.cbe);
         })
         .catch((e) => {
           // eslint-disable-next-line no-console
