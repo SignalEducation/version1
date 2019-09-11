@@ -6,12 +6,12 @@
 // All it does is render <div>Hello Vue</div> at the bottom of the page.
 
 import Vue from 'vue';
-import splitPane from 'vue-splitpane'
-import App from '../App'
-import Show from '../Show'
-import store from '../store/index'
-
+import splitPane from 'vue-splitpane';
 import VueRouter from 'vue-router';
+import App from '../App';
+import Show from '../Show';
+import store from '../store/index';
+
 import BootstrapVue from 'bootstrap-vue';
 
 Vue.component('split-pane', splitPane);

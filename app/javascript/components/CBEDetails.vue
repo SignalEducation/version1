@@ -1,6 +1,7 @@
 <template>
   <div>
     <h4>CBE Details</h4>
+    {{subjectCourses}}
     <div class="row ">
 
       <div class="col-sm-6">
