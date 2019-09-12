@@ -2,19 +2,16 @@
 
 module Api
   module V1
-    module Cbe
+    module Cbes
       class QuestionsController < Api::V1::ApplicationController
         def index
           @questions = ::Cbe::Question.all
         end
 
         def create
-
           @question = ::Cbe::Question.new(permitted_params)
 
-          if @question.save
-            render 'api/v1/cbe/questions/show.json'
-          else
+          unless @question.save
             render json: { errors: @question.errors }, status: :unprocessable_entity
           end
         end

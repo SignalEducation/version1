@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Cbe::IntroductionPage < ApplicationRecord
+  enum kind: { text: 0, agreement: 1 }
   # relationships
   belongs_to :cbe
 
