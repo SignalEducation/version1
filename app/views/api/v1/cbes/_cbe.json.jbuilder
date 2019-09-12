@@ -12,6 +12,7 @@ json.score                    cbe.score
 
 json.subject_course do
   json.name cbe.subject_course.name
+  json.id cbe.subject_course.id
 end
 
 json.exam_body do

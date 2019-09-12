@@ -1,28 +1,24 @@
 <template>
   <div>
-    <h1> Edit CBE Details {{subjectCourses}}</h1>
+    <h1> Edit CBE Details </h1>
     <div class="row ">
-
       <div class="col-sm-6">
         <div class="form-group">
-          <label for="subjectCoursesSelect">Course</label>
-          <b-form-select
-            v-model="cbe.subject_course_id"
-            :options="subjectCourses"
-            id="subjectCoursesSelect"
-            class="input-group input-group-lg"
-          >
+          <label for="subjectCoursesSelect" class="input-group input-group-lg">Course</label>
 
-            <select v-model="subject_course_id">
-              <option
-                v-for="course in subjectCourses"
-                v-bind:value="course.value"
-              >
-                {{ course.text }}
-              </option>
-            </select>
+
+              <select v-model="subject_course_id" class="input-group input-group-lg">
+                <option
+                  v-for="course in subjectCourses"
+                  v-bind:value="course.value"
+                  v-bind:key="course.value"
+                >
+                  {{ course.text }}
+                </option>
+              </select>
 
           </b-form-select>
+
         </div>
       </div>
 
@@ -32,7 +28,7 @@
           class="mt-5 mx-4"
         >
           <b-form-checkbox
-            v-model="cbe.active"
+            v-model="active"
             id="active-checkbox"
           >Active</b-form-checkbox>
         </b-form-group>
@@ -63,7 +59,7 @@
 
     <div class="row ">
       <div class="col-sm-6">
-        <label for="agreement_content">Agreement Content</label>
+        <label for="agreement_content">Agreement Text</label>
         <div class="field">
           <span
             class="field-value"
@@ -181,9 +177,9 @@ export default {
         .get(`http://localhost:3000/api/v1/cbes/${this.cbe_id}`)
         .then((response) => {
           this.cbe = response.data;
-          this.active = this.cbe;
-          this.subject_course_id = this.cbe.subject_course_id;
-          console.log(`**** ID **** ${response.data}`);
+          this.subject_course_id = this.cbe.subject_course.id;
+          this.active = this.cbe.active;
+          console.log(this.cbe);
           // console.log(this.cbe.subject_course);
           // console.log(this.cbe);
           this.$store.commit('setCurrentCbe', this.cbe);
@@ -195,7 +191,14 @@ export default {
     },
 
     saveForm() {
+      this.cbe.active = this.active;
+      console.log('*** active');
+      console.log(this.active);
+      console.log(this.cbe.active);
+
+      this.cbe.subject_course_id = this.subject_course_id;
       this.$store.commit('setCurrentCbe', this.cbe);
+      console.log(this.$store.state.cbeDetails.currentCbe);
 
       axios
         .patch(`http://localhost:3000/api/v1/cbes/${this.cbe_id}`, {

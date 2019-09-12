@@ -8,11 +8,16 @@ module Api
       end
 
       def show
-        @cbe = ::Cbe.find(params[:id].to_i)
+        @cbe = ::Cbe.find(params[:id])
+        @cbe.to_json
       end
 
       def update
-        @cbe = ::Cbe.find(params[:id].to_i)
+        #binding.pry
+        @cbe = ::Cbe.find(params[:id])
+       # binding.pry
+        puts "ID ---  #{@cbe.subject_course_id}"
+        puts "ACTIVE ---  #{@cbe.active}"
         @cbe.update_attributes(cbe_params)
       end
 
