@@ -147,7 +147,6 @@ describe Admin::ExercisesController, type: :controller do
       it 'redirects to the correct url with flash' do
         get :generate_daily_summary
         expect(response).to redirect_to(admin_exercises_url)
-        expect(flash[:success]).to eq 'Daily summary sent to Slack'
       end
     end
   end

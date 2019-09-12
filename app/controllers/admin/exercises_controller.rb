@@ -7,7 +7,7 @@ module Admin
       ensure_user_has_access_rights(%w[exercise_corrections_access])
     end
     before_action :set_user, only: %i[index new create]
-    before_action :set_exercise, except: %i[index generate_daily_summary]
+    before_action :set_exercise, only: %i[show edit update]
 
     layout 'management'
 
