@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe 'Api::V1::Cbe::QuestionsController', type: :request do
@@ -23,7 +25,9 @@ RSpec.describe 'Api::V1::Cbe::QuestionsController', type: :request do
                                                             kind
                                                             content
                                                             score
-                                                            cbe_section])
+                                                            sorting_order
+                                                            section_id
+                                                            scenario])
       end
     end
 
@@ -65,7 +69,9 @@ RSpec.describe 'Api::V1::Cbe::QuestionsController', type: :request do
                                                   kind
                                                   content
                                                   score
-                                                  cbe_section])
+                                                  sorting_order
+                                                  section_id
+                                                  scenario])
       end
     end
 

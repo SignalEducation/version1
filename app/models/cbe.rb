@@ -11,6 +11,7 @@ class Cbe < ApplicationRecord
 
   # relationships
   belongs_to :subject_course
+  has_one :product, dependent: :destroy
 
   has_many :sections, dependent: :destroy, inverse_of: :cbe,
                       class_name: 'Cbe::Section'
