@@ -6,11 +6,12 @@ export default {
     cbeExamTime: null,
     cbeSubjectCourseId: null,
     cbeActive: null,
-    currentCbe: 'sdfsdv',
+    currentCbe: null,
   },
 
   getters: {
     currentCbe: (state) => state.currentCbe,
+    cbeActive: null,
   },
 
   mutations: {

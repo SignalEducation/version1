@@ -22,7 +22,6 @@
         class="btn btn-primary"
       >Save Scenario</button>
     </div>
-
   </div>
 </template>
 
@@ -34,28 +33,27 @@ export default {
   data() {
     return {
       scenarioDetails: {},
-      scenarioContent: null,
+      scenarioContent: null
     };
   },
   methods: {
     saveScenario() {
       this.scenarioDetails = {};
-      this.scenarioDetails.content = this.scenarioContent;
-      this.scenarioDetails.cbe_section_id = this.sectionId;
+      this.scenarioDetails['content'] = this.scenarioContent;
+      this.scenarioDetails['cbe_section_id'] = this.sectionId;
 
       axios
-        .post('/api/v1/cbe/scenarios/', {
-          scenario: this.scenarioDetails,
+        .post("/api/v1/cbe/scenarios/", {
+          scenario: this.scenarioDetails
         })
-        .then((response) => {
+        .then(response => {
           this.createdScenario = response.data;
-          this.scenarioDetails.id = this.createdScenario.id;
+          this.scenarioDetails["id"] = this.createdScenario.id;
           this.$emit('add-scenario', this.scenarioDetails);
           this.scenarioDetails = {};
           this.scenarioContent = '';
         })
-        .catch((error) => {
-          // eslint-disable-next-line no-console
+        .catch(error => {
           console.log(error);
         });
     },

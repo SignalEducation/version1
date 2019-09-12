@@ -3,7 +3,6 @@
     <h4>CBE Details</h4>
     {{subjectCourses}}
     <div class="row ">
-
       <div class="col-sm-6">
         <div class="form-group">
           <label for="subjectCoursesSelect">Course</label>
@@ -76,7 +75,6 @@
           </div>
         </div>
       </div>
-
     </div>
 
     <div class="row mt-3">
@@ -88,7 +86,6 @@
         >Save CBE</button>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -107,55 +104,57 @@ export default {
       active: false,
       subjectCourseId: null,
       subjectCourses: [],
-      createdCBE: [],
+      createdCBE: []
     };
   },
   watch: {
     name() {
-      this.$store.commit('setCbeName', this.name);
+      this.$store.commit("setCbeName", this.name);
     },
     agreementContent() {
-      this.$store.commit('setCbeAgreementContent', this.agreementContent);
+      this.$store.commit("setCbeAgreementContent", this.agreementContent);
     },
     examTime() {
-      this.$store.commit('setCbeExamTime', this.examTime);
+      this.$store.commit("setCbeExamTime", this.examTime);
     },
     subjectCourseId() {
-      this.$store.commit('setCbeSubjectCourseId', this.subjectCourseId);
+      this.$store.commit("setCbeSubjectCourseId", this.subjectCourseId);
     },
     active() {
-      this.$store.commit('setCbeActive', this.active);
+      this.$store.commit("setCbeActive", this.active);
     },
   },
   methods: {
-    getSubjects() {
+    getSubjects () {
       axios
-        .get('/api/v1/subject_courses/')
-        .then((response) => {
+        .get("/api/v1/subject_courses/")
+        .then(response => {
           this.subjectCourses = response.data;
         })
-        // eslint-disable-next-line no-unused-vars
-        .catch((e) => {});
+        .catch(e => {
+          console.log(e);
+
+        });
     },
     saveNewCBE() {
       this.cbeDetails = {};
-      this.cbeDetails.name = this.$store.state.cbeDetails.cbeName;
-      this.cbeDetails.agreement_content = this.$store.state.cbeDetails.cbeAgreementContent;
-      this.cbeDetails.exam_time = this.$store.state.cbeDetails.cbeExamTime;
-      this.cbeDetails.active = this.$store.state.cbeDetails.cbeActive;
-      this.cbeDetails.subject_course_id = this.$store.state.cbeDetails.cbeSubjectCourseId;
+      this.cbeDetails["name"] = this.$store.state.cbeDetails.cbeName;
+      this.cbeDetails["agreement_content"] = this.$store.state.cbeDetails.cbeAgreementContent;
+      this.cbeDetails["exam_time"] = this.$store.state.cbeDetails.cbeExamTime;
+      this.cbeDetails["active"] = this.$store.state.cbeDetails.cbeActive;
+      this.cbeDetails["subject_course_id"] = this.$store.state.cbeDetails.cbeSubjectCourseId;
 
       axios
-        .post('/api/v1/cbes/', { cbe: this.cbeDetails })
-        .then((response) => {
+        .post("/api/v1/cbes/", { cbe: this.cbeDetails })
+        .then(response => {
           this.createdCBE = response.data;
           if (this.createdCBE.id > 0) {
-            this.$store.commit('setCbeId', this.createdCBE.id);
-            this.$store.commit('hideDetailsForm', true);
+            this.$store.commit("setCbeId", this.createdCBE.id);
+            this.$store.commit("hideDetailsForm", true);
           }
         })
-        // eslint-disable-next-line no-unused-vars
-        .catch((error) => {
+        .catch(error => {
+          console.log(error);
         });
     },
   },

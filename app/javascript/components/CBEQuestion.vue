@@ -18,6 +18,7 @@
         </b-form-select>
       </div>
     </div>
+
     <div class="col-sm-6">
       <div class="form-group">
         <label for="questionScore">Score</label>
@@ -33,6 +34,7 @@
         </div>
       </div>
     </div>
+
     <div class="col-sm-12">
       <div class="form-group">
         <label for="questionContent">Content</label>
@@ -55,16 +57,23 @@
         class="btn btn-primary"
       >Save Question</button>
     </div>
-
   </div>
 </template>
 
 <script>
+<<<<<<< HEAD
 import axios from 'axios';
 
 export default {
   props: ['sectionId', 'scenarioId'],
   data() {
+=======
+import axios from "axios";
+
+export default {
+  props: ['sectionId', 'scenarioId'],
+  data: function() {
+>>>>>>> cbe
     return {
       questionDetails: {},
       questionKind: null,
@@ -80,6 +89,7 @@ export default {
         'dropdown_list',
         'hot_spot',
         'spreadsheet',
+<<<<<<< HEAD
         'open',
       ],
     };
@@ -103,17 +113,48 @@ export default {
         .then((response) => {
           this.createdQuestion = response.data;
           this.questionDetails.id = this.createdQuestion.id;
+=======
+        'open'
+      ]
+    };
+  },
+  methods: {
+    saveQuestion: function(page, index) {
+      this.questionDetails = {};
+      this.questionDetails['kind'] = this.questionKind;
+      this.questionDetails['content'] = this.questionContent;
+      this.questionDetails['score'] = this.questionScore;
+      this.questionDetails['cbe_section_id'] = this.sectionId;
+      this.questionDetails['cbe_scenario_id'] = this.scenarioId;
+      console.log(this.questionDetails);
+
+      axios
+        .post("/api/v1/cbe/questions/", {
+          question: this.questionDetails
+        })
+        .then(response => {
+          this.createdQuestion = response.data;
+          this.questionDetails["id"] = this.createdQuestion.id;
+>>>>>>> cbe
           this.$emit('add-question', this.questionDetails);
           this.questionDetails = {};
           this.questionKind = '';
           this.questionContent = '';
           this.questionScore = '';
         })
+<<<<<<< HEAD
         .catch((error) => {
           // eslint-disable-next-line no-console
           console.log(error);
         });
     },
   },
+=======
+        .catch(error => {
+          console.log(error);
+        });
+    }
+  }
+>>>>>>> cbe
 };
 </script>

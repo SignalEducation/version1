@@ -24,7 +24,11 @@ Rails.application.routes.draw do
       end
 
       resources :subject_courses, only: :index
+<<<<<<< HEAD
       resources :cbes, format: 'json', only: [:index, :create, :show, :update] do
+=======
+      resources :cbes, format: 'json', only: [:index, :show, :create] do
+>>>>>>> cbe
         resources :sections, controller: 'cbe/sections', only: [:index, :create]
       end
     end
@@ -39,9 +43,6 @@ Rails.application.routes.draw do
     resources :orders, only: [:index, :show]
     post 'search_exercises', to: 'exercises#index', as: :search_exercises
   end
-
-  # CBE
-  resources :cbes, only: :new
 
   # all standard, user-facing "resources" go inside this scope
   scope '(:locale)', locale: /en/ do # /en\nl\pl/
@@ -267,6 +268,9 @@ Rails.application.routes.draw do
     get 'course/:name_url', to: 'student_sign_ups#group', as: :group_landing
 
     root 'student_sign_ups#home'
+
+    # CBE
+    resources :cbes, only: :show
 
     # Catch-all
     get '404', to: 'footer_pages#missing_page', first_element: '404-page', as: :missing_page

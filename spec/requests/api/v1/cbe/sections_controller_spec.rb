@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe 'Api::V1::Cbe::SectionsController', type: :request do
@@ -25,9 +27,7 @@ RSpec.describe 'Api::V1::Cbe::SectionsController', type: :request do
                                                             kind
                                                             sorting_order
                                                             content
-                                                            cbe
-                                                            subject_course
-                                                            exam_body])
+                                                            questions])
       end
     end
 
@@ -71,9 +71,7 @@ RSpec.describe 'Api::V1::Cbe::SectionsController', type: :request do
                                                   kind
                                                   sorting_order
                                                   content
-                                                  cbe
-                                                  subject_course
-                                                  exam_body])
+                                                  questions])
       end
     end
 
