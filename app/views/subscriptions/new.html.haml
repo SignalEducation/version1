@@ -335,8 +335,12 @@
             window.location.replace("#{personal_upgrade_complete_url(@subscription.completion_guid)}");
           }
         },
-        error: function(data, status, error){
-          resetForm(data.responseJSON.error);
+        error: function(request, status, error){
+          if (request.status === 500) {
+            resetForm('Something went wrong. Please try again.');
+          } else {
+            resetForm(request.responseJSON.error);
+          }
         }
       });
     }
@@ -345,27 +349,27 @@
       let statusArray = ['active', 'succeeded'];
       let intentStatus = '';
       stripe.handleCardPayment(client_secret, cardElement).then(function(result) {
-          if (result.error) {
-            resetForm(result.error.message);
-            intentStatus = 'pending';
-          } else {
-            intentStatus = result['paymentIntent']['status'];
-          }
+        if (result.error) {
+          resetForm(result.error.message);
+          intentStatus = 'pending';
+        } else {
+          intentStatus = result['paymentIntent']['status'];
+        }
 
-          $.ajax({
-            type: 'post',
-            url: "#{subscriptions_status_from_stripe_path}",
-            data: { status: intentStatus, id: subscription_id },
-            dataType: 'json',
-            success: function(data,status,xhr){
-              if( $.inArray(intentStatus, statusArray) !== -1){
-                window.location.replace("#{personal_upgrade_complete_url(@subscription.completion_guid)}");
-              }
-            },
-            error: function(xhr,status,error){
-              resetForm(error);
+        $.ajax({
+          type: 'post',
+          url: "/subscriptions/" + subscription_id + "/status_from_stripe",
+          data: { status: intentStatus },
+          dataType: 'json',
+          success: function(data,status,xhr){
+            if( $.inArray(intentStatus, statusArray) !== -1){
+              window.location.replace("#{personal_upgrade_complete_url(@subscription.completion_guid)}");
             }
-          });
+          },
+          error: function(xhr,status,error){
+            resetForm(error);
+          }
+        });
       });
     }
 

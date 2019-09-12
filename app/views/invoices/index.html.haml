@@ -23,7 +23,7 @@
                           %th PDF
                       %tbody
                         -@invoices.each do |invoice|
-                          - unless invoice.status == 'Pending'
+                          - unless invoice.status == 'Pending' && !invoice.requires_3d_secure
                             %tr
                               %td=invoice.id
                               %td=humanize_datetime(invoice.issued_at)

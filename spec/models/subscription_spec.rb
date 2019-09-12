@@ -144,6 +144,32 @@ describe Subscription do
       end
     end
 
+    describe '#pending_3ds_invoice' do
+      let(:subscription) { create(:subscription)}
+
+      before :each do
+        allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
+      end
+
+      describe 'when no 3ds invoices exist' do
+        let!(:invoice) { create(:invoice, subscription: subscription) }
+
+        it 'returns nil' do
+          expect(subscription.pending_3ds_invoice).to be_nil
+        end
+      end
+
+      describe 'when a 3ds invoices exists' do
+        let!(:invoice) {
+          create(:invoice, subscription: subscription, requires_3d_secure: true)
+        }
+
+        it 'returns the first invoice' do
+          expect(subscription.pending_3ds_invoice).to eq invoice
+        end
+      end
+    end
+
     describe '#update_invoice_payment_success' do
       let(:subscription) { create(:subscription) }
 
@@ -189,6 +215,34 @@ describe Subscription do
         subscription.reload
 
         expect(subscription.state).to eq 'active'
+      end
+    end
+
+    describe '#update_subscription_status' do
+      before :each do
+        allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
+      end
+
+      describe 'when stripe_status is active' do
+        let(:subscription) { create(:subscription, state: 'active') }
+
+        it 'starts the subscription' do
+          expect(subscription).to receive(:start)
+
+          subscription.send(:update_subscription_status)
+        end
+      end
+
+      describe 'when stripe_status is requires_action' do
+        let(:subscription) {
+          create(:subscription, payment_intent_status: 'requires_action')
+        }
+
+        it 'calls mark_payment_action_required transition' do
+          expect(subscription).to receive(:start)
+
+          subscription.send(:update_subscription_status)
+        end
       end
     end
 

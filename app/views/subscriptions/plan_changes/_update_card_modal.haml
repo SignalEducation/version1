@@ -1,0 +1,42 @@
+#update-card-modal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "update-card-modal", :role => "dialog", :tabindex => "-1"}
+  .modal-dialog{:role => "document"}
+    .modal-content
+      %button.btn.btn-text.modal-close.p-0{"data-dismiss" => "modal"}
+        %i.material-icons{"aria-hidden" => "true"} close
+      %div
+        %h3#add-card-modal.text-gray2.mb-5 Update Card
+        %p Your payment details have failed authentication. Please update your card details below.
+      .modal-body
+        =form_for(SubscriptionPaymentCard.new, method: :post, html: {class: 'py-2', role: 'form', id: 'new-subscription-payment-card-form'}, name: 'add_card_form') do |f|
+          =f.hidden_field :user_id, value: current_user.id
+          =f.hidden_field :stripe_token
+
+          .row
+            .col-sm-12
+              .payment-errors
+                .payment-errors
+                  .form-group.cc
+                    %label
+                      Credit or Debit card
+                    .clearfix
+                      #card-element
+                      #card-errors{role: 'alert', class: 'invalid-details'}
+
+          .pt-2.d-flex.flex-wrap.flex-sm-nowrap.justify-content-between
+            %div
+              = f.button :submit, class: 'btn btn-primary float-left mb-2', id: 'card_submit' do
+                Submit Card Details
+
+              .sk-circle{style: 'margin-right: 50px; margin-left: 50px;'}
+                .sk-circle1.sk-child
+                .sk-circle2.sk-child
+                .sk-circle3.sk-child
+                .sk-circle4.sk-child
+                .sk-circle5.sk-child
+                .sk-circle6.sk-child
+                .sk-circle7.sk-child
+                .sk-circle8.sk-child
+                .sk-circle9.sk-child
+                .sk-circle10.sk-child
+                .sk-circle11.sk-child
+                .sk-circle12.sk-child
