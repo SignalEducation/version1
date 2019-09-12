@@ -8,11 +8,11 @@
 import Vue from 'vue';
 import splitPane from 'vue-splitpane';
 import VueRouter from 'vue-router';
+import BootstrapVue from 'bootstrap-vue';
 import App from '../App';
 import Show from '../Show';
 import store from '../store/index';
 
-import BootstrapVue from 'bootstrap-vue';
 
 Vue.component('split-pane', splitPane);
 Vue.use(VueRouter);

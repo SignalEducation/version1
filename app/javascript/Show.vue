@@ -3,22 +3,24 @@
     <h1> Edit CBE Details </h1>
     <div class="row ">
       <div class="col-sm-6">
-        <div class="form-group">
-          <label for="subjectCoursesSelect" class="input-group input-group-lg">Course</label>
+        <div class="form-group">§2em
+          <label
+            for="subjectCoursesSelect"
+            class="input-group input-group-lg"
+          >Course</label>
 
-
-              <select v-model="subject_course_id" class="input-group input-group-lg">
-                <option
-                  v-for="course in subjectCourses"
-                  v-bind:value="course.value"
-                  v-bind:key="course.value"
-                >
-                  {{ course.text }}
-                </option>
-              </select>
-
-          </b-form-select>
-
+          <select
+            v-model="subject_course_id"
+            class="input-group input-group-lg"
+          >
+            <option
+              v-for="course in subjectCourses"
+              v-bind:value="course.value"
+              v-bind:key="course.value"
+            >
+              {{ course.text }}
+            </option>
+          </select>
         </div>
       </div>
 
@@ -138,11 +140,9 @@ export default {
         .get('/api/v1/subject_courses/')
         .then((response) => {
           this.subjectCourses = response.data;
-          console.log(this.subjectCourses);
         })
-        .catch((e) => {
-          console.log(e);
-        });
+        // eslint-disable-next-line no-unused-vars
+        .catch((e) => {});
     },
     focusField(name) {
       this.editField = name;
@@ -152,20 +152,6 @@ export default {
     },
     showField(name) {
       return this.cbe[name] === '' || this.editField === name;
-    },
-    // fetches all cbes
-    // eslint-disable-next-line no-unused-vars
-    fetchAllCbes(page, index) {
-      axios
-        .get('http://localhost:3000/api/v1/cbes/')
-        .then((response) => {
-          // this.$store.questionTypes = response.data
-          this.options = response.data;
-        })
-        .catch((e) => {
-          // eslint-disable-next-line no-console
-          console.log(`Error${e}`);
-        });
     },
     getCBEId() {
       const url = document.URL;
@@ -179,27 +165,17 @@ export default {
           this.cbe = response.data;
           this.subject_course_id = this.cbe.subject_course.id;
           this.active = this.cbe.active;
-          console.log(this.cbe);
-          // console.log(this.cbe.subject_course);
-          // console.log(this.cbe);
           this.$store.commit('setCurrentCbe', this.cbe);
         })
+        // eslint-disable-next-line no-unused-vars
         .catch((e) => {
-          // eslint-disable-next-line no-console
-          console.log(`Error${e}`);
         });
     },
 
     saveForm() {
       this.cbe.active = this.active;
-      console.log('*** active');
-      console.log(this.active);
-      console.log(this.cbe.active);
-
       this.cbe.subject_course_id = this.subject_course_id;
       this.$store.commit('setCurrentCbe', this.cbe);
-      console.log(this.$store.state.cbeDetails.currentCbe);
-
       axios
         .patch(`http://localhost:3000/api/v1/cbes/${this.cbe_id}`, {
           cbe: this.cbe,
@@ -209,9 +185,8 @@ export default {
           this.$store.commit('setCurrentCbe', this.cbe);
           window.location.reload();
         })
+        // eslint-disable-next-line no-unused-vars
         .catch((e) => {
-          // eslint-disable-next-line no-console
-          console.log(`Error${e}`);
         });
     },
   },

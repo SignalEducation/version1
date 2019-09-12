@@ -13,12 +13,8 @@ module Api
       end
 
       def update
-        #binding.pry
         @cbe = ::Cbe.find(params[:id])
-       # binding.pry
-        puts "ID ---  #{@cbe.subject_course_id}"
-        puts "ACTIVE ---  #{@cbe.active}"
-        @cbe.update_attributes(cbe_params)
+        @cbe.update(cbe_params)
       end
 
       def create

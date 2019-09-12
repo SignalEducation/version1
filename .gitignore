@@ -84,4 +84,5 @@ TAGS
 yarn-debug.log*
 .yarn-integrity
 
-.vscode 
+.vscode
+.eslintrc.js

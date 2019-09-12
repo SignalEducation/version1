@@ -134,9 +134,8 @@ export default {
         .then((response) => {
           this.subjectCourses = response.data;
         })
-        .catch((e) => {
-          console.log(e);
-        });
+        // eslint-disable-next-line no-unused-vars
+        .catch((e) => {});
     },
     saveNewCBE() {
       this.cbeDetails = {};
@@ -155,8 +154,8 @@ export default {
             this.$store.commit('hideDetailsForm', true);
           }
         })
+        // eslint-disable-next-line no-unused-vars
         .catch((error) => {
-          console.log(error);
         });
     },
   },
