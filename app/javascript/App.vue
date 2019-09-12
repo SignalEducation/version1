@@ -4,11 +4,19 @@
       <div class="row">
         <div class="col-sm-12 mb-2">
           <div v-if="this.$store.state.cbeDetailsSaved === true">
-            <b-button v-b-toggle.collapse-cbe variant="primary" class="mr-1">
+            <b-button :class="shouldShowCbeDetails ? 'collapsed mr-1' : 'mr-1'"
+                      :aria-expanded="shouldShowCbeDetails ? 'true' : 'false'"
+                      aria-controls="collapse-cbe"
+                      @click="toggleCbeDetails"
+                      variant="primary">
               <span class="when-opened">&#10514;</span> <span class="when-closed">&#10515;</span> CBE Details
             </b-button>
-            <b-button variant="primary" class="mr-1">
-              Intro Pages
+            <b-button :class="shouldShowIntroPages ? 'collapsed mr-1' : 'mr-1'"
+                      :aria-expanded="shouldShowIntroPages ? 'true' : 'false'"
+                      aria-controls="collapse-intro-pages"
+                      @click="toggleIntroPages"
+                      variant="primary">
+              <span class="when-opened">&#10514;</span> <span class="when-closed">&#10515;</span> Intro Pages
             </b-button>
             <b-button variant="primary" class="mr-1">
               Resources
@@ -19,12 +27,28 @@
     </div>
 
     <div>
-      <b-collapse visible id="collapse-cbe" class="mb-2">
+      <b-collapse v-model="showCbeDetails" id="collapse-cbe" class="mb-2">
         <b-card>
           <CBEDetails></CBEDetails>
         </b-card>
       </b-collapse>
       <div v-if="this.$store.state.cbeDetailsSaved === true" class="mt-2">
+        <b-collapse id="collapse-intro-pages" v-model="showIntroPages" class="mb-2">
+          <b-card no-body>
+            <b-tabs card >
+              <CBEIntroductionPage
+                v-for="page in introPages"
+                v-bind:key="'intro-page-tab-' + page.id"
+                v-bind:id="page.id"
+                v-bind:initialTitle="page.title"
+                v-bind:initialKind="page.kind"
+                v-bind:initialContent="page.content"
+                ></CBEIntroductionPage>
+              <CBEIntroductionPage v-on:add-introduction-page="updatePages"></CBEIntroductionPage>
+            </b-tabs>
+          </b-card>
+        </b-collapse>
+
         <b-card no-body>
           <b-tabs card >
             <b-tab v-for="section in sections" :key="'section-tab-' + section.id" :title="section.name">
@@ -153,14 +177,16 @@
 </template>
 
 <script>
-import CBEDetails from './components/CBEDetails';
-import CBESection from './components/CBESection';
-import CBEScenario from './components/CBEScenario';
-import CBEQuestion from './components/CBEQuestion';
+import CBEDetails          from "./components/CBEDetails";
+import CBESection          from "./components/CBESection";
+import CBEIntroductionPage from "./components/CBEIntroductionPage";
+import CBEScenario         from "./components/CBEScenario";
+import CBEQuestion         from "./components/CBEQuestion";
 
 export default {
   components: {
     CBEDetails,
+    CBEIntroductionPage,
     CBESection,
     CBEScenario,
     CBEQuestion,
@@ -169,13 +195,39 @@ export default {
     return {
         cbeDetails: [],
         sections: [],
+        introPages: [],
+        showIntroPages: false,
+        showCbeDetails: true
     };
   },
+  computed: {
+    shouldShowCbeDetails: function () {
+      return this.showCbeDetails && !this.showIntroPages;
+    },
+    shouldShowIntroPages: function () {
+      return this.showIntroPages && !this.showCbeDetails;
+    }
+  },
   methods: {
-    updateSections(data) {
+    toggleCbeDetails: function() {
+      this.showCbeDetails = !this.showCbeDetails;
+      if (this.showIntroPages && this.showCbeDetails) {
+        this.showIntroPages = false;
+      }
+    },
+    toggleIntroPages: function() {
+      this.showIntroPages = !this.showIntroPages;
+      if (this.showIntroPages && this.showCbeDetails) {
+        this.showCbeDetails = false;
+      }
+    },
+    updateSections: function(data) {
         this.sections.push(data);
     },
-    updateScenarios(data) {
+    updatePages: function(data) {
+        this.introPages.push(data);
+    },
+    updateScenarios: function(data) {
         let sectionIndex = 0;
         this.sections.forEach((s, i) => {
             if (s.id === data.cbe_section_id) {
