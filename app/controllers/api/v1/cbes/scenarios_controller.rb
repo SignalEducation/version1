@@ -2,16 +2,13 @@
 
 module Api
   module V1
-    module Cbe
+    module Cbes
       class ScenariosController < Api::V1::ApplicationController
 
         def create
-
           @scenario = ::Cbe::Scenario.new(permitted_params)
 
-          if @scenario.save
-            render 'api/v1/cbe/scenarios/show.json'
-          else
+          unless @scenario.save
             render json: { errors: @scenario.errors }, status: :unprocessable_entity
           end
         end

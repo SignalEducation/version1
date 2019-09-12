@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module Api
   module V1
-    module Cbe
+    module Cbes
       class SectionsController < Api::V1::ApplicationController
         def index
           @sections = ::Cbe::Section.all
@@ -10,9 +10,7 @@ module Api
         def create
           @section = ::Cbe::Section.new(section_params)
 
-          if @section.save
-            render 'api/v1/cbe/sections/show.json'
-          else
+          unless @section.save
             render json: { errors: @section.errors }, status: :unprocessable_entity
           end
         end
