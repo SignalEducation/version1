@@ -205,9 +205,10 @@ class CourseModuleElement < ApplicationRecord
 
   def available_to_user(user, exam_body_id, scul=nil)
     result = {view: false, reason: nil}
-    if user.non_verified_user?
-      result = {view: false, reason: 'verification-required'}
-    elsif user.standard_student_user?
+    #if user.non_verified_user?
+    #  result = {view: false, reason: 'verification-required'}
+    #elsif user.standard_student_user?
+    if user.standard_student_user?
       #result = available_for_subscription(user, exam_body_id, scul)
 
       if self.related_course_module_element_id && self.previous_cme_restriction(scul)

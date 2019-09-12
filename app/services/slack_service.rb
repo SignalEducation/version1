@@ -11,9 +11,17 @@ class SlackService
     send_notification(message)
   end
 
-  def daily_order_summary(orders)
-    notify_channel('corrections', order_attachment(orders),
-                   icon_emoji: ':chart_with_upwards_trend:')
+  def order_summary_attachment(orders)
+    [{ fallback: 'Daily Orders Summary (Last 24hrs)',
+       title: 'Daily Orders Summary (Last 24hrs)',
+       color: '#7CD197',
+       fields: [
+         { title: 'Mock Exams', value: orders.product_type_count('mock_exam'),
+           short: true },
+         { title: 'General Corrections',
+           value: orders.product_type_count('correction_pack'),
+           short: true }
+       ] }]
   end
 
   private

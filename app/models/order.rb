@@ -95,7 +95,9 @@ class Order < ApplicationRecord
 
   def self.send_daily_orders_update
     return if (orders = orders_completed_in_time(24.hours.ago)) && orders.empty?
-    SlackService.new.daily_order_summary(orders)
+    slack = SlackService.new
+    slack.notify_channel('corrections', slack.order_summary_attachment(orders),
+                         icon_emoji: ':chart_with_upwards_trend:')
   end
 
   def self.product_type_count(product_type)
@@ -113,7 +115,9 @@ class Order < ApplicationRecord
   end
 
   def execute_order_completion
-    MandrillWorker.perform_async(user_id, 'send_mock_exam_email',
+    return if Rails.env.test?
+    MandrillWorker.perform_async(user_id,
+                                 'send_mock_exam_email',
                                  user_exercise_url(user_id),
                                  product.mock_exam.name, reference_guid)
     invoice.update(paid: true, payment_closed: true)
@@ -154,6 +158,11 @@ class Order < ApplicationRecord
     return if destroyable?
     errors.add(:base, I18n.t('models.general.dependencies_exist'))
     false
+  end
+
+  def create_order_transaction
+    OrderTransaction.create_from_stripe_data(stripe_order_payment_data,
+                                             user_id, id, product_id)
   end
 
   def user_exercise_url(user_id)
