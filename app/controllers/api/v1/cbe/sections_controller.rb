@@ -7,6 +7,12 @@ module Api
           @sections = ::Cbe::Section.all
         end
 
+        def update
+        end
+
+        def show
+        end
+
         def create
           @section = ::Cbe::Section.new(section_params)
 
