@@ -14,7 +14,7 @@
               %p.h6
                 Why do you want to cancel?
 
-              =form_for @subscription, url: subscriptions_cancellations_path(id: @subscription.id), method: :post, html: { :id => "attempt_subscription_cancellation" } do |f|
+              =form_for @subscription, url: subscription_cancellations_path(id: @subscription.id), method: :post, html: { :id => "attempt_subscription_cancellation" } do |f|
                 .row
                   .col-sm-6
                     .form-group.cancellation-reason
