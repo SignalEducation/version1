@@ -24,11 +24,7 @@ Rails.application.routes.draw do
       end
 
       resources :subject_courses, only: :index
-<<<<<<< HEAD
       resources :cbes, format: 'json', only: [:index, :create, :show, :update] do
-=======
-      resources :cbes, format: 'json', only: [:index, :show, :create] do
->>>>>>> cbe
         resources :sections, controller: 'cbe/sections', only: [:index, :create]
       end
     end
