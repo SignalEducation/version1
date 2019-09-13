@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_27_092543) do
+ActiveRecord::Schema.define(version: 2019_09_12_152203) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -105,6 +105,7 @@ ActiveRecord::Schema.define(version: 2019_08_27_092543) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "cbe_id"
+    t.integer "kind", default: 0, null: false
     t.index ["cbe_id"], name: "index_cbe_introduction_pages_on_cbe_id"
   end
 
@@ -754,6 +755,7 @@ ActiveRecord::Schema.define(version: 2019_08_27_092543) do
     t.integer "cover_image_file_size"
     t.datetime "cover_image_updated_at"
     t.index ["name"], name: "index_mock_exams_on_name"
+    t.index ["subject_course_id"], name: "index_mock_exams_on_subject_course_id"
   end
 
   create_table "order_transactions", id: :serial, force: :cascade do |t|
@@ -835,6 +837,7 @@ ActiveRecord::Schema.define(version: 2019_08_27_092543) do
     t.index ["mock_exam_id"], name: "index_products_on_mock_exam_id"
     t.index ["name"], name: "index_products_on_name"
     t.index ["stripe_guid"], name: "index_products_on_stripe_guid"
+    t.index ["subject_course_id"], name: "index_products_on_subject_course_id"
   end
 
   create_table "quiz_answers", id: :serial, force: :cascade do |t|

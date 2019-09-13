@@ -3,13 +3,14 @@
 require 'rails_helper'
 
 RSpec.describe 'Api::V1::Cbe::QuestionsController', type: :request do
-  let(:cbe_section) { create(:cbe_section, :with_cbe) }
+  let!(:cbe) { create(:cbe, :with_subject_course) }
+  let(:cbe_section) { create(:cbe_section, cbe: cbe) }
 
-  describe 'get /api/v1/cbe/questions' do
+  describe 'get /api/v1/cbes/questions' do
     context 'return all records' do
-      let!(:questions) { create_list(:cbe_question, 5, :with_section) }
+      let!(:questions) { create_list(:cbe_question, 5, section: cbe_section) }
 
-      before { get '/api/v1/cbe/questions' }
+      before { get "/api/v1/cbes/#{cbe.id}/questions" }
 
       it 'returns HTTP status 200' do
         expect(response).to have_http_status 200
@@ -32,7 +33,7 @@ RSpec.describe 'Api::V1::Cbe::QuestionsController', type: :request do
     end
 
     context 'return an empty record' do
-      before { get '/api/v1/cbe/questions' }
+      before { get "/api/v1/cbes/#{cbe.id}/questions" }
 
       it 'returns HTTP status 200' do
         expect(response).to have_http_status 200
@@ -50,7 +51,7 @@ RSpec.describe 'Api::V1::Cbe::QuestionsController', type: :request do
       let(:questions) { build(:cbe_question, :with_section) }
 
       before do
-        post '/api/v1/cbe/questions',
+        post "/api/v1/cbes/#{cbe.id}/questions",
              params: { question: questions.attributes }
       end
 
@@ -79,7 +80,7 @@ RSpec.describe 'Api::V1::Cbe::QuestionsController', type: :request do
       let(:questions) { build(:cbe_question) }
 
       before do
-        post '/api/v1/cbe/questions',
+        post "/api/v1/cbes/#{cbe.id}/questions",
              params: { question: questions.attributes }
       end
 
