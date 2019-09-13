@@ -9,6 +9,6 @@ json.scenario do
   if question.scenario.nil?
     json.nil!
   else
-    json.partial! 'api/v1/cbe/scenarios/scenario', locals: { scenario: question.scenario }
+    json.partial! 'api/v1/cbes/scenarios/scenario', locals: { scenario: question.scenario }
   end
 end
