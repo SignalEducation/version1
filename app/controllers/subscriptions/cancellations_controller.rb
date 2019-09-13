@@ -22,7 +22,7 @@ module Subscriptions
         flash[:error] = I18n.t('controllers.subscriptions.destroy.flash.error')
         @subscription.errors.add(:cancellation_reason, 'please select an option')
 
-        redirect_to new_subscriptions_cancellation_path(id: @subscription.id)
+        redirect_to new_subscription_cancellation_path(id: @subscription.id)
       end
     end
 
