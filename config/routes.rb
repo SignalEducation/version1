@@ -19,12 +19,12 @@ Rails.application.routes.draw do
 
     namespace :v1, constraints: ApiConstraint.new(version: 1) do
       namespace :cbe, format: 'json' do
-        resources :questions, only: [:index, :create]
+        resources :questions, only: [:index, :create, :show]
         resources :scenarios, only: :create
       end
 
       resources :subject_courses, only: :index
-      resources :cbes, format: 'json', only: [:index, :show, :create] do
+      resources :cbes, format: 'json', only: [:index, :create, :show, :update] do
         resources :sections, controller: 'cbe/sections', only: [:index, :create]
       end
     end
@@ -35,7 +35,7 @@ Rails.application.routes.draw do
       get 'generate_daily_summary', on: :collection
     end
 
-    resources :cbes,   only: [:index, :new, :show]
+    resources :cbes,   only: [:index, :new, :show, :update]
     resources :orders, only: [:index, :show]
     post 'search_exercises', to: 'exercises#index', as: :search_exercises
   end

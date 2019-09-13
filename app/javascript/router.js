@@ -1,13 +1,14 @@
-import Vue               from 'vue';
-import Router            from 'vue-router';
-import Cbe               from 'views/cbe/Cbe.vue'
-import IntroductionPages from 'views/cbe/Introduction.vue'
-import Sections          from 'views/cbe/Sections.vue'
-import Questions         from 'views/cbe/Questions.vue'
+import Vue from 'vue';
+import Router from 'vue-router';
+import Cbe from 'views/cbe/Cbe.vue';
+import IntroductionPages from 'views/cbe/Introduction.vue';
+import Sections from 'views/cbe/Sections.vue';
+import Questions from 'views/cbe/Questions.vue';
 
 Vue.use(Router);
 
 export default new Router({
+  mode: 'history',
   routes: [
     {
       path: '/',
@@ -18,7 +19,7 @@ export default new Router({
       path: '/introductions/:id',
       name: 'introduction_pages',
       component: IntroductionPages,
-      props: true
+      props: true,
     },
     {
       path: '/sections/:id',
@@ -30,7 +31,7 @@ export default new Router({
       path: '/questions/:id',
       name: 'questions',
       component: Questions,
-      props: true
-    }
-  ]
-})
+      props: true,
+    },
+  ],
+});
