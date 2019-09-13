@@ -5,7 +5,8 @@ class ContentPagesController < ApplicationController
   before_action except: [:show] do
     ensure_user_has_access_rights(%w[system_requirements_access marketing_resources_access])
   end
-  before_action :get_variables, except: [:show]
+  before_action :set_content_page, except: :show
+  before_action :management_layout, except: :show
 
   def index
     @content_pages = ContentPage.all_in_order
@@ -81,9 +82,8 @@ class ContentPagesController < ApplicationController
 
   protected
 
-  def get_variables
-    @content_page = ContentPage.where(id: params[:id]).first if params[:id].to_i > 0
-    @layout = 'management'
+  def set_content_page
+    @content_page = ContentPage.find_by(id: params[:id])
   end
 
   def allowed_params

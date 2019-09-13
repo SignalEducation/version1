@@ -14,6 +14,7 @@
 
   -if flash[:success] || flash[:warning] || flash[:error]
     =render partial: 'layouts/flash_messages'
+  =render partial: '/layouts/error_messages', locals: {thing: @user, message: nil}
   .bg-gray5.py-5
     .container
       .row.row-md

@@ -77,12 +77,7 @@
                   =render partial: 'course_module', locals: { course_module: course_module, counter: counter }
 
             .col-xl-4.mb-5
-              -if current_user && !current_user.valid_subscription_for_exam_body?(@group.exam_body_id)
-                =link_to subscription_checkout_special_link(@course.exam_body_id), class: 'btn btn-primary btn-sm mb-5' do
-                  Upgrade Now
-              -elsif !current_user
-                =link_to new_student_url, class: 'btn btn-primary btn-sm mb-5' do
-                  Register Now
+              =render partial: 'register_upgrade_links', locals: { user: current_user }
 
               %aside
                 %a.btn.btn-secondary.btn-sm.mb-5{"data-target" => "#ask-a-tutor-modal", "data-toggle" => "modal", :href => "#"}

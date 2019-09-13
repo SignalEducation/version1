@@ -2,14 +2,12 @@ require 'rails_helper'
 
 RSpec.describe UserPasswordsController, type: :controller do
 
-  let!(:student_user_group ) { FactoryBot.create(:student_user_group ) }
-  let!(:student_user) { FactoryBot.create(:student_user, user_group_id: student_user_group.id) }
-  let!(:student_access) { FactoryBot.create(:valid_free_trial_student_access, user_id: student_user.id) }
-  let(:unverified_student_user) { FactoryBot.create(:unverified_user, user_group_id: student_user_group.id,
-                                                    password_reset_requested_at: Time.now - 1.hour,
-                                                    password_reset_token: ApplicationController::generate_random_code(20)
+  let(:student_user) { create(:student_user) }
+  let(:unverified_student_user) { create(:unverified_user, user_group: student_user.user_group,
+                                         password_reset_requested_at: Time.now - 1.hour,
+                                         password_reset_token: ApplicationController::generate_random_code(20)
   ) }
-  let!(:reset_user) { FactoryBot.create(:user_with_reset_requested)}
+  let(:reset_user) { create(:user_with_reset_requested, user_group: student_user.user_group) }
 
   #TODO - need to add tests here for set_password and create_password (invite users)
 

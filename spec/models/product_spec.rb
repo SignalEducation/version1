@@ -58,10 +58,6 @@ describe Product do
   it { expect(Product).to respond_to(:search) }
   it { expect(Product).to respond_to(:filter_by_state) }
 
-  # instance methods
-  it { should respond_to(:create_on_stripe) }
-  it { should respond_to(:update_on_stripe) }
-
   describe 'Methods' do
     before do
       @first_term  = active_product.name

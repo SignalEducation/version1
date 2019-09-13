@@ -24,12 +24,12 @@ class SubscriptionPlanService
   private
 
   def create_remote_plans
-    StripeService.new.create_plan(@plan)
+    StripePlanService.new.create_plan(@plan)
     PaypalPlansService.new.create_plan(@plan)
   end
 
   def update_remote_plans
-    StripeService.new.update_plan(@plan)
+    StripePlanService.new.update_plan(@plan)
     PaypalPlansService.new.update_plan(@plan)
   end
 end

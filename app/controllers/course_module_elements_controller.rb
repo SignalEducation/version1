@@ -2,9 +2,8 @@
 
 class CourseModuleElementsController < ApplicationController
   before_action :logged_in_required
-  before_action do
-    ensure_user_has_access_rights(%w[content_management_access])
-  end
+  before_action { ensure_user_has_access_rights(%w[content_management_access]) }
+  before_action :management_layout
   before_action :get_variables
 
   def show
@@ -160,7 +159,6 @@ class CourseModuleElementsController < ApplicationController
     @tutors = User.all_tutors.all_in_order
     @letters = ('A'..'Z').to_a
     @mathjax_required = true
-    @layout = 'management'
   end
 
   def spawn_quiz_children

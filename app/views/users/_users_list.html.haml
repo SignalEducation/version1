@@ -19,4 +19,4 @@
 
   .col-sm-10.user-pagination
     =will_paginate @users, renderer: RemoteLinkPaginationHelper::LinkRenderer,
-                      params: { controller: :users, search_term: params[:search_term] }
+                      params: { controller: :users, action: :search, search_term: params[:search_term] }

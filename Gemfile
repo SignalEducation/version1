@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-git_source(:github) { |repo| "https://github.com/#{repo}.git" }
+git_source(:github) {|repo| "https://github.com/#{repo}.git"}
 
 ruby '2.5.3'
 gem 'rails', '5.2.2'
@@ -23,7 +23,7 @@ gem 'chart-js-rails', '~> 0.1.6' #Graphs
 gem 'coffee-rails', '~> 4.2' # enables CoffeeScript (abbreviated javascript)
 gem 'dynamic_sitemaps' # Sitemap generation grm
 gem 'faraday', '~> 0.15.4'
-gem 'geocoder', '~> 1.3', '>= 1.3.7'#  a public API for geo-locating IP addresses
+gem 'geocoder', '~> 1.3', '>= 1.3.7' #  a public API for geo-locating IP addresses
 gem 'haml-rails' # a replacement system for HTML
 gem 'intercom-rails' # communicate with Intercom.io
 gem 'intercom', '~> 3.5.23' # Intercom API
@@ -38,6 +38,7 @@ gem 'paperclip', '~> 6.1.0' # for uploading files (works with RemotiPart)
 gem 'mailchimp-api', '~> 2.0.4'
 gem 'momentjs-rails', '>= 2.9.0'
 gem 'modernizr-rails'
+gem "nokogiri", ">= 1.10.4"
 gem 'bootstrap3-datetimepicker-rails', '~> 4.14.30'
 gem 'multipart-post' #To allow uploading wistia api
 gem 'pg' # PostgreSQL database engine
@@ -49,10 +50,10 @@ gem 'remodal-rails'
 gem 'rails_real_favicon'
 gem 'sass-rails', '~> 5.0' # Use SCSS for stylesheets
 gem 'sidekiq', require: %w(sidekiq sidekiq/web)
-        # background processor for tasks that can be run 'later' or take too long
-        # Requires Redis NoSQL datastore
+# background processor for tasks that can be run 'later' or take too long
+# Requires Redis NoSQL datastore
 gem 'state_machines-activerecord'
-gem 'stripe', '~> 4.5.0' #, git: 'https://github.com/stripe/stripe-ruby'
+gem 'stripe', '~> 4.21.0' #, git: 'https://github.com/stripe/stripe-ruby'
 gem 'paypal-sdk-rest'
 gem 'summernote-rails'
 gem 'turbolinks', '~> 5' # speeds up page loading - has negative side-effects

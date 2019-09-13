@@ -2,9 +2,8 @@
 
 class MockExamsController < ApplicationController
   before_action :logged_in_required
-  before_action do
-    ensure_user_has_access_rights(%w[content_management_access])
-  end
+  before_action { ensure_user_has_access_rights(%w[content_management_access]) }
+  before_action :management_layout
   before_action :get_variables
 
   def index
@@ -60,11 +59,10 @@ class MockExamsController < ApplicationController
   protected
 
   def get_variables
-    @mock_exam = MockExam.find_by(id: params[:id]) if params[:id].to_i > 0
+    @mock_exam       = MockExam.find_by(id: params[:id]) if params[:id].to_i > 0
+    @products        = Product.all_in_order
+    @currencies      = Currency.all_in_order
     @subject_courses = SubjectCourse.all_active.all_in_order
-    @products = Product.all_in_order
-    @currencies = Currency.all_in_order
-    @layout = 'management'
   end
 
   def allowed_params

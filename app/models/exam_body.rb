@@ -16,11 +16,13 @@
 #  logo_image                         :string
 #  registration_form_heading          :string
 #  login_form_heading                 :string
+#  landing_page_h1                    :string
+#  landing_page_paragraph             :text
 #
 
 class ExamBody < ApplicationRecord
 
-  LOGO_IMAGES = %w(learning-partner-badge.png acca_approved_white.png acca_approved_red.png ALP_LOGO_(GOLD).png ALP_LOGO_GOLD_REVERSED.png)
+  LOGO_IMAGES = %w(learning-partner-badge.png acca_approved_white.png acca_approved_red.png ALP_LOGO_(GOLD).png ALP_LOGO_GOLD_REVERSED.png).freeze
 
   has_one :group
   has_many :enrollments
@@ -30,11 +32,8 @@ class ExamBody < ApplicationRecord
   has_many :subscription_plans
 
   validates :name, presence: true, uniqueness: true
-  validates :url, presence: true
   validates :landing_page_h1, presence: true
   validates :landing_page_paragraph, presence: true
-  #validates :constructed_response_intro_heading, presence: true
-  #validates :constructed_response_intro_text, presence: true
 
   before_destroy :check_dependencies
 
@@ -45,7 +44,7 @@ class ExamBody < ApplicationRecord
 
   # instance methods
   def destroyable?
-    self.exam_sittings.empty? && self.enrollments.empty? && self.subject_courses.empty?
+    exam_sittings.empty? && enrollments.empty? && subject_courses.empty?
   end
 
   def to_s

@@ -2,9 +2,8 @@
 
 class SubscriptionPlansController < ApplicationController
   before_action :logged_in_required
-  before_action do
-    ensure_user_has_access_rights(%w[stripe_management_access])
-  end
+  before_action { ensure_user_has_access_rights(%w[stripe_management_access]) }
+  before_action :management_layout
   before_action :get_variables
 
   def index
@@ -70,7 +69,6 @@ class SubscriptionPlansController < ApplicationController
     @payment_frequencies = SubscriptionPlan::PAYMENT_FREQUENCIES
     seo_title_maker(@subscription_plan.try(:id).to_s, '', true)
     @subscription_plan_categories = SubscriptionPlanCategory.all_in_order
-    @layout = 'management'
   end
 
   def create_params

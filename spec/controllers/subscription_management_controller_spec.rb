@@ -1,5 +1,4 @@
 require 'rails_helper'
-require 'support/stripe_web_mock_helpers'
 
 RSpec.describe SubscriptionManagementController, :type => :controller do
   before :each do

@@ -24,7 +24,7 @@ describe SubscriptionService, type: :service do
       end
 
       it 'calls #change_plan on the StripeService' do
-        expect_any_instance_of(StripeService).to receive(:change_plan).with(subscription, 'new_plan_id')
+        expect_any_instance_of(StripeSubscriptionService).to receive(:change_plan).with('new_plan_id')
 
         sub_service.send(:change_plan, 'new_plan_id')
       end
@@ -132,37 +132,3 @@ describe SubscriptionService, type: :service do
     end
   end
 end
-
-#   def check_for_valid_coupon?(coupon_code)
-#     if coupon_code.present?
-#       unless @coupon = Coupon.get_and_verify(coupon_code, @subscription.subscription_plan_id)
-#         raise Learnsignal::SubscriptionError.new('Sorry! That is not a valid coupon code.')
-#       end
-#     end
-#   end
-
-#   def create_and_return_subscription(params)
-#     if self.stripe?
-#       @subscription = StripeService.new.create_and_return_subscription(@subscription, params[:subscription][:stripe_token], @coupon)
-#     elsif self.paypal?
-#       @subscription.save!
-#       @subscription = PaypalPlansService.new.create_and_return_subscription(@subscription)
-#     end
-#   end
-
-#   def check_valid_subscription?(params)
-#     if valid_paypal_subscription?(params) || valid_stripe_subscription?(params)
-#       true
-#     else
-#       raise Learnsignal::SubscriptionError.new('Sorry! The data entered is not valid. Please contact us for assistance.')
-#     end
-#   end
-
-#   def validate_referral
-#     if @subscription.user.referred_user?
-#       @subscription.user.referred_signup.update(
-#         payed_at: Time.zone.now,
-#         subscription_id: @subscription.id
-#       )
-#     end
-#   end

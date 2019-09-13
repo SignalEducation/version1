@@ -2,9 +2,8 @@
 
 class CourseModulesController < ApplicationController
   before_action :logged_in_required
-  before_action do
-    ensure_user_has_access_rights(%w[content_management_access])
-  end
+  before_action { ensure_user_has_access_rights(%w[content_management_access]) }
+  before_action :management_layout
   before_action :get_variables
 
   def show; end
@@ -76,7 +75,6 @@ class CourseModulesController < ApplicationController
     @course_module = CourseModule.where(id: params[:course_module_id]).first if params[:course_module_id].to_i > 0
     @subject_courses = SubjectCourse.all_in_order
     @tutors = User.all_tutors.all_in_order
-    @layout = 'management'
   end
 
   def allowed_params

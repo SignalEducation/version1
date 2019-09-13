@@ -33,7 +33,6 @@
 #
 
 require 'rails_helper'
-require 'support/stripe_web_mock_helpers'
 
 RSpec.describe SubscriptionPaymentCardsController, type: :controller do
 

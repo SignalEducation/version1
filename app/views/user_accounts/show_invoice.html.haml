@@ -1,0 +1,180 @@
+%main
+  %article.bg-gray5
+    .container
+      %header.hero-section
+        %h1.h2-hero.mb-2
+          Confirm payment
+        %p
+          ="You'll be asked to verify your identity with your bank."
+
+
+      %section.pb-md-6.pb-5
+        .row
+          .col-sm-10.offset-1
+
+
+            .invoice-show-section
+              .form-box
+                .row
+                  .col-12.col-md-6.mb-4
+                    .invoice-details
+                      %h3.text-gray2
+                        %span.mr-1
+                          ="Invoice #{@invoice.id}"
+                      %p.mb-1
+                        =@subscription.user_readable_name
+                      %p.mb-1
+                        Date Created
+                        %span=humanize_datetime(@invoice.issued_at)
+                      %p.mb-1
+                        Amount due:
+                        %span
+                          =number_in_local_currency(@invoice.total, @invoice.currency)
+
+                  .col-12.col-md-6.mb-4
+                    .invoice-payment-details
+                      .invoice-payment-details-wrap
+                        %span.payment-content
+                          =image_tag('ico-card.svg', alt: 'Credit Card Icon', class: 'logo-icon mr-2 mr-sm-3')
+                          =@card.brand
+                          &#8226;
+                          &#8226;
+                          &#8226;
+                          =@card.last_4
+
+
+                      -if @invoice.status == 'Pending'
+                        %p
+                          Invoice pending, please add a new payment card.
+
+                        .col-md-4.text-md-right
+                          %a{data: {target: '#add-card-modal', toggle: 'modal'}, href: '#', class: 'btn btn-primary btn-sm add-card'}
+                            =t('views.users.show.new_card')
+
+                      -else
+                        .mt-5.text-center
+                          .btn.btn-primary.btn-sm#triggerAuth{onclick: 'ReAuth(); return false;'}
+                            ='Confirm Payment'
+                          .spinner
+                            .bounce1
+                            .bounce2
+                            .bounce3
+
+
+
+
+#add-card.col-md-12.l-margin-top-big
+
+=render partial: 'add_card_modal_ajax'
+
+:javascript
+  var style = {
+    base: {
+      color: '#32325d',
+      lineHeight: '18px',
+      fontFamily: '"OakesGrotesk", "Helvetica Neue", Helvetica, sans-serif',
+      fontSmoothing: 'antialiased',
+      fontSize: '16px',
+      '::placeholder': {
+        color: '#aab7c4'
+      }
+    },
+    invalid: {
+      color: '#fa755a',
+      iconColor: '#fa755a'
+    }
+  };
+
+  var stripe              = Stripe('#{ENV['LEARNSIGNAL_V3_STRIPE_PUBLIC_KEY']}');
+  var elements            = stripe.elements();
+  var form                = document.getElementById('new-subscription-payment-card-form');
+  var subscription_status = "#{@invoice.subscription.state}"
+  var client_secret       = '#{@client_secret}'
+  var card                = elements.create('card', {hidePostalCode: true, style: style});
+
+  card.mount('#card-element');
+  $(".sk-circle").hide();
+  $(".spinner").hide();
+
+  function ReAuth() {
+    if (subscription_status == 'pending_3d_secure') {
+      $(".spinner").show();
+      $("#triggerAuth").hide();
+      stripe.handleCardPayment('#{@client_secret}').then(function(result) {
+        if (result.error) {
+          resetForm(result.error);
+          $('#add-card-modal').modal('show');
+        } else {
+          $.ajax ({
+            url: "/sca_successful",
+            type: "POST",
+            data: {id: "#{@invoice.id}"}
+          })
+        }
+      });
+    }
+  }
+
+  function createToken() {
+    stripe.createToken(card).then(function(result) {
+      if (result.error) {
+        // Inform the user if there was an error
+        var errorElement = document.getElementById('card-errors');
+        errorElement.textContent = result.error.message;
+        $('#card_submit').prop('disabled',false);
+        $('#card_submit').show();
+        $(".sk-circle").hide();
+      } else {
+        handlePayment(result.token);
+      }
+    });
+  };
+
+  function handlePayment(token){
+    stripe.handleCardPayment(client_secret, card).then(function(result) {
+      if (result.error) {
+        console.log(result)
+      } else {
+        console.log(result)
+        $.ajax({
+          type: 'patch',
+          url: "#{invoice_path(@invoice.id)}",
+          data: { status: result.paymentIntent.status },
+          dataType: 'json',
+          success: function(data,status,xhr){
+            stripeTokenHandler(token);
+          }
+        });
+      }
+    });
+  }
+
+  function stripeTokenHandler(token) {
+    $('#subscription_payment_card_stripe_token').val(token.id);
+
+    $.ajax({
+      type: $(form).attr('method'),
+      url:  $(form).attr('action'),
+      data: $(form).serialize(),
+      dataType: 'json',
+    });
+
+    location.reload();
+  }
+
+  // Create a token when the form is submitted.
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    $('#card_submit').prop('disabled',true);
+    $('#card_submit').hide();
+    $(".sk-circle").show();
+
+    createToken();
+  });
+
+  function resetForm(error){
+    console.log(error);
+    // Display error message & feedback to user
+  }
+
+  //window.onload = ReAuth;

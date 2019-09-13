@@ -12,7 +12,7 @@
 #  video_id                 :string
 #  duration                 :float
 #  vimeo_guid               :string
-#  voo_player_id            :string
+#  dacast_id                :string
 #
 
 class CourseModuleElementVideo < ApplicationRecord

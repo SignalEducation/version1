@@ -26,7 +26,7 @@ RSpec.describe 'library/_course_module' do
       it 'shows the lock icon at course_module level' do
         assign(:group, build_stubbed(:group))
         allow(course_module).to receive(:all_content_restricted?).and_return(true)
-        allow(user).to receive(:active_subscription_for_exam_body?).and_return(true)
+        allow(user).to receive(:valid_subscription_for_exam_body?).and_return(true)
 
         render partial: 'library/course_module', locals: { course_module: course_module, counter: 1, current_user: user }
 

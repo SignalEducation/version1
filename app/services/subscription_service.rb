@@ -10,42 +10,34 @@ class SubscriptionService
 
   def change_plan(new_plan_id)
     if paypal?
-      new_subscription = PaypalSubscriptionsService.new(@subscription).change_plan(new_plan_id)
+      PaypalSubscriptionsService.new(@subscription).change_plan(new_plan_id)
     elsif stripe?
-      new_subscription = StripeService.new.change_plan(@subscription, new_plan_id)
+      StripeSubscriptionService.new(@subscription).change_plan(new_plan_id)
     end
   end
 
   def check_for_valid_coupon?(coupon_code)
-    if coupon_code.present?
-      unless @coupon = Coupon.get_and_verify(coupon_code, @subscription.subscription_plan_id)
-        raise Learnsignal::SubscriptionError.new('Sorry! That is not a valid coupon code.')
-      end
-    end
-  end
+    return if coupon_code.blank?
 
-  def create_and_return_subscription(params)
-    if self.stripe?
-      @subscription = StripeService.new.create_and_return_subscription(@subscription, params[:subscription][:stripe_token], @coupon)
-    elsif self.paypal?
-      @subscription.save!
-      @subscription = PaypalSubscriptionsService.new(@subscription).create_and_return_subscription
-    end
+    @coupon = Coupon.get_and_verify(coupon_code, @subscription.subscription_plan_id)
+    return if @coupon.nil?
+
+    raise Learnsignal::SubscriptionError.new('Sorry! That is not a valid coupon code.')
   end
 
   def cancel_subscription
-    if self.paypal?
+    if paypal?
       PaypalSubscriptionsService.new(@subscription).cancel_billing_agreement
-    elsif self.stripe?
-      StripeService.new.cancel_subscription(@subscription)
+    elsif stripe?
+      StripeSubscriptionService.new(@subscription).cancel_subscription
     end
   end
 
   def cancel_subscription_immediately
-    if self.paypal?
+    if paypal?
       PaypalSubscriptionsService.new(@subscription).cancel_billing_agreement_immediately
-    elsif self.stripe?
-      StripeService.new.cancel_subscription_immediately(@subscription)
+    elsif stripe?
+      StripeSubscriptionService.new(@subscription).cancel_subscription(immediately: true)
     end
   end
 
@@ -58,23 +50,20 @@ class SubscriptionService
   end
 
   def check_valid_subscription?(params)
-    if valid_paypal_subscription?(params) || valid_stripe_subscription?(params)
-      true
-    else
-      raise Learnsignal::SubscriptionError.new('Sorry! The data entered is not valid. Please contact us for assistance.')
-    end
+    return true if valid_paypal_subscription?(params) || valid_stripe_subscription?(params)
+
+    raise Learnsignal::SubscriptionError.new('Sorry! The data entered is not valid. Please contact us for assistance.')
   end
 
   def validate_referral
-    if @subscription.user.referred_user?
-      @subscription.user.referred_signup.update(
-        payed_at: Time.zone.now,
-        subscription_id: @subscription.id
-      )
-    end
+    return unless @subscription.user.referred_user?
+
+    @subscription.user.referred_signup.update(payed_at: Time.zone.now,
+                                              subscription_id: @subscription.id)
   end
 
   private
+
   def valid_paypal_subscription?(params)
     params[:subscription][:use_paypal].present? &&
       @subscription &&

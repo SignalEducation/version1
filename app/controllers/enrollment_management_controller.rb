@@ -2,10 +2,8 @@
 
 class EnrollmentManagementController < ApplicationController
   before_action :logged_in_required
-  before_action do
-    ensure_user_has_access_rights(%w[user_management_access])
-  end
-  before_action :set_layout
+  before_action { ensure_user_has_access_rights(%w[user_management_access]) }
+  before_action :management_layout
 
   def index
     @enrollments = Enrollment.page(params[:page]).
@@ -32,7 +30,7 @@ class EnrollmentManagementController < ApplicationController
       flash[:error] = t('controllers.enrollments.admin_update.flash.error')
     end
 
-    redirect_to enrollment_management_url(@enrollment)
+    redirect_to user_activity_url(@enrollment.user)
   end
 
   def show
@@ -70,10 +68,6 @@ class EnrollmentManagementController < ApplicationController
   end
 
   protected
-
-  def set_layout
-    @layout = 'management'
-  end
 
   def allowed_params
     params.require(:enrollment).permit(:exam_date, :subject_course_user_log_id, :exam_sitting_id, :notifications, :expired, :active)

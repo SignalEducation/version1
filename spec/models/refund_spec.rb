@@ -20,7 +20,6 @@
 #
 
 require 'rails_helper'
-require 'support/stripe_web_mock_helpers'
 
 describe Refund do
 
@@ -40,12 +39,12 @@ describe Refund do
       stub_request(:post, "https://api.stripe.com/v1/refunds").
           with(
               headers: {
-                  'Accept'=>'*/*',
-                  'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-                  'Authorization'=>'Bearer sk_test_wEVy0Tzgi3HEzoeJk4t340vI',
-                  'Content-Type'=>'application/x-www-form-urlencoded',
-                  'Stripe-Version'=>'2017-06-05',
-                  'User-Agent'=>'Stripe/v1 RubyBindings/4.5.0'
+                'Accept'=>'*/*',
+                'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+                'Authorization'=>'Bearer sk_test_wEVy0Tzgi3HEzoeJk4t340vI',
+                'Content-Type'=>'application/x-www-form-urlencoded',
+                'Stripe-Version'=>'2019-05-16',
+                'User-Agent'=>'Stripe/v1 RubyBindings/4.21.3'
               }).
           to_return(status: 200, body: response_body.to_json, headers: {})
     end

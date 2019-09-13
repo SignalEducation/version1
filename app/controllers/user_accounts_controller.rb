@@ -42,12 +42,11 @@ class UserAccountsController < ApplicationController
   def update_user
     if @user&.update_attributes(allowed_params)
       flash[:success] = I18n.t('controllers.users.update.flash.success')
-      redirect_to account_url
     else
       session[:user_update_errors] = @user.errors unless @user.errors.empty?
       session[:valid_params] = [@user.first_name, @user.last_name, @user.email, @user.date_of_birth] unless @user.errors.empty?
-      redirect_to account_url(anchor: 'personal-details-modal')
     end
+    redirect_to account_url
   end
 
   def change_password
@@ -60,11 +59,38 @@ class UserAccountsController < ApplicationController
     redirect_to account_url
   end
 
+  def sca_successful
+    @invoice = Invoice.find(params[:id])
+    if @invoice.mark_payment_action_successful
+      render json: {}, status: :ok
+    else
+      render json: {}, status: :internal_server_error
+    end
+  end
+
   def subscription_invoice
     redirect_to pdf_invoice_path(format: :pdf), params
   end
 
+  def show_invoice
+    @invoice       = Invoice.find_by(sca_verification_guid: params['guid'])
+    @subscription  = @invoice.subscription
+    @card          = default_payment_card(@invoice.user_id)
+    @client_secret = stripe_client_secret(@invoice)
+  end
+
   protected
+
+  def default_payment_card(user_id)
+    @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: user_id).all_in_order
+    @default_payment_card       = @subscription_payment_cards.all_default_cards.first
+  end
+
+  def stripe_client_secret(invoice)
+    return if Rails.env.test?
+    stripe_invoice = StripeService.new.get_invoice(invoice.stripe_guid)
+    stripe_invoice.payment_intent.client_secret
+  end
 
   def change_password_params
     params.require(:user).permit(:current_password, :password, :password_confirmation)

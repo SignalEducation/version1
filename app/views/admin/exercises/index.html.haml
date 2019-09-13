@@ -1,7 +1,7 @@
 .container
   %header.management-console-section
     %h1
-      =t('views.exercises.admin.index.h1')
+      =t('views.exercises.admin.index.h1') + " #{@user&.name}"
 
   %section.pb-7
 
@@ -11,8 +11,8 @@
           .row
             .col-sm
               .search-container.mb-3.float-right
-                =form_tag(admin_search_exercises_url, role: 'form', class: 'form-inline') do
-                  =select_tag :state, options_for_select([['Submitted', 'submitted'], ['Correcting', 'correcting'], ['Returned', 'returned'], ['All', 'all']], @filters['state']), class: 'form-control custom-select filter mr-3'
+                =form_tag(admin_search_exercises_url(user_id: @user&.id), role: 'form', class: 'form-inline') do
+                  =select_tag :state, options_for_select([['Submitted', 'submitted'], ['Correcting', 'correcting'], ['Returned', 'returned'], ['Pending', 'pending'], ['All', 'all']], @filters['state']), class: 'form-control custom-select filter mr-3'
                   =select_tag :product, options_from_collection_for_select(Product.all_active, 'id', 'name', @filters['product']), prompt: 'All Products', class: 'form-control custom-select filter mr-3'
                   =select_tag :corrector, options_from_collection_for_select(UserGroup.where(exercise_corrections_access: true).first.users, 'id', 'name', @filters['corrector']), prompt: 'All Correctors', class: 'form-control custom-select filter mr-3'
                   =text_field_tag :search, @filters['search'], class: 'form-control', placeholder: 'Search term'
@@ -20,7 +20,8 @@
                     %i{:role => "img", class: 'budicon-search-list'}
 
           .table-responsive.pt-4
-            =will_paginate @exercises, renderer: BootstrapPagination::Rails
+            =will_paginate @exercises, renderer: PostLinkPaginationHelper::LinkRenderer, action: 'search_exercises',
+                           post_params: { search: @filters['search'], corrector: @filters['corrector'], product: @filters['product'], state: @filters['state'] }
             %table.table
               %thead
                 %tr
@@ -52,4 +53,7 @@
           .row
             .col-sm
               .search-container
-                =link_to 'Generate Daily Summary', generate_daily_summary_admin_exercises_path
+                -if @user
+                  =link_to "Assign New Exercise to #{@user.name}", new_admin_user_exercise_path(@user)
+                -else
+                  =link_to 'Generate Daily Summary', generate_daily_summary_admin_exercises_path

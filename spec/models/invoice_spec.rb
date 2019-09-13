@@ -39,6 +39,12 @@
 require 'rails_helper'
 
 describe Invoice do
+  
+  it 'has a valid factory' do
+    allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
+    expect(build(:invoice)).to be_valid
+  end
+
   # Constants
   it { expect(Invoice.const_defined?(:STRIPE_LIVE_MODE)).to eq(true) }
 
@@ -81,4 +87,62 @@ describe Invoice do
   it { should respond_to(:destroyable?) }
   it { should respond_to(:status) }
   it { should respond_to(:update_from_stripe) }
+
+  describe 'instance methods' do
+    let(:invoice) { build_stubbed(:invoice) }
+
+    before :each do
+      allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
+    end
+
+    describe '#mark_payment_action_required' do
+      let(:invoice_2) { create(:invoice) }
+
+      it 'updates the requires_3d_secure field' do
+        allow(invoice_2.subscription).to receive(:mark_payment_action_required!)
+
+        expect{ invoice_2.mark_payment_action_required }.to change{
+          invoice_2.requires_3d_secure
+        }.from(false).to(true)
+      end
+
+      it 'calls the mark_payment_action_required! transition on the subscription' do
+        expect(invoice_2.subscription).to receive(:mark_payment_action_required!)
+
+        invoice_2.mark_payment_action_required
+      end
+
+      describe 'calls #send_3d_secure_email' do
+        it 'calls the Mandrill worker with the receipt email' do
+          allow(Rails.env).to receive(:test?).and_return(false)
+          expect(MandrillWorker).to receive(:perform_async)
+
+          invoice.send_receipt('')
+        end
+      end
+      
+    end
+    
+    describe '#send_receipt' do
+      describe 'for Rails.env.test?' do
+        it 'does nothing' do
+          expect(invoice.send_receipt('')).to be_nil
+        end
+      end
+
+      describe 'for other environments' do
+        before :each do
+          stub_request(:post, "https://api.intercom.io/users").
+            to_return(status: 200, body: "", headers: {})
+        end
+
+        it 'calls the Mandrill worker with the receipt email' do
+          allow(Rails.env).to receive(:test?).and_return(false)
+          expect(MandrillWorker).to receive(:perform_async)
+
+          invoice.send_receipt('')
+        end
+      end
+    end
+  end
 end

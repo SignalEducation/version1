@@ -1,5 +1,4 @@
 require 'rails_helper'
-require 'support/stripe_web_mock_helpers'
 
 describe UserAccountsController, type: :controller do
   before :each do
@@ -33,7 +32,7 @@ describe UserAccountsController, type: :controller do
                                is_default_card: true, stripe_card_guid: 'guid_222',
                                status: 'card-live' ) }
   let!(:invoice) { create(:invoice, user: basic_student,
-                               subscription_id: valid_subscription.id, issued_at: Time.now, vat_rate: uk_vat_rate) }
+                               subscription_id: valid_subscription.id, issued_at: Time.now, vat_rate: uk_vat_rate, sca_verification_guid: 'guid-1111') }
 
 
   context 'Logged in as a basic_student' do
@@ -107,6 +106,28 @@ describe UserAccountsController, type: :controller do
         expect(response).to render_template(:account_show)
         expect(Subscription.count).to eq(2)
       end
+
+      describe "GET show_invoice" do
+        it 'should see show_invoice' do
+          get :show_invoice, params: { guid: 'guid-1111' }
+          expect(flash[:success]).to be_nil
+          expect(flash[:error]).to be_nil
+          expect(response.status).to eq(200)
+          expect(response).to render_template(:show_invoice)
+        end
+      end
+      
+      describe '#sca_successful' do
+        it 'should return a 200 response' do
+          invoice.update(:requires_3d_secure => true)
+          valid_subscription.mark_payment_action_required
+          post :sca_successful, params: {id: invoice.id}
+          invoice.reload
+          expect(response.status).to eq(200)
+          expect(invoice.requires_3d_secure).to eq(false)
+        end
+      end
+
     end
   end
 end

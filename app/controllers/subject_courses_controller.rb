@@ -2,9 +2,8 @@
 
 class SubjectCoursesController < ApplicationController
   before_action :logged_in_required
-  before_action do
-    ensure_user_has_access_rights(%w[content_management_access])
-  end
+  before_action { ensure_user_has_access_rights(%w[content_management_access]) }
+  before_action :management_layout
   before_action :get_variables
 
   def index
@@ -137,7 +136,6 @@ class SubjectCoursesController < ApplicationController
     @groups = Group.all_in_order
     @tutors = User.all_tutors.all_in_order
     @exam_bodies = ExamBody.all_in_order
-    @layout = 'management'
   end
 
   def allowed_params

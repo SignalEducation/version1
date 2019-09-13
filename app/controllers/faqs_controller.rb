@@ -5,10 +5,12 @@ class FaqsController < ApplicationController
   before_action do
     ensure_user_has_access_rights(%w[content_management_access marketing_resources_access])
   end
-  before_action :get_variables
+  before_action :management_layout, except: :reorder
+  before_action :set_faq, only: %i[edit update destroy]
 
   def new
     @faq = Faq.new(sorting_order: 1, faq_section_id: params[:faq_section_id])
+    @faq_sections = FaqSection.all_in_order
   end
 
   def edit; end
@@ -52,10 +54,8 @@ class FaqsController < ApplicationController
 
   protected
 
-  def get_variables
-    @faq = Faq.where(id: params[:id]).first if params[:id].to_i > 0
-    @faq_sections = FaqSection.all_in_order
-    @layout = 'management'
+  def set_faq
+    @faq = Faq.find(params[:id])
   end
 
   def allowed_params

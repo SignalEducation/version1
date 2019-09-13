@@ -1,5 +1,4 @@
 require 'rails_helper'
-require 'support/stripe_web_mock_helpers'
 
 describe InvoicesController, type: :controller do
   before :each do
@@ -50,6 +49,19 @@ describe InvoicesController, type: :controller do
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
+      end
+    end
+
+    describe 'update' do
+      it 'should update the invoice.' do
+        patch :update, params: { id: invoice.id, status: 'succeeded' }
+        invoice.reload
+
+        body = JSON.parse(response.body)
+        expect(invoice.paid).to be_truthy
+        expect(invoice.payment_closed).to be_truthy
+        expect(response.status).to eq(200)
+        expect(body['message']).to eq('updated')
       end
     end
 

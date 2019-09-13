@@ -11,8 +11,9 @@
         %section.pb-md-6.pb-5
           -if flash[:success] || flash[:error] || flash[:warning]
             =render partial: 'layouts/flash_messages'
-          =form_for(@subscription, url: subscriptions_plan_changes_path(id: @subscription.id), method: :post, html: {class: 'form-horizontal', role: 'form', id: 'upgrade-subscription-form'}) do |f|
+          =form_for(@subscription, url: subscription_plan_changes_path(@subscription), method: :post, html: {class: 'form-horizontal', role: 'form', id: 'upgrade-subscription-form'}) do |f|
             =f.hidden_field :subscription_plan_id
+            =f.hidden_field :use_paypal, value: @subscription.paypal?
             .row.row-md
               -@subscription.upgrade_options.each do |plan|
                 .col-lg
@@ -67,6 +68,7 @@
                       ='Selecting this Plan will result in an immediate charge and start a new billing period from this date.'
                     %p
                       ='Any remaining time paid for on your current billing will be credited to your account, and used for this payment and any future payments until all credit is used.'
+                    %div.invalid-details
                 .row
                   .col-sm-6.offset-1
                     .d-flex.justify-content-between.align-items-center.pt-3
@@ -86,6 +88,8 @@
                         .sk-circle12.sk-child
 
                       =link_to t('views.general.cancel'), account_url(anchor: 'account-info'), class: 'btn btn-secondary btn-sm '
+
+=render partial: 'update_card_modal'
 
 
 
@@ -121,7 +125,36 @@
     addToCart(theThing);
   }
 
+  var style = {
+    base: {
+      color: '#32325d',
+      lineHeight: '18px',
+      fontFamily: '"OakesGrotesk", "Helvetica Neue", Helvetica, sans-serif',
+      fontSmoothing: 'antialiased',
+      fontSize: '16px',
+      '::placeholder': {
+        color: '#aab7c4'
+      }
+    },
+    invalid: {
+      color: '#fa755a',
+      iconColor: '#fa755a'
+    }
+  };
+
   $(document).on('ready', function() {
+    var displayError = $('.invalid-details');
+    var displayCardError = $('#card-errors');
+    let clientSecret, subscriptionId;
+    let statusArray = ['active', 'succeeded'];
+    displayError.text('');
+    displayCardError.text('');
+    var stripe = Stripe('#{ENV['LEARNSIGNAL_V3_STRIPE_PUBLIC_KEY']}');
+    var elements = stripe.elements();
+
+    var cardElement = elements.create('card', {hidePostalCode: true, style: style});
+    cardElement.mount('#card-element');
+
     $(".sk-circle").hide();
     choosePlan($('.plan-option')[0]);
     $('.option').bind('click', function(event) {
@@ -133,12 +166,132 @@
       event.preventDefault();
       choosePlan(this);
     });
-  });
 
-  $("#upgrade-subscription-form").submit(function(ev) {
-    ev.preventDefault();
-    $(".sk-circle").show();
-    $("#changePlan").hide();
-    this.submit();
+    $("#upgrade-subscription-form").submit(function(ev) {
+      ev.preventDefault();
+      $(".sk-circle").show();
+      displayError.text('');
+      $("#changePlan").hide();
+
+      if ($('#subscription_use_paypal').val() === 'true') {
+        this.submit();
+      } else {
+        upgradeStripeSubscription();
+      }
+    });
+
+    function upgradeStripeSubscription(){
+      var form = $('#upgrade-subscription-form');
+
+      $.ajax({
+        type: $(form).attr('method'),
+        url: $(form).attr('action'),
+        data: $(form).serialize(),
+        dataType: 'json',
+        success: function(data, status, xhr){
+          if($.inArray(data.status, ['incomplete', 'past_due'])){
+            handleStripeAction(data.client_secret, data.subscription_id)
+          } else if(data.status == 'active'){
+            window.location.replace("#{personal_upgrade_complete_url(@subscription.completion_guid)}");
+          }
+        },
+        error: function(request, status, error){
+          if (request.status === 500) {
+            resetForm('Something went wrong. Please try again.');
+          } else {
+            resetForm(request.responseJSON.error);
+          }
+        }
+      });
+    }
+
+    function handleStripeAction(client_secret, subscription_id){
+      let intentStatus = '';
+      stripe.handleCardPayment(client_secret).then(function(result) {
+        if (result.error) {
+          resetForm(result.error.message);
+          intentStatus = 'pending';
+          let failureStatusArray = ['requires_payment_method', 'requires_source']
+          if ($.inArray(result.error.payment_intent.status, failureStatusArray) !== -1 ) {
+            launchPaymentMethodForm(client_secret, subscription_id);
+          }
+        } else {
+          intentStatus = result['paymentIntent']['status'];
+          $.ajax({
+            type: 'post',
+            url: "/subscriptions/" + subscription_id + "plan_changes/status_from_stripe",
+            data: { status: intentStatus, id: subscription_id },
+            dataType: 'json',
+            success: function(data,status,xhr){
+              if( $.inArray(intentStatus, statusArray) !== -1){
+                window.location.replace("#{personal_upgrade_complete_url(@subscription.completion_guid)}");
+              }
+            },
+            error: function(xhr,status,error){
+              resetForm(error);
+            }
+          });
+        }
+      });
+    }
+
+    function launchPaymentMethodForm(client_secret, subscription_id) {
+      $('#update-card-modal').modal('show');
+      clientSecret = client_secret;
+      subscriptionId = subscription_id;
+    }
+
+    cardElement.addEventListener('change', function(event) {
+      if (event.error) {
+        resetCardForm(event.error.message);
+      } else {
+        displayCardError.text('');
+      }
+    });
+
+    var cardButton = document.getElementById('card_submit');
+
+    cardButton.addEventListener('click', function(ev) {
+      ev.preventDefault();
+      $('#card_submit').hide();
+      $(".sk-circle").show();
+
+      stripe.handleCardPayment(clientSecret, cardElement).then(function(result) {
+        if (result.error) {
+          resetCardForm(result.error.message);
+          intentStatus = 'pending';
+        } else {
+          intentStatus = result['paymentIntent']['status'];
+          $.ajax({
+            type: 'post',
+            url: "/subscriptions/" + subscriptionId + "plan_changes/status_from_stripe",
+            data: { status: intentStatus },
+            dataType: 'json',
+            success: function(data,status,xhr){
+              if( $.inArray(intentStatus, statusArray) !== -1){
+                window.location.replace("#{personal_upgrade_complete_url(@subscription.completion_guid)}");
+              }
+            },
+            error: function(xhr,status,error){
+              resetCardForm(error);
+            }
+          });
+        }
+      })
+    });
+
+    function resetForm(error){
+      $(".sk-circle").hide();
+      $("#changePlan").show();
+      displayError.text(error);
+      $("#changePlan").attr("disabled", false);
+    }
+
+    function resetCardForm(error){
+      $(".sk-circle").hide();
+      $("#card_submit").show();
+      displayCardError.text(error);
+      $("#card_submit").attr("disabled", false);
+    }
   });
 

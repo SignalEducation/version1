@@ -35,15 +35,18 @@
 #  original_stripe_data        :text
 #  paypal_payment_guid         :string
 #  order_id                    :bigint(8)
+#  requires_3d_secure          :boolean          default(FALSE)
 #
 
 class Invoice < ApplicationRecord
   include LearnSignalModelExtras
+  require 'securerandom'
 
   serialize :original_stripe_data, Hash
 
   # Constants
   STRIPE_LIVE_MODE = (ENV['LEARNSIGNAL_V3_STRIPE_LIVE_MODE'] == 'live')
+  CLOSED_STATUSES = %w[paid uncollectible void].freeze
 
   # relationships
   belongs_to :currency
@@ -69,6 +72,7 @@ class Invoice < ApplicationRecord
   # callbacks
   after_create :set_vat_rate
   after_create :set_issued_at
+  after_create :generate_sca_guid
 
   # scopes
   scope :all_in_order,  -> { order(user_id: :asc, id: :desc) }
@@ -82,9 +86,9 @@ class Invoice < ApplicationRecord
     inv = nil
     # This is wrapped in a transaction block to ensure that the Invoice record does not save unless all the InvoiceLineItems save successfully. If an InvoiceLineItem record fails all other records including the parent Invoice record will be rolled back.
     Invoice.transaction do
-      user = User.find_by_stripe_customer_id(stripe_data_hash[:customer])
-      subscription = Subscription.where(stripe_guid: stripe_data_hash[:subscription]).last
-      currency = Currency.find_by_iso_code(stripe_data_hash[:currency].upcase)
+      user = User.find_by(stripe_customer_id: stripe_data_hash[:customer])
+      subscription = Subscription.find_by(stripe_guid: stripe_data_hash[:subscription])
+      currency = Currency.find_by(iso_code: stripe_data_hash[:currency].upcase)
 
       if user && subscription && currency
         inv = Invoice.new(
@@ -92,7 +96,7 @@ class Invoice < ApplicationRecord
           subscription_id: subscription.id,
           number_of_users: 1,
           currency_id: currency.id,
-          issued_at: Time.at(stripe_data_hash[:date]),
+          issued_at: Time.at(stripe_data_hash[:created]),
           stripe_guid: stripe_data_hash[:id],
           sub_total: stripe_data_hash[:subtotal].to_i / 100.0,
           total: stripe_data_hash[:total].to_i / 100.0,
@@ -101,7 +105,7 @@ class Invoice < ApplicationRecord
           object_type: stripe_data_hash[:object],
           payment_attempted: stripe_data_hash[:attempted],
           payment_closed: stripe_data_hash[:closed],
-          forgiven: stripe_data_hash[:forgiven],
+          forgiven: stripe_data_hash[:status] == 'uncollectible',
           paid: stripe_data_hash[:paid],
           livemode: stripe_data_hash[:livemode],
           attempt_count: stripe_data_hash[:attempt_count],
@@ -168,6 +172,17 @@ class Invoice < ApplicationRecord
     inv
   end
 
+  def mark_payment_action_required
+    update!(requires_3d_secure: true)
+    subscription.mark_payment_action_required!
+    send_3d_secure_email
+  end
+
+  def mark_payment_action_successful
+    update!(requires_3d_secure: false)
+    subscription.restart!
+  end
+
   ## Updates the Invoice from stripe data sent to a StripeApiEvent ##
   def update_from_stripe(invoice_guid)
     stripe_invoice = Stripe::Invoice.retrieve(invoice_guid)
@@ -179,8 +194,8 @@ class Invoice < ApplicationRecord
           total: stripe_invoice[:total].to_i / 100.0,
           total_tax: stripe_invoice[:tax].to_i / 100.0,
           payment_attempted: stripe_invoice[:attempted],
-          payment_closed: stripe_invoice[:closed],
-          forgiven: stripe_invoice[:forgiven],
+          payment_closed: CLOSED_STATUSES.include?(stripe_invoice[:status]),
+          forgiven: stripe_invoice[:status] == 'uncollectible',
           paid: stripe_invoice[:paid],
           livemode: stripe_invoice[:livemode],
           attempt_count: stripe_invoice[:attempt_count],
@@ -202,19 +217,38 @@ class Invoice < ApplicationRecord
     self.invoice_line_items.empty?
   end
 
+  def send_receipt(account_url)
+    return if Rails.env.test?
+    invoice_url = UrlHelper.instance.subscription_invoices_url(
+      id, locale: 'en', format: 'pdf', host: LEARNSIGNAL_HOST
+    )
+    MandrillWorker.perform_async(
+      user_id, 'send_successful_payment_email', account_url,
+      invoice_url
+    )
+  end
+
+  def send_3d_secure_email
+    return if Rails.env.test?
+
+    invoice_url = UrlHelper.instance.show_invoice_url(sca_verification_guid,
+                                                      locale: 'en',
+                                                      host: LEARNSIGNAL_HOST)
+    MandrillWorker.perform_async(user_id, 'send_sca_confirmation_email', invoice_url)
+  end
+
   ## Used in the views to show state of the invoice ##
   def status
-    if self.paid && self.payment_closed
+    if paid && payment_closed
       'Paid'
-    elsif !self.paid && !self.payment_closed && !self.payment_attempted
+    elsif requires_3d_secure && !paid && !payment_closed
+      'Pending Authentication'
+    elsif payment_attempted && next_payment_attempt_at.to_i.positive?
+      'Past Due'
+    elsif !paid && !payment_closed
       'Pending'
-    elsif self.payment_attempted && self.next_payment_attempt_at.to_i > 0
-      ActionController::Base.helpers.pluralize(attempt_count, 'attempt') +
-              ' made to charge your card - next attempt at ' +
-              Time.at(next_payment_attempt_at).to_s(:standard)
-    elsif self.payment_attempted
-      ActionController::Base.helpers.pluralize(attempt_count, 'attempt') +
-              ' made to charge your card'
+    elsif payment_attempted && payment_closed && !paid
+      'Closed'
     else
       'Other'
     end
@@ -225,17 +259,23 @@ class Invoice < ApplicationRecord
   def set_vat_rate
     country = user.country
 
-    if country && country.vat_codes.any?
+    if country&.vat_codes.any?
       vat_code = country.vat_codes.first
-      vat_rate_id = VatRate.find_by_vat_code_id(vat_code.id).try(:id)
-      self.update_attribute(:vat_rate_id, vat_rate_id) if vat_rate_id
+      vat_rate_id = VatRate.find_by(vat_code_id: vat_code.id).try(:id)
+      update_attribute(:vat_rate_id, vat_rate_id) if vat_rate_id
     end
   end
 
   def set_issued_at
     return if self.issued_at.present?
 
-    self.update(issued_at: Time.zone.now)
+    update(issued_at: Time.zone.now)
+  end
+
+  def generate_sca_guid
+    return if sca_verification_guid.present?
+
+    update(sca_verification_guid: SecureRandom.uuid)
   end
 
   def strip_invoice?

@@ -13,14 +13,14 @@
 #  destroyed_at                  :datetime
 #  image_file_name               :string
 #  image_content_type            :string
-#  image_file_size               :integer
+#  image_file_size               :bigint(8)
 #  image_updated_at              :datetime
 #  background_image_file_name    :string
 #  background_image_content_type :string
-#  background_image_file_size    :integer
+#  background_image_file_size    :bigint(8)
 #  background_image_updated_at   :datetime
-#  background_colour             :string
 #  exam_body_id                  :bigint(8)
+#  background_colour             :string
 #  seo_title                     :string
 #  seo_description               :string
 #  short_description             :string
@@ -57,6 +57,7 @@ class Group < ApplicationRecord
   # scopes
   scope :all_in_order, -> { order(:sorting_order, :name) }
   scope :all_active, -> { where(active: true) }
+  scope :with_active_body, -> { joins(:exam_body).where(exam_bodies: { active: true }) }
 
   # class methods
 

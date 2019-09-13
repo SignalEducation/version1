@@ -56,7 +56,6 @@
 #
 
 require 'rails_helper'
-require 'support/stripe_web_mock_helpers'
 
 describe UsersController, type: :controller do
   before :each do

@@ -12,16 +12,20 @@ Rails.application.routes.draw do
   get '500' => redirect('500-page')
 
   namespace :api do
-    post 'stripe_v01',      to: 'stripe_v01#create'
-    post 'stripe_v02',      to: 'stripe_v02#create'
+    post 'stripe_webhooks', to: 'stripe_webhooks#create'
+    post 'stripe_v02',      to: 'stripe_webhooks#create'
     post 'paypal_webhooks', to: 'paypal_webhooks#create'
   end
 
   namespace :admin do
-    resources :exercises, only: [:index, :show, :edit, :update] do
+    resources :exercises, only: [:index, :show, :new, :create, :edit, :update] do
       get 'generate_daily_summary', on: :collection
     end
+    resources :user do
+      resources :exercises, only: [:index, :new, :create]
+    end
     post 'search_exercises', to: 'exercises#index', as: :search_exercises
+    resources :orders, only: [:index, :show]
   end
 
   # all standard, user-facing "resources" go inside this scope
@@ -32,15 +36,17 @@ Rails.application.routes.draw do
     # Subscriptions
     resources :subscriptions, only: [:show, :new, :create, :update, :destroy] do
       member do
-        put 'un_cancel', action: :un_cancel
+        put 'un_cancel'
         get 'execute'
         get 'unapproved'
+        post 'status_from_stripe'
       end
-    end
-
-    namespace :subscriptions do
-      resources :cancellations, only: [:new, :create]
-      resources :plan_changes, only: [:show, :new, :create]
+      scope module: 'subscriptions' do
+        resources :cancellations, only: [:new, :create]
+        resource :plan_changes, only: [:show, :new, :create] do
+          post :status_from_stripe, on: :member
+        end
+      end
     end
 
     resources :subscription_management do
@@ -101,6 +107,8 @@ Rails.application.routes.draw do
     patch 'update_user_details',           to: 'user_accounts#update_user',                 as: :update_personal_details
     patch 'update_exam_body_user_details', to: 'enrollments#update_exam_body_user_details', as: :update_exam_body_user_details
     get 'subscription_invoice/:id',        to: 'user_accounts#subscription_invoice',        as: :subscription_invoices
+    get 'show_invoice/:guid',              to: 'user_accounts#show_invoice',                as: :show_invoice
+    post 'sca_successful',                 to: 'user_accounts#sca_successful',              as: :sca_successful
 
     # User Account Verification
     get 'user_verification/:email_verification_code',         to: 'user_verifications#update',                   as: :user_verification
@@ -112,13 +120,13 @@ Rails.application.routes.draw do
     resources :content_activations, only: [:new, :create]
     resource :preferred_exam_body, only: [:edit, :update]
 
-    resources :invoices, only: :show do
+    resources :invoices, only: [:show, :update] do
       get 'pdf', action: :pdf, on: :member
     end
 
     # Internal Landing Pages - post sign-up or upgrade or purchase
     get 'personal_sign_up_complete', to: 'student_sign_ups#show',                   as: :personal_sign_up_complete
-    get 'personal_upgrade_complete', to: 'subscriptions#personal_upgrade_complete', as: :personal_upgrade_complete
+    get 'personal_upgrade_complete(/:completion_guid)', to: 'subscriptions#personal_upgrade_complete', as: :personal_upgrade_complete
 
     # Courses
     resources :courses, only: [:create] do
@@ -173,7 +181,11 @@ Rails.application.routes.draw do
     resources :faq_sections, concerns: :supports_reordering
     resources :home_pages
     resources :mock_exams, concerns: :supports_reordering, path: '/admin/mock_exams'
-    resources :products, concerns: :supports_reordering
+    resources :products, concerns: :supports_reordering, shallow: true do
+      resources :orders, except: [:index, :show] do
+        get 'execute', on: :member
+      end
+    end
     resources :quiz_questions, except: [:index], concerns: :supports_reordering
     resources :refunds
     resources :vat_codes
@@ -207,12 +219,6 @@ Rails.application.routes.draw do
     resources :management_consoles
     get '/system_requirements', to: 'management_consoles#system_requirements', as: :system_requirements
     get '/public_resources', to: 'management_consoles#public_resources', as: :public_resources
-
-    resources :orders, except: [:new] do
-      get 'execute', on: :member
-    end
-    get 'order/new/:product_id', to: 'orders#new', as: :new_order
-    get 'order/order_complete/:reference_guid', to: 'orders#order_complete', as: :order_complete
 
     # Reports
     get '/reports',                       to: 'reports#index',                            as: :reports

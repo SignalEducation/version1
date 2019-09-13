@@ -31,6 +31,7 @@ en:
         cant_be_blank: "can't be blank"
       upgrade_plan:
         no_stripe_customer_id:  "No stripe id present for the user"
+        choose_different_plan: You cannot upgrade to that plan. Please choose a different plan.
         currencies_mismatch:  "You cannot switch to a Subscription Plan with a different currency"
         new_plan_is_inactive: "You cannot switch to a Subscription Plan that is inactive"
         this_subscription_cant_be_upgraded: "Can't switch from a subscription in this current status"

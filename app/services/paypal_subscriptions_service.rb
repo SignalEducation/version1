@@ -12,7 +12,7 @@ class PaypalSubscriptionsService
     agreement = create_billing_agreement(subscription: @subscription)
     @subscription.assign_attributes(
       paypal_token: agreement.token,
-      paypal_approval_url: agreement.links.find{|v| v.rel == "approval_url" }.href,
+      paypal_approval_url: agreement.links.find { |v| v.rel == 'approval_url' }.href,
       paypal_status: agreement.state
     )
     @subscription
@@ -156,7 +156,7 @@ class PaypalSubscriptionsService
           value: subscription_plan.price.to_s,
           currency: subscription_plan.currency.iso_code
         },
-        return_url: execute_subscription_url(id: subscription.id, host: learnsignal_host, payment_processor: 'paypal'),
+        return_url: execute_subscription_url(id: subscription.id, host: LEARNSIGNAL_HOST, payment_processor: 'paypal'),
         cancel_url: cancel_url(subscription)
       },
       plan: {
@@ -167,13 +167,9 @@ class PaypalSubscriptionsService
 
   def cancel_url(subscription)
     if subscription.changed_from_id
-      new_subscriptions_plan_change_url(id: subscription.changed_from_id, host: learnsignal_host, payment_processor: 'paypal')
+      new_subscriptions_plan_change_url(id: subscription.changed_from_id, host: LEARNSIGNAL_HOST, payment_processor: 'paypal')
     else
-      new_subscription_url(host: learnsignal_host, flash: 'It seems you cancelled your subscription on Paypal. Still want to upgrade?')
+      new_subscription_url(host: LEARNSIGNAL_HOST, flash: 'It seems you cancelled your subscription on Paypal. Still want to upgrade?')
     end
-  end
-
-  def learnsignal_host
-    Rails.env.production? ? 'https://learnsignal.com' : 'https://staging.learnsignal.com'
   end
 end

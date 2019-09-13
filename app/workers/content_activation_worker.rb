@@ -3,23 +3,13 @@ class ContentActivationWorker
 
   sidekiq_options queue: 'medium'
 
+  # type could be any of this classes
+  # CourseModuleElement
+  # SubjectCourseResource
+  # ContentPage
+  # HomePage
   def perform(type, id)
-    if type == 'CourseModuleElement'
-      course_module_element = CourseModuleElement.find(id)
-      course_module_element.update_attributes(active: true) if course_module_element.valid?
-    elsif type == 'SubjectCourseResource'
-      subject_course_resource = SubjectCourseResource.find(id)
-      subject_course_resource.update_attributes(active: true) if subject_course_resource.valid?
-    elsif type == 'ContentPage'
-      content_page = ContentPage.find(id)
-      content_page.update_attributes(active: true) if content_page.valid?
-    elsif type == 'HomePage'
-      home_page = HomePage.find(id)
-      home_page.update_attributes(active: true) if home_page.valid?
-    else
-
-    end
-
+    record = type.constantize.find(id)
+    record.update!(active: true)
   end
-
 end

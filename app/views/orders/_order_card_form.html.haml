@@ -3,14 +3,14 @@
     .form-group.cc
       .clearfix
         #card-element
-        #card-errors{role: 'alert'}
+        #card-errors.invalid-details{role: 'alert'}
 
   .row
     .col-sm-6.mb-2.mt-sm-4
       %h4.m-0.pt-2
         Total:
         %span.value
-          =number_in_local_currency(@product.price, @product.currency)
+          =number_in_local_currency(@order.product.price, @order.product.currency)
 
     .col-sm-6.mb-2.mt-sm-4
       = f.button :submit, class: 'btn btn-primary w-100 mb-2', id: 'card_submit' do

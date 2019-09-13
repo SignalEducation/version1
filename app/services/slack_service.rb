@@ -26,6 +26,19 @@ class SlackService
 
   private
 
+  def order_attachment(orders)
+    [{ fallback: 'Daily Orders Summary (Last 24hrs)',
+       title: 'Daily Orders Summary (Last 24hrs)',
+       color: '#7CD197',
+       fields: [
+         { title: 'Mock Exams', value: orders.product_type_count('mock_exam'),
+           short: true },
+         { title: 'General Corrections',
+           value: orders.product_type_count('correction_pack'),
+           short: true }
+       ] }]
+  end
+
   def slack_client
     @client ||= Slack::Web::Client.new
   end

@@ -3,9 +3,9 @@
     .container
       %header.hero-section
         %h1.h1-hero.mb-2
-          ="#{@product.mock_exam.name} Purchase"
+          ="#{@order.product.mock_exam.name} Purchase"
         %p.p-hero.px-lg-8
-          -if @product.mock_exam?
+          -if @order.product.mock_exam?
             Purchase an ACCA Mock Exam and increase your chances of passing the ACCA exams.
           -else
             Pass your ACCA exams faster with a question and solution correction pack.
@@ -16,9 +16,9 @@
       %section.pb-md-6.pb-5
         .order-checkout-section
           .container#product_purchase
-            =form_for(@order, html: {id: 'orders-form', class: 'payment', role: 'form'}) do |f|
-              =f.hidden_field :product_id, value: @product.id
-              =f.hidden_field :stripe_token
+            =form_for([@product, @order], html: {id: 'orders-form', class: 'payment', role: 'form'}) do |f|
+              =f.hidden_field :product_id, value: @order.product.id
+              =f.hidden_field :stripe_payment_method_id
               =f.hidden_field :use_paypal, value: false
               =render partial: '/layouts/error_messages', locals: {thing: @order, message: nil}
 
@@ -29,17 +29,17 @@
                       .card.card-link.text-center.mb-5
                         .py-4
                           %h4.text-ellipsis.mb-4
-                            =@product.mock_exam.name
+                            =@order.product.mock_exam.name
                           .pt-2
                             %i.budicon-files-tick{"aria-label" => "", :role => "img"}
                           .pt-4.pb-2
                             .h6.text-ellipsis
                               Total:
                               %span
-                                =number_in_local_currency(@product.price, @product.currency)
+                                =number_in_local_currency(@order.product.price, @order.product.currency)
                   .px-4
                     %p.text-left
-                      -if @product.mock_exam?
+                      -if @order.product.mock_exam?
                         Purchase your Mock Exam today. Once submitted we will give you a solution paper, your result, question by question, personalised feedback on your exam and study topic recommendations.
                       -else
                         This correction pack is applicable to all ACCA courses. Pick and complete any ACCA question from any resource. Once you have submitted your work, our expert tutors will correct it and give you feedback within 3 days.
@@ -71,11 +71,11 @@
 
 :javascript
 
-  let currencyIso = "#{@product.currency.iso_code}";
-  let productName = "#{@product.name}";
-  let productId = "#{@product.id}";
-  let productPrice = "#{@product.price}";
-  let productBody = "#{@product.mock_exam.subject_course.exam_body.name}";
+  let currencyIso = "#{@order.product.currency.iso_code}";
+  let productName = "#{@order.product.name}";
+  let productId = "#{@order.product.id}";
+  let productPrice = "#{@order.product.price}";
+  let productBody = "#{@order.product.mock_exam.subject_course.exam_body.name}";
   let searchParams = new URLSearchParams(window.location.search);
 
   function checkout1() {
@@ -215,7 +215,7 @@
         }
       } else {
         if(acceptedTerms('stripe')){
-          createToken();
+          createPaymentMethod();
         }
       }
     });
@@ -229,34 +229,67 @@
       }
     });
 
-    function stripeTokenHandler(token) {
-      // Insert the token ID into the form so it gets submitted to the server
-      var form = document.getElementById('orders-form');
-      $('#order_stripe_token').val(token.id);
-
-      // Submit the form
-      form.submit();
-      $('#card_submit').hide();
-      $(".sk-circle").show();
-    }
-
-    function createToken() {
-      stripe.createToken(card).then(function(result) {
+    function createPaymentMethod() {
+      stripe.createPaymentMethod('card', card).then(function(result) {
         if (result.error) {
-          // Inform the user if there was an error
-          var errorElement = document.getElementById('card-errors');
-          errorElement.textContent = result.error.message;
-          //Replace spinning JS with Submit button
-          $('#card_submit').prop('disabled',false);
-          $('#card_submit').show();
-          $(".sk-circle").hide();
-
+          resetForm(result.error)
         } else {
-          // Send the token to your server
-          stripeTokenHandler(result.token);
+          $('#order_stripe_payment_method_id').val(result.paymentMethod.id);
+          $.ajax({
+            type: 'POST',
+            url: "#{product_orders_path(@order.product)}",
+            data: $(form).serialize(),
+            dataType: 'json',
+            success: function(data,status,xhr){
+              if(data.status == 'pending_3d_secure'){
+                handlePayment(data.client_secret, data.id)
+              }else if(data.status == 'completed'){
+                window.location.replace("#{user_exercises_path(current_user)}");
+              }
+            },
+            error: function(xhr,status,error){
+              resetForm(xhr.responseJSON.error);
+            }
+          });
         }
       });
     };
+
+    function handlePayment(client_secret, order_id){
+      let orderStatus = '';
+      stripe.handleCardAction(client_secret, card).then(function(result) {
+        if (result.error) {
+          resetForm(result.error);
+          orderStatus = 'pending';
+        } else {
+          orderStatus = result['paymentIntent']['status'];
+        }
+          $.ajax({
+            type: 'PATCH',
+            url: '/orders/' + order_id,
+            data: { status: orderStatus },
+            dataType: 'json',
+            success: function(data,status,xhr){
+              if (data.status == 'completed') {
+                window.location.replace("#{user_exercises_path(current_user)}");
+              } else {
+                resetForm(data);
+              }
+            },
+            error: function(xhr,status,error){
+              resetForm(xhr.responseJSON.error);
+            }
+        });
+      });
+    };
+
+    function resetForm(error) {
+      var errorElement = document.getElementById('card-errors');
+      errorElement.textContent = error.message;
+      $('#card_submit').prop('disabled',false);
+      $('#card_submit').show();
+      $(".sk-circle").hide();
+    }
 
     $('#pay-with-card').click(); // To open the stripe card section on page load
   });

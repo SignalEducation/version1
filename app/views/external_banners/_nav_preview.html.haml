@@ -1,7 +1,7 @@
 .nav-header.header-dark
-  -if @banner
-    .notice.external-banner.text-center{style: "background-color: #{@banner.background_colour};"}
-      =@banner.text_content.html_safe
+  -if @external_banner
+    .notice.external-banner.text-center{style: "background-color: #{@external_banner.background_colour};"}
+      =@external_banner.text_content.html_safe
 
   .l-wrap
     .container-fluid
