@@ -15,6 +15,14 @@ module Api
           end
         end
 
+        def update
+          @section = ::Cbe::Section.find(params[:id])
+
+          unless @section.update(section_params)
+            render json: { errors: @section.errors }, status: :unprocessable_entity
+          end
+        end
+
         private
 
         def section_params

@@ -26,7 +26,10 @@
           class="input-group input-group-lg"
         >
           <template slot="first">
-            <option :value="null" disabled>-- Please select a type --</option>
+            <option
+              :value="null"
+              disabled
+            >-- Please select a type --</option>
           </template>
         </b-form-select>
         <p v-if="!$v.kind.required && $v.kind.$error" class="error-message">field is required</p>
@@ -61,7 +64,7 @@
           :class="{error: shouldAppendErrorClass($v.content), valid: shouldAppendValidClass($v.content)}"
           :fieldModel.sync="content"
           :aditionalToolbarOptions="['fullscreen']"
-          :editorId="'sectionEditor'"
+          :editorId="'sectionEditor' + id"
         />
         <p v-if="!$v.content.required && $v.content.$error" class="error-message">field is required</p>
       </div>
@@ -69,6 +72,13 @@
 
     <div>
       <button
+        v-if="id"
+        v-on:click="updateSection"
+        :disabled="submitStatus === 'PENDING'"
+        class="btn btn-primary"
+      >Update Section</button>
+      <button
+        v-else
         v-on:click="saveSection"
         :disabled="submitStatus === 'PENDING'"
         class="btn btn-primary"
@@ -90,13 +100,23 @@ export default {
     TinyEditor
   },
   mixins: [validationMixin],
+  props: {
+    id: Number,
+    initialName: {
+      type: String,
+      default: ''
+    },
+    initialScore: String,
+    initialContent: String,
+    initialKind: String,
+  },
   data: function() {
     return {
       sectionDetails: {},
-      name: null,
-      score: null,
-      kind: null,
-      content: null,
+      name: this.initialName,
+      score: this.initialScore,
+      kind: this.initialKind,
+      content: this.initialContent,
       sectionKinds: [
         "objective",
         "objective_test_case",
@@ -115,7 +135,7 @@ export default {
     score: {
       required,
       numeric,
-      between: between(1, 100)
+      between: between(1, 1000)
     },
     content: {
       required
@@ -145,13 +165,46 @@ export default {
               this.$emit("add-section", this.sectionDetails);
               this.$emit("update-content", this.TinyEditor);
               this.sectionDetails = {};
-              this.name = null;
-              this.kind = null;
-              this.score = null;
+              this.name = this.initialName;
+              this.kind = this.initialKind;
+              this.score = this.initialScore;
               this.content = null;
               this.submitStatus = "OK";
               this.$v.$reset();
             }
+          })
+          .catch(error => {
+            this.submitStatus = "ERROR";
+          });
+      }
+    },
+    updateSection: function() {
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        this.submitStatus = "ERROR";
+      } else {
+        this.sectionDetails["name"] = this.name;
+        this.sectionDetails["score"] = this.score;
+        this.sectionDetails["kind"] = this.kind;
+        this.sectionDetails["content"] = this.content;
+        this.sectionDetails["cbe_id"] = this.$store.state.cbeId;
+
+        axios
+          .patch(
+            `/api/v1/sections/${this.id}`, {cbe_section: this.sectionDetails}
+          )
+          .then(response => {
+            this.updatedSection = response.data;
+            this.sectionDetails["id"] = this.updatedSection.id;
+            //this.$emit('add-section', this.sectionDetails);
+            this.$emit("update-content", this.TinyEditor);
+            this.sectionDetails = {};
+            this.title = this.updatedSection.title;
+            this.content = this.updatedSection.content;
+            this.kind = this.updatedSection.kind;
+            this.submitStatus = "OK";
+            this.$v.$reset();
+
           })
           .catch(error => {
             this.submitStatus = "ERROR";
@@ -164,6 +217,7 @@ export default {
     shouldAppendErrorClass(field) {
       return field.$error;
     }
+
   }
 };
 </script>

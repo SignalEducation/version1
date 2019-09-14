@@ -13,9 +13,14 @@ module Api
 
       def update
         @cbe =  ::Cbe.find(params[:id])
-        @cbe.update(cbe_params)
+
+        if @cbe.update(cbe_params)
+          render 'api/v1/cbes/show.json'
+        else
+          render json: { errors: @cbe.errors }, status: :unprocessable_entity
+        end
       end
-      
+
       def create
         @cbe = ::Cbe.new(cbe_params)
 

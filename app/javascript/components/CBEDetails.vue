@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h4>CBE Details</h4>
     <div class="row">
       <div class="col-sm-6">
         <div class="form-group">
@@ -12,7 +11,10 @@
             class="input-group input-group-lg"
           >
             <template slot="first">
-              <option :value="null" disabled>-- Please select a course --</option>
+              <option
+                :value="null"
+                disabled
+              >-- Please select a course --</option>
             </template>
           </b-form-select>
           <p
@@ -97,12 +99,21 @@
 
     <div class="row mt-3">
       <div class="col-sm-12">
-        <!-- Save CBE -->
         <button
+            v-if="this.$store.state.cbeId"
+            v-on:click="updateCBE"
+            :disabled="updateStatus === 'PENDING' || updateStatus === 'OK'"
+            class="btn btn-primary"
+        >Update CBE</button>
+        <button
+          v-else
           v-on:click="saveNewCBE"
           :disabled="submitStatus === 'PENDING' || submitStatus === 'OK'"
           class="btn btn-primary"
         >Save CBE</button>
+
+        <p class="typo__p" v-if="updateStatus === 'ERROR'">Please fill the form correctly.</p>
+        <p class="typo__p" v-if="updateStatus === 'PENDING'">Updating...</p>
         <p class="typo__p" v-if="submitStatus === 'ERROR'">Please fill the form correctly.</p>
         <p class="typo__p" v-if="submitStatus === 'PENDING'">Sending...</p>
       </div>
@@ -125,7 +136,7 @@ export default {
   mounted() {
     this.getSubjects();
   },
-  data: function() {
+  data() {
     return {
       name: null,
       agreementContent: null,
@@ -145,13 +156,12 @@ export default {
       required
     },
     name: {
-      required,
-      alphaNum
+      required
     },
     examTime: {
       required,
       numeric,
-      between: between(1, 100)
+      between: between(1, 1000)
     },
     agreementContent: {
       required
@@ -177,8 +187,8 @@ export default {
   methods: {
     getSubjects() {
       axios
-        .get("/api/v1/subject_courses/")
-        .then(response => {
+        .get('/api/v1/subject_courses/')
+        .then((response) => {
           this.subjectCourses = response.data;
         })
         .catch(e => {});
@@ -203,10 +213,39 @@ export default {
               this.$store.commit("setCbeId", this.createdCBE.id);
               this.$store.commit("hideDetailsForm", true);
               this.submitStatus = "OK";
+              this.$emit('close-details', this.createdCBE);
             }
           })
           .catch(error => {
             this.submitStatus = "ERROR";
+          });
+      }
+    },
+    updateCBE() {
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        this.updateStatus = "ERROR";
+      } else {
+        this.cbeDetails = {};
+        this.cbeDetails.name = this.$store.state.cbeDetails.cbeName;
+        this.cbeDetails.agreement_content = this.$store.state.cbeDetails.cbeAgreementContent;
+        this.cbeDetails.exam_time = this.$store.state.cbeDetails.cbeExamTime;
+        this.cbeDetails.active = this.$store.state.cbeDetails.cbeActive;
+        this.cbeDetails.subject_course_id = this.$store.state.cbeDetails.cbeSubjectCourseId;
+        axios
+          .patch(`/api/v1/cbes/${this.$store.state.cbeId}`, {cbe: this.cbeDetails})
+
+          .then(response => {
+            this.createdCBE = response.data;
+            if (this.createdCBE.id > 0) {
+              this.$store.commit("setCbeId", this.createdCBE.id);
+              this.$store.commit("hideDetailsForm", true);
+              this.updateStatus = "OK";
+            }
+            this.$emit('close-details', this.createdCBE);
+          })
+          .catch(error => {
+            this.updateStatus = "ERROR";
           });
       }
     },
