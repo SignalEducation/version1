@@ -74,16 +74,11 @@ class Refund < ApplicationRecord
 
   def create_on_stripe
     stripe_refund = Stripe::Refund.create(charge: self.stripe_charge_guid, amount: self.amount, reason: self.reason)
-
-    if stripe_refund
-      self.stripe_guid = stripe_refund[:id]
-      self.status = stripe_refund[:status]
-      self.livemode = stripe_refund[:livemode]
-      self.stripe_refund_data = stripe_refund.to_hash.deep_dup
-    else
-      errors.add(:base, 'Failed to create Refund on Stripe')
-    end
-
+    self.stripe_guid = stripe_refund[:id]
+    self.status = stripe_refund[:status]
+    self.livemode = stripe_refund[:livemode]
+    self.stripe_refund_data = stripe_refund.to_hash.deep_dup
+  rescue Stripe::InvalidRequestError => e
+    raise Learnsignal::PaymentError, e[:message]
   end
-
 end

@@ -87,7 +87,7 @@ describe PaypalSubscriptionsService, type: :service do
   describe '#cancel_billing_agreement' do
     before :each do
       @dbl = double
-      allow(@dbl).to receive(:state).and_return('Cancelled')
+      allow(@dbl).to receive(:state).and_return('Active')
     end
 
     it 'calls FIND on an instance of PayPal::SDK::REST::DataTypes::Agreement::Plan' do
@@ -116,8 +116,73 @@ describe PaypalSubscriptionsService, type: :service do
     end
   end
 
+  describe '#cancel_billing_agreement_immediately' do
+    before :each do
+      @dbl = double
+      allow(@dbl).to receive(:state).and_return('Active')
+    end
+
+    it 'calls FIND on an instance of PayPal::SDK::REST::DataTypes::Agreement::Plan' do
+      expect(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(@dbl)
+      allow(@dbl).to receive(:cancel).and_return(true)
+
+      subject.cancel_billing_agreement_immediately
+    end
+
+    describe 'for subscriptions already cancelled on PayPal' do
+      it 'calls CANCEL on the subscription' do
+        @cancelled_dbl = double(state: 'Cancelled')
+        allow(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(@cancelled_dbl)
+        new_subscription = create(:subscription, state: 'active')
+        expect(new_subscription).to receive(:cancel)
+
+        PaypalSubscriptionsService.new(new_subscription).cancel_billing_agreement_immediately
+      end
+    end
+
+    describe 'for uncancelled subscriptions' do
+      it 'calls CANCEL on an instance of PayPal::SDK::REST::DataTypes::Agreement::Plan' do
+        expect(@dbl).to receive(:cancel).and_return(true)
+        allow(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(@dbl)
+
+        subject.cancel_billing_agreement_immediately
+      end
+
+      it 'updates the state of the subscription to CANCELLED' do
+        allow(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(@dbl)
+        allow(@dbl).to receive(:cancel).and_return(true)
+        new_subscription = create(:subscription, state: 'active')
+
+        PaypalSubscriptionsService.new(new_subscription).cancel_billing_agreement_immediately
+
+        new_subscription.reload
+        expect(new_subscription.state).to eq 'cancelled'
+      end
+    end
+  end
+
   describe '#change_plan' do
-    it 'changes the plan the user is on'
+    let(:target_date) { 1.week.from_now.iso8601 }
+
+    before :each do
+      @dbl = double(state: 'Active', agreement_details: double(next_billing_date: target_date))
+    end
+
+    it 'calls FIND on an instance of PayPal::SDK::REST::DataTypes::Agreement' do
+      expect(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(@dbl)
+      allow(subject).to receive(:create_new_subscription).and_return(true)
+      allow(subject).to receive(:cancel_billing_agreement)
+
+      subject.change_plan('plan-id-12345')
+    end
+
+    it 'creates a new subscription with the new plan_id' do
+      allow(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(@dbl)
+      allow(subject).to receive(:cancel_billing_agreement)
+      expect(subject).to receive(:create_new_subscription).with('plan-id-12345', Time.parse(target_date).iso8601).and_return(true)
+
+      subject.change_plan('plan-id-12345')
+    end
   end
 
   # PRIVATE METHODS ############################################################
@@ -151,6 +216,20 @@ describe PaypalSubscriptionsService, type: :service do
             }
           }
         )
+    end
+  end
+
+  describe '#raise_subscription_error' do
+    it 'logs the error and raises' do
+      expect(Rails.logger).to receive(:error)
+
+      expect{ subject.send(:raise_subscription_error, {}, 'test_method', :generic) }.to raise_error(Learnsignal::SubscriptionError)
+    end
+  end
+
+  describe '#return_message' do
+    it 'returns a default string message' do
+      expect(subject.send(:return_message, :generic)).to be_kind_of String
     end
   end
 end
