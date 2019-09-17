@@ -22,8 +22,11 @@ module Subscriptions
         flash[:error] = I18n.t('controllers.subscriptions.destroy.flash.error')
         @subscription.errors.add(:cancellation_reason, 'please select an option')
 
-        redirect_to new_subscription_cancellation_path(id: @subscription.id)
+        redirect_to new_subscription_cancellation_path(@subscription)
       end
+    rescue Learnsignal::SubscriptionError
+      flash[:error] = I18n.t('controllers.subscriptions.destroy.flash.error')
+      redirect_to new_subscription_cancellation_path(@subscription)
     end
 
     private
