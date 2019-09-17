@@ -48,7 +48,7 @@ module Subscriptions
       end
     end
 
-    def change_paypal_subscription(subscription, _params)
+    def change_paypal_subscription(subscription, plan_id)
       @subscription =
         PaypalSubscriptionsService.new(subscription).change_plan(plan_id)
 

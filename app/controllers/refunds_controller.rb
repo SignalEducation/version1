@@ -27,12 +27,13 @@ class RefundsController < ApplicationController
     @refund = Refund.new(allowed_params)
 
     if @refund.save
-      flash[:success] = I18n.t('controllers.refunds.create.flash.success')
-      redirect_to subscription_management_invoice_charge_url(@refund.subscription_id, @refund.invoice_id, @refund.charge_id)
+      redirect_to(subscription_management_invoice_charge_url(@refund.subscription_id, @refund.invoice_id, @refund.charge_id), notice: I18n.t('controllers.refunds.create.flash.success'))
     else
-      redirect_to request.referrer ? request.referrer : root_url
       flash[:error] = I18n.t('controllers.refunds.create.flash.error')
+      redirect_to user_path(id: allowed_params[:user_id])
     end
+  rescue Learnsignal::PaymentError => e
+    redirect_to user_path(id: allowed_params[:user_id]), notice: e.message
   end
 
   protected
