@@ -189,14 +189,14 @@
         data: $(form).serialize(),
         dataType: 'json',
         success: function(data, status, xhr){
-          if($.inArray(data.status, ['incomplete', 'past_due'])){
+          if (['incomplete', 'past_due'].includes(data.status)) {
             handleStripeAction(data.client_secret, data.subscription_id)
-          } else if(data.status == 'active'){
+          } else if(data.status == 'active') {
             window.location.replace("#{personal_upgrade_complete_url(@subscription.completion_guid)}");
           }
         },
         error: function(request, status, error){
-          if (request.status === 500) {
+          if (request.status === 500 || request.responseJSON === undefined) {
             resetForm('Something went wrong. Please try again.');
           } else {
             resetForm(request.responseJSON.error);
@@ -212,7 +212,7 @@
           resetForm(result.error.message);
           intentStatus = 'pending';
           let failureStatusArray = ['requires_payment_method', 'requires_source']
-          if ($.inArray(result.error.payment_intent.status, failureStatusArray) !== -1 ) {
+          if ($.inArray(result.error.payment_intent.status, failureStatusArray) !== -1) {
             launchPaymentMethodForm(client_secret, subscription_id);
           }
         } else {
@@ -223,7 +223,7 @@
             data: { status: intentStatus, id: subscription_id },
             dataType: 'json',
             success: function(data,status,xhr){
-              if( $.inArray(intentStatus, statusArray) !== -1){
+              if ($.inArray(intentStatus, statusArray) !== -1){
                 window.location.replace("#{personal_upgrade_complete_url(@subscription.completion_guid)}");
               }
             },
