@@ -48,7 +48,7 @@ class SubscriptionsController < ApplicationController
         @subscription.start!
         SubscriptionService.new(@subscription).validate_referral
         if @subscription.changed_from_id
-          redirect_to subscriptions_plan_change_url, notice: 'Your new plan is confirmed!'
+          redirect_to subscription_plan_changes_url(subscription_id: @subscription.id), notice: 'Your new plan is confirmed!'
         else
           redirect_to personal_upgrade_complete_url(@subscription.completion_guid)
         end
