@@ -198,6 +198,8 @@ class Subscription < ApplicationRecord
       Rails.logger.error "ERROR: Subscription#cancel failed because it didn't have a stripe_customer_id OR a stripe_guid. Subscription:#{self}."
       false
     end
+  rescue Stripe::InvalidRequestError
+    raise Learnsignal::SubscriptionError, I18n.t('controllers.subscriptions.destroy.flash.error')
   end
 
   def immediate_cancel
