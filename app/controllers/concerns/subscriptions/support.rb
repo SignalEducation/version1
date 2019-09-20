@@ -24,7 +24,7 @@ module Subscriptions
       @plans.
         filter(params.slice(:prioritise_plan_frequency,
                             :subscription_plan_id,
-                            :plan_guid))
+                            :plan_guid)).first
     end
 
     private
