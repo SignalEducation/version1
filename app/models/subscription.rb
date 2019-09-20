@@ -471,27 +471,33 @@ class Subscription < ApplicationRecord
   end
 
   def subscription_change_allowable
+    return unless stripe?
     return if %w[active past_due].include?(changed_from.stripe_status)
+
     errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.this_subscription_cant_be_upgraded'))
   end
 
   def user_has_default_card
-    return unless user.default_card.nil?
+    return unless stripe? && user.default_card.blank?
+
     errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.you_have_no_default_payment_card'))
   end
 
   def user_is_student
     return if user.standard_student_user?
+
     errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.you_are_not_permitted_to_upgrade'))
   end
 
   def plan_change_active
     return if subscription_plan.active?
+
     errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.choose_different_plan'))
   end
 
   def plan_change_currencies
     return if changed_from.subscription_plan.currency_id == subscription_plan.currency_id
+
     errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.currencies_mismatch'))
   end
 end
