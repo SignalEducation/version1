@@ -18,16 +18,19 @@ require 'rails_helper'
 describe CurrenciesController, type: :controller do
 
   let(:system_requirements_user_group) { create(:system_requirements_user_group) }
+
+  let!(:currency_1) { create(:gbp) }
+  let!(:currency_2) { create(:usd) }
+
   let(:system_requirements_user) { 
     create(
       :system_requirements_user,
+      currency: currency_1,
       user_group: system_requirements_user_group,
       country: nil
     )
   }
 
-  let!(:currency_1) { create(:gbp) }
-  let!(:currency_2) { create(:usd) }
   let(:valid_params) { attributes_for(:currency) }
 
   context 'Logged in as a system_requirements_user: ' do
