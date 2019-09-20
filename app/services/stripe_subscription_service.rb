@@ -59,13 +59,14 @@ class StripeSubscriptionService < StripeService
 
   def create_subscription(new_plan)
     stripe_sub = get_updated_stripe_subscription(new_plan)
+
     [Subscription.create!(
       user_id: @subscription.user_id, subscription_plan_id: new_plan.id,
       complimentary: false, livemode: stripe_sub.plan[:livemode],
       stripe_status: stripe_sub.status, changed_from: @subscription,
       stripe_guid: stripe_sub.id, next_renewal_date: renewal_date(stripe_sub),
       stripe_customer_id: @subscription.stripe_customer_id,
-      client_secret: stripe_sub.latest_invoice[:payment_intent][:client_secret]
+      client_secret: stripe_sub.latest_invoice.to_h.dig(:payment_intent, :client_secret)
     ), stripe_sub]
   end
 
@@ -83,6 +84,7 @@ class StripeSubscriptionService < StripeService
 
   def get_updated_stripe_subscription(new_sub_plan)
     stripe_sub = retrieve_subscription
+
     Stripe::Subscription.update(
       @subscription.stripe_guid,
       items: [{ id: stripe_sub&.items&.first&.id, plan: new_sub_plan.stripe_guid }],
