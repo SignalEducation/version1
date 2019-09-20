@@ -29,8 +29,8 @@ class StripeSubscriptionService < StripeService
     subscription_object = merge_subscription_data(stripe_subscription, customer)
     [subscription_object, { status: :ok }]
   rescue Stripe::CardError, Stripe::InvalidRequestError => e
-    error_type = e[:type] == 'card_error' ? :custom : :generic
-    raise_subscription_error(e, __method__.to_s, error_type, e.message)
+    error_type = e.json_body[:error][:type] == 'card_error' ? :custom : :generic
+    raise_subscription_error(e.json_body[:error], __method__.to_s, error_type, e.message)
   end
 
   def cancel_subscription(immediately: false)
