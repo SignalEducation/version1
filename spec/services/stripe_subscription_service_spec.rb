@@ -127,6 +127,41 @@ describe StripeSubscriptionService, type: :service do
         )
       )
     end
+
+    describe 'with Stripe errors' do
+      describe 'Stripe::CardError' do
+        let(:card_error) {
+          Stripe::InvalidRequestError.new(
+            'error message', 'param', json_body: {error: {type: 'card_error' }}
+          )
+        }
+
+        it 'raises a subscription error with the correct message' do
+          allow(Stripe::Customer).to receive(:update).and_return(stripe_customer)
+          allow(subject).to receive(:create_stripe_subscription).and_raise(card_error)
+
+          expect{
+            subject.create_and_return_subscription('sk_test_token', nil)
+          }.to raise_error(Learnsignal::SubscriptionError)
+        end
+      end
+
+      describe 'Stripe::InvalidRequestError' do
+        let(:invalid_error) {
+          Stripe::InvalidRequestError.new(
+            'error message', 'param', json_body: {error: {type: 'invalid_request' }}
+          )
+        }
+
+        it 'raises a subscription error with the correct message' do
+          allow(Stripe::Customer).to receive(:update).and_raise(invalid_error)
+
+          expect{
+            subject.create_and_return_subscription('sk_test_token', nil)
+          }.to raise_error(Learnsignal::SubscriptionError)
+        end
+      end
+    end
   end
 
   describe '#cancel_subscription' do
