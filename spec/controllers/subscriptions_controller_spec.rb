@@ -64,7 +64,7 @@ describe SubscriptionsController, type: :controller do
   }
 
   let!(:student_user_group ) { create(:student_user_group ) }
-  let!(:basic_student) { create(:basic_student, user_group: student_user_group, preferred_exam_body_id: exam_body_1.id, country: uk) }
+  let!(:basic_student) { create(:basic_student, user_group: student_user_group, preferred_exam_body_id: exam_body_1.id, country: uk, currency: gbp) }
   let!(:valid_subscription_student) { create(:basic_student, user_group: student_user_group, preferred_exam_body_id: exam_body_1.id) }
   let!(:canceled_pending_student) { create(:basic_student, user_group: student_user_group, preferred_exam_body_id: exam_body_1.id) }
 

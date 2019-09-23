@@ -131,6 +131,7 @@ class PaypalSubscriptionsService
 
   def agreement_attributes(subscription:, start_date: nil)
     subscription_plan = subscription.subscription_plan
+
     {
       name: subscription_plan.name,
       description: subscription_plan.description.gsub("\n", ""),
@@ -159,7 +160,7 @@ class PaypalSubscriptionsService
 
   def cancel_url(subscription)
     if subscription.changed_from_id
-      new_subscription_plan_changes_url(subscription.changed_from, host: LEARNSIGNAL_HOST, payment_processor: 'paypal')
+      new_subscription_plan_changes_url(subscription_id: subscription.id, host: LEARNSIGNAL_HOST, payment_processor: 'paypal')
     else
       new_subscription_url(host: LEARNSIGNAL_HOST, flash: 'It seems you cancelled your subscription on Paypal. Still want to upgrade?')
     end
