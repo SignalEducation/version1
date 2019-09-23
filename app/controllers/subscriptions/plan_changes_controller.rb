@@ -6,7 +6,7 @@ module Subscriptions
     before_action do
       ensure_user_has_access_rights(%w(student_user))
     end
-    before_action :get_subscription
+    before_action :set_subscription
 
     def show
       Rails.logger.info "DataLayer Event: PlanChanges#show - Subscription: #{@subscription.id}, Revenue: #{@subscription.subscription_plan.price}, PlanName: #{@subscription.subscription_plan.name}, Brand: #{@subscription.subscription_plan.exam_body.name}" if @subscription
@@ -36,10 +36,6 @@ module Subscriptions
 
     private
 
-    def get_subscription
-      @subscription = Subscription.find_by_id(params[:id])
-    end
-
     def change_stripe_subscription(subscription, plan_id)
       @subscription, data = StripeSubscriptionService.new(subscription).
                               change_plan(plan_id)
@@ -52,7 +48,7 @@ module Subscriptions
       end
     end
 
-    def change_paypal_subscription(subscription, _params)
+    def change_paypal_subscription(subscription, plan_id)
       @subscription =
         PaypalSubscriptionsService.new(subscription).change_plan(plan_id)
 
@@ -61,6 +57,10 @@ module Subscriptions
 
     def plan_change_params
       params.require(:subscription).permit(:subscription_plan_id)
+    end
+
+    def set_subscription
+      @subscription = Subscription.find_by(id: params[:subscription_id])
     end
   end
 end

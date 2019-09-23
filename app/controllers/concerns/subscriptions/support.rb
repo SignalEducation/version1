@@ -51,7 +51,7 @@ module Subscriptions
     end
 
     def redirect_url(plans, active_subscriptions)
-      plans.count <= 1 ? account_url : new_subscriptions_plan_change_url(id: active_subscriptions.first.id)
+      plans.count <= 1 ? account_url : new_subscription_plan_changes_url(active_subscriptions.first)
     end
 
     def standard_student?

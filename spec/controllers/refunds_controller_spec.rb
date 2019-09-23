@@ -36,7 +36,7 @@ describe RefundsController, type: :controller do
   let!(:uk_vat_rate) { create(:vat_rate, vat_code: uk_vat_code) }
 
 
-  let!(:valid_params) { FactoryBot.attributes_for(:refund, stripe_charge_guid: 'stripe-charge-guid-a') }
+  let!(:valid_params) { FactoryBot.attributes_for(:refund, stripe_charge_guid: 'stripe-charge-guid-a', user_id: basic_student.id) }
 
 
   context 'Logged in as a stripe_management_user: ' do
@@ -87,17 +87,19 @@ describe RefundsController, type: :controller do
 
       it 'should report error for invalid params' do
         url = 'https://api.stripe.com/v1/refunds'
+        request_body = {"amount"=>"1", "charge"=>"stripe-charge-guid-a", "reason"=>"requested_by_customer"}
         response_body = {"id": "re_CRvumGmpCr9pF2", "object": "refund", "amount": 1,
                          "reason": "requested_by_customer", "status": "succeeded"}
 
-        stub_refund_create_request(url, nil, response_body)
+        stub_refund_create_request(url, request_body, response_body)
+        valid_params.delete(valid_params.keys.first)
 
-        post :create, params: { refund: {valid_params.keys.first => ''} }
+        post :create, params: { refund: valid_params }
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to eq(I18n.t('controllers.refunds.create.flash.error'))
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(root_url)
-        expect(a_request(:post, url).with(body: nil)).to have_been_made.once
+        expect(response).to redirect_to(user_url(id: valid_params[:user_id]))
+        expect(a_request(:post, url).with(body: request_body)).to have_been_made.once
       end
     end
 

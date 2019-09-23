@@ -112,7 +112,7 @@ class User < ApplicationRecord
   accepts_nested_attributes_for :exam_body_user_details, :reject_if => lambda { |c| c[:student_number].blank? }
 
   # validation
-  validates :email, presence: true, length: {within: 5..50}, uniqueness: { case_sensitive: false }
+  validates :email, presence: true, length: { within: 5..50 }, uniqueness: { case_sensitive: false }, format: { with: /\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i }
   validates :first_name, presence: true, length: {minimum: 2, maximum: 20}
   validates :last_name, presence: true, length: {minimum: 2, maximum: 30}
   validates :password, presence: true, length: {minimum: 6, maximum: 255}, on: :create

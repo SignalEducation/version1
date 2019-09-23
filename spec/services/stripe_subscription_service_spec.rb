@@ -21,23 +21,23 @@ describe StripeSubscriptionService, type: :service do
   describe '#change_plan' do
     let(:sub_plan) { create(:subscription_plan) }
     let(:new_sub) { create(:subscription, subscription_plan_id: sub_plan.id) }
-    let(:stripe_sub) { 
+    let(:stripe_sub) {
       double(
         latest_invoice: { payment_intent: { client_secret: 'cs_123456' }},
         status: 'active'
       )
     }
 
-    it 'calls #create_new_subscription' do
+    it 'calls #create_subscription' do
       allow(subject).to receive(:update_old_subscription)
-      expect(subject).to receive(:create_new_subscription).
+      expect(subject).to receive(:create_subscription).
                            and_return([new_sub, stripe_sub])
 
       subject.change_plan(sub_plan.id)
     end
 
     it 'starts the new subscription' do
-      allow(subject).to receive(:create_new_subscription).
+      allow(subject).to receive(:create_subscription).
                           and_return([new_sub, stripe_sub])
       allow(subject).to receive(:update_old_subscription)
       expect_any_instance_of(Subscription).to receive(:start)
@@ -46,7 +46,7 @@ describe StripeSubscriptionService, type: :service do
     end
 
     it 'calls #update_old_subscription' do
-      allow(subject).to receive(:create_new_subscription).
+      allow(subject).to receive(:create_subscription).
                           and_return([new_sub, stripe_sub])
       expect(subject).to receive(:update_old_subscription)
 
@@ -54,7 +54,7 @@ describe StripeSubscriptionService, type: :service do
     end
 
     it 'returns a subscription and stripe object' do
-      allow(subject).to receive(:create_new_subscription).
+      allow(subject).to receive(:create_subscription).
                           and_return([new_sub, stripe_sub])
       allow(subject).to receive(:update_old_subscription)
 
@@ -62,15 +62,15 @@ describe StripeSubscriptionService, type: :service do
     end
 
     describe 'for payments failing 3DS' do
-      let(:stripe_sub_3ds) { 
+      let(:stripe_sub_3ds) {
         double(
           latest_invoice: { payment_intent: { client_secret: 'cs_123456' }},
           status: 'past_due'
         )
       }
-      
+
       it 'calls #mark_payment_action_required on the subscription' do
-        allow(subject).to receive(:create_new_subscription).
+        allow(subject).to receive(:create_subscription).
                           and_return([new_sub, stripe_sub_3ds])
         allow(subject).to receive(:update_old_subscription)
         expect_any_instance_of(Subscription).to receive(:mark_payment_action_required)
@@ -126,6 +126,41 @@ describe StripeSubscriptionService, type: :service do
           { status: :ok }
         )
       )
+    end
+
+    describe 'with Stripe errors' do
+      describe 'Stripe::CardError' do
+        let(:card_error) {
+          Stripe::InvalidRequestError.new(
+            'error message', 'param', json_body: {error: {type: 'card_error' }}
+          )
+        }
+
+        it 'raises a subscription error with the correct message' do
+          allow(Stripe::Customer).to receive(:update).and_return(stripe_customer)
+          allow(subject).to receive(:create_stripe_subscription).and_raise(card_error)
+
+          expect{
+            subject.create_and_return_subscription('sk_test_token', nil)
+          }.to raise_error(Learnsignal::SubscriptionError)
+        end
+      end
+
+      describe 'Stripe::InvalidRequestError' do
+        let(:invalid_error) {
+          Stripe::InvalidRequestError.new(
+            'error message', 'param', json_body: {error: {type: 'invalid_request' }}
+          )
+        }
+
+        it 'raises a subscription error with the correct message' do
+          allow(Stripe::Customer).to receive(:update).and_raise(invalid_error)
+
+          expect{
+            subject.create_and_return_subscription('sk_test_token', nil)
+          }.to raise_error(Learnsignal::SubscriptionError)
+        end
+      end
     end
   end
 
@@ -227,9 +262,8 @@ describe StripeSubscriptionService, type: :service do
     end
   end
 
-  describe '#create_new_subscription' do
-    let(:student_user_group ) { FactoryBot.create(:student_user_group ) }
-    let(:user) { create(:student_user, user_group: student_user_group) }
+  describe '#create_subscription' do
+    let(:user) { create(:student_user) }
     let(:test_sub) { create(:stripe_subscription, user: user, state: 'active') }
     let(:sub_plan) { create(:subscription_plan, currency: test_sub.currency) }
     let(:stripe_sub) {
@@ -249,13 +283,13 @@ describe StripeSubscriptionService, type: :service do
     it 'calls #get_updated_stripe_subscription' do
       expect(subject).to receive(:get_updated_stripe_subscription).and_return(stripe_sub)
 
-      subject.send(:create_new_subscription, sub_plan)
+      subject.send(:create_subscription, sub_plan)
     end
 
     it 'creates a new Subscription record' do
       allow(subject).to receive(:get_updated_stripe_subscription).and_return(stripe_sub)
 
-      expect{ subject.send(:create_new_subscription, sub_plan) }.to(
+      expect{ subject.send(:create_subscription, sub_plan) }.to(
         change { Subscription.count }.from(1).to(2)
       )
     end

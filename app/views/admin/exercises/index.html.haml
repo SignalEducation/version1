@@ -1,7 +1,7 @@
 .container
   %header.management-console-section
     %h1
-      =t('views.exercises.admin.index.h1')
+      =t('views.exercises.admin.index.h1') + " #{@user&.name}"
 
   %section.pb-7
 
@@ -20,7 +20,8 @@
                     %i{:role => "img", class: 'budicon-search-list'}
 
           .table-responsive.pt-4
-            =will_paginate @exercises, renderer: BootstrapPagination::Rails
+            =will_paginate @exercises, renderer: PostLinkPaginationHelper::LinkRenderer, action: 'search_exercises',
+                           post_params: { search: @filters['search'], corrector: @filters['corrector'], product: @filters['product'], state: @filters['state'] }
             %table.table
               %thead
                 %tr

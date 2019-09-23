@@ -71,9 +71,9 @@ class SubscriptionPlan < ApplicationRecord
   scope :for_exam_body, lambda { |body_id| where(exam_body_id: body_id) }
   scope :yearly, -> { where(payment_frequency_in_months: 12) }
 
-  search_scope :prioritise_plan_frequency, ->(frequency) { find_by(payment_frequency_in_months: frequency) }
-  search_scope :plan_guid,                 ->(guid)      { find_by(guid: guid) }
-  search_scope :subscription_plan_id,      ->(id)        { find_by(id: id) }
+  search_scope :prioritise_plan_frequency, ->(frequency) { where(payment_frequency_in_months: frequency) }
+  search_scope :plan_guid,                 ->(guid)      { where(guid: guid) }
+  search_scope :subscription_plan_id,      ->(id)        { where(id: id) }
 
   # class methods
   def self.get_relevant(user, currency, exam_body_id)

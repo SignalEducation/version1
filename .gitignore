@@ -76,9 +76,9 @@ TAGS
 *.env
 
 # webpacker compiled files
-/public/packs/
-/public/packs-test
-/node_modules
+public/packs/*
+public/packs-test/*
+node_modules
 yarn-debug.log*
 .yarn-integrity
 

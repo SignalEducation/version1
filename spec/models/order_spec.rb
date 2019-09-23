@@ -133,7 +133,7 @@ describe Order do
   it { expect(Order).to respond_to(:all_for_user) }
 
   describe 'orders_completed_in_time' do
-    let(:mock_product) { create(:mock_product) }
+    let(:mock_product) { create(:product, :for_mock) }
 
     before :each do
       create_list(:order, 3, state: 'completed', product: mock_product,
@@ -156,7 +156,7 @@ describe Order do
   # class methods
 
   describe '.send_daily_orders_update' do
-    let(:mock_product) { create(:mock_product) }
+    let(:mock_product) { create(:product, :for_mock) }
 
     it 'calls the orders_completed_in_time scope for 24.hours.ago' do
       expect(Order).to(
@@ -185,8 +185,8 @@ describe Order do
   end
 
   describe '.product_type_count' do
-    let(:mock_product) { create(:mock_product) }
-    let(:corrections_product) { create(:correction_product) }
+    let(:mock_product) { create(:product, :for_mock) }
+    let(:corrections_product) { create(:product, :for_corrections) }
 
     before :each do
       create_list(:order, 3, product: mock_product)
