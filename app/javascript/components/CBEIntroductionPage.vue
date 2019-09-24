@@ -62,7 +62,7 @@
     },
     computed: {
       tabTitle: function () {
-        return this.title.length > 0 ? this.title : 'New Introduction Page'
+        return this.initialTitle.length > 0 ? this.initialTitle : 'New Introduction Page'
       },
     },
     methods: {

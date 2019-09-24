@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe 'Api::V1::Cbe::QuestionsController', type: :request do
-  let(:cbe) { create(:cbe, :with_subject_course) }
+  let(:cbe) { create(:cbe) }
 
   context 'for cbe_sections' do
     let(:cbe_section) { create(:cbe_section, cbe: cbe) }

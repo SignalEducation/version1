@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Rails.application.routes.draw do
   concern :supports_reordering do
     post :reorder, on: :collection
@@ -19,30 +21,31 @@ Rails.application.routes.draw do
 
     namespace :v1, constraints: ApiConstraint.new(version: 1) do
       resources :subject_courses, only: :index
-      resources :cbes, format: 'json', only: [:index, :create, :show], shallow: true do
+      resources :cbes, format: 'json', only: %i[index create show], shallow: true do
         scope module: 'cbes' do
-          resources :sections, only: [:index, :create], shallow: true do
-            resources :questions, only: [:index, :create]
+          resources :sections, only: %i[index create], shallow: true do
+            resources :questions, only: %i[index create]
             resources :scenarios, only: :create do
-              resources :questions, only: [:index, :create]
+              resources :questions, only: %i[index create]
             end
           end
-          resources :introduction_pages, only: [:index, :create, :update]
+          resources :introduction_pages, only: %i[index create update]
+          resources :resources, only: %i[index create]
         end
       end
     end
   end
 
   namespace :admin do
-    resources :exercises, only: [:index, :show, :new, :create, :edit, :update] do
+    resources :exercises, only: %i[index show new create edit update] do
       get 'generate_daily_summary', on: :collection
     end
     resources :user do
-      resources :exercises, only: [:index, :new, :create]
+      resources :exercises, only: %i[index new create]
     end
 
-    resources :cbes,   only: [:index, :new, :show, :update]
-    resources :orders, only: [:index, :show]
+    resources :cbes,   only: %i[index new show update]
+    resources :orders, only: %i[index show]
     post 'search_exercises', to: 'exercises#index', as: :search_exercises
   end
 
@@ -52,7 +55,7 @@ Rails.application.routes.draw do
     get '500' => redirect('500-page')
 
     # Subscriptions
-    resources :subscriptions, only: [:show, :new, :create, :update, :destroy] do
+    resources :subscriptions, only: %i[show new create update destroy] do
       member do
         put 'un_cancel'
         get 'execute'
@@ -60,8 +63,8 @@ Rails.application.routes.draw do
         post 'status_from_stripe'
       end
       scope module: 'subscriptions' do
-        resources :cancellations, only: [:new, :create]
-        resource :plan_changes, only: [:show, :new, :create] do
+        resources :cancellations, only: %i[new create]
+        resource :plan_changes, only: %i[show new create] do
           post :status_from_stripe, on: :member
         end
       end
@@ -77,7 +80,7 @@ Rails.application.routes.draw do
       put '/reactivate',                     action: :reactivate_subscription, as: :reactivate_subscription
     end
 
-    resources :subscription_payment_cards, only: [:create, :update, :destroy]
+    resources :subscription_payment_cards, only: %i[create update destroy]
     resources :subscription_plans
     resources :subscription_plan_categories
     get '/all_subscriptions', to: 'subscription_plans#all_subscriptions', as: :all_subscriptions
@@ -95,8 +98,8 @@ Rails.application.routes.draw do
       patch '/update_courses',                          action: :update_courses,                  as: :update_courses
       get 'search', on: :collection
       resources :invoices,  only: :index, shallow: true
-      resources :visits,    only: [:index, :show]
-      resources :exercises, only: [:index, :show, :edit, :update], shallow: true
+      resources :visits,    only: %i[index show]
+      resources :exercises, only: %i[index show edit update], shallow: true
     end
 
     get '/visits/all_index', to: 'visits#all_index', as: :visits_all_index
@@ -112,7 +115,7 @@ Rails.application.routes.draw do
     get 'sign_out', to: 'user_sessions#destroy', as: :sign_out
 
     # User password
-    resources :user_passwords, only: [:new, :edit, :create, :update]
+    resources :user_passwords, only: %i[new edit create update]
     get 'forgot_password',     to: 'user_passwords#new',                  as: :forgot_password
     get 'reset_password/:id',  to: 'user_passwords#edit',                 as: :reset_password
     get 'set_password/:id',    to: 'user_passwords#set_password',         as: :set_password
@@ -135,23 +138,23 @@ Rails.application.routes.draw do
 
     resources :user_groups
     resources :content_pages, except: [:show]
-    resources :content_activations, only: [:new, :create]
-    resource :preferred_exam_body, only: [:edit, :update]
+    resources :content_activations, only: %i[new create]
+    resource :preferred_exam_body, only: %i[edit update]
 
-    resources :invoices, only: [:show, :update] do
+    resources :invoices, only: %i[show update] do
       get 'pdf', action: :pdf, on: :member
     end
 
     # Internal Landing Pages - post sign-up or upgrade or purchase
-    get 'personal_sign_up_complete', to: 'student_sign_ups#show',                   as: :personal_sign_up_complete
+    get 'personal_sign_up_complete', to: 'student_sign_ups#show', as: :personal_sign_up_complete
     get 'personal_upgrade_complete(/:completion_guid)', to: 'subscriptions#personal_upgrade_complete', as: :personal_upgrade_complete
 
     # Courses
     resources :courses, only: [:create] do
       match :create_video_user_log,                on: :collection, via: :post
-      match :video_watched_data,                   on: :collection, via: [:put, :patch]
+      match :video_watched_data,                   on: :collection, via: %i[put patch]
       match :create_constructed_response_user_log, on: :collection, via: :post
-      match :update_constructed_response_user_log, on: :collection, via: [:put, :patch]
+      match :update_constructed_response_user_log, on: :collection, via: %i[put patch]
 
       get ':subject_course_name_url', to: redirect('/%{locale}/library/%{subject_course_name_url}'), on: :collection
     end
@@ -195,12 +198,12 @@ Rails.application.routes.draw do
     resources :exam_bodies
     resources :exam_sittings
     resources :external_banners, concerns: :supports_reordering
-    resources :faqs, except: [:show, :index], concerns: :supports_reordering
+    resources :faqs, except: %i[show index], concerns: :supports_reordering
     resources :faq_sections, concerns: :supports_reordering
     resources :home_pages
     resources :mock_exams, concerns: :supports_reordering, path: '/admin/mock_exams'
     resources :products, concerns: :supports_reordering, shallow: true do
-      resources :orders, except: [:index, :show] do
+      resources :orders, except: %i[index show] do
         get 'execute', on: :member
       end
     end
@@ -209,8 +212,8 @@ Rails.application.routes.draw do
     resources :vat_codes
 
     # Enrollments
-    resources :enrollments, only: [:edit, :update, :create]
-    resources :enrollment_management, only: [:index, :edit, :update, :show] do
+    resources :enrollments, only: %i[edit update create]
+    resources :enrollment_management, only: %i[index edit update show] do
       get 'export_log_data/:id',  action: :export_log_data, as: :export_log_data,       on: :collection
       post 'create_new_scul/:id', action: :create_new_scul, as: :reset_enrollment_scul, on: :collection
     end
@@ -249,8 +252,8 @@ Rails.application.routes.draw do
     get '/export_referral_codes',         to: 'referral_codes#export_referral_codes',     as: :export_referral_codes
     get '/export_referral_codes/:id',     to: 'referred_signups#export_referred_signups', as: :export_referred_signups
     get '/referral',                      to: 'referral_codes#referral', as: :refer_a_friend
-    resources :referral_codes, except: [:new, :edit, :update]
-    resources :referred_signups, only: [:index, :edit, :update] do
+    resources :referral_codes, except: %i[new edit update]
+    resources :referred_signups, only: %i[index edit update] do
       get '/filter/:payed', on: :collection, action: :index, as: :filtered
     end
 
