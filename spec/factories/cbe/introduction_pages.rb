@@ -5,7 +5,7 @@ FactoryBot.define do
     sequence(:sorting_order)
 
     trait :with_cbe do
-      association :cbe, :with_subject_course
+      association :cbe
     end
   end
 end

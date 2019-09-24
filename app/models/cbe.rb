@@ -18,6 +18,8 @@ class Cbe < ApplicationRecord
   has_many :introduction_pages, dependent: :destroy, inverse_of: :cbe,
                                 class_name: 'Cbe::IntroductionPage'
   has_many :questions, through: :sections, class_name: 'Cbe::Question'
+  has_many :resources, inverse_of: :cbe, class_name: 'Cbe::Resource',
+                       dependent: :destroy
 
   # validations
   validates :name, :exam_time, :agreement_content, :subject_course_id, presence: true

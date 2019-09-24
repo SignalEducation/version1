@@ -4,12 +4,14 @@ module Api
   module V1
     module Cbes
       class IntroductionPagesController < Api::V1::ApplicationController
+        before_action :set_cbe
+
         def index
-          @pages = ::Cbe::IntroductionPage.all
+          @pages = @cbe.introduction_pages
         end
 
         def create
-          @page = ::Cbe::IntroductionPage.new(introduction_page_params)
+          @page = @cbe.introduction_pages.build(introduction_page_params)
 
           unless @page.save
             render json: { errors: @page.errors }, status: :unprocessable_entity
@@ -28,8 +30,12 @@ module Api
 
         def introduction_page_params
           params.require(:cbe_introduction_page).permit(
-            :title, :content, :sorting_order, :cbe_id, :kind
+            :title, :content, :sorting_order, :kind
           )
+        end
+
+        def set_cbe
+          @cbe = Cbe.find(params[:cbe_id])
         end
       end
     end
