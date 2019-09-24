@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe 'Api::V1::Cbe::SectionsController', type: :request do
-  let!(:cbe) { create(:cbe, :with_subject_course) }
+  let!(:cbe) { create(:cbe) }
 
   describe 'get /api/v1/cbe/sections' do
     context 'return all records' do

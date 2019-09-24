@@ -3,7 +3,35 @@
 require 'rails_helper'
 
 RSpec.describe 'Api::V1::Cbe::QuestionsController', type: :request do
-  let(:cbe) { create(:cbe, :with_subject_course) }
+  let(:cbe) { create(:cbe) }
+
+  context 'for cbe_sections' do
+    let(:cbe_section) { create(:cbe_section, cbe: cbe) }
+    describe "get /api/v1/sections/:cbe_section_id/questions" do
+      context 'return all records' do
+        let!(:questions) { create_list(:cbe_question, 5, section: cbe_section) }
+
+        before { get "/api/v1/sections/#{cbe_section.id}/questions" }
+
+        it 'returns HTTP status 200' do
+          expect(response).to have_http_status 200
+        end
+
+        it 'returns questions json data' do
+          body = JSON.parse(response.body)
+
+          expect(body.size).to eq(5)
+          expect(body.map { |j| j['id'] }).to match_array(questions.pluck(:id))
+          expect(body.map { |j| j['name'] }).to match_array(questions.pluck(:name))
+          expect(body.map(&:keys).uniq).to contain_exactly(%w[id
+                                                              kind
+                                                              content
+                                                              score
+                                                              sorting_order
+                                                              section_id
+                                                              scenario])
+        end
+      end
 
   context 'for cbe_sections' do
     let(:cbe_section) { create(:cbe_section, cbe: cbe) }

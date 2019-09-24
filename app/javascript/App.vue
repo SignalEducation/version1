@@ -18,8 +18,12 @@
                       variant="primary">
               <span class="when-opened">&#10514;</span> <span class="when-closed">&#10515;</span> Intro Pages
             </b-button>
-            <b-button variant="primary" class="mr-1">
-              Resources
+            <b-button :class="shouldShowResources ? 'collapsed mr-1' : 'mr-1'"
+                      :aria-expanded="shouldShowResources ? 'true' : 'false'"
+                      aria-controls="collapse-resources"
+                      @click="toggleResources"
+                      variant="primary">
+              <span class="when-opened">&#10514;</span> <span class="when-closed">&#10515;</span> Resources
             </b-button>
           </div>
         </div>
@@ -49,6 +53,13 @@
           </b-card>
         </b-collapse>
 
+        <b-collapse id="collapse-resources" v-model="showResources" class="mb-2">
+          <CBEResources
+            v-bind:resources="resources"
+            v-on:add-resource="updateResources"
+            ></CBEResources>
+        </b-collapse>
+
         <b-card no-body>
           <b-tabs card >
             <b-tab v-for="section in sections" :key="'section-tab-' + section.id" :title="section.name">
@@ -66,7 +77,7 @@
               <hr/>
 
               <div v-if="section.kind === 'objective'">
-                <div v-for="(question, index) in section.questions">
+                <div v-for="(question) in section.questions" v-bind:key="question.id">
                   <b-card no-body class="mb-1">
                     <b-card-header header-tag="header" class="p-1" role="tab">
                       <b-button block href="#" v-b-toggle="'accordion-' + question.id" variant="secondary">Question - {{ question.id }}</b-button>
@@ -117,7 +128,7 @@
                               </div>
                             </div>
                             <br/>
-                            <div v-for="question in scenario.questions">
+                            <div v-for="question in scenario.questions" v-bind:key="question.id">
                               <b-card no-body class="mb-1">
                                 <b-card-header header-tag="header" class="p-1" role="tab">
                                   <b-button block href="#" v-b-toggle="'accordion-' + question.id" variant="secondary">Question - {{ question.id }}</b-button>
@@ -182,6 +193,7 @@ import CBESection          from "./components/CBESection";
 import CBEIntroductionPage from "./components/CBEIntroductionPage";
 import CBEScenario         from "./components/CBEScenario";
 import CBEQuestion         from "./components/CBEQuestion";
+import CBEResources        from "./components/CBEResources";
 
 export default {
   components: {
@@ -190,104 +202,121 @@ export default {
     CBESection,
     CBEScenario,
     CBEQuestion,
+    CBEResources,
   },
   data() {
     return {
-        cbeDetails: [],
-        sections: [],
-        introPages: [],
-        showIntroPages: false,
-        showCbeDetails: true
+      cbeDetails: [],
+      sections: [],
+      introPages: [],
+      resources: [],
+      showIntroPages: false,
+      showCbeDetails: true,
+      showResources: false,
     };
   },
   computed: {
     shouldShowCbeDetails: function () {
-      return this.showCbeDetails && !this.showIntroPages;
+      return this.showCbeDetails && !(this.showIntroPages || this.showResources);
     },
     shouldShowIntroPages: function () {
-      return this.showIntroPages && !this.showCbeDetails;
+      return this.showIntroPages && !(this.showCbeDetails || this.showResources);
+    },
+    shouldShowResources: function () {
+      return this.showResources && !(this.showCbeDetails || this.showIntroPages);
     }
   },
   methods: {
     toggleCbeDetails: function() {
       this.showCbeDetails = !this.showCbeDetails;
-      if (this.showIntroPages && this.showCbeDetails) {
+      if (this.showCbeDetails && (this.showIntroPages || this.showResources)) {
         this.showIntroPages = false;
+        this.showResources = false;
       }
     },
     toggleIntroPages: function() {
       this.showIntroPages = !this.showIntroPages;
-      if (this.showIntroPages && this.showCbeDetails) {
+      if (this.showIntroPages && (this.showCbeDetails || this.showResources)) {
         this.showCbeDetails = false;
+        this.showResources = false;
+      }
+    },
+    toggleResources: function() {
+      this.showResources = !this.showResources;
+      if (this.showResources && (this.showCbeDetails || this.showIntroPages)) {
+        this.showCbeDetails = false;
+        this.showIntroPages = false;
       }
     },
     updateSections: function(data) {
-        this.sections.push(data);
+      this.sections.push(data);
     },
     updatePages: function(data) {
-        this.introPages.push(data);
+      this.introPages.push(data);
+    },
+    updateResources: function(data) {
+      this.resources.push(data);
     },
     updateScenarios: function(data) {
-        let sectionIndex = 0;
-        this.sections.forEach((s, i) => {
-            if (s.id === data.cbe_section_id) {
-                sectionIndex =  i;
-            }
-        });
-        let currentSection = this.sections[sectionIndex];
-        if (currentSection.hasOwnProperty('scenarios')) {
-            console.log(currentSection);
-        } else {
-            // This $set syntax is required by Vue to ensure the section.questions array is reactive
-            // It is inside the conditional to ensure section.questions is not reset to empty
-            this.$set(currentSection, 'scenarios', []);
+      let sectionIndex = 0;
+      this.sections.forEach((s, i) => {
+        if (s.id === data.cbe_section_id) {
+            sectionIndex =  i;
         }
-        currentSection.scenarios.push(data);
+      });
+      let currentSection = this.sections[sectionIndex];
+      if (currentSection.hasOwnProperty('scenarios')) {
+          console.log(currentSection);
+      } else {
+        // This $set syntax is required by Vue to ensure the section.questions array is reactive
+        // It is inside the conditional to ensure section.questions is not reset to empty
+        this.$set(currentSection, 'scenarios', []);
+      }
+      currentSection.scenarios.push(data);
     },
     updateQuestions(data) {
-        let sectionIndex = 0;
-        this.sections.forEach((s, i) => {
-            if (s.id === data.cbe_section_id) {
-                sectionIndex =  i;
-            }
-        });
-        let currentSection = this.sections[sectionIndex];
-        if (currentSection.hasOwnProperty('questions')) {
-            console.log(currentSection);
-        } else {
-            // This $set syntax is required by Vue to ensure the section.questions array is reactive
-            // It is inside the conditional to ensure section.questions is not reset to empty
-            this.$set(currentSection, 'questions', []);
-        }
-        currentSection.questions.push(data);
+      let sectionIndex = 0;
+      this.sections.forEach((s, i) => {
+          if (s.id === data.cbe_section_id) {
+              sectionIndex =  i;
+          }
+      });
+      let currentSection = this.sections[sectionIndex];
+      if (currentSection.hasOwnProperty('questions')) {
+        console.log(currentSection);
+      } else {
+        // This $set syntax is required by Vue to ensure the section.questions array is reactive
+        // It is inside the conditional to ensure section.questions is not reset to empty
+        this.$set(currentSection, 'questions', []);
+      }
+      currentSection.questions.push(data);
     },
     updateScenarioQuestions(data) {
-        let scenarioIndex = 0;
-        let sectionIndex = 0;
+      let scenarioIndex = 0;
+      let sectionIndex = 0;
 
-        this.sections.forEach((s, i) => {
-            if (s.id === data.cbe_section_id) {
-                sectionIndex = i;
-            }
-        });
-        let currentSection = this.sections[sectionIndex];
-
-        currentSection.scenarios.forEach((s, i) => {
-            if (s.id === data.cbe_scenario_id) {
-                scenarioIndex =  i;
-            }
-        });
-        let currentScenario = currentSection.scenarios[scenarioIndex];
-        if (currentScenario.hasOwnProperty('questions')) {
-            console.log(currentScenario);
-        } else {
-            // This $set syntax is required by Vue to ensure the section.questions array is reactive
-            // It is inside the conditional to ensure section.questions is not reset to empty
-            this.$set(currentScenario, 'questions', []);
+      this.sections.forEach((s, i) => {
+        if (s.id === data.cbe_section_id) {
+            sectionIndex = i;
         }
-        currentScenario.questions.push(data);
-    },
+      });
+      let currentSection = this.sections[sectionIndex];
 
+      currentSection.scenarios.forEach((s, i) => {
+        if (s.id === data.cbe_scenario_id) {
+            scenarioIndex =  i;
+        }
+      });
+      let currentScenario = currentSection.scenarios[scenarioIndex];
+      if (currentScenario.hasOwnProperty('questions')) {
+          console.log(currentScenario);
+      } else {
+        // This $set syntax is required by Vue to ensure the section.questions array is reactive
+        // It is inside the conditional to ensure section.questions is not reset to empty
+        this.$set(currentScenario, 'questions', []);
+      }
+      currentScenario.questions.push(data);
+    },
   },
 };
 </script>

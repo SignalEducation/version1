@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Admin::CbesController, type: :controller do
-  let(:cbe) { create(:cbe, :with_subject_course) }
+  let(:cbe) { create(:cbe) }
 
   before :each do
     allow(controller).to receive(:logged_in_required).and_return(true)

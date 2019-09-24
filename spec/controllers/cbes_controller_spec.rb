@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe CbesController, type: :controller do
   let(:sys_group) { create(:system_requirements_user_group) }
   let(:sys_user)  { create(:system_requirements_user, user_group_id: sys_group.id) }
-  let(:cbe)       { create(:cbe, :with_subject_course) }
+  let(:cbe)       { create(:cbe) }
 
   before(:each) do
     activate_authlogic
