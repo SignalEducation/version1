@@ -1,4 +1,4 @@
 =stylesheet_link_tag 'splitpanes'
 
-#cbe-front-view{ data: { id: params[:id] } }
+#cbe-front-view{ data: { id: params[:id], user_id: current_user.id } }
   %vue-tree-navigation{":defaultopenlevel" => "1", ":items" => "items"}

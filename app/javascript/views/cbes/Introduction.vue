@@ -22,10 +22,7 @@ import { mapGetters } from 'vuex'
 
 export default {
   props: {
-    id: {
-      // required: true,
-      // type: Number
-    }
+    id: Number
   },
   computed: {
     ...mapGetters('cbe', {
