@@ -28,17 +28,17 @@
         .col-md-6
           .form-group
             %label.sr-only{:for => "first-name"} First Name
-            =f.text_field :first_name, placeholder: 'Enter your first name', class: 'form-control'
+            =f.text_field :first_name, placeholder: 'Enter your first name', class: 'form-control', required: true
         .col-md-6
           .form-group
             %label.sr-only{:for => "last-name"} Last Name
-            =f.text_field :last_name, placeholder: 'Enter your last name', class: 'form-control'
+            =f.text_field :last_name, placeholder: 'Enter your last name', class: 'form-control', required: true
       .row
         -if @home_page&.custom_file_name == 'bootcamp.html.haml'
           .col-md-6
             .form-group
               %label.sr-only{:for => "email-address"} Your email address
-              =f.email_field :email, placeholder: 'Enter your email', class: 'form-control'
+              =f.email_field :email, placeholder: 'Enter your email', class: 'form-control', required: true
           .col-md-6
             .form-group
               %label.sr-only{:for => "subject_course_id"} Course Selection
@@ -49,29 +49,29 @@
           .col-md-6
             .form-group
               %label.sr-only{:for => "email-address"} Your email address
-              =f.email_field :email, placeholder: 'Enter your email', class: 'form-control'
+              =f.email_field :email, placeholder: 'Enter your email', class: 'form-control', required: true
           .col-md-6
             .form-group
               =f.label :preferred_exam_body_id, t('views.users.form.exam_body'), class: 'sr-only'
               .input-group.input-group-lg
-                =f.collection_select :preferred_exam_body_id, ExamBody.all_active.all_in_order, :id, :name, {include_blank: t('views.users.form.exam_body')}, {class: 'form-control custom-select', id: 'user_exam_body'}
+                =f.collection_select :preferred_exam_body_id, ExamBody.all_active.all_in_order, :id, :name, {include_blank: t('views.users.form.exam_body')}, {class: 'form-control custom-select', id: 'user_exam_body', required: true}
 
         -else
           .col-md-12
             .form-group
               %label.sr-only{:for => "email-address"} Your email address
-              =f.email_field :email, placeholder: 'Enter your email', class: 'form-control'
+              =f.email_field :email, placeholder: 'Enter your email', class: 'form-control', required: true
 
 
       .row
         .col-md-6
           .form-group
             %label.sr-only{:for => "create-pwd"} Create a password
-            =f.password_field :password, placeholder: t('views.users.form.create_password'), class: 'form-control'
+            =f.password_field :password, placeholder: t('views.users.form.create_password'), class: 'form-control', required: true
         .col-md-6
           .form-group
             %label.sr-only{:for => "confirm-pwd"} Confirm your password
-            =f.password_field :password_confirmation, placeholder: t('views.users.form.password_confirmation_placeholder'), class: 'form-control', id: 'user_password_confirmation'
+            =f.password_field :password_confirmation, placeholder: t('views.users.form.password_confirmation_placeholder'), class: 'form-control', id: 'user_password_confirmation', required: true
 
     %fieldset
       %legend.sr-only Terms and Conditions checkboxes
