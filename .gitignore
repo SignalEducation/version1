@@ -78,4 +78,4 @@ public/packs/*
 
 
 # redis db
-./dump.rdb
+dump.rdb
