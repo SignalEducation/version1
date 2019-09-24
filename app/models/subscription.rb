@@ -70,6 +70,7 @@ class Subscription < ApplicationRecord
            :user_is_student, if: proc { |sub| sub.changed_from.present? }, on: :create
 
   # callbacks
+  after_initialize :set_completion_guid
   after_create :create_subscription_payment_card, if: :stripe_token # If new card details
   after_create :update_subscription_status, if: :stripe_token
   after_create :update_coupon_count
@@ -198,6 +199,8 @@ class Subscription < ApplicationRecord
       Rails.logger.error "ERROR: Subscription#cancel failed because it didn't have a stripe_customer_id OR a stripe_guid. Subscription:#{self}."
       false
     end
+  rescue Stripe::InvalidRequestError
+    raise Learnsignal::SubscriptionError, I18n.t('controllers.subscriptions.destroy.flash.error')
   end
 
   def immediate_cancel
@@ -499,5 +502,10 @@ class Subscription < ApplicationRecord
     return if changed_from.subscription_plan.currency_id == subscription_plan.currency_id
 
     errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.currencies_mismatch'))
+  end
+
+  def set_completion_guid
+    return unless new_record? && completion_guid.blank?
+    self.completion_guid = ApplicationController.generate_random_code(20)
   end
 end

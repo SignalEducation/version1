@@ -26,32 +26,32 @@
                       .col-sm-6
                         .form-group
                           =f.label :first_name, t('views.users.form.first_name')
-                          =f.text_field :first_name, autofocus: true, placeholder: 'Enter your first name', class: 'form-control', id: 'user_first_name'
+                          =f.text_field :first_name, autofocus: true, placeholder: 'Enter your first name', class: 'form-control', id: 'user_first_name', required: true
                       .col-sm-6
                         .form-group
                           =f.label :last_name, t('views.users.form.last_name')
-                          =f.text_field :last_name, class: 'form-control', placeholder: 'Enter your last name', id: 'user_last_name'
+                          =f.text_field :last_name, class: 'form-control', placeholder: 'Enter your last name', id: 'user_last_name', required: true
 
                       .col-sm-6
                         .form-group
                           =f.label :email, t('views.users.form.email')
-                          =f.email_field :email, class: 'form-control', placeholder: 'Enter your email', id: 'user_email'
+                          =f.email_field :email, class: 'form-control', placeholder: 'Enter your email', id: 'user_email', required: true
 
                       .col-sm-6
                         .form-group
                           =f.label :preferred_exam_body_id, t('views.users.form.area_of_study')
                           .input-group.input-group-lg
-                            =f.collection_select :preferred_exam_body_id, ExamBody.all_active.all_in_order, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control custom-select', id: 'user_exam_body'}
+                            =f.collection_select :preferred_exam_body_id, ExamBody.all_active.all_in_order, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control custom-select', id: 'user_exam_body', required: true}
 
                       .col-sm-6
                         .form-group
                           =f.label :password, t('views.users.form.password')
-                          =f.password_field :password, placeholder: t('views.users.form.create_password'), class: 'form-control', id: 'user_password'
+                          =f.password_field :password, placeholder: t('views.users.form.create_password'), class: 'form-control', id: 'user_password', required: true
 
                       .col-sm-6
                         .form-group
                           =f.label :password_confirmation, t('views.users.form.password_confirmation')
-                          =f.password_field :password_confirmation, placeholder: t('views.users.form.password_confirmation_placeholder'), class: 'form-control', id: 'user_password_confirmation'
+                          =f.password_field :password_confirmation, placeholder: t('views.users.form.password_confirmation_placeholder'), class: 'form-control', id: 'user_password_confirmation', required: true
 
                     %fieldset.pt-2
                       %legend.sr-only Terms and Conditions checkboxes

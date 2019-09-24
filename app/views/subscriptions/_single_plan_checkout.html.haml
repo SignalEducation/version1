@@ -45,13 +45,14 @@
             / custom checkbox
 
 #info-text
-  - if @yearly_plan && @yearly_plan.previous_plan_price.present? && @yearly_plan.previous_plan_price > 0
+  - yearly_plan = @plans.yearly.first
+  - if yearly_plan&.previous_plan_price&.present? && yearly_plan.previous_plan_price > 0
     %p.mb-2.price
       -#%span
         25%
       ='Currently we are offering a discount off the Annual Plan. Original Price '
       %span
-        =@yearly_plan.currency.format_number(@yearly_plan.previous_plan_price)
+        =yearly_plan.currency.format_number(yearly_plan.previous_plan_price)
 
   %p.mb-2
     %span.font-weight-medium Note:

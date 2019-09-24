@@ -77,8 +77,95 @@ describe SubscriptionPlan, type: :model do
   end
 
   describe 'class methods' do
+
+    before :each do
+      allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
+    end
+
     it { expect(SubscriptionPlan).to respond_to(:get_relevant) }
-    it { expect(SubscriptionPlan).to respond_to(:get_related_plans) }
+
+    describe '.get_related_plans' do
+      let(:user) { build_stubbed(:user) }
+      let(:exam_body) { build_stubbed(:exam_body) }
+      let(:plan_guid) { 'plan_ls_12345' }
+
+      it 'calls .get_individual_related_plan' do
+        expect(SubscriptionPlan).to(
+          receive(:get_individual_related_plan)
+        ).with(plan_guid, user.currency)
+
+        SubscriptionPlan.get_related_plans(user, user.currency, exam_body.id, plan_guid)
+      end
+
+      it 'calls .scope_exam_body_plans' do
+        expect(SubscriptionPlan).to(
+          receive(:scope_exam_body_plans)
+        ).with(user, exam_body.id, any_args)
+
+        SubscriptionPlan.get_related_plans(user, user.currency, exam_body.id, plan_guid)
+      end
+
+      it 'returns plans' do
+        return_value = SubscriptionPlan.get_related_plans(
+          user, user.currency, exam_body.id, plan_guid
+        )
+
+        expect(return_value).to be_an ActiveRecord::Relation
+        expect(return_value.klass).to eq SubscriptionPlan
+      end
+    end
+
+    describe '.scope_exam_body_plans' do
+      let(:user) { build_stubbed(:user) }
+      let!(:plan) { create(:subscription_plan) }
+      let(:plans) { SubscriptionPlan.all }
+
+      describe 'when the exam_body exists' do
+        let(:exam_body) { create(:exam_body) }
+
+        it 'calls .where on the passed in plans with the correct exam_body_id' do
+          expect(plans).to receive(:where).with(exam_body_id: exam_body.id)
+
+          SubscriptionPlan.scope_exam_body_plans(user, exam_body.id, plans)
+        end
+      end
+
+      describe 'when the user has a preferred exam_body' do
+        it 'calls .where on the passed in plans with the user preferred exam_body' do
+          expect(plans).to receive(:where).with(exam_body_id: user.preferred_exam_body_id)
+
+          SubscriptionPlan.scope_exam_body_plans(user, nil, plans)
+        end
+      end
+
+      describe 'when neither the exam_body or preferred_exam_body exist' do
+        let(:new_user) { build_stubbed(:user, preferred_exam_body_id: nil) }
+        
+        it 'returns the original plans' do
+          expect(SubscriptionPlan.scope_exam_body_plans(new_user, nil, plans)).to(
+            eq plans
+          )
+        end
+      end
+    end
+
+    describe '.get_individual_related_plan' do
+      let(:plan) { create(:subscription_plan) }
+      let(:currency) { build_stubbed(:currency) }
+
+      it 'finds the subscription_plan' do
+        expect(SubscriptionPlan).to receive(:find_by).
+          with({guid: plan.guid})
+
+        SubscriptionPlan.get_individual_related_plan(plan.guid, currency)
+      end
+
+      it 'raises an error if there is a currency miss-match' do
+        expect{ SubscriptionPlan.get_individual_related_plan(plan.guid, currency) }.to(
+          raise_error(Learnsignal::SubscriptionError, 'The specified plan is not available in your currency! Please choose another.')
+        )
+      end
+    end
   end
 
   describe 'scopes' do

@@ -14,12 +14,13 @@ class SubscriptionsController < ApplicationController
 
   def new
     @plans        = get_relevant_subscription_plans
-    @yearly_plan  = @plans.yearly.first
-    @subscription = Subscription.includes(:exam_body).
-                      new(user_id: current_user.id, subscription_plan_id: filtered_plan.id,
-                          completion_guid: ApplicationController.generate_random_code(20))
+    @subscription = Subscription.new(user_id: current_user.id,
+                                     subscription_plan_id: filtered_plan.id)
 
     seo_title_maker('Course Membership Payment | LearnSignal', 'Pay monthly, quarterly or yearly for learnsignal and access professional course materials, expert notes and corrected questions anytime, anywhere.', false)
+  rescue Learnsignal::SubscriptionError => e
+    flash[:error] = e.message
+    redirect_to new_subscription_url(params.slice(:exam_body_id).to_unsafe_h)
   end
 
   def create

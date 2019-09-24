@@ -91,26 +91,34 @@ class SubscriptionPlan < ApplicationRecord
     end
   end
 
-  def self.get_related_plans(user, currency, exam_body_id, plan_guid)
-    plan = SubscriptionPlan.where(guid: plan_guid).first
-    if plan && plan.subscription_plan_category_id
-      plans = plan.subscription_plan_category.subscription_plans.in_currency(
-          currency.id).all_active.all_in_order
-    else
-      plans = self.in_currency(currency.id)
-                  .generally_available
-                  .all_active
-                  .all_in_order
-    end
+  def self.get_individual_related_plan(plan_guid, currency)
+    plan = SubscriptionPlan.find_by(guid: plan_guid)
+    return plan unless plan && plan.currency_id != currency.id
+    raise Learnsignal::SubscriptionError, 'The specified plan is not available in your currency! Please choose another.'
+  end
 
-    if exam_body_id && (body = ExamBody.find(exam_body_id))
+  def self.get_related_plans(user, currency, exam_body_id, plan_guid)
+    plan = get_individual_related_plan(plan_guid, currency)
+    plans = if plan&.subscription_plan_category_id
+              plan.subscription_plan_category.subscription_plans.in_currency(
+                currency.id
+              ).all_active.all_in_order
+            else
+              in_currency(currency.id).generally_available.all_active.
+                all_in_order
+            end
+
+    scope_exam_body_plans(user, exam_body_id, plans)
+  end
+
+  def self.scope_exam_body_plans(user, exam_body_id, plans)
+    if body = ExamBody.find_by(id: exam_body_id)
       plans.where(exam_body_id: body.id)
-    elsif body = user.preferred_exam_body
-      plans.where(exam_body_id: body.id)
+    elsif body_id = user.preferred_exam_body_id
+      plans.where(exam_body_id: body_id)
     else
       plans
     end
-
   end
 
   def self.by_exam_body(exam_body_id)

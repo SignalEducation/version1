@@ -3639,10 +3639,9 @@ cite {
     padding-top: calc(1.35rem + .1rem)
   }
 }
-.form-control.is-invalid,
-.form-control:invalid {
-  color: #dc3545;
-  border-color: #fd5c63!important
+.form-control.is-invalid {
+  color: #fd5c63;
+  border-color: #fd5c63 !important;
 }
 .form-control.is-valid,
 .form-control:valid {

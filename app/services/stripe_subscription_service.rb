@@ -58,7 +58,8 @@ class StripeSubscriptionService < StripeService
   end
 
   def create_subscription(new_plan)
-    stripe_sub = get_updated_stripe_subscription(new_plan)
+    stripe_sub    = get_updated_stripe_subscription(new_plan)
+    client_secret = client_secret_from_sub(stripe_sub)
 
     [Subscription.create!(
       user_id: @subscription.user_id, subscription_plan_id: new_plan.id,
@@ -66,7 +67,7 @@ class StripeSubscriptionService < StripeService
       stripe_status: stripe_sub.status, changed_from: @subscription,
       stripe_guid: stripe_sub.id, next_renewal_date: renewal_date(stripe_sub),
       stripe_customer_id: @subscription.stripe_customer_id,
-      client_secret: stripe_sub.latest_invoice.to_h.dig(:payment_intent, :client_secret)
+      client_secret: client_secret
     ), stripe_sub]
   end
 
@@ -116,5 +117,11 @@ class StripeSubscriptionService < StripeService
       content_access: true
     )
     @subscription.update(stripe_status: 'canceled', state: 'cancelled')
+  end
+
+  def client_secret_from_sub(subscription)
+    subscription.latest_invoice.to_h.
+      dig(:payment_intent).to_h.
+      dig(:client_secret)
   end
 end
