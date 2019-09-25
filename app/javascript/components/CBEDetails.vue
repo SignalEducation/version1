@@ -15,6 +15,10 @@
               <option :value="null" disabled>-- Please select a course --</option>
             </template>
           </b-form-select>
+          <p
+            v-if="!$v.subjectCourseId.required && $v.subjectCourseId.$error"
+            class="error-message"
+          >field is required</p>
         </div>
       </div>
 
@@ -22,14 +26,27 @@
         <b-form-group id="checkbox-input-group" class="mt-5 mx-4">
           <b-form-checkbox v-model="active" id="active-checkbox">Active</b-form-checkbox>
         </b-form-group>
+        <p v-if="!$v.active.required && $v.active.$error" class="error-message">field is required</p>
       </div>
 
       <div class="col-sm-6">
         <div class="form-group">
           <label for="cbeName">Name</label>
           <div class="input-group input-group-lg">
-            <input v-model="name" class="form-control" id="cbeName" placeholder="Name" />
+            <input
+              v-model="name"
+              @blur="$v.name.$touch()"
+              :class="'form-control ' + {error: shouldAppendErrorClass($v.name), valid: shouldAppendValidClass($v.name)}"
+              id="cbeName"
+              placeholder="Name"
+            />
           </div>
+
+          <p v-if="!$v.name.required && $v.name.$error" class="error-message">field is required</p>
+          <p
+            v-if="!$v.name.alphaNum && $v.name.$error"
+            class="error-message"
+          >field should be alphanumeric.</p>
         </div>
       </div>
 
@@ -39,11 +56,24 @@
           <div class="input-group input-group-lg">
             <input
               v-model="examTime"
-              class="form-control"
+              @blur="$v.examTime.$touch()"
+              :class="'form-control ' + {error: shouldAppendErrorClass($v.examTime), valid: shouldAppendValidClass($v.examTime)}"
               id="cbeExamTime"
               placeholder="Time Limit"
             />
           </div>
+          <p
+            v-if="!$v.examTime.required && $v.examTime.$error"
+            class="error-message"
+          >field is required.</p>
+          <p
+            v-if="!$v.examTime.numeric && $v.examTime.$error"
+            class="error-message"
+          >field should be numeric.</p>
+          <p
+            v-if="!$v.examTime.between && $v.examTime.$error"
+            class="error-message"
+          >must be between {{$v.examTime.$params.between.min}} and {{$v.examTime.$params.between.max}}.</p>
         </div>
       </div>
 
@@ -51,10 +81,16 @@
         <div class="form-group">
           <label for="cbeAgreementContent">Agreement Text</label>
           <TinyEditor
+            @blur="$v.agreementContent.$touch()"
+            :class="{error: shouldAppendErrorClass($v.agreementContent), valid: shouldAppendValidClass($v.agreementContent)}"
             :fieldModel.sync="agreementContent"
             :aditionalToolbarOptions="['fullscreen']"
             :editorId="'detailsEditor'"
           />
+          <p
+            v-if="!$v.agreementContent.required && $v.agreementContent.$error"
+            class="error-message"
+          >field is required</p>
         </div>
       </div>
     </div>
@@ -62,20 +98,30 @@
     <div class="row mt-3">
       <div class="col-sm-12">
         <!-- Save CBE -->
-        <button v-on:click="saveNewCBE" class="btn btn-primary">Save CBE</button>
+        <button
+          v-on:click="saveNewCBE"
+          :disabled="submitStatus === 'PENDING' || submitStatus === 'OK'"
+          class="btn btn-primary"
+        >Save CBE</button>
+        <p class="typo__p" v-if="submitStatus === 'ERROR'">Please fill the form correctly.</p>
+        <p class="typo__p" v-if="submitStatus === 'PENDING'">Sending...</p>
       </div>
     </div>
   </div>
 </template>
 
+
 <script>
 import axios from "axios";
 import TinyEditor from "./TinyEditor";
+import { validationMixin } from "vuelidate";
+import { required, numeric, alphaNum, between } from "vuelidate/lib/validators";
 
 export default {
   components: {
     TinyEditor
   },
+  mixins: [validationMixin],
   mounted() {
     this.getSubjects();
   },
@@ -87,8 +133,29 @@ export default {
       active: false,
       subjectCourseId: null,
       subjectCourses: [],
-      createdCBE: []
+      createdCBE: [],
+      submitStatus: null
     };
+  },
+  validations: {
+    subjectCourseId: {
+      required
+    },
+    active: {
+      required
+    },
+    name: {
+      required,
+      alphaNum
+    },
+    examTime: {
+      required,
+      numeric,
+      between: between(1, 100)
+    },
+    agreementContent: {
+      required
+    }
   },
   watch: {
     name() {
@@ -117,24 +184,37 @@ export default {
         .catch(e => {});
     },
     saveNewCBE() {
-      this.cbeDetails = {};
-      this.cbeDetails.name = this.$store.state.cbeDetails.cbeName;
-      this.cbeDetails.agreement_content = this.$store.state.cbeDetails.cbeAgreementContent;
-      this.cbeDetails.exam_time = this.$store.state.cbeDetails.cbeExamTime;
-      this.cbeDetails.active = this.$store.state.cbeDetails.cbeActive;
-      this.cbeDetails.subject_course_id = this.$store.state.cbeDetails.cbeSubjectCourseId;
-      axios
-        .post("/api/v1/cbes/", { cbe: this.cbeDetails })
-        .then(response => {
-          this.createdCBE = response.data;
-          if (this.createdCBE.id > 0) {
-            this.$store.commit("setCbeId", this.createdCBE.id);
-            this.$store.commit("hideDetailsForm", true);
-          }
-        })
-        .catch(error => {
-          console.log(error);
-        });
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        this.submitStatus = "ERROR";
+      } else {
+        this.submitStatus = "PENDING";
+        this.cbeDetails = {};
+        this.cbeDetails.name = this.$store.state.cbeDetails.cbeName;
+        this.cbeDetails.agreement_content = this.$store.state.cbeDetails.cbeAgreementContent;
+        this.cbeDetails.exam_time = this.$store.state.cbeDetails.cbeExamTime;
+        this.cbeDetails.active = this.$store.state.cbeDetails.cbeActive;
+        this.cbeDetails.subject_course_id = this.$store.state.cbeDetails.cbeSubjectCourseId;
+        axios
+          .post("/api/v1/cbes/", { cbe: this.cbeDetails })
+          .then(response => {
+            this.createdCBE = response.data;
+            if (this.createdCBE.id > 0) {
+              this.$store.commit("setCbeId", this.createdCBE.id);
+              this.$store.commit("hideDetailsForm", true);
+              this.submitStatus = "OK";
+            }
+          })
+          .catch(error => {
+            this.submitStatus = "ERROR";
+          });
+      }
+    },
+    shouldAppendValidClass(field) {
+      return !field.$invalid && field.$model && field.$dirty;
+    },
+    shouldAppendErrorClass(field) {
+      return field.$error;
     }
   }
 };

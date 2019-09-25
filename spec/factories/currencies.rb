@@ -15,8 +15,8 @@
 
 FactoryBot.define do
   factory :currency do
-    iso_code                  { |n| "CCY#{n}" }
-    name                      { |n| "Currency #{n}" }
+    sequence(:iso_code)       { |n| "CCY#{n}" }
+    sequence(:name)           { |n| "Currency #{n}" }
     leading_symbol            { '£' }
     trailing_symbol           { 'p' }
     sequence(:sorting_order)  { |n| n * 100 }

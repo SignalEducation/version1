@@ -13,14 +13,12 @@ RSpec.describe StudentSignUpsController, type: :controller do
   let!(:landing_page_1) { FactoryBot.create(:landing_page_1, group_id: group_1.id) }
   let!(:landing_page_2) { FactoryBot.create(:landing_page_2, subject_course_id: subject_course_1.id, group_id: nil) }
 
-  let!(:student_user_group ) { FactoryBot.create(:student_user_group ) }
-  let!(:student_user) { FactoryBot.create(:student_user, user_group_id: student_user_group.id) }
+  let(:student_user) { FactoryBot.create(:student_user) }
   let!(:student_access) { FactoryBot.create(:valid_free_trial_student_access, user_id: student_user.id) }
-  let!(:gbp) { FactoryBot.create(:gbp) }
-  let!(:uk) { FactoryBot.create(:uk, currency_id: gbp.id) }
+  let(:gbp) { FactoryBot.create(:gbp) }
+  let(:uk) { FactoryBot.create(:uk, currency_id: gbp.id) }
 
-  let!(:unverified_user) { FactoryBot.create(:student_user, account_activated_at: nil, account_activation_code: '987654321', active: false, email_verified_at: nil, email_verification_code: '123456687', email_verified: false) }
-  let!(:valid_params) { FactoryBot.attributes_for(:student_user, user_group_id: student_user_group.id) }
+  let(:unverified_user) { FactoryBot.create(:student_user, user_group: student_user.user_group, account_activated_at: nil, account_activation_code: '987654321', active: false, email_verified_at: nil, email_verification_code: '123456687', email_verified: false) }
 
   let!(:sign_up_params) { { first_name: "Test", last_name: "Student", country_id: uk.id, locale: 'en', email: 'test.student@example.com', password: "dummy_pass", password_confirmation: "dummy_pass" , email_verification_code: "c5a8a2cb71d476ff4ed5" } }
 

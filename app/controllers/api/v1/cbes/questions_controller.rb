@@ -4,12 +4,14 @@ module Api
   module V1
     module Cbes
       class QuestionsController < Api::V1::ApplicationController
+        before_action :set_parent
+
         def index
-          @questions = ::Cbe::Question.all
+          @questions = @parent.questions.order(:sorting_order)
         end
 
         def create
-          @question = ::Cbe::Question.new(permitted_params)
+          @question = @parent.questions.build(permitted_params)
 
           unless @question.save
             render json: { errors: @question.errors }, status: :unprocessable_entity
@@ -26,6 +28,14 @@ module Api
             :cbe_scenario_id,
             :cbe_section_id
           )
+        end
+
+        def set_parent
+          @parent = if params[:section_id].present?
+                      ::Cbe::Section.find_by(id: params[:section_id])
+                    elsif params[:scenario_id].present?
+                      ::Cbe::Scenario.find_by(id: params[:scenario_id])
+                    end                        
         end
       end
     end

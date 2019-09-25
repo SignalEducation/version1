@@ -4,9 +4,10 @@ module Api
   module V1
     module Cbes
       class ScenariosController < Api::V1::ApplicationController
+        before_action :set_section
 
         def create
-          @scenario = ::Cbe::Scenario.new(permitted_params)
+          @scenario = @section.scenarios.build(permitted_params)
 
           unless @scenario.save
             render json: { errors: @scenario.errors }, status: :unprocessable_entity
@@ -20,6 +21,10 @@ module Api
             :content,
             :cbe_section_id
           )
+        end
+
+        def set_section
+          @section = ::Cbe::Section.find_by(id: params[:section_id])
         end
       end
     end
