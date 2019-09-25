@@ -93,8 +93,9 @@ class SubscriptionPlan < ApplicationRecord
 
   def self.get_individual_related_plan(plan_guid, currency)
     plan = SubscriptionPlan.find_by(guid: plan_guid)
-    return plan unless plan && plan.currency_id != currency.id
-    raise Learnsignal::SubscriptionError, 'The specified plan is not available in your currency! Please choose another.'
+    return plan unless (plan && plan.currency_id != currency.id) || (plan && !plan.active?)
+
+    raise Learnsignal::SubscriptionError, 'The specified plan is not available! Please choose another.'
   end
 
   def self.get_related_plans(user, currency, exam_body_id, plan_guid)
