@@ -140,7 +140,7 @@ describe SubscriptionPlan, type: :model do
 
       describe 'when neither the exam_body or preferred_exam_body exist' do
         let(:new_user) { build_stubbed(:user, preferred_exam_body_id: nil) }
-        
+
         it 'returns the original plans' do
           expect(SubscriptionPlan.scope_exam_body_plans(new_user, nil, plans)).to(
             eq plans
@@ -161,8 +161,15 @@ describe SubscriptionPlan, type: :model do
       end
 
       it 'raises an error if there is a currency miss-match' do
-        expect{ SubscriptionPlan.get_individual_related_plan(plan.guid, currency) }.to(
-          raise_error(Learnsignal::SubscriptionError, 'The specified plan is not available in your currency! Please choose another.')
+        expect { SubscriptionPlan.get_individual_related_plan(plan.guid, currency) }.to(
+          raise_error(Learnsignal::SubscriptionError, 'The specified plan is not available! Please choose another.')
+        )
+      end
+
+      it 'raises an error if the plan is not active' do
+        plan.update_column(:available_to, 1.days.ago)
+        expect { SubscriptionPlan.get_individual_related_plan(plan.guid, currency) }.to(
+          raise_error(Learnsignal::SubscriptionError, 'The specified plan is not available! Please choose another.')
         )
       end
     end

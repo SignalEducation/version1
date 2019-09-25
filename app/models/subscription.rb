@@ -329,11 +329,11 @@ class Subscription < ApplicationRecord
   end
 
   def reactivation_options
-    SubscriptionPlan
-      .where(
-        currency_id: self.subscription_plan.currency_id
-      )
-      .where('price > 0.0').generally_available.all_active.all_in_order
+    SubscriptionPlan.
+      where(
+        currency_id: subscription_plan.currency_id
+      ).
+      where('price > 0.0').generally_available.all_active.all_in_order
   end
 
   def schedule_paypal_cancellation
@@ -342,7 +342,12 @@ class Subscription < ApplicationRecord
   end
 
   def upgrade_options
-    SubscriptionPlan.includes(:currency).where.not(id: subscription_plan.id).where(subscription_plan_category_id: nil).for_exam_body(subscription_plan.exam_body_id).in_currency(subscription_plan.currency_id).all_active.all_in_order
+    SubscriptionPlan.includes(:currency).
+      where.not(payment_frequency_in_months: subscription_plan.payment_frequency_in_months).
+      where(subscription_plan_category_id: nil).
+      for_exam_body(subscription_plan.exam_body_id).
+      in_currency(subscription_plan.currency_id).
+      all_active.all_in_order
   end
 
   def update_from_stripe
