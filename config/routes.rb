@@ -18,26 +18,27 @@ Rails.application.routes.draw do
     post 'paypal_webhooks', to: 'paypal_webhooks#create'
 
     namespace :v1, constraints: ApiConstraint.new(version: 1) do
-      namespace :cbe, format: 'json' do
-        resources :questions, only: [:index, :create, :show]
-        resources :scenarios, only: :create
-      end
-
       resources :subject_courses, only: :index
       resources :cbes, format: 'json', only: [:index, :create, :show], shallow: true do
         scope module: 'cbes' do
-          resources :sections, only: [:index, :create]
+          resources :sections, only: [:index, :create], shallow: true do
+            resources :questions, only: [:index, :create]
+            resources :scenarios, only: :create do
+              resources :questions, only: [:index, :create]
+            end
+          end
           resources :introduction_pages, only: [:index, :create, :update]
-          resources :questions, only: [:index, :create]
-          resources :scenarios, only: :create
         end
       end
     end
   end
 
   namespace :admin do
-    resources :exercises, only: [:index, :show, :edit, :update] do
+    resources :exercises, only: [:index, :show, :new, :create, :edit, :update] do
       get 'generate_daily_summary', on: :collection
+    end
+    resources :user do
+      resources :exercises, only: [:index, :new, :create]
     end
 
     resources :cbes,   only: [:index, :new, :show, :update]

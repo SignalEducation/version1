@@ -77,8 +77,13 @@ FactoryBot.define do
     end
 
     factory :developers_user_group do
-      name { 'Developers User Group' }
-      developer_access                { true }
+      name             { 'Developers User Group' }
+      developer_access { true }
+    end
+
+    factory :exercise_corrections_user_group do
+      name                        { 'Exercise Correction User Group' }
+      exercise_corrections_access { true }
     end
 
     factory :marketing_manager_user_group do

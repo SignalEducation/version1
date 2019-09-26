@@ -92,7 +92,7 @@ FactoryBot.define do
       email_verified                  { true }
       email_verification_code         { nil }
       email_verified_at               { Time.now }
-      association :user_group
+      association :user_group, factory: :student_user_group
 
       factory :inactive_student_user do
         sequence(:email)                { |n| "inactive-indie-student-#{n}@example.com" }
@@ -195,6 +195,13 @@ FactoryBot.define do
       sequence(:email)                  { |n| "developer.user-#{n}@example.com" }
       active                            { true }
       stripe_customer_id                { nil }
+    end
+
+    factory :exercise_corrections_user do
+      sequence(:email)                  { |n| "corrections.user-#{n}@example.com" }
+      active                            { true }
+      stripe_customer_id                { nil }
+      association :user_group, factory: :exercise_corrections_user_group
     end
 
     factory :marketing_manager_user do

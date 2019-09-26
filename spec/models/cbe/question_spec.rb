@@ -21,7 +21,6 @@ RSpec.describe Cbe::Question, type: :model do
   describe 'Validations' do
     it { should validate_presence_of(:content) }
     it { should validate_presence_of(:kind) }
-    it { should validate_presence_of(:cbe_section_id) }
     it { should validate_numericality_of(:score).is_greater_than_or_equal_to(0) }
   end
 
