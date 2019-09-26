@@ -60,24 +60,22 @@
 
   =render partial: 'usage_numbers_section'
 
-  .container
-    %article.py-5
-      %header.pb-sm-4.pb-md-5
-        .row.row-lg
-          .col-12.col-lg-6
-            %blockquote.ml-lg-3.mr-lg-3
-              %p.text-gray2
-                "I passed my final exam advanced performance management. I found the learnsignal system and content very useful and more up-to-date than previous providers. I would recommend learnsignal to anyone studying ACCA."
-              %footer
-                %cite.font-weight-semi-bold.text-gray2
-                  Peter Curtis, United Kingdom
+    -if @home_page&.video_guid.present?
+    .container
+      %article.py-5
+        %header.pb-sm-4.pb-md-5
+          .row.row-lg
+            .col-12.col-lg-6
+              %blockquote.ml-lg-3.mr-lg-3
+                %p.text-gray2
+                  "I passed my final exam advanced performance management. I found the learnsignal system and content very useful and more up-to-date than previous providers. I would recommend learnsignal to anyone studying ACCA."
+                %footer
+                  %cite.font-weight-semi-bold.text-gray2
+                    Peter Curtis, United Kingdom
 
-          .col-12.col-lg-6
-            -if @home_page&.video_guid.present?
+            .col-12.col-lg-6
               .video-iframe-wrap
                 %iframe{src: "https://player.vimeo.com/video/#{@home_page.video_guid}", frameborder: '0', allowfullscreen: true, mozallowfullscreen: true, webkitallowfullscreen: true}
-            -else
-              =image_tag('testimonial-img-3.png', class: 'mb-5 mb-lg-0', alt: 'Girl at the laptop')
 
 
 
