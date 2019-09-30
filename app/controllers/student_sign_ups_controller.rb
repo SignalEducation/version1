@@ -40,8 +40,8 @@ class StudentSignUpsController < ApplicationController
       @exam_body = @group.exam_body
 
       @currency_id =
-        if current_user
-          current_user.country_id
+        if current_user&.currency_id
+          current_user.currency_id
         else
           ip_country = IpAddress.get_country(request.remote_ip)
           country = ip_country || Country.find_by(name: 'United Kingdom')
