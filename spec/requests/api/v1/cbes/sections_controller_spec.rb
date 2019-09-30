@@ -93,4 +93,58 @@ RSpec.describe 'Api::V1::Cbe::SectionsController', type: :request do
       end
     end
   end
+
+  describe 'patch /api/v1/sections/:id' do
+    context 'update a section' do
+      let!(:cbe) { create(:cbe, :with_subject_course) }
+      let(:section) { create(:cbe_section, cbe: cbe) }
+      let!(:update_params) { FactoryBot.attributes_for(:cbe_section, name: 'Updated Section') }
+
+      before do
+        patch "/api/v1/sections/#{section.id}", params: { cbe_section: update_params }
+      end
+
+      it 'returns HTTP status 200' do
+        expect(response).to have_http_status 200
+      end
+
+      it 'returns cbes json data' do
+        body = JSON.parse(response.body)
+
+        expect(body['name']).to eq(update_params[:name])
+        expect(body['score']).to eq(update_params[:score])
+        expect(body['kind']).to eq(update_params[:kind])
+        expect(body['sorting_order']).to eq(update_params[:sorting_order])
+        expect(body['content']).to eq(update_params[:content])
+        expect([body.keys]).to contain_exactly(%w[id
+                                                  name
+                                                  score
+                                                  kind
+                                                  sorting_order
+                                                  content
+                                                  questions])
+      end
+    end
+
+    context 'try to update a cbe with invalid details' do
+      let!(:cbe) { create(:cbe, :with_subject_course) }
+      let(:section) { create(:cbe_section, cbe: cbe) }
+      let!(:update_params) { FactoryBot.attributes_for(:cbe_section, name: nil) }
+
+      before do
+        patch "/api/v1/sections/#{section.id}", params: { cbe_section: update_params }
+      end
+
+      it 'returns HTTP status 422' do
+        expect(response).to have_http_status 422
+      end
+
+      it 'returns empty data' do
+        body = JSON.parse(response.body)
+
+        expect(body['errors']).to eq('name' => ['can\'t be blank'])
+      end
+    end
+  end
+
 end

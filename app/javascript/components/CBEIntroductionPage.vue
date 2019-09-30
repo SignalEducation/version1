@@ -12,7 +12,7 @@
 
       <div class="col-sm-12">
         <div class="form-group">
-          <label for="sectionKindSelect">Page Type</label>
+          <label for="pageKindSelect">Page Type</label>
           <b-form-select v-model="kind" :options="introPageKinds" id="pageKindSelect" class="input-group input-group-lg">
             <template slot="first">
               <option :value="null" disabled>-- Please select a type --</option>
@@ -24,9 +24,11 @@
       <div class="col-sm-12">
         <div class="form-group">
           <label for="pageContent">Page Content</label>
-          <div class="input-group input-group-lg">
-            <textarea v-model="content" placeholder="Content" class="form-control" id="pageContent" rows="10"></textarea>
-          </div>
+          <TinyEditor
+              :fieldModel.sync="content"
+              :aditionalToolbarOptions="['fullscreen']"
+              :editorId="'introPagesEditor' + id"
+          />
         </div>
       </div>
 
@@ -40,10 +42,17 @@
 
 <script>
   import axios from "axios";
+  import TinyEditor from "./TinyEditor";
 
   export default {
+    components: {
+      TinyEditor
+    },
     props: {
-      id: Number,
+      id: {
+        type: Number,
+        default: 0
+      },
       initialTitle: {
         type: String,
         default: ''

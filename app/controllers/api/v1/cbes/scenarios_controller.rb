@@ -14,6 +14,14 @@ module Api
           end
         end
 
+        def update
+          @scenario = ::Cbe::Scenario.find(params[:id])
+
+          unless @scenario.update(permitted_params)
+            render json: { errors: @scenario.errors }, status: :unprocessable_entity
+          end
+        end
+
         private
 
         def permitted_params

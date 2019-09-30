@@ -18,6 +18,14 @@ module Api
           end
         end
 
+        def update
+          @question = ::Cbe::Question.find(params[:id])
+
+          unless @question.update(permitted_params)
+            render json: { errors: @question.errors }, status: :unprocessable_entity
+          end
+        end
+
         private
 
         def permitted_params

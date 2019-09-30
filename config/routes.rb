@@ -19,12 +19,12 @@ Rails.application.routes.draw do
 
     namespace :v1, constraints: ApiConstraint.new(version: 1) do
       resources :subject_courses, only: :index
-      resources :cbes, format: 'json', only: [:index, :create, :show], shallow: true do
+      resources :cbes, format: 'json', only: [:index, :create, :update, :show], shallow: true do
         scope module: 'cbes' do
-          resources :sections, only: [:index, :create], shallow: true do
-            resources :questions, only: [:index, :create]
-            resources :scenarios, only: :create do
-              resources :questions, only: [:index, :create]
+          resources :sections, only: [:index, :create, :update], shallow: true do
+            resources :questions, only: [:index, :create, :update]
+            resources :scenarios, only: [:create, :update] do
+              resources :questions, only: [:index, :create, :update]
             end
           end
           resources :introduction_pages, only: [:index, :create, :update]

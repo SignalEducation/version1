@@ -9,7 +9,7 @@
             :class="{error: shouldAppendErrorClass($v.scenarioContent), valid: shouldAppendValidClass($v.scenarioContent)}"
             :fieldModel.sync="scenarioContent"
             :aditionalToolbarOptions="['fullscreen']"
-            :editorId="'scenarioEditor'"
+            :editorId="'scenarioEditor' + '-' + scenarioId + '-' + id"
           />
           <p
             v-if="!$v.scenarioContent.required && $v.scenarioContent.$error"
@@ -21,6 +21,13 @@
 
     <div class="form-group">
       <button
+        v-if="id"
+        v-on:click="updateScenario"
+        :disabled="submitStatus === 'PENDING'"
+        class="btn btn-primary"
+      >Update Scenario</button>
+      <button
+        v-else
         v-on:click="saveScenario"
         :disabled="submitStatus === 'PENDING'"
         class="btn btn-primary"
@@ -38,7 +45,11 @@ import { validationMixin } from "vuelidate";
 import { required } from "vuelidate/lib/validators";
 
 export default {
-  props: ["sectionId"],
+  props: {
+    sectionId: Number,
+    id: Number,
+    initialContent: String,
+  },
   components: {
     TinyEditor
   },
@@ -46,7 +57,7 @@ export default {
   data: function() {
     return {
       scenarioDetails: {},
-      scenarioContent: null,
+      scenarioContent: this.initialContent,
       submitStatus: null
     };
   },
@@ -76,6 +87,32 @@ export default {
             this.$emit("add-scenario", this.scenarioDetails);
             this.scenarioDetails = {};
             this.scenarioContent = null;
+            this.submitStatus = "OK";
+            this.$v.$reset();
+          })
+          .catch(error => {
+            this.submitStatus = "ERROR";
+          });
+      }
+    },
+    updateScenario: function() {
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        this.submitStatus = "ERROR";
+      } else {
+        this.scenarioDetails["content"] = this.scenarioContent;
+        this.scenarioDetails["cbe_section_id"] = this.sectionId;
+
+        axios
+          .patch(
+            `/api/v1/scenarios/${this.id}`, {scenario: this.scenarioDetails}
+          )
+          .then(response => {
+            this.updatedScenario = response.data;
+            this.scenarioDetails["id"] = this.updatedScenario.id;
+            this.$emit("update-content", this.TinyEditor);
+            this.scenarioDetails = {};
+            this.content = this.initialContent;
             this.submitStatus = "OK";
             this.$v.$reset();
           })

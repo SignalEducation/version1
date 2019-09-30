@@ -50,11 +50,22 @@
 
   - if controller_name == 'cbes'
     %body.page-light
-      .main-content
-        -if flash[:success] || flash[:error] || flash[:warning]
-          =render partial: 'layouts/flash_messages'
+      -if @layout == 'management'
+        #console-wrapper
+          .d-none.d-sm-block
+            =render partial: 'layouts/management_side_navbar'
+          .main-content
+            -if flash[:success] || flash[:error] || flash[:warning]
+              =render partial: 'layouts/flash_messages'
 
-        =yield
+            =yield
+
+      -else
+        .main-content
+          -if flash[:success] || flash[:error] || flash[:warning]
+            =render partial: 'layouts/flash_messages'
+
+          =yield
 
   - else
     %body{class: (controller_name == 'student_sign_ups' && action_name != 'new') ? 'page-light' : ''}
