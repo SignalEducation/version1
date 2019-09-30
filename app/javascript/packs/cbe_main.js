@@ -42,8 +42,11 @@ document.addEventListener('DOMContentLoaded', () => {
       el: cbe_front,
       data: {
         cbe_id: cbe_front.dataset.id,
+        user_id: cbe_front.dataset.userId,
       },
       render: (h) => h(CbeHome),
     });
   }
+
+  router.replace('/')
 });

@@ -3,6 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe 'Api::V1::CbesController', type: :request do
+  # index
   describe 'get /api/v1/cbes' do
     context 'return all records' do
       let!(:cbes) { create_list(:cbe, 5, :with_subject_course) }
@@ -52,6 +53,7 @@ RSpec.describe 'Api::V1::CbesController', type: :request do
     end
   end
 
+  # show
   describe 'get /api/v1/cbes/:id' do
     context 'return a CBE' do
       let!(:cbe) { create(:cbe, :with_subject_course) }
@@ -87,6 +89,7 @@ RSpec.describe 'Api::V1::CbesController', type: :request do
     end
   end
 
+  # create
   describe 'post /api/v1/cbes' do
     context 'create a valid cbe' do
       let(:cbe) { build(:cbe, :with_subject_course) }

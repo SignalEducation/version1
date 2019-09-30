@@ -1,6 +1,7 @@
 import Vue        from 'vue'
 import Vuex       from 'vuex'
 import cbe        from './modules/cbe'
+import userCbe    from './modules/user_cbe'
 import cbeDetails from './modules/cbe_details'
 
 Vue.use(Vuex);
@@ -8,7 +9,8 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   modules: {
     cbe,
-    cbeDetails
+    cbeDetails,
+    userCbe
   },
 
   state: { // data
@@ -26,5 +28,4 @@ export default new Vuex.Store({
       state.cbeId = value
     }
   }
-
 });

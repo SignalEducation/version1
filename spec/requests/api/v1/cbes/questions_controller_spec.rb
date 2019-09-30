@@ -29,6 +29,7 @@ RSpec.describe 'Api::V1::Cbe::QuestionsController', type: :request do
                                                               score
                                                               sorting_order
                                                               section_id
+                                                              answers
                                                               scenario])
         end
       end
@@ -73,6 +74,7 @@ RSpec.describe 'Api::V1::Cbe::QuestionsController', type: :request do
                                                     score
                                                     sorting_order
                                                     section_id
+                                                    answers
                                                     scenario])
         end
       end
@@ -124,6 +126,7 @@ RSpec.describe 'Api::V1::Cbe::QuestionsController', type: :request do
                                                               score
                                                               sorting_order
                                                               section_id
+                                                              answers
                                                               scenario])
         end
       end
@@ -168,6 +171,7 @@ RSpec.describe 'Api::V1::Cbe::QuestionsController', type: :request do
                                                     score
                                                     sorting_order
                                                     section_id
+                                                    answers
                                                     scenario])
         end
       end
@@ -215,12 +219,13 @@ RSpec.describe 'Api::V1::Cbe::QuestionsController', type: :request do
         expect(body['score']).to eq(update_params[:score])
 
         expect([body.keys]).to contain_exactly(%w[id
-                                                    kind
-                                                    content
-                                                    score
-                                                    sorting_order
-                                                    section_id
-                                                    scenario])
+                                                  kind
+                                                  content
+                                                  score
+                                                  sorting_order
+                                                  section_id
+                                                  answers
+                                                  scenario])
       end
 
     end
@@ -273,6 +278,7 @@ RSpec.describe 'Api::V1::Cbe::QuestionsController', type: :request do
                                                               score
                                                               sorting_order
                                                               section_id
+                                                              answers
                                                               scenario])
         end
       end
@@ -317,6 +323,7 @@ RSpec.describe 'Api::V1::Cbe::QuestionsController', type: :request do
                                                     score
                                                     sorting_order
                                                     section_id
+                                                    answers
                                                     scenario])
         end
       end
@@ -337,7 +344,7 @@ RSpec.describe 'Api::V1::Cbe::QuestionsController', type: :request do
         it 'returns empty data' do
           body = JSON.parse(response.body)
 
-          expect(body['errors']).to eq("content"=>["can't be blank"])
+          expect(body['errors']).to eq('content'=>["can't be blank"])
         end
       end
     end

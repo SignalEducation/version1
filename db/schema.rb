@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_12_152203) do
+ActiveRecord::Schema.define(version: 2019_09_26_124329) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -153,6 +153,29 @@ ActiveRecord::Schema.define(version: 2019_09_12_152203) do
     t.integer "sorting_order"
     t.text "content"
     t.index ["cbe_id"], name: "index_cbe_sections_on_cbe_id"
+  end
+
+  create_table "cbe_user_answers", force: :cascade do |t|
+    t.json "content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "cbe_user_log_id"
+    t.bigint "cbe_question_id"
+    t.bigint "cbe_answer_id"
+    t.index ["cbe_answer_id"], name: "index_cbe_user_answers_on_cbe_answer_id"
+    t.index ["cbe_question_id"], name: "index_cbe_user_answers_on_cbe_question_id"
+    t.index ["cbe_user_log_id"], name: "index_cbe_user_answers_on_cbe_user_log_id"
+  end
+
+  create_table "cbe_user_logs", force: :cascade do |t|
+    t.integer "status"
+    t.float "score"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "cbe_id"
+    t.bigint "user_id"
+    t.index ["cbe_id"], name: "index_cbe_user_logs_on_cbe_id"
+    t.index ["user_id"], name: "index_cbe_user_logs_on_user_id"
   end
 
   create_table "cbes", force: :cascade do |t|
@@ -371,9 +394,9 @@ ActiveRecord::Schema.define(version: 2019_09_12_152203) do
     t.boolean "is_video", default: false, null: false
     t.boolean "is_quiz", default: false, null: false
     t.boolean "active", default: true, null: false
-    t.string "seo_description", limit: 255
-    t.boolean "seo_no_index", default: false
     t.datetime "destroyed_at"
+    t.string "seo_description"
+    t.boolean "seo_no_index", default: false
     t.integer "number_of_questions", default: 0
     t.float "duration", default: 0.0
     t.string "temporary_label"
@@ -392,9 +415,9 @@ ActiveRecord::Schema.define(version: 2019_09_12_152203) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer "cme_count", default: 0
-    t.string "seo_description", limit: 255
-    t.boolean "seo_no_index", default: false
     t.datetime "destroyed_at"
+    t.string "seo_description"
+    t.boolean "seo_no_index", default: false
     t.integer "number_of_questions", default: 0
     t.integer "subject_course_id"
     t.float "video_duration", default: 0.0

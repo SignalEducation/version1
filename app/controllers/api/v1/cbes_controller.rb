@@ -3,13 +3,12 @@
 module Api
   module V1
     class CbesController < Api::V1::ApplicationController
+      before_action :set_cbe, only: %i[show update]
       def index
         @cbes = ::Cbe.all
       end
 
-      def show
-        @cbe = ::Cbe.find(params[:id])
-      end
+      def show; end
 
       def update
         @cbe =  ::Cbe.find(params[:id])
@@ -32,6 +31,10 @@ module Api
       end
 
       private
+
+      def set_cbe
+        @cbe = ::Cbe.find(params[:id])
+      end
 
       def cbe_params
         params.require(:cbe).permit(:name,
