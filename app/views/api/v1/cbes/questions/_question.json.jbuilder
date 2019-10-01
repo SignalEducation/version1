@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 json.id               question.id
 json.kind             question.kind
 json.content          question.content

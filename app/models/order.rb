@@ -61,7 +61,7 @@ class Order < ApplicationRecord
 
   scope :cbe_by_user, lambda { |user_id, cbe_id|
     joins(:product).
-      where(user_id: user_id, products: { product_type: :cbe,  cbe_id: cbe_id })
+      where(user_id: user_id, products: { product_type: :cbe, cbe_id: cbe_id })
   }
 
   scope :orders_completed_in_time, lambda { |time|
