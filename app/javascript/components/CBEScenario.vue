@@ -9,7 +9,7 @@
             :class="{error: shouldAppendErrorClass($v.scenarioContent), valid: shouldAppendValidClass($v.scenarioContent)}"
             :fieldModel.sync="scenarioContent"
             :aditionalToolbarOptions="['fullscreen']"
-            :editorId="'scenarioEditor' + '-' + scenarioId + '-' + id"
+            :editorId="'scenarioEditor' + '-' + sectionId + '-' + id"
           />
           <p
             v-if="!$v.scenarioContent.required && $v.scenarioContent.$error"

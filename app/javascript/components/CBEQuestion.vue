@@ -199,9 +199,9 @@ export default {
             this.questionDetails["id"] = this.updatedQuestion.id;
             this.$emit("update-content", this.TinyEditor);
             this.questionDetails = {};
-            this.questionKind = null;
-            this.questionContent = null;
-            this.questionScore = null;
+            this.questionKind = this.initialKind;
+            this.questionContent = this.initialContent;
+            this.questionScore = this.initialScore;
             this.submitStatus = "OK";
             this.$v.$reset();
           })
