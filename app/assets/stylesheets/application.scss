@@ -1101,8 +1101,10 @@ textarea.form-control {
 .input-group-lg > .input-group-append > .input-group-text,
 .input-group-lg > .input-group-prepend > .btn,
 .input-group-lg > .input-group-prepend > .input-group-text {
-  height: -webkit-calc(2.6875rem + 2px);
-  height: calc(2.6875rem + 2px);
+  :not(textarea) {
+    height: -webkit-calc(2.6875rem + 2px);
+    height: calc(2.6875rem + 2px);
+  }
   padding: .5rem 1rem;
   font-size: 1.125rem;
   line-height: 1.5;

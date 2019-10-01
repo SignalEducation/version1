@@ -22,12 +22,12 @@
 
 FactoryBot.define do
   factory :exam_body do
-    sequence(:name)           { |n| "ACCA #{n}" }
-    url { 'accaglobal.com/ie/en.html' }
-    active                    { true }
-    constructed_response_intro_heading {'Intro Heading'}
-    constructed_response_intro_text {'Intro Text'}
-    landing_page_h1 {'Header H1'}
-    landing_page_paragraph {'Header P Text'}
+    sequence(:name)                    { |n| "#{Faker::Commerce.product_name} - #{n}" }
+    url                                { 'accaglobal.com/ie/en.html' }
+    active                             { true }
+    constructed_response_intro_heading { 'Intro Heading' }
+    constructed_response_intro_text    { 'Intro Text' }
+    landing_page_h1                    { 'Header H1' }
+    landing_page_paragraph             { 'Header P Text' }
   end
 end

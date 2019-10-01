@@ -51,4 +51,7 @@ Rails.application.configure do
           authentication:       'plain',
           enable_starttls_auto: true
   }
+
+  # Paperclip rspec config
+  Paperclip::Attachment.default_options[:path] = "#{Rails.root}/spec/test_files/:class/:id_partition/:style.:extension"
 end

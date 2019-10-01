@@ -58,6 +58,12 @@ class Order < ApplicationRecord
   scope :all_for_course,  ->(course_id)  { where(subject_course_id: course_id) }
   scope :all_for_product, ->(product_id) { where(product_id: product_id) }
   scope :all_for_user,    ->(user_id)    { where(user_id: user_id) }
+
+  scope :cbe_by_user, lambda { |user_id, cbe_id|
+    joins(:product).
+      where(user_id: user_id, products: { product_type: :cbe, cbe_id: cbe_id })
+  }
+
   scope :orders_completed_in_time, lambda { |time|
     with_state(:completed).where('orders.created_at > (?)', time)
   }
