@@ -48,15 +48,15 @@ class FooterPagesController < ApplicationController
     end
 
     @products = Product.in_currency(@currency_id).
-                        all_active.
-                        all_in_order.
-                        where('mock_exam_id IS NOT NULL').
-                        where('product_type = ?', Product.product_types[:mock_exam])
+                  all_active.
+                  all_in_order.
+                  where('mock_exam_id IS NOT NULL').
+                  where('product_type = ?', Product.product_types[:mock_exam])
     @questions = Product.in_currency(@currency_id).
-                         all_active.
-                         all_in_order.
-                         where('mock_exam_id IS NOT NULL').
-                         where('product_type = ?', Product.product_types[:correction_pack])
+                   all_active.
+                   all_in_order.
+                   where('mock_exam_id IS NOT NULL').
+                   where('product_type = ?', Product.product_types[:correction_pack])
   end
 
   def profile

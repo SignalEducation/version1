@@ -124,7 +124,7 @@
 
 <script>
 import axios from "axios";
-import TinyEditor from "./TinyEditor";
+import TinyEditor from "../../TinyEditor";
 import { validationMixin } from "vuelidate";
 import { required, numeric, alphaNum, between } from "vuelidate/lib/validators";
 

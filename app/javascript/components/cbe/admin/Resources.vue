@@ -1,23 +1,23 @@
 <template>
   <b-card no-body>
     <b-tabs card >
-      <CBEResource
+      <Resource
         v-for="resource in resources"
         v-bind:key="'resource-tab-' + resource.id"
         v-bind:id="resource.id"
         v-bind:initialTitle="resource.name"
       />
-      <CBEResource v-on:add-resource="updateResources" />
+      <Resource v-on:add-resource="updateResources" />
     </b-tabs>
   </b-card>
 </template>
 
 <script>
-import CBEResource from "./CBEResource";
+import Resource from "./Resource";
 
 export default {
   components: {
-    CBEResource,
+    Resource,
   },
   props: {
     resources: Array

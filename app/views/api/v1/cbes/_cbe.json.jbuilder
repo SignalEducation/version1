@@ -23,7 +23,6 @@ json.sections cbe.sections.order(:sorting_order) do |section|
   json.partial! 'api/v1/cbes/sections/section', locals: { section: section }
 end
 
-# TODO(Giordano), Find a way to use questions from section in vuejs cbe_data to show a specific question view.
 json.questions cbe.questions.order(:sorting_order) do |question|
   json.partial! 'api/v1/cbes/questions/question', locals: { question: question }
 end

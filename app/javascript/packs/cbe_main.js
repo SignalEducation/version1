@@ -1,36 +1,40 @@
 import Vue from 'vue';
 import BootstrapVue from 'bootstrap-vue';
-import App from '../App';
-import Show from '../Show';
 import store from '../store';
 import router from '../router';
 
-
-// CBE FRONT
+// ##### CBE #####
+//
+// Admin View
+//
+import CbeAdmin from '../components/cbe/admin/Home';
+import CbeEdit from '../components/cbe/admin/Edit';
+//
+// User View
+//
 import CbeHome from '../components/cbe/Home';
+// ##############
 
 Vue.use(BootstrapVue);
 
 document.addEventListener('DOMContentLoaded', () => {
   const cbes_new = document.getElementById('cbes-new-view');
   if (cbes_new != null) {
-    const vue = new Vue({
+    new Vue({
       store,
       el: cbes_new,
-      template: '<App/>',
-      components: { App },
-      render: (h) => h(App),
+      components: { CbeAdmin },
+      render: (h) => h(CbeAdmin),
     });
   }
 
   const cbes_show = document.getElementById('cbes-show-view');
   if (cbes_show != null) {
-    const vue = new Vue({
+    new Vue({
       store,
       el: cbes_show,
-      template: '<Show/>',
-      components: { Show },
-      render: (h) => h(Show),
+      components: { CbeEdit },
+      render: (h) => h(CbeEdit),
     });
   }
 
