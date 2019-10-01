@@ -152,7 +152,7 @@ RSpec.describe 'Api::V1::CbesController', type: :request do
 
   describe 'patch /api/v1/cbes/:id' do
     context 'update a cbe' do
-      let!(:cbe) { create(:cbe, :with_subject_course) }
+      let!(:cbe) { create(:cbe) }
       let!(:update_params) { FactoryBot.attributes_for(:cbe, name: 'Updated CBE') }
 
       before do
@@ -193,7 +193,7 @@ RSpec.describe 'Api::V1::CbesController', type: :request do
     end
 
     context 'try to update a cbe with invalid details' do
-      let!(:cbe) { create(:cbe, :with_subject_course) }
+      let!(:cbe) { create(:cbe) }
       let!(:update_params) { FactoryBot.attributes_for(:cbe, subject_course_id: nil) }
 
       before do

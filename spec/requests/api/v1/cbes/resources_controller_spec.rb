@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+require 'rack/test'
 
 RSpec.describe 'Api::V1::Cbe::ResourcesController', type: :request do
   let(:cbe) { create(:cbe) }
@@ -41,9 +42,10 @@ RSpec.describe 'Api::V1::Cbe::ResourcesController', type: :request do
   describe 'post /api/v1/cbe/resources' do
     context 'create a valid CBE resource' do
       let(:resource) { build(:cbe_resource, cbe: cbe) }
+      let(:doc) { Rack::Test::UploadedFile.new('spec/support/fixtures/file.pdf', 'application/pdf') }
 
       before do
-        post "/api/v1/cbes/#{cbe.id}/resources", params: { resource: resource.attributes }
+        post "/api/v1/cbes/#{cbe.id}/resources", params: { resource: resource.attributes.merge(document: doc) }
       end
 
       it 'returns HTTP status 200' do
@@ -72,7 +74,7 @@ RSpec.describe 'Api::V1::Cbe::ResourcesController', type: :request do
       it 'returns empty data' do
         body = JSON.parse(response.body)
 
-        expect(body['errors']).to eq('name' => ['can\'t be blank'])
+        expect(body['errors']).to eq("document"=>["can't be blank"], 'name' => ['can\'t be blank'])
       end
     end
   end

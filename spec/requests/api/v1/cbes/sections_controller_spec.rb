@@ -96,7 +96,7 @@ RSpec.describe 'Api::V1::Cbe::SectionsController', type: :request do
 
   describe 'patch /api/v1/sections/:id' do
     context 'update a section' do
-      let!(:cbe) { create(:cbe, :with_subject_course) }
+      let!(:cbe) { create(:cbe) }
       let(:section) { create(:cbe_section, cbe: cbe) }
       let!(:update_params) { FactoryBot.attributes_for(:cbe_section, name: 'Updated Section') }
 
@@ -127,7 +127,7 @@ RSpec.describe 'Api::V1::Cbe::SectionsController', type: :request do
     end
 
     context 'try to update a cbe with invalid details' do
-      let!(:cbe) { create(:cbe, :with_subject_course) }
+      let!(:cbe) { create(:cbe) }
       let(:section) { create(:cbe_section, cbe: cbe) }
       let!(:update_params) { FactoryBot.attributes_for(:cbe_section, name: nil) }
 

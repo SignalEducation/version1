@@ -3,13 +3,13 @@
 require 'rails_helper'
 
 RSpec.describe 'Api::V1::Cbe::ScenariosController', type: :request do
-  let!(:cbe) { create(:cbe, :with_subject_course) }
+  let!(:cbe) { create(:cbe) }
   let(:cbe_section) { create(:cbe_section, cbe: cbe) }
   let(:cbe_scenario) { create(:cbe_scenario, cbe_section: cbe_section) }
 
   describe 'post /api/v1/cbe/scenarios' do
     context 'create a valid CBE scenario' do
-      let(:scenario) { build(:cbe_scenario, :with_section) }
+      let(:scenario) { build(:cbe_scenario) }
 
       before do
         post "/api/v1/sections/#{cbe_section.id}/scenarios", params: { scenario: scenario.attributes }

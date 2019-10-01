@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe 'Api::V1::Cbe::UsersLogController', type: :request do
-  let(:cbe)  { create(:cbe, :with_subject_course) }
+  let(:cbe)  { create(:cbe) }
   let(:user) { create(:user) }
 
   # index
