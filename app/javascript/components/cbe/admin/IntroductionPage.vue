@@ -42,7 +42,7 @@
 
 <script>
   import axios from "axios";
-  import TinyEditor from "./TinyEditor";
+  import TinyEditor from "../../TinyEditor";
 
   export default {
     components: {

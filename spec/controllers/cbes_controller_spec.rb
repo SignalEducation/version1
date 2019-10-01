@@ -22,7 +22,8 @@ RSpec.describe CbesController, type: :controller do
     it 'user has not purchased a CBE' do
       get :show, params: { id: cbe.id }
 
-      expect(response.status).to eq(200)
+      expect(response.status).to eq(302)
+      expect(response).to redirect_to(prep_products_url)
       expect(flash[:error]).to be_present
       expect(flash[:error]).to eq('You need to purchase it before access.')
     end

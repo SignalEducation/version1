@@ -11,8 +11,6 @@ module Api
       def show; end
 
       def update
-        @cbe =  ::Cbe.find(params[:id])
-
         if @cbe.update(cbe_params)
           render 'api/v1/cbes/show.json'
         else

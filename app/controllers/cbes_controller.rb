@@ -15,6 +15,6 @@ class CbesController < ApplicationController
     return if current_user.purchased_cbe?(params[:id])
 
     flash[:error] = 'You need to purchase it before access.'
-    # todo(Giordano), maybe redirect user to product page.
+    redirect_to prep_products_url
   end
 end
