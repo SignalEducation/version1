@@ -155,7 +155,7 @@ $wj-cell-grp-bkg: #777777;
     padding: 10px;
 
     .btn-row {
-      height: 25px;
+      min-height: 25px;
       margin: 5px 0;
       font-size: 0.8rem;
 
@@ -245,6 +245,19 @@ $wj-cell-grp-bkg: #777777;
             background: url("./images/redo.gif") no-repeat center;
           }
 
+          &.cut {
+            border-left: 1px solid #d9d9d9;
+            background: url("./images/cut.gif") no-repeat center;
+          }
+
+          &.copy {
+            background: url("./images/copy.gif") no-repeat center;
+          }
+
+          &.paste {
+            background: url("./images/paste.gif") no-repeat center;
+          }
+
           &.active {
             background-color: #dbdbdb;
             border-color: #ccc;
@@ -252,6 +265,51 @@ $wj-cell-grp-bkg: #777777;
         }
       }
     }
+
+    .formula-row {
+      padding: 4px;
+      height: 30px;
+
+      .cell-number {
+        float: left;
+        height: 25px;
+        width: 100px;
+        background: #fff;
+        color: blue;
+        padding: 2px;
+        text-align: center;
+      }
+
+      .formula-box {
+        float: left;
+        height: 25px;
+        background: #fff;
+        color: blue;
+        margin-left: 10px;
+        width: calc(100% - 110px);
+      }
+    }
+  }
+}
+
+.modal {
+  z-index: 1042;
+}
+
+.modal-backdrop {
+  opacity: 0.1;
+}
+
+.d-block {
+  padding: 10px;
+}
+
+.modal-content {
+
+  .modal-header,
+  .modal-footer,
+  .modal-body {
+    padding: 10px;
   }
 }
 
@@ -387,27 +445,6 @@ div.ui-dialog .spreadsheet-dialog.ui-dialog-content {
   font: 13.3333px Arial;
 }
 
-.spreadsheet-toolbar .number {
-  border-left: 1px solid #d9d9d9;
-  // background: url("icons/fixed.gif") no-repeat center;
-}
-
-.spreadsheet-toolbar .currency {
-  // background: url("icons/currency.gif") no-repeat center;
-}
-
-.spreadsheet-toolbar .percent {
-  // background: url("icons/percent.gif") no-repeat center;
-}
-
-.spreadsheet-toolbar .fraction {
-  // background: url("icons/fraction.gif") no-repeat center;
-}
-
-.spreadsheet-toolbar .datetime {
-  // background: url("icons/datetime.gif") no-repeat center;
-}
-
 .top-section {
   background-color: #ffffff !important;
   padding: 5px 0 5px 0;
@@ -458,18 +495,6 @@ div.ui-dialog .spreadsheet-dialog.ui-dialog-content {
 .sp-palette-container {
   position: initial;
 }
-
-/** The following two styles change the 16x16 pixel color boxes to 32x32 */
-
-/*.sp-palette .sp-thumb-el {*/
-/*width:32px;*/
-/*height: 32px;*/
-/*}*/
-
-/*.sp-palette {*/
-/**width: 440px;*/
-/*max-width: 440px;*/
-/*}*/
 
 .inlineInput {
   display: inline-flex;

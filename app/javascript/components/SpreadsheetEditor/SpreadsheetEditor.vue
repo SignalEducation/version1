@@ -7,13 +7,13 @@
         <div class="btn-group">
           <DropDownSelect
             v-bind:buttonText="'Edit'"
-            v-bind:dropdownOptions="[['Undo', 'g'], ['Redo', 'r'], ['Cut', 'f2'], ['Copy', 'n0'], ['Paste', 'n2']]"
-            v-on:selected-value-updated="actionCalled"
+            v-bind:dropdownOptions="[['Undo', 'undo'], ['Redo', 'redo'], ['Cut', 'cut'], ['Copy', 'copy'], ['Paste', 'paste'], ['Select All', 'select-all']]"
+            @selected-value-updated="editActionCalled"
           />
           <DropDownSelect
             v-bind:buttonText="'Format'"
-            v-bind:dropdownOptions="[['Undo', 'g'], ['Redo', 'r'], ['Cut', 'f2'], ['Copy', 'n0'], ['Paste', 'n2']]"
-            v-on:selected-value-updated="actionCalled"
+            v-bind:dropdownOptions="[['Bold', 'bold'], ['Italic', 'italic'], ['Underline', 'underline']]"
+            @selected-value-updated="formatActionCalled"
           />
         </div>
       </div>
@@ -22,16 +22,68 @@
         <div class="btn-group">
           <button
             type="button"
-            v-bind:class="['btn btn-default reset']"
-            @click="applyBoldStyle()" />
+            :class="'btn btn-default reset'"
+            @click="showResetModal"
+          />
+          <div ref="reset-spreadsheet" class="modal" v-show="resetModalIsOpen">
+            <div class="modal-content">
+              <div class="modal-header bg-cbe-gray">
+                <span class="title">
+                  Reset Spreadsheet
+                </span>
+
+                <span
+                  class="close"
+                  @click="resetModalIsOpen = !resetModalIsOpen"
+                >
+                  &times;
+                </span>
+              </div>
+
+              <div class="modal-internal-content">
+                <div class="d-block">
+                  <p>
+                    Resetting the spreadsheet will revert any changes you have made so far.
+                    Are you sure you want to reset the spreadsheet?
+                  </p>
+                  <b-button
+                    variant="outline-success"
+                    @click="resetModalIsOpen = !resetModalIsOpen"
+                  >
+                    Cancel
+                  </b-button>
+                  <b-button
+                    variant="outline-danger"
+                    @click="resetSpreadsheet"
+                  >
+                    Reset Sheet
+                  </b-button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button
+            type="button"
+            v-bind:class="['btn btn-default cut']"
+            @click="cut()" />
+          <button
+            type="button"
+            v-bind:class="['btn btn-default copy']"
+            @click="copy()" />
+          <button
+            type="button"
+            v-bind:class="['btn btn-default paste']"
+            @click="paste()" />
           <button
             type="button"
             v-bind:class="['btn btn-default undo']"
-            @click="applyBoldStyle()" />
+            :disabled="flex.undoStack && !flex.undoStack.canUndo"
+            @click="flex.undo()" />
           <button
             type="button"
             v-bind:class="['btn btn-default redo']"
-            @click="applyBoldStyle()" />
+            :disabled="flex.undoStack && !flex.undoStack.canRedo"
+            @click="flex.redo()" />
         </div>
       </div>
       <div class="btn-row">
@@ -85,25 +137,25 @@
           <DropDownSelect
             v-bind:iconClass="'number-format'"
             v-bind:dropdownOptions="[['General', 'g'], ['Custom', 'r'], ['#0.00', 'f2'], ['#,##0', 'n0'], ['#,##0.00', 'n2']]"
-            v-on:selected-value-updated="numberFormatChanged"
+            @selected-value-updated="numberFormatChanged"
           />
 
           <DropDownSelect
             v-bind:iconClass="'currency'"
             v-bind:dropdownOptions="currencyOptions"
-            v-on:selected-value-updated="numberFormatChanged"
+            @selected-value-updated="numberFormatChanged"
           />
 
           <DropDownSelect
             v-bind:iconClass="'percent'"
             v-bind:dropdownOptions="[['0%', 'p0'], ['0.00%', 'p2'], ['0.0%', 'p1']]"
-            v-on:selected-value-updated="numberFormatChanged"
+            @selected-value-updated="numberFormatChanged"
           />
 
           <DropDownSelect
             v-bind:iconClass="'fraction'"
             v-bind:dropdownOptions="[['# ?/?', '#/#'], ['# ??/??', '##/##']]"
-            v-on:selected-value-updated="numberFormatChanged"
+            @selected-value-updated="numberFormatChanged"
           />
 
           <DropDownSelect
@@ -117,6 +169,12 @@
             v-on:selected-value-updated="numberFormatChanged"
           />
         </div>
+      </div>
+      <div class="formula-row">
+        <div class="cell-number">
+          <span>{{ selectedCell }}</span>
+        </div>
+        <div class="formula-box"></div>
       </div>
     </div>
     <wj-flex-sheet :initialized="initializeFlexSheet" :isTabHolderVisible="false">
@@ -136,6 +194,7 @@
   import * as wjcCore from "@grapecity/wijmo";
   import '@grapecity/wijmo.vue2.input';
   import '@grapecity/wijmo.vue2.grid.sheet';
+  import { UndoStack } from '@grapecity/wijmo.undo';
   import './SpreadsheetEditor.scss';
   import DropDownSelect from "../../lib/DropDownSelect";
   import getData from "./data";
@@ -157,10 +216,14 @@
         } else {
           return getData();
         }
-      }
+      },
     },
     data: function() {
       return {
+        selectedCell: '',
+        copyString: '',
+        undoStack:  null,
+        resetModalIsOpen: false,
         currencyOptions: [
           ['General', 'c'], ['Custom', 'r'], ["$#,##0", "\$#,##0"], ['$#,##0.00', "\$#,##0.00"]
         ],
@@ -207,21 +270,70 @@
       };
     },
     methods: {
-      actionCalled: function () {
-        console.log("action called");
+      showResetModal () {
+        this.resetModalIsOpen = true;
       },
-      numberFormatChanged: function (format) {
+      formatActionCalled (action) {
+        switch (action) {
+          case 'bold':
+            this.applyBoldStyle();
+            break;
+          case 'italic':
+            this.applyItalicStyle();
+            break;
+          case 'underline':
+            this.applyUnderlineStyle();
+          default:
+            break;
+        }
+      },
+      editActionCalled (action) {
+        switch (action) {
+          case 'undo':
+            this.flex.undo();
+            break;
+          case 'redo':
+            this.flex.redo();
+            break;
+          case 'cut':
+            this.cut();
+          case 'copy':
+            this.copy();
+            break;
+          case 'paste':
+            this.paste();
+            break;
+          case 'select-all':
+            this.flex.select(1, 4000);
+            break;
+          default:
+            break;
+        }
+      },
+      cut() {
+        this.copyString = this.flex.getClipString(this.flex.selection);
+        wijmo.Clipboard.copy(this.copyString);
+        this._clearCellData(this.flex.selection);
+      },
+      copy() {
+        this.copyString = this.flex.getClipString(this.flex.selection);
+        document.execCommand('copy');
+        wijmo.Clipboard.copy(this.copyString);
+      },
+      paste() {
+        if (this.copyString){
+          this.flex.setClipString(this.copyString, this.flex.selection);
+        }
+      },
+      numberFormatChanged (format) {
         this.flex.applyCellsStyle({ format: format });
       },
-      initializeFlexSheet: function(flex) {
+      initializeFlexSheet (flex) {
         flex.deferUpdate(() => {
           for (let sheetIdx = 0; sheetIdx < flex.sheets.length; sheetIdx++) {
             flex.selectedSheetIndex = sheetIdx;
-            let sheetName = flex.selectedSheet.name;
 
-            for (let cellIdx = 0; cellIdx < this.spreadsheetData.length; cellIdx++) {
-              flex.setCellData(this.spreadsheetData[cellIdx].row, this.spreadsheetData[cellIdx].col, this.spreadsheetData[cellIdx].value);
-            }
+            this._setInitialData(flex);
           }
 
           flex.selectedSheetIndex = 0;
@@ -232,7 +344,10 @@
         });
         flex.lostFocus.addHandler((sender, args) => {
           this.commitUpdatedData(flex);
-        })
+        });
+        flex.copied.addHandler((s,e)=>{
+          this.copyString = s.getClipString();
+        });
         flex.rows.defaultSize = 22;
         flex.rowHeaders.defaultSize = 100;
         flex.columns.defaultSize = 75;
@@ -307,6 +422,11 @@
         const cellsJson = this._getJsonData(flexSheet);
         this.$emit('spreadsheet-updated', cellsJson);
       },
+      resetSpreadsheet() {
+        this._setInitialData(this.flex);
+        this.$emit('spreadsheet-updated', this.spreadsheetData);
+        this.resetModalIsOpen = false;
+      },
       _updateSelection(flexSheet, sel) {
         let row = flexSheet.rows[sel.row],
             rCnt = flexSheet.rows.length,
@@ -339,6 +459,9 @@
               format = 'd';
             }
           }
+          const colName = flexSheet.columnHeaders.getCellData(0, sel.leftCol);
+          const rowName = flexSheet.rowHeaders.getCellData(sel.topRow, 0);
+          this.selectedCell = `${ colName }${ rowName }`;
 
           this.fontIdx = fontIdx;
           this.fontSizeIdx = fontSizeIdx;
@@ -406,18 +529,30 @@
           left: left - scrollLeft
         };
       },
+      _clearCellData(cellRange) {
+        for (let colIdx = cellRange.leftCol; colIdx < (cellRange.leftCol + cellRange.columnSpan); colIdx += 1) {
+          for (let rowIdx = cellRange.topRow; rowIdx < (cellRange.topRow + cellRange.rowSpan); rowIdx += 1) {
+            this.flex.setCellData(rowIdx, colIdx, '');
+          }
+        }
+      },
+      _setInitialData (flex) {
+        for (let cellIdx = 0; cellIdx < this.spreadsheetData.length; cellIdx += 1) {
+          flex.setCellData(this.spreadsheetData[cellIdx].row, this.spreadsheetData[cellIdx].col, this.spreadsheetData[cellIdx].value);
+        }
+      },
       _getJsonData(flexSheet){
         const cells = flexSheet.cells;
         let cellsJson = [];
-        for(let r=0;r<cells.rows.length;r++){
-          for(let c=0;c<cells.columns.length;c++){
-            var cell={};
-            cell['value']=cells.getCellData(r,c);
-            cell['row']=r;
-            cell['col']=c;
-            cell['colBinding']=cells.columns[c].binding;
-            cell['style']=flexSheet.selectedSheet._styledCells
-            [r*cells.columns.length+c+'']?flexSheet.selectedSheet._styledCells[r*cells.columns.length+c+'']:null;
+        for(let r = 0; r < cells.rows.length; r += 1){
+          for(let c = 0; c < cells.columns.length; c += 1){
+            let cell = {};
+            cell['value'] = cells.getCellData(r,c);
+            cell['row'] = r;
+            cell['col'] = c;
+            cell['colBinding'] = cells.columns[c].binding;
+            cell['style'] = flexSheet.selectedSheet._styledCells
+            [r * cells.columns.length + c + ''] ? flexSheet.selectedSheet._styledCells[ r * cells.columns.length + c + ''] : null;
             cellsJson.push(cell);
           }
         }
