@@ -70,13 +70,13 @@
     <div>
       <button
         v-if="id"
-        v-on:click="updateSection"
+        @click="updateSection"
         :disabled="submitStatus === 'PENDING'"
         class="btn btn-primary"
       >Update Section</button>
       <button
         v-else
-        v-on:click="saveSection"
+        @click="saveSection"
         :disabled="submitStatus === 'PENDING'"
         class="btn btn-primary"
       >Save Section</button>

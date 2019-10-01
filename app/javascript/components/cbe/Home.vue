@@ -38,10 +38,10 @@ export default {
   },
   computed: {
     ...mapGetters("cbe", {
-      cbe_data: "cbeData"
+      cbe_data: "cbe_data"
     }),
-    ...mapGetters("userCbe", {
-      user_cbe_data: "userCbeData"
+    ...mapGetters("user_cbe", {
+      user_cbe_data: "user_cbe_data"
     })
   },
   watch: {

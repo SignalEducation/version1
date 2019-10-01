@@ -1,4 +1,5 @@
-/* eslint-disable no-param-reassign */
+/* eslint-disable */
+
 export default {
   state: {
     cbeName: null,

@@ -20,9 +20,14 @@
             v-if="question_kind == 'multiple_choice'"
           />
           <AdminMultipleResponse
+            v-if="question_kind == 'multiple_response'"
             :answersArray="answers"
             :question_id="question_id"
-            v-if="question_kind == 'multiple_response'"
+          />
+          <AdminSpreadsheet
+            v-if="question_kind == 'spreadsheet'"
+            :answersArray="answers"
+            :questionId="question_id"
           />
           <!-- Let this commented for now, in future education team can
                use a pre formatted content in open questions -->
@@ -38,23 +43,25 @@
 </template>
 
 <script>
-import AdminDropdownList from "./answers/AdminDropdownList";
-import AdminFillTheBlank from "./answers/AdminFillTheBlank";
-import AdminMultipleChoice from "./answers/AdminMultipleChoice";
-import AdminMultipleResponse from "./answers/AdminMultipleResponse";
-import AdminTextEditor from "./answers/AdminTextEditor";
+import AdminDropdownList from './answers/AdminDropdownList.vue';
+import AdminFillTheBlank from './answers/AdminFillTheBlank.vue';
+import AdminMultipleChoice from './answers/AdminMultipleChoice.vue';
+import AdminMultipleResponse from './answers/AdminMultipleResponse.vue';
+import AdminTextEditor from './answers/AdminTextEditor.vue';
+import AdminSpreadsheet from './answers/AdminSpreadsheet.vue';
 
 export default {
   components: {
     AdminDropdownList,
     AdminMultipleChoice,
     AdminMultipleResponse,
-    AdminTextEditor
+    AdminTextEditor,
+    AdminSpreadsheet,
   },
   props: {
     answers: Array,
     question_id: Number,
-    question_kind: String
-  }
+    question_kind: String,
+  },
 };
 </script>
