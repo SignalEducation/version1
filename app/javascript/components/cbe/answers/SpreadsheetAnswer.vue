@@ -33,7 +33,7 @@ export default {
   },
   methods: {
     syncSpreadsheetData(jsonData) {
-      this.$store.dispatch('user_cbe/recordAnswer', {
+      this.$store.dispatch('userCbe/recordAnswer', {
         id: this.questionId,
         answers: [{
           content: {
@@ -44,7 +44,7 @@ export default {
       });
     },
     getPrepopulatedAnswer() {
-      const initialValue = this.$store.state.user_cbe.user_cbe_data.questions[this.questionId];
+      const initialValue = this.$store.state.userCbe.user_cbe_data.questions[this.questionId];
       return initialValue ? initialValue.answers : this.answerData;
     },
   },

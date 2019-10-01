@@ -384,9 +384,9 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('cbe', [
-      'edit_cbe_data',
-    ]),
+    ...mapGetters('cbe', {
+      edit_cbe_data: 'edit_cbe_data',
+    }),
     shouldShowCbeDetails() {
       return this.showCbeDetails && !(this.showIntroPages || this.showResources);
     },

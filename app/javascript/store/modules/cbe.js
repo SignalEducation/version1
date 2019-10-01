@@ -1,4 +1,5 @@
-/* eslint-disable */
+/* eslint-disable no-param-reassign */
+/* eslint no-shadow: ["error", { "allow": ["state"] }] */
 
 const state = {
   cbe_data: {},
@@ -13,14 +14,14 @@ const getters = {
 const actions = {
   getCbe(context, cbeId) {
     fetch(`/api/v1/cbes/${cbeId}`)
-      .then((response) => response.json())
+      .then(response => response.json())
       .then((response) => {
         context.commit('setCbeData', response);
       });
   },
   getEditCbe(context, cbeId) {
     fetch(`/api/v1/cbes/${cbeId}/edit`)
-      .then((response) => response.json())
+      .then(response => response.json())
       .then((response) => {
         context.commit('setEditCbeData', response);
       });
