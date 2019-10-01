@@ -1,8 +1,8 @@
-import Vue        from 'vue'
-import Vuex       from 'vuex'
-import cbe        from './modules/cbe'
-import userCbe    from './modules/user_cbe'
-import cbeDetails from './modules/cbe_details'
+import Vue from 'vue';
+import Vuex from 'vuex';
+import cbe from './modules/cbe';
+import userCbe from './modules/userCbe';
+import cbeDetails from './modules/cbeDetails';
 
 Vue.use(Vuex);
 
@@ -10,22 +10,20 @@ export default new Vuex.Store({
   modules: {
     cbe,
     cbeDetails,
-    userCbe
+    userCbe,
   },
-
-  state: { // data
+  state: {
     cbeDetailsSaved: false,
     cbeId: null,
     currentSectionId: null,
     currentQuestionId: null,
   },
-
   mutations: {
     hideDetailsForm(state, value) {
-      state.cbeDetailsSaved = value
+      state.cbeDetailsSaved = value;
     },
     setCbeId(state, value) {
-      state.cbeId = value
-    }
-  }
+      state.cbeId = value;
+    },
+  },
 });

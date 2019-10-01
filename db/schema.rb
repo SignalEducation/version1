@@ -395,9 +395,9 @@ ActiveRecord::Schema.define(version: 2019_10_06_135033) do
     t.boolean "is_video", default: false, null: false
     t.boolean "is_quiz", default: false, null: false
     t.boolean "active", default: true, null: false
-    t.datetime "destroyed_at"
-    t.string "seo_description"
+    t.string "seo_description", limit: 255
     t.boolean "seo_no_index", default: false
+    t.datetime "destroyed_at"
     t.integer "number_of_questions", default: 0
     t.float "duration", default: 0.0
     t.string "temporary_label"
@@ -416,9 +416,9 @@ ActiveRecord::Schema.define(version: 2019_10_06_135033) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer "cme_count", default: 0
-    t.datetime "destroyed_at"
-    t.string "seo_description"
+    t.string "seo_description", limit: 255
     t.boolean "seo_no_index", default: false
+    t.datetime "destroyed_at"
     t.integer "number_of_questions", default: 0
     t.integer "subject_course_id"
     t.float "video_duration", default: 0.0
@@ -779,6 +779,7 @@ ActiveRecord::Schema.define(version: 2019_10_06_135033) do
     t.integer "cover_image_file_size"
     t.datetime "cover_image_updated_at"
     t.index ["name"], name: "index_mock_exams_on_name"
+    t.index ["subject_course_id"], name: "index_mock_exams_on_subject_course_id"
   end
 
   create_table "order_transactions", id: :serial, force: :cascade do |t|
@@ -860,6 +861,7 @@ ActiveRecord::Schema.define(version: 2019_10_06_135033) do
     t.index ["mock_exam_id"], name: "index_products_on_mock_exam_id"
     t.index ["name"], name: "index_products_on_name"
     t.index ["stripe_guid"], name: "index_products_on_stripe_guid"
+    t.index ["subject_course_id"], name: "index_products_on_subject_course_id"
   end
 
   create_table "quiz_answers", id: :serial, force: :cascade do |t|
@@ -1258,7 +1260,6 @@ ActiveRecord::Schema.define(version: 2019_10_06_135033) do
     t.string "cancellation_reason"
     t.text "cancellation_note"
     t.bigint "changed_from_id"
-    t.string "temp_guid"
     t.string "completion_guid"
     t.index ["changed_from_id"], name: "index_subscriptions_on_changed_from_id"
   end

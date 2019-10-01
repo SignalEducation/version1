@@ -20,6 +20,10 @@
             :question_id="question_id"
             v-if="question_kind == 'multiple_response'"
           />
+          <SpreadsheetEditor
+            :question_id="question_id"
+            v-if="question_kind == 'spreadsheet'"
+          />
         </div>
       </div>
     </div>
@@ -30,12 +34,14 @@
 import AdminFillTheBlank from "./answers/AdminFillTheBlank";
 import AdminMultipleChoice from "./answers/AdminMultipleChoice";
 import AdminMultipleResponse from "./answers/AdminMultipleResponse";
+import SpreadsheetEditor from '../../SpreadsheetEditor/SpreadsheetEditor.vue';
 
 export default {
   components: {
     AdminFillTheBlank,
     AdminMultipleChoice,
-    AdminMultipleResponse
+    AdminMultipleResponse,
+    SpreadsheetEditor,
   },
   props: {
     answers: Array,

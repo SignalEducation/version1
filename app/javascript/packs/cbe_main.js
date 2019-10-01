@@ -7,51 +7,51 @@ import router from '../router';
 //
 // Admin View
 //
-import CbeAdmin from '../components/cbe/admin/Home';
-import CbeEdit from '../components/cbe/admin/Edit';
+import CbeAdmin from '../components/cbe/admin/Home.vue';
+import CbeEdit from '../components/cbe/admin/Edit.vue';
 //
 // User View
 //
-import CbeHome from '../components/cbe/Home';
+import CbeHome from '../components/cbe/Home.vue';
 // ##############
 
 Vue.use(BootstrapVue);
 
 document.addEventListener('DOMContentLoaded', () => {
-  const cbes_new = document.getElementById('cbes-new-view');
-  if (cbes_new != null) {
-    new Vue({
+  const cbeNew = document.getElementById('cbes-new-view');
+  if (cbeNew != null) {
+    (() => new Vue({
       store,
-      el: cbes_new,
+      el: cbeNew,
       components: { CbeAdmin },
       render: (h) => h(CbeAdmin),
-    });
+    }))();
   }
 
-  const cbes_edit = document.getElementById('cbes-edit-view');
-  if (cbes_edit != null) {
-    new Vue({
+  const cbeEdit = document.getElementById('cbes-edit-view');
+  if (cbeEdit != null) {
+    (() => new Vue({
       store,
-      el: cbes_edit,
+      el: cbeEdit,
       components: { CbeEdit },
       render: (h) => h(CbeEdit),
-    });
+    }))();
   }
 
-  const cbe_front = document.getElementById('cbe-front-view');
-  if (cbe_front != null) {
-    new Vue({
+  const cbeFront = document.getElementById('cbe-front-view');
+  if (cbeFront != null) {
+    (() => new Vue({
       store,
       router,
-      el: cbe_front,
+      el: cbeFront,
       data: {
-        cbe_id: cbe_front.dataset.id,
-        user_id: cbe_front.dataset.userId,
+        cbe_id: cbeFront.dataset.id,
+        user_id: cbeFront.dataset.userId,
       },
       render: (h) => h(CbeHome),
-    });
+    }))();
 
     // Loading introduction pages as root when home load.
-    router.replace(`/introductions/${cbe_front  .dataset.introductionId}`)
+    router.replace(`/introductions/${cbeFront.dataset.introductionId}`);
   }
 });

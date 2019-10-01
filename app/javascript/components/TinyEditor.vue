@@ -59,7 +59,7 @@ export default {
   },
   methods: {
     updateContent: function(data) {
-        this.editor.value = "";
+      this.editor.value = "";
     },
   }
 };
