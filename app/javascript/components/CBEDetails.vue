@@ -145,7 +145,8 @@ export default {
       subjectCourseId: null,
       subjectCourses: [],
       createdCBE: [],
-      submitStatus: null
+      submitStatus: null,
+      updateStatus: null
     };
   },
   validations: {

@@ -60,17 +60,31 @@
             ></CBEResources>
         </b-collapse>
 
+        <h3>Exam Content</h3>
         <b-card no-body>
           <b-tabs card >
             <b-tab v-for="section in sections" :key="'section-tab-' + section.id" :title="section.name">
               <div class="row">
                 <div class="col-sm-10">
+                  <b-collapse v-bind:id="'section-edit-collapse-' + section.id" class="mt-2">
+                    <b-card>
+
+                      <CBESection
+                          v-bind:id="section.id"
+                          v-bind:initialName="section.name"
+                          v-bind:initialScore="section.score"
+                          v-bind:initialKind="section.kind"
+                          v-bind:initialContent="section.content"
+                      ></CBESection>
+
+                    </b-card>
+                  </b-collapse>
                   <b-card>
-                    <b-card-text>{{ section.name }}</b-card-text>
+                    <p>Name: {{ section.name }} - Type: {{ section.kind }} - Score: {{ section.score }}</p>
                   </b-card>
                 </div>
                 <div class="col-sm-2">
-                  <b-button variant="secondary" class="mr-1">Edit Section</b-button>
+                  <b-button v-b-toggle="'section-edit-collapse-' + section.id" variant="secondary" class="mr-1">Edit Section</b-button>
                 </div>
               </div>
 
@@ -86,11 +100,14 @@
                     <b-collapse v-bind:id="'accordion-'+ question.id" accordion="my-accordion" role="tabpanel">
                       <b-card-body>
                         <div class="row">
-                          <div class="col-sm-10">
-                            <b-card-text>{{ question }}</b-card-text>
-                          </div>
-                          <div class="col-sm-2">
-                            <b-button variant="secondary" class="mr-1">Edit Question</b-button>
+                          <div class="col-sm-12">
+                            <CBEQuestion
+                                v-bind:section-id="section.id"
+                                v-bind:id="question.id"
+                                v-bind:initialContent="question.content"
+                                v-bind:initialScore="question.score"
+                                v-bind:initialKind="question.kind"
+                            ></CBEQuestion>
                           </div>
                         </div>
                       </b-card-body>
@@ -104,7 +121,10 @@
 
                   <b-collapse id="new-question-accordion" visible accordion="my-accordion" role="tabpanel">
                     <b-card-body>
-                      <CBEQuestion v-bind:section-id="section.id" v-on:add-question="updateQuestions"></CBEQuestion>
+                      <CBEQuestion
+                          v-bind:section-id="section.id"
+                          v-on:add-question="updateQuestions"
+                      ></CBEQuestion>
                     </b-card-body>
                   </b-collapse>
                 </b-card>
@@ -119,12 +139,22 @@
                           <b-card-text>
                             <div class="row">
                               <div class="col-sm-10">
+                                <b-collapse v-bind:id="'scenario-edit-collapse-' + scenario.id" class="mt-2">
+                                  <b-card>
+
+                                    <CBEScenario
+                                        v-bind:id="scenario.id"
+                                        v-bind:initialContent="scenario.content"
+                                    ></CBEScenario>
+
+                                  </b-card>
+                                </b-collapse>
                                 <b-card>
-                                  <b-card-text>{{ scenario.content }}</b-card-text>
+                                  <p>Name: {{ scenario }}</p>
                                 </b-card>
                               </div>
                               <div class="col-sm-2">
-                                <b-button variant="secondary" class="mr-1">Edit Scenario</b-button>
+                                <b-button v-b-toggle="'scenario-edit-collapse-' + scenario.id" variant="secondary" class="mr-1">Edit Scenario</b-button>
                               </div>
                             </div>
                             <br/>
@@ -137,11 +167,19 @@
                                 <b-collapse v-bind:id="'accordion-'+ question.id" accordion="question-accordion" role="tabpanel">
                                   <b-card-body>
                                     <div class="row">
-                                      <div class="col-sm-10">
-                                        <b-card-text>{{ question }}</b-card-text>
-                                      </div>
-                                      <div class="col-sm-2">
-                                        <b-button variant="secondary" class="mr-1">Edit Question</b-button>
+                                      <div class="col-sm-12">
+                                        <b-card>
+
+                                          <CBEQuestion
+                                              v-bind:section-id="section.id"
+                                              v-bind:scenario-id="scenario.id"
+                                              v-bind:id="question.id"
+                                              v-bind:initialContent="question.content"
+                                              v-bind:initialScore="question.score"
+                                              v-bind:initialKind="question.kind"
+                                          ></CBEQuestion>
+
+                                        </b-card>
                                       </div>
                                     </div>
                                   </b-card-body>
@@ -168,7 +206,10 @@
                         </b-tab>
                         <b-tab title="New Scenario">
                           <b-card-text>
-                            <CBEScenario v-bind:section-id="section.id" v-on:add-scenario="updateScenarios"></CBEScenario>
+                            <CBEScenario
+                                v-bind:section-id="section.id"
+                                v-on:add-scenario="updateScenarios"
+                            ></CBEScenario>
                           </b-card-text>
                         </b-tab>
                       </b-tabs>
@@ -178,7 +219,9 @@
               </div>
             </b-tab>
             <b-tab title="New Section">
-              <CBESection v-on:add-section="updateSections"></CBESection>
+              <CBESection
+                  v-on:add-section="updateSections"
+              ></CBESection>
             </b-tab>
           </b-tabs>
         </b-card>
