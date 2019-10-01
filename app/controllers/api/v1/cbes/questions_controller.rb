@@ -43,7 +43,7 @@ module Api
                       ::Cbe::Section.find_by(id: params[:section_id])
                     elsif params[:scenario_id].present?
                       ::Cbe::Scenario.find_by(id: params[:scenario_id])
-                    end                        
+                    end
         end
       end
     end
