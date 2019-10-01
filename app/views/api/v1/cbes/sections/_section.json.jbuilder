@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 json.id             section.id
 json.name           section.name
 json.score          section.score

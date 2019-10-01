@@ -17,7 +17,7 @@ RSpec.describe Cbe::IntroductionPage, type: :model do
   end
 
   describe 'Validations' do
-    xit { should validate_presence_of(:title) }
+    it { should validate_presence_of(:title) }
     it { should validate_presence_of(:content) }
     it { should validate_presence_of(:cbe_id) }
   end

@@ -12,6 +12,6 @@ class ApiConstraint
       headers.
       fetch(:accept).
       include?("version=#{version}") ||
-    version == 1
+      version == 1
   end
 end
