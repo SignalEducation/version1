@@ -227,21 +227,17 @@
           flex.selectedSheetIndex = 0;
           setTimeout(() => this._updateSelection(flex, flex.selection), 100);
         });
-
         flex.selectionChanged.addHandler((sender, args) => {
           this._updateSelection(flex, args.range);
         });
-
-        flex.cellEditEnded.addHandler((sender, args) => {
+        flex.lostFocus.addHandler((sender, args) => {
           this.commitUpdatedData(flex);
         })
-
-        // set the height of rows in the scrollable area
         flex.rows.defaultSize = 22;
         flex.rowHeaders.defaultSize = 100;
         flex.columns.defaultSize = 75;
-        // set the height of rows in the column header area
         flex.columnHeaders.rows.defaultSize = 22;
+        this.commitUpdatedData(flex);
 
         this.flex = flex;
       },

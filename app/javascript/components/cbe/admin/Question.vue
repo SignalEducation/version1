@@ -33,7 +33,7 @@
         <div class="input-group input-group-lg" id="questionScore">
           <input
             id="questionScore"
-            v-model="questionScore"
+            v-model.number="questionScore"
             placeholder="Score"
             :class="'form-control ' + {error: shouldAppendErrorClass($v.questionScore), valid: shouldAppendValidClass($v.questionScore)}"
             @blur="$v.questionScore.$touch()"
@@ -125,16 +125,34 @@ import AdminAnswers from './QuestionAnswers.vue';
 
 export default {
   props: {
-    sectionId: Number,
-    scenarioId: Number,
+    sectionId: {
+      type: Number,
+      default: null,
+    },
+    scenarioId: {
+      type: Number,
+      default: null,
+    },
     id: {
       type: Number,
-      default: 0
+      default: null,
     },
-    initialScore: Number,
-    initialContent: String,
-    initialKind: String,
-    initialAnswers: Array
+    initialScore: {
+      type: Number,
+      default: null,
+    },
+    initialContent: {
+      type: String,
+      default: '',
+    },
+    initialKind: {
+      type: String,
+      default: '',
+    },
+    initialAnswers: {
+      type: Array,
+      default: () => [],
+    },
   },
   components: {
     TinyEditor,
@@ -201,14 +219,14 @@ export default {
           .then(response => {
             this.createdQuestion = response.data;
             this.questionDetails.id = this.createdQuestion.id;
-            this.$emit("add-question", this.questionDetails);
-            this.$emit("update-content", this.TinyEditor);
+            this.$emit('add-question', this.questionDetails);
+            this.$emit('update-content', this.TinyEditor);
             this.questionDetails = {};
             this.questionKind = null;
             this.questionContent = null;
             this.questionScore = null;
             this.questionAnswers = [];
-            this.submitStatus = "OK";
+            this.submitStatus = 'OK';
             this.$v.$reset();
           })
           .catch(error => {

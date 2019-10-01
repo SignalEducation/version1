@@ -21,12 +21,12 @@ export default {
   },
   data() {
     return {
-      question: this.getPickedValue()
+      question: this.getPickedValue(),
     };
   },
   watch: {
     question(newValue, oldValue) {
-      this.$store.dispatch("userCbe/recordAnswer", {
+      this.$store.dispatch("user_cbe/recordAnswer", {
         id: this.question_id,
         answers: {
           content: {

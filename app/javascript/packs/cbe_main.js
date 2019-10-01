@@ -19,12 +19,12 @@ import CbeHome from '../components/cbe/Home.vue';
 
 Vue.use(BootstrapVue);
 
-const mountCbeElement = (element, component) =>
+const mountCbeElement = (element, theComponent) =>
   new Vue({
     store,
     el: element,
-    components: { component },
-    render: h => h(component)
+    components: { theComponent },
+    render: h => h(theComponent)
   });
 
 document.addEventListener('DOMContentLoaded', () => {

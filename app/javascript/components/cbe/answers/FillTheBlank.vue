@@ -20,7 +20,7 @@ export default {
     question(newValue, oldValue) {
       let check = this.compareValues(newValue);
 
-      this.$store.dispatch("userCbe/recordAnswer", {
+      this.$store.dispatch("user_cbe/recordAnswer", {
         id: this.question_id,
         answers: {
           cbe_answer_id: this.answer.id,

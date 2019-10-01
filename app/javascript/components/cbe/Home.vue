@@ -25,40 +25,37 @@
 </template>
 
 <script>
-import axios from "axios";
-import NavBar from "./NavBar";
-import NavPagination from "./NavPagination";
-import { mapGetters } from "vuex";
+import axios from 'axios';
+import { mapGetters } from 'vuex';
+import NavBar from './NavBar.vue';
+import NavPagination from './NavPagination.vue';
 
 export default {
   components: {
     NavBar,
-    NavPagination
+    NavPagination,
   },
   data() {
     return {
       cbeId: this.$parent.cbe_id,
-      userId: this.$parent.user_id
+      userId: this.$parent.user_id,
     };
   },
-  mounted() {
-    this.$store.dispatch("cbe/getCbe", this.cbeId);
-  },
   computed: {
-    ...mapGetters("cbe", {
-      cbe_data: "cbe_data"
+    ...mapGetters('cbe', {
+      cbe_data: 'cbe_data',
     }),
-    ...mapGetters("user_cbe", {
-      user_cbe_data: "user_cbe_data"
-    })
+    ...mapGetters('user_cbe', {
+      user_cbe_data: 'user_cbe_data',
+    }),
   },
   watch: {
     cbe_data: {
       handler() {
-        this.$store.dispatch("userCbe/startUserCbeData", {
+        this.$store.dispatch('user_cbe/startUserCbeData', {
           cbe_id: this.cbeId,
           user_id: this.userId,
-          cbe_data: this.cbe_data
+          cbe_data: this.cbe_data,
         });
       }
     },
@@ -69,6 +66,9 @@ export default {
         }
       },
     }
+  },
+  mounted() {
+    this.$store.dispatch('cbe/getCbe', this.cbeId);
   },
   methods: {
     submitExam: function() {
@@ -106,6 +106,6 @@ export default {
         }
       });
     }
-  }
+  },
 };
 </script>

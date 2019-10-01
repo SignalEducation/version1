@@ -1,41 +1,45 @@
 <template>
   <section>
     <DropdownList
+      v-if="question_kind === 'dropdown_list'"
       :answers="answers"
       :question_id="question_id"
-      v-if="question_kind == 'dropdown_list'"
     />
     <!-- passing just the first answer in fill the blank cause is just one text value -->
     <FillTheBlank
+      v-if="question_kind === 'fill_in_the_blank'"
       :answer="answers[0]"
       :question_id="question_id"
-      v-if="question_kind == 'fill_in_the_blank'"
     />
     <MultipleChoice
+      v-if="question_kind === 'multiple_choice'"
       :answers="answers"
       :question_id="question_id"
-      v-if="question_kind == 'multiple_choice'"
     />
     <MultipleResponse
+      v-if="question_kind === 'multiple_response'"
       :answers="answers"
       :question_id="question_id"
-      v-if="question_kind == 'multiple_response'"
     />
     <OpenAnswer
+      v-if="question_kind === 'open'"
       :question_id="question_id"
-      v-if="question_kind == 'open'"
+    />
+    <SpreadsheetAnswer
+      v-if="question_kind === 'spreadsheet'"
+      :question-id="question_id"
+      :answer-data="answers[0]"
     />
   </section>
 </template>
 
 <script>
-import DropdownList from "./answers/DropdownList";
-import FillTheBlank from "./answers/FillTheBlank";
-import MultipleChoice from "./answers/MultipleChoice";
-import MultipleResponse from "./answers/MultipleResponse";
-import OpenAnswer from "./answers/OpenAnswer";
-
-
+import DropdownList from './answers/DropdownList.vue';
+import FillTheBlank from './answers/FillTheBlank.vue';
+import MultipleChoice from './answers/MultipleChoice.vue';
+import MultipleResponse from './answers/MultipleResponse.vue';
+import OpenAnswer from './answers/OpenAnswer.vue';
+import SpreadsheetAnswer from './answers/SpreadsheetAnswer.vue';
 
 export default {
   components: {
@@ -43,13 +47,13 @@ export default {
     FillTheBlank,
     MultipleChoice,
     MultipleResponse,
-    OpenAnswer
+    OpenAnswer,
+    SpreadsheetAnswer,
   },
   props: {
     answers: {},
     question_id: Number,
-    question_kind: String
-  }
+    question_kind: String,
+  },
 };
 </script>
-

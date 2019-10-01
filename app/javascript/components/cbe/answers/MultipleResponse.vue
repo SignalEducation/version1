@@ -26,7 +26,7 @@ export default {
   },
   watch: {
     question(newValue, oldValue) {
-      this.$store.dispatch("userCbe/recordAnswer", this.getQuestionFormated(newValue));
+      this.$store.dispatch("user_cbe/recordAnswer", this.getQuestionFormated(newValue));
     }
   },
   methods: {

@@ -464,9 +464,7 @@ export default {
         }
       });
       const currentSection = this.sections[sectionIndex];
-      if (currentSection.hasOwnProperty('questions')) {
-        console.log(currentSection);
-      } else {
+      if (!('questions' in currentSection)) {
         // This $set syntax is required by Vue to ensure the section.questions array is reactive
         // It is inside the conditional to ensure section.questions is not reset to empty
         this.$set(currentSection, 'questions', []);
@@ -490,9 +488,7 @@ export default {
         }
       });
       const currentScenario = currentSection.scenarios[scenarioIndex];
-      if (currentScenario.hasOwnProperty('questions')) {
-        console.log(currentScenario);
-      } else {
+      if (!('questions' in currentScenario)) {
         // This $set syntax is required by Vue to ensure the section.questions array is reactive
         // It is inside the conditional to ensure section.questions is not reset to empty
         this.$set(currentScenario, 'questions', []);
