@@ -11,10 +11,7 @@
             class="input-group input-group-lg"
           >
             <template slot="first">
-              <option
-                :value="null"
-                disabled
-              >-- Please select a course --</option>
+              <option :value="null" disabled>-- Please select a course --</option>
             </template>
           </b-form-select>
           <p
@@ -100,10 +97,10 @@
     <div class="row mt-3">
       <div class="col-sm-12">
         <button
-            v-if="this.$store.state.cbeId"
-            v-on:click="updateCBE"
-            :disabled="updateStatus === 'PENDING' || updateStatus === 'OK'"
-            class="btn btn-primary"
+          v-if="this.$store.state.cbeId"
+          v-on:click="updateCBE"
+          :disabled="updateStatus === 'PENDING' || updateStatus === 'OK'"
+          class="btn btn-primary"
         >Update CBE</button>
         <button
           v-else
@@ -188,8 +185,8 @@ export default {
   methods: {
     getSubjects() {
       axios
-        .get('/api/v1/subject_courses/')
-        .then((response) => {
+        .get("/api/v1/subject_courses/")
+        .then(response => {
           this.subjectCourses = response.data;
         })
         .catch(e => {});
@@ -214,7 +211,7 @@ export default {
               this.$store.commit("setCbeId", this.createdCBE.id);
               this.$store.commit("hideDetailsForm", true);
               this.submitStatus = "OK";
-              this.$emit('close-details', this.createdCBE);
+              this.$emit("close-details", this.createdCBE);
             }
           })
           .catch(error => {
@@ -234,7 +231,9 @@ export default {
         this.cbeDetails.active = this.$store.state.cbeDetails.cbeActive;
         this.cbeDetails.subject_course_id = this.$store.state.cbeDetails.cbeSubjectCourseId;
         axios
-          .patch(`/api/v1/cbes/${this.$store.state.cbeId}`, {cbe: this.cbeDetails})
+          .patch(`/api/v1/cbes/${this.$store.state.cbeId}`, {
+            cbe: this.cbeDetails
+          })
 
           .then(response => {
             this.createdCBE = response.data;
@@ -243,7 +242,7 @@ export default {
               this.$store.commit("hideDetailsForm", true);
               this.updateStatus = "OK";
             }
-            this.$emit('close-details', this.createdCBE);
+            this.$emit("close-details", this.createdCBE);
           })
           .catch(error => {
             this.updateStatus = "ERROR";

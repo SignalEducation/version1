@@ -13,6 +13,8 @@ class Cbe
     has_many :answers, class_name: 'Cbe::Answer', foreign_key: 'cbe_question_id',
                        inverse_of: :question, dependent: :destroy
 
+    accepts_nested_attributes_for :answers
+
     # validations
     validates :content, :kind, :score, presence: true
     validates :score, numericality: { greater_than_or_equal_to: 0 }

@@ -7,7 +7,7 @@
         :key="page.id"
       >
       <div class="intructions-counter">
-        Introductions {{ `(${page.sorting_order} of ${cbe_data.introduction_pages.length})` }}
+        Introductions {{ `(${page.id} of ${cbe_data.introduction_pages.length})` }}
       </div>
 
       <div class="content">
@@ -22,7 +22,7 @@ import { mapGetters } from 'vuex'
 
 export default {
   props: {
-    id: Number
+    id: String
   },
   computed: {
     ...mapGetters('cbe', {

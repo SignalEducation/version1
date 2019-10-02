@@ -44,7 +44,7 @@ const functions = {
     sections.filter(section => {
       exam_pages.push({ description: section.name, state: 'Unseen', flagged: false })
       section.questions.filter(question => {
-        exam_pages.push({ description: question.sorting_order, state: 'Unseen', flagged: false })
+        exam_pages.push({ description: question.kind, state: 'Unseen', flagged: false })
       });
     });
 

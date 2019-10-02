@@ -1,40 +1,40 @@
 <template>
-    <b-tab :title="tabName">
-      <div class="row">
-        <div class="col-sm-12">
-          <div class="form-group">
-            <label for="resourceName">Name</label>
-            <div class="input-group input-group-lg">
-              <input
-                v-model="name"
-                placeholder="Document name"
-                class="form-control"
-                id="resourceName"
-              />
-            </div>
+  <b-tab :title="tabName">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="form-group">
+          <label for="resourceName">Name</label>
+          <div class="input-group input-group-lg">
+            <input
+              v-model="name"
+              placeholder="Document name"
+              class="form-control"
+              id="resourceName"
+            />
           </div>
-        </div>
-
-        <div class="col-sm-12">
-          <div class="form-group">
-            <label for="sectionKindSelect">File</label>
-            <b-form-file
-              ref="inputFile"
-              :state="Boolean(file)"
-              placeholder="Choose a file or drop it here..."
-              drop-placeholder="Drop file here..."
-              @change="uploadFile"
-            ></b-form-file>
-            <div class="mt-3">Selected file: {{ file ? file.name : '' }}</div>
-          </div>
-        </div>
-
-        <div>
-          <button v-if="id" v-on:click="updateFile" class="btn btn-primary">Update File</button>
-          <button v-else v-on:click="saveFile" class="btn btn-primary">Save File</button>
         </div>
       </div>
-    </b-tab>
+
+      <div class="col-sm-12">
+        <div class="form-group">
+          <label for="sectionKindSelect">File</label>
+          <b-form-file
+            ref="inputFile"
+            :state="Boolean(file)"
+            placeholder="Choose a file or drop it here..."
+            drop-placeholder="Drop file here..."
+            @change="uploadFile"
+          ></b-form-file>
+          <div class="mt-3">Selected file: {{ file ? file.name : '' }}</div>
+        </div>
+      </div>
+
+      <div>
+        <button v-if="id" v-on:click="updateFile" class="btn btn-primary">Update File</button>
+        <button v-else v-on:click="saveFile" class="btn btn-primary">Save File</button>
+      </div>
+    </div>
+  </b-tab>
 </template>
 
 <script>
@@ -44,9 +44,9 @@ export default {
   props: {
     id: Number,
     initialName: {
-        type: String,
-        default: ''
-      },
+      type: String,
+      default: ""
+    }
   },
   data: function() {
     return {
@@ -73,11 +73,12 @@ export default {
       formData.append("resource[document]", this.file);
 
       axios({
-        method: 'post',
+        method: "post",
         url: `/api/v1/cbes/${this.$store.state.cbeId}/resources`,
         data: formData,
-        config: { headers: {'Content-Type': 'multipart/form-data' }}
-      }).then(response => {
+        config: { headers: { "Content-Type": "multipart/form-data" } }
+      })
+        .then(response => {
           this.createdResource = response.data;
           if (this.createdResource.id > 0) {
             this.resourceDetails["id"] = this.createdResource.id;

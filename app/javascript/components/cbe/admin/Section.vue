@@ -26,10 +26,7 @@
           class="input-group input-group-lg"
         >
           <template slot="first">
-            <option
-              :value="null"
-              disabled
-            >-- Please select a type --</option>
+            <option :value="null" disabled>-- Please select a type --</option>
           </template>
         </b-form-select>
         <p v-if="!$v.kind.required && $v.kind.$error" class="error-message">field is required</p>
@@ -104,11 +101,11 @@ export default {
     id: Number,
     initialName: {
       type: String,
-      default: ''
+      default: ""
     },
     initialScore: String,
     initialContent: String,
-    initialKind: String,
+    initialKind: String
   },
   data: function() {
     return {
@@ -190,9 +187,9 @@ export default {
         this.sectionDetails["cbe_id"] = this.$store.state.cbeId;
 
         axios
-          .patch(
-            `/api/v1/sections/${this.id}`, {cbe_section: this.sectionDetails}
-          )
+          .patch(`/api/v1/sections/${this.id}`, {
+            cbe_section: this.sectionDetails
+          })
           .then(response => {
             this.updatedSection = response.data;
             this.sectionDetails["id"] = this.updatedSection.id;
@@ -204,7 +201,6 @@ export default {
             this.kind = this.updatedSection.kind;
             this.submitStatus = "OK";
             this.$v.$reset();
-
           })
           .catch(error => {
             this.submitStatus = "ERROR";
@@ -217,7 +213,6 @@ export default {
     shouldAppendErrorClass(field) {
       return field.$error;
     }
-
   }
 };
 </script>

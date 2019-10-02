@@ -7,7 +7,9 @@ class CbesController < ApplicationController
   end
   before_action :cbe_access?
 
-  def show; end
+  def show
+    @cbe = Cbe.find(params[:id])
+  end
 
   private
 

@@ -48,7 +48,7 @@ export default {
   props: {
     sectionId: Number,
     id: Number,
-    initialContent: String,
+    initialContent: String
   },
   components: {
     TinyEditor
@@ -104,9 +104,9 @@ export default {
         this.scenarioDetails["cbe_section_id"] = this.sectionId;
 
         axios
-          .patch(
-            `/api/v1/scenarios/${this.id}`, {scenario: this.scenarioDetails}
-          )
+          .patch(`/api/v1/scenarios/${this.id}`, {
+            scenario: this.scenarioDetails
+          })
           .then(response => {
             this.updatedScenario = response.data;
             this.scenarioDetails["id"] = this.updatedScenario.id;

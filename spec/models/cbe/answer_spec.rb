@@ -17,7 +17,6 @@ RSpec.describe Cbe::Answer, type: :model do
 
   describe 'Validations' do
     it { should validate_presence_of(:kind) }
-    it { should validate_presence_of(:cbe_question_id) }
   end
 
   describe 'Enums' do
