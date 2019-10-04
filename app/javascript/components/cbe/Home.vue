@@ -1,6 +1,6 @@
 <template>
   <section class="cbe-section">
-    <NavBar v-bind:logo="'CBE'" v-bind:title="cbe_data.title" />
+    <NavBar :logo="'CBE'" :title="cbe_data.title" :user_cbe_data="user_cbe_data" />
 
     <div class="cbe-content panel panel-default">
       <router-view :id="$route.path" />

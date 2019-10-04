@@ -1,3 +1,5 @@
+import { type } from "os";
+
 const state = {
   user_cbe_data: {
     user_id: null,
@@ -6,7 +8,9 @@ const state = {
     exam_pages: {
       state: null,
       flagged: false,
-      description: null
+      description: null,
+      type: null,
+      param: null
     }
   }
 };
@@ -42,9 +46,9 @@ const functions = {
     var exam_pages = [];
 
     sections.filter(section => {
-      exam_pages.push({ description: section.name, state: 'Unseen', flagged: false })
+      exam_pages.push({ description: section.name, state: 'Unseen', flagged: false, type: 'sections', param: section.id })
       section.questions.filter(question => {
-        exam_pages.push({ description: question.kind, state: 'Unseen', flagged: false })
+        exam_pages.push({ description: question.kind, state: 'Unseen', flagged: false, type: 'questions', param: question.id })
       });
     });
 

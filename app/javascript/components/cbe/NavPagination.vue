@@ -1,7 +1,7 @@
 <template>
   <section class="overflow-auto">
     <b-pagination-nav
-      :limit="0"
+      :limit="1"
       :link-gen="linkGen"
       :number-of-pages="links.length"
       :hide-goto-end-buttons="true"
