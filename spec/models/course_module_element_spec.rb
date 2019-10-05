@@ -92,6 +92,29 @@ describe CourseModuleElement do
     it { should respond_to(:type_name) }
     it { should respond_to(:cme_is_video?) }
 
+    describe User, '#available_to_user' do
+      it 'for unverified_user it returns false and verification-required' do
+        user = build(:unverified_user)
+        cme = build(:course_module_element)
+
+        expect(cme.available_to_user(user, nil)).to eq(view: false, reason: 'verification-required')
+      end
+
+      it 'for comp_user it returns true' do
+        user = build(:comp_user)
+        cme = build(:course_module_element)
+
+        expect(cme.available_to_user(user, nil)).to eq(view: true, reason: nil)
+      end
+
+      it 'for standard_student_user it returns false and invalid-subscription' do
+        user = build(:active_student_user)
+        cme = build(:course_module_element, available_on_trial: false)
+
+        expect(cme.available_to_user(user, nil)).to eq(view: false, reason: 'invalid-subscription')
+      end
+    end
+
   end
 
 end

@@ -308,13 +308,11 @@ class ApplicationController < ActionController::Base
   def user_course_correct_url(the_thing, scul = nil)
     return new_student_url unless current_user
 
-    #if current_user.non_verified_user? # current_user.non_verified_user?
-    #  library_course_url(the_thing.course_module.course_section.subject_course.group.name_url,
-    #                     the_thing.course_module.course_section.subject_course.name_url,
-    #                     anchor: 'verification-required')
-    #
-    #elsif the_thing.related_course_module_element_id && the_thing.previous_cme_restriction(scul)
-    if the_thing.related_course_module_element_id && the_thing.previous_cme_restriction(scul)
+    if current_user.non_verified_user? # current_user.non_verified_user?
+      library_course_url(the_thing.course_module.course_section.subject_course.group.name_url,
+                         the_thing.course_module.course_section.subject_course.name_url,
+                         anchor: 'verification-required')
+    elsif the_thing.related_course_module_element_id && the_thing.previous_cme_restriction(scul)
       library_course_url(the_thing.course_module.course_section.subject_course.group.name_url,
                          the_thing.course_module.course_section.subject_course.name_url,
                          anchor: 'related-lesson-restriction')

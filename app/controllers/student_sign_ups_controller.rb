@@ -131,7 +131,7 @@ class StudentSignUpsController < ApplicationController
 
     @user.pre_creation_setup
 
-    if @user.valid? && @user.save
+    if verify_recaptcha(model: @user) && @user.valid? && @user.save
       handle_post_user_creation(@user)
       handle_course_enrollment(@user, params[:subject_course_id]) if params[:subject_course_id]
 
