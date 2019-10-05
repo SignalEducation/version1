@@ -4,6 +4,7 @@ RSpec.describe Cbe::Scenario, type: :model do
   let(:cbe_scenario) { build(:cbe_scenario, :with_section) }
 
   describe 'Should Respond' do
+    it { should respond_to(:name) }
     it { should respond_to(:content) }
     it { should respond_to(:cbe_section_id) }
     it { should respond_to(:created_at) }

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_26_124329) do
+ActiveRecord::Schema.define(version: 2019_10_06_135033) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -140,6 +140,7 @@ ActiveRecord::Schema.define(version: 2019_09_26_124329) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "cbe_section_id"
+    t.string "name"
     t.index ["cbe_section_id"], name: "index_cbe_scenarios_on_cbe_section_id"
   end
 

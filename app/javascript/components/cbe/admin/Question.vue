@@ -46,7 +46,7 @@
     <div class="col-sm-12">
       <div class="form-group">
         <label for="questionContent">Content</label>
-        <div class="input-group input-group-lg" id="questionContent">
+        <div id="questionContent">
           <TinyEditor
             @blur="$v.questionContent.$touch()"
             :class="{error: shouldAppendErrorClass($v.questionContent), valid: shouldAppendValidClass($v.questionContent)}"
@@ -65,7 +65,7 @@
     <div class="col-sm-12">
       <AdminAnswers
         :question_kind="questionKind"
-        :answers="this.questionAnswers"
+        :answers="questionAnswers"
         v-model="questionAnswers"
       />
     </div>
@@ -104,7 +104,7 @@ export default {
       type: Number,
       default: 0
     },
-    initialScore: String,
+    initialScore: Number,
     initialContent: String,
     initialKind: String,
     initialAnswers: Array

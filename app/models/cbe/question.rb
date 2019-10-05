@@ -18,5 +18,9 @@ class Cbe
     # validations
     validates :content, :kind, :score, presence: true
     validates :score, numericality: { greater_than_or_equal_to: 0 }
+
+    # scopes
+    scope :without_scenario, -> { where(cbe_scenario_id: nil) }
+    scope :with_scenario,    -> { where.not(cbe_scenario_id: nil) }
   end
 end

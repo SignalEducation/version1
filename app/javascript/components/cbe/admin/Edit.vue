@@ -1,182 +1,444 @@
 <template>
-  <div>
-    <h1>Edit CBE Details</h1>
-    <div class="row">
-      <div class="col-sm-6">
-        <div class="form-group">
-          <label for="subjectCoursesSelect" class="input-group input-group-lg">Course</label>
-
-          <select v-model="subject_course_id" class="input-group input-group-lg">
-            <option
-              v-for="course in subjectCourses"
-              v-bind:value="course.value"
-              v-bind:key="course.value"
-            >{{ course.text }}</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="col-sm-6">
-        <b-form-group id="checkbox-input-group" class="mt-5 mx-4">
-          <b-form-checkbox v-model="active" id="active-checkbox">Active</b-form-checkbox>
-        </b-form-group>
-      </div>
-    </div>
-    <!-- row -->
-
-    <div class="row">
-      <div class="col-sm-6">
-        <label for="name">Name</label>
-        <div class="field">
-          <span
-            class="field-value"
-            v-show="!showField('name')"
-            @click="focusField('name')"
-          >{{cbe.name}}</span>
-          <input
-            v-model="cbe.name"
-            v-show="showField('name')"
-            type="name"
-            class="field-value form-control"
-            @focus="focusField('name')"
-            @blur="blurField"
-          />
+  <div class="panel-body no-top-padding">
+    <div>
+      <div class="row">
+        <div class="col-sm-12 mb-2">
+          <b-button
+              :class="shouldShowCbeDetails ? 'collapsed mr-1' : 'mr-1'"
+              :aria-expanded="shouldShowCbeDetails ? 'true' : 'false'"
+              aria-controls="collapse-cbe"
+              @click="toggleCbeDetails"
+              variant="primary"
+          >
+            <span class="when-opened">&#10514;</span>
+            <span class="when-closed">&#10515;</span> CBE Details
+          </b-button>
+          <b-button
+              :class="shouldShowIntroPages ? 'collapsed mr-1' : 'mr-1'"
+              :aria-expanded="shouldShowIntroPages ? 'true' : 'false'"
+              aria-controls="collapse-intro-pages"
+              @click="toggleIntroPages"
+              variant="primary"
+          >
+            <span class="when-opened">&#10514;</span>
+            <span class="when-closed">&#10515;</span> Intro Pages
+          </b-button>
+          <b-button
+              :class="shouldShowResources ? 'collapsed mr-1' : 'mr-1'"
+              :aria-expanded="shouldShowResources ? 'true' : 'false'"
+              aria-controls="collapse-resources"
+              @click="toggleResources"
+              variant="primary"
+          >
+            <span class="when-opened">&#10514;</span>
+            <span class="when-closed">&#10515;</span> Resources
+          </b-button>
         </div>
       </div>
     </div>
-    <!-- row -->
 
-    <div class="row">
-      <div class="col-sm-6">
-        <label for="agreement_content">Agreement Text</label>
-        <div class="field">
-          <span
-            class="field-value"
-            v-show="!showField('agreement_content')"
-            @click="focusField('agreement_content')"
-          >{{cbe.agreement_content}}</span>
-          <input
-            v-model="cbe.agreement_content"
-            v-show="showField('agreement_content')"
-            id="agreement_content"
-            type="text"
-            class="field-value form-control"
-            @focus="focusField('agreement_content')"
-            @blur="blurField"
-          />
-        </div>
-      </div>
+    <div>
+      <b-collapse v-model="showCbeDetails" id="collapse-cbe" class="mb-2">
+        <b-card>
+          <Details
+              v-bind:id="edit_cbe_data.id"
+              v-bind:initialName="edit_cbe_data.name"
+              v-bind:initialCourseId="edit_cbe_data.subject_course.id"
+              v-bind:initialAgreementContent="edit_cbe_data.agreement_content"
+              v-bind:initialExamTime="edit_cbe_data.exam_time"
+              v-bind:initialActive="edit_cbe_data.active"
+          ></Details>
+        </b-card>
+      </b-collapse>
 
-      <div class="col-sm-6">
-        <label for="exam_time">Time</label>
-        <div class="field">
-          <span
-            class="field-value"
-            v-show="!showField('exam_time')"
-            @click="focusField('exam_time')"
-          >{{cbe.exam_time}}</span>
-          <input
-            v-model="cbe.exam_time"
-            v-show="showField('exam_time')"
-            type="exam_time"
-            class="field-value form-control"
-            @focus="focusField('exam_time')"
-            @blur="blurField"
-          />
-        </div>
-      </div>
-    </div>
-    <!-- row -->
+      <b-collapse id="collapse-intro-pages" v-model="showIntroPages" class="mb-2">
+        <b-card no-body>
+          <b-tabs card>
+            <IntroductionPage
+                v-for="page in edit_cbe_data.introduction_pages"
+                v-bind:key="'intro-page-tab-' + page.id"
+                v-bind:id="page.id"
+                v-bind:initialTitle="page.title"
+                v-bind:initialKind="page.kind"
+                v-bind:initialContent="page.content"
+            ></IntroductionPage>
+            <IntroductionPage v-on:add-introduction-page="updatePages"></IntroductionPage>
+          </b-tabs>
+        </b-card>
+      </b-collapse>
 
-    <div class="row mt-3">
-      <div class="col-sm-12">
-        <!-- Save CBE -->
-        <button v-on:click="saveForm" class="btn btn-primary">Save</button>
-      </div>
+      <b-collapse id="collapse-resources" v-model="showResources" class="mb-2">
+        <Resources v-bind:resources="edit_cbe_data.resources" v-on:add-resource="updateResources"></Resources>
+      </b-collapse>
+
+      <h3>Exam Content</h3>
+      <b-card no-body>
+        <b-tabs card>
+          <b-tab
+              v-for="section in edit_cbe_data.sections"
+              :key="'section-tab-' + section.id"
+              :title="section.name"
+          >
+            <div class="row">
+              <div class="col-sm-10">
+                <b-collapse v-bind:id="'section-edit-collapse-' + section.id" class="mt-2">
+                  <b-card>
+                    <Section
+                        v-bind:id="section.id"
+                        v-bind:initialName="section.name"
+                        v-bind:initialScore="section.score"
+                        v-bind:initialKind="section.kind"
+                        v-bind:initialContent="section.content"
+                    ></Section>
+                  </b-card>
+                </b-collapse>
+                <b-card>
+                  <p>Name: {{ section.name }} - Type: {{ section.kind }} - Score: {{ section.score }}</p>
+                </b-card>
+              </div>
+              <div class="col-sm-2">
+                <b-button
+                    v-b-toggle="'section-edit-collapse-' + section.id"
+                    variant="secondary"
+                    class="mr-1"
+                >Edit Section</b-button>
+              </div>
+            </div>
+
+            <hr />
+
+            <div v-if="section.kind === 'objective'">
+              <div v-for="(question) in section.questions" v-bind:key="question.id">
+                <b-card no-body class="mb-1">
+                  <b-card-header header-tag="header" class="p-1" role="tab">
+                    <b-button
+                        block
+                        href="#"
+                        v-b-toggle="'accordion-' + question.id"
+                        variant="secondary"
+                    >Question - {{ question.id }}</b-button>
+                  </b-card-header>
+
+                  <b-collapse
+                      v-bind:id="'accordion-'+ question.id"
+                      accordion="my-accordion"
+                      role="tabpanel"
+                  >
+                    <b-card-body>
+                      <div class="row">
+                        <div class="col-sm-12">
+                          <Question
+                              v-bind:section-id="section.id"
+                              v-bind:id="question.id"
+                              v-bind:initialContent="question.content"
+                              v-bind:initialScore="question.score"
+                              v-bind:initialKind="question.kind"
+                              v-bind:initialAnswers="question.answers"
+                          ></Question>
+                        </div>
+                      </div>
+                    </b-card-body>
+                  </b-collapse>
+                </b-card>
+              </div>
+              <b-card no-body class="mb-1">
+                <b-card-header header-tag="header" class="p-1" role="tab">
+                  <b-button
+                      block
+                      href="#"
+                      v-b-toggle.new-question-accordion
+                      variant="primary"
+                  >New Question</b-button>
+                </b-card-header>
+
+                <b-collapse
+                    id="new-question-accordion"
+                    visible
+                    accordion="my-accordion"
+                    role="tabpanel"
+                >
+                  <b-card-body>
+                    <Question
+                        v-bind:section-id="section.id"
+                        v-on:add-question="updateQuestions"
+                    ></Question>
+                  </b-card-body>
+                </b-collapse>
+              </b-card>
+            </div>
+
+            <div v-else>
+              <div class="row">
+                <div class="col-sm-12">
+                  <b-card no-body>
+                    <b-tabs pills card vertical nav-wrapper-class="w-5">
+                      <b-tab
+                          v-for="scenario in section.scenarios"
+                          :key="'scenario-tab-' + scenario.id"
+                          :title="scenario.name"
+                      >
+                        <b-card-text>
+                          <div class="row">
+                            <div class="col-sm-10">
+                              <b-collapse
+                                  v-bind:id="'scenario-edit-collapse-' + scenario.id"
+                                  class="mt-2"
+                              >
+                                <b-card>
+                                  <Scenario
+                                      v-bind:id="scenario.id"
+                                      v-bind:initialName="scenario.name"
+                                      v-bind:initialContent="scenario.content"
+                                  ></Scenario>
+                                </b-card>
+                              </b-collapse>
+                              <b-card>
+                                <p>Name: {{ scenario.name }}</p>
+                              </b-card>
+                            </div>
+                            <div class="col-sm-2">
+                              <b-button
+                                  v-b-toggle="'scenario-edit-collapse-' + scenario.id"
+                                  variant="secondary"
+                                  class="mr-1"
+                              >Edit Scenario</b-button>
+                            </div>
+                          </div>
+                          <br />
+                          <div v-for="question in scenario.questions" v-bind:key="question.id">
+                            <b-card no-body class="mb-1">
+                              <b-card-header header-tag="header" class="p-1" role="tab">
+                                <b-button
+                                    block
+                                    href="#"
+                                    v-b-toggle="'accordion-' + question.id"
+                                    variant="secondary"
+                                >Question - {{ question.id }}</b-button>
+                              </b-card-header>
+
+                              <b-collapse
+                                  v-bind:id="'accordion-'+ question.id"
+                                  accordion="question-accordion"
+                                  role="tabpanel"
+                              >
+                                <b-card-body>
+                                  <div class="row">
+                                    <div class="col-sm-12">
+                                      <b-card>
+                                        <Question
+                                            v-bind:section-id="section.id"
+                                            v-bind:scenario-id="scenario.id"
+                                            v-bind:id="question.id"
+                                            v-bind:initialContent="question.content"
+                                            v-bind:initialScore="question.score"
+                                            v-bind:initialKind="question.kind"
+                                            v-bind:initialAnswers="question.answers"
+                                        ></Question>
+                                      </b-card>
+                                    </div>
+                                  </div>
+                                </b-card-body>
+                              </b-collapse>
+                            </b-card>
+                          </div>
+
+                          <b-card no-body class="mb-1">
+                            <b-card-header header-tag="header" class="p-1" role="tab">
+                              <b-button
+                                  block
+                                  href="#"
+                                  v-b-toggle.new-question-accordion
+                                  variant="primary"
+                              >New Question</b-button>
+                            </b-card-header>
+
+                            <b-collapse
+                                id="new-question-accordion"
+                                visible
+                                accordion="my-accordion"
+                                role="tabpanel"
+                            >
+                              <b-card-body>
+                                <Question
+                                    v-bind:section-id="section.id"
+                                    v-bind:scenario-id="scenario.id"
+                                    v-on:add-question="updateScenarioQuestions"
+                                ></Question>
+                              </b-card-body>
+                            </b-collapse>
+                          </b-card>
+                        </b-card-text>
+                      </b-tab>
+                      <b-tab title="New Scenario">
+                        <b-card-text>
+                          <Scenario
+                              v-bind:section-id="section.id"
+                              v-on:add-scenario="updateScenarios"
+                          ></Scenario>
+                        </b-card-text>
+                      </b-tab>
+                    </b-tabs>
+                  </b-card>
+                </div>
+              </div>
+            </div>
+          </b-tab>
+          <b-tab title="New Section">
+            <Section v-on:add-section="updateSections"></Section>
+          </b-tab>
+        </b-tabs>
+      </b-card>
     </div>
   </div>
 </template>
 
 <script>
-import axios from "axios";
+  import Details from "./Details";
+  import Section from "./Section";
+  import IntroductionPage from "./IntroductionPage";
+  import Scenario from "./Scenario";
+  import Question from "./Question";
+  import Resources from "./Resources";
+  import { mapGetters } from "vuex";
 
-export default {
-  mounted() {
-    this.getSubjects();
-    this.getCBEId();
-    this.fetchCbe();
-  },
-  data() {
-    return {
-      cbe: {},
-      editField: "",
-      options: [],
-      selectedCbe: "",
-      cbe_id: null,
-      subjectCourses: [],
-      subject_course_id: null,
-      active: false
-    };
-  },
-  methods: {
-    getSubjects() {
-      axios
-        .get("/api/v1/subject_courses/")
-        .then(response => {
-          this.subjectCourses = response.data;
-        })
-        // eslint-disable-next-line no-unused-vars
-        .catch(e => {});
+  export default {
+    components: {
+      Details,
+      IntroductionPage,
+      Section,
+      Scenario,
+      Question,
+      Resources
     },
-    focusField(name) {
-      this.editField = name;
+    data() {
+      return {
+        cbeId: null,
+        showIntroPages: false,
+        showCbeDetails: false,
+        showResources: false
+      };
     },
-    blurField() {
-      this.editField = "";
+    mounted() {
+      this.getCBEId();
     },
-    showField(name) {
-      return this.cbe[name] === "" || this.editField === name;
+    computed: {
+      ...mapGetters("cbe", {
+        edit_cbe_data: "editCbeData",
+      }),
+      shouldShowCbeDetails: function() {
+        return (
+          this.showCbeDetails && !(this.showIntroPages || this.showResources)
+        );
+      },
+      shouldShowIntroPages: function() {
+        return (
+          this.showIntroPages && !(this.showCbeDetails || this.showResources)
+        );
+      },
+      shouldShowResources: function() {
+        return (
+          this.showResources && !(this.showCbeDetails || this.showIntroPages)
+        );
+      }
     },
-    getCBEId() {
-      const url = document.URL;
-      this.cbe_id = url.substr(url.lastIndexOf("/") + 1);
-    },
-    // eslint-disable-next-line no-unused-vars
-    fetchCbe(page, index) {
-      axios
-        .get(`http://localhost:3000/api/v1/cbes/${this.cbe_id}`)
-        .then(response => {
-          this.cbe = response.data;
-          this.subject_course_id = this.cbe.subject_course.id;
-          this.active = this.cbe.active;
-          this.$store.commit("setCurrentCbe", this.cbe);
-        })
-        // eslint-disable-next-line no-unused-vars
-        .catch(e => {});
-    },
-    saveForm() {
-      this.cbe.active = this.active;
-      this.cbe.subject_course_id = this.subject_course_id;
-      this.$store.commit("setCurrentCbe", this.cbe);
-      axios
-        .patch(`http://localhost:3000/api/v1/cbes/${this.cbe_id}`, {
-          cbe: this.cbe
-        })
-        .then(response => {
-          this.cbe = response.data;
-          this.$store.commit("setCurrentCbe", this.cbe);
-          window.location.reload();
-        })
-        // eslint-disable-next-line no-unused-vars
-        .catch(e => {});
+    methods: {
+      getCBEId() {
+        let url = document.URL;
+        this.url_cbe_id = url.substr(url.lastIndexOf('/') + 1);
+        this.cbeId = parseInt(this.url_cbe_id, 10);
+        this.$store.commit("setCbeId", this.cbeId);
+        this.$store.dispatch("cbe/getEditCbe", this.cbeId);
+      },
+      toggleCbeDetails: function() {
+        this.showCbeDetails = !this.showCbeDetails;
+        if (this.showCbeDetails && (this.showIntroPages || this.showResources)) {
+          this.showIntroPages = false;
+          this.showResources = false;
+        }
+      },
+      toggleIntroPages: function() {
+        this.showIntroPages = !this.showIntroPages;
+        if (this.showIntroPages && (this.showCbeDetails || this.showResources)) {
+          this.showCbeDetails = false;
+          this.showResources = false;
+        }
+      },
+      toggleResources: function() {
+        this.showResources = !this.showResources;
+        if (this.showResources && (this.showCbeDetails || this.showIntroPages)) {
+          this.showCbeDetails = false;
+          this.showIntroPages = false;
+        }
+      },
+      updateSections: function(data) {
+        this.edit_cbe_data.sections.push(data);
+      },
+      updatePages: function(data) {
+        this.edit_cbe_data.introPages.push(data);
+      },
+      updateResources: function(data) {
+        this.edit_cbe_data.resources.push(data);
+      },
+      updateScenarios: function(data) {
+        let sectionIndex = 0;
+        this.edit_cbe_data.sections.forEach((s, i) => {
+          if (s.id === data.cbe_section_id) {
+            sectionIndex = i;
+          }
+        });
+        let currentSection = this.edit_cbe_data.sections[sectionIndex];
+        if (currentSection.hasOwnProperty("scenarios")) {
+          console.log(currentSection);
+        } else {
+          // This $set syntax is required by Vue to ensure the section.questions array is reactive
+          // It is inside the conditional to ensure section.questions is not reset to empty
+          this.$set(currentSection, "scenarios", []);
+        }
+        currentSection.scenarios.push(data);
+      },
+      updateQuestions(data) {
+        let sectionIndex = 0;
+        this.edit_cbe_data.sections.forEach((s, i) => {
+          if (s.id === data.cbe_section_id) {
+            sectionIndex = i;
+          }
+        });
+        let currentSection = this.edit_cbe_data.sections[sectionIndex];
+        if (currentSection.hasOwnProperty("questions")) {
+          console.log(currentSection);
+        } else {
+          // This $set syntax is required by Vue to ensure the section.questions array is reactive
+          // It is inside the conditional to ensure section.questions is not reset to empty
+          this.$set(currentSection, "questions", []);
+        }
+        currentSection.questions.push(data);
+      },
+      updateScenarioQuestions(data) {
+        let scenarioIndex = 0;
+        let sectionIndex = 0;
+
+        this.edit_cbe_data.sections.forEach((s, i) => {
+          if (s.id === data.cbe_section_id) {
+            sectionIndex = i;
+          }
+        });
+        let currentSection = this.edit_cbe_data.sections[sectionIndex];
+
+        currentSection.scenarios.forEach((s, i) => {
+          if (s.id === data.cbe_scenario_id) {
+            scenarioIndex = i;
+          }
+        });
+        let currentScenario = currentSection.scenarios[scenarioIndex];
+        if (currentScenario.hasOwnProperty("questions")) {
+          console.log(currentScenario);
+        } else {
+          // This $set syntax is required by Vue to ensure the section.questions array is reactive
+          // It is inside the conditional to ensure section.questions is not reset to empty
+          this.$set(currentScenario, "questions", []);
+        }
+        currentScenario.questions.push(data);
+      }
     }
-  }
-};
+  };
 </script>
-
-<style scoped>
-p {
-  font-size: 2em;
-  text-align: center;
-}
-</style>

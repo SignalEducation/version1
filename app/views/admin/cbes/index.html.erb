@@ -37,10 +37,10 @@
                     <%= cbe.subject_course.name %>
                   </td>
                   <td>
-                    <%= link_to t('views.general.show'), "cbes/#{cbe.id}", class: 'btn btn-xs btn-primary' %>
+                    <%= link_to t('views.general.edit'), admin_cbe_url(cbe.id), class: 'btn btn-xs btn-primary' %>
                   </td>
                   <td>
-                    <%= link_to t('views.general.show'), "cbes/#{cbe.id}", class: 'btn btn-xs btn-secondary' %>
+                    <%= link_to t('views.general.show'), cbe_url(cbe.id), class: 'btn btn-xs btn-secondary' %>
                   </td>
                   <td></td>
                 </tr>

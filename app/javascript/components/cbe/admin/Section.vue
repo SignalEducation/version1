@@ -103,7 +103,7 @@ export default {
       type: String,
       default: ""
     },
-    initialScore: String,
+    initialScore: Number,
     initialContent: String,
     initialKind: String
   },

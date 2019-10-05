@@ -9,7 +9,7 @@ module Admin
     skip_before_action :verify_authenticity_token
 
     def index
-      @cbes = Cbe.all
+      @cbes = Cbe.all.order(created_at: :desc)
     end
 
     def show

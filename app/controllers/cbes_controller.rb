@@ -14,7 +14,7 @@ class CbesController < ApplicationController
   private
 
   def cbe_access?
-    return if current_user.purchased_cbe?(params[:id])
+    return if current_user.purchased_cbe?(params[:id]) || current_user.non_student_user?
 
     flash[:error] = 'You need to purchase it before access.'
     redirect_to prep_products_url
