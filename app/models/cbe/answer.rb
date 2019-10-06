@@ -10,6 +10,6 @@ class Cbe
                           inverse_of: :answers
 
     # validations
-    validates :kind, :cbe_question_id, presence: true
+    validates :kind, presence: true
   end
 end

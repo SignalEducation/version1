@@ -29,7 +29,6 @@ export default {
     generateObjectLinks(){
       var object_link = [];
 
-      object_link.push({ name: 'cbe' })
       object_link = this.mapObject(object_link, this.link_data.introduction_pages, 'introduction_pages')
       object_link.push({ name: 'agreement' })
       object_link = this.mapObject(object_link, this.link_data.sections, 'sections')

@@ -1,6 +1,6 @@
 <template>
   <b-card no-body>
-    <b-tabs card >
+    <b-tabs card>
       <Resource
         v-for="resource in resources"
         v-bind:key="'resource-tab-' + resource.id"
@@ -17,7 +17,7 @@ import Resource from "./Resource";
 
 export default {
   components: {
-    Resource,
+    Resource
   },
   props: {
     resources: Array
@@ -25,7 +25,7 @@ export default {
   methods: {
     updateResources: function(data) {
       this.$emit("add-resource", data);
-    },
+    }
   }
 };
 </script>

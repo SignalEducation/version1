@@ -1,44 +1,30 @@
 <template>
   <div>
-    <h1> Edit CBE Details </h1>
-    <div class="row ">
+    <h1>Edit CBE Details</h1>
+    <div class="row">
       <div class="col-sm-6">
         <div class="form-group">
-          <label
-            for="subjectCoursesSelect"
-            class="input-group input-group-lg"
-          >Course</label>
+          <label for="subjectCoursesSelect" class="input-group input-group-lg">Course</label>
 
-          <select
-            v-model="subject_course_id"
-            class="input-group input-group-lg"
-          >
+          <select v-model="subject_course_id" class="input-group input-group-lg">
             <option
               v-for="course in subjectCourses"
               v-bind:value="course.value"
               v-bind:key="course.value"
-            >
-              {{ course.text }}
-            </option>
+            >{{ course.text }}</option>
           </select>
         </div>
       </div>
 
-      <div class="col-sm-6 ">
-        <b-form-group
-          id="checkbox-input-group"
-          class="mt-5 mx-4"
-        >
-          <b-form-checkbox
-            v-model="active"
-            id="active-checkbox"
-          >Active</b-form-checkbox>
+      <div class="col-sm-6">
+        <b-form-group id="checkbox-input-group" class="mt-5 mx-4">
+          <b-form-checkbox v-model="active" id="active-checkbox">Active</b-form-checkbox>
         </b-form-group>
       </div>
+    </div>
+    <!-- row -->
 
-    </div> <!-- row -->
-
-    <div class="row ">
+    <div class="row">
       <div class="col-sm-6">
         <label for="name">Name</label>
         <div class="field">
@@ -57,9 +43,10 @@
           />
         </div>
       </div>
-    </div> <!-- row -->
+    </div>
+    <!-- row -->
 
-    <div class="row ">
+    <div class="row">
       <div class="col-sm-6">
         <label for="agreement_content">Agreement Text</label>
         <div class="field">
@@ -98,23 +85,20 @@
           />
         </div>
       </div>
-    </div> <!-- row -->
+    </div>
+    <!-- row -->
 
     <div class="row mt-3">
       <div class="col-sm-12">
         <!-- Save CBE -->
-        <button
-          v-on:click="saveForm"
-          class="btn btn-primary"
-        >Save</button>
+        <button v-on:click="saveForm" class="btn btn-primary">Save</button>
       </div>
     </div>
-
   </div>
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 
 export default {
   mounted() {
@@ -125,70 +109,68 @@ export default {
   data() {
     return {
       cbe: {},
-      editField: '',
+      editField: "",
       options: [],
-      selectedCbe: '',
+      selectedCbe: "",
       cbe_id: null,
       subjectCourses: [],
       subject_course_id: null,
-      active: false,
+      active: false
     };
   },
   methods: {
     getSubjects() {
       axios
-        .get('/api/v1/subject_courses/')
-        .then((response) => {
+        .get("/api/v1/subject_courses/")
+        .then(response => {
           this.subjectCourses = response.data;
         })
         // eslint-disable-next-line no-unused-vars
-        .catch((e) => {});
+        .catch(e => {});
     },
     focusField(name) {
       this.editField = name;
     },
     blurField() {
-      this.editField = '';
+      this.editField = "";
     },
     showField(name) {
-      return this.cbe[name] === '' || this.editField === name;
+      return this.cbe[name] === "" || this.editField === name;
     },
     getCBEId() {
       const url = document.URL;
-      this.cbe_id = url.substr(url.lastIndexOf('/') + 1);
+      this.cbe_id = url.substr(url.lastIndexOf("/") + 1);
     },
     // eslint-disable-next-line no-unused-vars
     fetchCbe(page, index) {
       axios
         .get(`http://localhost:3000/api/v1/cbes/${this.cbe_id}`)
-        .then((response) => {
+        .then(response => {
           this.cbe = response.data;
           this.subject_course_id = this.cbe.subject_course.id;
           this.active = this.cbe.active;
-          this.$store.commit('setCurrentCbe', this.cbe);
+          this.$store.commit("setCurrentCbe", this.cbe);
         })
         // eslint-disable-next-line no-unused-vars
-        .catch((e) => {
-        });
+        .catch(e => {});
     },
     saveForm() {
       this.cbe.active = this.active;
       this.cbe.subject_course_id = this.subject_course_id;
-      this.$store.commit('setCurrentCbe', this.cbe);
+      this.$store.commit("setCurrentCbe", this.cbe);
       axios
         .patch(`http://localhost:3000/api/v1/cbes/${this.cbe_id}`, {
-          cbe: this.cbe,
+          cbe: this.cbe
         })
-        .then((response) => {
+        .then(response => {
           this.cbe = response.data;
-          this.$store.commit('setCurrentCbe', this.cbe);
+          this.$store.commit("setCurrentCbe", this.cbe);
           window.location.reload();
         })
         // eslint-disable-next-line no-unused-vars
-        .catch((e) => {
-        });
-    },
-  },
+        .catch(e => {});
+    }
+  }
 };
 </script>
 

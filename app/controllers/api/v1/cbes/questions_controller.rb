@@ -34,7 +34,15 @@ module Api
             :content,
             :score,
             :cbe_scenario_id,
-            :cbe_section_id
+            :cbe_section_id,
+            answers_attributes: [
+              :cbe_question_id,
+              :kind,
+              content: [
+                :text,
+                :correct
+              ]
+            ]
           )
         end
 

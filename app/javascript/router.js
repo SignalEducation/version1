@@ -13,11 +13,6 @@ export default new Router({
   mode: 'abstract',
   routes: [
     {
-      path: '/',
-      name: 'cbe',
-      component: Cbe,
-    },
-    {
       path: '/introductions/:id',
       name: 'introduction_pages',
       component: IntroductionPages,

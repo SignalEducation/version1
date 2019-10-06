@@ -38,3 +38,33 @@ footer.cbe-footer {
   display: block;
   color: #f57f6c;
 }
+
+.handle {
+  margin-top: 2%;
+}
+.close {
+  float: right;
+}
+.answers-input {
+  display: inline-block;
+  width: 90%;
+}
+
+.text {
+  margin: 25px;
+}
+
+.list-group .answer-list{
+  padding: 0.75rem 0.25rem;
+}
+
+.list-group-item .input-group {
+  width: 95%;
+  flex-wrap: nowrap;
+}
+
+.input-group .answers-text-input {
+  display: inline-block;
+  pointer-events: none;
+  width: 89%;
+}

@@ -50,7 +50,8 @@ document.addEventListener('DOMContentLoaded', () => {
       },
       render: (h) => h(CbeHome),
     });
-  }
 
-  router.replace('/')
+    // Loading introduction pages as root when home load.
+    router.replace(`/introductions/${cbe_front  .dataset.introductionId}`)
+  }
 });

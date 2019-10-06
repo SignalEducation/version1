@@ -1,6 +1,6 @@
 <template>
   <section>
-    <p v-html="cbe_data.content" />
+    <p v-html="cbe_data.agreement_content" />
   </section>
 </template>
 

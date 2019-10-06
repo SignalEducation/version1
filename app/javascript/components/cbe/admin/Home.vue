@@ -128,6 +128,7 @@
                               v-bind:initialContent="question.content"
                               v-bind:initialScore="question.score"
                               v-bind:initialKind="question.kind"
+                              v-bind:initialAnswers="question.answers_attributes"
                             ></Question>
                           </div>
                         </div>
@@ -152,10 +153,7 @@
                     role="tabpanel"
                   >
                     <b-card-body>
-                      <Question
-                        v-bind:section-id="section.id"
-                        v-on:add-question="updateQuestions"
-                      ></Question>
+                      <Question v-bind:section-id="section.id" v-on:add-question="updateQuestions"></Question>
                     </b-card-body>
                   </b-collapse>
                 </b-card>

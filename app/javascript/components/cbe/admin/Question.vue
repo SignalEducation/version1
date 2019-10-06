@@ -10,10 +10,7 @@
           class="input-group input-group-lg"
         >
           <template slot="first">
-            <option
-              :value="null"
-              disabled
-            >-- Please select a type --</option>
+            <option :value="null" disabled>-- Please select a type --</option>
           </template>
         </b-form-select>
         <p
@@ -65,6 +62,14 @@
       </div>
     </div>
 
+    <div class="col-sm-12">
+      <AdminAnswers
+        :question_kind="questionKind"
+        :answers="this.questionAnswers"
+        v-model="questionAnswers"
+      />
+    </div>
+
     <div class="form-group">
       <button
         v-if="id"
@@ -87,6 +92,7 @@
 <script>
 import axios from "axios";
 import TinyEditor from "../../TinyEditor";
+import AdminAnswers from "./QuestionAnswers";
 import { validationMixin } from "vuelidate";
 import { required, numeric, between } from "vuelidate/lib/validators";
 
@@ -101,9 +107,11 @@ export default {
     initialScore: String,
     initialContent: String,
     initialKind: String,
+    initialAnswers: Array
   },
   components: {
-    TinyEditor
+    TinyEditor,
+    AdminAnswers
   },
   mixins: [validationMixin],
   data: function() {
@@ -112,6 +120,7 @@ export default {
       questionKind: this.initialKind,
       questionContent: this.initialContent,
       questionScore: this.initialScore,
+      questionAnswers: this.initialAnswers || [],
       selectedSelectQuestion: null,
       questionKinds: [
         "multiple_choice",
@@ -151,11 +160,12 @@ export default {
         this.questionDetails.kind = this.questionKind;
         this.questionDetails.content = this.questionContent;
         this.questionDetails.score = this.questionScore;
+        this.questionDetails.answers_attributes = this.questionAnswers;
         this.questionDetails.cbe_section_id = this.sectionId;
         this.questionDetails.cbe_scenario_id = this.scenarioId;
-        let url = this.scenarioId ?
-          `/api/v1/scenarios/${this.scenarioId}/questions/` :
-          `/api/v1/sections/${this.sectionId}/questions/`
+        let url = this.scenarioId
+          ? `/api/v1/scenarios/${this.scenarioId}/questions/`
+          : `/api/v1/sections/${this.sectionId}/questions/`;
 
         axios
           .post(url, {
@@ -170,6 +180,7 @@ export default {
             this.questionKind = null;
             this.questionContent = null;
             this.questionScore = null;
+            this.questionAnswers = [];
             this.submitStatus = "OK";
             this.$v.$reset();
           })
@@ -189,11 +200,12 @@ export default {
         this.questionDetails.score = this.questionScore;
         this.questionDetails.cbe_section_id = this.sectionId;
         this.questionDetails.cbe_scenario_id = this.scenarioId;
+        this.questionDetails.answers_attributes = this.questionAnswers;
 
         axios
-          .patch(
-            `/api/v1/questions/${this.id}`, {question: this.questionDetails}
-          )
+          .patch(`/api/v1/questions/${this.id}`, {
+            question: this.questionDetails
+          })
           .then(response => {
             this.updatedQuestion = response.data;
             this.questionDetails["id"] = this.updatedQuestion.id;
