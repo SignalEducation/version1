@@ -2,7 +2,13 @@
   <section>
     <h3>Item Review Screen</h3>
 
-    <b-table striped hover :items="user_cbe_data.exam_pages"></b-table>
+    <b-table
+      striped
+      hover
+      :items="user_cbe_data.exam_pages"
+      :fields="[{ key: 'description', label: 'Question #' }, { key: 'state', label: 'Status' }, { key: 'flagged', label: 'Flagged - Review' }]"
+    >
+    </b-table>
 
     <div id="example-1">
       <button v-on:click="submitExam">End Exam</button>
@@ -32,8 +38,7 @@ export default {
         .then(response => {
           window.location.href = `/api/v1/cbes/${this.cbe_id}/users_log/${response.data.id}`;
         })
-        .catch(error => {
-        });
+        .catch(error => {});
     },
 
     formatedData: function() {
@@ -44,7 +49,7 @@ export default {
         [],
         Object.values(this.user_cbe_data.questions).map(a => a.answers)
       );
-      data.status = 'finished';
+      data.status = "finished";
       data.score = 100;
       data.cbe_id = this.user_cbe_data.cbe_id;
       data.user_id = this.user_cbe_data.user_id;
