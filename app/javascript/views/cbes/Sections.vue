@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section style="padding: 25px;">
     <div
       class="sections"
       v-bind:id="'section-' + section.sorting_order"
@@ -8,7 +8,7 @@
       :key="section.id"
     >
       <div class="content">
-        <p v-html="section.content" />
+        <div v-html="section.content" />
       </div>
     </div>
   </section>

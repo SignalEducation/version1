@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section style="padding: 25px;">
     <h3>Item Review Screen</h3>
 
     <b-table

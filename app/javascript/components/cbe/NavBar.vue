@@ -1,5 +1,5 @@
 <template>
-  <header class="header">
+  <header class="header fixed-top" id="cbe-nav-header">
     <b-navbar toggleable="lg" type="dark">
       <router-link to="/" v-slot="{ href, route, navigate, isActive, isExactActive }">
         <b-navbar-brand :href="href" @click="navigate">{{ logo }}</b-navbar-brand>
@@ -8,13 +8,13 @@
       <CbeFlagToReview :user_cbe_data="user_cbe_data" :route="$route" v-if="showFlag($route.name)" />
     </b-navbar>
 
-    <div class="nav-scroller bg-white shadow-sm">
-      <nav class="nav nav-underline">
-        <b-nav-text>{{ title }}</b-nav-text>
+    <div class="nav-scroller">
+      <nav class="nav nav-underline bg-cbe-gray">
+        <b-nav-text>Calculator</b-nav-text>
+        <b-nav-text>Scratch Pad</b-nav-text>
       </nav>
     </div>
 
-    <div class="nav-scroller bg-white shadow-sm"></div>
   </header>
 </template>
 

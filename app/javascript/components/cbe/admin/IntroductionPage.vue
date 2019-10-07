@@ -91,7 +91,7 @@ export default {
       this.pageDetails["content"] = this.content;
 
       axios
-        .patch(`/api/v1/introduction_pages/${this.id}`, {
+        .patch(`/api/v1/cbes/${this.$store.state.cbeId}/introduction_pages/${this.id}`, {
           cbe_introduction_page: this.pageDetails
         })
         .then(response => {

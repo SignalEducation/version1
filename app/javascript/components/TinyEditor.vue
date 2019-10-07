@@ -6,7 +6,7 @@
       :api-key="this.apiKey"
       :init="{
         branding:  false,
-        menubar:   false,
+        menubar:   true,
         statusbar: false,
         resize:    false,
         toolbar:   ['newdocument | \
@@ -21,7 +21,7 @@
                     alignleft aligncenter alignright alignjustify | \
                     numlist bullist | \
                     outdent indent'].concat(this.aditionalToolbarOptions),
-        plugins:   'fullscreen lists table',
+        plugins:   'fullscreen lists table code',
       }"
       v-model="localFieldModel"
       @input="$emit('update:fieldModel', localFieldModel)"
