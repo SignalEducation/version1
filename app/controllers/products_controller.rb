@@ -6,6 +6,7 @@ class ProductsController < ApplicationController
   before_action :seo_title,         except: :reorder
   before_action :management_layout, except: :reorder
   before_action :set_product, only: %i[show edit update destroy]
+  before_action :set_variables, only: %i[new create edit update]
 
   def index
     @products = Product.includes(:currency, :mock_exam, :orders).
@@ -17,10 +18,7 @@ class ProductsController < ApplicationController
   def show; end
 
   def new
-    @product         = Product.new
-    @currencies      = Currency.all_in_order
-    @mock_exams      = MockExam.all_in_order
-    @subject_courses = SubjectCourse.all_active.all_in_order
+    @product = Product.new
   end
 
   def edit; end
@@ -69,6 +67,12 @@ class ProductsController < ApplicationController
 
   def set_product
     @product = Product.find(params[:id])
+  end
+
+  def set_variables
+    @currencies      = Currency.all_in_order
+    @mock_exams      = MockExam.all_in_order
+    @subject_courses = SubjectCourse.all_active.all_in_order
   end
 
   def seo_title
