@@ -36,6 +36,7 @@ module Api
             :cbe_scenario_id,
             :cbe_section_id,
             answers_attributes: [
+              :id,
               :cbe_question_id,
               :kind,
               content: [

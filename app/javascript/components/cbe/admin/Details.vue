@@ -123,7 +123,7 @@
 import axios from "axios";
 import TinyEditor from "../../TinyEditor";
 import { validationMixin } from "vuelidate";
-import { required, numeric, alphaNum, between } from "vuelidate/lib/validators";
+import { required, numeric, between } from "vuelidate/lib/validators";
 
 export default {
   components: {
@@ -133,13 +133,21 @@ export default {
   mounted() {
     this.getSubjects();
   },
+  props: {
+    id: Number,
+    initialName: String,
+    initialCourseId: Number,
+    initialAgreementContent: String,
+    initialExamTime: Number,
+    initialActive: Boolean,
+  },
   data() {
     return {
-      name: null,
-      agreementContent: null,
-      examTime: null,
-      active: false,
-      subjectCourseId: null,
+      name: this.initialName,
+      agreementContent: this.initialAgreementContent,
+      examTime: this.initialExamTime,
+      active: this.initialActive,
+      subjectCourseId: this.initialCourseId,
       subjectCourses: [],
       createdCBE: [],
       submitStatus: null,
@@ -165,23 +173,7 @@ export default {
       required
     }
   },
-  watch: {
-    name() {
-      this.$store.commit("setCbeName", this.name);
-    },
-    agreementContent() {
-      this.$store.commit("setCbeAgreementContent", this.agreementContent);
-    },
-    examTime() {
-      this.$store.commit("setCbeExamTime", this.examTime);
-    },
-    subjectCourseId() {
-      this.$store.commit("setCbeSubjectCourseId", this.subjectCourseId);
-    },
-    active() {
-      this.$store.commit("setCbeActive", this.active);
-    }
-  },
+
   methods: {
     getSubjects() {
       axios
@@ -198,11 +190,11 @@ export default {
       } else {
         this.submitStatus = "PENDING";
         this.cbeDetails = {};
-        this.cbeDetails.name = this.$store.state.cbeDetails.cbeName;
-        this.cbeDetails.agreement_content = this.$store.state.cbeDetails.cbeAgreementContent;
-        this.cbeDetails.exam_time = this.$store.state.cbeDetails.cbeExamTime;
-        this.cbeDetails.active = this.$store.state.cbeDetails.cbeActive;
-        this.cbeDetails.subject_course_id = this.$store.state.cbeDetails.cbeSubjectCourseId;
+        this.cbeDetails.name = this.name;
+        this.cbeDetails.agreement_content = this.agreementContent;
+        this.cbeDetails.exam_time = this.examTime;
+        this.cbeDetails.active = this.active;
+        this.cbeDetails.subject_course_id = this.subjectCourseId;
         axios
           .post("/api/v1/cbes/", { cbe: this.cbeDetails })
           .then(response => {
@@ -225,13 +217,13 @@ export default {
         this.updateStatus = "ERROR";
       } else {
         this.cbeDetails = {};
-        this.cbeDetails.name = this.$store.state.cbeDetails.cbeName;
-        this.cbeDetails.agreement_content = this.$store.state.cbeDetails.cbeAgreementContent;
-        this.cbeDetails.exam_time = this.$store.state.cbeDetails.cbeExamTime;
-        this.cbeDetails.active = this.$store.state.cbeDetails.cbeActive;
-        this.cbeDetails.subject_course_id = this.$store.state.cbeDetails.cbeSubjectCourseId;
+        this.cbeDetails.name = this.name;
+        this.cbeDetails.agreement_content = this.agreementContent;
+        this.cbeDetails.exam_time = this.examTime;
+        this.cbeDetails.active = this.active;
+        this.cbeDetails.subject_course_id = this.subjectCourseId;
         axios
-          .patch(`/api/v1/cbes/${this.$store.state.cbeId}`, {
+          .patch(`/api/v1/cbes/${this.id}`, {
             cbe: this.cbeDetails
           })
 

@@ -28,11 +28,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  const cbes_show = document.getElementById('cbes-show-view');
-  if (cbes_show != null) {
+  const cbes_edit = document.getElementById('cbes-edit-view');
+  if (cbes_edit != null) {
     new Vue({
       store,
-      el: cbes_show,
+      el: cbes_edit,
       components: { CbeEdit },
       render: (h) => h(CbeEdit),
     });

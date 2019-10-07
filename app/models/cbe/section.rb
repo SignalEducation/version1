@@ -12,6 +12,9 @@ class Cbe
     # validations
     validates :name, :kind, :content, :cbe_id, presence: true
 
+    # scopes
+    scope :all_in_order, -> { order(:sorting_order) }
+
     # enums
     enum kind: { objective: 0, constructed_response: 1, objective_test_case: 2 }
   end

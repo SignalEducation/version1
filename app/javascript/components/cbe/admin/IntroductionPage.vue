@@ -12,22 +12,6 @@
 
       <div class="col-sm-12">
         <div class="form-group">
-          <label for="pageKindSelect">Page Type</label>
-          <b-form-select
-            v-model="kind"
-            :options="introPageKinds"
-            id="pageKindSelect"
-            class="input-group input-group-lg"
-          >
-            <template slot="first">
-              <option :value="null" disabled>-- Please select a type --</option>
-            </template>
-          </b-form-select>
-        </div>
-      </div>
-
-      <div class="col-sm-12">
-        <div class="form-group">
           <label for="pageContent">Page Content</label>
           <TinyEditor
             :fieldModel.sync="content"
@@ -62,16 +46,13 @@ export default {
       type: String,
       default: ""
     },
-    initialContent: String,
-    initialKind: String
+    initialContent: String
   },
   data: function() {
     return {
       pageDetails: {},
       title: this.initialTitle,
-      content: this.initialContent,
-      kind: this.initialKind,
-      introPageKinds: ["text", "agreement"]
+      content: this.initialContent
     };
   },
   computed: {
@@ -85,7 +66,6 @@ export default {
     savePage: function() {
       this.pageDetails["title"] = this.title;
       this.pageDetails["content"] = this.content;
-      this.pageDetails["kind"] = this.kind;
       this.pageDetails["cbe_id"] = this.$store.state.cbeId;
 
       axios
@@ -99,8 +79,7 @@ export default {
             this.$emit("add-introduction-page", this.pageDetails);
             this.pageDetails = {};
             this.title = this.initialTitle;
-            this.content = this.initialContent;
-            this.kind = this.initialKind;
+            this.content = null;
           }
         })
         .catch(error => {
@@ -110,7 +89,6 @@ export default {
     updatePage: function() {
       this.pageDetails["title"] = this.title;
       this.pageDetails["content"] = this.content;
-      this.pageDetails["kind"] = this.kind;
 
       axios
         .patch(`/api/v1/introduction_pages/${this.id}`, {
@@ -123,7 +101,6 @@ export default {
           this.pageDetails = {};
           this.title = this.updatedPage.title;
           this.content = this.updatedPage.content;
-          this.kind = this.updatedPage.kind;
         })
         .catch(error => {
           console.log(error);

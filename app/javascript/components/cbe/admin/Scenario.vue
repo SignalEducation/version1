@@ -1,9 +1,25 @@
 <template>
   <div class="row">
+    <div class="col-sm-6">
+      <div class="form-group">
+        <label for="scenarioName">Name</label>
+        <div class="input-group input-group-lg">
+          <input
+              v-model="scenarioName"
+              @blur="$v.scenarioName.$touch()"
+              :class="'form-control ' + {error: shouldAppendErrorClass($v.scenarioName), valid: shouldAppendValidClass($v.scenarioName)}"
+              id="scenarioName"
+              placeholder="Name"
+          />
+        </div>
+        <p v-if="!$v.scenarioName.required && $v.scenarioName.$error" class="error-message">field is required</p>
+      </div>
+    </div>
+
     <div class="col-sm-12">
       <div class="form-group">
         <label for="scenarioContent">Content</label>
-        <div class="input-group input-group-lg" id="scenarioContent">
+        <div id="scenarioContent">
           <TinyEditor
             @blur="$v.scenarioContent.$touch()"
             :class="{error: shouldAppendErrorClass($v.scenarioContent), valid: shouldAppendValidClass($v.scenarioContent)}"
@@ -48,6 +64,7 @@ export default {
   props: {
     sectionId: Number,
     id: Number,
+    initialName: String,
     initialContent: String
   },
   components: {
@@ -57,11 +74,15 @@ export default {
   data: function() {
     return {
       scenarioDetails: {},
+      scenarioName: this.initialName,
       scenarioContent: this.initialContent,
       submitStatus: null
     };
   },
   validations: {
+    scenarioName: {
+      required
+    },
     scenarioContent: {
       required
     }
@@ -74,6 +95,7 @@ export default {
       } else {
         this.submitStatus = "PENDING";
         this.scenarioDetails = {};
+        this.scenarioDetails["name"] = this.scenarioName;
         this.scenarioDetails["content"] = this.scenarioContent;
         this.scenarioDetails["cbe_section_id"] = this.sectionId;
 
@@ -86,6 +108,7 @@ export default {
             this.scenarioDetails["id"] = this.createdScenario.id;
             this.$emit("add-scenario", this.scenarioDetails);
             this.scenarioDetails = {};
+            this.scenarioName = null;
             this.scenarioContent = null;
             this.submitStatus = "OK";
             this.$v.$reset();
@@ -100,6 +123,7 @@ export default {
       if (this.$v.$invalid) {
         this.submitStatus = "ERROR";
       } else {
+        this.scenarioDetails["name"] = this.scenarioName;
         this.scenarioDetails["content"] = this.scenarioContent;
         this.scenarioDetails["cbe_section_id"] = this.sectionId;
 
@@ -112,6 +136,7 @@ export default {
             this.scenarioDetails["id"] = this.updatedScenario.id;
             this.$emit("update-content", this.TinyEditor);
             this.scenarioDetails = {};
+            this.name = this.scenarioName;
             this.content = this.initialContent;
             this.submitStatus = "OK";
             this.$v.$reset();

@@ -9,6 +9,6 @@ class Cbe
                          inverse_of: :scenario, dependent: :destroy
 
     # validations
-    validates :content, :cbe_section_id, presence: true
+    validates :name, :content, :cbe_section_id, presence: true
   end
 end

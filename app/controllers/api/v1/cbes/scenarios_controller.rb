@@ -26,6 +26,7 @@ module Api
 
         def permitted_params
           params.require(:scenario).permit(
+            :name,
             :content,
             :cbe_section_id
           )

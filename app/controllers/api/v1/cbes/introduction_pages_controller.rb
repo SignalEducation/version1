@@ -30,7 +30,7 @@ module Api
 
         def introduction_page_params
           params.require(:cbe_introduction_page).permit(
-            :title, :content, :sorting_order, :kind
+            :title, :content, :sorting_order
           )
         end
 
