@@ -177,14 +177,14 @@ describe StripeApiEvent do
       describe 'for customer.subscription.deleted webhook' do
         let(:payload) {{
           type: 'customer.subscription.deleted', livemode: false,
-          data: { object: { id: 'test_id', customer: 'customer' }}
+          data: { object: { id: 'test_id', customer: 'customer', cancel_at_period_end: false } }
         }}
         let(:api_event) { build(:stripe_api_event, payload: payload) }
 
         it 'call #process_customer_subscription_deleted' do
           expect(api_event).to(
             receive(:process_customer_subscription_deleted).with(
-              'customer', 'test_id'
+              'customer', 'test_id', false
             )
           )
 
