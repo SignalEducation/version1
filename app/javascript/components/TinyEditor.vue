@@ -21,7 +21,7 @@
                     alignleft aligncenter alignright alignjustify | \
                     numlist bullist | \
                     outdent indent'].concat(this.aditionalToolbarOptions),
-        plugins:   'fullscreen lists table code',
+        plugins:   'fullscreen lists table code paste',
       }"
       v-model="localFieldModel"
       @input="$emit('update:fieldModel', localFieldModel)"
