@@ -144,7 +144,7 @@ class SubjectCoursesController < ApplicationController
       :short_description, :exam_body_id, :default_number_of_possible_exam_answers,
       :background_image, :survey_url, :quiz_pass_rate, :group_id, :preview,
       :computer_based, :highlight_colour, :category_label, :icon_label,
-      :seo_title, :seo_description,
+      :seo_title, :seo_description, :has_correction_packs,
       course_sections_attributes: [
         course_modules_attributes: [
           course_module_elements_attributes: [
