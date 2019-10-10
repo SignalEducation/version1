@@ -27,13 +27,14 @@ module HubSpot
          { property: 'date_of_birth',       value: user.date_of_birth },
          { property: 'currency',            value: user&.currency&.name },
          { property: 'country',             value: user&.country&.name },
-         { property: 'preferred_exam_body', value: user&.preferred_exam_body&.name }] + subscriptons_statuses(user)
+         { property: 'preferred_exam_body', value: user&.preferred_exam_body&.name }] + subscriptions_statuses(user)
       end
 
-      def subscriptons_statuses(user, statuses = [])
-        user.viewable_subscriptions.each do |subscripton|
-          statuses << { property: "#{subscripton&.exam_body&.name&.downcase}_status",
-                        value: subscripton.user_readable_status }
+      def subscriptions_statuses(user, statuses = [])
+        ExamBody.where(active: true).each do |body|
+          subscriptions_for_body = user.subscriptions.for_exam_body(body.id).where.not(state: :pending).order(created_at: :desc)
+          statuses << { property: "#{body&.name&.downcase}_status",
+                        value: subscriptions_for_body.any? ? subscriptions_for_body.first.user_readable_status : 'Basic' }
         end
 
         statuses
