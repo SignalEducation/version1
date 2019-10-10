@@ -1,16 +1,16 @@
 <template>
-  <section class="cbe-section">
-    <NavBar :logo="'CBE'" :title="cbe_data.title" :user_cbe_data="user_cbe_data" />
+  <section class="cbe-section" id="student-cbe">
+    <NavBar :logo="cbe_data.name" :title="cbe_data.name" :user_cbe_data="user_cbe_data" />
 
-    <div class="cbe-content panel panel-default">
+    <div class="cbe-content">
       <router-view :id="$route.path" />
     </div>
 
-    <footer class="cbe-footer">
-      <div class="container">
+    <div id="cbe-footer">
+      <footer>
         <NavPagination v-bind:link_data="cbe_data" />
-      </div>
-    </footer>
+      </footer>
+    </div>
   </section>
 </template>
 

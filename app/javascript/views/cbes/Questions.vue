@@ -6,7 +6,7 @@
       v-if="question.id == id"
       :key="question.id"
     >
-      <splitpanes class="default-theme" style="height: 460px">
+      <splitpanes class="default-theme" v-bind:style="{ height: height + 'px'}">
         <span v-if="question.scenario != null" v-html="question.scenario.content"></span>
         <span>
           <section v-html="question.content" />
@@ -32,6 +32,15 @@ export default {
     Splitpanes,
     QuestionAnswers
   },
+  data() {
+    return {
+      height: 200
+    };
+  },
+  mounted() {
+    window.addEventListener('resize', this.handleResize);
+    this.handleResize();
+  },
   props: {
     id: Number
   },
@@ -39,6 +48,15 @@ export default {
     ...mapGetters("cbe", {
       cbe_data: "cbeData"
     })
+  },
+  methods: {
+    handleResize: function() {
+      let headerFooter = $("#cbe-nav-header").height() + $("#cbe-footer").children().first().height();
+      this.height = $(window).height() - headerFooter;
+    }
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.handleResize);
   }
 };
 </script>

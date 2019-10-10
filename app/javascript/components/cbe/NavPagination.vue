@@ -7,6 +7,7 @@
       :hide-goto-end-buttons="true"
       prev-text="Previous"
       next-text="Next"
+      align="right"
       use-router
     ></b-pagination-nav>
   </section>

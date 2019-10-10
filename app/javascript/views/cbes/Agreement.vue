@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section style="padding: 25px;">
     <p v-html="cbe_data.agreement_content" />
   </section>
 </template>
