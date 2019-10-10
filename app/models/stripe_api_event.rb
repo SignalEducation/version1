@@ -94,7 +94,7 @@ class StripeApiEvent < ApplicationRecord
         process_payment_action_required(webhook_object[:id], webhook_object[:subscription])
       when 'customer.subscription.deleted'
         process_customer_subscription_deleted(webhook_object[:customer],
-                                              webhook_object[:id])
+                                              webhook_object[:id], webhook_object[:cancel_at_period_end])
       when 'charge.succeeded'
         process_charge_event(webhook_object[:invoice], webhook_object)
       when 'charge.failed'
@@ -204,7 +204,7 @@ class StripeApiEvent < ApplicationRecord
     end
   end
 
-  def process_customer_subscription_deleted(stripe_customer_guid, stripe_subscription_guid)
+  def process_customer_subscription_deleted(stripe_customer_guid, stripe_subscription_guid, cancel_at_period_end)
     user = User.find_by_stripe_customer_id(stripe_customer_guid)
     subscription = Subscription.where(stripe_guid: stripe_subscription_guid).last
 
@@ -215,7 +215,11 @@ class StripeApiEvent < ApplicationRecord
 
       subscription.update_from_stripe
       subscription.cancel
-      MandrillWorker.perform_async(user.id, 'send_account_suspended_email') unless Rails.env.test?
+      # This is to ensure the Account Suspended email is only sent when
+      # the subscription is canceled by Stripe due to failed payments
+      unless cancel_at_period_end
+        MandrillWorker.perform_async(user.id, 'send_account_suspended_email') unless Rails.env.test?
+      end
     else
       set_process_error("Error deleting subscription. Couldn't find User with stripe_customer_guid: #{stripe_customer_guid} OR Couldn't find Subscription with stripe_subscription_guid: #{stripe_subscription_guid}")
     end
