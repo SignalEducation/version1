@@ -5,15 +5,24 @@
         <b-navbar-brand :href="href" @click="navigate">{{ logo }}</b-navbar-brand>
       </router-link>
 
-      <CbeFlagToReview :user_cbe_data="user_cbe_data" :route="$route" v-if="showFlag($route.name)" />
+      <b-navbar-nav class="ml-auto">
+        <!-- TODO, update with pagination -->
+        <b-nav-text class="progress-count-icon-white">1 of 23</b-nav-text>
+      </b-navbar-nav>
     </b-navbar>
 
-    <div class="nav-scroller">
-      <nav class="nav nav-underline bg-cbe-gray">
-        <b-nav-text>Calculator</b-nav-text>
-        <b-nav-text>Scratch Pad</b-nav-text>
-      </nav>
-    </div>
+    <b-navbar class="nav nav-underline bg-cbe-gray">
+      <b-navbar-nav>
+        <b-nav-text class="symbols-icon">Symbol</b-nav-text>
+        <b-nav-text class="calculator-icon">Calculator</b-nav-text>
+        <b-nav-text class="scratch-pad-icon">Scratch Pad</b-nav-text>
+      </b-navbar-nav>
+      <b-navbar-nav align="right">
+        <CbeFlagToReview :user_cbe_data="user_cbe_data" :route="$route" v-if="showFlag($route.name)" />
+
+      </b-navbar-nav>
+    </b-navbar>
+
 
   </header>
 </template>

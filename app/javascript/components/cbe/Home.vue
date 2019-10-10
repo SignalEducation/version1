@@ -8,7 +8,14 @@
 
     <div id="cbe-footer">
       <footer>
-        <NavPagination v-bind:link_data="cbe_data" />
+        <b-navbar class="nav nav-underline bg-cbe-gray">
+          <b-navbar-nav>
+            <b-nav-text class="help-icon">Help</b-nav-text>
+          </b-navbar-nav>
+          <b-navbar-nav>
+            <NavPagination v-bind:link_data="cbe_data" />
+          </b-navbar-nav>
+        </b-navbar>
       </footer>
     </div>
   </section>

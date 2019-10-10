@@ -5,11 +5,13 @@
       :link-gen="linkGen"
       :number-of-pages="links.length"
       :hide-goto-end-buttons="true"
-      prev-text="Previous"
-      next-text="Next"
       align="right"
       use-router
-    ></b-pagination-nav>
+    >
+      <template v-slot:prev-text><span class="arrow-left-icon">Previous</span></template>
+      <template v-slot:next-text><span class="arrow-right-icon">Next</span></template>
+
+    </b-pagination-nav>
   </section>
 </template>
 

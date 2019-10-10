@@ -1,8 +1,10 @@
 <template>
   <div>
-    <button v-on:click="greet()" v-bind:class="{ flagged: pageFlag }">
-       <i class="glyphicon glyphicon-flag"  />
-    </button>
+    <b-nav-text
+      v-on:click="greet()"
+      v-bind:class="{ flagged: pageFlag }"
+      class="flag-icon"
+    >Flag for Review</b-nav-text>
   </div>
 </template>
 

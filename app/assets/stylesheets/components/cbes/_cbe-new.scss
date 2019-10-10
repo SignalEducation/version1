@@ -145,7 +145,7 @@ button.flagged{
 
     .navbar {
       padding: .5rem;
-      border-bottom: 2px solid ;
+      border-bottom: 3px solid ;
     }
 
     .navbar-brand {
@@ -154,13 +154,23 @@ button.flagged{
       font-style: normal;
       font-weight: 700;
     }
+    .navbar-light .navbar-text {
+      color: #000000;
+    }
+    .navbar-dark .navbar-text {
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+    }
 
     .nav-underline {
-      height: 30px;
-      border-bottom: 2px solid #DCDDDD;
-      font-size: 13px;
+      padding: 4px 4px 4px 0;
+      border-bottom: 1px solid #afb0b0;
+      font-size: 14px;
       font-style: normal;
       font-weight: 700;
+      line-height: 23px;
 
       .navbar-item {
         height: 30px;
@@ -176,8 +186,16 @@ button.flagged{
       bottom: 0;
       min-height: 33px;
       width: 100%;
-      background-color: #DCDDDD;
 
+      .navbar {
+        background-color: #DCDDDD;
+        padding: 0;
+      }
+      .navbar-text {
+        font-weight: 400;
+        font-size: 16px;
+        color: #000000;
+      }
       ul .page-item {
         list-style: none;
       }
@@ -186,7 +204,9 @@ button.flagged{
         margin-left: 0;
         margin-bottom: 0;
       }
-
+      .page-item .page-link {
+        font-size: 14px;
+      }
     }
 
     .page-item .page-link {
@@ -213,6 +233,108 @@ button.flagged{
       padding-left: 15px;
     }
 
+  }
+
+
+  .calculator-icon {
+    background-image: url('cbe-calc-icon.png');
+    background-repeat: no-repeat;
+    padding: 0 0 0 25px;
+  }
+  .calculator-icon:hover {
+    background-image: url('cbe-calc-icon-red.png');
+    color: #C80000!important;
+    cursor: pointer;
+  }
+  .scratch-pad-icon {
+    background-image: url('scratch-pad-icon.png');
+    background-repeat: no-repeat;
+    padding: 0 0 0 25px;
+  }
+  .scratch-pad-icon:hover {
+    background-image: url('scratch-pad-icon-red.png');
+    color: #C80000!important;
+    cursor: pointer;
+  }
+  .navigation-icon {
+    background-image: url('navigation-icon.png');
+    background-repeat: no-repeat;
+    padding: 0 0 0 25px;
+  }
+  .navigation-icon:hover {
+    background-image: url('navigation-icon-red.png');
+    color: #C80000!important;
+    cursor: pointer;
+  }
+  .arrow-right-icon {
+    background-image: url('arrow-right-icon.png');
+    background-repeat: no-repeat;
+    padding: 0 25px 0 0;
+    background-position: right;
+  }
+  .arrow-right-icon:hover {
+    background-image: url('arrow-right-icon-red.png');
+    color: #C80000!important;
+    cursor: pointer;
+  }
+  .arrow-left-icon {
+    background-image: url('arrow-left-icon.png');
+    background-repeat: no-repeat;
+    padding: 0 0 0 25px;
+  }
+  .arrow-left-icon:hover {
+    background-image: url('arrow-left-icon-red.png');
+    color: #C80000!important;
+    cursor: pointer;
+  }
+  .symbols-icon {
+    background-image: url('symbols-icon.png');
+    background-repeat: no-repeat;
+    padding: 0 0 0 25px;
+  }
+  .symbols-icon:hover {
+    background-image: url('symbols-icon-red.png');
+    color: #C80000!important;
+    cursor: pointer;
+  }
+  .progress-count-icon {
+    background-image: url('progress-count-icon.png');
+    background-repeat: no-repeat;
+    padding: 0 0 0 25px;
+  }
+  .progress-count-icon-white {
+    background-image: url('progress-count-icon-white.png');
+    background-repeat: no-repeat;
+    padding: 0 0 0 25px;
+  }
+  .flag-icon {
+    background-image: url('flag-icon.png');
+    background-repeat: no-repeat;
+    padding: 0 0 0 25px;
+    margin-top: 5px;
+  }
+  .flag-icon:hover {
+    background-image: url('flag-icon-red.png');
+    color: #C80000!important;
+    cursor: pointer;
+  }
+  .flagged {
+    background-image: url('flagged-icon.png');
+  }
+  .flagged:hover {
+    background-image: url('flagged-icon.png');
+    color: #C80000!important;
+    cursor: pointer;
+  }
+  .help-icon {
+    background-image: url('help-icon.png');
+    background-repeat: no-repeat;
+    padding: 0 0 0 25px;
+  }
+  .help-icon:hover {
+    background-image: url('help-icon-red.png');
+    color: #C80000!important;
+    cursor: pointer;
   }
 
 }
