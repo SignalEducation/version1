@@ -46,7 +46,11 @@
         </b-card>
       </b-collapse>
       <div v-if="this.$store.state.cbeDetailsSaved === true" class="mt-2">
-        <b-collapse id="collapse-intro-pages" v-model="showIntroPages" class="mb-2">
+        <b-collapse
+          id="collapse-intro-pages"
+          v-model="showIntroPages"
+          class="mb-2"
+        >
           <b-card no-body>
             <b-tabs card>
               <IntroductionPage
@@ -57,13 +61,22 @@
                 v-bind:initialKind="page.kind"
                 v-bind:initialContent="page.content"
               ></IntroductionPage>
-              <IntroductionPage v-on:add-introduction-page="updatePages"></IntroductionPage>
+              <IntroductionPage
+                v-on:add-introduction-page="updatePages"
+              ></IntroductionPage>
             </b-tabs>
           </b-card>
         </b-collapse>
 
-        <b-collapse id="collapse-resources" v-model="showResources" class="mb-2">
-          <Resources v-bind:resources="resources" v-on:add-resource="updateResources"></Resources>
+        <b-collapse
+          id="collapse-resources"
+          v-model="showResources"
+          class="mb-2"
+        >
+          <Resources
+            v-bind:resources="resources"
+            v-on:add-resource="updateResources"
+          ></Resources>
         </b-collapse>
 
         <h3>Exam Content</h3>
@@ -76,7 +89,10 @@
             >
               <div class="row">
                 <div class="col-sm-10">
-                  <b-collapse v-bind:id="'section-edit-collapse-' + section.id" class="mt-2">
+                  <b-collapse
+                    v-bind:id="'section-edit-collapse-' + section.id"
+                    class="mt-2"
+                  >
                     <b-card>
                       <Section
                         v-bind:id="section.id"
@@ -88,7 +104,10 @@
                     </b-card>
                   </b-collapse>
                   <b-card>
-                    <p>Name: {{ section.name }} - Type: {{ section.kind }} - Score: {{ section.score }}</p>
+                    <p>
+                      Name: {{ section.name }} - Type: {{ section.kind }} -
+                      Score: {{ section.score }}
+                    </p>
                   </b-card>
                 </div>
                 <div class="col-sm-2">
@@ -96,14 +115,18 @@
                     v-b-toggle="'section-edit-collapse-' + section.id"
                     variant="secondary"
                     class="mr-1"
-                  >Edit Section</b-button>
+                    >Edit Section</b-button
+                  >
                 </div>
               </div>
 
               <hr />
 
               <div v-if="section.kind === 'objective'">
-                <div v-for="(question) in section.questions" v-bind:key="question.id">
+                <div
+                  v-for="question in section.questions"
+                  v-bind:key="question.id"
+                >
                   <b-card no-body class="mb-1">
                     <b-card-header header-tag="header" class="p-1" role="tab">
                       <b-button
@@ -111,11 +134,12 @@
                         href="#"
                         v-b-toggle="'accordion-' + question.id"
                         variant="secondary"
-                      >Question - {{ question.id }}</b-button>
+                        >Question - {{ question.id }}</b-button
+                      >
                     </b-card-header>
 
                     <b-collapse
-                      v-bind:id="'accordion-'+ question.id"
+                      v-bind:id="'accordion-' + question.id"
                       accordion="my-accordion"
                       role="tabpanel"
                     >
@@ -128,7 +152,9 @@
                               v-bind:initialContent="question.content"
                               v-bind:initialScore="question.score"
                               v-bind:initialKind="question.kind"
-                              v-bind:initialAnswers="question.answers_attributes"
+                              v-bind:initialAnswers="
+                                question.answers_attributes
+                              "
                             ></Question>
                           </div>
                         </div>
@@ -143,7 +169,8 @@
                       href="#"
                       v-b-toggle.new-question-accordion
                       variant="primary"
-                    >New Question</b-button>
+                      >New Question</b-button
+                    >
                   </b-card-header>
 
                   <b-collapse
@@ -153,7 +180,10 @@
                     role="tabpanel"
                   >
                     <b-card-body>
-                      <Question v-bind:section-id="section.id" v-on:add-question="updateQuestions"></Question>
+                      <Question
+                        v-bind:section-id="section.id"
+                        v-on:add-question="updateQuestions"
+                      ></Question>
                     </b-card-body>
                   </b-collapse>
                 </b-card>
@@ -173,7 +203,9 @@
                             <div class="row">
                               <div class="col-sm-10">
                                 <b-collapse
-                                  v-bind:id="'scenario-edit-collapse-' + scenario.id"
+                                  v-bind:id="
+                                    'scenario-edit-collapse-' + scenario.id
+                                  "
                                   class="mt-2"
                                 >
                                   <b-card>
@@ -189,26 +221,37 @@
                               </div>
                               <div class="col-sm-2">
                                 <b-button
-                                  v-b-toggle="'scenario-edit-collapse-' + scenario.id"
+                                  v-b-toggle="
+                                    'scenario-edit-collapse-' + scenario.id
+                                  "
                                   variant="secondary"
                                   class="mr-1"
-                                >Edit Scenario</b-button>
+                                  >Edit Scenario</b-button
+                                >
                               </div>
                             </div>
                             <br />
-                            <div v-for="question in scenario.questions" v-bind:key="question.id">
+                            <div
+                              v-for="question in scenario.questions"
+                              v-bind:key="question.id"
+                            >
                               <b-card no-body class="mb-1">
-                                <b-card-header header-tag="header" class="p-1" role="tab">
+                                <b-card-header
+                                  header-tag="header"
+                                  class="p-1"
+                                  role="tab"
+                                >
                                   <b-button
                                     block
                                     href="#"
                                     v-b-toggle="'accordion-' + question.id"
                                     variant="secondary"
-                                  >Question - {{ question.id }}</b-button>
+                                    >Question - {{ question.id }}</b-button
+                                  >
                                 </b-card-header>
 
                                 <b-collapse
-                                  v-bind:id="'accordion-'+ question.id"
+                                  v-bind:id="'accordion-' + question.id"
                                   accordion="question-accordion"
                                   role="tabpanel"
                                 >
@@ -220,7 +263,9 @@
                                             v-bind:section-id="section.id"
                                             v-bind:scenario-id="scenario.id"
                                             v-bind:id="question.id"
-                                            v-bind:initialContent="question.content"
+                                            v-bind:initialContent="
+                                              question.content
+                                            "
                                             v-bind:initialScore="question.score"
                                             v-bind:initialKind="question.kind"
                                           ></Question>
@@ -233,13 +278,18 @@
                             </div>
 
                             <b-card no-body class="mb-1">
-                              <b-card-header header-tag="header" class="p-1" role="tab">
+                              <b-card-header
+                                header-tag="header"
+                                class="p-1"
+                                role="tab"
+                              >
                                 <b-button
                                   block
                                   href="#"
                                   v-b-toggle.new-question-accordion
                                   variant="primary"
-                                >New Question</b-button>
+                                  >New Question</b-button
+                                >
                               </b-card-header>
 
                               <b-collapse
