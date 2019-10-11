@@ -60,7 +60,7 @@
           @blur="$v.content.$touch()"
           :class="{error: shouldAppendErrorClass($v.content), valid: shouldAppendValidClass($v.content)}"
           :fieldModel.sync="content"
-          :aditionalToolbarOptions="['fullscreen']"
+          :aditionalToolbarOptions="['fullscreen code']"
           :editorId="'sectionEditor' + id"
         />
         <p v-if="!$v.content.required && $v.content.$error" class="error-message">field is required</p>

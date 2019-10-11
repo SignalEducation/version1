@@ -83,7 +83,7 @@
             @blur="$v.agreementContent.$touch()"
             :class="{error: shouldAppendErrorClass($v.agreementContent), valid: shouldAppendValidClass($v.agreementContent)}"
             :fieldModel.sync="agreementContent"
-            :aditionalToolbarOptions="['fullscreen']"
+            :aditionalToolbarOptions="['fullscreen code']"
             :editorId="'detailsEditor'"
           />
           <p

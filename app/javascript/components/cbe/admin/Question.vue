@@ -51,7 +51,7 @@
             @blur="$v.questionContent.$touch()"
             :class="{error: shouldAppendErrorClass($v.questionContent), valid: shouldAppendValidClass($v.questionContent)}"
             :fieldModel.sync="questionContent"
-            :aditionalToolbarOptions="['fullscreen']"
+            :aditionalToolbarOptions="['fullscreen code']"
             :editorId="'questionEditor-' + sectionId + '-' + scenarioId + '-' + id"
           />
           <p

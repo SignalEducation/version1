@@ -15,7 +15,7 @@
           <label for="pageContent">Page Content</label>
           <TinyEditor
             :fieldModel.sync="content"
-            :aditionalToolbarOptions="['fullscreen']"
+            :aditionalToolbarOptions="['fullscreen code']"
             :editorId="'introPagesEditor' + id"
           />
         </div>

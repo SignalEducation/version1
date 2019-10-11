@@ -16,6 +16,10 @@
       :question_id="question_id"
       v-if="question_kind == 'multiple_response'"
     />
+    <OpenAnswer
+      :question_id="question_id"
+      v-if="question_kind == 'open'"
+    />
   </section>
 </template>
 
@@ -23,12 +27,16 @@
 import FillTheBlank from "./answers/FillTheBlank";
 import MultipleChoice from "./answers/MultipleChoice";
 import MultipleResponse from "./answers/MultipleResponse";
+import OpenAnswer from "./answers/OpenAnswer";
+
+
 
 export default {
   components: {
     FillTheBlank,
     MultipleChoice,
-    MultipleResponse
+    MultipleResponse,
+    OpenAnswer
   },
   props: {
     answers: {},
