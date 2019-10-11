@@ -1,5 +1,10 @@
 <template>
   <section>
+    <DropdownList
+      :answers="answers"
+      :question_id="question_id"
+      v-if="question_kind == 'dropdown_list'"
+    />
     <!-- passing just the first answer in fill the blank cause is just one text value -->
     <FillTheBlank
       :answer="answers[0]"
@@ -20,12 +25,14 @@
 </template>
 
 <script>
+import DropdownList from "./answers/DropdownList";
 import FillTheBlank from "./answers/FillTheBlank";
 import MultipleChoice from "./answers/MultipleChoice";
 import MultipleResponse from "./answers/MultipleResponse";
 
 export default {
   components: {
+    DropdownList,
     FillTheBlank,
     MultipleChoice,
     MultipleResponse
