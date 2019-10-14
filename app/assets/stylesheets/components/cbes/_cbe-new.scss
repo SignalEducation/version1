@@ -237,102 +237,102 @@ button.flagged{
 
 
   .calculator-icon {
-    background-image: url('cbe-calc-icon.png');
+    background-image: asset-url('cbe-calc-icon.png');
     background-repeat: no-repeat;
     padding: 0 0 0 25px;
   }
   .calculator-icon:hover {
-    background-image: url('cbe-calc-icon-red.png');
+    background-image: asset-url('cbe-calc-icon-red.png');
     color: #C80000!important;
     cursor: pointer;
   }
   .scratch-pad-icon {
-    background-image: url('scratch-pad-icon.png');
+    background-image: asset-url('scratch-pad-icon.png');
     background-repeat: no-repeat;
     padding: 0 0 0 25px;
   }
   .scratch-pad-icon:hover {
-    background-image: url('scratch-pad-icon-red.png');
+    background-image: asset-url('scratch-pad-icon-red.png');
     color: #C80000!important;
     cursor: pointer;
   }
   .navigation-icon {
-    background-image: url('navigation-icon.png');
+    background-image: asset-url('navigation-icon.png');
     background-repeat: no-repeat;
     padding: 0 0 0 25px;
   }
   .navigation-icon:hover {
-    background-image: url('navigation-icon-red.png');
+    background-image: asset-url('navigation-icon-red.png');
     color: #C80000!important;
     cursor: pointer;
   }
   .arrow-right-icon {
-    background-image: url('arrow-right-icon.png');
+    background-image: asset-url('arrow-right-icon.png');
     background-repeat: no-repeat;
     padding: 0 25px 0 0;
     background-position: right;
   }
   .arrow-right-icon:hover {
-    background-image: url('arrow-right-icon-red.png');
+    background-image: asset-url('arrow-right-icon-red.png');
     color: #C80000!important;
     cursor: pointer;
   }
   .arrow-left-icon {
-    background-image: url('arrow-left-icon.png');
+    background-image: asset-url('arrow-left-icon.png');
     background-repeat: no-repeat;
     padding: 0 0 0 25px;
   }
   .arrow-left-icon:hover {
-    background-image: url('arrow-left-icon-red.png');
+    background-image: asset-url('arrow-left-icon-red.png');
     color: #C80000!important;
     cursor: pointer;
   }
   .symbols-icon {
-    background-image: url('symbols-icon.png');
+    background-image: asset-url('symbols-icon.png');
     background-repeat: no-repeat;
     padding: 0 0 0 25px;
   }
   .symbols-icon:hover {
-    background-image: url('symbols-icon-red.png');
+    background-image: asset-url('symbols-icon-red.png');
     color: #C80000!important;
     cursor: pointer;
   }
   .progress-count-icon {
-    background-image: url('progress-count-icon.png');
+    background-image: asset-url('progress-count-icon.png');
     background-repeat: no-repeat;
     padding: 0 0 0 25px;
   }
   .progress-count-icon-white {
-    background-image: url('progress-count-icon-white.png');
+    background-image: asset-url('progress-count-icon-white.png');
     background-repeat: no-repeat;
     padding: 0 0 0 25px;
   }
   .flag-icon {
-    background-image: url('flag-icon.png');
+    background-image: asset-url('flag-icon.png');
     background-repeat: no-repeat;
     padding: 0 0 0 25px;
     margin-top: 5px;
   }
   .flag-icon:hover {
-    background-image: url('flag-icon-red.png');
+    background-image: asset-url('flag-icon-red.png');
     color: #C80000!important;
     cursor: pointer;
   }
   .flagged {
-    background-image: url('flagged-icon.png');
+    background-image: asset-url('flagged-icon.png');
   }
   .flagged:hover {
-    background-image: url('flagged-icon.png');
+    background-image: asset-url('flagged-icon.png');
     color: #C80000!important;
     cursor: pointer;
   }
   .help-icon {
-    background-image: url('help-icon.png');
+    background-image: asset-url('help-icon.png');
     background-repeat: no-repeat;
     padding: 0 0 0 25px;
   }
   .help-icon:hover {
-    background-image: url('help-icon-red.png');
+    background-image: asset-url('help-icon-red.png');
     color: #C80000!important;
     cursor: pointer;
   }
