@@ -24,7 +24,7 @@
             @blur="$v.scenarioContent.$touch()"
             :class="{error: shouldAppendErrorClass($v.scenarioContent), valid: shouldAppendValidClass($v.scenarioContent)}"
             :fieldModel.sync="scenarioContent"
-            :aditionalToolbarOptions="['fullscreen']"
+            :aditionalToolbarOptions="['fullscreen code']"
             :editorId="'scenarioEditor' + '-' + sectionId + '-' + id"
           />
           <p

@@ -1,7 +1,6 @@
 <template>
   <section>
     <hr />
-
     <div class="panel-body no-top-padding">
       <div class="row">
         <div class="col-sm-12 mb-2">
@@ -25,6 +24,13 @@
             :question_id="question_id"
             v-if="question_kind == 'multiple_response'"
           />
+          <!-- Let this commented for now, in future education team can
+               use a pre formatted content in open questions -->
+          <!-- <AdminTextEditor
+            :answersArray="answers"
+            :question_id="question_id"
+            v-if="question_kind == 'open'"
+          /> -->
         </div>
       </div>
     </div>
@@ -36,12 +42,14 @@ import AdminDropdownList from "./answers/AdminDropdownList";
 import AdminFillTheBlank from "./answers/AdminFillTheBlank";
 import AdminMultipleChoice from "./answers/AdminMultipleChoice";
 import AdminMultipleResponse from "./answers/AdminMultipleResponse";
+import AdminTextEditor from "./answers/AdminTextEditor";
 
 export default {
   components: {
     AdminDropdownList,
     AdminMultipleChoice,
-    AdminMultipleResponse
+    AdminMultipleResponse,
+    AdminTextEditor
   },
   props: {
     answers: Array,

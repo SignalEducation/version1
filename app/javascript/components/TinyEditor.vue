@@ -6,7 +6,7 @@
       :api-key="this.apiKey"
       :init="{
         branding:  false,
-        menubar:   true,
+        menubar:   false,
         statusbar: false,
         resize:    false,
         toolbar:   ['newdocument | \
