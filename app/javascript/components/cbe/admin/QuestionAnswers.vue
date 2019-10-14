@@ -5,6 +5,11 @@
     <div class="panel-body no-top-padding">
       <div class="row">
         <div class="col-sm-12 mb-2">
+          <AdminDropdownList
+            :answersArray="answers"
+            :question_id="question_id"
+            v-if="question_kind == 'dropdown_list'"
+          />
           <AdminFillTheBlank
             :answersArray="answers"
             :question_id="question_id"
@@ -27,13 +32,14 @@
 </template>
 
 <script>
+import AdminDropdownList from "./answers/AdminDropdownList";
 import AdminFillTheBlank from "./answers/AdminFillTheBlank";
 import AdminMultipleChoice from "./answers/AdminMultipleChoice";
 import AdminMultipleResponse from "./answers/AdminMultipleResponse";
 
 export default {
   components: {
-    AdminFillTheBlank,
+    AdminDropdownList,
     AdminMultipleChoice,
     AdminMultipleResponse
   },
