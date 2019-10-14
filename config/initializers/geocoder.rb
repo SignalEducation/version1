@@ -25,8 +25,8 @@ Geocoder.configure(
       api_key: ENV["LEARNSIGNAL_GOOGLE_API_KEY"]
   },
 
-  ip_lookup: :pointpin,
-  :pointpin => {
-      api_key: ENV["LEARNSIGNAL_POINTPIN_API_KEY"]
+  ip_lookup: :ipinfo_io,
+  :ipinfo_io => {
+      api_key: ENV["LEARNSIGNAL_IPINFO_IO_API_KEY"]
   }
 )
