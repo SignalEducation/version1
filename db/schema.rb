@@ -1151,6 +1151,7 @@ ActiveRecord::Schema.define(version: 2019_10_06_135033) do
     t.date "release_date"
     t.string "seo_title"
     t.string "seo_description"
+    t.boolean "has_correction_packs", default: false
     t.index ["name"], name: "index_subject_courses_on_name"
   end
 

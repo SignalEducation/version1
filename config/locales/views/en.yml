@@ -1201,6 +1201,7 @@ en:
         active: Active
         preview: Preview Mode
         computer_based: Computer Based
+        has_correction_packs: Correction Packs
         highlight_colour: Highlight Colour
         release_date: Release Date
         exam_body_id: Exam Body
