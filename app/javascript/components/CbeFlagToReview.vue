@@ -1,10 +1,11 @@
 <template>
   <div>
     <b-nav-text
-      v-on:click="greet()"
+      v-on:click="markFlag()"
       v-bind:class="{ flagged: pageFlag }"
       class="flag-icon"
-    >Flag for Review</b-nav-text>
+      >Flag for Review</b-nav-text
+    >
   </div>
 </template>
 
@@ -19,12 +20,12 @@ export default {
   },
   props: {
     user_cbe_data: Object,
-    route: Object,
+    route: Object
   },
-   watch: {
+  watch: {
     route: {
       handler() {
-        this.mapFlags()
+        this.mapFlags();
       }
     }
   },
@@ -32,7 +33,7 @@ export default {
     this.mapFlags();
   },
   methods: {
-    greet: function() {
+    markFlag: function() {
       let type = this.route.name;
       let id = this.route.params.id;
 

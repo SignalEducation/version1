@@ -19,7 +19,7 @@ import { mapGetters } from 'vuex'
 
 export default {
   props: {
-    id: String
+    id: {}
   },
   computed: {
     ...mapGetters('cbe', {

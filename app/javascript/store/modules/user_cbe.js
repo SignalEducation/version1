@@ -1,5 +1,3 @@
-import { type } from "os";
-
 const state = {
   user_cbe_data: {
     user_id: null,
@@ -10,23 +8,25 @@ const state = {
       flagged: false,
       description: null,
       type: null,
+      page: null,
       param: null
-    }
+    },
+    scratch_pad: null
   }
 };
 
 const getters = {
-  userCbeData: (state) => {
-    return state.user_cbe_data
+  userCbeData: state => {
+    return state.user_cbe_data;
   }
 };
 
 const actions = {
   startUserCbeData(context, data) {
-    context.commit('setUserCbeData', data);
+    context.commit("setUserCbeData", data);
   },
   recordAnswer(context, data) {
-    context.commit('setAnswerData', data);
+    context.commit("setAnswerData", data);
   }
 };
 
@@ -34,25 +34,47 @@ const mutations = {
   setUserCbeData(state, data) {
     state.user_cbe_data.cbe_id = data.cbe_id;
     state.user_cbe_data.user_id = data.user_id;
-    state.user_cbe_data.exam_pages = functions.reviewPageLinks(data.cbe_data.sections)
+    state.user_cbe_data.exam_pages = functions.reviewPageLinks(
+      data.cbe_data.sections
+    );
   },
   setAnswerData(state, question) {
     state.user_cbe_data.questions[question.id] = question;
-  },
+  }
 };
 
 const functions = {
   reviewPageLinks(sections) {
     var exam_pages = [];
+    var page = 0;
 
     sections.filter(section => {
-      exam_pages.push({ description: section.name, state: 'Unseen', flagged: false, type: 'sections', param: section.id })
+      exam_pages.push({
+        state: "Unseen",
+        flagged: false,
+        description: section.name,
+        type: "sections",
+        param: section.id
+      });
+
       section.questions.filter(question => {
-        exam_pages.push({ description: question.kind, state: 'Unseen', flagged: false, type: 'questions', param: question.id })
+        page++;
+        exam_pages.push(this.exam_pagesData(question, "questions", page));
       });
     });
 
     return exam_pages;
+  },
+
+  exam_pagesData(data, type, index) {
+    return {
+      state: "Unseen",
+      flagged: false,
+      description: `Question ${index}`,
+      type: type,
+      page: index,
+      param: data.id
+    };
   }
 };
 
@@ -62,4 +84,4 @@ export default {
   getters,
   actions,
   mutations
-}
+};
