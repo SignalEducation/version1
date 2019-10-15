@@ -30,18 +30,11 @@ module Api
 
         def permitted_params
           params.require(:question).permit(
-            :kind,
-            :content,
-            :score,
-            :cbe_scenario_id,
-            :cbe_section_id,
+            :kind, :content, :score, :cbe_scenario_id, :cbe_section_id,
             answers_attributes: [
-              :id,
-              :cbe_question_id,
-              :kind,
+              :id, :cbe_question_id, :kind,
               content: [
-                :text,
-                :correct
+                :text, :correct, data: %i[value row col colBinding style]
               ]
             ]
           )

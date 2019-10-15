@@ -120,14 +120,14 @@
 
 
 <script>
-import axios from "axios";
-import TinyEditor from "../../TinyEditor";
-import { validationMixin } from "vuelidate";
-import { required, numeric, between } from "vuelidate/lib/validators";
+import axios from 'axios';
+import { validationMixin } from 'vuelidate';
+import { required, numeric, between } from 'vuelidate/lib/validators';
+import TinyEditor from '../../TinyEditor.vue';
 
 export default {
   components: {
-    TinyEditor
+    TinyEditor,
   },
   mixins: [validationMixin],
   mounted() {
@@ -151,33 +151,33 @@ export default {
       subjectCourses: [],
       createdCBE: [],
       submitStatus: null,
-      updateStatus: null
+      updateStatus: null,
     };
   },
   validations: {
     subjectCourseId: {
-      required
+      required,
     },
     active: {
-      required
+      required,
     },
     name: {
-      required
+      required,
     },
     examTime: {
       required,
       numeric,
-      between: between(1, 1000)
+      between: between(1, 1000),
     },
     agreementContent: {
-      required
-    }
+      required,
+    },
   },
 
   methods: {
     getSubjects() {
       axios
-        .get("/api/v1/subject_courses/")
+        .get('/api/v1/subject_courses/')
         .then(response => {
           this.subjectCourses = response.data;
         })
@@ -188,7 +188,7 @@ export default {
       if (this.$v.$invalid) {
         this.submitStatus = "ERROR";
       } else {
-        this.submitStatus = "PENDING";
+        this.submitStatus = 'PENDING';
         this.cbeDetails = {};
         this.cbeDetails.name = this.name;
         this.cbeDetails.agreement_content = this.agreementContent;
@@ -196,25 +196,25 @@ export default {
         this.cbeDetails.active = this.active;
         this.cbeDetails.subject_course_id = this.subjectCourseId;
         axios
-          .post("/api/v1/cbes/", { cbe: this.cbeDetails })
+          .post('/api/v1/cbes/', { cbe: this.cbeDetails })
           .then(response => {
             this.createdCBE = response.data;
             if (this.createdCBE.id > 0) {
-              this.$store.commit("setCbeId", this.createdCBE.id);
-              this.$store.commit("hideDetailsForm", true);
-              this.submitStatus = "OK";
-              this.$emit("close-details", this.createdCBE);
+              this.$store.commit('setCbeId', this.createdCBE.id);
+              this.$store.commit('hideDetailsForm', true);
+              this.submitStatus = 'OK';
+              this.$emit('close-details', this.createdCBE);
             }
           })
           .catch(error => {
-            this.submitStatus = "ERROR";
+            this.submitStatus = 'ERROR';
           });
       }
     },
     updateCBE() {
       this.$v.$touch();
       if (this.$v.$invalid) {
-        this.updateStatus = "ERROR";
+        this.updateStatus = 'ERROR';
       } else {
         this.cbeDetails = {};
         this.cbeDetails.name = this.name;
@@ -224,7 +224,7 @@ export default {
         this.cbeDetails.subject_course_id = this.subjectCourseId;
         axios
           .patch(`/api/v1/cbes/${this.id}`, {
-            cbe: this.cbeDetails
+            cbe: this.cbeDetails,
           })
 
           .then(response => {

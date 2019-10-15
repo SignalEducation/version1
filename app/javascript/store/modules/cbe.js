@@ -1,47 +1,45 @@
+/* eslint-disable */
+
 const state = {
   cbe_data: {},
-  edit_cbe_data: {}
-}
+  edit_cbe_data: {},
+};
 
 const getters = {
-  cbeData: (state) => {
-    return state.cbe_data
-  },
-  editCbeData: (state) => {
-    return state.edit_cbe_data
-  }
-}
+  cbe_data: state => state.cbe_data,
+  edit_cbe_data: state => state.edit_cbe_data,
+};
 
 const actions = {
-  getCbe(context, cbe_id) {
-    fetch(`/api/v1/cbes/${cbe_id}`)
-      .then(response => response.json())
-      .then(response => {
+  getCbe(context, cbeId) {
+    fetch(`/api/v1/cbes/${cbeId}`)
+      .then((response) => response.json())
+      .then((response) => {
         context.commit('setCbeData', response);
       });
   },
-  getEditCbe(context, cbe_id) {
-    fetch(`/api/v1/cbes/${cbe_id}/edit`)
-      .then(response => response.json())
-      .then(response => {
+  getEditCbe(context, cbeId) {
+    fetch(`/api/v1/cbes/${cbeId}/edit`)
+      .then((response) => response.json())
+      .then((response) => {
         context.commit('setEditCbeData', response);
       });
   },
-}
+};
 
 const mutations = {
-  setCbeData(state, data) {
-    state.cbe_data = data
+  setCbeData(state, newData) {
+    state.cbe_data = newData;
   },
-  setEditCbeData(state, data) {
-    state.edit_cbe_data = data
-  }
-}
+  setEditCbeData(state, newData) {
+    state.edit_cbe_data = newData;
+  },
+};
 
 export default {
   namespaced: true,
   state,
   getters,
   actions,
-  mutations
-}
+  mutations,
+};

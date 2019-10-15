@@ -57,7 +57,7 @@ import { required } from "vuelidate/lib/validators";
 
 export default {
   components: {
-    draggable
+    draggable,
   },
   props: {
     answersArray: Array,
@@ -66,8 +66,8 @@ export default {
   data() {
     return {
       id: 0,
-      answer: ""
-    }
+      answer: '',
+    };
   },
   validations: {
     answer: {
@@ -75,12 +75,12 @@ export default {
       isUnique (value) {
         let check = true;
         this.answersArray.filter(answer => {
-          if (answer.content.text == value) check = false;
+          if (answer.content.text === value) check = false;
         });
 
-        return check
-      }
-    }
+        return check;
+      },
+    },
   },
   watch: {
     answersArray(newValue, oldValue) {

@@ -5,18 +5,25 @@
         <label for="questionKindSelect">Question Type</label>
         <b-form-select
           v-model="questionKind"
-          :options="questionKinds"
           id="questionKindSelect"
+          :options="questionKinds"
           class="input-group input-group-lg"
         >
           <template slot="first">
-            <option :value="null" disabled>-- Please select a type --</option>
+            <option
+              :value="null"
+              disabled
+            >
+              -- Please select a type --
+            </option>
           </template>
         </b-form-select>
         <p
           v-if="!$v.questionKind.required && $v.questionKind.$error"
           class="error-message"
-        >field is required</p>
+        >
+          field is required
+        </p>
       </div>
     </div>
 
@@ -25,21 +32,26 @@
         <label for="questionScore">Score</label>
         <div class="input-group input-group-lg" id="questionScore">
           <input
-            v-model="questionScore"
-            @blur="$v.questionScore.$touch()"
-            :class="'form-control ' + {error: shouldAppendErrorClass($v.questionScore), valid: shouldAppendValidClass($v.questionScore)}"
             id="questionScore"
+            v-model="questionScore"
             placeholder="Score"
-          />
+            :class="'form-control ' + {error: shouldAppendErrorClass($v.questionScore), valid: shouldAppendValidClass($v.questionScore)}"
+            @blur="$v.questionScore.$touch()"
+          >
         </div>
         <p
           v-if="!$v.questionScore.required && $v.questionScore.$error"
           class="error-message"
-        >field is required.</p>
+        >
+          field is required.
+        </p>
         <p
           v-if="!$v.questionScore.between && $v.questionScore.$error"
           class="error-message"
-        >must be between {{$v.questionScore.$params.between.min}} and {{$v.questionScore.$params.between.max}}.</p>
+        >
+          must be between {{ $v.questionScore.$params.between.min }} and
+          {{ $v.questionScore.$params.between.max }}.
+        </p>
       </div>
     </div>
 
@@ -48,11 +60,11 @@
         <label for="questionContent">Content</label>
         <div id="questionContent">
           <TinyEditor
-            @blur="$v.questionContent.$touch()"
             :class="{error: shouldAppendErrorClass($v.questionContent), valid: shouldAppendValidClass($v.questionContent)}"
             :fieldModel.sync="questionContent"
             :aditionalToolbarOptions="['fullscreen code']"
             :editorId="'questionEditor-' + sectionId + '-' + scenarioId + '-' + id"
+            @blur="$v.questionContent.$touch()"
           />
           <p
             v-if="!$v.questionContent.required && $v.questionContent.$error"
@@ -73,28 +85,43 @@
     <div class="form-group">
       <button
         v-if="id"
-        v-on:click="updateQuestion"
         :disabled="submitStatus === 'PENDING'"
         class="btn btn-primary"
-      >Update Question</button>
+        @click="updateQuestion"
+      >
+        Update Question
+      </button>
       <button
         v-else
-        v-on:click="saveQuestion"
         :disabled="submitStatus === 'PENDING'"
         class="btn btn-primary"
-      >Save Question</button>
-      <p class="typo__p" v-if="submitStatus === 'ERROR'">Please fill the form correctly.</p>
-      <p class="typo__p" v-if="submitStatus === 'PENDING'">Sending...</p>
+        @click="saveQuestion"
+      >
+        Save Question
+      </button>
+      <p
+        v-if="submitStatus === 'ERROR'"
+        class="typo__p"
+      >
+        Please fill the form correctly.
+      </p>
+      <p
+        v-if="submitStatus === 'PENDING'"
+        class="typo__p"
+      >
+        Sending...
+      </p>
     </div>
   </div>
 </template>
 
 <script>
-import axios from "axios";
-import TinyEditor from "../../TinyEditor";
-import AdminAnswers from "./QuestionAnswers";
-import { validationMixin } from "vuelidate";
-import { required, numeric, between } from "vuelidate/lib/validators";
+import axios from 'axios';
+import { validationMixin } from 'vuelidate';
+import { required, numeric, between } from 'vuelidate/lib/validators';
+
+import TinyEditor from '../../TinyEditor.vue';
+import AdminAnswers from './QuestionAnswers.vue';
 
 export default {
   props: {
@@ -111,10 +138,10 @@ export default {
   },
   components: {
     TinyEditor,
-    AdminAnswers
+    AdminAnswers,
   },
   mixins: [validationMixin],
-  data: function() {
+  data: function () {
     return {
       questionDetails: {},
       questionKind: this.initialKind,
@@ -138,16 +165,16 @@ export default {
   },
   validations: {
     questionKind: {
-      required
+      required,
     },
     questionScore: {
       required,
       numeric,
-      between: between(1, 100)
+      between: between(1, 100),
     },
     questionContent: {
-      required
-    }
+      required,
+    },
   },
   methods: {
     saveQuestion(page, index) {
@@ -163,13 +190,13 @@ export default {
         this.questionDetails.answers_attributes = this.questionAnswers;
         this.questionDetails.cbe_section_id = this.sectionId;
         this.questionDetails.cbe_scenario_id = this.scenarioId;
-        let url = this.scenarioId
+        const url = this.scenarioId
           ? `/api/v1/scenarios/${this.scenarioId}/questions/`
           : `/api/v1/sections/${this.sectionId}/questions/`;
 
         axios
           .post(url, {
-            question: this.questionDetails
+            question: this.questionDetails,
           })
           .then(response => {
             this.createdQuestion = response.data;
@@ -227,7 +254,7 @@ export default {
     },
     shouldAppendErrorClass(field) {
       return field.$error;
-    }
-  }
+    },
+  },
 };
 </script>
