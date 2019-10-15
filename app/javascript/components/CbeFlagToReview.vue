@@ -4,7 +4,9 @@
       v-on:click="markFlag()"
       v-bind:class="{ flagged: pageFlag }"
       class="flag-icon"
-      >Flag for Review</b-nav-text
+      >
+        <div v-if="type != 'review'">Flag for Review</div>
+      </b-nav-text
     >
   </div>
 </template>
@@ -19,14 +21,21 @@ export default {
     };
   },
   props: {
+    type: String,
+    flagId: Number,
     user_cbe_data: Object,
-    route: Object
   },
   watch: {
-    route: {
+    flagId: {
       handler() {
         this.mapFlags();
       }
+    },
+    "user_cbe_data.exam_pages": {
+      handler() {
+        this.mapFlags();
+      },
+     deep: true
     }
   },
   created() {
@@ -34,8 +43,8 @@ export default {
   },
   methods: {
     markFlag: function() {
-      let type = this.route.name;
-      let id = this.route.params.id;
+      let id = this.flagId;
+      let type = this.type;
 
       this.user_cbe_data.exam_pages.forEach(item => {
         if (item.type == type && item.param == id) {
@@ -45,8 +54,8 @@ export default {
       });
     },
     mapFlags: function() {
-      let type = this.route.name;
-      let id = this.route.params.id;
+      let id = this.flagId;
+      let type = this.type;
 
       this.user_cbe_data.exam_pages.forEach(item => {
         if (item.type == type && item.param == id) {

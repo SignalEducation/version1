@@ -50,7 +50,6 @@ const functions = {
 
     sections.filter(section => {
       exam_pages.push({
-        state: 'Unseen',
         flagged: false,
         description: section.name,
         type: "sections",

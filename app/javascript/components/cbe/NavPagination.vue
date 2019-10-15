@@ -10,13 +10,18 @@
     >
       <template v-slot:prev-text><span class="arrow-left-icon">Previous</span></template>
       <template v-slot:next-text><span class="arrow-right-icon">Next</span></template>
-
+      <template v-slot:page><CbeNavigator v-bind:cbeId="link_data.id" /></template>
     </b-pagination-nav>
   </section>
 </template>
 
 <script>
+import CbeNavigator from "../CbeNavigator"
+
 export default {
+  components: {
+    CbeNavigator
+  },
   computed: {
     links: function () {
       return this.generateObjectLinks();
