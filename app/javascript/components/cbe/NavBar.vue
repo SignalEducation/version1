@@ -28,7 +28,7 @@
         <CbeScratchPad :user_cbe_data="user_cbe_data" />
       </b-navbar-nav>
       <b-navbar-nav align="right">
-        <CbeFlagToReview :user_cbe_data="user_cbe_data" :route="$route" />
+        <CbeFlagToReview :user_cbe_data="user_cbe_data" :type="$route.name" :flagId="$route.params.id" />
       </b-navbar-nav>
     </b-navbar>
   </header>
