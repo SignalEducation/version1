@@ -31,7 +31,7 @@ export default {
   },
   methods: {
     getPickedValue() {
-      var initial_value = this.$store.state.userCbe.user_cbe_data.questions[
+      var initial_value = this.$store.state.user_cbe.user_cbe_data.questions[
         this.question_id
       ];
       if (initial_value != null) {

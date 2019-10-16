@@ -4,13 +4,14 @@
       <select v-model="question">
         <option
           v-for="answer in answers"
+          :key="`option-${answer.id}`"
           :value="{
             id: question_id,
-            answers: {
+            answers: [{
               cbe_answer_id: answer.id,
               content: answer.content,
               cbe_question_id: question_id
-            }
+            }]
           }"
         >
           {{ answer.content.text }}
@@ -37,7 +38,7 @@ export default {
   },
   methods: {
     getPickedValue() {
-      var initial_value = this.$store.state.userCbe.user_cbe_data.questions[
+      var initial_value = this.$store.state.user_cbe.user_cbe_data.questions[
         this.question_id
       ];
       if (initial_value != null) {

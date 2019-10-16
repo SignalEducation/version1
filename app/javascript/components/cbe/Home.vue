@@ -37,7 +37,7 @@ export default {
   },
   data() {
     return {
-      cbeId: this.$parent.cbe_id,
+      cbe_id: this.$parent.cbe_id,
       userId: this.$parent.user_id,
     };
   },
@@ -53,7 +53,7 @@ export default {
     cbe_data: {
       handler() {
         this.$store.dispatch('user_cbe/startUserCbeData', {
-          cbe_id: this.cbeId,
+          cbe_id: this.cbe_id,
           user_id: this.userId,
           cbe_data: this.cbe_data,
         });
@@ -68,7 +68,7 @@ export default {
     }
   },
   mounted() {
-    this.$store.dispatch('cbe/getCbe', this.cbeId);
+    this.$store.dispatch('cbe/getCbe', this.cbe_id);
   },
   methods: {
     submitExam: function() {

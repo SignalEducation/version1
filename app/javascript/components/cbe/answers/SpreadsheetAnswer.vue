@@ -35,12 +35,12 @@ export default {
     syncSpreadsheetData(jsonData) {
       this.$store.dispatch('user_cbe/recordAnswer', {
         id: this.questionId,
-        answers: {
+        answers: [{
           content: {
             data: jsonData,
           },
           cbe_question_id: this.questionId,
-        },
+        }],
       });
     },
     getPrepopulatedAnswer() {
