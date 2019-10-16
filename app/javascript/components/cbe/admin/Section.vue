@@ -33,7 +33,7 @@
       </div>
     </div>
 
-    <div class="col-sm-12">
+    <div class="col-sm-6">
       <div class="form-group">
         <label for="sectionScore">Score</label>
         <div class="input-group input-group-lg">
@@ -50,6 +50,21 @@
           v-if="!$v.score.between && $v.score.$error"
           class="error-message"
         >must be between {{$v.score.$params.between.min}} and {{$v.score.$params.between.max}}.</p>
+      </div>
+    </div>
+
+    <div class="col-sm-6">
+      <div class="form-group">
+        <label for="sortingOrder">Sorting Order</label>
+        <div class="input-group input-group-lg">
+          <input v-model="sortingOrder" placeholder="Sorting Order" class="form-control" id="sortingOrder" />
+        </div>
+
+        <p v-if="!$v.sortingOrder.required && $v.sortingOrder.$error" class="error-message">field is required.</p>
+      <p
+        v-if="!$v.sortingOrder.between && $v.sortingOrder.$error"
+        class="error-message"
+      >must be between {{$v.sortingOrder.$params.between.min}} and {{$v.sortingOrder.$params.between.max}}.</p>
       </div>
     </div>
 
@@ -104,6 +119,10 @@ export default {
       default: ""
     },
     initialScore: Number,
+    initialSortingOrder: {
+      type: Number,
+      default: 1
+    },
     initialContent: String,
     initialKind: String
   },
@@ -112,6 +131,7 @@ export default {
       sectionDetails: {},
       name: this.initialName,
       score: this.initialScore,
+      sortingOrder: this.initialSortingOrder,
       kind: this.initialKind,
       content: this.initialContent,
       sectionKinds: [
@@ -134,6 +154,11 @@ export default {
       numeric,
       between: between(1, 1000)
     },
+    sortingOrder: {
+      required,
+      numeric,
+      between: between(1, 10)
+    },
     content: {
       required
     }
@@ -147,6 +172,7 @@ export default {
         this.submitStatus = "PENDING";
         this.sectionDetails["name"] = this.name;
         this.sectionDetails["score"] = this.score;
+        this.sectionDetails["sorting_order"] = this.sortingOrder;
         this.sectionDetails["kind"] = this.kind;
         this.sectionDetails["content"] = this.content;
         this.sectionDetails["cbe_id"] = this.$store.state.cbeId;
@@ -165,6 +191,7 @@ export default {
               this.name = this.initialName;
               this.kind = this.initialKind;
               this.score = this.initialScore;
+              this.sortingOrder = this.initialSortingOrder;
               this.content = null;
               this.submitStatus = "OK";
               this.$v.$reset();
@@ -182,6 +209,7 @@ export default {
       } else {
         this.sectionDetails["name"] = this.name;
         this.sectionDetails["score"] = this.score;
+        this.sectionDetails["sorting_order"] = this.sortingOrder;
         this.sectionDetails["kind"] = this.kind;
         this.sectionDetails["content"] = this.content;
         this.sectionDetails["cbe_id"] = this.$store.state.cbeId;
@@ -196,8 +224,10 @@ export default {
             //this.$emit('add-section', this.sectionDetails);
             this.$emit("update-content", this.TinyEditor);
             this.sectionDetails = {};
-            this.title = this.updatedSection.title;
+            this.name = this.updatedSection.name;
             this.content = this.updatedSection.content;
+            this.score = this.updatedSection.score;
+            this.sortingOrder = this.updatedSection.sorting_order;
             this.kind = this.updatedSection.kind;
             this.submitStatus = "OK";
             this.$v.$reset();

@@ -30,7 +30,7 @@ module Api
 
         def permitted_params
           params.require(:question).permit(
-            :kind, :content, :score, :cbe_scenario_id, :cbe_section_id,
+            :kind, :content, :score, :sorting_order, :cbe_scenario_id, :cbe_section_id,
             answers_attributes: [
               :id, :cbe_question_id, :kind,
               content: [

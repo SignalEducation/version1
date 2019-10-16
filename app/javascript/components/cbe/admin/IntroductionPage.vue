@@ -1,11 +1,20 @@
 <template>
   <b-tab :title="tabTitle">
     <div class="row">
-      <div class="col-sm-12">
+      <div class="col-sm-8">
         <div class="form-group">
           <label for="pageTitle">Title</label>
           <div class="input-group input-group-lg">
             <input v-model="title" placeholder="Title" class="form-control" id="pageTitle" />
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-4">
+        <div class="form-group">
+          <label for="sortingOrder">Sorting Order</label>
+          <div class="input-group input-group-lg">
+            <input v-model="sortingOrder" placeholder="Sorting Order" class="form-control" id="sortingOrder" />
           </div>
         </div>
       </div>
@@ -46,12 +55,17 @@ export default {
       type: String,
       default: ""
     },
+    initialSortingOrder: {
+      type: Number,
+      default: 1
+    },
     initialContent: String
   },
   data: function() {
     return {
       pageDetails: {},
       title: this.initialTitle,
+      sortingOrder: this.initialSortingOrder,
       content: this.initialContent
     };
   },
@@ -67,6 +81,7 @@ export default {
       this.pageDetails["title"] = this.title;
       this.pageDetails["content"] = this.content;
       this.pageDetails["cbe_id"] = this.$store.state.cbeId;
+      this.pageDetails["sorting_order"] = this.sortingOrder;
 
       axios
         .post(`/api/v1/cbes/${this.$store.state.cbeId}/introduction_pages`, {
@@ -80,6 +95,7 @@ export default {
             this.pageDetails = {};
             this.title = this.initialTitle;
             this.content = null;
+            this.sortingOrder = this.initialSortingOrder;
           }
         })
         .catch(error => {
@@ -89,6 +105,7 @@ export default {
     updatePage: function() {
       this.pageDetails["title"] = this.title;
       this.pageDetails["content"] = this.content;
+      this.pageDetails["sorting_order"] = this.sortingOrder;
 
       axios
         .patch(`/api/v1/cbes/${this.$store.state.cbeId}/introduction_pages/${this.id}`, {
@@ -101,6 +118,7 @@ export default {
           this.pageDetails = {};
           this.title = this.updatedPage.title;
           this.content = this.updatedPage.content;
+          this.sortingOrder = this.updatedPage.sorting_order;
         })
         .catch(error => {
           console.log(error);

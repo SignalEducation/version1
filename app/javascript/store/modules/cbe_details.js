@@ -4,7 +4,6 @@ export default {
   state: {
     cbeName: null,
     cbeAgreementContent: null,
-    cbeExamTime: null,
     cbeSubjectCourseId: null,
     cbeActive: null,
     currentCbe: '',

@@ -45,7 +45,6 @@
             :initialName="edit_cbe_data.name"
             :initialCourseId="edit_cbe_data.subject_course.id"
             :initialAgreementContent="edit_cbe_data.agreement_content"
-            :initialExamTime="edit_cbe_data.exam_time"
             :initialActive="edit_cbe_data.active"
           />
         </b-card>

@@ -49,33 +49,6 @@
         </div>
       </div>
 
-      <div class="col-sm-6">
-        <div class="form-group">
-          <label for="cbeExamTime">Time</label>
-          <div class="input-group input-group-lg">
-            <input
-              v-model="examTime"
-              @blur="$v.examTime.$touch()"
-              :class="'form-control ' + {error: shouldAppendErrorClass($v.examTime), valid: shouldAppendValidClass($v.examTime)}"
-              id="cbeExamTime"
-              placeholder="Time Limit"
-            />
-          </div>
-          <p
-            v-if="!$v.examTime.required && $v.examTime.$error"
-            class="error-message"
-          >field is required.</p>
-          <p
-            v-if="!$v.examTime.numeric && $v.examTime.$error"
-            class="error-message"
-          >field should be numeric.</p>
-          <p
-            v-if="!$v.examTime.between && $v.examTime.$error"
-            class="error-message"
-          >must be between {{$v.examTime.$params.between.min}} and {{$v.examTime.$params.between.max}}.</p>
-        </div>
-      </div>
-
       <div class="col-sm-12">
         <div class="form-group">
           <label for="cbeAgreementContent">Agreement Text</label>
@@ -138,14 +111,12 @@ export default {
     initialName: String,
     initialCourseId: Number,
     initialAgreementContent: String,
-    initialExamTime: Number,
     initialActive: Boolean,
   },
   data() {
     return {
       name: this.initialName,
       agreementContent: this.initialAgreementContent,
-      examTime: this.initialExamTime,
       active: this.initialActive,
       subjectCourseId: this.initialCourseId,
       subjectCourses: [],
@@ -163,11 +134,6 @@ export default {
     },
     name: {
       required,
-    },
-    examTime: {
-      required,
-      numeric,
-      between: between(1, 1000),
     },
     agreementContent: {
       required,
@@ -192,7 +158,6 @@ export default {
         this.cbeDetails = {};
         this.cbeDetails.name = this.name;
         this.cbeDetails.agreement_content = this.agreementContent;
-        this.cbeDetails.exam_time = this.examTime;
         this.cbeDetails.active = this.active;
         this.cbeDetails.subject_course_id = this.subjectCourseId;
         axios
@@ -219,7 +184,6 @@ export default {
         this.cbeDetails = {};
         this.cbeDetails.name = this.name;
         this.cbeDetails.agreement_content = this.agreementContent;
-        this.cbeDetails.exam_time = this.examTime;
         this.cbeDetails.active = this.active;
         this.cbeDetails.subject_course_id = this.subjectCourseId;
         axios

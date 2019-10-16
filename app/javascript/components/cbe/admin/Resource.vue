@@ -1,7 +1,7 @@
 <template>
   <b-tab :title="tabName">
     <div class="row">
-      <div class="col-sm-12">
+      <div class="col-sm-8">
         <div class="form-group">
           <label for="resourceName">Name</label>
           <div class="input-group input-group-lg">
@@ -11,6 +11,15 @@
               class="form-control"
               id="resourceName"
             />
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-4">
+        <div class="form-group">
+          <label for="sortingOrder">Sorting Order</label>
+          <div class="input-group input-group-lg">
+            <input v-model="sortingOrder" placeholder="Sorting Order" class="form-control" id="sortingOrder" />
           </div>
         </div>
       </div>
@@ -46,12 +55,17 @@ export default {
     initialName: {
       type: String,
       default: ""
+    },
+    initialSortingOrder: {
+      type: Number,
+      default: 1
     }
   },
   data: function() {
     return {
       resourceDetails: {},
       name: this.initialName,
+      sortingOrder: this.initialSortingOrder,
       file: {}
     };
   },
@@ -67,10 +81,12 @@ export default {
     saveFile: function() {
       this.resourceDetails["name"] = this.name;
       this.resourceDetails["document"] = this.file;
+      this.resourceDetails["sorting_order"] = this.sortingOrder;
 
       let formData = new FormData();
       formData.append("resource[name]", this.name);
       formData.append("resource[document]", this.file);
+      formData.append("resource[sorting_order]", this.sortingOrder);
 
       axios({
         method: "post",
@@ -85,6 +101,7 @@ export default {
             this.$emit("add-resource", this.resourceDetails);
             this.resourceDetails = {};
             this.name = this.initialName;
+            this.sortingOrder = this.initialSortingOrder;
             this.file = {};
           }
         })
@@ -94,9 +111,10 @@ export default {
     },
     updateFile: function() {
       this.resourceDetails["name"] = this.name;
+      this.resourceDetails["sorting_order"] = this.sortingOrder;
 
       axios
-        .patch(`/api/v1/resources/${this.id}`, {
+        .patch(`/api/v1/cbes/resources/${this.id}`, {
           resource: this.resourceDetails
         })
         .then(response => {
@@ -105,6 +123,7 @@ export default {
           this.$emit("add-resource", this.resourceDetails);
           this.resourceDetails = {};
           this.title = this.updatedResource.title;
+          this.sortingOrder = this.updatedResource.sorting_order;
         })
         .catch(error => {
           console.log(error);
