@@ -3,11 +3,9 @@
     <b-table
       striped
       hover
-      :items="user_cbe_data.exam_pages"
+      :items="getExamsPage"
       :fields="fields"
     >
-
-
       <template v-slot:cell(description)="data">
         <router-link :to="{ name: data.item.type, params: { id:  data.item.param }}">
           {{ data.item.description }}
@@ -50,6 +48,14 @@ export default {
     ...mapGetters('user_cbe', {
       user_cbe_data: 'user_cbe_data',
     }),
+    getExamsPage: function () {
+      var examPage = this.user_cbe_data.exam_pages;
+      if( Array.isArray(examPage) ) {
+        return this.user_cbe_data.exam_pages;
+      } else {
+        return []
+      }
+    }
   },
 };
 </script>

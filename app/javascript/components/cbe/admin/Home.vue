@@ -100,9 +100,9 @@
                   >
                     <b-card>
                       <Section
-                        :id="section.id"
+                        :id="parseInt(section.id)"
                         :initial-name="section.name"
-                        :initial-score="section.score"
+                        :initial-score="parseInt(section.score)"
                         :initial-kind="section.kind"
                         :initial-content="section.content"
                       />

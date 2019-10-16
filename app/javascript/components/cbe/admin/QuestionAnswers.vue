@@ -53,6 +53,7 @@ import AdminSpreadsheet from './answers/AdminSpreadsheet.vue';
 export default {
   components: {
     AdminDropdownList,
+    AdminFillTheBlank,
     AdminMultipleChoice,
     AdminMultipleResponse,
     AdminTextEditor,
