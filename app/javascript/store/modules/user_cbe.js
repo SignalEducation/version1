@@ -11,14 +11,14 @@ const state = {
       description: null,
       type: null,
       page: null,
-      param: null,
+      param: null
     },
-    scratch_pad: null,
-  },
+    scratch_pad: null
+  }
 };
 
 const getters = {
-  user_cbe_data: state => state.user_cbe_data,
+  user_cbe_data: state => state.user_cbe_data
 };
 
 const actions = {
@@ -40,7 +40,7 @@ const mutations = {
   },
   setAnswerData(state, question) {
     state.user_cbe_data.questions[question.id] = question;
-  },
+  }
 };
 
 const functions = {
@@ -58,7 +58,7 @@ const functions = {
 
       section.questions.filter(question => {
         page += 1;
-        exam_pages.push(this.exam_pagesData(question, 'questions', page));
+        exam_pages.push(this.exam_pagesData(question, "questions", page));
       });
     });
 
@@ -67,14 +67,14 @@ const functions = {
 
   exam_pagesData(data, type, index) {
     return {
-      state: 'Unseen',
+      state: "Unseen",
       flagged: false,
       description: `Question ${index}`,
       type: type,
       page: index,
-      param: data.id,
+      param: data.id
     };
-  },
+  }
 };
 
 export default {
@@ -82,5 +82,5 @@ export default {
   state,
   getters,
   actions,
-  mutations,
+  mutations
 };

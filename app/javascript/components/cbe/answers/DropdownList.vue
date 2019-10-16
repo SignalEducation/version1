@@ -32,7 +32,7 @@ export default {
   },
   watch: {
     question(newValue, oldValue) {
-      this.$store.dispatch("userCbe/recordAnswer", newValue);
+      this.$store.dispatch("user_cbe/recordAnswer", newValue);
     }
   },
   methods: {

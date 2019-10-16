@@ -28,7 +28,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import CbeFlagToReview from "../../components/CbeFlagToReview"
+import CbeFlagToReview from "../../components/CbeFlagToReview.vue"
 
 export default {
   components: {
@@ -44,11 +44,11 @@ export default {
         { key: 'state', label: 'Status' },
         { key: 'flagged', label: 'Flagged - Review' },
       ],
-    }
+    };
   },
   computed: {
-    ...mapGetters("userCbe", {
-      user_cbe_data: "userCbeData"
+    ...mapGetters('user_cbe', {
+      user_cbe_data: 'user_cbe_data',
     }),
   },
 };

@@ -15,17 +15,16 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters } from 'vuex';
 
 export default {
   props: {
-    id: Number
+    id: Number,
   },
   computed: {
-    ...mapGetters("cbe", {
-      cbe_data: "cbeData"
-    })
-  }
+    ...mapGetters('cbe', {
+      cbe_data: 'cbe_data',
+    }),
+  },
 };
 </script>
-

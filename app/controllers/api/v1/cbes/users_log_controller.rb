@@ -28,18 +28,11 @@ module Api
 
         def permitted_params
           params.require(:cbe_user_log).permit(
-            :status,
-            :score,
-            :created_at,
-            :updated_at,
-            :cbe_id,
-            :user_id,
+            :status, :score, :created_at, :updated_at, :cbe_id, :user_id,
             answers_attributes: [
-              :cbe_question_id,
-              :cbe_answer_id,
+              :cbe_question_id, :cbe_answer_id,
               content: [
-                :text,
-                :correct
+                :text, :correct, data: %i[value row col colBinding style]
               ]
             ]
           )

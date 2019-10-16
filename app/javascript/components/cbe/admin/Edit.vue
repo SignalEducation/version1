@@ -409,37 +409,37 @@ export default {
       this.$store.commit('setCbeId', this.cbeId);
       this.$store.dispatch('cbe/getEditCbe', this.cbeId);
     },
-    toggleCbeDetails: () => {
+    toggleCbeDetails() {
       this.showCbeDetails = !this.showCbeDetails;
       if (this.showCbeDetails && (this.showIntroPages || this.showResources)) {
         this.showIntroPages = false;
         this.showResources = false;
       }
     },
-    toggleIntroPages: () => {
+    toggleIntroPages() {
       this.showIntroPages = !this.showIntroPages;
       if (this.showIntroPages && (this.showCbeDetails || this.showResources)) {
         this.showCbeDetails = false;
         this.showResources = false;
       }
     },
-    toggleResources: () => {
+    toggleResources() {
       this.showResources = !this.showResources;
       if (this.showResources && (this.showCbeDetails || this.showIntroPages)) {
         this.showCbeDetails = false;
         this.showIntroPages = false;
       }
     },
-    updateSections: (data) => {
+    updateSections(data) {
       this.edit_cbe_data.sections.push(data);
     },
-    updatePages: (data) => {
+    updatePages(data) {
       this.edit_cbe_data.introPages.push(data);
     },
     updateResources: (data) => {
       this.edit_cbe_data.resources.push(data);
     },
-    updateScenarios: (data) => {
+    updateScenarios(data) {
       let sectionIndex = 0;
       this.edit_cbe_data.sections.forEach((s, i) => {
         if (s.id === data.cbe_section_id) {
@@ -456,7 +456,7 @@ export default {
       }
       currentSection.scenarios.push(data);
     },
-    updateQuestions: (data) => {
+    updateQuestions(data) {
       let sectionIndex = 0;
       this.edit_cbe_data.sections.forEach((s, i) => {
         if (s.id === data.cbe_section_id) {
@@ -464,16 +464,14 @@ export default {
         }
       });
       const currentSection = this.edit_cbe_data.sections[sectionIndex];
-      if (currentSection.hasOwnProperty('questions')) {
-        console.log(currentSection);
-      } else {
+      if (!('questions' in currentSection)) {
         // This $set syntax is required by Vue to ensure the section.questions array is reactive
         // It is inside the conditional to ensure section.questions is not reset to empty
         this.$set(currentSection, 'questions', []);
       }
       currentSection.questions.push(data);
     },
-    updateScenarioQuestions: (data) => {
+    updateScenarioQuestions(data) {
       let scenarioIndex = 0;
       let sectionIndex = 0;
 
@@ -490,9 +488,7 @@ export default {
         }
       });
       const currentScenario = currentSection.scenarios[scenarioIndex];
-      if (currentScenario.hasOwnProperty('questions')) {
-        console.log(currentScenario);
-      } else {
+      if (!('questions' in currentScenario)) {
         // This $set syntax is required by Vue to ensure the section.questions array is reactive
         // It is inside the conditional to ensure section.questions is not reset to empty
         this.$set(currentScenario, 'questions', []);
