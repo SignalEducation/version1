@@ -43,6 +43,7 @@
             :class="'form-control ' + {error: shouldAppendErrorClass($v.score), valid: shouldAppendValidClass($v.score)}"
             id="sectionScore"
             placeholder="Score"
+            type="number"
           />
         </div>
         <p v-if="!$v.score.required && $v.score.$error" class="error-message">field is required.</p>
@@ -57,7 +58,7 @@
       <div class="form-group">
         <label for="sortingOrder">Sorting Order</label>
         <div class="input-group input-group-lg">
-          <input v-model="sortingOrder" placeholder="Sorting Order" class="form-control" id="sortingOrder" />
+          <input v-model="sortingOrder" placeholder="Sorting Order" class="form-control" id="sortingOrder" type="number" />
         </div>
 
         <p v-if="!$v.sortingOrder.required && $v.sortingOrder.$error" class="error-message">field is required.</p>

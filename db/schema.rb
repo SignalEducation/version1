@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_06_135033) do
+ActiveRecord::Schema.define(version: 2019_10_18_071310) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -118,6 +118,7 @@ ActiveRecord::Schema.define(version: 2019_10_06_135033) do
     t.float "score"
     t.integer "sorting_order"
     t.bigint "cbe_scenario_id"
+    t.text "solution"
     t.index ["cbe_scenario_id"], name: "index_cbe_questions_on_cbe_scenario_id"
     t.index ["cbe_section_id"], name: "index_cbe_questions_on_cbe_section_id"
   end
@@ -183,16 +184,12 @@ ActiveRecord::Schema.define(version: 2019_10_06_135033) do
     t.string "name"
     t.string "title"
     t.text "content"
-    t.float "exam_time"
-    t.float "hard_time_limit"
-    t.integer "number_of_pauses_allowed"
-    t.integer "length_of_pauses"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "subject_course_id"
     t.text "agreement_content"
-    t.boolean "active", default: false, null: false
     t.float "score"
+    t.boolean "active", default: true, null: false
     t.index ["subject_course_id"], name: "index_cbes_on_subject_course_id"
   end
 
@@ -395,9 +392,9 @@ ActiveRecord::Schema.define(version: 2019_10_06_135033) do
     t.boolean "is_video", default: false, null: false
     t.boolean "is_quiz", default: false, null: false
     t.boolean "active", default: true, null: false
-    t.string "seo_description", limit: 255
-    t.boolean "seo_no_index", default: false
     t.datetime "destroyed_at"
+    t.string "seo_description"
+    t.boolean "seo_no_index", default: false
     t.integer "number_of_questions", default: 0
     t.float "duration", default: 0.0
     t.string "temporary_label"
@@ -416,9 +413,9 @@ ActiveRecord::Schema.define(version: 2019_10_06_135033) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer "cme_count", default: 0
-    t.string "seo_description", limit: 255
-    t.boolean "seo_no_index", default: false
     t.datetime "destroyed_at"
+    t.string "seo_description"
+    t.boolean "seo_no_index", default: false
     t.integer "number_of_questions", default: 0
     t.integer "subject_course_id"
     t.float "video_duration", default: 0.0

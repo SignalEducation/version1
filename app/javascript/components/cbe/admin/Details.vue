@@ -21,11 +21,10 @@
         </div>
       </div>
 
-      <div class="col-sm-6">
+      <div v-if="this.$store.state.cbeId" class="col-sm-6">
         <b-form-group id="checkbox-input-group" class="mt-5 mx-4">
           <b-form-checkbox v-model="active" id="active-checkbox">Active</b-form-checkbox>
         </b-form-group>
-        <p v-if="!$v.active.required && $v.active.$error" class="error-message">field is required</p>
       </div>
 
       <div class="col-sm-6">
@@ -129,9 +128,6 @@ export default {
     subjectCourseId: {
       required,
     },
-    active: {
-      required,
-    },
     name: {
       required,
     },
@@ -158,7 +154,6 @@ export default {
         this.cbeDetails = {};
         this.cbeDetails.name = this.name;
         this.cbeDetails.agreement_content = this.agreementContent;
-        this.cbeDetails.active = this.active;
         this.cbeDetails.subject_course_id = this.subjectCourseId;
         axios
           .post('/api/v1/cbes/', { cbe: this.cbeDetails })
