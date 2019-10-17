@@ -10,7 +10,10 @@
           class="input-group input-group-lg"
         >
           <template slot="first">
-            <option :value="null" disabled>
+            <option
+              :value="null"
+              disabled
+            >
               -- Please select a type --
             </option>
           </template>
@@ -148,12 +151,12 @@
 </template>
 
 <script>
-import axios from "axios";
-import { validationMixin } from "vuelidate";
-import { required, numeric, between } from "vuelidate/lib/validators";
+import axios from 'axios';
+import { validationMixin } from 'vuelidate';
+import { required, numeric, between } from 'vuelidate/lib/validators';
 
-import TinyEditor from "../../TinyEditor.vue";
-import AdminAnswers from "./QuestionAnswers.vue";
+import TinyEditor from '../../TinyEditor.vue';
+import AdminAnswers from './QuestionAnswers.vue';
 
 export default {
   props: {
@@ -192,7 +195,7 @@ export default {
   },
   components: {
     TinyEditor,
-    AdminAnswers
+    AdminAnswers,
   },
   mixins: [validationMixin],
   data: function() {

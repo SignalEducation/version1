@@ -70,7 +70,6 @@ TAGS
 
 # Ignore VSC file
 *.code-workspace
-.vscode
 
 # .env files
 *.env

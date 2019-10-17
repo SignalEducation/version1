@@ -1,4 +1,5 @@
-/* eslint-disable */
+/* eslint-disable no-param-reassign */
+/* eslint no-shadow: ["error", { "allow": ["state"] }] */
 
 export default {
   state: {
@@ -10,7 +11,7 @@ export default {
   },
 
   getters: {
-    currentCbe: (state) => state.currentCbe,
+    currentCbe: state => state.currentCbe,
   },
 
   mutations: {

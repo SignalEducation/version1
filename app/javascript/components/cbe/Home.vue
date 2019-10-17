@@ -45,14 +45,15 @@ export default {
     ...mapGetters('cbe', {
       cbe_data: 'cbe_data',
     }),
-    ...mapGetters('user_cbe', {
-      user_cbe_data: 'user_cbe_data',
+    ...mapGetters('userCbe', {
+      user_cbe_data: 'userCbeData',
     }),
   },
   watch: {
     cbe_data: {
       handler() {
-        this.$store.dispatch('user_cbe/startUserCbeData', {
+        console.log(this.cbe_data);
+        this.$store.dispatch('userCbe/startUserCbeData', {
           cbe_id: this.cbe_id,
           user_id: this.userId,
           cbe_data: this.cbe_data,

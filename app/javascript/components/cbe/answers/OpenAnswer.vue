@@ -26,7 +26,7 @@ export default {
   },
   watch: {
     question(newValue, oldValue) {
-      this.$store.dispatch("user_cbe/recordAnswer", {
+      this.$store.dispatch("userCbe/recordAnswer", {
         id: this.question_id,
         answers: {
           content: {
@@ -39,7 +39,7 @@ export default {
   },
   methods: {
     getPickedValue() {
-      var initial_value = this.$store.state.user_cbe.user_cbe_data.questions[
+      var initial_value = this.$store.state.userCbe.user_cbe_data.questions[
         this.question_id
       ];
       if (initial_value != null) {

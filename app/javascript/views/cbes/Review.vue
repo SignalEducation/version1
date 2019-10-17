@@ -45,8 +45,8 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('user_cbe', {
-      user_cbe_data: 'user_cbe_data',
+    ...mapGetters('userCbe', {
+      user_cbe_data: 'userCbeData',
     }),
     getExamsPage: function () {
       var examPage = this.user_cbe_data.exam_pages;

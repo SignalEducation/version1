@@ -9,7 +9,8 @@
   },
   "extends": [
     "airbnb-base",
-    "plugin:vue/recommended"
+    "plugin:vue/recommended",
+    "prettier"
   ],
   "rules": {}
 }

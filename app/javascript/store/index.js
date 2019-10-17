@@ -1,18 +1,19 @@
-/* eslint-disable */
+/* eslint-disable no-param-reassign */
+/* eslint no-shadow: ["error", { "allow": ["state"] }] */
 
 import Vue from 'vue';
 import Vuex from 'vuex';
 import cbe from './modules/cbe';
-import user_cbe from './modules/user_cbe';
-import cbe_details from './modules/cbe_details';
+import userCbe from './modules/userCbe';
+import cbeDetails from './modules/cbeDetails';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   modules: {
     cbe,
-    cbe_details,
-    user_cbe,
+    cbeDetails,
+    userCbe,
   },
   state: {
     cbeDetailsSaved: false,
