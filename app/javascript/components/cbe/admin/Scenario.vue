@@ -123,6 +123,7 @@ export default {
       if (this.$v.$invalid) {
         this.submitStatus = "ERROR";
       } else {
+        this.submitStatus = "PENDING";
         this.scenarioDetails["name"] = this.scenarioName;
         this.scenarioDetails["content"] = this.scenarioContent;
         this.scenarioDetails["cbe_section_id"] = this.sectionId;

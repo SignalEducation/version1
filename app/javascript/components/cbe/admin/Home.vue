@@ -226,7 +226,7 @@
                         <b-tab
                           v-for="scenario in section.scenarios"
                           :key="'scenario-tab-' + scenario.id"
-                          :title="'Scenario ' + scenario.id"
+                          :title="scenario.name"
                         >
                           <b-card-text>
                             <div class="row">
@@ -238,12 +238,13 @@
                                   <b-card>
                                     <Scenario
                                       :id="scenario.id"
+                                      :initial-name="scenario.name"
                                       :initial-content="scenario.content"
                                     />
                                   </b-card>
                                 </b-collapse>
                                 <b-card>
-                                  <p>Name: {{ scenario }}</p>
+                                  <p>Name: {{ scenario.name }}</p>
                                 </b-card>
                               </div>
                               <div class="col-sm-2">

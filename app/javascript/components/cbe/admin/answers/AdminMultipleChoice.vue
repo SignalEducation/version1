@@ -38,7 +38,7 @@
                   <i class="glyphicon glyphicon-sort handle" title="Drag to reorder"></i>
                 </div>
                 <label class="input-group-text">
-                  <input type="radio" class="" name="answers" v-on:click="updateAnswer(idx)" :checked="element.content.correct" />
+                  <input type="radio" class="" :name="`${questionId}-answers`" v-on:click="updateAnswer(idx)" :checked="element.content.correct" />
                 </label>
               </div>
               <input type="text" :placeholder="element.content.text" class="answers-text-input" />
@@ -60,6 +60,7 @@ export default {
     draggable,
   },
   props: {
+    questionId: Number,
     answersArray: Array,
   },
   mixins: [validationMixin],

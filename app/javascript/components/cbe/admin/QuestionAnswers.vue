@@ -2,38 +2,51 @@
   <section>
     <hr />
     <div class="panel-body no-top-padding">
+      <p
+        v-if="!validateData.questionAnswers.answersRequired"
+        class="error-message"
+      >
+        You need to add answers to be able to save a question.
+      </p>
+
+      <p
+        v-if="!validateData.questionAnswers.setCorrectAnswerRequired"
+        class="error-message"
+      >
+        You need to set a correct answer to save a question.
+      </p>
       <div class="row">
         <div class="col-sm-12 mb-2">
           <AdminDropdownList
             :answersArray="answers"
-            :question_id="question_id"
+            :questionId="questionId"
             v-if="question_kind == 'dropdown_list'"
           />
           <AdminFillTheBlank
             :answersArray="answers"
-            :question_id="question_id"
+            :questionId="questionId"
             v-if="question_kind == 'fill_in_the_blank'"
           />
           <AdminMultipleChoice
             :answersArray="answers"
-            :question_id="question_id"
+            :questionId="questionId"
             v-if="question_kind == 'multiple_choice'"
           />
           <AdminMultipleResponse
             v-if="question_kind == 'multiple_response'"
             :answersArray="answers"
-            :question_id="question_id"
+            :questionId="questionId"
           />
           <AdminSpreadsheet
             v-if="question_kind == 'spreadsheet'"
             :answersArray="answers"
-            :questionId="question_id"
+            :questionId="questionId"
           />
           <!-- Let this commented for now, in future education team can
                use a pre formatted content in open questions -->
           <!-- <AdminTextEditor
             :answersArray="answers"
-            :question_id="question_id"
+            :questionId="questionId"
             v-if="question_kind == 'open'"
           /> -->
         </div>
@@ -61,7 +74,8 @@ export default {
   },
   props: {
     answers: Array,
-    question_id: Number,
+    validateData: Object,
+    questionId: Number,
     question_kind: String,
   },
 };

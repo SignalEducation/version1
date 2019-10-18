@@ -23,13 +23,14 @@ import { required } from "vuelidate/lib/validators";
 
 export default {
   props: {
-    answersArray: Array
+    questionId: Number,
+    answersArray: Array,
   },
   mixins: [validationMixin],
   data() {
     return {
       id: 0,
-      answer: ""
+      answer: this.getPickedValue(),
     };
   },
   validations: {
@@ -46,6 +47,16 @@ export default {
         }
       };
     }
-  }
+  },
+  methods: {
+    getPickedValue() {
+      var initial_value = this.answersArray[0]
+      if (initial_value != null) {
+        return initial_value.content.text;
+      } else {
+        return [];
+      }
+    },
+  },
 };
 </script>

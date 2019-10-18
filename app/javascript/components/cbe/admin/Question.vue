@@ -5,6 +5,7 @@
         <label for="questionKindSelect">Question Type</label>
         <b-form-select
           v-model="questionKind"
+          @change="resetAnwers()"
           id="questionKindSelect"
           :options="questionKinds"
           class="input-group input-group-lg"
@@ -32,6 +33,7 @@
             id="questionScore"
             v-model.number="questionScore"
             placeholder="Score"
+            type="number"
             :class="
               'form-control ' +
                 {
@@ -64,6 +66,7 @@
         <div class="input-group input-group-lg">
           <input
             v-model="questionSortingOrder"
+            type="number"
             placeholder="Sorting Order"
             class="form-control"
             id="questionSortingOrder"
@@ -135,9 +138,11 @@
     <div class="col-sm-12">
       <AdminAnswers
         :question_kind="questionKind"
+        :questionId="id"
         :answers="questionAnswers"
+        :validateData="$v"
         v-model="questionAnswers"
-      />
+      ></AdminAnswers>
     </div>
 
     <div class="form-group">
@@ -176,6 +181,11 @@ import TinyEditor from '../../TinyEditor.vue';
 import AdminAnswers from './QuestionAnswers.vue';
 
 export default {
+  components: {
+    TinyEditor,
+    AdminAnswers,
+  },
+  mixins: [validationMixin],
   props: {
     sectionId: {
       type: Number,
@@ -214,11 +224,6 @@ export default {
       default: () => [],
     },
   },
-  components: {
-    TinyEditor,
-    AdminAnswers,
-  },
-  mixins: [validationMixin],
   data: function() {
     return {
       questionDetails: {},
@@ -230,13 +235,10 @@ export default {
       questionAnswers: this.initialAnswers || [],
       selectedSelectQuestion: null,
       questionKinds: [
+        'dropdown_list',
+        'fill_in_the_blank',
         'multiple_choice',
         'multiple_response',
-        'complete',
-        'fill_in_the_blank',
-        'drag_drop',
-        'dropdown_list',
-        'hot_spot',
         'spreadsheet',
         'open',
       ],
@@ -259,6 +261,42 @@ export default {
     },
     questionContent: {
       required,
+    },
+    questionAnswers: {
+      answersRequired() {
+        let check = false;
+
+        switch (this.questionKind) {
+          case 'dropdown_list':
+          case 'multiple_choice':
+          case 'multiple_response':
+            check = this.questionAnswers.length > 0;
+            break;
+          default:
+            check = true;
+        }
+
+        return check;
+      },
+      setCorrectAnswerRequired() {
+        let check = false;
+
+        switch (this.questionKind) {
+          case 'dropdown_list':
+          case 'multiple_choice':
+          case 'multiple_response':
+            check = this.questionAnswers
+              .map(function(answer) {
+                return answer.content.correct;
+              })
+              .includes(true);
+            break;
+          default:
+            check = true;
+        }
+
+        return check;
+      },
     },
   },
   methods: {
@@ -310,6 +348,7 @@ export default {
       if (this.$v.$invalid) {
         this.submitStatus = 'ERROR';
       } else {
+        this.submitStatus = 'PENDING';
         this.questionDetails = {};
         this.questionDetails.kind = this.questionKind;
         this.questionDetails.content = this.questionContent;
@@ -351,6 +390,9 @@ export default {
       if (typeof field !== 'undefined') {
         return field.$error;
       }
+    },
+    resetAnwers() {
+      this.questionAnswers = [];
     },
   },
 };
