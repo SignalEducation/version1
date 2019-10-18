@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="cbe-modals">
     <b-nav-text
       class="navigation-icon"
       ref="myBtn"

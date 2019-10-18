@@ -25,6 +25,7 @@ class ExamBody < ApplicationRecord
   LOGO_IMAGES = %w(learning-partner-badge.png acca_approved_white.png acca_approved_red.png ALP_LOGO_(GOLD).png ALP_LOGO_GOLD_REVERSED.png CIMA_logo.png CIMA_logo_black.png).freeze
 
   has_one :group
+  has_many :coupons
   has_many :enrollments
   has_many :exam_sittings
   has_many :subject_courses

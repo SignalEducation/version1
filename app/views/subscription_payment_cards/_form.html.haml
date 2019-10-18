@@ -2,13 +2,29 @@
   .form-group.cc
     #card-element
     #card-errors.invalid-details{role: 'alert'}
+  -if params[:coupon]
+    .form-group{style: 'margin-bottom: 0;'}
+      .col-sm-6{style: 'padding-left: 0;'}
+        %input{type: 'text_field', id: 'coupon_code', class: 'form-control', placeholder: 'Coupon Code'}
+        .invalid-code.invalid-details
+          ='Invalid Code'
+
   .row
     .col-sm-6.mb-2.mt-sm-4
-      %h4.m-0
-        Total:
-        = @plans.first.currency.leading_symbol
-        %span.value#stripe-total-value
+      .discounted-price
+        %h4.m-0
+          Discounted Total:
+
+          %span.value#discounted-value
+
+      .price
+        %h4.m-0
+          Total:
+          = @plans.first.currency.leading_symbol
+          %span.value#stripe-total-value
+
       %p.billing-summary Billed every month
+
 
     .col-sm-6.mb-2.mt-sm-4
       = f.button :submit, class: 'btn btn-primary w-100 mb-3', id: 'card_submit' do

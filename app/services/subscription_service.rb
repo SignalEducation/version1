@@ -20,7 +20,7 @@ class SubscriptionService
     return if coupon_code.blank?
 
     @coupon = Coupon.get_and_verify(coupon_code, @subscription.subscription_plan_id)
-    return if @coupon.nil?
+    return if @coupon
 
     raise Learnsignal::SubscriptionError.new('Sorry! That is not a valid coupon code.')
   end

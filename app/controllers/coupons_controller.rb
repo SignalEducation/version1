@@ -7,6 +7,7 @@ class CouponsController < ApplicationController
   end
   before_action :management_layout
   before_action :set_coupon, only: %i[show destroy]
+  before_action :form_variables, only: %i[new create]
 
   def index
     @coupons = Coupon.paginate(per_page: 50, page: params[:page]).all_in_order
@@ -16,7 +17,6 @@ class CouponsController < ApplicationController
 
   def new
     @coupon = Coupon.new
-    @currencies = Currency.all_in_order.all_active
   end
 
   def create
@@ -44,7 +44,7 @@ class CouponsController < ApplicationController
     respond_to do |format|
       format.json do
         discount = Coupon.verify_coupon_and_get_discount(params[:coupon_code], params[:plan_id])
-        data = { valid: discount[0], discounted_price: discount[1] }
+        data = { valid: discount[0], discounted_price: discount[1], reason: discount[2] }
 
         render json: data, status: :ok
       end
@@ -57,8 +57,14 @@ class CouponsController < ApplicationController
     @coupon = Coupon.find(params[:id])
   end
 
+  def form_variables
+    @currencies = Currency.all_in_order.all_active
+    @exam_bodies = ExamBody.all_in_order
+  end
+
   def allowed_params
     params.require(:coupon).permit(:name, :code, :currency_id, :amount_off, :duration, :max_redemptions,
-                                   :duration_in_months, :percent_off, :redeem_by)
+                                   :duration_in_months, :percent_off, :redeem_by, :exam_body_id,
+                                   :monthly_interval, :quarterly_interval, :yearly_interval)
   end
 end

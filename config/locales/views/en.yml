@@ -337,12 +337,16 @@ en:
         duration_placeholder: Duration Type
         duration_in_months: Duration in Months
         duration_in_months_placeholder: Number of Months the Coupon Applies
-        max_redemptions: Max Redemptions
+        max_redemptions: Max Redemptions (Optional)
         max_redemptions_placeholder: Limit the number of times this can be used
         percent_off: Percentage Off
         percent_off_placeholder: Percentage Off
-        redeem_by: Redeem By (Date)
+        redeem_by: Redeem By (Optional)
         redeem_by_placeholder: Redeem By Specific Date
+        exam_body_id: Exam Body Restriction
+        monthly_interval: Monthly
+        quarterly_interval: Quarterly
+        yearly_interval: Yearly
 
 
       index:
