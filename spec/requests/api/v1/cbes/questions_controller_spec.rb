@@ -26,6 +26,7 @@ RSpec.describe 'Api::V1::Cbe::QuestionsController', type: :request do
           expect(body.map(&:keys).uniq).to contain_exactly(%w[id
                                                               kind
                                                               content
+                                                              solution
                                                               score
                                                               sorting_order
                                                               section_id
@@ -71,6 +72,7 @@ RSpec.describe 'Api::V1::Cbe::QuestionsController', type: :request do
           expect([body.keys]).to contain_exactly(%w[id
                                                     kind
                                                     content
+                                                    solution
                                                     score
                                                     sorting_order
                                                     section_id
@@ -123,6 +125,7 @@ RSpec.describe 'Api::V1::Cbe::QuestionsController', type: :request do
           expect(body.map(&:keys).uniq).to contain_exactly(%w[id
                                                               kind
                                                               content
+                                                              solution
                                                               score
                                                               sorting_order
                                                               section_id
@@ -168,6 +171,7 @@ RSpec.describe 'Api::V1::Cbe::QuestionsController', type: :request do
           expect([body.keys]).to contain_exactly(%w[id
                                                     kind
                                                     content
+                                                    solution
                                                     score
                                                     sorting_order
                                                     section_id
@@ -221,6 +225,7 @@ RSpec.describe 'Api::V1::Cbe::QuestionsController', type: :request do
         expect([body.keys]).to contain_exactly(%w[id
                                                   kind
                                                   content
+                                                  solution
                                                   score
                                                   sorting_order
                                                   section_id
@@ -275,6 +280,7 @@ RSpec.describe 'Api::V1::Cbe::QuestionsController', type: :request do
           expect(body.map(&:keys).uniq).to contain_exactly(%w[id
                                                               kind
                                                               content
+                                                              solution
                                                               score
                                                               sorting_order
                                                               section_id
@@ -320,6 +326,7 @@ RSpec.describe 'Api::V1::Cbe::QuestionsController', type: :request do
           expect([body.keys]).to contain_exactly(%w[id
                                                     kind
                                                     content
+                                                    solution
                                                     score
                                                     sorting_order
                                                     section_id

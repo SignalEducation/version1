@@ -7,13 +7,8 @@ RSpec.describe Cbe, type: :model do
     it { should respond_to(:name) }
     it { should respond_to(:title) }
     it { should respond_to(:content) }
-    it { should respond_to(:exam_time) }
-    it { should respond_to(:hard_time_limit) }
-    it { should respond_to(:number_of_pauses_allowed) }
-    it { should respond_to(:length_of_pauses) }
     it { should respond_to(:subject_course_id) }
     it { should respond_to(:agreement_content) }
-    it { should respond_to(:active) }
     it { should respond_to(:score) }
     it { should respond_to(:created_at) }
     it { should respond_to(:updated_at) }
@@ -39,17 +34,5 @@ RSpec.describe Cbe, type: :model do
   describe 'Factory' do
     it { expect(cbe).to be_a Cbe }
     it { expect(cbe).to be_valid }
-  end
-
-  describe '#initialize_settings' do
-    it 'initialize' do
-      expect(cbe).to be_a_new(Cbe)
-
-      expect { cbe.initialize_settings }.
-        to change { cbe.number_of_pauses_allowed }.from(nil).to(32).
-        and change { cbe.length_of_pauses }.from(nil).to(15)
-
-      expect(cbe).not_to be_a_new(Cbe)
-    end
   end
 end

@@ -19,9 +19,10 @@ RSpec.describe CbesController, type: :controller do
       expect(flash[:error]).to be_nil
     end
 
-    xit 'user has not purchased a CBE' do
-      get :show, params: { id: cbe.id }
+    it 'user has not purchased a CBE' do
+      expect_any_instance_of(User).to receive('non_student_user?').and_return(false)
 
+      get :show, params: { id: cbe.id }
       expect(response.status).to eq(302)
       expect(response).to redirect_to(prep_products_url)
       expect(flash[:error]).to be_present

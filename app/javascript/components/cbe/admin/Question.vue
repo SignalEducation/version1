@@ -10,10 +10,7 @@
           class="input-group input-group-lg"
         >
           <template slot="first">
-            <option
-              :value="null"
-              disabled
-            >
+            <option :value="null" disabled>
               -- Please select a type --
             </option>
           </template>
@@ -39,7 +36,7 @@
               'form-control ' +
                 {
                   error: shouldAppendErrorClass($v.questionScore),
-                  valid: shouldAppendValidClass($v.questionScore)
+                  valid: shouldAppendValidClass($v.questionScore),
                 }
             "
             @blur="$v.questionScore.$touch()"
@@ -74,13 +71,17 @@
         </div>
 
         <p
-          v-if="!$v.questionSortingOrder.required && $v.questionSortingOrder.$error"
+          v-if="
+            !$v.questionSortingOrder.required && $v.questionSortingOrder.$error
+          "
           class="error-message"
         >
           field is required.
         </p>
         <p
-          v-if="!$v.questionSortingOrder.between && $v.questionSortingOrder.$error"
+          v-if="
+            !$v.questionSortingOrder.between && $v.questionSortingOrder.$error
+          "
           class="error-message"
         >
           must be between {{ $v.questionSortingOrder.$params.between.min }} and
@@ -96,7 +97,7 @@
           <TinyEditor
             :class="{
               error: shouldAppendErrorClass($v.questionContent),
-              valid: shouldAppendValidClass($v.questionContent)
+              valid: shouldAppendValidClass($v.questionContent),
             }"
             :fieldModel.sync="questionContent"
             :aditionalToolbarOptions="['fullscreen code']"
@@ -111,6 +112,22 @@
           >
             field is required
           </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-12">
+      <div class="form-group">
+        <label for="questionSolution">Solution</label>
+        <div id="questionSolution">
+          <TinyEditor
+            :fieldModel.sync="questionSolution"
+            :aditionalToolbarOptions="['fullscreen code']"
+            :editorId="
+              'questionSolution-' + sectionId + '-' + scenarioId + '-' + id
+            "
+            @blur="$v.questionSolution.$touch()"
+          />
         </div>
       </div>
     </div>
@@ -162,36 +179,40 @@ export default {
   props: {
     sectionId: {
       type: Number,
-      default: null
+      default: null,
     },
     scenarioId: {
       type: Number,
-      default: null
+      default: null,
     },
     id: {
       type: Number,
-      default: null
+      default: null,
     },
     initialScore: {
       type: Number,
-      default: null
+      default: null,
     },
     initialSortingOrder: {
       type: Number,
-      default: 1
+      default: 1,
     },
     initialContent: {
       type: String,
-      default: ""
+      default: '',
+    },
+    initialSolution: {
+      type: String,
+      default: '',
     },
     initialKind: {
       type: String,
-      default: ""
+      default: '',
     },
     initialAnswers: {
       type: Array,
-      default: () => []
-    }
+      default: () => [],
+    },
   },
   components: {
     TinyEditor,
@@ -203,52 +224,54 @@ export default {
       questionDetails: {},
       questionKind: this.initialKind,
       questionContent: this.initialContent,
+      questionSolution: this.initialSolution,
       questionScore: this.initialScore,
       questionSortingOrder: this.initialSortingOrder,
       questionAnswers: this.initialAnswers || [],
       selectedSelectQuestion: null,
       questionKinds: [
-        "multiple_choice",
-        "multiple_response",
-        "complete",
-        "fill_in_the_blank",
-        "drag_drop",
-        "dropdown_list",
-        "hot_spot",
-        "spreadsheet",
-        "open"
+        'multiple_choice',
+        'multiple_response',
+        'complete',
+        'fill_in_the_blank',
+        'drag_drop',
+        'dropdown_list',
+        'hot_spot',
+        'spreadsheet',
+        'open',
       ],
-      submitStatus: null
+      submitStatus: null,
     };
   },
   validations: {
     questionKind: {
-      required
+      required,
     },
     questionScore: {
       required,
       numeric,
-      between: between(1, 100)
+      between: between(1, 100),
     },
     questionSortingOrder: {
       required,
       numeric,
-      between: between(1, 10)
+      between: between(1, 10),
     },
     questionContent: {
-      required
-    }
+      required,
+    },
   },
   methods: {
     saveQuestion(page, index) {
       this.$v.$touch();
       if (this.$v.$invalid) {
-        this.submitStatus = "ERROR";
+        this.submitStatus = 'ERROR';
       } else {
-        this.submitStatus = "PENDING";
+        this.submitStatus = 'PENDING';
         this.questionDetails = {};
         this.questionDetails.kind = this.questionKind;
         this.questionDetails.content = this.questionContent;
+        this.questionDetails.solution = this.questionSolution;
         this.questionDetails.score = this.questionScore;
         this.questionDetails.sorting_order = this.questionSortingOrder;
         this.questionDetails.answers_attributes = this.questionAnswers;
@@ -260,35 +283,37 @@ export default {
 
         axios
           .post(url, {
-            question: this.questionDetails
+            question: this.questionDetails,
           })
           .then(response => {
             this.createdQuestion = response.data;
             this.questionDetails.id = this.createdQuestion.id;
-            this.$emit("add-question", this.questionDetails);
-            this.$emit("update-content", this.TinyEditor);
+            this.$emit('add-question', this.questionDetails);
+            this.$emit('update-content', this.TinyEditor);
             this.questionDetails = {};
             this.questionKind = null;
             this.questionContent = null;
+            this.questionSolution = null;
             this.questionScore = null;
             this.questionSortingOrder = null;
             this.questionAnswers = [];
-            this.submitStatus = "OK";
+            this.submitStatus = 'OK';
             this.$v.$reset();
           })
           .catch(error => {
-            this.submitStatus = "ERROR";
+            this.submitStatus = 'ERROR';
           });
       }
     },
     updateQuestion: function() {
       this.$v.$touch();
       if (this.$v.$invalid) {
-        this.submitStatus = "ERROR";
+        this.submitStatus = 'ERROR';
       } else {
         this.questionDetails = {};
         this.questionDetails.kind = this.questionKind;
         this.questionDetails.content = this.questionContent;
+        this.questionDetails.solution = this.questionSolution;
         this.questionDetails.score = this.questionScore;
         this.questionDetails.sorting_order = this.questionSortingOrder;
         this.questionDetails.cbe_section_id = this.sectionId;
@@ -297,35 +322,36 @@ export default {
 
         axios
           .patch(`/api/v1/questions/${this.id}`, {
-            question: this.questionDetails
+            question: this.questionDetails,
           })
           .then(response => {
             this.updatedQuestion = response.data;
-            this.questionDetails["id"] = this.updatedQuestion.id;
-            this.$emit("update-content", this.TinyEditor);
+            this.questionDetails['id'] = this.updatedQuestion.id;
+            this.$emit('update-content', this.TinyEditor);
             this.questionDetails = {};
             this.questionKind = this.initialKind;
             this.questionContent = this.initialContent;
+            this.questionSolution = this.initialSolution;
             this.questionScore = this.initialScore;
             this.questionSortingOrder = this.initialSortingOrder;
-            this.submitStatus = "OK";
+            this.submitStatus = 'OK';
             this.$v.$reset();
           })
           .catch(error => {
-            this.submitStatus = "ERROR";
+            this.submitStatus = 'ERROR';
           });
       }
     },
     shouldAppendValidClass(field) {
-      if (typeof field !== "undefined") {
+      if (typeof field !== 'undefined') {
         return !field.$invalid && field.$model && field.$dirty;
       }
     },
     shouldAppendErrorClass(field) {
-      if (typeof field !== "undefined") {
+      if (typeof field !== 'undefined') {
         return field.$error;
       }
-    }
-  }
+    },
+  },
 };
 </script>

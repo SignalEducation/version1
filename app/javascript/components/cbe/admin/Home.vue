@@ -65,6 +65,7 @@
                 :id="page.id"
                 :key="'intro-page-tab-' + page.id"
                 :initial-title="page.title"
+                :initial-sorting-order="page.sorting_order"
                 :initial-kind="page.kind"
                 :initial-content="page.content"
               />
@@ -102,7 +103,8 @@
                       <Section
                         :id="parseInt(section.id)"
                         :initial-name="section.name"
-                        :initial-score="parseInt(section.score)"
+                        :initial-score="section.score"
+                        :initial-sorting-order="section.sorting_order"
                         :initial-kind="section.kind"
                         :initial-content="section.content"
                       />
@@ -164,7 +166,9 @@
                               :id="question.id"
                               :section-id="section.id"
                               :initial-content="question.content"
+                              :initial-solution="question.solution"
                               :initial-score="question.score"
+                              :initial-sorting-order="question.sorting_order"
                               :initial-kind="question.kind"
                               :initial-answers="question.answers_attributes"
                             />
@@ -291,6 +295,8 @@
                                             :id="question.id"
                                             :section-id="section.id"
                                             :scenario-id="scenario.id"
+                                            :initial-solution="question.solution"
+                                            :initial-sorting-order="question.sorting_order"
                                             :initial-content="question.content"
                                             :initial-score="question.score"
                                             :initial-kind="question.kind"

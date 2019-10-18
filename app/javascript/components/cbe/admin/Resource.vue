@@ -19,7 +19,7 @@
         <div class="form-group">
           <label for="sortingOrder">Sorting Order</label>
           <div class="input-group input-group-lg">
-            <input v-model="sortingOrder" placeholder="Sorting Order" class="form-control" id="sortingOrder" />
+            <input v-model="sortingOrder" placeholder="Sorting Order" class="form-control" id="sortingOrder" type="number" />
           </div>
         </div>
       </div>

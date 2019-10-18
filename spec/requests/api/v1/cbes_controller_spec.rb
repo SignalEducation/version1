@@ -24,10 +24,6 @@ RSpec.describe 'Api::V1::CbesController', type: :request do
                                                             name
                                                             title
                                                             content
-                                                            exam_time
-                                                            hard_time_limit
-                                                            number_of_pauses_allowed
-                                                            length_of_pauses
                                                             agreement_content
                                                             active
                                                             score
@@ -73,10 +69,6 @@ RSpec.describe 'Api::V1::CbesController', type: :request do
                                                 name
                                                 title
                                                 content
-                                                exam_time
-                                                hard_time_limit
-                                                number_of_pauses_allowed
-                                                length_of_pauses
                                                 agreement_content
                                                 active
                                                 score
@@ -108,18 +100,10 @@ RSpec.describe 'Api::V1::CbesController', type: :request do
         expect(body['name']).to eq(cbe.name)
         expect(body['title']).to eq(cbe.title)
         expect(body['content']).to eq(cbe.content)
-        expect(body['exam_time']).to eq(cbe.exam_time)
-        expect(body['hard_time_limit']).to eq(cbe.hard_time_limit)
-        expect(body['number_of_pauses_allowed']).to eq(cbe.number_of_pauses_allowed)
-        expect(body['length_of_pauses']).to eq(cbe.length_of_pauses)
         expect([body.keys]).to contain_exactly(%w[id
                                                   name
                                                   title
                                                   content
-                                                  exam_time
-                                                  hard_time_limit
-                                                  number_of_pauses_allowed
-                                                  length_of_pauses
                                                   agreement_content
                                                   active
                                                   score
@@ -169,18 +153,10 @@ RSpec.describe 'Api::V1::CbesController', type: :request do
         expect(body['name']).to eq(update_params[:name])
         expect(body['title']).to eq(update_params[:title])
         expect(body['content']).to eq(update_params[:content])
-        expect(body['exam_time']).to eq(update_params[:exam_time])
-        expect(body['hard_time_limit']).to eq(update_params[:hard_time_limit])
-        expect(body['number_of_pauses_allowed']).to eq(update_params[:number_of_pauses_allowed])
-        expect(body['length_of_pauses']).to eq(update_params[:length_of_pauses])
         expect([body.keys]).to contain_exactly(%w[id
                                                   name
                                                   title
                                                   content
-                                                  exam_time
-                                                  hard_time_limit
-                                                  number_of_pauses_allowed
-                                                  length_of_pauses
                                                   agreement_content
                                                   active
                                                   score
