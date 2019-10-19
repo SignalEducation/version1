@@ -31,6 +31,7 @@ describe Coupon do
 
   describe 'relationships' do
     it { should belong_to(:currency) }
+    it { should belong_to(:exam_body) }
     it { should have_many(:charges) }
     it { should have_many(:subscriptions) }
   end
@@ -67,6 +68,7 @@ describe Coupon do
 
   describe 'instance methods' do
     it { should respond_to(:destroyable?) }
+    it { should respond_to(:available_payment_intervals) }
     it { should respond_to(:amount_or_percent_off) }
     it { should respond_to(:duration_months_if_repeating) }
     it { should respond_to(:currency_if_amount_off_set) }

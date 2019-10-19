@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="cbe-modals">
     <b-nav-text class="scratch-pad-icon" ref="myBtn" v-on:click="modalIsOpen = !modalIsOpen">Scratch Pad</b-nav-text>
 
     <div ref="myModal" class="modal" v-show="modalIsOpen">

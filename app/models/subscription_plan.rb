@@ -63,7 +63,7 @@ class SubscriptionPlan < ApplicationRecord
 
   # scopes
   scope :all_in_order, -> { order(:currency_id, :available_from, :price) }
-  scope :all_in_display_order, -> { order(:created_at) }
+  scope :all_in_display_order, -> { order(:payment_frequency_in_months) }
   scope :all_in_update_order, -> { order(:updated_at) }
   scope :all_active, -> { where('available_from <= :date AND available_to >= :date', date: Proc.new{ Time.now.gmtime.to_date }.call) }
   scope :generally_available, -> { where(subscription_plan_category_id: nil) }
@@ -80,7 +80,7 @@ class SubscriptionPlan < ApplicationRecord
     plans = in_currency(currency.id).
               generally_available.
               all_active.
-              all_in_order
+              all_in_display_order
 
     if exam_body_id && (body = ExamBody.find(exam_body_id))
       plans.where(exam_body_id: body.id)
@@ -103,10 +103,10 @@ class SubscriptionPlan < ApplicationRecord
     plans = if plan&.subscription_plan_category_id
               plan.subscription_plan_category.subscription_plans.in_currency(
                 currency.id
-              ).all_active.all_in_order
+              ).all_active.all_in_display_order
             else
               in_currency(currency.id).generally_available.all_active.
-                all_in_order
+                  all_in_display_order
             end
 
     scope_exam_body_plans(user, exam_body_id, plans)

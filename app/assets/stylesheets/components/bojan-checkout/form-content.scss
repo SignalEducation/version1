@@ -34,7 +34,25 @@
     }
   }
 
+  .strike {
+    position: relative;
+
+    font-weight: bold;
+    &:before {
+      position: absolute;
+      content: '';
+      left: 6%;
+      top: 35%;
+      right: 2%;
+      border-top: 0.1em solid #fd5c63;
+      -webkit-transform: skewY(-6deg);
+      -moz-transform: skewY(-6deg);
+      transform: skewY(-6deg);
+    }
+  }
+
 }
+
 
 #upgrade-subscription, #product_purchase {
   font-size: 16px;
@@ -197,6 +215,15 @@
       padding: 1.35em 1.25em
     }
   }
+  .form-control.coupon-error,
+  .form-control:valid.coupon-error {
+    border:2px solid #f34664!important;
+  }
+  .form-control.coupon-success,
+  .form-control:valid.coupon-success {
+    border:2px solid #00b67B!important;
+  }
+
   .form-control.is-invalid,
   .form-control:invalid {
     color: #f34664;
