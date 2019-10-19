@@ -92,7 +92,8 @@
 
 
 
-  =render partial: 'usp_section'
+  -if @home_page.usp_section
+    =render partial: 'usp_section'
 
   -if @home_page.pricing_section && @subscription_plans.any?
     .container-bg.bg-gray5

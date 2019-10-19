@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_19_090719) do
+ActiveRecord::Schema.define(version: 2019_10_19_143347) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -689,6 +689,7 @@ ActiveRecord::Schema.define(version: 2019_10_19_090719) do
     t.string "video_guid"
     t.string "header_h3"
     t.string "background_image"
+    t.boolean "usp_section", default: true
     t.index ["public_url"], name: "index_home_pages_on_public_url"
     t.index ["subscription_plan_category_id"], name: "index_home_pages_on_subscription_plan_category_id"
   end
@@ -1155,6 +1156,7 @@ ActiveRecord::Schema.define(version: 2019_10_19_090719) do
     t.string "seo_title"
     t.string "seo_description"
     t.boolean "has_correction_packs", default: false
+    t.text "short_description"
     t.index ["name"], name: "index_subject_courses_on_name"
   end
 

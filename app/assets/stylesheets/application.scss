@@ -6068,3 +6068,17 @@ button.sub-details[aria-expanded="false"]:before{
 button.sub-details[aria-expanded="true"]:before{
   content: "Hide details";
 }
+
+.tooltip-custom {
+  .tooltip-inner {
+    background-color: $navy;
+    color: #fff;
+    max-width: 300px;
+    padding: 1rem;
+    font-size: 16px;
+  }
+}
+.tooltip-custom > .arrow::before{ border-right-color: $navy; }
+.tooltip-custom.show {
+  opacity: 1;
+}

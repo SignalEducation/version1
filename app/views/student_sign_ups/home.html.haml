@@ -6,7 +6,11 @@
         .col-xl-4
           %header.home-hero-header.pb-2
             <h1 class="h1-hero">the smarter<br>way to study<span class="text-mint">.</span></h1>
-            %p.p-hero Get everything you need to pass your ACCA exam in one place! See why over 100,000 students have saved money and time by switching to studying online with learnsignal.
+            %p.p-hero
+              -if @home_page&.header_paragraph.present?
+                =@home_page.header_paragraph
+              -else
+                Get everything you need to pass your ACCA exam in one place! See why over 100,000 students have saved money and time by switching to studying online with learnsignal.
         .col-xl-8
           %aside.home-hero-aside.py-2.py-sm-0
             .home-hero-img-wrap
@@ -27,9 +31,12 @@
       .home-hero-cta-section.pt-4.pt-sm-5.py-xl-0
         .pb-3
           =link_to new_student_url, class: 'btn btn-primary btn-lg' do
-            Join for
-            %span.text-uppercase free
-            today!
+            -if @home_page&.header_h3.present?
+              =@home_page.header_h3
+            -else
+              Join for
+              %span.text-uppercase free
+              today!
 
         %small No credit card required. Set-up takes one minute
 

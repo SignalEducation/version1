@@ -74,7 +74,7 @@
             .col-xl-8
               .mb-5.mb-xl-0
                 - course_section.course_modules.all_valid.all_in_order.each_with_index do |course_module, counter|
-                  =render partial: 'course_module', locals: { course_module: course_module, counter: counter }
+                  =render partial: 'course_module', locals: { course_module: course_module, counter: counter, count: course_section.course_modules.all_valid.count }
 
             .col-xl-4.mb-5
               =render partial: 'register_upgrade_links', locals: { user: current_user }
