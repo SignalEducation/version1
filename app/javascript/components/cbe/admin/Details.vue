@@ -71,7 +71,7 @@
         <button
           v-if="this.$store.state.cbeId"
           v-on:click="updateCBE"
-          :disabled="updateStatus === 'PENDING' || updateStatus === 'OK'"
+          :disabled="updateStatus === 'PENDING'"
           class="btn btn-primary"
         >Update CBE</button>
         <button
@@ -135,7 +135,6 @@ export default {
       required,
     },
   },
-
   methods: {
     getSubjects() {
       axios
@@ -172,17 +171,20 @@ export default {
       }
     },
     updateCBE() {
+      const cbe_id = (this.id ? this.id  : this.$store.state.cbeId);
+
       this.$v.$touch();
       if (this.$v.$invalid) {
         this.updateStatus = 'ERROR';
       } else {
+        this.updateStatus = 'PENDING';
         this.cbeDetails = {};
         this.cbeDetails.name = this.name;
         this.cbeDetails.agreement_content = this.agreementContent;
         this.cbeDetails.active = this.active;
         this.cbeDetails.subject_course_id = this.subjectCourseId;
         axios
-          .patch(`/api/v1/cbes/${this.id}`, {
+          .patch(`/api/v1/cbes/${cbe_id}`, {
             cbe: this.cbeDetails,
           })
 

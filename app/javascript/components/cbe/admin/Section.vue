@@ -208,6 +208,7 @@ export default {
       if (this.$v.$invalid) {
         this.submitStatus = "ERROR";
       } else {
+        this.submitStatus = "PENDING";
         this.sectionDetails["name"] = this.name;
         this.sectionDetails["score"] = this.score;
         this.sectionDetails["sorting_order"] = this.sortingOrder;
