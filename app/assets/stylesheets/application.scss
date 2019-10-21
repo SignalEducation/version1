@@ -1101,8 +1101,10 @@ textarea.form-control {
 .input-group-lg > .input-group-append > .input-group-text,
 .input-group-lg > .input-group-prepend > .btn,
 .input-group-lg > .input-group-prepend > .input-group-text {
-  height: -webkit-calc(2.6875rem + 2px);
-  height: calc(2.6875rem + 2px);
+  :not(textarea) {
+    height: -webkit-calc(2.6875rem + 2px);
+    height: calc(2.6875rem + 2px);
+  }
   padding: .5rem 1rem;
   font-size: 1.125rem;
   line-height: 1.5;
@@ -6065,4 +6067,18 @@ button.sub-details[aria-expanded="false"]:before{
 
 button.sub-details[aria-expanded="true"]:before{
   content: "Hide details";
+}
+
+.tooltip-custom {
+  .tooltip-inner {
+    background-color: $navy;
+    color: #fff;
+    max-width: 300px;
+    padding: 1rem;
+    font-size: 16px;
+  }
+}
+.tooltip-custom > .arrow::before{ border-right-color: $navy; }
+.tooltip-custom.show {
+  opacity: 1;
 }

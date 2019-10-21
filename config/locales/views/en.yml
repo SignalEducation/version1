@@ -337,12 +337,16 @@ en:
         duration_placeholder: Duration Type
         duration_in_months: Duration in Months
         duration_in_months_placeholder: Number of Months the Coupon Applies
-        max_redemptions: Max Redemptions
+        max_redemptions: Max Redemptions (Optional)
         max_redemptions_placeholder: Limit the number of times this can be used
         percent_off: Percentage Off
         percent_off_placeholder: Percentage Off
-        redeem_by: Redeem By (Date)
+        redeem_by: Redeem By (Optional)
         redeem_by_placeholder: Redeem By Specific Date
+        exam_body_id: Exam Body Restriction
+        monthly_interval: Monthly
+        quarterly_interval: Quarterly
+        yearly_interval: Yearly
 
 
       index:
@@ -1067,7 +1071,6 @@ en:
         product_id: Product
         file: Upload a PDF of your solution
         file_replacement: Upload a replacement solution
-        correction_replacement: Upload a replacement correction
         cover_image: Upload the Cover Image File
         sorting_order: Sorting Order
 
@@ -1225,6 +1228,8 @@ en:
         seo_title_placeholder: SEO Title
         seo_description: SEO Description
         seo_description_placeholder: SEO Description
+        short_description: Short Description
+        short_description_placeholder: Tooltip Hover Text
 
       index:
         h1: Courses

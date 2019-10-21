@@ -29,10 +29,10 @@ FactoryBot.define do
     active                    { true }
     amount_off                { nil }
     duration                  { 'once' }
-    duration_in_months        { 1 }
+    duration_in_months        { nil }
     max_redemptions           { 1 }
     percent_off               { 1 }
-    redeem_by                 { '2017-11-29 16:14:46' }
+    redeem_by                 { nil }
     times_redeemed            { 1 }
     stripe_coupon_data        { 'Stripe Data' }
   end

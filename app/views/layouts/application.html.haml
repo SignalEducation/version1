@@ -2,20 +2,25 @@
 %html{lang: params[:locale] || 'en'}
   %head
     %meta{charset: 'utf-8'}
-    %meta{http: {equiv:'X-UA-Compatible'}, content:'IE=edge'}
-    %meta{name: 'viewport', content: 'width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=0'}
-    %title
-      -if @seo_title
-        =@seo_title
-      -else
-        The Smarter Way to Study | learnsignal
+      %meta{http: {equiv:'X-UA-Compatible'}, content:'IE=edge'}
+      %meta{name: 'viewport', content: 'width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=0'}
+      %title
+        -if @seo_title
+          =@seo_title
+        -else
+          The Smarter Way to Study | learnsignal
 
     =stylesheet_link_tag 'application', media: 'all'
     =javascript_include_tag 'application', modernizr: :true
+    -# VueJS include
+    = javascript_pack_tag 'cbe_main'
+    = stylesheet_pack_tag 'cbe_main'
 
     =render partial: 'layouts/google_tag_manager'
 
     %script{type: 'text/javascript', src: 'https://js.stripe.com/v3/'}
+
+    =yield :head
 
     -if controller_name == 'courses' || controller_name == 'course_module_elements' || controller_name == 'preview_course_module_elements'|| controller_name == 'content_activations'
       %link{href: 'https://kendo.cdn.telerik.com/2018.2.516/styles/kendo.common.min.css', rel: 'stylesheet'}
@@ -45,80 +50,97 @@
     -if Rails.env.production?
       =render partial: 'layouts/cookie_banner'
 
-  -#%body.page-light
-  %body{class: (controller_name == 'student_sign_ups' && action_name != 'new') ? 'page-light' : ''}
-    %noscript
-      %iframe{src: '//www.googletagmanager.com/ns.html?id=GTM-5SC76S', height: 0, width: 0, style: 'display:none;visibility:hidden'}
 
-    -if controller_name == 'courses' || controller_name == 'course_module_elements' || controller_name == 'preview_course_module_elements' || controller_name == 'content_activations'
-      %script{src: 'https://kendo.cdn.telerik.com/2018.2.516/js/jszip.min.js'}
-      %script{src: 'https://kendo.cdn.telerik.com/2018.2.516/js/kendo.all.min.js'}
+  - if controller_name == 'cbes'
+    %body.page-light
+      -if @layout == 'management'
+        #console-wrapper
+          .d-none.d-sm-block
+            =render partial: 'layouts/management_side_navbar'
+          .main-content
+            -if flash[:success] || flash[:error] || flash[:warning]
+              =render partial: 'layouts/flash_messages'
 
-    -if @layout == 'standard'
-      -if @navbar
-        =render partial: 'layouts/navbar'
+            =yield
 
-      -if @top_margin
-        -if @banner && !current_user
-          .margin-top-lg
-        -else
-          .margin-top
-
-      -unless controller_name == 'subscriptions' || controller_name == 'orders' || controller_name == 'footer_pages' || controller_name == 'student_sign_ups' || controller_name == 'user_accounts'
-        -if flash[:success] || flash[:error] || flash[:warning]
-          =render partial: 'layouts/flash_messages'
-
-      =yield
-
-      -if @footer
-        =render partial: 'layouts/footer'
-
-    -elsif @layout == 'management'
-      #console-wrapper
-        .d-none.d-sm-block
-          =render partial: 'layouts/management_side_navbar'
-
+      -else
         .main-content
           -if flash[:success] || flash[:error] || flash[:warning]
             =render partial: 'layouts/flash_messages'
+
           =yield
 
+  - else
+    %body{class: (controller_name == 'student_sign_ups' && action_name != 'new') ? 'page-light' : ''}
+      -if controller_name == 'courses' || controller_name == 'course_module_elements' || controller_name == 'preview_course_module_elements' || controller_name == 'content_activations'
+        %script{src: 'https://kendo.cdn.telerik.com/2018.2.516/js/jszip.min.js'}
+        %script{src: 'https://kendo.cdn.telerik.com/2018.2.516/js/kendo.all.min.js'}
 
-    -else
-      =render partial: 'layouts/navbar'
-      -if @top_margin
-        .margin-top
-      -if flash[:success] || flash[:error] || flash[:warning]
-        =render partial: 'layouts/flash_messages'
-      =yield
-      =render partial: 'layouts/footer'
+      %noscript
+        %iframe{src: '//www.googletagmanager.com/ns.html?id=GTM-5SC76S', height: 0, width: 0, style: 'display:none;visibility:hidden'}
 
+      -if @layout == 'standard'
+        -if @navbar
+          =render partial: 'layouts/navbar'
 
-    -#General partials
-    =render partial: 'layouts/misc_javascript'
-    -unless controller_name == 'courses' || controller_name == 'student_sign_ups'
-      =render partial: 'layouts/intercom'
+        -if @top_margin
+          -if @banner && !current_user
+            .margin-top-lg
+          -else
+            .margin-top
 
-    -if current_user
-      :javascript
-        dataLayer.push({'user_id':"#{current_user.id}", 'user_plan':"#{current_user.analytics_exam_body_plan_data[0]}", 'plan_type':"#{current_user.analytics_exam_body_plan_data[1]}", 'plan_status':"#{current_user.analytics_exam_body_plan_data[2]}"});
+        -unless controller_name == 'subscriptions' || controller_name == 'orders' || controller_name == 'footer_pages' || controller_name == 'student_sign_ups' || controller_name == 'user_accounts'
+          -if flash[:success] || flash[:error] || flash[:warning]
+            =render partial: 'layouts/flash_messages'
 
-      -if flash[:datalayer_verify]
-        :javascript
-          dataLayer.push({'event':'registrationEmailConfirmed', 'user_id':"#{current_user.id}", 'user_plan':"#{current_user.subscriptions.all_valid.any? ? 'Subscription Plan' : 'Basic Plan'}", 'plan_type':"#{current_user.try(:preferred_exam_body).try(:name)}"});
+        =yield
 
+        -if @footer
+          =render partial: 'layouts/footer'
 
-    <!-- Mathjax -->
+      -elsif @layout == 'management'
+        #console-wrapper
+          .d-none.d-sm-block
+            =render partial: 'layouts/management_side_navbar'
 
-    -if @mathjax_required && !controller_name == 'home_pages'
-      %script{type: 'text/x-mathjax-config'}
-        MathJax.Hub.Config({"HTML-CSS": { linebreaks: { automatic: true } }, tex2jax: {inlineMath: [["(math)","(/math)"]]}});
-      -if Rails.env.production? || Rails.env.staging?
-        %script{type: 'text/javascript', src: 'https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'}
+          .main-content
+            -if flash[:success] || flash[:error] || flash[:warning]
+              =render partial: 'layouts/flash_messages'
+            =yield
       -else
-        %script{type: 'text/javascript', src: 'http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'}
+        =render partial: 'layouts/navbar'
+        -if @top_margin
+          .margin-top
+        -if flash[:success] || flash[:error] || flash[:warning]
+          =render partial: 'layouts/flash_messages'
+        =yield
+        =render partial: 'layouts/footer'
 
-    -unless controller_name == 'home_pages'
-      %script{type: 'text/javascript'} try{Typekit.load();}catch(e){}
 
-    =render partial: 'layouts/hubspot_js'
+      -#General partials
+      =render partial: 'layouts/misc_javascript'
+      -unless controller_name == 'courses' || controller_name == 'student_sign_ups'
+        =render partial: 'layouts/intercom'
+
+      -if current_user
+        :javascript
+          dataLayer.push({'user_id':"#{current_user.id}", 'user_plan':"#{current_user.analytics_exam_body_plan_data[0]}", 'plan_type':"#{current_user.analytics_exam_body_plan_data[1]}", 'plan_status':"#{current_user.analytics_exam_body_plan_data[2]}"});
+
+        -if flash[:datalayer_verify]
+          :javascript
+            dataLayer.push({'event':'registrationEmailConfirmed', 'user_id':"#{current_user.id}", 'user_plan':"#{current_user.subscriptions.all_valid.any? ? 'Subscription Plan' : 'Basic Plan'}", 'plan_type':"#{current_user.try(:preferred_exam_body).try(:name)}"});
+
+      <!-- Mathjax -->
+
+      -if @mathjax_required && !controller_name == 'home_pages'
+        %script{type: 'text/x-mathjax-config'}
+          MathJax.Hub.Config({"HTML-CSS": { linebreaks: { automatic: true } }, tex2jax: {inlineMath: [["(math)","(/math)"]]}});
+        -if Rails.env.production? || Rails.env.staging?
+          %script{type: 'text/javascript', src: 'https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'}
+        -else
+          %script{type: 'text/javascript', src: 'http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'}
+
+      -unless controller_name == 'home_pages'
+        %script{type: 'text/javascript'} try{Typekit.load();}catch(e){}
+
+      =render partial: 'layouts/hubspot_js'

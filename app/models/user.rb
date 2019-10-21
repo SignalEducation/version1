@@ -524,6 +524,10 @@ class User < ApplicationRecord
     end
   end
 
+  def purchased_cbe?(cbe_id)
+    orders.cbe_by_user(id, cbe_id).any?
+  end
+
   def change_the_password(options)
     if options[:password] == options[:password_confirmation] &&
             options[:password].to_s != '' &&

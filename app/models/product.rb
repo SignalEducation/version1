@@ -24,7 +24,7 @@
 class Product < ApplicationRecord
   include ActionView::Helpers::NumberHelper
 
-  enum product_type: { mock_exam: 0, correction_pack: 1 }
+  enum product_type: { mock_exam: 0, correction_pack: 1, cbe: 2 }
 
   # Constants
 
@@ -36,8 +36,8 @@ class Product < ApplicationRecord
 
   # validation
   validates :name, presence: true
-  validates :mock_exam_id, presence: true, numericality: { only_integer: true,
-                                                           greater_than: 0 }
+  validates :mock_exam_id, numericality: { only_integer: true,
+                                           greater_than: 0 }
   validates :currency_id, presence: true
   validates :price, presence: true
   validates :stripe_guid, presence: true, uniqueness: true, on: :update

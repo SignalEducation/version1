@@ -3,33 +3,31 @@
 module Admin
   class ExercisesController < ApplicationController
     before_action :logged_in_required
-    before_action do
-      ensure_user_has_access_rights(%w[exercise_corrections_access])
-    end
+    before_action { ensure_user_has_access_rights(%w[exercise_corrections_access]) }
     before_action :set_user, only: %i[index new create]
     before_action :set_exercise, only: %i[show edit update]
-
-    layout 'management'
+    before_action :management_layout
 
     def index
       @filters = { state: 'submitted', product: '', corrector: '', search: '' }
-      @exercises = @user ? @user.exercises : Exercise.all
 
       if request.post?
+        @exercises = Exercise.where(nil)
+
         filtering_params(params).each do |key, value|
           @exercises = @exercises.public_send(key, value) if value.present?
           @filters[key] = value
         end
 
         case params[:state]
-        when 'returned', 'all', 'pending'
+        when 'returned', 'all'
           @exercises = @exercises.order(created_at: :desc)
         else
           @exercises = @exercises.order(created_at: :asc)
         end
         @exercises = @exercises.paginate(per_page: 50, page: params[:page])
       else
-        @exercises = @exercises.with_state(:submitted).
+        @exercises = Exercise.with_state(:submitted).
                        order(created_at: :asc).
                        paginate(per_page: 50, page: params[:page])
       end

@@ -33,11 +33,6 @@ describe Product do
   it { should have_many(:orders) }
 
   # validation
-  it { should validate_presence_of(:name) }
-
-  it { should validate_presence_of(:mock_exam_id) }
-  it { should validate_numericality_of(:mock_exam_id) }
-
   it { should validate_presence_of(:currency_id) }
 
   it { should validate_presence_of(:price) }

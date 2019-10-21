@@ -17,14 +17,12 @@
 
 
 # Ignore all logfiles and tempfiles.
-/spec/tmp
-/public/system
-
-# Ignore all logfiles and tempfiles.
 /log/*
 /tmp/*
 !/log/.keep
 !/tmp/.keep
+/spec/tmp
+/public/system
 
 # Ignore uploaded files in development
 /storage/*
@@ -51,6 +49,9 @@ config/secrets.yml
 # Mac file managment stuff
 .DS_Store
 
+# Foreman proc file
+Procfile
+
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
@@ -75,7 +76,12 @@ TAGS
 
 # webpacker compiled files
 public/packs/*
-
+public/packs-test/*
 
 # redis db
 dump.rdb
+
+#eslint config file
+.eslintrc.js
+
+package-lock.json

@@ -74,6 +74,8 @@ gem 'stackprof'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
+gem 'webpacker', '~> 3.5'
+gem 'rack-cors'
 
 # Environment-specific gems
 
@@ -100,7 +102,7 @@ group :development, :test do
   gem 'rubocop-performance' # rubocop lint
   gem 'rubocop-rails' # rubocop lint
   gem 'ultrahook' # allows incoming webhooks from stripe
-  gem 'faker'
+  gem 'faker', '~> 2.1.2'
 end
 
 group :test do

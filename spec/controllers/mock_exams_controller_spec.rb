@@ -22,7 +22,6 @@
 require 'rails_helper'
 
 describe MockExamsController, type: :controller do
-
   let(:content_management_user_group) { FactoryBot.create(:content_management_user_group) }
   let(:content_management_user)       { FactoryBot.create(:content_management_user, user_group_id: content_management_user_group.id) }
   let!(:exam_body)                    { FactoryBot.create(:exam_body) }
@@ -78,7 +77,7 @@ describe MockExamsController, type: :controller do
       end
 
       it 'should report error for invalid params' do
-        post :create, params: { mock_exam: {valid_params.keys.first => ''} }
+        post :create, params: { mock_exam: { valid_params.keys.first => '' } }
         expect_create_error_with_model('mock_exam')
       end
     end
@@ -97,7 +96,7 @@ describe MockExamsController, type: :controller do
       end
 
       it 'should reject invalid params' do
-        put :update, params: { id: mock_exam_1.id, mock_exam: {valid_params.keys.first => ''} }
+        put :update, params: { id: mock_exam_1.id, mock_exam: { valid_params.keys.first => '' } }
         expect_update_error_with_model('mock_exam')
         expect(assigns(:mock_exam).id).to eq(mock_exam_1.id)
       end
@@ -121,7 +120,5 @@ describe MockExamsController, type: :controller do
         expect_delete_success_with_model('mock_exam', mock_exams_url)
       end
     end
-
   end
-
 end

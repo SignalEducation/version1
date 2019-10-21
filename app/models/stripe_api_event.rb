@@ -251,7 +251,7 @@ class StripeApiEvent < ApplicationRecord
   end
 
   def process_coupon_updated(coupon_code)
-    coupon = Coupon.where(code: coupon_code).first
+    coupon = Coupon.find_by(code: coupon_code)
     if coupon
       coupon.deactivate
       update!(processed: true, processed_at: Time.zone.now, error: false,
