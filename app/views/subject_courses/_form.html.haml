@@ -114,11 +114,16 @@
             .input-group.input-group-lg
               =f.text_field :seo_title, placeholder: t('views.subject_courses.form.seo_title_placeholder'), class: 'form-control'
 
-        .col-sm-6
           .form-group
             =f.label :seo_description, t('views.subject_courses.form.seo_description')
             .input-group.input-group-lg
-              =f.text_area :seo_description, placeholder: t('views.subject_courses.form.seo_description_placeholder'), class: 'form-control'
+              =f.text_field :seo_description, placeholder: t('views.subject_courses.form.seo_description_placeholder'), class: 'form-control'
+
+        .col-sm-6
+          .form-group
+            =f.label :short_description, t('views.subject_courses.form.short_description')
+            .input-group.input-group-lg
+              =f.text_area :short_description, placeholder: t('views.subject_courses.form.short_description_placeholder'), class: 'form-control'
 
       .row.pt-4
         .col-md-12

@@ -13,7 +13,7 @@ RSpec.describe 'library/_course_module' do
         assign(:group, build_stubbed(:group))
         allow(course_module).to receive(:all_content_restricted?).and_return(true)
 
-        render partial: 'library/course_module', locals: { course_module: course_module, counter: 1, current_user: user }
+        render partial: 'library/course_module', locals: { course_module: course_module, counter: 1, count: 1, current_user: user }
 
         expect(rendered).to match /check/
       end
@@ -28,7 +28,7 @@ RSpec.describe 'library/_course_module' do
         allow(course_module).to receive(:all_content_restricted?).and_return(true)
         allow(user).to receive(:valid_subscription_for_exam_body?).and_return(true)
 
-        render partial: 'library/course_module', locals: { course_module: course_module, counter: 1, current_user: user }
+        render partial: 'library/course_module', locals: { course_module: course_module, counter: 1, count: 1, current_user: user }
 
         expect(rendered).to match /check/
       end
@@ -42,7 +42,7 @@ RSpec.describe 'library/_course_module' do
         assign(:group, build_stubbed(:group))
         allow(course_module).to receive(:all_content_restricted?).and_return(true)
 
-        render partial: 'library/course_module', locals: { course_module: course_module, counter: 1, current_user: user }
+        render partial: 'library/course_module', locals: { course_module: course_module, counter: 1, count: 1, current_user: user }
 
         expect(rendered).to match /lock_outline/
       end

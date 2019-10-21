@@ -29,7 +29,7 @@
           .row.row-lg
             -@group.subject_courses.all_active.all_in_order.each do |course|
               .col-lg-6.col-xl-4
-                =link_to library_special_link(course), class: 'card card-horizontal flex-row card-mint' do
+                =link_to library_special_link(course), class: 'card card-horizontal flex-row card-mint', data: { toggle: 'tooltip', placement: 'right', animation: 'true', delay: { "show": 300, "hide": 100 }}, title: "#{course.short_description}" do
                   .card-header.d-flex.justify-content-center.align-items-center
                     %i{"aria-label" => course.icon_label, :role => "img", class: course.icon_label ? course.icon_label : 'budicon-office-bag-c', style: "color: #{course.highlight_colour};"}
 
@@ -97,3 +97,10 @@
 
   =render partial: 'customer_support_section'
 
+
+:javascript
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip({
+      template: '<div class="tooltip tooltip-custom" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
+    })
+  })

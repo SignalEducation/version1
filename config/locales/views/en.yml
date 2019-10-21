@@ -1228,6 +1228,8 @@ en:
         seo_title_placeholder: SEO Title
         seo_description: SEO Description
         seo_description_placeholder: SEO Description
+        short_description: Short Description
+        short_description_placeholder: Tooltip Hover Text
 
       index:
         h1: Courses
