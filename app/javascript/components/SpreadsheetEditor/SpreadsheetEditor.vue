@@ -170,19 +170,18 @@
           />
         </div>
       </div>
-      <div class="formula-row">
-        <div class="cell-number">
-          <span>{{ selectedCell }}</span>
-        </div>
-        <div class="formula-box"></div>
-      </div>
+      <FormulaBar
+        :selectedCellRow="selectedCellRow"
+        :selectedCellCol="selectedCellCol"
+        :selectedCellReference="selectedCell"
+        :selectedCellData="selectedCellData"
+        @formula-box-focussed="formulaBoxFocussed"
+        @formula-updated="formulaUpdated"
+      />
     </div>
     <wj-flex-sheet :initialized="initializeFlexSheet" :isTabHolderVisible="false">
       <wj-sheet :alternating-row-step="0"></wj-sheet>
     </wj-flex-sheet>
-
-    <!-- Current sheet view -->
-    <div id="tableHost"></div>
   </div>
 </template>
 
@@ -197,11 +196,13 @@
   import { UndoStack } from '@grapecity/wijmo.undo';
   import './SpreadsheetEditor.scss';
   import DropDownSelect from "../../lib/DropDownSelect";
+  import FormulaBar from './components/FormulaBar.vue';
   import getData from "./data";
 
   export default {
     components: {
       DropDownSelect,
+      FormulaBar,
     },
     props: {
       initialData: {
@@ -218,9 +219,12 @@
         }
       },
     },
-    data: function() {
+    data() {
       return {
+        selectedCellRow: null,
+        selectedCellCol: null,
         selectedCell: '',
+        selectedCellData: '',
         copyString: '',
         undoStack:  null,
         resetModalIsOpen: false,
@@ -270,6 +274,12 @@
       };
     },
     methods: {
+      formulaBoxFocussed (row, col) {
+        this.flex.startEditing(true, row, col, false);
+      },
+      formulaUpdated(row, col, value) {
+        this.flex.cells.setCellData(row, col, value);
+      },
       showResetModal () {
         this.resetModalIsOpen = true;
       },
@@ -462,6 +472,9 @@
           const colName = flexSheet.columnHeaders.getCellData(0, sel.leftCol);
           const rowName = flexSheet.rowHeaders.getCellData(sel.topRow, 0);
           this.selectedCell = `${ colName }${ rowName }`;
+          this.selectedCellRow = sel.topRow;
+          this.selectedCellCol = sel.leftCol;
+          this.selectedCellData = flexSheet.cells.getCellData(sel.topRow, sel.leftCol);
 
           this.fontIdx = fontIdx;
           this.fontSizeIdx = fontSizeIdx;
