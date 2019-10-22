@@ -24,27 +24,32 @@ const actions = {
   startUserCbeData(context, newData) {
     context.commit('setUserCbeData', newData);
   },
+  recordUserLog(context, newData) {
+    context.commit('setUserLog', newData);
+  },
   recordAnswer(context, newData) {
     context.commit('setAnswerData', newData);
   },
 };
 
-const examPageObject = (description, type, id) => ({
+const examPageObject = (description, type, param, state = 'Unseen') => ({
   description,
-  state: 'Unseen',
+  state,
   flagged: false,
   type,
-  param: id,
+  param,
 });
 
 const functions = {
   reviewPageLinks(sections) {
     const examPages = [];
+    let page = 0;
 
     sections.forEach((section) => {
-      examPages.push(examPageObject(section.name, 'sections', section.id));
+      examPages.push(examPageObject(section.name, 'sections', section.id, null));
       section.questions.forEach((question) => {
-        examPages.push(examPageObject(question.kind, 'questions', question.id));
+        page += 1;
+        examPages.push(examPageObject(`Question ${page}`, 'questions', question.id));
       });
     });
 
@@ -57,6 +62,9 @@ const mutations = {
     state.user_cbe_data.cbe_id = newDat.cbe_id;
     state.user_cbe_data.user_id = newDat.user_id;
     state.user_cbe_data.exam_pages = functions.reviewPageLinks(newDat.cbe_data.sections);
+  },
+  setUserLog(state, id) {
+    state.user_cbe_data.user_log_id = id;
   },
   setAnswerData(state, question) {
     state.user_cbe_data.questions[question.id] = question;

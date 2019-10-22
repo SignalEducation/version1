@@ -117,4 +117,51 @@ RSpec.describe 'Api::V1::Cbe::UsersLogController', type: :request do
       end
     end
   end
+
+  # update
+  describe 'post /api/v1/cbes/#cbe_id/users_log/:id' do
+    context 'create a valid UserLog' do
+      let(:user_log)       { create(:cbe_user_log, :with_answers, :started, cbe: cbe, user: user) }
+      let!(:update_params) { attributes_for(:cbe_user_log, :finished) }
+
+      before do
+        patch "/api/v1/cbes/#{cbe.id}/users_log/#{user_log.id}", params: { cbe_user_log: update_params }
+      end
+
+      it 'returns HTTP status 200' do
+        expect(response).to have_http_status 200
+      end
+
+      it 'returns the user log json data' do
+        body = JSON.parse(response.body)
+
+        expect(body['status']).to eq('finished')
+        expect([body.keys]).to contain_exactly(%w[id
+                                                  status
+                                                  user
+                                                  answers
+                                                  cbe])
+        expect(body['answers'].map { |a| a['text'] }).to include(user_log.answers.sample.content['text'])
+      end
+    end
+
+    context 'try to create a invalid user log' do
+      let(:user_log)       { create(:cbe_user_log, :with_answers, :started, cbe: cbe, user: user) }
+      let!(:update_params) { attributes_for(:cbe_user_log, user_id: nil, cbe_id: nil ) }
+
+      before do
+        patch "/api/v1/cbes/#{cbe.id}/users_log/#{user_log.id}", params: { cbe_user_log: update_params }
+      end
+
+      it 'returns HTTP status 422' do
+        expect(response).to have_http_status 422
+      end
+
+      it 'returns empty data' do
+        body = JSON.parse(response.body)
+
+        expect(body['errors']).to eq('user' => ['must exist'], 'cbe' => ['must exist'], 'cbe_id' => ['can\'t be blank'])
+      end
+    end
+  end
 end

@@ -20,6 +20,14 @@ module Api
           end
         end
 
+        def update
+          @user_log = ::Cbe::UserLog.find(params[:id])
+
+          unless @user_log.update(permitted_params)
+            render json: { errors: @user_log.errors }, status: :unprocessable_entity
+          end
+        end
+
         private
 
         def set_user_log

@@ -52,7 +52,6 @@ export default {
   watch: {
     cbe_data: {
       handler() {
-        console.log(this.cbe_data);
         this.$store.dispatch('userCbe/startUserCbeData', {
           cbe_id: this.cbe_id,
           user_id: this.userId,
@@ -60,13 +59,9 @@ export default {
         });
       }
     },
-    '$route': {
-      handler: function(route) {
-        if (route.name === 'sections' || route.name === 'questions') {
-          this.updateExamPageState(route)
-        }
-      },
-    }
+    $route(to, from) {
+      this.updateExamPageState(to)
+    },
   },
   mounted() {
     this.$store.dispatch('cbe/getCbe', this.cbe_id);
@@ -74,7 +69,7 @@ export default {
   methods: {
     submitExam: function() {
       axios
-        .post(`/api/v1/cbes/${this.cbe_id}/users_log`, {
+        .patch(`/api/v1/cbes/${this.cbe_id}/users_log/${this.user_cbe_data.user_log_id}`, {
           cbe_user_log: this.formatedData()
         })
         .then(response => {
@@ -98,15 +93,17 @@ export default {
       return data;
     },
     updateExamPageState: function(route) {
-      let id = route.params.id;
-      let type = route.name;
+      if (route.name === 'sections' || route.name === 'questions') {
+        let id = route.params.id;
+        let type = route.name;
 
-      this.user_cbe_data.exam_pages.forEach(page => {
-        if (page.type == "questions" && page.param == id && page.state == 'Unseen') {
-          page.state = "Seen";
-        }
-      });
-    }
+        this.user_cbe_data.exam_pages.forEach(page => {
+          if (page.type == "questions" && page.param == id && page.state == 'Unseen') {
+            page.state = "Seen";
+          }
+        });
+      }
+    },
   },
 };
 </script>

@@ -14,7 +14,7 @@ import CbeEdit from '../components/cbe/admin/Edit.vue';
 //
 // User View
 //
-import CbeHome from '../components/cbe/Home.vue';
+import CbeHome from '../components/cbe/UserHome.vue';
 // ##############
 
 Vue.use(BootstrapVue);

@@ -38,7 +38,6 @@ export default {
       var object_link = [];
 
       object_link = this.mapObject(object_link, this.link_data.introduction_pages, 'introduction_pages')
-      object_link.push({ name: 'agreement' })
       object_link = this.mapObject(object_link, this.link_data.sections, 'sections')
       object_link.push({ name: 'review', params: { cbe_id: this.link_data.id } })
 

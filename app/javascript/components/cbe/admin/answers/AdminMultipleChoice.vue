@@ -83,12 +83,6 @@ export default {
       },
     },
   },
-  watch: {
-    answersArray(newValue, oldValue) {
-      console.log(oldValue);
-      console.log(newValue);
-    }
-  },
   methods: {
     removeAt(idx) {
       this.answersArray.splice(idx, 1);
