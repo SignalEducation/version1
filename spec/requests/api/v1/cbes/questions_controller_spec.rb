@@ -204,8 +204,9 @@ RSpec.describe 'Api::V1::Cbe::QuestionsController', type: :request do
 
   describe 'patch /api/v1/questions/:id' do
     context 'update a valid CBE questions' do
-      let(:question) { create(:cbe_question, :with_section) }
-      let!(:update_params) { FactoryBot.attributes_for(:cbe_question, kind: 'multiple_choice') }
+      let(:question)       { create(:cbe_question, :with_section, :with_answers) }
+      let(:answers)        { attributes_for_list(:cbe_answer, 3) }
+      let!(:update_params) { FactoryBot.attributes_for(:cbe_question, kind: 'multiple_choice', answers_attributes: answers) }
 
       before do
         patch "/api/v1/questions/#{question.id}", params: { question: update_params }
@@ -232,12 +233,12 @@ RSpec.describe 'Api::V1::Cbe::QuestionsController', type: :request do
                                                   answers
                                                   scenario])
       end
-
     end
 
     context 'try to update an invalid CBE question' do
       let(:question) { create(:cbe_question, :with_section) }
-      let!(:update_params) { FactoryBot.attributes_for(:cbe_question, content: '') }
+      let(:answers)        { attributes_for_list(:cbe_answer, 3) }
+      let!(:update_params) { FactoryBot.attributes_for(:cbe_question, content: '', answers_attributes: answers) }
 
       before do
         question.content = nil
@@ -252,10 +253,9 @@ RSpec.describe 'Api::V1::Cbe::QuestionsController', type: :request do
       it 'returns empty data' do
         body = JSON.parse(response.body)
 
-        expect(body['errors']).to eq("content"=>["can't be blank"])
+        expect(body['errors']).to eq('content'=>["can't be blank"])
       end
     end
-
   end
 
   context 'for cbe_scenarios' do
@@ -351,7 +351,7 @@ RSpec.describe 'Api::V1::Cbe::QuestionsController', type: :request do
         it 'returns empty data' do
           body = JSON.parse(response.body)
 
-          expect(body['errors']).to eq('content'=>["can't be blank"])
+          expect(body['errors']).to eq('content' => ["can't be blank"])
         end
       end
     end

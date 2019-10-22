@@ -13,5 +13,9 @@ FactoryBot.define do
     trait :with_scenario do
       association :scenario, :with_section, factory: :cbe_scenario
     end
+
+    trait :with_answers do
+      answers { build_list :cbe_answer, 3 }
+    end
   end
 end
