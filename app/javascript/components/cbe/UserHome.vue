@@ -17,12 +17,10 @@
       <footer>
         <b-navbar class="nav nav-underline bg-cbe-gray">
           <b-navbar-nav>
-            <b-nav-text
+            <CbeResources
               v-if="['sections', 'questions'].includes(this.$route.name)"
-              class="help-icon"
-            >
-              Help
-            </b-nav-text>
+              :cbe_data="cbe_data"
+            />
           </b-navbar-nav>
           <b-navbar-nav v-if="$route.name == 'review'">
             <b-nav-text
@@ -44,11 +42,13 @@
 <script>
 import axios from 'axios';
 import { mapGetters } from 'vuex';
+import CbeResources from './CbeResources.vue';
 import NavBar from './NavBar.vue';
 import NavPagination from './NavPagination.vue';
 
 export default {
   components: {
+    CbeResources,
     NavBar,
     NavPagination,
   },

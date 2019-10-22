@@ -28,6 +28,7 @@ RSpec.describe 'Api::V1::CbesController', type: :request do
                                                             active
                                                             score
                                                             introduction_pages
+                                                            resources
                                                             sections
                                                             questions
                                                             subject_course
@@ -73,6 +74,7 @@ RSpec.describe 'Api::V1::CbesController', type: :request do
                                                 active
                                                 score
                                                 introduction_pages
+                                                resources
                                                 sections
                                                 questions
                                                 subject_course
@@ -108,6 +110,7 @@ RSpec.describe 'Api::V1::CbesController', type: :request do
                                                   active
                                                   score
                                                   introduction_pages
+                                                  resources
                                                   sections
                                                   questions
                                                   subject_course
@@ -161,6 +164,7 @@ RSpec.describe 'Api::V1::CbesController', type: :request do
                                                   active
                                                   score
                                                   introduction_pages
+                                                  resources
                                                   sections
                                                   questions
                                                   subject_course
