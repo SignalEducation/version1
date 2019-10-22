@@ -31,7 +31,7 @@
         default: '',
       },
       selectedCellData: {
-        type: String,
+        type: [Number, String, Date],
         default: '',
       }
     },
