@@ -60,7 +60,7 @@ class SubjectCourseResourcesController < ApplicationController
 
   def get_variables
     @subject_course_resource = SubjectCourseResource.find_by(id: params[:id]) if params[:id].to_i > 0
-    @subject_courses = SubjectCourse.all_active.all_in_order
+    @subject_courses = SubjectCourse.all_in_order
   end
 
   def allowed_params

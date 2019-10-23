@@ -77,7 +77,7 @@ class HomePagesController < ApplicationController
                                       :header_h1, :header_paragraph,
                                       :registration_form_heading, :login_form_heading,
                                       :footer_option, :video_guid, :header_h3,
-                                      :background_image, :usp_section,
+                                      :background_image, :usp_section, :stats_content,
                                       blog_posts_attributes: [:id, :home_page_id,
                                                               :title, :description,
                                                               :url, :_destroy,

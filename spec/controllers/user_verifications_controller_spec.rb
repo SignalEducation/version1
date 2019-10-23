@@ -8,6 +8,10 @@ RSpec.describe UserVerificationsController, :type => :controller do
   let!(:student_user_group ) { FactoryBot.create(:student_user_group ) }
   let!(:unverified_student_user) { FactoryBot.create(:unverified_user, user_group_id: student_user_group.id) }
   let!(:unverified_trial_student_access) { FactoryBot.create(:unverified_trial_student_access, user_id: unverified_student_user.id) }
+  let!(:exam_body_1) { FactoryBot.create(:exam_body) }
+  let!(:group_1) { FactoryBot.create(:group) }
+  let!(:subject_course_1)  { FactoryBot.create(:active_subject_course, group_id: group_1.id, exam_body_id: exam_body_1.id) }
+
 
   #TODO - attention needed here
   context 'Non-verified user' do
@@ -35,7 +39,7 @@ RSpec.describe UserVerificationsController, :type => :controller do
       end
 
       it 'returns success when given a valid code' do
-        get :account_verified
+        get :account_verified, params: { group_url: group_1.name_url }
         expect(response.status).to eq(200)
         expect(response).to render_template(:account_verified)
         expect(flash[:error]).to be_nil

@@ -118,6 +118,11 @@
               .input-group.input-group-lg
                 =f.text_field :login_form_heading, placeholder: t('views.home_pages.form.login_form_heading_placeholder'), class: 'form-control'
 
+            .form-group
+              =f.label :stats_content, t('views.home_pages.form.stats_content')
+              .input-group.input-group-lg
+                =f.text_area :stats_content, placeholder: t('views.home_pages.form.stats_content_placeholder'), class: 'form-control'
+
 
   =render partial: 'fields_for_student_testimonials', locals: {f: f}
   =render partial: 'fields_for_blog_posts', locals: {f: f}
