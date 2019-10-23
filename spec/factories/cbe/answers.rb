@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :cbe_answer, class: Cbe::Answer do
     kind    { Cbe::Answer.kinds.keys.sample }
-    content { Faker::Lorem.sentence }
+    content { { text: Faker::Lorem.sentence, correct: [true, false].sample } }
 
     trait :with_question do
       association :question, :with_section, factory: :cbe_question
