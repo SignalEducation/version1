@@ -13,7 +13,7 @@ class Cbe
     has_many :answers, class_name: 'Cbe::Answer', foreign_key: 'cbe_question_id',
                        inverse_of: :question, dependent: :destroy
 
-    accepts_nested_attributes_for :answers
+    accepts_nested_attributes_for :answers, allow_destroy: true
 
     # validations
     validates :content, :kind, :score, presence: true

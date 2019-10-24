@@ -3,173 +3,39 @@
 <template>
   <div class="container-fluid spreadsheetwrapper">
     <div class="well well-lg controls">
-      <div class="btn-row top">
-        <div class="btn-group">
-          <DropDownSelect
-            v-bind:buttonText="'Edit'"
-            v-bind:dropdownOptions="[['Undo', 'undo'], ['Redo', 'redo'], ['Cut', 'cut'], ['Copy', 'copy'], ['Paste', 'paste'], ['Select All', 'select-all']]"
-            @selected-value-updated="editActionCalled"
-          />
-          <DropDownSelect
-            v-bind:buttonText="'Format'"
-            v-bind:dropdownOptions="[['Bold', 'bold'], ['Italic', 'italic'], ['Underline', 'underline']]"
-            @selected-value-updated="formatActionCalled"
-          />
-        </div>
-      </div>
+      <FileBar
+        @edit-action-called="editActionCalled"
+        @format-action-called="formatActionCalled"
+      />
 
-      <div class="btn-row">
-        <div class="btn-group">
-          <button
-            type="button"
-            :class="'btn btn-default reset'"
-            @click="showResetModal"
-          />
-          <div ref="reset-spreadsheet" class="modal" v-show="resetModalIsOpen">
-            <div class="modal-content">
-              <div class="modal-header bg-cbe-gray">
-                <span class="title">
-                  Reset Spreadsheet
-                </span>
+      <CopyPasteBar
+        :cut="cut"
+        :copy="copy"
+        :paste="paste"
+        :canUndo="flex.undoStack && flex.undoStack.canUndo"
+        :canRedo="flex.undoStack && flex.undoStack.canRedo"
+        :undo="() => flex.undo()"
+        :redo="() => flex.redo()"
+        @reset-spreadsheet="resetSpreadsheet"
+      />
+      
+      <FormatBar
+        :applyBoldStyle="() => applyBoldStyle()"
+        :applyItalicStyle="() => applyItalicStyle()"
+        :applyUnderlineStyle="() => applyUnderlineStyle()"
+        :fontSizeList="fontSizeList"
+        :isBold="isBold"
+        :isItalic="isItalic"
+        :isUnderline="isUnderline"
+        :fontSizeIdx="fontSizeIdx"
+        :textAlign="textAlign"
+        @apply-cell-text-align="applyCellTextAlign"
+        @font-size-changed="fontSizeChanged"
+        @number-format-changed="numberFormatChanged"
+        @set-background-color="(color) => flex.applyCellsStyle({ backgroundColor: color })"
+        @set-font-color="(color) => flex.applyCellsStyle({ color: color })"
+      />
 
-                <span
-                  class="close"
-                  @click="resetModalIsOpen = !resetModalIsOpen"
-                >
-                  &times;
-                </span>
-              </div>
-
-              <div class="modal-internal-content">
-                <div class="d-block">
-                  <p>
-                    Resetting the spreadsheet will revert any changes you have made so far.
-                    Are you sure you want to reset the spreadsheet?
-                  </p>
-                  <b-button
-                    variant="outline-success"
-                    @click="resetModalIsOpen = !resetModalIsOpen"
-                  >
-                    Cancel
-                  </b-button>
-                  <b-button
-                    variant="outline-danger"
-                    @click="resetSpreadsheet"
-                  >
-                    Reset Sheet
-                  </b-button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <button
-            type="button"
-            v-bind:class="['btn btn-default cut']"
-            @click="cut()" />
-          <button
-            type="button"
-            v-bind:class="['btn btn-default copy']"
-            @click="copy()" />
-          <button
-            type="button"
-            v-bind:class="['btn btn-default paste']"
-            @click="paste()" />
-          <button
-            type="button"
-            v-bind:class="['btn btn-default undo']"
-            :disabled="flex.undoStack && !flex.undoStack.canUndo"
-            @click="flex.undo()" />
-          <button
-            type="button"
-            v-bind:class="['btn btn-default redo']"
-            :disabled="flex.undoStack && !flex.undoStack.canRedo"
-            @click="flex.redo()" />
-        </div>
-      </div>
-      <div class="btn-row">
-        <wj-combo-box
-          style="width:80px"
-          :itemsSource="fontSizeList"
-          :selectedIndex="fontSizeIdx"
-          displayMemberPath="name"
-          selectedValuePath="value"
-          :isEditable="false"
-          :selectedIndexChanged="fontSizeChanged">
-        </wj-combo-box>
-        <div class="btn-group">
-          <button
-            type="button"
-            v-bind:class="['btn btn-default bold', { active: isBold }]"
-            @click="applyBoldStyle()" />
-          <button
-            type="button"
-            v-bind:class="['btn btn-default italic', { active: isItalic }]"
-            @click="applyItalicStyle()" />
-          <button
-            type="button"
-            v-bind:class="['btn btn-default underline', { active: isUnderline }]"
-            @click="applyUnderlineStyle()" />
-          <button
-            type="button"
-            class="btn btn-default fontcolor"
-            @click="showColorPicker($event, false)" />
-          <button
-            type="button"
-            class="btn btn-default fillcolor"
-            @click="showColorPicker($event, true)" />
-          <wj-color-picker
-            style="display:none;position:fixed;z-index:100"
-            :initialized="colorPickerInit">
-          </wj-color-picker>
-          <button
-            type="button"
-            v-bind:class="['btn btn-default left-align', { active: textAlign == 'left' }]"
-            @click="applyCellTextAlign('left')" />
-          <button
-            type="button"
-            v-bind:class="['btn btn-default center-align', { active: textAlign == 'center' }]"
-            @click="applyCellTextAlign('center')" />
-          <button
-            type="button"
-            v-bind:class="['btn btn-default right-align', { active: textAlign == 'right' }]"
-            @click="applyCellTextAlign('right')" />
-
-          <DropDownSelect
-            v-bind:iconClass="'number-format'"
-            v-bind:dropdownOptions="[['General', 'g'], ['Custom', 'r'], ['#0.00', 'f2'], ['#,##0', 'n0'], ['#,##0.00', 'n2']]"
-            @selected-value-updated="numberFormatChanged"
-          />
-
-          <DropDownSelect
-            v-bind:iconClass="'currency'"
-            v-bind:dropdownOptions="currencyOptions"
-            @selected-value-updated="numberFormatChanged"
-          />
-
-          <DropDownSelect
-            v-bind:iconClass="'percent'"
-            v-bind:dropdownOptions="[['0%', 'p0'], ['0.00%', 'p2'], ['0.0%', 'p1']]"
-            @selected-value-updated="numberFormatChanged"
-          />
-
-          <DropDownSelect
-            v-bind:iconClass="'fraction'"
-            v-bind:dropdownOptions="[['# ?/?', '#/#'], ['# ??/??', '##/##']]"
-            @selected-value-updated="numberFormatChanged"
-          />
-
-          <DropDownSelect
-            v-bind:iconClass="'datetime'"
-            v-bind:dropdownOptions="[
-              ['M/d/yyyy', 'M/d/yyyy'], ['d-MMM-yy', 'd-MMM-yy'], ['d-MMM', 'd-MMM'],
-              ['MMM-yy', 'MMM-yy'], ['h:mm AM/PM', 'h:mm tt'], ['h:mm:ss AM/PM', 'h:mm:ss tt'],
-              ['h:mm', 'h:mm'], ['h:mm:ss', 'h:mm:ss'], ['M/d/yyyy h:mm', 'M/d/yyyy h:mm'],
-              ['mm:ss', 'mm:ss']
-            ]"
-            v-on:selected-value-updated="numberFormatChanged"
-          />
-        </div>
-      </div>
       <FormulaBar
         :selectedCellRow="selectedCellRow"
         :selectedCellCol="selectedCellCol"
@@ -194,14 +60,20 @@
   import '@grapecity/wijmo.vue2.input';
   import '@grapecity/wijmo.vue2.grid.sheet';
   import { UndoStack } from '@grapecity/wijmo.undo';
-  import './SpreadsheetEditor.scss';
-  import DropDownSelect from "../../lib/DropDownSelect";
-  import FormulaBar from './components/FormulaBar.vue';
   import getData from "./data";
+
+  import CopyPasteBar from './components/CopyPasteBar.vue';
+  import FormatBar from './components/FormatBar.vue';
+  import FormulaBar from './components/FormulaBar.vue';
+  import FileBar from './components/FileBar.vue';
+
+  import './SpreadsheetEditor.scss';
 
   export default {
     components: {
-      DropDownSelect,
+      CopyPasteBar,
+      FileBar,
+      FormatBar,
       FormulaBar,
     },
     props: {
@@ -226,27 +98,14 @@
         selectedCell: '',
         selectedCellData: '',
         copyString: '',
-        undoStack:  null,
-        resetModalIsOpen: false,
-        currencyOptions: [
-          ['General', 'c'], ['Custom', 'r'], ["$#,##0", "\$#,##0"], ['$#,##0.00', "\$#,##0.00"]
-        ],
-        fonts: [
-          { name: 'Arial', value: 'Arial, Helvetica, sans-serif' },
-          { name: 'Arial Black', value: '"Arial Black", Gadget, sans-serif' },
-          { name: 'Comic Sans MS', value: '"Comic Sans MS", cursive, sans-serif' },
-          { name: 'Courier New', value: '"Courier New", Courier, monospace' },
-          { name: 'Georgia', value: 'Georgia, serif' },
-          { name: 'Impact', value: 'Impact, Charcoal, sans-serif' },
-          { name: 'Lucida Console', value: '"Lucida Console", Monaco, monospace' },
-          { name: 'Lucida Sans Unicode', value: '"Lucida Sans Unicode", "Lucida Grande", sans-serif' },
-          { name: 'Palatino Linotype', value: '"Palatino Linotype", "Book Antiqua", Palatino, serif' },
-          { name: 'Tahoma', value: 'Tahoma, Geneva, sans-serif' },
-          { name: 'Segoe UI', value: '"Segoe UI", "Roboto", sans-serif' },
-          { name: 'Times New Roman', value: '"Times New Roman", Times, serif' },
-          { name: 'Trebuchet MS', value: '"Trebuchet MS", Helvetica, sans-serif' },
-          { name: 'Verdana', value: 'Verdana, Geneva, sans-serif' }
-        ],
+        format: '0',
+        fontSizeIdx: 5,
+        isBold: false,
+        isItalic: false,
+        isUnderline: false,
+        textAlign: 'left',
+        _updatingSelection: false,
+        flex: {},
         fontSizeList: [
           { name: '8', value: '8px' },
           { name: '9', value: '9px' },
@@ -260,17 +119,6 @@
           { name: '22', value: '22px' },
           { name: '24', value: '24px' }
         ],
-        format: '0',
-        fontIdx: 0,
-        fontSizeIdx: 5,
-        isBold: false,
-        isItalic: false,
-        isUnderline: false,
-        textAlign: 'left',
-        _updatingSelection: false,
-        _applyFillColor: false,
-        flex: {},
-        colorPicker: {},
       };
     },
     methods: {
@@ -279,9 +127,6 @@
       },
       formulaUpdated(row, col, value) {
         this.flex.cells.setCellData(row, col, value);
-      },
-      showResetModal () {
-        this.resetModalIsOpen = true;
       },
       formatActionCalled (action) {
         switch (action) {
@@ -371,30 +216,10 @@
           this.flex.applyCellsStyle({ fontFamily: sender.selectedItem.value });
         }
       },
-      fontSizeChanged(sender) {
-        if (sender.selectedItem && !this._updatingSelection) {
-          this.flex.applyCellsStyle({ fontSize: sender.selectedItem.value });
+      fontSizeChanged(value) {
+        if (!this._updatingSelection) {
+          this.flex.applyCellsStyle({ fontSize: value });
         }
-      },
-      colorPickerInit(colorPicker) {
-        let blurEvt = /firefox/i.test(window.navigator.userAgent) ? 'blur' : 'focusout';
-        colorPicker.hostElement.addEventListener(blurEvt, () => {
-          setTimeout(() => {
-            if (!colorPicker.containsFocus()) {
-              this._applyFillColor = false;
-              colorPicker.hostElement.style.display = 'none';
-            }
-          }, 0);
-        });
-        colorPicker.valueChanged.addHandler(() => {
-          if (this._applyFillColor) {
-            this.flex.applyCellsStyle({ backgroundColor: colorPicker.value });
-          } else {
-            this.flex.applyCellsStyle({ color: colorPicker.value });
-          }
-        });
-
-        this.colorPicker = colorPicker;
       },
       formatChanged(sender) {
         if (sender.selectedIndex >= 0) {
@@ -417,17 +242,6 @@
         this.flex.applyCellsStyle({ fontStyle: this.isItalic ? 'none' : 'italic' });
         this.isItalic = !this.isItalic;
       },
-      showColorPicker(e, isFillColor) {
-        let offset = this._cumulativeOffset(e.target),
-            he = this.colorPicker.hostElement;
-
-        he.style.display = 'inline';
-        he.style.left = offset.left + 'px';
-        he.style.top = offset.top - he.clientHeight - 5 + 'px';
-        he.focus();
-
-        this._applyFillColor = isFillColor;
-      },
       commitUpdatedData(flexSheet){
         const cellsJson = this._getJsonData(flexSheet);
         this.$emit('spreadsheet-updated', cellsJson);
@@ -435,13 +249,11 @@
       resetSpreadsheet() {
         this._setInitialData(this.flex);
         this.$emit('spreadsheet-updated', this.spreadsheetData);
-        this.resetModalIsOpen = false;
       },
       _updateSelection(flexSheet, sel) {
         let row = flexSheet.rows[sel.row],
             rCnt = flexSheet.rows.length,
             cCnt = flexSheet.columns.length,
-            fontIdx = 0,
             fontSizeIdx = 5;
 
         this._updatingSelection = true;
@@ -452,7 +264,6 @@
               cellFormat = null;
 
           if (cellStyle) {
-            fontIdx = this._checkFontfamily(cellStyle.fontFamily);
             fontSizeIdx = this._checkFontSize(cellStyle.fontSize);
             cellFormat = cellStyle.format;
           }
@@ -476,7 +287,6 @@
           this.selectedCellCol = sel.leftCol;
           this.selectedCellData = flexSheet.cells.getCellData(sel.topRow, sel.leftCol);
 
-          this.fontIdx = fontIdx;
           this.fontSizeIdx = fontSizeIdx;
           
           let state = flexSheet.getSelectionFormatState();
@@ -487,22 +297,6 @@
         }
 
         this._updatingSelection = false;
-      },
-      _checkFontfamily(fontFamily) {
-        let fonts = this.fonts;
-
-        if (!fontFamily) {
-          return 0;
-        }
-
-        for (let fontIndex = 0; fontIndex < fonts.length; fontIndex++) {
-          let font = fonts[fontIndex];
-          if (font.name === fontFamily || font.value === fontFamily) {
-            return fontIndex;
-          }
-        }
-
-        return 0;
       },
       _checkFontSize(fontSize) {
         let sizeList = this.fontSizeList;
@@ -519,28 +313,6 @@
         }
 
         return 5;
-      },
-      _cumulativeOffset(element) {
-        let top = 0,
-            left = 0,
-            scrollTop = 0,
-            scrollLeft = 0;
-
-        do {
-          top += element.offsetTop || 0;
-          left += element.offsetLeft || 0;
-          scrollTop += element.scrollTop || 0;
-          scrollLeft += element.scrollLeft || 0;
-          element = element.offsetParent;
-        } while (element && !(element instanceof HTMLBodyElement));
-
-        scrollTop += document.body.scrollTop || document.documentElement.scrollTop;
-        scrollLeft += document.body.scrollLeft || document.documentElement.scrollLeft;
-
-        return {
-          top: top - scrollTop,
-          left: left - scrollLeft
-        };
       },
       _clearCellData(cellRange) {
         for (let colIdx = cellRange.leftCol; colIdx < (cellRange.leftCol + cellRange.columnSpan); colIdx += 1) {

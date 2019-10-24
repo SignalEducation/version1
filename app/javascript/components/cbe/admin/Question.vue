@@ -326,6 +326,7 @@ export default {
           .then(response => {
             this.createdQuestion = response.data;
             this.questionDetails.id = this.createdQuestion.id;
+            this.questionDetails.answers_attributes = this.createdQuestion.answers;
             this.$emit('add-question', this.questionDetails);
             this.$emit('update-content', this.TinyEditor);
             this.questionDetails = {};

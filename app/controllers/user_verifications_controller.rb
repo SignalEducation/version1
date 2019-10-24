@@ -15,11 +15,16 @@ class UserVerificationsController < ApplicationController
     elsif @user
       UserSession.create(@user)
       set_current_visit
-      flash[:success] = 'Thank you! Your email is now verified'
       flash[:datalayer_verify] = true
       if @user.preferred_exam_body&.group
-        redirect_to library_special_link(@user.preferred_exam_body.group)
+        if @user.preferred_exam_body&.group == Group.find_by(name: 'CPD')
+          redirect_to registration_onboarding_url(@user.preferred_exam_body.group.name_url)
+        else
+          flash[:success] = 'Thank you! Your email is now verified'
+          redirect_to library_special_link(@user.preferred_exam_body.group)
+        end
       else
+        flash[:success] = 'Thank you! Your email is now verified'
         redirect_to student_dashboard_url
       end
 
@@ -31,7 +36,25 @@ class UserVerificationsController < ApplicationController
 
   def account_verified
     # This is the post email verification page
-    redirect_to root_url unless current_user
+    # redirect_to root_url unless current_user
+
+    @group = Group.find_by(name_url: params[:group_url])
+    seo_title_maker("Welcome to learnsignal #{@group.name}", @group.seo_description, nil)
+
+    @courses = @group.subject_courses.all_active.where(on_welcome_page: true)
+
+    ip_country = IpAddress.get_country(request.remote_ip)
+    country = ip_country ? ip_country : Country.find_by(name: 'United Kingdom')
+    @currency_id = current_user ? current_user.get_currency(country).id : country.try(:currency_id)
+
+    if country && @currency_id
+      @subscription_plan =
+          SubscriptionPlan.where(
+              subscription_plan_category_id: nil, exam_body_id: @group.exam_body_id,
+              payment_frequency_in_months: @group.exam_body.preferred_payment_frequency).
+              includes(:currency).in_currency(@currency_id).all_active.all_in_order.first
+    end
+
   end
 
   def resend_verification_mail

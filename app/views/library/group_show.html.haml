@@ -16,7 +16,15 @@
               .col-lg-6.col-xl-4
                 =link_to library_special_link(course), class: 'card card-horizontal flex-row card-mint', data: { toggle: 'tooltip', placement: 'right', animation: 'true', delay: { "show": 300, "hide": 100 }}, title: "#{course.short_description}" do
                   .card-header.d-flex.justify-content-center.align-items-center
-                    %i{"aria-label" => course.icon_label, :role => "img", class: course.icon_label ? course.icon_label : 'budicon-office-bag-c', style: "color: #{course.highlight_colour};"}
+                    -# TODO - Convert this into partial
+                    -if course.unit_label
+                      .pb-0.d-flex.flex-column.align-items-center
+                        .mb-3.mx-md-2
+                          %i{"aria-label" => course.icon_label, :role => "img", class: course.icon_label ? course.icon_label : 'budicon-office-bag-c', style: "color: #{course.highlight_colour};"}
+                        %p.m-0.text-left.text-md-center{style: "color: #{course.highlight_colour};"}
+                          =course.unit_label
+                    -else
+                      %i{"aria-label" => course.icon_label, :role => "img", class: course.icon_label ? course.icon_label : 'budicon-office-bag-c', style: "color: #{course.highlight_colour};"}
 
                   .card-body.d-flex.flex-column.justify-content-center
                     %small.card-category.mb-2{style: "color: #{course.highlight_colour};"}
