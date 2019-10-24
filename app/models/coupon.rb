@@ -103,13 +103,9 @@ class Coupon < ApplicationRecord
 
   def available_payment_intervals
     intervals = []
-    if monthly_interval
-      intervals << 'Monthly'
-    elsif quarterly_interval
-      intervals << 'Quarterly'
-    elsif yearly_interval
-      intervals << 'Yearly'
-    end
+    intervals << 'Monthly' if monthly_interval
+    intervals << 'Quarterly' if quarterly_interval
+    intervals << 'Yearly' if yearly_interval
     intervals
   end
 

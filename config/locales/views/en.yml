@@ -936,6 +936,8 @@ en:
         login_form_heading_placeholder: Login Form Header text
         video_guid: Video Guid
         video_guid_placeholder: Vimeo Video File Id
+        stats_content: Stats Panel Content
+        stats_content_placeholder: "* seperated values"
 
       index:
         h1: Landing Pages
@@ -1222,6 +1224,8 @@ en:
         quiz_pass_rate_placeholder: Custom Pass Rate for Quizzes
         icon_label: Icon Label
         icon_label_placeholder: Budicon Text Label
+        unit_label: Unit Label
+        unit_label_placeholder: CPD Unit/Hours Label
         category_label: Category Label
         category_label_placeholder: Category Label [Applied Knowledge]
         seo_title: SEO Title
@@ -1230,6 +1234,7 @@ en:
         seo_description_placeholder: SEO Description
         short_description: Short Description
         short_description_placeholder: Tooltip Hover Text
+        on_welcome_page: On Welcome Page
 
       index:
         h1: Courses
