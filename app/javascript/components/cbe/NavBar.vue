@@ -20,12 +20,12 @@
 
     <b-navbar
       class="nav nav-underline bg-cbe-gray"
-      v-if="showNavOptions($route.name)"
+      v-if="showNavOptions(['sections', 'questions'])"
     >
       <b-navbar-nav>
-        <b-nav-text class="symbols-icon">Symbol</b-nav-text>
-        <b-nav-text class="calculator-icon">Calculator</b-nav-text>
-        <CbeScratchPad :user_cbe_data="user_cbe_data" />
+        <!-- <b-nav-text class="symbols-icon">Symbol</b-nav-text>
+        <b-nav-text class="calculator-icon">Calculator</b-nav-text> -->
+        <CbeScratchPad :user_cbe_data="user_cbe_data" v-if="showNavOptions(['questions'])" />
       </b-navbar-nav>
       <b-navbar-nav align="right">
         <CbeFlagToReview :user_cbe_data="user_cbe_data" :type="$route.name" :flagId="$route.params.id" />
@@ -51,10 +51,8 @@ export default {
     user_cbe_data: Object
   },
   methods: {
-    showNavOptions: function(page) {
-      let permitted_pages = ["sections", "questions"];
-
-      return permitted_pages.includes(page);
+    showNavOptions: function(permitted_pages) {
+      return permitted_pages.includes(this.$route.name);
     }
   }
 };
