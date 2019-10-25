@@ -1,6 +1,10 @@
 <template>
   <section class="cbe-section" id="student-cbe">
-    <NavBar :logo="cbe_data.name" :title="cbe_data.name" :user_cbe_data="user_cbe_data" />
+    <NavBar
+      :logo="cbe_data.name"
+      :title="cbe_data.name"
+      :user_cbe_data="user_cbe_data"
+    />
 
     <div class="cbe-content">
       <router-view :id="$route.path" />
@@ -9,11 +13,17 @@
     <div id="cbe-footer">
       <footer>
         <b-navbar class="nav nav-underline bg-cbe-gray">
-          <b-navbar-nav v-if="$route.name != 'review'">
-            <b-nav-text class="help-icon">Help</b-nav-text>
+          <b-navbar-nav>
+            <b-nav-text
+              v-if="['sections', 'questions'].includes(this.$route.name)"
+              class="help-icon"
+              >Help</b-nav-text
+            >
           </b-navbar-nav>
           <b-navbar-nav v-if="$route.name == 'review'">
-            <b-nav-text class="arrow-right-icon" v-on:click="submitExam">End Exam</b-nav-text>
+            <b-nav-text class="arrow-right-icon" v-on:click="submitExam"
+              >End Exam</b-nav-text
+            >
           </b-navbar-nav>
           <b-navbar-nav>
             <NavPagination v-bind:link_data="cbe_data" />
@@ -57,10 +67,10 @@ export default {
           user_id: this.userId,
           cbe_data: this.cbe_data,
         });
-      }
+      },
     },
     $route(to, from) {
-      this.updateExamPageState(to)
+      this.updateExamPageState(to);
     },
   },
   mounted() {
@@ -69,11 +79,14 @@ export default {
   methods: {
     submitExam: function() {
       axios
-        .patch(`/api/v1/cbes/${this.cbe_id}/users_log/${this.user_cbe_data.user_log_id}`, {
-          cbe_user_log: this.formatedData()
-        })
+        .patch(
+          `/api/v1/cbes/${this.cbe_id}/users_log/${this.user_cbe_data.user_log_id}`,
+          {
+            cbe_user_log: this.formatedData(),
+          }
+        )
         .then(response => {
-          window.location.href = `/api/v1/cbes/${this.cbe_id}/users_log/${response.data.id}`;
+          this.$router.push({ name: 'exam_submited' })
         })
         .catch(error => {});
     },
@@ -85,7 +98,7 @@ export default {
         [],
         Object.values(this.user_cbe_data.questions).map(a => a.answers)
       );
-      data.status = "finished";
+      data.status = 'finished';
       data.score = 100;
       data.cbe_id = this.user_cbe_data.cbe_id;
       data.user_id = this.user_cbe_data.user_id;
@@ -98,8 +111,12 @@ export default {
         let type = route.name;
 
         this.user_cbe_data.exam_pages.forEach(page => {
-          if (page.type == "questions" && page.param == id && page.state == 'Unseen') {
-            page.state = "Seen";
+          if (
+            page.type == 'questions' &&
+            page.param == id &&
+            page.state == 'Unseen'
+          ) {
+            page.state = 'Seen';
           }
         });
       }
