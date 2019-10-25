@@ -4434,6 +4434,11 @@ a.card:hover .card-title .card-explanation {
   min-height: 100px;
   background-position: 50% 50%;
 }
+.home-hero-alt-bg.bg-bootcamp {
+  background-image: asset-url('bootcamp-bg.jpg');
+  min-height: 100px;
+  background-position: 50% 50%;
+}
 @media (min-width:768px) {
   .home-hero-alt-bg {
     min-height: auto
