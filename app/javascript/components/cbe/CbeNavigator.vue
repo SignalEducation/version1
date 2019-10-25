@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import CbeReview from "../views/cbes/Review";
+import CbeReview from "../../views/cbes/Review.vue";
 
 export default {
   components: {

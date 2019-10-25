@@ -35,7 +35,8 @@
     "js-yaml": "^3.13.1",
     "jszip": "^3.2.2",
     "postcss-flexbugs-fixes": "^4.1.0",
-    "webpack-dev-server": "3.1.11"
+    "webpack-cli": "^3.3.9",
+    "webpack-dev-server": "^2.11.1"
   },
   "resolutions": {
     "js-yaml": "^3.13.1"

@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import CbeNavigator from "../CbeNavigator"
+import CbeNavigator from "./CbeNavigator"
 
 export default {
   components: {
