@@ -1,20 +1,16 @@
 =render partial: 'layouts/external_navbar'
 %main
-  .container-bg.home-hero-alt-bg
+  .container-bg.home-hero-alt-bg.bg-bootcamp
     .container
       %article.home-hero.home-hero-bootcamp
         .row{class: "#{(@home_page.registration_form || @home_page.login_form) ? 'justify-content-between' : ''}"}
-          .col-10.offset-1.col-md-8.offset-md-2.col-lg-6.offset-lg-0.col-xl-4
-            %header.home-hero-header.mt-5
+          .col-10.offset-1.col-md-8.offset-md-2.col-lg-6.offset-lg-0.col-xl-5
+            %header.home-hero-header{style: 'padding-top: 1.5rem;'}
               %h1.h1-hero.text-white.mb-3
-                ="#{@home_page.group.name} Exam Bootcamp"
-
                 -if @home_page&.header_h1.present?
-                  %h3.text-white.pr-xl-4
-                    =@home_page.header_h1
+                  =@home_page.header_h1
                 -else
-                  %h3.text-white.pr-xl-4
-                    June 2019 Sitting
+                  ="#{@home_page.group.name} Exam Bootcamp"
 
               -if @home_page&.header_paragraph.present?
                 %p.text-white.mb-5.pr-xl-4.pt-5
@@ -23,11 +19,14 @@
                 %p.text-white.mb-5.pr-xl-4.pt-5
                   Register for free today to get 21 days of daily advice, motivation, exam tips and recommended exam questions.
 
-              %h3.text-white.pr-xl-4.d-none.d-sm-block
-                Register Now
+              %h3.text-white.pr-xl-4
+                -if @home_page&.header_h3.present?
+                  =@home_page.header_h3
+                -else
+                  Register Now
 
           -if (@home_page.registration_form || @home_page.login_form) && !current_user
-            .col-xl-6.mt-sm-4.mt-md-6
+            .col-xl-6.mt-sm-4
               =render partial: 'registration_login_form'
 
 

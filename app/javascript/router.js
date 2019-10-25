@@ -1,10 +1,11 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import IntroductionPages from './views/cbes/Introduction.vue';
-import CbeAgreement from './views/cbes/Agreement.vue';
 import Sections from './views/cbes/Sections.vue';
 import Questions from './views/cbes/Questions.vue';
 import CbeReview from './views/cbes/Review.vue';
+import ExamSubmited from './views/cbes/ExamSubmited.vue';
+
 
 Vue.use(Router);
 
@@ -16,11 +17,6 @@ export default new Router({
       name: 'introduction_pages',
       component: IntroductionPages,
       props: true,
-    },
-    {
-      path: '/agreement',
-      name: 'agreement',
-      component: CbeAgreement,
     },
     {
       path: '/sections/:id',
@@ -39,6 +35,11 @@ export default new Router({
       name: 'review',
       component: CbeReview,
       props: true,
+    },
+    {
+      path: '/exam_submited/',
+      name: 'exam_submited',
+      component: ExamSubmited,
     },
   ],
 });

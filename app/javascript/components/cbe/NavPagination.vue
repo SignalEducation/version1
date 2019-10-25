@@ -1,7 +1,7 @@
 <template>
   <section class="overflow-auto">
     <b-pagination-nav
-      :limit="1"
+      :limit="pageLimit"
       :link-gen="linkGen"
       :number-of-pages="links.length"
       :hide-goto-end-buttons="true"
@@ -27,8 +27,26 @@ export default {
       return this.generateObjectLinks();
     }
   },
+  data() {
+    return {
+      pageLimit: 0
+    };
+  },
   props: {
     link_data: {}
+  },
+  watch: {
+    $route(to, from) {
+      if (to.name == 'introduction_pages') {
+        this.pageLimit = 0;
+      } else if (to.name == 'review') {
+        this.pageLimit = 0;
+      } else if (to.name == 'exam_submited') {
+        this.pageLimit = 0;
+      } else {
+        this.pageLimit = 1;
+      }
+    },
   },
   methods: {
     linkGen(pageNum, object) {
@@ -38,7 +56,6 @@ export default {
       var object_link = [];
 
       object_link = this.mapObject(object_link, this.link_data.introduction_pages, 'introduction_pages')
-      object_link.push({ name: 'agreement' })
       object_link = this.mapObject(object_link, this.link_data.sections, 'sections')
       object_link.push({ name: 'review', params: { cbe_id: this.link_data.id } })
 
