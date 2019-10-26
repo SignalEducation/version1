@@ -77,14 +77,6 @@ class LibraryController < ApplicationController
     end
   end
 
-  def tutor_contact_form
-    user_id = current_user ? current_user.id : nil
-    IntercomCreateMessageWorker.perform_async(user_id, params[:email_address], params[:full_name],
-                                              params[:question], params[:type])
-    flash[:success] = 'Thank you! Your submission was successful. We will contact you shortly.'
-    redirect_to request.referrer
-  end
-
   protected
 
   def check_course_available

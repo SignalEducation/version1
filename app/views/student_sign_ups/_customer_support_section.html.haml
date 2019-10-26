@@ -8,7 +8,12 @@
         - %w(Conor_CHD_5350.jpg Alan_CHD_5507.jpg Philip_CHD_5494.jpg Kate_CHD_5387.jpg).sample(3).each do |image|
           =image_tag(image, class: 'img-thumbnail img-thumbnail-sm m-1 m-sm-2', alt: "Contact person profile image")
       .py-3
-        %a.btn.btn-primary.btn-lg{"data-target" => "#contact-us-modal", "data-toggle" => "modal", :href => "#"}
+        .btn.btn-primary.btn-lg{onclick: 'openHubspotChat(); return false;'}
           Chat with our experts
 
 =render partial: 'footer_pages/contact_us_form_modal'
+
+:javascript
+  function openHubspotChat() {
+    window.HubSpotConversations.widget.open();
+  };

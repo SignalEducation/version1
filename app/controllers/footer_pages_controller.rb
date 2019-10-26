@@ -98,19 +98,16 @@ class FooterPagesController < ApplicationController
       but don't worry. We're working on fixing this link.", nil)
   end
 
-
   def complaints_intercom
-    user_id = current_user ? current_user.id : nil
-    IntercomCreateMessageWorker.perform_async(user_id, params[:email_address], params[:full_name], params[:body], 'Complaints Form')
+    # TODO: Added HubSpot API
     flash[:success] = 'Thank you! Your submission was successful. We will contact you shortly.'
     redirect_to contact_url
   end
 
   def contact_us_intercom
-    user_id = current_user ? current_user.id : nil
-    IntercomCreateMessageWorker.perform_async(user_id, params[:email_address], params[:full_name], params[:question], params[:type])
+    # TODO: Added HubSpot API
     flash[:success] = 'Thank you! Your submission was successful. We will contact you shortly.'
-    redirect_to request.referrer ? request.referrer : root_url
+    redirect_to request.referer || root_url
   end
 
   protected

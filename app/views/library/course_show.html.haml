@@ -80,8 +80,8 @@
               =render partial: 'register_upgrade_links', locals: { user: current_user }
 
               %aside
-                %a.btn.btn-secondary.btn-sm.mb-5{"data-target" => "#ask-a-tutor-modal", "data-toggle" => "modal", :href => "#"}
-                  Ask the Tutor
+                .btn.btn-secondary.btn-sm.mb-5{onclick: 'openHubspotChat(); return false;'}
+                  =@exam_body&.help_text
                 -#
                   %h3.mb-4.text-gray2 Course Resources
                   %ul.list-default
@@ -170,7 +170,6 @@
 
 -# Modals
 =render partial: 'account_required_modal'
-=render partial: 'tutor_contact'
 - if current_user
   =render partial: 'subscription_restriction_modal'
   =render partial: 'verification_restriction_modal'
@@ -178,6 +177,10 @@
 
 
 :javascript
+
+  function openHubspotChat() {
+    window.HubSpotConversations.widget.open();
+  };
 
   $(document).ready(function(){
 

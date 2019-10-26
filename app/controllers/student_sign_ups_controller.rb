@@ -2,7 +2,6 @@
 
 class StudentSignUpsController < ApplicationController
 
-  skip_after_action :intercom_rails_auto_include, only: [:landing, :new, :sign_in_or_register]
   before_action :check_logged_in_status, except: %i[landing subscribe group]
   before_action :get_variables
   before_action :create_user_object, only: %i[new sign_in_or_register landing]
