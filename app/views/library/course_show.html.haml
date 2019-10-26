@@ -193,10 +193,12 @@
     if (searchParams.has('cm')) {
       let moduleParam = searchParams.get('cm');
       let coursePanel = $(".btn.btn-collapse#" + moduleParam + "");
-      coursePanel.click();
-      setTimeout(function() {
-          scrollTop: coursePanel.offset().top;
-      }, 1);
+      if (!coursePanel.siblings().hasClass('show')) {
+        coursePanel.click();
+        setTimeout(function() {
+            scrollTop: coursePanel.offset().top;
+        }, 1);
+      }
     } else {
       // Prevent browser jump to anchor tag
       if (location.hash) {
