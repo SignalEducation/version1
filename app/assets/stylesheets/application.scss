@@ -138,7 +138,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
   .margin-top {
-    margin-top: 80px;
+    margin-top: 85px;
   }
   .margin-top-lg {
     margin-top: 127px;
@@ -698,6 +698,12 @@ textarea.form-control {
   width: 100%;
   margin-top: .25rem;
   font-size: .75rem;
+  color: #dc3545
+}
+.text-alert {
+  color: #f0ca28
+}
+.text-error {
   color: #dc3545
 }
 .invalid-tooltip {
@@ -1694,7 +1700,7 @@ textarea.form-control {
 }
 .alert-warning {
   color: #7d6915;
-  background-color: #fcf4d4;
+  background-color: #fff3cd;
   border-color: #fbf0c3
 }
 .alert-warning hr {
@@ -6022,7 +6028,7 @@ input[type="radio"] {
   background-color: rgba(119,94,173,.1)
 }
 .badge-warning {
-  background-color: rgba(240,202,40,.1)
+  background-color: #fff3cd
 }
 .badge-danger {
   background-color: rgba(253,92,99,.1)

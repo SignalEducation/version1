@@ -142,7 +142,7 @@ class StudentSignUpsController < ApplicationController
       elsif flash[:product_id]
         UserSession.create(@user)
         set_current_visit
-        redirect_to new_order_url(product_id: flash[:product_id], registered: true)
+        redirect_to new_product_order_url(product_id: flash[:product_id], registered: true)
       else
         flash[:datalayer_id] = @user.id
         flash[:datalayer_body] = @user.try(:preferred_exam_body).try(:name)

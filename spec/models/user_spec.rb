@@ -215,6 +215,9 @@ describe User do
   it { should respond_to(:next_enrollment) }
   it { should respond_to(:next_exam_date) }
 
+  it { should respond_to(:subscription_action_required?) }
+  it { should respond_to(:actionable_invoice) }
+
   it { should respond_to(:completed_course_module_element) }
   it { should respond_to(:started_course_module_element) }
 

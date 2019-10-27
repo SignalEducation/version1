@@ -4,9 +4,10 @@
       %button.btn.btn-text.modal-close.p-0{"data-dismiss" => "modal"}
         %i.material-icons{"aria-hidden" => "true"} close
       %div
-        %h3#add-card-modal.text-gray2.mb-5 Update Card
-        %p Your payment details have failed authentication. Please update your card details below.
-      .modal-body
+        %h3#add-card-modal.text-gray2.mb-2 Payment Card Authentication
+        %p.text-error Your payment details have failed authentication. Please re-enter your card details or try a different card.
+        %p If we cannot authenticate your payment details and process the outstanding charge your subscription will be cancelled.
+      .modal-body.mt-3
         =form_for(SubscriptionPaymentCard.new, method: :post, html: {class: 'py-2', role: 'form', id: 'new-subscription-payment-card-form'}, name: 'add_card_form') do |f|
           =f.hidden_field :user_id, value: current_user.id
           =f.hidden_field :stripe_token

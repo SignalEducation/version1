@@ -101,8 +101,8 @@ class StripeSubscriptionService < StripeService
       stripe_status: stripe_sub.status, stripe_customer_id: customer.id,
       next_renewal_date: renewal_date(stripe_sub), stripe_guid: stripe_sub.id,
       stripe_customer_data: customer.to_hash.deep_dup,
-      payment_intent_status: stripe_sub.latest_invoice[:payment_intent][:status],
-      client_secret: stripe_sub.latest_invoice[:payment_intent][:client_secret]
+      payment_intent_status: stripe_sub.latest_invoice&.payment_intent&.status,
+      client_secret: stripe_sub.latest_invoice&.payment_intent&.client_secret
     )
     @subscription
   end

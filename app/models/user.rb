@@ -470,6 +470,14 @@ class User < ApplicationRecord
     active_subscriptions_for_exam_body(exam_body_id).all_valid.any?
   end
 
+  def subscription_action_required?
+    viewable_subscriptions.map(&:state).include?('pending_3d_secure')
+  end
+
+  def actionable_invoice
+    invoices.where(payment_attempted: true).where.not(next_payment_attempt_at: nil).last
+  end
+
   def analytics_exam_body_plan_data
     user_plans = ''
     plans_type = ''

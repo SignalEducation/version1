@@ -73,7 +73,9 @@ class UserAccountsController < ApplicationController
   end
 
   def show_invoice
-    @invoice       = Invoice.find_by(sca_verification_guid: params['guid'])
+    @invoice = Invoice.find_by(sca_verification_guid: params['guid'])
+    redirect_to account_url if @invoice.payment_closed
+
     @subscription  = @invoice.subscription
     @card          = default_payment_card(@invoice.user_id)
     @client_secret = stripe_client_secret(@invoice)

@@ -31,7 +31,7 @@
 }
 @media (min-width:576px) {
   .btn {
-    padding: .4rem 1rem;
+    //padding: .4rem 1rem;
     padding-top: -webkit-calc(.65rem + .1rem);
     padding-top: calc(.65rem + .1rem);
     font-size: 1rem
@@ -493,4 +493,8 @@
   font-size: .875rem;
   line-height: 1.5;
   border-radius: 0;
+}
+
+.btn.full-width {
+  width: 100%;
 }

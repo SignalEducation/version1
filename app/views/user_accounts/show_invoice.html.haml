@@ -4,8 +4,10 @@
       %header.hero-section
         %h1.h2-hero.mb-2
           Confirm payment
-        %p
-          ="You'll be asked to verify your identity with your bank."
+        -if @invoice.requires_3d_secure
+          %p="You'll be asked to verify your identity with your bank."
+        -else
+          %p='Invoice payment is outstanding, please add a new payment card.'
 
 
       %section.pb-md-6.pb-5
@@ -30,6 +32,10 @@
                         Amount due:
                         %span
                           =number_in_local_currency(@invoice.total, @invoice.currency)
+                      %p.mb-1
+                        Status:
+                        %span.text-alert
+                          =@invoice.status
 
                   .col-12.col-md-6.mb-4
                     .invoice-payment-details
@@ -45,15 +51,19 @@
 
                       -if @invoice.status == 'Pending'
                         %p
-                          Invoice pending, please add a new payment card.
+                          The last charge attempt failed with this card.
+                        %p.invalid-details
+                          Your subscription will be cancelled if this invoice is not paid.
 
-                        .col-md-4.text-md-right
-                          %a{data: {target: '#add-card-modal', toggle: 'modal'}, href: '#', class: 'btn btn-primary btn-sm add-card'}
+                        .col-10.offset-1
+                          %a{data: {target: '#add-card-modal', toggle: 'modal'}, href: '#', class: 'btn btn-primary full-width add-card'}
                             =t('views.users.show.new_card')
 
                       -else
-                        .mt-5.text-center
-                          .btn.btn-primary.btn-sm#triggerAuth{onclick: 'ReAuth(); return false;'}
+                        %p.invalid-details
+                          Your subscription will be cancelled if this invoice is not paid.
+                        .col-10.offset-1.mt-5
+                          .btn.btn-primary.full-width#triggerAuth{onclick: 'ReAuth(); return false;'}
                             ='Confirm Payment'
                           .spinner
                             .bounce1
@@ -135,7 +145,6 @@
       if (result.error) {
         console.log(result)
       } else {
-        console.log(result)
         $.ajax({
           type: 'patch',
           url: "#{invoice_path(@invoice.id)}",
@@ -176,5 +185,3 @@
     console.log(error);
     // Display error message & feedback to user
   }
-
-  //window.onload = ReAuth;
