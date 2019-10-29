@@ -129,7 +129,7 @@ class ApplicationController < ActionController::Base
   end
 
   def authorize_rack_profiler
-    return unless current_user&.is_admin?
+    return unless current_user&.admin?
 
     Rack::MiniProfiler.authorize_request
   end

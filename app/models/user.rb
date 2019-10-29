@@ -117,6 +117,7 @@ class User < ApplicationRecord
   validates :last_name, presence: true, length: {minimum: 2, maximum: 30}
   validates :password, presence: true, length: {minimum: 6, maximum: 255}, on: :create
   validates :user_group_id, presence: true
+  validates :name_url, presence: true, uniqueness: { case_sensitive: false }, if: :tutor_user?
   validates_confirmation_of :password, on: :create
   validates_confirmation_of :password, unless: Proc.new { |u| u.password.blank? }
   validates :locale, inclusion: {in: LOCALES}
@@ -368,62 +369,66 @@ class User < ApplicationRecord
 
   ## UserGroup Access methods
   def student_user?
-    self.user_group.try(:student_user)
+    user_group&.student_user
   end
 
   def non_student_user?
-    !self.user_group.student_user
+    !user_group&.student_user
   end
 
   def standard_student_user?
-    self.student_user? && self.user_group.trial_or_sub_required
+    student_user? && user_group&.trial_or_sub_required
   end
 
   def complimentary_user?
-    self.user_group.try(:student_user) && !self.user_group.trial_or_sub_required
+    user_group&.student_user && !user_group&.trial_or_sub_required
   end
 
   def non_verified_user?
-    !self.email_verified && self.email_verification_code
+    !email_verified && email_verification_code
   end
 
   def blocked_user?
-    self.user_group.blocked_user
+    user_group&.blocked_user
   end
 
   def system_requirements_access?
-    self.user_group.system_requirements_access
+    user_group&.system_requirements_access
+  end
+
+  def tutor_user?
+    user_group&.tutor
   end
 
   def content_management_access?
-    self.user_group.content_management_access
+    user_group&.content_management_access
   end
 
   def exercise_corrections_access?
-    self.user_group.exercise_corrections_access
+    user_group&.exercise_corrections_access
   end
 
   def stripe_management_access?
-    self.user_group.stripe_management_access
+    user_group&.stripe_management_access
   end
 
   def user_management_access?
-    self.user_group.user_management_access
+    user_group&.user_management_access
   end
 
   def developer_access?
-    self.user_group.developer_access
+    user_group&.developer_access
   end
 
   def marketing_resources_access?
-    self.user_group.marketing_resources_access
+    user_group&.marketing_resources_access
   end
 
   def user_group_management_access?
-    self.user_group.user_group_management_access
+    user_group&.user_group_management_access
   end
 
-  def is_admin?
+  def admin?
     user_group_management_access? && developer_access? && system_requirements_access?
   end
 

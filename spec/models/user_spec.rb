@@ -121,6 +121,16 @@ describe User do
 
   it { should validate_presence_of(:user_group_id) }
 
+  context 'is a tutor' do
+    before { allow(subject).to receive(:tutor_user?).and_return(true) }
+    it { should validate_presence_of(:name_url)}
+  end
+
+  context 'is not a tutor' do
+    before { allow(subject).to receive(:tutor_user?).and_return(false) }
+    it { should_not validate_presence_of(:name_url)}
+  end
+
 
   context "user email validation" do
     before do
