@@ -26,7 +26,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import CbeFlagToReview from "../../components/CbeFlagToReview.vue"
+import CbeFlagToReview from "../../components/cbe/CbeFlagToReview.vue"
 
 export default {
   components: {
