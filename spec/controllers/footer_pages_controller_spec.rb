@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe FooterPagesController, type: :controller do
-
   let!(:gbp) { FactoryBot.create(:gbp) }
   let!(:uk) { FactoryBot.create(:uk, currency_id: gbp.id) }
 
@@ -11,9 +12,7 @@ describe FooterPagesController, type: :controller do
   let!(:tutor_student_access_1) { FactoryBot.create(:complimentary_student_access, user_id: tutor_user_1.id) }
   let!(:course_tutor_detail_1) { FactoryBot.create(:course_tutor_detail, user_id: tutor_user_1.id, subject_course_id: subject_course_1.id) }
 
-
   context 'Not logged in: ' do
-
     describe "GET 'privacy_policy'" do
       it 'should render with 200' do
         get :privacy_policy
@@ -41,7 +40,6 @@ describe FooterPagesController, type: :controller do
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:acca_info)
-
       end
     end
 
@@ -52,7 +50,6 @@ describe FooterPagesController, type: :controller do
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:terms_and_conditions)
-
       end
     end
 
@@ -63,7 +60,6 @@ describe FooterPagesController, type: :controller do
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:frequently_asked_questions)
-
       end
     end
 
@@ -95,7 +91,6 @@ describe FooterPagesController, type: :controller do
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:profile_index)
-
       end
     end
 
@@ -107,7 +102,6 @@ describe FooterPagesController, type: :controller do
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:profile_index)
-
       end
 
       xit 'should reject with invalid params' do
@@ -116,7 +110,6 @@ describe FooterPagesController, type: :controller do
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:profile_index)
-
       end
     end
 
@@ -128,7 +121,6 @@ describe FooterPagesController, type: :controller do
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:profile_index)
-
       end
 
       xit 'should reject with invalid params' do
@@ -137,7 +129,6 @@ describe FooterPagesController, type: :controller do
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:profile_index)
-
       end
     end
 
@@ -149,7 +140,6 @@ describe FooterPagesController, type: :controller do
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:profile_index)
-
       end
 
       xit 'should reject with invalid params' do
@@ -158,10 +148,28 @@ describe FooterPagesController, type: :controller do
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:profile_index)
-
       end
     end
-
   end
 
+  context 'Logged in: ' do
+    let(:student_user_group ) { create(:student_user_group ) }
+    let(:student)             { create(:basic_student, user_group: student_user_group) }
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(student)
+    end
+
+    describe "Get 'media_library'" do
+      it 'should render with 200' do
+        request.env['remote_ip'] = ''
+        get :media_library
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:media_library)
+      end
+    end
+  end
 end

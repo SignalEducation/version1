@@ -3,19 +3,21 @@
 class OrdersController < ApplicationController
   before_action :logged_in_required
   before_action :set_order, only: %i[execute update]
-  before_action :set_navbar, only: :create
+
+  include OrdersHelper
 
   def new
     @product = Product.find(params[:product_id])
     @order   = @product.orders.build
     @layout  = 'standard'
 
-    seo_title_maker("#{@order.product.mock_exam.name} Payment | LearnSignal", 'Get access to ACCA question and solution correction packs from learnsignal designed by experts to help you pass your exams the first time.', true)
+    seo_title_maker("#{order_name(@order)} Payment | LearnSignal", 'Get access to ACCA question and solution correction packs from learnsignal designed by experts to help you pass your exams the first time.', true)
   end
 
   def create
     order_object = PurchaseService.new(current_user.orders.build(order_params))
     @order       = order_object.create_purchase
+    @navbar      = false
 
     @order.transaction do
       if @order.save
@@ -40,8 +42,8 @@ class OrdersController < ApplicationController
     if @order.stripe? && @order.pending_3d_secure?
       update_status(params[:status])
     else
-      raise(Learnsignal::PaymentError, 'Your payment was declined. Please ' \
-            'contact us for assistance!')
+      raise(Learnsignal::PaymentError,
+            'Your payment was declined. Please contact us for assistance!')
     end
   rescue Learnsignal::PaymentError => e
     render json: { error: { message: e.message } }, status: :unprocessable_entity
@@ -93,10 +95,6 @@ class OrdersController < ApplicationController
     render json: {
       error: { message: (message || 'Something went wrong. Please try again.') }
     }, status: :unprocessable_entity
-  end
-
-  def set_navbar
-    @navbar = false
   end
 
   def set_order

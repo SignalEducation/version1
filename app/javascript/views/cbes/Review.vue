@@ -7,13 +7,13 @@
       :fields="fields"
     >
       <template v-slot:cell(description)="data">
-        <router-link :to="{ name: data.item.type, params: { id:  data.item.param }}">
+        <router-link :to="{ name: data.item.type, params: { id: data.item.param }}">
           {{ data.item.description }}
         </router-link>
       </template>
 
       <template v-slot:cell(state)="data">
-        <router-link :to="{ name: data.item.type, params: { id:  data.item.param }}">
+        <router-link :to="{ name: data.item.type, params: { id: data.item.param }}">
           {{ data.item.state }}
         </router-link>
       </template>

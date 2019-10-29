@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: exercises
@@ -26,15 +28,15 @@ class Exercise < ApplicationRecord
   include Filterable
   belongs_to :product
   belongs_to :user
-  belongs_to :corrector, class_name: 'User', foreign_key: 'corrector_id', optional: true
+  belongs_to :corrector, class_name: 'User', foreign_key: 'corrector_id', optional: true, inverse_of: :exercise
 
+  has_one :cbe_user_log, class_name: 'Cbe::UserLog', dependent: :destroy, inverse_of: :exercise
   has_attached_file :submission, default_url: nil
   has_attached_file :correction, default_url: nil
   validates_attachment_content_type :submission,
-    :correction, content_type: ['application/pdf', 'image/png', 'image/jpeg', 'image/jpg']
+                                    :correction,
+                                    content_type: ['application/pdf', 'image/png', 'image/jpeg', 'image/jpg']
 
-  # after_submission_post_process :submit
-  # after_correction_post_process :return
   after_update :check_corrector
 
   # SCOPES =====================================================================
@@ -53,7 +55,7 @@ class Exercise < ApplicationRecord
   }
 
   scope :all_in_order, -> { order(created_at: :asc) }
-  scope :live, -> { with_states(%w(submitted correcting returned)) }
+  scope :live, -> { with_states(%w[submitted correcting returned]) }
 
   # STATE MACHINE ==============================================================
 
@@ -71,20 +73,17 @@ class Exercise < ApplicationRecord
     end
 
     after_transition pending: :submitted do |exercise, _transition|
-      exercise.update_columns(submitted_on: Time.zone.now)
-      SlackNotificationWorker.perform_async(
-        :exercise,
-        exercise.id,
-        :notify_submitted
-      )
+      exercise.update(submitted_on: Time.zone.now)
+
+      SlackNotificationWorker.perform_async(:exercise, exercise.id, :notify_submitted)
     end
 
     after_transition submitted: :correcting do |exercise, _transition|
-      exercise.update_columns(corrected_on: Time.zone.now)
+      exercise.update(corrected_on: Time.zone.now)
     end
 
     after_transition correcting: :returned do |exercise, _transition|
-      exercise.update_columns(returned_on: Time.zone.now)
+      exercise.update(returned_on: Time.zone.now)
       exercise.send_returned_email
     end
   end
@@ -92,7 +91,7 @@ class Exercise < ApplicationRecord
   # CLASS METHODS ==============================================================
 
   def self.search(term)
-    self.joins(:user).where(
+    joins(:user).where(
       "users.email ILIKE :t OR users.first_name ILIKE :t OR users.last_name ILIKE :t OR textcat(users.first_name, textcat(text(' '), users.last_name)) ILIKE :t", t: "%#{term}%"
     )
   end
@@ -101,13 +100,13 @@ class Exercise < ApplicationRecord
 
   def send_returned_email
     MandrillWorker.perform_async(
-      self.user_id,
+      user_id,
       'send_correction_returned_email',
       UrlHelper.instance.user_exercises_url(
-        user_id: self.user_id,
+        user_id: user_id,
         host: LEARNSIGNAL_HOST
       ),
-      product.mock_exam.name
+      product.mock_exam? ? product.mock_exam.name : product.cbe.name
     )
   end
 
@@ -118,7 +117,7 @@ class Exercise < ApplicationRecord
   private
 
   def check_corrector
-    self.correct if corrector_id_previously_changed?
+    correct if corrector_id_previously_changed?
   end
 
   def send_submitted_slack_message
@@ -127,27 +126,25 @@ class Exercise < ApplicationRecord
       title: "<#{UrlHelper.instance.admin_exercises_url(host: LEARNSIGNAL_HOST)}|#{user.name}> - uploaded an exercise.",
       title_link: UrlHelper.instance.admin_exercises_url(host: LEARNSIGNAL_HOST).to_s,
       color: '#7CD197',
-      fields: [
-        {
-          title: product.mock_exam? ? 'Mock Exam' : 'General Correction',
-          value: "#{product.name}",
-          short: true
-        }
-      ],
+      fields: [{
+        title: product.mock_exam? ? 'Mock Exam' : 'General Correction',
+        value: product.name,
+        short: true
+      }]
     }]
     SlackService.new.notify_channel('corrections', attachments)
   end
 
   def send_submitted_email
     MandrillWorker.perform_async(
-      self.user_id,
+      user_id,
       'send_exercise_submitted_email',
       UrlHelper.instance.account_url(
         host: LEARNSIGNAL_HOST
       ),
       product.mock_exam.name,
       product.mock_exam.file,
-      self.reference_guid
+      reference_guid
     )
   end
 end

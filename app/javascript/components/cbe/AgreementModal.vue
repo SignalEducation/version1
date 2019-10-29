@@ -59,6 +59,8 @@ export default {
       data.status = 'started';
       data.cbe_id = this.userCbeData.cbe_id;
       data.user_id = this.userCbeData.user_id;
+      data.exercise_id = this.userCbeData.exercise_id;
+
       return data;
     },
     acceptAgreement(accepted) {

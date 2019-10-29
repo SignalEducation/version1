@@ -5,6 +5,7 @@ const state = {
   user_cbe_data: {
     user_id: null,
     cbe_id: null,
+    exercise_id: null,
     questions: {},
     exam_pages: {
       state: null,
@@ -61,6 +62,7 @@ const mutations = {
   setUserCbeData(state, newDat) {
     state.user_cbe_data.cbe_id = newDat.cbe_id;
     state.user_cbe_data.user_id = newDat.user_id;
+    state.user_cbe_data.exercise_id = newDat.exercise_id;
     state.user_cbe_data.exam_pages = functions.reviewPageLinks(newDat.cbe_data.sections);
   },
   setUserLog(state, id) {

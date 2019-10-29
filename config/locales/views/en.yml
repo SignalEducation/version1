@@ -1097,6 +1097,7 @@ en:
         active: Active
         currency: Currency
         mock_exam_id: Mock Exam
+        cbe: CBE
         product_type: Product Type
         correction_pack_count: Number of Corrections
         subject_course: Course

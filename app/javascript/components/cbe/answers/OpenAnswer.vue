@@ -17,7 +17,7 @@ export default {
     TinyEditor
   },
   props: {
-    question_id: Number
+    questionId: Number
   },
   data() {
     return {
@@ -25,14 +25,14 @@ export default {
     };
   },
   watch: {
-    question(newValue, oldValue) {
+    question(newValue) {
       this.$store.dispatch("userCbe/recordAnswer", {
         id: this.question_id,
         answers: {
           content: {
             text: newValue
           },
-          cbe_question_id: this.question_id
+          cbe_question_id: this.questionId
         }
       });
     }
@@ -40,7 +40,7 @@ export default {
   methods: {
     getPickedValue() {
       var initial_value = this.$store.state.userCbe.user_cbe_data.questions[
-        this.question_id
+        this.questionId
       ];
       if (initial_value != null) {
         return initial_value;

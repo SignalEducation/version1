@@ -1,35 +1,43 @@
 <template>
   <section>
-    <DropdownList
-      v-if="question_kind === 'dropdown_list'"
-      :answers="answers"
-      :question_id="question_id"
-    />
-    <!-- passing just the first answer in fill the blank cause is just one text value -->
-    <FillTheBlank
-      v-if="question_kind === 'fill_in_the_blank'"
-      :answer="answers[0]"
-      :question_id="question_id"
-    />
-    <MultipleChoice
-      v-if="question_kind === 'multiple_choice'"
-      :answers="answers"
-      :question_id="question_id"
-    />
-    <MultipleResponse
-      v-if="question_kind === 'multiple_response'"
-      :answers="answers"
-      :question_id="question_id"
-    />
-    <OpenAnswer
-      v-if="question_kind === 'open'"
-      :question_id="question_id"
-    />
-    <SpreadsheetAnswer
-      v-if="question_kind === 'spreadsheet'"
-      :question-id="question_id"
-      :answer-data="answers[0]"
-    />
+    <div v-if="questionKind === 'dropdown_list'">
+      <DropdownList
+        :answers-data="answersData"
+        :question-id="questionId"
+        :question-score="questionScore"
+      />
+    </div>
+    <div v-else-if="questionKind === 'fill_in_the_blank'">
+      <FillTheBlank
+        :answer-data="answersData[0]"
+        :question-id="questionId"
+        :question-score="questionScore"
+      />
+    </div>
+    <div v-else-if="questionKind === 'multiple_choice'">
+      <!-- passing only the first answer in fill the blank cause is just one text value -->
+      <MultipleChoice
+        :answers-data="answersData"
+        :question-id="questionId"
+        :question-score="questionScore"
+      />
+    </div>
+    <div v-else-if="questionKind === 'multiple_response'">
+      <MultipleResponse
+        :answers-data="answersData"
+        :question-id="questionId"
+        :question-score="questionScore"
+      />
+    </div>
+    <div v-else-if="questionKind === 'open'">
+      <OpenAnswer :question-id="questionId" />
+    </div>
+    <div v-else-if="questionKind === 'spreadsheet'">
+      <SpreadsheetAnswer
+        :question-id="questionId"
+        :answer-data="answersData[0]"
+      />
+    </div>
   </section>
 </template>
 
@@ -51,9 +59,23 @@ export default {
     SpreadsheetAnswer,
   },
   props: {
-    answers: {},
-    question_id: Number,
-    question_kind: String,
+    answersData: {
+      type: Array,
+      required: true,
+    },
+    questionId: {
+      type: Number,
+      required: true,
+    },
+    questionKind: {
+      type: String,
+      required: true,
+    },
+    questionScore: {
+      type: Number,
+      required: false,
+      default: null,
+    },
   },
 };
 </script>

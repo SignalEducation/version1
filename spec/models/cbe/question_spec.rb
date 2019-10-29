@@ -16,6 +16,7 @@ RSpec.describe Cbe::Question, type: :model do
 
   describe 'Associations' do
     it { should belong_to(:section) }
+    it { should have_many(:user_answers) }
   end
 
   describe 'Validations' do
