@@ -71,6 +71,9 @@
                             check out our"
                         =link_to 'Privacy Policy.', privacy_policy_url, target: '_blank'
 
+                      %p.pt-2
+                        =recaptcha_tags
+
 
                         .pt-4
                           =f.submit 'Register Now', class: 'btn btn-primary btn-sm', id: 'signUp'

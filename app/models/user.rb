@@ -129,6 +129,7 @@ class User < ApplicationRecord
   after_create :create_referral_code_record, :create_or_update_intercom_user
   after_update :update_stripe_customer
   after_save :update_hub_spot_data
+  after_destroy :delete_stripe_customer
 
   # scopes
   scope :all_in_order, -> { order(:user_group_id, :last_name, :first_name, :email) }
@@ -598,13 +599,14 @@ class User < ApplicationRecord
   end
 
   def destroyable?
-      self.course_module_element_user_logs.empty? &&
-      self.invoices.empty? &&
-      self.quiz_attempts.empty? &&
-      self.student_exam_tracks.empty? &&
-      self.subscriptions.empty? &&
-      self.subscription_payment_cards.empty? &&
-      self.subscription_transactions.empty?
+    course_module_element_user_logs.empty? &&
+      invoices.empty? &&
+      quiz_attempts.empty? &&
+      student_exam_tracks.empty? &&
+      subscriptions.empty? &&
+      subscription_payment_cards.empty? &&
+      subscription_transactions.empty? &&
+      orders.empty?
   end
 
   def full_name
@@ -739,6 +741,15 @@ class User < ApplicationRecord
         stripe_customer.save
       end
     end
+  end
+
+  def delete_stripe_customer
+    return if Rails.env.test?
+
+    return unless stripe_customer_id
+
+    stripe_customer = Stripe::Customer.retrieve(stripe_customer_id)
+    stripe_customer&.delete(stripe_customer_id)
   end
 
   def update_hub_spot_data

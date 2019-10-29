@@ -69,6 +69,7 @@ gem 'scout_apm'
 gem 'rack-mini-profiler'
 gem 'flamegraph'
 gem 'stackprof'
+gem "recaptcha"
 # Use ActiveStorage variant
 # gem 'mini_magick', '~> 4.8'
 

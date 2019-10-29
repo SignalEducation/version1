@@ -28,5 +28,6 @@ FactoryBot.define do
     active { true }
     counts_towards_completion { false }
     assumed_knowledge { false }
+    subject_course
   end
 end
