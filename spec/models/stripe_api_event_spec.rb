@@ -70,11 +70,13 @@ describe StripeApiEvent do
     describe '.processing_delay' do
       it 'returns 5 minutes for a flagged event' do
         expect(StripeApiEvent.processing_delay('invoice.payment_succeeded')).to(
-          eq 5.minutes)
+          eq 1.minute
+        )
       end
       it 'returns 1 minute for a non-flagged event' do
         expect(StripeApiEvent.processing_delay('invoice.created')).to(
-          eq 1.minute)
+          eq 10.seconds
+        )
       end
     end
 
@@ -344,7 +346,7 @@ describe StripeApiEvent do
           allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
           allow(api_event).to receive(:get_data_from_stripe)
           allow(Invoice).to receive(:find_by).and_return(invoice)
-          allow(Subscription).to receive(:find_by).and_return(subscription)
+          allow(Subscription).to receive_message_chain(:in_reverse_created_order, :find_by).and_return(subscription)
           allow(subscription).to receive_message_chain(:invoices, :count).and_return(2)
         end
 
@@ -357,9 +359,9 @@ describe StripeApiEvent do
         it 'calls #update on the StripeApiEvent' do
           allow(invoice).to receive(:mark_payment_action_required)
           expect(api_event).to receive(:update!).with(hash_including(
-            processed: true, error: false,
-            error_message: nil
-          ))
+                                                        processed: true, error: false,
+                                                        error_message: nil
+                                                      ))
 
           api_event.send(:process_payment_action_required, 'inv_12345', 'sub_12345')
         end

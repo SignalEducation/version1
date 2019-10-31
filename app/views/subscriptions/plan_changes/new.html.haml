@@ -6,88 +6,104 @@
           %h1.h2-hero.mb-2
             Change Plan
           %p.p-hero.px-lg-6
-            Simply select your new plan
-          -#TODO Proration Details explained here!
+            Select your preferred payment plan
         %section.pb-md-6.pb-5
           -if flash[:success] || flash[:error] || flash[:warning]
             =render partial: 'layouts/flash_messages'
           =form_for(@subscription, url: subscription_plan_changes_path(@subscription), method: :post, html: {class: 'form-horizontal', role: 'form', id: 'upgrade-subscription-form'}) do |f|
             =f.hidden_field :subscription_plan_id
             =f.hidden_field :use_paypal, value: @subscription.paypal?
-            .row.row-md
-              -@subscription.upgrade_options.each do |plan|
-                .col-lg
-                  %article.card.card-primary.card-primary-alt.medium-gap{id: "sub-#{plan.currency.iso_code}-#{plan.payment_frequency_in_months}", data: {plan_id: plan.id, :price => plan.price, :currency => plan.currency.iso_code, :name => plan.name, :body => plan.exam_body.name}}
-                    -if plan.most_popular
-                      .card-banner.bg-mint
-                        %large.text-white
-                          Most popular payment plan
-                    .card-body.text-center.py-4.py-sm-5
-                      %h2.card-title
-                        =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
+            .row
+              .col-12.col-lg-8
+                .row.row-md.justify-content-center
+                  -@subscription.upgrade_options.each do |plan|
+                    .col
+                      %article.card.card-primary.card-primary-alt{id: "sub-#{plan.currency.iso_code}-#{plan.payment_frequency_in_months}", data: {plan_id: plan.id, :price => plan.price, :currency => plan.currency.iso_code, :name => plan.name, :body => plan.exam_body.name}}
+                        -if plan.most_popular
+                          .card-banner.bg-mint
+                            %large.text-white
+                              Most popular payment plan
+                        .card-body.text-center.py-4.py-sm-5
+                          %h2.card-title
+                            =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
 
-                      %ul.list-centered
-                        -if plan.bullet_points_list && !plan.bullet_points_list.empty?
-                          - plan.bullet_points_list.split(/, ?/).each do |bullet|
-                            %li=bullet
-                        -else
-                          %li="Access all #{plan.exam_body.group.name} courses"
-                          %li="Topic-by-topic lectures"
-                          %li="24/7 tutor support"
+                          %ul.list-centered
+                            -if plan.bullet_points_list && !plan.bullet_points_list.empty?
+                              - plan.bullet_points_list.split(/, ?/).each do |bullet|
+                                %li=bullet
+                            -else
+                              %li="Access all #{plan.exam_body.group.name} courses"
+                              %li="Topic-by-topic lectures"
+                              %li="24/7 tutor support"
 
-                        -unless plan.exam_body.name == "CPD"
-                          %li{style: 'font-style: italic;'}
-                            Cancel anytime
+                            -unless plan.exam_body.name == "CPD"
+                              %li{style: 'font-style: italic;'}
+                                Cancel anytime
 
-                      %p.h2.mb-0
-                        =plan.currency.format_number(plan.price)
+                          %p.h2.mb-0
+                            =plan.currency.format_number(plan.price)
 
-                      -if plan.monthly_percentage_off
-                        %p.h5.text-gray2{style: 'margin-bottom: 0;'}
-                          Save over
-                          =plan.monthly_percentage_off
-                          ='%'
+                          -if plan.monthly_percentage_off
+                            %p.h5.text-gray2{style: 'margin-bottom: 0;'}
+                              Save over
+                              =plan.monthly_percentage_off
+                              ='%'
 
-                      .pt-4.pt-md-5
-                        %fieldset
-                          %legend.sr-only Select this plan
-                          .custom-control.custom-radio.plan-option
-                            %input{id: 'chk-plan-' + plan.id.to_s, type: 'radio', class: 'custom-control-input style-radio option'}
-                            %label{class: "custom-control-label ", for: 'chk-plan-' + plan.id.to_s}
-                              %span.custom-label-info
-                                %span Select this plan
-                              %span.custom-check
+                          .pt-4.pt-md-5
+                            %fieldset
+                              %legend.sr-only Select this plan
+                              .custom-control.custom-radio.plan-option
+                                %input{id: 'chk-plan-' + plan.id.to_s, type: 'radio', class: 'custom-control-input style-radio option'}
+                                %label{class: "custom-control-label ", for: 'chk-plan-' + plan.id.to_s}
+                                  %span.custom-label-info
+                                    %span Select this plan
+                                  %span.custom-check
 
 
 
-            %section#simply
-              .container
-                .row
-                  .col-sm-10.offset-1
-                    %h3
-                      ='Selecting this Plan will result in an immediate charge and start a new billing period from this date.'
-                    %p
-                      ='Any remaining time paid for on your current billing will be credited to your account, and used for this payment and any future payments until all credit is used.'
-                    %div.invalid-details
-                .row
-                  .col-sm-6.offset-1
-                    .d-flex.justify-content-between.align-items-center.pt-3
-                      =f.submit 'Change Plan', class: 'btn btn-primary btn-sm', id: 'changePlan'
-                      .sk-circle
-                        .sk-circle1.sk-child
-                        .sk-circle2.sk-child
-                        .sk-circle3.sk-child
-                        .sk-circle4.sk-child
-                        .sk-circle5.sk-child
-                        .sk-circle6.sk-child
-                        .sk-circle7.sk-child
-                        .sk-circle8.sk-child
-                        .sk-circle9.sk-child
-                        .sk-circle10.sk-child
-                        .sk-circle11.sk-child
-                        .sk-circle12.sk-child
+              .col-12.col-lg-4
+                %section#simply
+                  .container.pt-lg-6
+                    .row
+                      - if @subscription.stripe? && !@card
+                        .col-sm-10.offset-1
+                          %h5.text-alert
+                            ='You must have a default payment method in order to change plans. Please visit the card details section in your account.'
+                      - else
+                        .col-sm-10.offset-1
+                          %h5.pt-4
+                            ='This action will result in an immediate charge and start a new billing period from this date.'
 
-                      =link_to t('views.general.cancel'), account_url(anchor: 'account-info'), class: 'btn btn-secondary btn-sm '
+                          - if @subscription.stripe? && @card
+                            .invoice-payment-details-wrap
+                              %span.payment-content
+                                =image_tag('ico-card.svg', alt: 'Credit Card Icon', class: 'logo-icon mr-2 mr-sm-3')
+                                =@card.brand
+                                &#8226;
+                                &#8226;
+                                &#8226;
+                                =@card.last_4
+
+                          %p.py-4
+                            ='Any remaining time on your current billing period will be credited to your account, and used for this and any future payments until all credit is used.'
+                          %div.invalid-details
+
+                        .col-sm-10.offset-1.text-center
+                          =f.submit 'Change Plan Now', class: 'btn btn-primary full-width', id: 'changePlan'
+                          .sk-circle
+                            .sk-circle1.sk-child
+                            .sk-circle2.sk-child
+                            .sk-circle3.sk-child
+                            .sk-circle4.sk-child
+                            .sk-circle5.sk-child
+                            .sk-circle6.sk-child
+                            .sk-circle7.sk-child
+                            .sk-circle8.sk-child
+                            .sk-circle9.sk-child
+                            .sk-circle10.sk-child
+                            .sk-circle11.sk-child
+                            .sk-circle12.sk-child
+
 
 =render partial: 'update_card_modal'
 

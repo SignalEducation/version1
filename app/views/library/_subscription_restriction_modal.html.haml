@@ -11,8 +11,14 @@
       .modal-body
         %p.mb-4
           A valid account is required to access that content. Subscribe to a payment plan to access all course materials. Cancel anytime.
-        %p.mb-4
-          ="Get unlimited access to all #{@group.name} courses."
+
+        - if current_user&.subscription_action_required?
+          %h5.text-warning
+            ='There seems to be problem with your existing subscription. You should resolve this issue first or you may be double charged.'
+            =link_to 'Resolve Issue!', account_url(anchor: 'account-info')
+        - else
+          %p.mb-4
+            ="Get unlimited access to all #{@group.name} courses."
 
       .modal-footer
         =link_to 'Subscribe Now', subscription_checkout_special_link(@group.exam_body_id), class: 'btn btn-primary', title: 'Get Unlimited Access'

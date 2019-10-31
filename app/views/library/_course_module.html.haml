@@ -55,7 +55,7 @@
                                 -else
                                   =cme.number_of_questions.to_s + ' ' +  'Question'
 
-              -else
+              - else
                 - permission = cme.available_to_user(current_user, @group.exam_body_id, @subject_course_user_log)
 
                 - if permission[:view]

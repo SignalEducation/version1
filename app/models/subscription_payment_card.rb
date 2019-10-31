@@ -193,8 +193,8 @@ class SubscriptionPaymentCard < ApplicationRecord
   end
 
   def destroyable?
-    # don't alow destroy if user have a current valid subscription
-    !user.current_subscription?
+    # don't allow destroy if it is the default card or if user has a current valid subscription
+    !is_default_card || !user.current_subscription?
   end
 
   def status

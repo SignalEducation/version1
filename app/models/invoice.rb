@@ -87,7 +87,7 @@ class Invoice < ApplicationRecord
     # This is wrapped in a transaction block to ensure that the Invoice record does not save unless all the InvoiceLineItems save successfully. If an InvoiceLineItem record fails all other records including the parent Invoice record will be rolled back.
     Invoice.transaction do
       user = User.find_by(stripe_customer_id: stripe_data_hash[:customer])
-      subscription = Subscription.find_by(stripe_guid: stripe_data_hash[:subscription])
+      subscription = Subscription.in_reverse_created_order.find_by(stripe_guid: stripe_data_hash[:subscription])
       currency = Currency.find_by(iso_code: stripe_data_hash[:currency].upcase)
 
       if user && subscription && currency
@@ -109,7 +109,7 @@ class Invoice < ApplicationRecord
           paid: stripe_data_hash[:paid],
           livemode: stripe_data_hash[:livemode],
           attempt_count: stripe_data_hash[:attempt_count],
-          amount_due: stripe_data_hash[:amount_due],
+          amount_due: stripe_data_hash[:amount_due].to_i / 100.0,
           next_payment_attempt_at: (stripe_data_hash[:next_payment_attempt] ? Time.at(stripe_data_hash[:next_payment_attempt]) : nil),
           webhooks_delivered_at: (stripe_data_hash[:webhooks_delivered_at] ? Time.at(stripe_data_hash[:webhooks_delivered_at]) : nil),
           charge_guid: stripe_data_hash[:charge],
@@ -199,10 +199,11 @@ class Invoice < ApplicationRecord
           paid: stripe_invoice[:paid],
           livemode: stripe_invoice[:livemode],
           attempt_count: stripe_invoice[:attempt_count],
-          amount_due: stripe_invoice[:amount_due],
+          amount_due: stripe_invoice[:amount_due].to_i / 100.0,
           next_payment_attempt_at: (stripe_invoice[:next_payment_attempt] ? Time.at(stripe_invoice[:next_payment_attempt]) : nil),
           webhooks_delivered_at: (stripe_invoice[:webhooks_delivered_at] ? Time.at(stripe_invoice[:webhooks_delivered_at]) : nil),
-          charge_guid: stripe_invoice[:charge]
+          charge_guid: stripe_invoice[:charge],
+          requires_3d_secure: invoice.subscription.pending_3d_secure? && !stripe_invoice[:next_payment_attempt]
         )
       else
         Rails.logger.debug "Error: Invoice#update_from_stripe failed to find an Invoice #{stripe_invoice[:id]}"
