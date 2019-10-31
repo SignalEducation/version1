@@ -13,7 +13,7 @@
           =f.label :user_group_id, t('views.users.form.user_group_id')
           .input-group.input-group-lg
             =f.collection_select :user_group_id, @user_groups, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
-
+    .row
       .col-sm-6
         .form-group
           =f.label :first_name, t('views.users.form.first_name')
@@ -24,6 +24,12 @@
           =f.label :last_name, t('views.users.form.last_name')
           .input-group.input-group-lg
             =f.text_field :last_name, placeholder: t('views.users.form.last_name_placeholder'), class: 'form-control'
+    .row
+      .col-sm-6
+        .form-group
+          =f.label :preferred_exam_body_id, t('views.users.form.preferred_exam_body_id')
+          .input-group.input-group-lg
+            =f.collection_select :preferred_exam_body_id, ExamBody.all_in_order, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
       .col-sm-6
         .form-group
           =f.label :date_of_birth, t('views.users.form.date_of_birth')
@@ -31,16 +37,12 @@
             =f.text_field :date_of_birth, placeholder: t('views.users.form.date_of_birth_placeholder'), class: 'form-control', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}, id: 'datetimepicker'
 
 
-
-    .row.pt-5
+    #tutor-info.pt-4
+      %hr/
       %h2='Tutor Info'
       .row
-        .col-sm-12
-          =f.label :description, t('views.users.form.description')
-          =f.text_area :description, 'data-provider': :summernote, id: 'editor'
-      .row
-        .col-sm.pt-4
-          =f.label :profile_image, t('views.users.form.profile_image')
+        .col-sm-6
+          =f.label :profile_image, t('views.users.form.profile_image'), class: 'text-danger'
           -if f.object.profile_image.present?
             =image_tag f.object.profile_image.url, class: 'img-responsive'
             %br/
@@ -48,10 +50,14 @@
             %br/
           .input-group.input-group-lg
             =f.file_field :profile_image, class: 'form-control'
-        .col-sm.pt-4
-          =f.label :name_url, t('views.users.form.name_url')
+        .col-sm-6
+          =f.label :name_url, t('views.users.form.name_url'), class: 'text-danger'
           .input-group.input-group-lg
-            =f.text_field :name_url, class: 'form-control'
+            =f.text_field :name_url, class: 'form-control', placeholder: t('views.users.form.name_url_placeholder')
+      .row.pt-6
+        .col-sm-12
+          =f.label :description, t('views.users.form.description')
+          =f.text_area :description, 'data-provider': :summernote, id: 'editor'
 
 
     .row.pt-4
@@ -65,7 +71,24 @@
     $('#datetimepicker').datetimepicker();
       format: 'DD/MM/YYYY'
   });
+
   $('#editor').summernote({
     disableDragAndDrop: true,
     height: 150
+  });
+
+  function toggleTutorDetails() {
+    if($( "#user_user_group_id option:selected" ).text() == 'tutor'){
+      $('#tutor-info').show();
+    } else {
+      $('#tutor-info').hide();
+    }
+  }
+
+  $('#user_user_group_id').change(function(){
+    toggleTutorDetails()
+  });
+
+  $(document).one('ready', function () {
+    toggleTutorDetails()
   });
