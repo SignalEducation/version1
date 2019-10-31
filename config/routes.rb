@@ -230,7 +230,6 @@ Rails.application.routes.draw do
 
     post '/complaints_intercom', to: 'footer_pages#complaints_intercom'
     post '/contact_us_intercom', to: 'footer_pages#contact_us_intercom'
-    post '/tutor_contact_form',  to: 'library#tutor_contact_form'
 
     get 'register_or_login', to: 'student_sign_ups#sign_in_or_register', as: :sign_in_or_register
 

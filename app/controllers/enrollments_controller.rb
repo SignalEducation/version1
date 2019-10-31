@@ -52,7 +52,6 @@ class EnrollmentsController < ApplicationController
   protected
 
   def send_welcome_email(user_id, course_name)
-    # Turned Off until emails are all moved back from intercom
     MandrillWorker.perform_at(5.minutes.from_now, user_id, 'send_enrollment_welcome_email', course_name, account_url)
   end
 

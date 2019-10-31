@@ -52,6 +52,10 @@ class ExamBody < ApplicationRecord
     name
   end
 
+  def help_text
+    has_sittings ? 'Ask the Tutor' : 'Need Help'
+  end
+
   private
 
   def check_dependencies
