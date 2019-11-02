@@ -215,7 +215,7 @@ class CourseModuleElement < ApplicationRecord
         else
           available_on_trial ? { view: true, reason: nil } : { view: false, reason: 'invalid-subscription' }
         end
-      elsif user.complimentary_user?
+      elsif user.complimentary_user? || user.non_student_user?
         available_for_complimentary(scul)
       else
         { view: false, reason: nil }

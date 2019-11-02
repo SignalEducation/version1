@@ -104,7 +104,9 @@
   let searchParams = new URLSearchParams(window.location.search);
 
   function addToCart() {
-    var selectedPlan = $("input[name='plans']:checked");
+    let selectedPlan = $("input[name='plans']:checked");
+    let planData = {name: selectedPlan.attr('data-name'), id: selectedPlan.attr('value'), body: selectedPlan.attr('data-body'), frequency: selectedPlan.attr('data-frequency')};
+    planOptionSelect(planData);
     dataLayer.push({
       'event': 'addToCart',
       'ecommerce': {
@@ -145,6 +147,7 @@
   function checkout2(type) {
     var selectedPlan = $("input[name='plans']:checked");
     var convertType = (type === "stripe") ? "Credit Card" : "PayPal";
+    providerOptionSelect(convertType);
     dataLayer.push({ 'event': 'checkout',
       'ecommerce': {
         'checkout': {
@@ -409,6 +412,7 @@
           if(data.status == 'incomplete'){
             handlePayment(data.client_secret, data.subscription_id)
           } else if(data.status == 'active'){
+            subscriptionCreation(data);
             window.location.replace("#{personal_upgrade_complete_url(@subscription.completion_guid)}");
           }
         },
@@ -440,6 +444,7 @@
           dataType: 'json',
           success: function(data,status,xhr){
             if( $.inArray(intentStatus, statusArray) !== -1){
+              subscriptionCreation(data);
               window.location.replace("#{personal_upgrade_complete_url(@subscription.completion_guid)}");
             }
           },

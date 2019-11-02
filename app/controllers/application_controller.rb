@@ -9,7 +9,6 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception, prepend: true
   before_action :authenticate_if_staging
-  before_action :setup_mcapi
   before_action :set_locale        # not for Api::
   before_action :set_session_stuff # not for Api::
   before_action :set_layout_variables
@@ -38,10 +37,10 @@ class ApplicationController < ActionController::Base
     @current_user = current_user_session&.record
   end
 
-  def set_current_visit
+  def set_current_visit(session_user = nil)
     return unless current_visit && !current_visit.user
 
-    current_visit.user = current_user
+    current_visit.user = current_user || session_user
     current_visit.save!
   end
 
@@ -364,8 +363,4 @@ class ApplicationController < ActionController::Base
     @tag_manager_course = course
   end
   helper_method :tag_manager_data_layer
-
-  def setup_mcapi
-    @mc = Mailchimp::API.new(ENV['LEARNSIGNAL_MAILCHIMP_API_KEY'])
-  end
 end

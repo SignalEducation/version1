@@ -12,7 +12,7 @@ class EnrollmentsController < ApplicationController
     @enrollment.active = true
 
     if @enrollment.save
-      # redirect_to library_special_link(@enrollment.subject_course)
+      ahoy.track 'Course Enrol', course: @enrollment.subject_course.name, sitting: @enrollment.exam_sitting.name, exam_date: @enrollment.enrollment_date
       flash[:success] = "Thank you. You have successfully enrolled in #{@enrollment&.subject_course&.name}"
     else
       flash[:error] = t('controllers.enrollments.create.flash.error')

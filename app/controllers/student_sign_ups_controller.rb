@@ -134,17 +134,19 @@ class StudentSignUpsController < ApplicationController
       handle_post_user_creation(@user)
       handle_course_enrollment(@user, params[:subject_course_id]) if params[:subject_course_id]
 
+      # TODO: Refactor this to not use the flash
       if flash[:plan_guid]
         UserSession.create(@user)
-        set_current_visit
+        set_current_visit(@user)
         redirect_to new_subscription_url(plan_guid: flash[:plan_guid], exam_body_id: flash[:exam_body], registered: true)
       elsif flash[:product_id]
         UserSession.create(@user)
-        set_current_visit
+        set_current_visit(@user)
         redirect_to new_product_order_url(product_id: flash[:product_id], registered: true)
       else
         flash[:datalayer_id] = @user.id
         flash[:datalayer_body] = @user.try(:preferred_exam_body).try(:name)
+        set_current_visit(@user)
         redirect_to personal_sign_up_complete_url
       end
     elsif request&.referrer
