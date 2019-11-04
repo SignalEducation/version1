@@ -1,6 +1,6 @@
 .row.row-lg
   .col-xl-8
-    #video-player-window.video-player-window
+    #video-player-window.video-player-window{data: {lesson_name: @course_module_element.name, course_name: @course.name}}
       =render partial: 'courses/video_player', locals: { cme: @course_module_element }
 
     .pt-5.pb-5

@@ -31,6 +31,7 @@
         contentType: "application/json; charset=utf-8"
       });
       player.off('timeupdate', timeUpdate);
+      videoFinishedEvent(logId);
     }
   };
 
@@ -46,6 +47,7 @@
         contentType: "application/json; charset=utf-8",
         success: function(data,status,xhr){
           logId = data.video_log_id;
+          videoPlayEvent(logId);
         },
         error: function(xhr,status,error){
           console.log(xhr);
@@ -53,7 +55,6 @@
         }
       });
     }
-    dataLayer.push({'event':'videoAction', 'video_name':"#{cme.name}", 'course_name':"#{@course.name}", 'video_action':'Play'});
   };
 
   player.on('play', onPlay);

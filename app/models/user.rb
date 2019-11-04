@@ -99,7 +99,7 @@ class User < ApplicationRecord
   has_many :student_exam_tracks
   has_many :course_section_user_logs
   has_many :subject_course_user_logs
-  has_many :visits
+  has_many :ahoy_visits, :class_name => 'Ahoy::Visit'
   has_many :charges
   has_many :refunds
   has_many :ahoy_events, :class_name => 'Ahoy::Event'
@@ -117,6 +117,7 @@ class User < ApplicationRecord
   validates :last_name, presence: true, length: {minimum: 2, maximum: 30}
   validates :password, presence: true, length: {minimum: 6, maximum: 255}, on: :create
   validates :user_group_id, presence: true
+  validates :name_url, presence: true, uniqueness: { case_sensitive: false }, if: :tutor_user?
   validates_confirmation_of :password, on: :create
   validates_confirmation_of :password, unless: Proc.new { |u| u.password.blank? }
   validates :locale, inclusion: {in: LOCALES}
@@ -126,9 +127,10 @@ class User < ApplicationRecord
   before_validation { squish_fields(:email, :first_name, :last_name) }
   before_create :add_guid
   before_create :set_additional_user_attributes
-  after_create :create_referral_code_record, :create_or_update_intercom_user
+  after_create :create_referral_code_record
   after_update :update_stripe_customer
   after_save :update_hub_spot_data
+  after_destroy :delete_stripe_customer
 
   # scopes
   scope :all_in_order, -> { order(:user_group_id, :last_name, :first_name, :email) }
@@ -367,62 +369,66 @@ class User < ApplicationRecord
 
   ## UserGroup Access methods
   def student_user?
-    self.user_group.try(:student_user)
+    user_group&.student_user
   end
 
   def non_student_user?
-    !self.user_group.student_user
+    !user_group&.student_user
   end
 
   def standard_student_user?
-    self.student_user? && self.user_group.trial_or_sub_required
+    student_user? && user_group&.trial_or_sub_required
   end
 
   def complimentary_user?
-    self.user_group.try(:student_user) && !self.user_group.trial_or_sub_required
+    user_group&.student_user && !user_group&.trial_or_sub_required
   end
 
   def non_verified_user?
-    !self.email_verified && self.email_verification_code
+    !email_verified && email_verification_code
   end
 
   def blocked_user?
-    self.user_group.blocked_user
+    user_group&.blocked_user
   end
 
   def system_requirements_access?
-    self.user_group.system_requirements_access
+    user_group&.system_requirements_access
+  end
+
+  def tutor_user?
+    user_group&.tutor
   end
 
   def content_management_access?
-    self.user_group.content_management_access
+    user_group&.content_management_access
   end
 
   def exercise_corrections_access?
-    self.user_group.exercise_corrections_access
+    user_group&.exercise_corrections_access
   end
 
   def stripe_management_access?
-    self.user_group.stripe_management_access
+    user_group&.stripe_management_access
   end
 
   def user_management_access?
-    self.user_group.user_management_access
+    user_group&.user_management_access
   end
 
   def developer_access?
-    self.user_group.developer_access
+    user_group&.developer_access
   end
 
   def marketing_resources_access?
-    self.user_group.marketing_resources_access
+    user_group&.marketing_resources_access
   end
 
   def user_group_management_access?
-    self.user_group.user_group_management_access
+    user_group&.user_group_management_access
   end
 
-  def is_admin?
+  def admin?
     user_group_management_access? && developer_access? && system_requirements_access?
   end
 
@@ -467,6 +473,14 @@ class User < ApplicationRecord
 
   def valid_subscription_for_exam_body?(exam_body_id)
     active_subscriptions_for_exam_body(exam_body_id).all_valid.any?
+  end
+
+  def subscription_action_required?
+    viewable_subscriptions.map(&:state).include?('pending_3d_secure')
+  end
+
+  def actionable_invoice
+    invoices.where(payment_attempted: true).where.not(next_payment_attempt_at: nil).last
   end
 
   def analytics_exam_body_plan_data
@@ -598,13 +612,14 @@ class User < ApplicationRecord
   end
 
   def destroyable?
-      self.course_module_element_user_logs.empty? &&
-      self.invoices.empty? &&
-      self.quiz_attempts.empty? &&
-      self.student_exam_tracks.empty? &&
-      self.subscriptions.empty? &&
-      self.subscription_payment_cards.empty? &&
-      self.subscription_transactions.empty?
+    course_module_element_user_logs.empty? &&
+      invoices.empty? &&
+      quiz_attempts.empty? &&
+      student_exam_tracks.empty? &&
+      subscriptions.empty? &&
+      subscription_payment_cards.empty? &&
+      subscription_transactions.empty? &&
+      orders.empty?
   end
 
   def full_name
@@ -726,10 +741,6 @@ class User < ApplicationRecord
     self.email_verification_code = SecureRandom.hex(10)
   end
 
-  def create_or_update_intercom_user
-    IntercomCreateUserWorker.perform_async(self.try(:id)) unless Rails.env.test?
-  end
-
   def update_stripe_customer
     unless Rails.env.test?
       if self.saved_change_to_email?
@@ -739,6 +750,15 @@ class User < ApplicationRecord
         stripe_customer.save
       end
     end
+  end
+
+  def delete_stripe_customer
+    return if Rails.env.test?
+
+    return unless stripe_customer_id
+
+    stripe_customer = Stripe::Customer.retrieve(stripe_customer_id)
+    stripe_customer&.delete(stripe_customer_id)
   end
 
   def update_hub_spot_data

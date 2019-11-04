@@ -9,7 +9,6 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception, prepend: true
   before_action :authenticate_if_staging
-  before_action :setup_mcapi
   before_action :set_locale        # not for Api::
   before_action :set_session_stuff # not for Api::
   before_action :set_layout_variables
@@ -38,10 +37,10 @@ class ApplicationController < ActionController::Base
     @current_user = current_user_session&.record
   end
 
-  def set_current_visit
+  def set_current_visit(session_user = nil)
     return unless current_visit && !current_visit.user
 
-    current_visit.user = current_user
+    current_visit.user = current_user || session_user
     current_visit.save!
   end
 
@@ -129,7 +128,7 @@ class ApplicationController < ActionController::Base
   end
 
   def authorize_rack_profiler
-    return unless current_user&.is_admin?
+    return unless current_user&.admin?
 
     Rack::MiniProfiler.authorize_request
   end
@@ -308,13 +307,11 @@ class ApplicationController < ActionController::Base
   def user_course_correct_url(the_thing, scul = nil)
     return new_student_url unless current_user
 
-    #if current_user.non_verified_user? # current_user.non_verified_user?
-    #  library_course_url(the_thing.course_module.course_section.subject_course.group.name_url,
-    #                     the_thing.course_module.course_section.subject_course.name_url,
-    #                     anchor: 'verification-required')
-    #
-    #elsif the_thing.related_course_module_element_id && the_thing.previous_cme_restriction(scul)
-    if the_thing.related_course_module_element_id && the_thing.previous_cme_restriction(scul)
+    if current_user.non_verified_user? # current_user.non_verified_user?
+      library_course_url(the_thing.course_module.course_section.subject_course.group.name_url,
+                         the_thing.course_module.course_section.subject_course.name_url,
+                         anchor: 'verification-required')
+    elsif the_thing.related_course_module_element_id && the_thing.previous_cme_restriction(scul)
       library_course_url(the_thing.course_module.course_section.subject_course.group.name_url,
                          the_thing.course_module.course_section.subject_course.name_url,
                          anchor: 'related-lesson-restriction')
@@ -366,8 +363,4 @@ class ApplicationController < ActionController::Base
     @tag_manager_course = course
   end
   helper_method :tag_manager_data_layer
-
-  def setup_mcapi
-    @mc = Mailchimp::API.new(ENV['LEARNSIGNAL_MAILCHIMP_API_KEY'])
-  end
 end

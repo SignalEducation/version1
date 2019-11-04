@@ -14,7 +14,7 @@ class UserVerificationsController < ApplicationController
       redirect_to set_password_url
     elsif @user
       UserSession.create(@user)
-      set_current_visit
+      set_current_visit(@user)
       flash[:datalayer_verify] = true
       if @user.preferred_exam_body&.group
         if @user.preferred_exam_body&.group == Group.find_by(name: 'CPD')

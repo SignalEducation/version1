@@ -12,7 +12,9 @@ module Subscriptions
       Rails.logger.info "DataLayer Event: PlanChanges#show - Subscription: #{@subscription.id}, Revenue: #{@subscription.subscription_plan.price}, PlanName: #{@subscription.subscription_plan.name}, Brand: #{@subscription.subscription_plan.exam_body.name}" if @subscription
     end
 
-    def new; end
+    def new
+      @card = default_payment_card(@subscription.user_id)
+    end
 
     def create
       send("change_#{@subscription.subscription_type}_subscription",
@@ -53,6 +55,11 @@ module Subscriptions
         PaypalSubscriptionsService.new(subscription).change_plan(plan_id)
 
       redirect_to @subscription.paypal_approval_url
+    end
+
+    def default_payment_card(user_id)
+      @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: user_id).all_in_order
+      @default_payment_card       = @subscription_payment_cards.all_default_cards.first
     end
 
     def plan_change_params

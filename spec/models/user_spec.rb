@@ -86,7 +86,7 @@ describe User do
   it { should have_many(:course_section_user_logs) }
   it { should have_many(:subject_course_user_logs) }
   it { should belong_to(:user_group) }
-  it { should have_many(:visits) }
+  it { should have_many(:ahoy_visits) }
   it { should have_many(:charges) }
   it { should have_many(:refunds) }
   it { should have_many(:ahoy_events) }
@@ -120,6 +120,16 @@ describe User do
   it { should_not validate_presence_of(:country_id) }
 
   it { should validate_presence_of(:user_group_id) }
+
+  context 'is a tutor' do
+    before { allow(subject).to receive(:tutor_user?).and_return(true) }
+    it { should validate_presence_of(:name_url)}
+  end
+
+  context 'is not a tutor' do
+    before { allow(subject).to receive(:tutor_user?).and_return(false) }
+    it { should_not validate_presence_of(:name_url)}
+  end
 
 
   context "user email validation" do
@@ -214,6 +224,9 @@ describe User do
   it { should respond_to(:active_enrollments_in_sitting_order) }
   it { should respond_to(:next_enrollment) }
   it { should respond_to(:next_exam_date) }
+
+  it { should respond_to(:subscription_action_required?) }
+  it { should respond_to(:actionable_invoice) }
 
   it { should respond_to(:completed_course_module_element) }
   it { should respond_to(:started_course_module_element) }

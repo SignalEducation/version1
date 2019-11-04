@@ -2,7 +2,6 @@
 
 class StudentSignUpsController < ApplicationController
 
-  skip_after_action :intercom_rails_auto_include, only: [:landing, :new, :sign_in_or_register]
   before_action :check_logged_in_status, except: %i[landing subscribe group]
   before_action :get_variables
   before_action :create_user_object, only: %i[new sign_in_or_register landing]
@@ -131,21 +130,23 @@ class StudentSignUpsController < ApplicationController
 
     @user.pre_creation_setup
 
-    if @user.valid? && @user.save
+    if verify_recaptcha(model: @user) && @user.valid? && @user.save
       handle_post_user_creation(@user)
       handle_course_enrollment(@user, params[:subject_course_id]) if params[:subject_course_id]
 
+      # TODO: Refactor this to not use the flash
       if flash[:plan_guid]
         UserSession.create(@user)
-        set_current_visit
+        set_current_visit(@user)
         redirect_to new_subscription_url(plan_guid: flash[:plan_guid], exam_body_id: flash[:exam_body], registered: true)
       elsif flash[:product_id]
         UserSession.create(@user)
-        set_current_visit
-        redirect_to new_order_url(product_id: flash[:product_id], registered: true)
+        set_current_visit(@user)
+        redirect_to new_product_order_url(product_id: flash[:product_id], registered: true)
       else
         flash[:datalayer_id] = @user.id
         flash[:datalayer_body] = @user.try(:preferred_exam_body).try(:name)
+        set_current_visit(@user)
         redirect_to personal_sign_up_complete_url
       end
     elsif request&.referrer

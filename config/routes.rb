@@ -103,8 +103,6 @@ Rails.application.routes.draw do
       resources :exercises, only: %i[index show edit update], shallow: true
     end
 
-    get '/visits/all_index', to: 'visits#all_index', as: :visits_all_index
-    get '/visits/all_show/:id', to: 'visits#all_show', as: :visits_all_show
     post '/search_visits', to: 'visits#all_index', as: :search_visits
 
     post :preview_csv_upload, to: 'users#preview_csv_upload'
@@ -230,7 +228,6 @@ Rails.application.routes.draw do
 
     post '/complaints_intercom', to: 'footer_pages#complaints_intercom'
     post '/contact_us_intercom', to: 'footer_pages#contact_us_intercom'
-    post '/tutor_contact_form',  to: 'library#tutor_contact_form'
 
     get 'register_or_login', to: 'student_sign_ups#sign_in_or_register', as: :sign_in_or_register
 

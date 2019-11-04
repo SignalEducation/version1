@@ -173,6 +173,7 @@ class SubjectCoursesController < ApplicationController
   def resource_allowed_params
     params.require(:subject_course_resource).permit(:name, :subject_course_id,
                                                     :description, :file_upload,
-                                                    :external_url)
+                                                    :external_url, :active,
+                                                    :available_on_trial)
   end
 end

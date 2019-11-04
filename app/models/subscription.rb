@@ -46,6 +46,7 @@ class Subscription < ApplicationRecord
   belongs_to :subscription_plan
   belongs_to :coupon, optional: true
   belongs_to :changed_from, class_name: 'Subscription', foreign_key: :changed_from_id, optional: true
+  visitable :ahoy_visit
 
   has_one :changed_to, class_name: 'Subscription', foreign_key: 'changed_from_id', inverse_of: :changed_from
   has_one :student_access
@@ -79,7 +80,7 @@ class Subscription < ApplicationRecord
   # scopes
   scope :all_in_order,             -> { order(:user_id, :id) }
   scope :in_created_order,         -> { order(:created_at) }
-  scope :in_reverse_created_order, -> { order(:created_at).reverse_order }
+  scope :in_reverse_created_order, -> { order(created_at: :desc) }
   scope :all_of_status,            ->(status) { where(stripe_status: status) }
   scope :all_active,               -> { with_states(:active, :paused, :errored, :pending_cancellation) }
   scope :all_valid,                -> { where(state: VALID_STATES) }
@@ -123,6 +124,9 @@ class Subscription < ApplicationRecord
     end
 
     event :mark_payment_action_required do
+      # This event can also be triggered when non-3D-secure plan_changes fails to charge the first payment
+      # So subscriptions that are not SCA required can be in pending_3d_secure state as action is required
+      # in order to charge an outstanding invoice (A new card)
       transition all => :pending_3d_secure
     end
 
@@ -347,7 +351,7 @@ class Subscription < ApplicationRecord
       where(subscription_plan_category_id: nil).
       for_exam_body(subscription_plan.exam_body_id).
       in_currency(subscription_plan.currency_id).
-      all_active.all_in_order
+      all_active.all_in_display_order
   end
 
   def update_from_stripe
@@ -475,7 +479,7 @@ class Subscription < ApplicationRecord
   def update_hub_spot_data
     return if Rails.env.test?
 
-    HubSpotContactWorker.perform_async(id)
+    HubSpotContactWorker.perform_async(user_id)
   end
 
   def subscription_change_allowable

@@ -1486,7 +1486,7 @@ en:
         password_confirmation_placeholder: Confirm your password
         address: Address
         address_placeholder: Billing address
-        name_url: Name URL
+        name_url: Name URL (Required)
         name_url_placeholder: must-be-lower-case-and-no-spaces
         country_id: Country
         login_count: Login count
@@ -1520,6 +1520,7 @@ en:
         student_number_placeholder: Student Number
         stripe_account_balance: Stripe Account Balance (in Cents)
         stripe_account_balance_placeholder: Student Number
+        preferred_exam_body_id: Preferred Exam Body
 
         student_access:
           account_type: Account Type

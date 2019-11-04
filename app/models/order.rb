@@ -36,6 +36,8 @@ class Order < ApplicationRecord
   belongs_to :subject_course, optional: true
   belongs_to :mock_exam, optional: true
   belongs_to :user
+  visitable :ahoy_visit
+
   has_one :order_transaction
   has_one :invoice, autosave: true
 

@@ -1,4 +1,4 @@
-.row.row-lg
+.row.row-lg#quiz-window{data: {lesson_name: @course_module_element.name, course_name: @course.name}}
   .col-xl-12
     -if @course_module_element.try(:course_module_element_quiz).try(:enough_questions?)
       %h1.h3
@@ -69,6 +69,10 @@
 
 
       if (currentQuestion < numberOfQuestions) {
+        if (currentQuestion <= 1) {
+          quizStartEvent();
+        }
+
         allQuestionsList;
         currentQuestion++;
         updateProgressBar();

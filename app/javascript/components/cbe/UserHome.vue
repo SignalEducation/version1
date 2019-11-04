@@ -8,6 +8,7 @@
 
     <div class="cbe-content">
       <router-view :id="$route.path" />
+      <CbeCalculator />
     </div>
 
     <div id="cbe-footer">
@@ -37,11 +38,13 @@
 <script>
 import axios from 'axios';
 import { mapGetters } from 'vuex';
+import CbeCalculator from '../cbe/CbeCalculator';
 import NavBar from './NavBar.vue';
 import NavPagination from './NavPagination.vue';
 
 export default {
   components: {
+    CbeCalculator,
     NavBar,
     NavPagination,
   },

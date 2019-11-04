@@ -30,7 +30,7 @@ class LibraryController < ApplicationController
       if country && @currency_id
         @subscription_plans =
           SubscriptionPlan.where(subscription_plan_category_id: nil, exam_body_id: @group.exam_body_id).
-                           includes(:currency).in_currency(@currency_id).all_active.all_in_order.limit(3)
+                           includes(:currency).in_currency(@currency_id).all_active.all_in_display_order.limit(3)
       end
     else
       redirect_to root_url
@@ -40,7 +40,7 @@ class LibraryController < ApplicationController
   def course_show
     # Course Data necessary for logged out state
     tag_manager_data_layer(@course.name)
-    seo_title_maker(@course.seo_title, @course.seo_description, nil)
+    seo_title_maker(@course.seo_title.present? || @course.name, @course.seo_description, nil)
     @form_type = "Course Tutor Question. Course: #{@course.name}"
     @course_tutor_details = @course.course_tutor_details.all_in_order
 
@@ -75,14 +75,6 @@ class LibraryController < ApplicationController
     else
       render 'course_preview'
     end
-  end
-
-  def tutor_contact_form
-    user_id = current_user ? current_user.id : nil
-    IntercomCreateMessageWorker.perform_async(user_id, params[:email_address], params[:full_name],
-                                              params[:question], params[:type])
-    flash[:success] = 'Thank you! Your submission was successful. We will contact you shortly.'
-    redirect_to request.referrer
   end
 
   protected

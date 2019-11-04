@@ -13,7 +13,7 @@
                     =subscription.user_readable_name
 
                   %span.badge.badge-warning.align-middle
-                    =subscription.pending_3d_secure? ? 'Payment Error' : subscription.state.capitalize
+                    =subscription.pending_3d_secure? ? 'Action Required' : subscription.state.capitalize
 
                 %p.mb-1
                   Subscription created on
@@ -65,15 +65,15 @@
                             %tr
                               %td=invoice.id
                               %td=humanize_datetime(invoice.issued_at)
-                              %td=number_in_local_currency(invoice.total, invoice.currency)
+                              %td=number_in_local_currency(invoice.amount_due, invoice.currency)
                               %td
                                 %span{class: invoice.status == 'Paid' ? 'text-success' : 'text-danger'}
                                   =invoice.status
                               %td
-                                -if invoice.requires_3d_secure
+                                -if (subscription.pending_3d_secure? && invoice.requires_3d_secure) || invoice.status == 'Past Due'
                                   =link_to show_invoice_url(invoice.sca_verification_guid) do
                                     .btn.btn-primary.btn-xs
-                                      Authenticate
+                                      =invoice.requires_3d_secure ? 'Authenticate' : 'Confirm Payment'
                                 -else
                                   =link_to subscription_invoices_url(invoice.id, format: 'pdf'), target: '_blank' do
                                     .btn.btn-link.btn-xs

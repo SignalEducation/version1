@@ -10,7 +10,7 @@ gem 'puma', '~> 3.11'
 # Core gems - common to all environments
 gem 'airbrake', '~> 9.2'
 gem 'authlogic', '~> 5.0.0'
-gem 'ahoy_matey' # visit tracking
+gem 'ahoy_matey', '>= 3.0.0' # visit tracking
 gem 'uuidtools', '~> 2.1', '>= 2.1.5'
 gem 'blazer', '~> 2.1'
 gem 'scrypt' # S-Crypt for Authlogic
@@ -24,6 +24,7 @@ gem 'coffee-rails', '~> 4.2' # enables CoffeeScript (abbreviated javascript)
 gem 'dynamic_sitemaps' # Sitemap generation grm
 gem 'faraday', '~> 0.15.4'
 gem 'geocoder', '~> 1.3', '>= 1.3.7' #  a public API for geo-locating IP addresses
+gem 'groupdate'
 gem 'haml-rails' # a replacement system for HTML
 gem 'intercom-rails' # communicate with Intercom.io
 gem 'intercom', '~> 3.5.23' # Intercom API
@@ -69,6 +70,7 @@ gem 'scout_apm'
 gem 'rack-mini-profiler'
 gem 'flamegraph'
 gem 'stackprof'
+gem "recaptcha"
 # Use ActiveStorage variant
 # gem 'mini_magick', '~> 4.8'
 

@@ -12,7 +12,7 @@ class EnrollmentsController < ApplicationController
     @enrollment.active = true
 
     if @enrollment.save
-      # redirect_to library_special_link(@enrollment.subject_course)
+      ahoy.track 'Course Enrol', course: @enrollment.subject_course.name, sitting: @enrollment.exam_sitting.name, exam_date: @enrollment.enrollment_date
       flash[:success] = "Thank you. You have successfully enrolled in #{@enrollment&.subject_course&.name}"
     else
       flash[:error] = t('controllers.enrollments.create.flash.error')
@@ -52,7 +52,6 @@ class EnrollmentsController < ApplicationController
   protected
 
   def send_welcome_email(user_id, course_name)
-    # Turned Off until emails are all moved back from intercom
     MandrillWorker.perform_at(5.minutes.from_now, user_id, 'send_enrollment_welcome_email', course_name, account_url)
   end
 

@@ -61,7 +61,7 @@ class StripeApiEvent < ApplicationRecord
   end
 
   def self.processing_delay(event_type)
-    DELAYED_TYPES.include?(event_type) ? 5.minutes : 1.minute
+    DELAYED_TYPES.include?(event_type) ? 1.minute : 10.seconds
   end
 
   def self.should_process?(event_json)
@@ -171,7 +171,7 @@ class StripeApiEvent < ApplicationRecord
 
   def process_invoice_payment_failed(stripe_customer_guid, stripe_next_attempt, stripe_subscription_guid, stripe_invoice_guid)
     user = User.find_by(stripe_customer_id: stripe_customer_guid)
-    subscription = Subscription.find_by(stripe_guid: stripe_subscription_guid)
+    subscription = Subscription.in_reverse_created_order.find_by(stripe_guid: stripe_subscription_guid)
     invoice = Invoice.find_by(stripe_guid: stripe_invoice_guid)
 
     if user && invoice && subscription
@@ -192,7 +192,7 @@ class StripeApiEvent < ApplicationRecord
 
   def process_payment_action_required(stripe_inv_id, stripe_subscription_guid)
     invoice = Invoice.find_by(stripe_guid: stripe_inv_id)
-    subscription = Subscription.find_by(stripe_guid: stripe_subscription_guid)
+    subscription = Subscription.in_reverse_created_order.find_by(stripe_guid: stripe_subscription_guid)
 
     if invoice && subscription
       invoice.mark_payment_action_required if subscription.invoices.count > 1
@@ -205,8 +205,8 @@ class StripeApiEvent < ApplicationRecord
   end
 
   def process_customer_subscription_deleted(stripe_customer_guid, stripe_subscription_guid, cancel_at_period_end)
-    user = User.find_by_stripe_customer_id(stripe_customer_guid)
-    subscription = Subscription.where(stripe_guid: stripe_subscription_guid).last
+    user = User.find_by(stripe_customer_id: stripe_customer_guid)
+    subscription = Subscription.in_reverse_created_order.find_by(stripe_guid: stripe_subscription_guid)
 
     if user && subscription
       Rails.logger.debug "DEBUG: Deleted Subscription-#{stripe_subscription_guid} for User-#{stripe_customer_guid}"

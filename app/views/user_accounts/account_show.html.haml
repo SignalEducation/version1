@@ -27,6 +27,10 @@
               %li.nav-item
                 %a#account-info-tab.nav-link{"aria-controls" => "account-info", "aria-selected" => "false", "data-toggle" => "tab", :href => "#account-info", :role => "tab"}
                   Account Info
+                  -if current_user&.subscription_action_required?
+                    %span.badge.badge-warning.align-middle
+                      ='Action Required'
+
               %li.nav-item
                 %a#payment-details-tab.nav-link{"aria-controls" => "payment-details", "aria-selected" => "false", "data-toggle" => "tab", :href => "#payment-details", :role => "tab"}
                   Card Details

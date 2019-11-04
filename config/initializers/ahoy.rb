@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Ahoy::Store < Ahoy::DatabaseStore
   def track_visit(data)
     data[:id] = ensure_uuid(data.delete(:visit_token))
@@ -15,7 +17,7 @@ class Ahoy::Store < Ahoy::DatabaseStore
   end
 
   def visit_model
-    Visit
+    Ahoy::Visit
   end
 
   UUID_NAMESPACE = UUIDTools::UUID.parse("a82ae811-5011-45ab-a728-569df7499c5f")
@@ -28,10 +30,14 @@ class Ahoy::Store < Ahoy::DatabaseStore
 end
 
 # set to true for JavaScript tracking
-Ahoy.api = false
+Ahoy.api = true
 
 # better user agent parsing
 Ahoy.user_agent_parser = :device_detector
 
 # better bot detection
 Ahoy.bot_detection_version = 2
+
+# By default, a new visit is created after 4 hours of inactivity.
+# This sets it to 1 hour
+Ahoy.visit_duration = 1.hour

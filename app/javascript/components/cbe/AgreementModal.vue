@@ -20,7 +20,7 @@
 <script>
 import axios from 'axios';
 import { mapGetters } from 'vuex';
-import Modal from '../../lib/Modal';
+import Modal from '../../lib/Modal/index.vue';
 
 export default {
   components: {
@@ -43,7 +43,7 @@ export default {
     }),
   },
   methods: {
-    createUserLog: function() {
+    createUserLog() {
       axios
         .post(`/api/v1/cbes/${this.userCbeData.cbe_id}/users_log`, {
           cbe_user_log: this.formatedData(),
@@ -54,14 +54,14 @@ export default {
         })
         .catch(error => {});
     },
-    formatedData: function() {
-      let data = {};
+    formatedData() {
+      const data = {};
       data.status = 'started';
       data.cbe_id = this.userCbeData.cbe_id;
       data.user_id = this.userCbeData.user_id;
       return data;
     },
-    acceptAgreement: function(accepted) {
+    acceptAgreement(accepted) {
       if (accepted) {
         this.createUserLog();
       } else {
@@ -70,7 +70,7 @@ export default {
 
       this.toggleResetModal();
     },
-    toggleResetModal: function() {
+    toggleResetModal() {
       this.agreementModalIsOpen = !this.agreementModalIsOpen;
     },
   },
