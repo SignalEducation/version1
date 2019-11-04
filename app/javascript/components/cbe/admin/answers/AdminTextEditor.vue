@@ -38,7 +38,7 @@ export default {
     }
   },
   watch: {
-    answer(newValue, oldValue) {
+    answer(newValue) {
       this.answersArray[0] = {
         kind: "open",
         content: {
