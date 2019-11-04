@@ -4,8 +4,8 @@
 
 // Video Player Events
 function videoPlayEvent(logId) {
-  let playerWindow = $("#video-player-window"),
-  lessonData = playerWindow.data(),
+  let videoLesson = $("#video-player-window"),
+  lessonData = videoLesson.data(),
   playerType = (lessonData.hasOwnProperty('vimeoInitialized'))? 'Vimeo' : 'DaCast';
 
   ahoy.track('Video Play', {'lesson': lessonData.lessonName, 'course': lessonData.courseName, 'log_id': logId, 'player': playerType });
@@ -13,8 +13,8 @@ function videoPlayEvent(logId) {
     'course_name': lessonData.courseName, 'video_action':'Play'});
 }
 function videoFinishedEvent() {
-  let playerWindow = $("#video-player-window"),
-  lessonData = playerWindow.data(),
+  let videoLesson = $("#video-player-window"),
+  lessonData = videoLesson.data(),
   playerType = (lessonData.hasOwnProperty('vimeoInitialized'))? 'Vimeo' : 'DaCast';
 
   ahoy.track('Video Finished', {'lesson': lessonData.lessonName, 'course': lessonData.courseName,
