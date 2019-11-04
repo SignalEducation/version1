@@ -1,4 +1,4 @@
-.row.row-lg
+.row.row-lg#quiz-results-window{data: {lesson_name: @course_module_element.name, course_name: @course.name, result: @pass, log_id: @course_module_element_user_log.id}}
   .col-xl-12
     %h1.h3
       =@course_module_element_user_log.course_module_element.try(:name).try(:html_safe)
@@ -76,6 +76,7 @@
     $( document ).ready(function() {
       allSolutions.hide();
       summaryButton.hide();
+      quizFinishEvent();
     });
 
     function showSolution() {

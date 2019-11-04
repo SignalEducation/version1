@@ -86,7 +86,7 @@ describe User do
   it { should have_many(:course_section_user_logs) }
   it { should have_many(:subject_course_user_logs) }
   it { should belong_to(:user_group) }
-  it { should have_many(:visits) }
+  it { should have_many(:ahoy_visits) }
   it { should have_many(:charges) }
   it { should have_many(:refunds) }
   it { should have_many(:ahoy_events) }

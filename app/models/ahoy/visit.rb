@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: visits
@@ -30,9 +32,11 @@
 #  started_at       :datetime
 #
 
-class Visit < ApplicationRecord
-  has_many :events, class_name: "Ahoy::Event"
+class Ahoy::Visit < ApplicationRecord
+  has_many :events, class_name: 'Ahoy::Event', dependent: :destroy
+  has_one :subscription, foreign_key: 'ahoy_visit_id', inverse_of: :ahoy_visit
   belongs_to :user, optional: true
 
-  scope :search_for, lambda { |search_term| where('utm_source ILIKE :t OR utm_medium ILIKE :t OR utm_term ILIKE :t  OR utm_content ILIKE :t  OR utm_campaign ILIKE :t ', t: '%' + search_term + '%').order(started_at: :desc) }
+  scope :search_for, ->(search_term) { where('utm_source ILIKE :t OR utm_medium ILIKE :t OR utm_term ILIKE :t  OR utm_content ILIKE :t  OR utm_campaign ILIKE :t ', t: '%' + search_term + '%').order(started_at: :desc) }
+  scope :all_in_order, -> { order(:started_at) }
 end

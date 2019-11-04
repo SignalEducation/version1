@@ -99,7 +99,7 @@ class User < ApplicationRecord
   has_many :student_exam_tracks
   has_many :course_section_user_logs
   has_many :subject_course_user_logs
-  has_many :visits
+  has_many :ahoy_visits, :class_name => 'Ahoy::Visit'
   has_many :charges
   has_many :refunds
   has_many :ahoy_events, :class_name => 'Ahoy::Event'

@@ -22,8 +22,8 @@
                               'csul_id': section_log_id,
                               'set_id': exam_track_id }),
         success: function(data,status,xhr){
-          console.log('Success')
           log_id = data.video_log_id;
+          videoPlayEvent();
         },
         error: function(xhr,status,error){
           console.log(xhr);
@@ -41,7 +41,7 @@
       contentType: "application/json; charset=utf-8",
       data: JSON.stringify({ 'video_log_id': log_id, 'cme_id': video_cme_id }),
       success: function(data,status,xhr){
-        console.log('Success')
+        videoFinishedEvent();
       },
       error: function(xhr,status,error){
         console.log(xhr);

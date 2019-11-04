@@ -46,6 +46,7 @@ class Subscription < ApplicationRecord
   belongs_to :subscription_plan
   belongs_to :coupon, optional: true
   belongs_to :changed_from, class_name: 'Subscription', foreign_key: :changed_from_id, optional: true
+  visitable :ahoy_visit
 
   has_one :changed_to, class_name: 'Subscription', foreign_key: 'changed_from_id', inverse_of: :changed_from
   has_one :student_access

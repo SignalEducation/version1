@@ -76,6 +76,10 @@ class SubjectCourseResource < ApplicationRecord
     true
   end
 
+  def type
+    external_url&.blank? ? 'File' : 'Link'
+  end
+
   protected
 
   def check_dependencies
