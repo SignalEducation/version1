@@ -86,8 +86,8 @@ class InvoiceDocument < Prawn::Document
 
     summary_details = [
       ['Subtotal', invoice.currency.format_number(invoice.sub_total)],
-      ['Discount', invoice.currency.format_number((invoice.sub_total - invoice.amount_due))],
-      ['Total',    invoice.currency.format_number(invoice.amount_due)]
+      ['Discount', invoice.currency.format_number((invoice.sub_total - invoice.total))],
+      ['Total',    invoice.currency.format_number(invoice.total)]
     ]
 
     table(summary_details, column_widths: [480, 60], header: true,
