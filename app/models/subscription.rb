@@ -363,7 +363,7 @@ class Subscription < ApplicationRecord
           begin
             stripe_subscription = stripe_customer.subscriptions.retrieve(self.stripe_guid)
 
-            subscription = Subscription.where(stripe_guid: stripe_subscription.id).last
+            subscription = Subscription.where(stripe_guid: stripe_subscription.id).in_reverse_created_order.last
             subscription.next_renewal_date = Time.at(stripe_subscription.current_period_end)
             subscription.stripe_status = stripe_subscription.status
             subscription.stripe_customer_data = stripe_customer.to_hash.deep_dup
