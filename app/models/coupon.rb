@@ -75,7 +75,7 @@ class Coupon < ApplicationRecord
       elsif coupon.percent_off
         discounted_number = sub_plan.price.to_f - ((sub_plan.price.to_f / 100) * coupon.percent_off)
         discounted_price = sub_plan.currency.format_number(discounted_number)
-        valid = true if discounted_number.positive?
+        valid = true unless discounted_number.negative?
       end
     end
     [valid, discounted_price, reason]
