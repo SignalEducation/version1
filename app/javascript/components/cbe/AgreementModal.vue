@@ -1,38 +1,46 @@
 <template>
-  <Modal v-if="agreementModalIsOpen" @close="toggleResetModal()">
-    <h3 slot="header">
-      Ready to begin?
-    </h3>
-    <p slot="body" v-html="cbe_data.agreement_content">
-    </p>
+  <VueWindow
+    v-if="agreementModalIsOpen"
+    :window-header="'Ready to begin?'"
+    :window-is-open="true"
+    @close="toggleResetModal()"
+  >
+    <p
+      slot="body"
+      v-html="cbe_data.agreement_content"
+    />
 
     <div slot="footer">
-      <b-button variant="success" @click="acceptAgreement(true)">
+      <b-button
+        @click="acceptAgreement(true)"
+      >
         Yes
       </b-button>
-      <b-button variant="danger" @click="acceptAgreement(false)">
+      <b-button
+        @click="acceptAgreement(false)"
+      >
         No
       </b-button>
     </div>
-  </Modal>
+  </VueWindow>
 </template>
 
 <script>
 import axios from 'axios';
 import { mapGetters } from 'vuex';
-import Modal from '../../lib/Modal/index.vue';
+import VueWindow from '../VueWindow.vue'
 
 export default {
   components: {
-    Modal,
+    VueWindow,
+  },
+  props: {
+    nextAction: Function,
   },
   data() {
     return {
       agreementModalIsOpen: true,
     };
-  },
-  props: {
-    nextAction: Function,
   },
   computed: {
     ...mapGetters('cbe', {
@@ -64,6 +72,11 @@ export default {
       return data;
     },
     acceptAgreement(accepted) {
+      const navLinks = document.getElementsByClassName('page-item');
+      for (const link of navLinks) {
+        link.style.display = 'block';
+      }
+
       if (accepted) {
         this.createUserLog();
       } else {
