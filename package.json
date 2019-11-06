@@ -3,6 +3,7 @@
   "private": true,
   "dependencies": {
     "@grapecity/wijmo.all": "^5.20192.631",
+    "@hscmap/vue-window": "^2.4.2",
     "@rails/webpacker": "3.5",
     "@tinymce/tinymce-vue": "^3.0.1",
     "axios": "^0.19.0",

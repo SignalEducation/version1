@@ -6,12 +6,11 @@
     <NavBar
       :logo="cbe_data.name"
       :title="cbe_data.name"
-      :user_cbe_data="user_cbe_data"
+      :user-cbe-data="user_cbe_data"
     />
 
     <div class="cbe-content">
       <router-view :id="$route.path" />
-      <CbeCalculator />
     </div>
 
     <div id="cbe-footer">
@@ -45,13 +44,11 @@
 <script>
 import axios from 'axios';
 import { mapGetters } from 'vuex';
-import CbeCalculator from '../cbe/CbeCalculator.vue';
 import NavBar from './NavBar.vue';
 import NavPagination from './NavPagination.vue';
 
 export default {
   components: {
-    CbeCalculator,
     NavBar,
     NavPagination,
   },
@@ -125,9 +122,11 @@ export default {
         const {id} = route.params;
 
         this.user_cbe_data.exam_pages.forEach(page => {
-          if ( page.type === 'questions' &&
-               page.param === id &&
-               page.state === 'Unseen' ) {
+          if (
+            page.type === 'questions' &&
+            page.param === id &&
+            page.state === 'Unseen'
+          ) {
             page.state = 'Seen';
           }
         });
