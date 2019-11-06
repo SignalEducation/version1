@@ -47,6 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
       data: {
         cbe_id: cbeFront.dataset.id,
         user_id: cbeFront.dataset.userId,
+        exercise_id: cbeFront.dataset.exerciseId,
       },
       render: (h) => h(CbeHome),
     }))();

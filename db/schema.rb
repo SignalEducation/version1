@@ -176,7 +176,9 @@ ActiveRecord::Schema.define(version: 2019_11_02_120741) do
     t.datetime "updated_at", null: false
     t.bigint "cbe_id"
     t.bigint "user_id"
+    t.bigint "exercise_id"
     t.index ["cbe_id"], name: "index_cbe_user_logs_on_cbe_id"
+    t.index ["exercise_id"], name: "index_cbe_user_logs_on_exercise_id"
     t.index ["user_id"], name: "index_cbe_user_logs_on_user_id"
   end
 

@@ -3,12 +3,9 @@
     .container
       %header.hero-section
         %h1.h1-hero.mb-2
-          ="#{@order.product.mock_exam.name} Purchase"
+          =order_name(@order)
         %p.p-hero.px-lg-8
-          -if @order.product.mock_exam?
-            Purchase an ACCA Mock Exam and increase your chances of passing the ACCA exams.
-          -else
-            Pass your ACCA exams faster with a question and solution correction pack.
+          =order_short_description(@order)
 
       -if flash[:success] || flash[:error] || flash[:warning]
         =render partial: 'layouts/flash_messages'
@@ -29,7 +26,7 @@
                       .card.card-link.text-center.mb-5
                         .py-4
                           %h4.text-ellipsis.mb-4
-                            =@order.product.mock_exam.name
+                            =order_name(@order)
                           .pt-2
                             %i.budicon-files-tick{"aria-label" => "", :role => "img"}
                           .pt-4.pb-2
@@ -39,10 +36,7 @@
                                 =number_in_local_currency(@order.product.price, @order.product.currency)
                   .px-4
                     %p.text-left
-                      -if @order.product.mock_exam?
-                        Purchase your Mock Exam today. Once submitted we will give you a solution paper, your result, question by question, personalised feedback on your exam and study topic recommendations.
-                      -else
-                        This correction pack is applicable to all ACCA courses. Pick and complete any ACCA question from any resource. Once you have submitted your work, our expert tutors will correct it and give you feedback within 3 days.
+                      =order_description(@order)
 
                 .col-lg-6.mb-5
                   %fieldset.card.card-payments
@@ -75,7 +69,7 @@
   let productName = "#{@order.product.name}";
   let productId = "#{@order.product.id}";
   let productPrice = "#{@order.product.price}";
-  let productBody = "#{@order.product.mock_exam.subject_course.exam_body.name}";
+  let productBody = "#{@order.exam_body_name}";
   let searchParams = new URLSearchParams(window.location.search);
 
   function checkout1() {

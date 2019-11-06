@@ -14,7 +14,6 @@ RSpec.describe Cbe, type: :model do
     it { should respond_to(:updated_at) }
   end
 
-
   describe 'Associations' do
     it { should belong_to(:subject_course) }
     it { should have_many(:sections) }
@@ -24,11 +23,12 @@ RSpec.describe Cbe, type: :model do
 
   describe 'Validations' do
     it { should validate_presence_of(:name) }
-    xit { should validate_presence_of(:title) }
-    xit { should validate_presence_of(:score) }
-    xit { should validate_presence_of(:content) }
     it { should validate_presence_of(:agreement_content) }
     it { should validate_presence_of(:subject_course_id) }
+  end
+
+  describe 'scopes' do
+    it { expect(Cbe).to respond_to(:all_in_order) }
   end
 
   describe 'Factory' do

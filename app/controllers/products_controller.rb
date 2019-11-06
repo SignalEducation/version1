@@ -72,6 +72,7 @@ class ProductsController < ApplicationController
   def set_variables
     @currencies      = Currency.all_in_order
     @mock_exams      = MockExam.all_in_order
+    @cbes            = Cbe.all
     @subject_courses = SubjectCourse.all_active.all_in_order
   end
 
@@ -81,7 +82,7 @@ class ProductsController < ApplicationController
 
   def allowed_params
     params.require(:product).permit(:name, :active, :price, :currency_id, :livemode,
-                                    :mock_exam_id, :sorting_order, :product_type,
-                                    :correction_pack_count)
+                                    :cbe_id, :mock_exam_id, :sorting_order,
+                                    :product_type, :correction_pack_count)
   end
 end

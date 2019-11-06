@@ -25,5 +25,5 @@
                   =link_to 'Download Submission', @exercise.submission.url, class: 'btn btn-primary btn-sm', target: '_blank'
                 -if @exercise.correction.present?
                   =link_to 'Download Response', @exercise.correction.url, class: 'btn btn-primary btn-sm', target: '_blank'
-
-
+                -if @exercise.product.cbe?
+                  =render partial: 'cbe_user_log'

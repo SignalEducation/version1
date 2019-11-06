@@ -30,21 +30,24 @@ class Product < ApplicationRecord
 
   # relationships
   belongs_to :currency
-  belongs_to :mock_exam
+  belongs_to :mock_exam, optional: true
+  belongs_to :cbe, optional: true
   has_many :orders, dependent: :restrict_with_error
   has_many :exercises, dependent: :restrict_with_error
 
   # validation
   validates :name, presence: true
-  validates :mock_exam_id, numericality: { only_integer: true,
-                                           greater_than: 0 }
   validates :currency_id, presence: true
   validates :price, presence: true
   validates :stripe_guid, presence: true, uniqueness: true, on: :update
   validates :stripe_sku_guid, presence: true, uniqueness: true, on: :update
+  validates :mock_exam_id, numericality: { only_integer: true,
+                                           greater_than: 0 }, if: :mock_exam?
+  validates :cbe_id, numericality: { only_integer: true,
+                                     greater_than: 0 }, if: :cbe?
   validates :correction_pack_count, presence: true,
                                     numericality: { only_integer: true,
-                                                    greater_than: 0 }, if: proc { |prod| prod.correction_pack? }
+                                                    greater_than: 0 }, if: :correction_pack?
 
   # callbacks
   after_create :create_on_stripe

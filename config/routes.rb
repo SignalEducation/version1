@@ -103,6 +103,12 @@ Rails.application.routes.draw do
       resources :exercises, only: %i[index show edit update], shallow: true
     end
 
+    # Exercises/Cbes
+    get 'exercises/:exercise_id/cbes/:id', to: 'cbes#show', as: :exercise_cbes
+
+    # Cbes
+    resources :cbes, only: :show
+
     post '/search_visits', to: 'visits#all_index', as: :search_visits
 
     post :preview_csv_upload, to: 'users#preview_csv_upload'
@@ -271,9 +277,6 @@ Rails.application.routes.draw do
     get 'course/:name_url', to: 'student_sign_ups#group', as: :group_landing
 
     root 'student_sign_ups#home'
-
-    # CBE
-    resources :cbes, only: :show
 
     # Catch-all
     get '404', to: 'footer_pages#missing_page', first_element: '404-page', as: :missing_page

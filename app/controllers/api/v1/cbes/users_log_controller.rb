@@ -13,19 +13,19 @@ module Api
         def show; end
 
         def create
-          @user_log = ::Cbe::UserLog.new(permitted_params)
+          @user_log = ::Cbe::UserLog.first_or_initialize(permitted_params)
 
-          unless @user_log.save
-            render json: { errors: @user_log.errors }, status: :unprocessable_entity
-          end
+          return if @user_log.save
+
+          render json: { errors: @user_log.errors }, status: :unprocessable_entity
         end
 
         def update
           @user_log = ::Cbe::UserLog.find(params[:id])
 
-          unless @user_log.update(permitted_params)
-            render json: { errors: @user_log.errors }, status: :unprocessable_entity
-          end
+          return if @user_log.update(permitted_params)
+
+          render json: { errors: @user_log.errors }, status: :unprocessable_entity
         end
 
         private
@@ -36,7 +36,7 @@ module Api
 
         def permitted_params
           params.require(:cbe_user_log).permit(
-            :status, :score, :created_at, :updated_at, :cbe_id, :user_id,
+            :status, :score, :created_at, :updated_at, :cbe_id, :user_id, :exercise_id,
             answers_attributes: [
               :cbe_question_id, :cbe_answer_id,
               content: [

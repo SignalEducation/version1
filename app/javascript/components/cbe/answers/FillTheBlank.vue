@@ -1,54 +1,79 @@
 <template>
   <section>
     <div class="answers">
-      <input type="text" :id="answer.id" v-model="question" />
+      <input
+        :id="answerData.id"
+        v-model="question"
+        type="text"
+      >
     </div>
   </section>
 </template>
+
 <script>
 export default {
   props: {
-    answer: {},
-    question_id: Number
+    answerData: {
+      type: Object,
+      required: true,
+    },
+    questionId: {
+      type: Number,
+      required: true,
+    },
+    questionScore: {
+      type: Number,
+      required: true,
+    },
   },
   data() {
     return {
-      question: this.getPickedValue()
+      question: this.getPickedValue(),
+      answerScore: 0,
+      answerCorrect: false
     };
   },
   watch: {
-    question(newValue, oldValue) {
-      let check = this.compareValues(newValue);
+    question(newValue) {
+      this.compareValues(newValue);
 
       this.$store.dispatch("userCbe/recordAnswer", {
-        id: this.question_id,
+        id: this.questionId,
+        score: this.answerScore,
+        correct:this.answerCorrect,
         answers: [{
-          cbe_answer_id: this.answer.id,
+          cbe_answer_id: this.answerData.id,
           content: {
             text: newValue,
-            correct: check
+            correct: this.answerCorrect
           },
-          cbe_question_id: this.question_id
+          cbe_question_id: this.questionId
         }]
       });
     }
   },
   methods: {
     getPickedValue() {
-      var initial_value = this.$store.state.userCbe.user_cbe_data.questions[
-        this.question_id
+      const initialValue = this.$store.state.userCbe.user_cbe_data.questions[
+        this.questionId
       ];
-      if (initial_value != null) {
-        return initial_value;
-      } else {
-        return [];
+      if (initialValue != null) {
+        return initialValue;
       }
+
+      return [];
     },
     compareValues(value) {
-      let firstToCompare = this.formatStringToCompare(this.answer.content.text);
-      let secondToCompare = this.formatStringToCompare(value);
+      const firstToCompare = this.formatStringToCompare(this.answerData.content.text);
+      const secondToCompare = this.formatStringToCompare(value);
 
-      return firstToCompare == secondToCompare;
+      if ( firstToCompare === secondToCompare ){
+        this.answerScore = this.questionScore;
+        this.answerCorrect = true;
+      } else {
+        this.answerScore = 0;
+        this.answerCorrect = false;
+      }
     },
     // for now I format the strings to check if they are equal.
     // maybe we can implement a comparison of similarity.

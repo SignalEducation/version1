@@ -38,25 +38,14 @@ class FooterPagesController < ApplicationController
   def media_library
     seo_title_maker('ACCA Correction Packs and Mock Exams | LearnSignal', 'Get access to ACCA question and solution correction packs and mock exams designed by experts to help you pass your exams the first time.', nil)
 
-    if current_user
-      country = IpAddress.get_country(request.remote_ip) || current_user.country
-      currency = current_user.get_currency(country)
-      @currency_id = currency.id
-    else
-      country = IpAddress.get_country(request.remote_ip) || Country.find_by(name: 'United Kingdom')
-      @currency_id = country.currency_id
-    end
-
-    @products = Product.in_currency(@currency_id).
-                  all_active.
-                  all_in_order.
-                  where('mock_exam_id IS NOT NULL').
-                  where('product_type = ?', Product.product_types[:mock_exam])
-    @questions = Product.in_currency(@currency_id).
-                   all_active.
-                   all_in_order.
-                   where('mock_exam_id IS NOT NULL').
-                   where('product_type = ?', Product.product_types[:correction_pack])
+    @currency_id   = user_currency_id
+    valid_products = Product.in_currency(@currency_id).all_active.all_in_order
+    @products      = valid_products.where('mock_exam_id IS NOT NULL').
+                       where('product_type = ?', Product.product_types[:mock_exam])
+    @questions     = valid_products.where('mock_exam_id IS NOT NULL').
+                       where('product_type = ?', Product.product_types[:correction_pack])
+    @cbes          = valid_products.where('cbe_id IS NOT NULL').
+                       where('product_type = ?', Product.product_types[:cbe])
   end
 
   def profile
@@ -78,7 +67,7 @@ class FooterPagesController < ApplicationController
   end
 
   def profile_index
-    #/profiles
+    # /profiles
     @tutors = User.all_tutors.with_course_tutor_details.where.not(profile_image_file_name: nil)
     seo_title_maker('Learn About Our Tutors | LearnSignal', 'Our tutors are dedicated helping students achieve their learning goals. Read profiles of the industry experts that create learnsignal’s online courses.', nil)
     @navbar = true
@@ -116,5 +105,18 @@ class FooterPagesController < ApplicationController
     @navbar     = 'standard'
     @top_margin = true
     @footer     = true
+  end
+
+  def user_currency_id
+    if current_user
+      country = IpAddress.get_country(request.remote_ip) || current_user.country
+      currency = current_user.get_currency(country)
+      currency_id = currency.id
+    else
+      country = IpAddress.get_country(request.remote_ip) || Country.find_by(name: 'United Kingdom')
+      currency_id = country.currency_id
+    end
+
+    currency_id
   end
 end

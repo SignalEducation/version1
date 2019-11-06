@@ -12,6 +12,8 @@ class Cbe
                           inverse_of: :questions, optional: true
     has_many :answers, class_name: 'Cbe::Answer', foreign_key: 'cbe_question_id',
                        inverse_of: :question, dependent: :destroy
+    has_many :user_answers, class_name: 'Cbe::UserAnswer', foreign_key: 'cbe_question_id',
+                            inverse_of: :user_log, dependent: :destroy
 
     accepts_nested_attributes_for :answers, allow_destroy: true
 

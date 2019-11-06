@@ -124,10 +124,13 @@ class Order < ApplicationRecord
 
   def execute_order_completion
     return if Rails.env.test?
+
+    product_name = product.cbe? ? product.cbe.name : product.mock_exam.name
+
     MandrillWorker.perform_async(user_id,
                                  'send_mock_exam_email',
                                  user_exercise_url(user_id),
-                                 product.mock_exam.name, reference_guid)
+                                 product_name, reference_guid)
     invoice.update(paid: true, payment_closed: true)
   end
 
@@ -154,6 +157,12 @@ class Order < ApplicationRecord
                                                       currency_id: invoice.currency_id)
   rescue => e
     Rails.logger.error "ERROR: Order#generate_invoice failed to create. Error:#{e.inspect}"
+  end
+
+  def exam_body_name
+    return product.cbe.subject_course.exam_body.name if product.cbe?
+
+    product.mock_exam.subject_course.exam_body.name
   end
 
   protected
