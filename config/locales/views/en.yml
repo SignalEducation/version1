@@ -178,6 +178,9 @@ en:
           due_on: Due On
           corrected_on: Corrected On
           returned_on: Returned On
+        correct_cbe:
+          h1: Correction
+          question: Question
         form:
           correction: Upload Correction
         show:

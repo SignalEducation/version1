@@ -76,6 +76,14 @@ class MandrillClient
     send_template('corrections-returned-190510', msg)
   end
 
+  #NEED TO CREATE A NEW TEMAIL TEMPLATE BEFORE MERGE -> Giordano Alves
+  def send_cbe_correction_returned_email(account_url, product_name)
+    msg = message_stub.merge({"subject" => "LearnSignal Corrections Returned"})
+    msg["global_merge_vars"] << { "name" => "NAME", "content" => product_name }
+    msg["global_merge_vars"] << { "name" => "ACCOUNTURL", "content" => account_url }
+    send_template('corrections-returned-190510', msg)
+  end
+
   # Enrollments Emails (Unsubscribe possible)
   def send_enrollment_welcome_email(course_name, url)
     msg = message_stub.merge({"subject" => "Welcome to #{course_name}"})

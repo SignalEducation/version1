@@ -1,0 +1,43 @@
+.container
+  %header.management-console-section
+    %h1
+      =t('views.exercises.admin.correct_cbe.h1') + " - #{@cbe&.name}"
+
+  %section.pb-7
+    .row
+      .col-sm-12
+        .box-item.table-box
+          %div.cbe_score
+            ="Score: #{@cbe_user_log.score}"
+    .row
+      .col-sm-12
+        .box-item.table-box
+          .row
+            #accordionExample.accordion
+              -@cbe_user_log.questions.each do |question|
+                .card
+                  #headingOne.card-header
+                    %h2.mb-0
+                      %button.btn.btn-link{"aria-controls" => "collapse_#{question.id}", "aria-expanded" => "false", "data-target" => "#collapse_#{question.id}", "data-toggle" => "collapse", :type => "button"}
+                        =question_title(question)
+                  .collapse{"aria-labelledby" => "heading_#{question.id}", "data-parent" => "#accordionExample", id:  "collapse_#{question.id}"}
+                    .card-body
+                      .question_content
+                        .h6.text-gray2
+                          Question
+                        =raw(question.cbe_question.content)
+                      %br
+                      .question_solution
+                        .h6.text-gray2
+                          Solution
+                        =raw(question.cbe_question.solution)
+                      <br />
+                      .question_answers
+                        .h6.text-gray2
+                          Answer
+                        =render_admin_answers(question)
+    .row
+      .col-sm-12
+        .box-item.table-box
+          %div.cbe_score
+            =link_to t('views.general.return'), return_cbe_admin_exercise_path(@exercise.id), data: {confirm: 'Do you want to return the correction to user?'}, method: :post, class: 'btn btn-primary btn-xs'

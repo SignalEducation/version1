@@ -1,21 +1,24 @@
--if @exercise.product.cbe.questions.map(&:kind).uniq.exclude?('spreadsheet' || 'open')
-  %table.table
-    %thead.thead-dark
-      %tr
-        %th{:scope => "col"} #
-        %th{:scope => "col"} Question Type
-        %th{:scope => "col"} Score
-    %tbody
+-# -if @exercise.product.cbe.questions.map(&:kind).uniq.exclude?('spreadsheet' && 'open')
+%table.table
+  %thead.thead-dark
+    %tr
+      %th{:scope => "col"} #
+      %th{:scope => "col"} Question Type
+      %th{:scope => "col"} Score
+  %tbody
+    #accordionExample.accordion
       -@exercise.cbe_user_log.questions.each do |question|
-        -user_answers = question.user_answers.where(cbe_user_log_id: @exercise.cbe_user_log.id)
         %tr
           %th{:scope => "row"}
-            =question.sorting_order
+            =question.cbe_question.sorting_order
           %td
-            =question.kind.humanize
+            #headingOne
+              =question_corrected_link(question)
+            .collapse{"aria-labelledby" => "heading_#{question.id}", "data-parent" => "#accordionExample", id:  "collapse_#{question.id}"}
+              =raw(question.educator_comment)
           %td
-            =user_answers_score(question, user_answers)
-    %tfoot
-      %tr
-        %td{:colspan => "3"}
-          ="Total Score: #{@exercise.cbe_user_log.score}"
+            =question.score
+  %tfoot
+    %tr
+      %td{:colspan => "3"}
+        ="Total Score: #{@exercise.cbe_user_log.score}"

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_02_120741) do
+ActiveRecord::Schema.define(version: 2019_11_07_134915) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -161,12 +161,10 @@ ActiveRecord::Schema.define(version: 2019_11_02_120741) do
     t.json "content"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "cbe_user_log_id"
-    t.bigint "cbe_question_id"
     t.bigint "cbe_answer_id"
+    t.bigint "cbe_user_question_id"
     t.index ["cbe_answer_id"], name: "index_cbe_user_answers_on_cbe_answer_id"
-    t.index ["cbe_question_id"], name: "index_cbe_user_answers_on_cbe_question_id"
-    t.index ["cbe_user_log_id"], name: "index_cbe_user_answers_on_cbe_user_log_id"
+    t.index ["cbe_user_question_id"], name: "index_cbe_user_answers_on_cbe_user_question_id"
   end
 
   create_table "cbe_user_logs", force: :cascade do |t|
@@ -180,6 +178,18 @@ ActiveRecord::Schema.define(version: 2019_11_02_120741) do
     t.index ["cbe_id"], name: "index_cbe_user_logs_on_cbe_id"
     t.index ["exercise_id"], name: "index_cbe_user_logs_on_exercise_id"
     t.index ["user_id"], name: "index_cbe_user_logs_on_user_id"
+  end
+
+  create_table "cbe_user_questions", force: :cascade do |t|
+    t.text "educator_comment"
+    t.float "score", default: 0.0
+    t.boolean "correct", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "cbe_user_log_id"
+    t.bigint "cbe_question_id"
+    t.index ["cbe_question_id"], name: "index_cbe_user_questions_on_cbe_question_id"
+    t.index ["cbe_user_log_id"], name: "index_cbe_user_questions_on_cbe_user_log_id"
   end
 
   create_table "cbes", force: :cascade do |t|

@@ -1,0 +1,36 @@
+.card.mb-5
+  .card-body
+    .row
+      -if question_kind == 'open'
+        =raw(question.answers.first.content['text'])
+      -else
+        WE NEED CALL SPREADSHEET VUEJS HERE
+
+.h6.text-gray2
+  Educator Section
+.card.mb-5
+  .card-body
+    =form_with(url: cbe_user_question_update_admin_exercise_path(id: @exercise.id, question_id:question.id), html: {class: 'form-horizontal', role: 'form'}) do
+      .row.pt-5
+        .col-sm-12
+          .form-group
+            .input-group.input-group-lg
+              =label_tag :score, 'Score'
+              =text_field_tag(:score, question.score)
+      .row.pt-5
+        .col-sm-12
+          .form-group
+            .input-group.input-group-lg
+              =label_tag :educator_comment, 'Comment'
+              =text_area_tag(:educator_comment, question.educator_comment, id: "#{question.id}-editor", as: 'summernote')
+      .row.pt-5
+        .col-sm-6
+          =submit_tag("Update", class: 'btn btn-primary')
+          %div{:id => "#{question.id}-response"}
+
+
+:javascript
+  $("##{question.id}-editor").summernote({
+    disableDragAndDrop: true,
+    height: 150
+  });

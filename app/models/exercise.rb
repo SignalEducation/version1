@@ -28,7 +28,7 @@ class Exercise < ApplicationRecord
   include Filterable
   belongs_to :product
   belongs_to :user
-  belongs_to :corrector, class_name: 'User', foreign_key: 'corrector_id', optional: true, inverse_of: :exercise
+  belongs_to :corrector, class_name: 'User', foreign_key: 'corrector_id', optional: true
 
   has_one :cbe_user_log, class_name: 'Cbe::UserLog', dependent: :destroy, inverse_of: :exercise
   has_attached_file :submission, default_url: nil
@@ -99,15 +99,7 @@ class Exercise < ApplicationRecord
   # INSTANCE METHODS ===========================================================
 
   def send_returned_email
-    MandrillWorker.perform_async(
-      user_id,
-      'send_correction_returned_email',
-      UrlHelper.instance.user_exercises_url(
-        user_id: user_id,
-        host: LEARNSIGNAL_HOST
-      ),
-      product.mock_exam? ? product.mock_exam.name : product.cbe.name
-    )
+    product.mock_exam? ? send_mock_exam_email : send_cbe_email
   end
 
   def notify_submitted
@@ -145,6 +137,30 @@ class Exercise < ApplicationRecord
       product.mock_exam.name,
       product.mock_exam.file,
       reference_guid
+    )
+  end
+
+  def send_mock_exam_email
+    MandrillWorker.perform_async(
+      user_id,
+      'send_correction_returned_email',
+      UrlHelper.instance.user_exercises_url(
+        user_id: user_id,
+        host: LEARNSIGNAL_HOST
+      ), product.mock_exam.name
+    )
+  end
+
+  def send_cbe_email
+    # REMOVE IT BEFORE MERGE
+    return true
+    MandrillWorker.perform_async(
+      user_id,
+      'send_cbe_correction_returned_email',
+      UrlHelper.instance.user_exercises_url(
+        user_id: user_id,
+        host: LEARNSIGNAL_HOST
+      ), product.cbe.name
     )
   end
 end

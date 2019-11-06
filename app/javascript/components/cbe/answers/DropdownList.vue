@@ -9,10 +9,10 @@
             id: questionId,
             score: answerScore(answer),
             correct: answer.content.correct,
-            answers: [{
+            cbe_question_id: questionId,
+            answers_attributes: [{
               cbe_answer_id: answer.id,
               content: answer.content,
-              cbe_question_id: questionId
             }]
           }"
         >

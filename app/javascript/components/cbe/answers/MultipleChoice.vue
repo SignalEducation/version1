@@ -12,12 +12,12 @@
         :value="{
           id: questionId,
           score: answerScore(answer),
+          cbe_question_id: questionId,
           correct: answer.content.correct,
-          answers: [
+          answers_attributes: [
             {
               cbe_answer_id: answer.id,
               content: answer.content,
-              cbe_question_id: questionId,
             },
           ],
         }"

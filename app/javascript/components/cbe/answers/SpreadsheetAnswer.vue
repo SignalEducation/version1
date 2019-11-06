@@ -35,17 +35,19 @@ export default {
     syncSpreadsheetData(jsonData) {
       this.$store.dispatch('userCbe/recordAnswer', {
         id: this.questionId,
-        answers: [{
+        score: 0,
+        correct: null,
+        cbe_question_id: this.questionId,
+        answers_attributes: [{
           content: {
             data: jsonData,
           },
-          cbe_question_id: this.questionId,
         }],
       });
     },
     getPrepopulatedAnswer() {
       const initialValue = this.$store.state.userCbe.user_cbe_data.questions[this.questionId];
-      return initialValue ? initialValue.answers : this.answerData;
+      return initialValue ? initialValue.answers_attributes[0] : this.answerData;
     },
   },
 };
