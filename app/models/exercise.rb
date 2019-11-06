@@ -28,9 +28,11 @@ class Exercise < ApplicationRecord
   include Filterable
   belongs_to :product
   belongs_to :user
-  belongs_to :corrector, class_name: 'User', foreign_key: 'corrector_id', optional: true, inverse_of: :exercise
+  belongs_to :corrector, class_name: 'User', foreign_key: 'corrector_id',
+                         optional: true, inverse_of: :exercise
 
-  has_one :cbe_user_log, class_name: 'Cbe::UserLog', dependent: :destroy, inverse_of: :exercise
+  has_one :cbe_user_log, class_name: 'Cbe::UserLog', dependent: :destroy,
+                         inverse_of: :exercise
   has_attached_file :submission, default_url: nil
   has_attached_file :correction, default_url: nil
   validates_attachment_content_type :submission,
@@ -84,7 +86,7 @@ class Exercise < ApplicationRecord
 
     after_transition correcting: :returned do |exercise, _transition|
       exercise.update(returned_on: Time.zone.now)
-      exercise.send_returned_email
+      exercise.correction_returned_email
     end
   end
 
@@ -97,19 +99,6 @@ class Exercise < ApplicationRecord
   end
 
   # INSTANCE METHODS ===========================================================
-
-  def send_returned_email
-    MandrillWorker.perform_async(
-      user_id,
-      'send_correction_returned_email',
-      UrlHelper.instance.user_exercises_url(
-        user_id: user_id,
-        host: LEARNSIGNAL_HOST
-      ),
-      product.mock_exam? ? product.mock_exam.name : product.cbe.name
-    )
-  end
-
   def notify_submitted
     send_submitted_slack_message
   end
@@ -145,6 +134,17 @@ class Exercise < ApplicationRecord
       product.mock_exam.name,
       product.mock_exam.file,
       reference_guid
+    )
+  end
+
+  def correction_returned_email
+    MandrillWorker.perform_async(
+      user_id,
+      'send_correction_returned_email',
+      UrlHelper.instance.user_exercises_url(
+        user_id: user_id,
+        host: LEARNSIGNAL_HOST
+      ), product.mock_exam.name
     )
   end
 end

@@ -1,20 +1,30 @@
--if @exercise.product.cbe.questions.map(&:kind).uniq.exclude?('spreadsheet' || 'open')
+-if @exercise.returned?
   %table.table
     %thead.thead-dark
       %tr
         %th{:scope => "col"} #
         %th{:scope => "col"} Question Type
         %th{:scope => "col"} Score
-    %tbody
-      -@exercise.cbe_user_log.questions.each do |question|
-        -user_answers = question.user_answers.where(cbe_user_log_id: @exercise.cbe_user_log.id)
-        %tr
-          %th{:scope => "row"}
-            =question.sorting_order
-          %td
-            =question.kind.humanize
-          %td
-            =user_answers_score(question, user_answers)
+    %tbody.scrollbar
+      #accordionExample.accordion
+        -@exercise.cbe_user_log.questions.each do |question|
+          %tr
+            %td
+              =question.cbe_question.sorting_order
+            %td
+              %div.question-listed
+                =question_corrected_link(question)
+                .collapse{"aria-labelledby" => "heading_#{question.id}", "data-parent" => "#accordionExample", id:  "collapse_#{question.id}"}
+                  %div
+                    %b
+                      Suggested Solution:
+                    =raw(question.cbe_question.solution)
+                  -if question.educator_comment.present?
+                    %div
+                      %b Educator Comment:
+                      =raw(question.educator_comment)
+            %td
+              =question.score
     %tfoot
       %tr
         %td{:colspan => "3"}
