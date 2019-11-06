@@ -1,6 +1,6 @@
 <template>
   <section>
-    <hr />
+    <hr>
     <div class="panel-body no-top-padding">
       <p
         v-if="!validateData.questionAnswers.answersRequired"
@@ -18,36 +18,36 @@
       <div class="row">
         <div class="col-sm-12 mb-2">
           <AdminDropdownList
-            :answersArray="answers"
-            :questionId="questionId"
-            v-if="question_kind == 'dropdown_list'"
+            v-if="questionKind == 'dropdown_list'"
+            :answers-array="answers"
+            :question-id="questionId"
           />
           <AdminFillTheBlank
-            :answersArray="answers"
-            :questionId="questionId"
-            v-if="question_kind == 'fill_in_the_blank'"
+            v-if="questionKind == 'fill_in_the_blank'"
+            :answers-array="answers"
+            :question-id="questionId"
           />
           <AdminMultipleChoice
-            :answersArray="answers"
-            :questionId="questionId"
-            v-if="question_kind == 'multiple_choice'"
+            v-if="questionKind == 'multiple_choice'"
+            :answers-array="answers"
+            :question-id="questionId"
           />
           <AdminMultipleResponse
-            v-if="question_kind == 'multiple_response'"
-            :answersArray="answers"
-            :questionId="questionId"
+            v-if="questionKind == 'multiple_response'"
+            :answers-array="answers"
+            :question-id="questionId"
           />
           <AdminSpreadsheet
-            v-if="question_kind == 'spreadsheet'"
-            :answersArray="answers"
-            :questionId="questionId"
+            v-if="questionKind == 'spreadsheet'"
+            :answers-array="answers"
+            :question-id="questionId"
           />
           <!-- Let this commented for now, in future education team can
                use a pre formatted content in open questions -->
           <!-- <AdminTextEditor
             :answersArray="answers"
             :questionId="questionId"
-            v-if="question_kind == 'open'"
+            v-if="questionKind == 'open'"
           /> -->
         </div>
       </div>
@@ -60,7 +60,7 @@ import AdminDropdownList from './answers/AdminDropdownList.vue';
 import AdminFillTheBlank from './answers/AdminFillTheBlank.vue';
 import AdminMultipleChoice from './answers/AdminMultipleChoice.vue';
 import AdminMultipleResponse from './answers/AdminMultipleResponse.vue';
-import AdminTextEditor from './answers/AdminTextEditor.vue';
+// import AdminTextEditor from './answers/AdminTextEditor.vue';
 import AdminSpreadsheet from './answers/AdminSpreadsheet.vue';
 
 export default {
@@ -69,14 +69,26 @@ export default {
     AdminFillTheBlank,
     AdminMultipleChoice,
     AdminMultipleResponse,
-    AdminTextEditor,
+    // AdminTextEditor,
     AdminSpreadsheet,
   },
   props: {
-    answers: Array,
-    validateData: Object,
-    questionId: Number,
-    question_kind: String,
+    answers: {
+      type: Array,
+      default: () => [],
+    },
+    validateData: {
+      type: Object,
+      default: null,
+    },
+    questionId: {
+      type: Number,
+      default: null,
+    },
+    questionKind: {
+      type: String,
+      default: '',
+    },
   },
 };
 </script>

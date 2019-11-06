@@ -4,14 +4,17 @@
       <div class="form-group">
         <label for="questionKindSelect">Question Type</label>
         <b-form-select
-          v-model="questionKind"
-          @change="resetAnwers()"
           id="questionKindSelect"
+          v-model="questionKind"
           :options="questionKinds"
           class="input-group input-group-lg"
+          @change="resetAnwers()"
         >
           <template slot="first">
-            <option :value="null" disabled>
+            <option
+              :value="null"
+              disabled
+            >
               -- Please select a type --
             </option>
           </template>
@@ -28,7 +31,10 @@
     <div class="col-sm-4">
       <div class="form-group">
         <label for="questionScore">Score</label>
-        <div class="input-group input-group-lg" id="questionScore">
+        <div
+          id="questionScore"
+          class="input-group input-group-lg"
+        >
           <input
             id="questionScore"
             v-model.number="questionScore"
@@ -42,7 +48,7 @@
                 }
             "
             @blur="$v.questionScore.$touch()"
-          />
+          >
         </div>
         <p
           v-if="!$v.questionScore.required && $v.questionScore.$error"
@@ -65,12 +71,12 @@
         <label for="questionSortingOrder">Sorting Order</label>
         <div class="input-group input-group-lg">
           <input
+            id="questionSortingOrder"
             v-model="questionSortingOrder"
             type="number"
             placeholder="Sorting Order"
             class="form-control"
-            id="questionSortingOrder"
-          />
+          >
         </div>
 
         <p
@@ -102,9 +108,9 @@
               error: shouldAppendErrorClass($v.questionContent),
               valid: shouldAppendValidClass($v.questionContent),
             }"
-            :fieldModel.sync="questionContent"
-            :aditionalToolbarOptions="['fullscreen code']"
-            :editorId="
+            :field-model.sync="questionContent"
+            :aditional-toolbar-options="['fullscreen code']"
+            :editor-id="
               'questionEditor-' + sectionId + '-' + scenarioId + '-' + id
             "
             @blur="$v.questionContent.$touch()"
@@ -124,9 +130,9 @@
         <label for="questionSolution">Solution</label>
         <div id="questionSolution">
           <TinyEditor
-            :fieldModel.sync="questionSolution"
-            :aditionalToolbarOptions="['fullscreen code']"
-            :editorId="
+            :field-model.sync="questionSolution"
+            :aditional-toolbar-options="['fullscreen code']"
+            :editor-id="
               'questionSolution-' + sectionId + '-' + scenarioId + '-' + id
             "
             @blur="$v.questionSolution.$touch()"
@@ -137,12 +143,12 @@
 
     <div class="col-sm-12">
       <AdminAnswers
-        :question_kind="questionKind"
-        :questionId="id"
-        :answers="questionAnswers"
-        :validateData="$v"
         v-model="questionAnswers"
-      ></AdminAnswers>
+        :question-kind="questionKind"
+        :question-id="id"
+        :answers="questionAnswers"
+        :validate-data="$v"
+      />
     </div>
 
     <div class="form-group">
@@ -162,10 +168,16 @@
       >
         Save Question
       </button>
-      <p v-if="submitStatus === 'ERROR'" class="typo__p">
+      <p
+        v-if="submitStatus === 'ERROR'"
+        class="typo__p"
+      >
         Please fill the form correctly.
       </p>
-      <p v-if="submitStatus === 'PENDING'" class="typo__p">
+      <p
+        v-if="submitStatus === 'PENDING'"
+        class="typo__p"
+      >
         Sending...
       </p>
     </div>
@@ -224,7 +236,7 @@ export default {
       default: () => [],
     },
   },
-  data: function() {
+  data() {
     return {
       questionDetails: {},
       questionKind: this.initialKind,
@@ -257,7 +269,6 @@ export default {
     questionSortingOrder: {
       required,
       numeric,
-      between: between(1, 10),
     },
     questionContent: {
       required,
@@ -300,7 +311,7 @@ export default {
     },
   },
   methods: {
-    saveQuestion(page, index) {
+    saveQuestion() {
       this.$v.$touch();
       if (this.$v.$invalid) {
         this.submitStatus = 'ERROR';
@@ -344,7 +355,7 @@ export default {
           });
       }
     },
-    updateQuestion: function() {
+    updateQuestion() {
       this.$v.$touch();
       if (this.$v.$invalid) {
         this.submitStatus = 'ERROR';
@@ -366,7 +377,7 @@ export default {
           })
           .then(response => {
             this.updatedQuestion = response.data;
-            this.questionDetails['id'] = this.updatedQuestion.id;
+            this.questionDetails.id = this.updatedQuestion.id;
             this.$emit('update-content', this.TinyEditor);
             this.questionDetails = {};
             this.questionKind = this.initialKind;

@@ -5,14 +5,19 @@
         <label for="sectionName">Name</label>
         <div class="input-group input-group-lg">
           <input
-            v-model="name"
-            @blur="$v.name.$touch()"
-            :class="'form-control ' + {error: shouldAppendErrorClass($v.name), valid: shouldAppendValidClass($v.name)}"
             id="sectionName"
+            v-model="name"
+            :class="'form-control ' + {error: shouldAppendErrorClass($v.name), valid: shouldAppendValidClass($v.name)}"
             placeholder="Name"
-          />
+            @blur="$v.name.$touch()"
+          >
         </div>
-        <p v-if="!$v.name.required && $v.name.$error" class="error-message">field is required</p>
+        <p
+          v-if="!$v.name.required && $v.name.$error"
+          class="error-message"
+        >
+          field is required
+        </p>
       </div>
     </div>
 
@@ -20,16 +25,26 @@
       <div class="form-group">
         <label for="sectionKindSelect">Section Type</label>
         <b-form-select
+          id="sectionKindSelect"
           v-model="kind"
           :options="sectionKinds"
-          id="sectionKindSelect"
           class="input-group input-group-lg"
         >
           <template slot="first">
-            <option :value="null" disabled>-- Please select a type --</option>
+            <option
+              :value="null"
+              disabled
+            >
+              -- Please select a type --
+            </option>
           </template>
         </b-form-select>
-        <p v-if="!$v.kind.required && $v.kind.$error" class="error-message">field is required</p>
+        <p
+          v-if="!$v.kind.required && $v.kind.$error"
+          class="error-message"
+        >
+          field is required
+        </p>
       </div>
     </div>
 
@@ -38,19 +53,26 @@
         <label for="sectionScore">Score</label>
         <div class="input-group input-group-lg">
           <input
-            v-model="score"
-            @blur="$v.score.$touch()"
-            :class="'form-control ' + {error: shouldAppendErrorClass($v.score), valid: shouldAppendValidClass($v.score)}"
             id="sectionScore"
+            v-model="score"
+            :class="'form-control ' + {error: shouldAppendErrorClass($v.score), valid: shouldAppendValidClass($v.score)}"
             placeholder="Score"
             type="number"
-          />
+            @blur="$v.score.$touch()"
+          >
         </div>
-        <p v-if="!$v.score.required && $v.score.$error" class="error-message">field is required.</p>
+        <p
+          v-if="!$v.score.required && $v.score.$error"
+          class="error-message"
+        >
+          field is required.
+        </p>
         <p
           v-if="!$v.score.between && $v.score.$error"
           class="error-message"
-        >must be between {{$v.score.$params.between.min}} and {{$v.score.$params.between.max}}.</p>
+        >
+          must be between {{ $v.score.$params.between.min }} and {{ $v.score.$params.between.max }}.
+        </p>
       </div>
     </div>
 
@@ -58,14 +80,27 @@
       <div class="form-group">
         <label for="sortingOrder">Sorting Order</label>
         <div class="input-group input-group-lg">
-          <input v-model="sortingOrder" placeholder="Sorting Order" class="form-control" id="sortingOrder" type="number" />
+          <input
+            id="sortingOrder"
+            v-model="sortingOrder"
+            placeholder="Sorting Order"
+            class="form-control"
+            type="number"
+          >
         </div>
 
-        <p v-if="!$v.sortingOrder.required && $v.sortingOrder.$error" class="error-message">field is required.</p>
-      <p
-        v-if="!$v.sortingOrder.between && $v.sortingOrder.$error"
-        class="error-message"
-      >must be between {{$v.sortingOrder.$params.between.min}} and {{$v.sortingOrder.$params.between.max}}.</p>
+        <p
+          v-if="!$v.sortingOrder.required && $v.sortingOrder.$error"
+          class="error-message"
+        >
+          field is required.
+        </p>
+        <p
+          v-if="!$v.sortingOrder.between && $v.sortingOrder.$error"
+          class="error-message"
+        >
+          must be between {{ $v.sortingOrder.$params.between.min }} and {{ $v.sortingOrder.$params.between.max }}.
+        </p>
       </div>
     </div>
 
@@ -73,40 +108,59 @@
       <div class="form-group">
         <label for="sectionContent">Cover Page Content</label>
         <TinyEditor
-          @blur="$v.content.$touch()"
           :class="{error: shouldAppendErrorClass($v.content), valid: shouldAppendValidClass($v.content)}"
-          :fieldModel.sync="content"
-          :aditionalToolbarOptions="['fullscreen code']"
-          :editorId="'sectionEditor' + id"
+          :field-model.sync="content"
+          :aditional-toolbar-options="['fullscreen code']"
+          :editor-id="'sectionEditor' + id"
+          @blur="$v.content.$touch()"
         />
-        <p v-if="!$v.content.required && $v.content.$error" class="error-message">field is required</p>
+        <p
+          v-if="!$v.content.required && $v.content.$error"
+          class="error-message"
+        >
+          field is required
+        </p>
       </div>
     </div>
 
     <div>
       <button
         v-if="id"
-        @click="updateSection"
         :disabled="submitStatus === 'PENDING'"
         class="btn btn-primary"
-      >Update Section</button>
+        @click="updateSection"
+      >
+        Update Section
+      </button>
       <button
         v-else
-        @click="saveSection"
         :disabled="submitStatus === 'PENDING'"
         class="btn btn-primary"
-      >Save Section</button>
-      <p class="typo__p" v-if="submitStatus === 'ERROR'">Please fill the form correctly.</p>
-      <p class="typo__p" v-if="submitStatus === 'PENDING'">Sending...</p>
+        @click="saveSection"
+      >
+        Save Section
+      </button>
+      <p
+        v-if="submitStatus === 'ERROR'"
+        class="typo__p"
+      >
+        Please fill the form correctly.
+      </p>
+      <p
+        v-if="submitStatus === 'PENDING'"
+        class="typo__p"
+      >
+        Sending...
+      </p>
     </div>
   </div>
 </template>
 
 <script>
 import axios from "axios";
-import TinyEditor from "../../TinyEditor";
 import { validationMixin } from "vuelidate";
 import { required, numeric, between } from "vuelidate/lib/validators";
+import TinyEditor from "../../TinyEditor.vue";
 
 export default {
   components: {
@@ -114,20 +168,32 @@ export default {
   },
   mixins: [validationMixin],
   props: {
-    id: Number,
+    id: {
+      type: Number,
+      default: null,
+    },
     initialName: {
       type: String,
       default: ""
     },
-    initialScore: Number,
+    initialScore: {
+      type: Number,
+      default: null
+    },
     initialSortingOrder: {
       type: Number,
       default: 1
     },
-    initialContent: String,
-    initialKind: String
+    initialContent: {
+      type: String,
+      default: ""
+    },
+    initialKind: {
+      type: String,
+      default: ""
+    },
   },
-  data: function() {
+  data() {
     return {
       sectionDetails: {},
       name: this.initialName,
@@ -158,25 +224,24 @@ export default {
     sortingOrder: {
       required,
       numeric,
-      between: between(1, 10)
     },
     content: {
       required
     }
   },
   methods: {
-    saveSection: function() {
+    saveSection() {
       this.$v.$touch();
       if (this.$v.$invalid) {
         this.submitStatus = "ERROR";
       } else {
         this.submitStatus = "PENDING";
-        this.sectionDetails["name"] = this.name;
-        this.sectionDetails["score"] = this.score;
-        this.sectionDetails["sorting_order"] = this.sortingOrder;
-        this.sectionDetails["kind"] = this.kind;
-        this.sectionDetails["content"] = this.content;
-        this.sectionDetails["cbe_id"] = this.$store.state.cbeId;
+        this.sectionDetails.name = this.name;
+        this.sectionDetails.score = this.score;
+        this.sectionDetails.sorting_order = this.sortingOrder;
+        this.sectionDetails.kind = this.kind;
+        this.sectionDetails.content = this.content;
+        this.sectionDetails.cbe_id = this.$store.state.cbeId;
 
         axios
           .post(`/api/v1/cbes/${this.$store.state.cbeId}/sections`, {
@@ -185,7 +250,7 @@ export default {
           .then(response => {
             this.createdSection = response.data;
             if (this.createdSection.id > 0) {
-              this.sectionDetails["id"] = this.createdSection.id;
+              this.sectionDetails.id = this.createdSection.id;
               this.$emit("add-section", this.sectionDetails);
               this.$emit("update-content", this.TinyEditor);
               this.sectionDetails = {};
@@ -203,18 +268,18 @@ export default {
           });
       }
     },
-    updateSection: function() {
+    updateSection() {
       this.$v.$touch();
       if (this.$v.$invalid) {
         this.submitStatus = "ERROR";
       } else {
         this.submitStatus = "PENDING";
-        this.sectionDetails["name"] = this.name;
-        this.sectionDetails["score"] = this.score;
-        this.sectionDetails["sorting_order"] = this.sortingOrder;
-        this.sectionDetails["kind"] = this.kind;
-        this.sectionDetails["content"] = this.content;
-        this.sectionDetails["cbe_id"] = this.$store.state.cbeId;
+        this.sectionDetails.name = this.name;
+        this.sectionDetails.score = this.score;
+        this.sectionDetails.sorting_order = this.sortingOrder;
+        this.sectionDetails.kind = this.kind;
+        this.sectionDetails.content = this.content;
+        this.sectionDetails.cbe_id = this.$store.state.cbeId;
 
         axios
           .patch(`/api/v1/sections/${this.id}`, {
@@ -222,8 +287,8 @@ export default {
           })
           .then(response => {
             this.updatedSection = response.data;
-            this.sectionDetails["id"] = this.updatedSection.id;
-            //this.$emit('add-section', this.sectionDetails);
+            this.sectionDetails.id = this.updatedSection.id;
+            // this.$emit('add-section', this.sectionDetails);
             this.$emit("update-content", this.TinyEditor);
             this.sectionDetails = {};
             this.name = this.updatedSection.name;

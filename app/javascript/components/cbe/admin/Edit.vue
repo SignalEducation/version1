@@ -38,14 +38,18 @@
     </div>
 
     <div>
-      <b-collapse id="collapse-cbe" v-model="showCbeDetails" class="mb-2">
+      <b-collapse
+        id="collapse-cbe"
+        v-model="showCbeDetails"
+        class="mb-2"
+      >
         <b-card>
           <Details
             :id="edit_cbe_data.id"
-            :initialName="edit_cbe_data.name"
-            :initialCourseId="edit_cbe_data.subject_course.id"
-            :initialAgreementContent="edit_cbe_data.agreement_content"
-            :initialActive="edit_cbe_data.active"
+            :initial-name="edit_cbe_data.name"
+            :initial-course-id="edit_cbe_data.subject_course.id"
+            :initial-agreement-content="edit_cbe_data.agreement_content"
+            :initial-active="edit_cbe_data.active"
           />
         </b-card>
       </b-collapse>
@@ -61,9 +65,10 @@
               v-for="page in edit_cbe_data.introduction_pages"
               :id="page.id"
               :key="'intro-page-tab-' + page.id"
-              :initialTitle="page.title"
-              :initialKind="page.kind"
-              :initialContent="page.content"
+              :initial-title="page.title"
+              :initial-kind="page.kind"
+              :initial-sorting-order="page.sorting_order"
+              :initial-content="page.content"
             />
             <IntroductionPage @add-introduction-page="updatePages" />
           </b-tabs>
@@ -98,10 +103,11 @@
                   <b-card>
                     <Section
                       :id="section.id"
-                      :initialName="section.name"
-                      :initialScore="section.score"
-                      :initialKind="section.kind"
-                      :initialContent="section.content"
+                      :initial-name="section.name"
+                      :initial-score="section.score"
+                      :initial-sorting-order="section.sorting_order"
+                      :initial-kind="section.kind"
+                      :initial-content="section.content"
                     />
                   </b-card>
                 </b-collapse>
@@ -135,7 +141,8 @@
                 >
                   <b-card-header
                     header-tag="header"
-                    class="p-1" role="tab"
+                    class="p-1"
+                    role="tab"
                   >
                     <b-button
                       v-b-toggle="'accordion-' + question.id"
@@ -158,10 +165,11 @@
                           <Question
                             :id="question.id"
                             :section-id="section.id"
-                            :initialContent="question.content"
-                            :initialScore="question.score"
-                            :initialKind="question.kind"
-                            :initialAnswers="question.answers"
+                            :initial-content="question.content"
+                            :initial-score="question.score"
+                            :initial-sorting-order="question.sorting_order"
+                            :initial-kind="question.kind"
+                            :initial-answers="question.answers"
                           />
                         </div>
                       </div>
@@ -229,8 +237,8 @@
                                 <b-card>
                                   <Scenario
                                     :id="scenario.id"
-                                    :initialName="scenario.name"
-                                    :initialContent="scenario.content"
+                                    :initial-name="scenario.name"
+                                    :initial-content="scenario.content"
                                   />
                                 </b-card>
                               </b-collapse>
@@ -248,7 +256,7 @@
                               </b-button>
                             </div>
                           </div>
-                          <br >
+                          <br>
                           <div
                             v-for="question in scenario.questions"
                             :key="question.id"
@@ -285,10 +293,10 @@
                                           :id="question.id"
                                           :section-id="section.id"
                                           :scenario-id="scenario.id"
-                                          :initialContent="question.content"
-                                          :initialScore="question.score"
-                                          :initialKind="question.kind"
-                                          :initialAnswers="question.answers"
+                                          :initial-content="question.content"
+                                          :initial-score="question.score"
+                                          :initial-kind="question.kind"
+                                          :initial-answers="question.answers"
                                         />
                                       </b-card>
                                     </div>
