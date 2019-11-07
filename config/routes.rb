@@ -30,7 +30,7 @@ Rails.application.routes.draw do
             end
           end
           resources :introduction_pages, only: %i[index create update]
-          resources :resources, only: %i[index create]
+          resources :resources, only: %i[index create update]
           resources :users_log, only: %i[index show create update]
         end
       end

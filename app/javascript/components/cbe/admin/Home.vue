@@ -372,20 +372,20 @@
 
 <script>
 import Details from './Details.vue';
-import Section from './Section.vue';
 import IntroductionPage from './IntroductionPage.vue';
-import Scenario from './Scenario.vue';
 import Question from './Question.vue';
 import Resources from './Resources.vue';
+import Scenario from './Scenario.vue';
+import Section from './Section.vue';
 
 export default {
   components: {
     Details,
     IntroductionPage,
-    Section,
-    Scenario,
     Question,
     Resources,
+    Scenario,
+    Section,
   },
   data() {
     return {

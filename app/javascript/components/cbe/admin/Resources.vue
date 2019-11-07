@@ -5,9 +5,14 @@
         v-for="resource in resources"
         :id="resource.id"
         :key="'resource-tab-' + resource.id"
-        :initial-title="resource.name"
+        :initial-name="resource.name"
+        :initial-file="resource.file"
+        :initial-sorting-order="resource.sorting_order"
       />
-      <Resource @add-resource="updateResources" />
+      <Resource
+        :initial-sorting-order="resources.length + 1"
+        @add-resource="updateResources"
+      />
     </b-tabs>
   </b-card>
 </template>
