@@ -171,17 +171,18 @@ class User < ApplicationRecord
   end
 
   def self.start_password_reset_process(the_email_address, root_url)
-    if the_email_address.to_s.length > 5 # a@b.co
-      user = User.where(email: the_email_address.to_s).first
-      if user && !user.password_change_required?
-        user.update_attributes(password_reset_requested_at: Proc.new{Time.now}.call,password_reset_token: ApplicationController::generate_random_code(20))
-        #Send reset password email from Mandrill
-        MandrillWorker.perform_async(user.id, 'password_reset_email', "#{root_url}/reset_password/#{user.password_reset_token}") unless Rails.env.test?
-      elsif user && user.email_verified && user.password_change_required?
-        # This is for users that received invite verification emails, clicked on the link which verified their account but they did not enter a PW. Now they are trying to access their account by trying to reset their PW so we send them a link for the set pw form instead of the reset pw form.
-        user.update_attribute(:password_reset_token, ApplicationController::generate_random_code(20))
-        MandrillWorker.perform_async(user.id, 'send_set_password_email', "#{root_url}/set_password/#{user.password_reset_token}") unless Rails.env.test?
-      end
+
+    return unless the_email_address.to_s.length > 5 # a@b.co
+
+    user = User.find_by(email: the_email_address.to_s)
+    if user&.email_verified && !user.password_change_required?
+      user.update_attributes(password_reset_requested_at: proc { Time.zone.now }.call, password_reset_token: ApplicationController.generate_random_code(20))
+      # Send reset password email from Mandrill
+      MandrillWorker.perform_async(user.id, 'password_reset_email', "#{root_url}/reset_password/#{user.password_reset_token}") unless Rails.env.test?
+    elsif user&.email_verified && user&.password_change_required?
+      # This is for users that received invite verification emails, clicked on the link which verified their account but they did not enter a PW. Now they are trying to access their account by trying to reset their PW so we send them a link for the set pw form instead of the reset pw form.
+      user.update_attribute(:password_reset_token, ApplicationController.generate_random_code(20))
+      MandrillWorker.perform_async(user.id, 'send_set_password_email', "#{root_url}/set_password/#{user.password_reset_token}") unless Rails.env.test?
     end
   end
 
@@ -758,7 +759,7 @@ class User < ApplicationRecord
     return unless stripe_customer_id
 
     stripe_customer = Stripe::Customer.retrieve(stripe_customer_id)
-    stripe_customer&.delete(stripe_customer_id)
+    stripe_customer.delete(stripe_customer_id)
   end
 
   def update_hub_spot_data

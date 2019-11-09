@@ -33,11 +33,15 @@
                                 %span{class: invoice.status == 'Paid' ? 'text-success' : 'text-danger'}
                                   =invoice.status
                               %td
-                                -if (invoice.subscription.pending_3d_secure? && invoice.requires_3d_secure) || invoice.status == 'Past Due'
+                                -if invoice.order_id
+                                  =link_to pdf_invoice_path(invoice.id, format: 'pdf'), target: '_blank' do
+                                    .btn.btn-link.btn-xs
+                                      View
+                                -elsif (invoice&.subscription.pending_3d_secure? && invoice.requires_3d_secure) || invoice.status == 'Past Due'
                                   =link_to show_invoice_url(invoice.sca_verification_guid) do
                                     .btn.btn-primary.btn-xs
                                       =invoice.requires_3d_secure ? 'Authenticate' : 'Confirm Payment'
-                                -else
+                                -elsif invoice.subscription
                                   =link_to subscription_invoices_url(invoice.id, format: 'pdf'), target: '_blank' do
                                     .btn.btn-link.btn-xs
                                       View
