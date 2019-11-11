@@ -8,15 +8,21 @@
       align="right"
       use-router
     >
-      <template v-slot:prev-text><span class="arrow-left-icon">Previous</span></template>
-      <template v-slot:next-text><span class="arrow-right-icon">Next</span></template>
-      <template v-slot:page><CbeNavigator v-bind:cbeId="link_data.id" /></template>
+      <template v-slot:prev-text>
+        <span class="arrow-left-icon">Previous</span>
+      </template>
+      <template v-slot:next-text>
+        <span class="arrow-right-icon">Next</span>
+      </template>
+      <template v-slot:page>
+        <CbeNavigator :cbe-id="link_data.id" />
+      </template>
     </b-pagination-nav>
   </section>
 </template>
 
 <script>
-import CbeNavigator from "./CbeNavigator"
+import CbeNavigator from './CbeNavigator.vue'
 
 export default {
   components: {
@@ -25,23 +31,23 @@ export default {
   computed: {
     links: function () {
       return this.generateObjectLinks();
-    }
+    },
   },
   data() {
     return {
-      pageLimit: 0
+      pageLimit: 0,
     };
   },
   props: {
-    link_data: {}
+    link_data: {},
   },
   watch: {
     $route(to, from) {
-      if (to.name == 'introduction_pages') {
+      if (to.name === 'introduction_pages') {
         this.pageLimit = 0;
-      } else if (to.name == 'review') {
+      } else if (to.name === 'review') {
         this.pageLimit = 0;
-      } else if (to.name == 'exam_submited') {
+      } else if (to.name === 'exam_submited') {
         this.pageLimit = 0;
       } else {
         this.pageLimit = 1;

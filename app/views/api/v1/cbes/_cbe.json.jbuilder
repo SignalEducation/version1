@@ -15,6 +15,12 @@ json.introduction_pages cbe.introduction_pages.order(:sorting_order) do |page|
   json.sorting_order page.sorting_order
 end
 
+json.resources cbe.resources.order(:sorting_order) do |resource|
+  json.id   resource.id
+  json.name resource.name
+  json.url  resource.document.url(:original, timestamp: false)
+end
+
 json.sections cbe.sections.order(:sorting_order) do |section|
   json.partial! 'api/v1/cbes/sections/section', locals: { section: section }
 end

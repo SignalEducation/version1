@@ -190,8 +190,8 @@ ActiveRecord::Schema.define(version: 2019_11_02_120741) do
     t.datetime "updated_at", null: false
     t.bigint "subject_course_id"
     t.text "agreement_content"
-    t.float "score"
     t.boolean "active", default: true, null: false
+    t.float "score"
     t.index ["subject_course_id"], name: "index_cbes_on_subject_course_id"
   end
 
@@ -398,9 +398,9 @@ ActiveRecord::Schema.define(version: 2019_11_02_120741) do
     t.boolean "is_video", default: false, null: false
     t.boolean "is_quiz", default: false, null: false
     t.boolean "active", default: true, null: false
-    t.datetime "destroyed_at"
-    t.string "seo_description"
+    t.string "seo_description", limit: 255
     t.boolean "seo_no_index", default: false
+    t.datetime "destroyed_at"
     t.integer "number_of_questions", default: 0
     t.float "duration", default: 0.0
     t.string "temporary_label"
@@ -419,9 +419,9 @@ ActiveRecord::Schema.define(version: 2019_11_02_120741) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer "cme_count", default: 0
-    t.datetime "destroyed_at"
-    t.string "seo_description"
+    t.string "seo_description", limit: 255
     t.boolean "seo_no_index", default: false
+    t.datetime "destroyed_at"
     t.integer "number_of_questions", default: 0
     t.integer "subject_course_id"
     t.float "video_duration", default: 0.0
