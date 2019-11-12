@@ -12,18 +12,16 @@ module Api
 
         def create
           @page = @cbe.introduction_pages.build(introduction_page_params)
+          return if @page.save
 
-          unless @page.save
-            render json: { errors: @page.errors }, status: :unprocessable_entity
-          end
+          render json: { errors: @page.errors }, status: :unprocessable_entity
         end
 
         def update
           @page = ::Cbe::IntroductionPage.find(params[:id])
+          return if @page.update(introduction_page_params)
 
-          unless @page.update(introduction_page_params)
-            render json: { errors: @page.errors }, status: :unprocessable_entity
-          end
+          render json: { errors: @page.errors }, status: :unprocessable_entity
         end
 
         private

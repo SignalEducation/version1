@@ -45,17 +45,28 @@
 
       <div class="col-sm-12">
         <div class="form-group">
-          <label for="sectionKindSelect">File</label>
+          <div
+            v-if="file.name"
+            class="mt-3"
+          >
+            <label>
+              Selected file:
+            </label>
+            <a
+              :href="file.url"
+              target="_blank"
+            >
+              {{ file.name }}
+            </a>
+          </div>
+          <label for="sectionKindSelect">{{ file.name ? 'Change File' : 'Attach File' }}</label>
           <b-form-file
-            ref="inputFile"
+            ref="input-file"
             :state="Boolean(file)"
             placeholder="Choose a file or drop it here..."
             drop-placeholder="Drop file here..."
-            @change="uploadFile"
+            @change="attachFile"
           />
-          <div class="mt-3">
-            Selected file: {{ file ? file.name : '' }}
-          </div>
           <p
             v-if="!$v.file.required && $v.file.$error"
             class="error-message"
@@ -126,17 +137,26 @@ export default {
       type: String,
       default: '',
     },
+    initialFile: {
+      type: Object,
+      default: () => ({}),
+    },
     initialSortingOrder: {
       type: Number,
       default: 1,
     },
+    totalResources: {
+      type: Number,
+      default: 0,
+    }
   },
   data() {
     return {
       resourceDetails: {},
       name: this.initialName,
       sortingOrder: this.initialSortingOrder,
-      file: {},
+      file: this.initialFile,
+      attachedFile: null,
       submitStatus: null,
       updateStatus: null,
     };
@@ -159,9 +179,9 @@ export default {
     },
   },
   methods: {
-    uploadFile(e) {
-      // this.file = e.target.files[0];
-      [ this.file ] = e.target.files;
+    attachFile(e) {
+      [ this.attachedFile ] = e.target.files;
+      if (Object.keys(this.file).length === 0) { [ this.file ] = e.target.files };
     },
     saveFile() {
       this.$v.$touch();
@@ -169,13 +189,10 @@ export default {
         this.submitStatus = 'ERROR';
       } else {
         this.submitStatus = 'PENDING';
-        this.resourceDetails.name = this.name;
-        this.resourceDetails.document = this.file;
-        this.resourceDetails.sorting_order = this.sortingOrder;
 
         const formData = new FormData();
         formData.append('resource[name]', this.name);
-        formData.append('resource[document]', this.file);
+        formData.append('resource[document]', this.attachedFile);
         formData.append('resource[sorting_order]', this.sortingOrder);
 
         axios({
@@ -185,15 +202,16 @@ export default {
           config: { headers: { 'Content-Type': 'multipart/form-data' } },
         })
           .then(response => {
-            this.createdResource = response.data;
-            if (this.createdResource.id > 0) {
+            this.resourceDetails = response.data;
+            if (this.resourceDetails.id > 0) {
               this.submitStatus = 'OK';
-              this.resourceDetails.id = this.createdResource.id;
               this.$emit('add-resource', this.resourceDetails);
               this.resourceDetails = {};
               this.name = this.initialName;
-              this.sortingOrder = this.initialSortingOrder;
+              this.sortingOrder += 1;
               this.file = {};
+              this.attachedFile = null;
+              this.$refs['input-file'].reset()
               this.$v.$reset();
             }
           })
@@ -209,21 +227,25 @@ export default {
         this.updateStatus = 'ERROR';
       } else {
         this.updateStatus = 'PENDING';
-        this.resourceDetails.name = this.name;
-        this.resourceDetails.sorting_order = this.sortingOrder;
+        const formData = new FormData();
+        formData.append('resource[name]', this.name);
+        formData.append('resource[sorting_order]', this.sortingOrder);
+        if (this.attachedFile) { formData.append('resource[document]', this.attachedFile) };
 
-        axios
-          .patch(`/api/v1/cbes/resources/${this.id}`, {
-            resource: this.resourceDetails,
-          })
+        axios({
+          method: 'patch',
+          url: `/api/v1/cbes/${this.$store.state.cbeId}/resources/${this.id}`,
+          data: formData,
+          config: { headers: { 'Content-Type': 'multipart/form-data' } },
+        })
           .then(response => {
             this.updateStatus = 'OK';
-            this.updatedResource = response.data;
-            this.resourceDetails.id = this.updatedResource.id;
+            this.resourceDetails = response.data;
             this.$emit('add-resource', this.resourceDetails);
-            this.resourceDetails = {};
-            this.title = this.updatedResource.title;
-            this.sortingOrder = this.updatedResource.sorting_order;
+            this.title = this.resourceDetails.title;
+            this.sortingOrder = this.resourceDetails.sorting_order;
+            this.file = this.resourceDetails.file;
+            this.attachedFile = null;
             this.$v.$reset();
           })
           .catch(error => {

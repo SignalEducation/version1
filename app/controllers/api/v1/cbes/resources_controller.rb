@@ -12,10 +12,16 @@ module Api
 
         def create
           @resource = @cbe.resources.build(permitted_params)
+          return if @resource.save
 
-          unless @resource.save
-            render json: { errors: @resource.errors }, status: :unprocessable_entity
-          end
+          render json: { errors: @resource.errors }, status: :unprocessable_entity
+        end
+
+        def update
+          @resource = ::Cbe::Resource.find(params[:id])
+          return if @resource.update(permitted_params)
+
+          render json: { errors: @resource.errors }, status: :unprocessable_entity
         end
 
         private

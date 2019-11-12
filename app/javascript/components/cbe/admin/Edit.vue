@@ -368,20 +368,20 @@
 <script>
 import { mapGetters } from 'vuex';
 import Details from './Details.vue';
-import Section from './Section.vue';
 import IntroductionPage from './IntroductionPage.vue';
-import Scenario from './Scenario.vue';
 import Question from './Question.vue';
 import Resources from './Resources.vue';
+import Scenario from './Scenario.vue';
+import Section from './Section.vue';
 
 export default {
   components: {
     Details,
     IntroductionPage,
-    Section,
-    Scenario,
     Question,
     Resources,
+    Section,
+    Scenario,
   },
   data() {
     return {
@@ -443,7 +443,7 @@ export default {
     updatePages(data) {
       this.edit_cbe_data.introPages.push(data);
     },
-    updateResources: (data) => {
+    updateResources(data) {
       this.edit_cbe_data.resources.push(data);
     },
     updateScenarios(data) {
