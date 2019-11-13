@@ -38,9 +38,10 @@ class Order < ApplicationRecord
   belongs_to :user
   visitable :ahoy_visit
 
-  has_one :order_transaction
-  has_one :invoice, autosave: true
+  has_one :order_transaction, dependent: :destroy
+  has_one :invoice, autosave: true, dependent: :restrict_with_error
 
+  has_many :exercises, dependent: :restrict_with_error
   delegate :mock_exam, to: :product
 
   # validation
@@ -136,7 +137,7 @@ class Order < ApplicationRecord
 
   def generate_exercises
     count = product.correction_pack_count || 1
-    (1..count).each { user.exercises.create(product_id: product_id) }
+    (1..count).each { user.exercises.create(product_id: product_id, order_id: id) }
   end
 
   def paypal?

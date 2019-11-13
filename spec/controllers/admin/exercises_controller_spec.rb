@@ -103,7 +103,7 @@ describe Admin::ExercisesController, type: :controller do
     describe 'POST create' do
       it 'creates a new exercise' do
         post :create, params: {
-          exercise: { product_id: exercise.product_id },
+          exercise: { product_id: exercise.product_id, order_id: exercise.order.id },
           user_id: exercise.user_id
         }
         expect_create_success_with_model(

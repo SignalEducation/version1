@@ -57,6 +57,8 @@ class Product < ApplicationRecord
   scope :all_in_order, -> { order(:sorting_order, :name) }
   scope :all_active,   -> { where(active: true).includes(mock_exam: :subject_course) }
   scope :in_currency,  ->(ccy_id) { where(currency_id: ccy_id) }
+  scope :cbes,         -> { where.not(cbe_id: nil) }
+  scope :mock_exams,   -> { where.not(mock_exam_id: nil) }
 
   # instance methods
   def destroyable?

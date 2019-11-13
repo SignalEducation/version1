@@ -49,7 +49,9 @@ Rails.application.routes.draw do
     end
 
     resources :cbes,   only: %i[index new show update]
-    resources :orders, only: %i[index show]
+    resources :orders, only: %i[index show update] do
+      get :update_product
+    end
     post 'search_exercises', to: 'exercises#index', as: :search_exercises
   end
 
