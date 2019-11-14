@@ -102,19 +102,15 @@ export default {
     formatedData() {
       const data = {};
       const questions = Object.values(this.user_cbe_data.questions);
-      const answers = questions.map(a => a.answers);
-
-      const score = questions
-        .map(a => a.score)
-        .filter(Number)
-        .reduce((a, b) => a + b, 0);
+      for (let i = 0; i < questions.length; i++) {
+        delete questions[i].id;
+      }
 
       data.status = 'finished';
-      data.score = score;
       data.cbe_id = this.user_cbe_data.cbe_id;
       data.user_id = this.user_cbe_data.user_id;
       data.exercise_id = this.user_cbe_data.exercise_id;
-      data.answers_attributes = [].concat.apply([], answers);
+      data.questions_attributes = [].concat.apply([], questions);
       return data;
     },
     updateExamPageState(route) {

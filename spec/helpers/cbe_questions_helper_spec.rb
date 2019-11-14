@@ -3,20 +3,65 @@
 require 'rails_helper'
 
 describe CbeQuestionsHelper do
-  let(:question)        { build(:cbe_question) }
-  let(:user_answers)    { build_list(:cbe_user_answer, 5, question: question) }
+  let(:exercise_cbe) { create(:exercise) }
+  let(:cbe)          { create(:cbe) }
+  let(:cbe_user_log) { create(:cbe_user_log, cbe: cbe, exercise: exercise_cbe) }
+  let!(:question)    { create(:cbe_user_question, user_log: cbe_user_log) }
 
-  describe '#user_answers_score' do
-    it 'returns zero score' do
-      user_answers.each { |r| r.content['correct'] = false }
+  describe '#question_title' do
+    it 'return correct stylized question title' do
+      question.correct = true
+      title = question_title(question)
 
-      expect(user_answers_score(question, user_answers)).to be_zero
+      expect(title).to include('text-green')
+      expect(title).to include(question.cbe_question.sorting_order.to_s)
+      expect(title).to include(question.cbe_question.kind.humanize)
+      expect(title).to include(question.cbe_question.score.to_s)
     end
 
-    it 'returns the correct score' do
-      user_answers.each { |r| r.content['correct'] = true }
+    it 'return incorrect stylized question title' do
+      question.correct = false
+      title = question_title(question)
 
-      expect(user_answers_score(question, user_answers)).to eq(question.score)
+      expect(title).to include('text-red')
+    end
+
+    it 'return not corrected stylized question title' do
+      question.correct = nil
+      title = question_title(question)
+
+      expect(title).to include('text-yellow')
+    end
+  end
+
+  describe '#question_corrected_link' do
+    it 'return question link' do
+      button = question_corrected_link(question)
+
+      expect(button).to include(question.cbe_question.kind.humanize)
+    end
+  end
+
+  describe '#render_admin_answers' do
+    it 'render a specific open_answer partial' do
+      question.cbe_question.kind = Cbe::Question.kinds[:open]
+      partial = render_admin_answers(question)
+
+      expect(partial).to include('Educator Section')
+    end
+
+    it 'render a specific single_answer partial' do
+      question.cbe_question.kind = Cbe::Question.kinds[:fill_in_the_blank]
+      partial = render_admin_answers(question)
+
+      expect(partial).to include(raw(question.answers.first.content['text']))
+    end
+
+    it 'render a specific multiple_answers partial' do
+      question.cbe_question.kind = Cbe::Question.kinds[:multiple_choice]
+      partial = render_admin_answers(question)
+
+      expect(partial).to include(raw(question.answers.sample.content['text']))
     end
   end
 end

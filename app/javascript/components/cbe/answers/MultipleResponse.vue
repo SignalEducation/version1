@@ -10,7 +10,8 @@
         v-model="question"
         type="checkbox"
         :value="{ id: questionId,
-                  answers: { cbe_answer_id: answer.id, content: answer.content, cbe_question_id: questionId } }"
+                  cbe_question_id: questionId,
+                  answers_attributes: { cbe_answer_id: answer.id, content: answer.content } }"
       >
       <label :for="answer.id">{{ answer.content['text'] }}</label>
       <br>
@@ -47,7 +48,7 @@ export default {
   methods: {
     getPickedValue() {
       const initialValue = this.$store.state.userCbe.user_cbe_data.questions[
-        this.question_id
+        this.questionId
       ];
       if (initialValue != null) {
         return this.undoQuestionFormat(initialValue);
@@ -61,9 +62,10 @@ export default {
       const check = this.checkAnswers();
 
       question.id = this.questionId;
+      question.cbe_question_id = this.questionId;
       question.score = (check ? this.questionScore : 0);
       question.correct = check;
-      question.answers = questions.map(a => a.answers);
+      question.answers_attributes = questions.map(a => a.answers_attributes);
 
       return question;
     },
@@ -71,8 +73,8 @@ export default {
     undoQuestionFormat(question) {
       const questions = [];
 
-      question.answers.filter(answers => {
-        questions.push({ id: question.id, answers })
+      question.answers_attributes.filter(answers_attributes => {
+        questions.push({ id: question.id, cbe_question_id: this.questionId, answers_attributes })
       });
 
       return questions;
@@ -82,7 +84,7 @@ export default {
 
       if( this.question.length > 0 ) {
         const pickedAnswers = this.question.
-                                map(a => a.answers).
+                                map(a => a.answers_attributes).
                                 map(answer => answer.content.correct);
         // checking if all picked answers are correct
         if (pickedAnswers.some(x => x === false)){

@@ -41,13 +41,13 @@ export default {
         id: this.questionId,
         score: this.answerScore,
         correct:this.answerCorrect,
-        answers: [{
+        cbe_question_id: this.questionId,
+        answers_attributes: [{
           cbe_answer_id: this.answerData.id,
           content: {
             text: newValue,
             correct: this.answerCorrect
-          },
-          cbe_question_id: this.questionId
+          }
         }]
       });
     }
@@ -58,7 +58,7 @@ export default {
         this.questionId
       ];
       if (initialValue != null) {
-        return initialValue;
+        return initialValue.answers_attributes[0].content.text;
       }
 
       return [];

@@ -1,6 +1,10 @@
-
-# This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV['RAILS_ENV'] ||= 'test'
+require 'simplecov'
+SimpleCov.start do
+  add_filter 'spec'
+  add_filter 'config'
+end
+
 require_relative '../config/environment'
 require 'authlogic/test_case'     # required for Authlogic
 require 'bundler/setup'
@@ -21,7 +25,6 @@ require 'support/stripe_mock_helpers'
 require 'webmock/rspec'
 include Authlogic::TestCase       # required for Authlogic
 
-SimpleCov.start
 WebMock.disable_net_connect!(allow_localhost: true)
 Sidekiq::Testing.inline! # makes background jobs run immediately
 

@@ -40,6 +40,9 @@ Rails.application.routes.draw do
   namespace :admin do
     resources :exercises, only: %i[index show new create edit update] do
       get 'generate_daily_summary', on: :collection
+      get 'correct_cbe', to: 'exercises#correct_cbe', as: :correct_cbe, on: :member
+      post 'return_cbe', to: 'exercises#return_cbe', as: :return_cbe, on: :member
+      post 'cbe_user_question_update/answer/:question_id', to: 'exercises#cbe_user_question_update', as: :cbe_user_question_update, on: :member
     end
     resources :user do
       resources :exercises, only: %i[index new create]

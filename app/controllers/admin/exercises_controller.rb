@@ -4,8 +4,8 @@ module Admin
   class ExercisesController < ApplicationController
     before_action :logged_in_required
     before_action { ensure_user_has_access_rights(%w[exercise_corrections_access]) }
-    before_action :set_user, only: %i[index new create]
-    before_action :set_exercise, only: %i[show edit update]
+    before_action :set_user, only: %i[index new create correct_cbe]
+    before_action :set_exercise, only: %i[show edit update return_cbe]
     before_action :management_layout
 
     def index
@@ -66,6 +66,45 @@ module Admin
       Order.send_daily_orders_update
       redirect_to admin_exercises_path, notice: 'Daily summary sent to Slack'
     end
+
+    # CBE Exercise
+    def correct_cbe
+      @exercise = Exercise.
+                    includes(cbe_user_log: [questions: [:cbe_question]]).
+                    find(params[:id])
+      @cbe_user_log = @exercise.cbe_user_log
+      @cbe          = @cbe_user_log.cbe
+
+      @exercise.correct
+    end
+
+    def cbe_user_question_update
+      @question = Cbe::UserQuestion.find(params[:question_id])
+      @user_log = Cbe::UserLog.find(@question.cbe_user_log_id)
+      @response = 'Question was updated.'
+
+      ActiveRecord::Base.transaction do
+        @question.update(score: params[:score], educator_comment: params[:educator_comment])
+        @user_log.update(status: 'corrected')
+      end
+
+      respond_to do |format|
+        format.js
+      end
+    end
+
+    def return_cbe
+      @cbe_user_log = @exercise.cbe_user_log
+      @cbe          = @cbe_user_log.cbe
+
+      if @exercise.cbe_user_log.status == 'corrected' && @exercise.return
+        flash[:success] = I18n.t('controllers.exercises.update.flash.success')
+        redirect_to admin_exercises_path
+      else
+        render action: :correct_cbe
+      end
+    end
+    # CBE Exercise
 
     private
 
