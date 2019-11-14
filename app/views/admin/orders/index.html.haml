@@ -28,7 +28,7 @@
                         =order.user&.full_name
                     %td=order.stripe_status
                     %td
-                      =link_to 'Order', order, class: 'btn btn-secondary btn-xs'
+                      =link_to 'Order', admin_order_path(order), class: 'btn btn-secondary btn-xs'
                       =link_to 'Product', order.product, class: 'btn btn-secondary-reverse btn-xs'
                       -if order.user_id
                         =link_to t('views.orders.index.user_id'), user_url(order.user_id), class: 'btn btn-primary btn-xs'

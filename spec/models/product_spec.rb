@@ -48,6 +48,8 @@ describe Product do
   it { expect(Product).to respond_to(:all_in_order) }
   it { expect(Product).to respond_to(:all_active) }
   it { expect(Product).to respond_to(:in_currency) }
+  it { expect(Product).to respond_to(:cbes) }
+  it { expect(Product).to respond_to(:mock_exams) }
 
   # class methods
   it { expect(Product).to respond_to(:search) }

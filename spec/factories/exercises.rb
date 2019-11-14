@@ -26,5 +26,6 @@ FactoryBot.define do
   factory :exercise do
     product
     user
+    order
   end
 end

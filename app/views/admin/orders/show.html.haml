@@ -14,7 +14,11 @@
               %table.table.table-bordered.l-margin-top
                 %tr
                   %td.col-sm-4=t('views.orders.show.product_id')
-                  %td.col-sm-8=@order.product.name
+                  %td.col-sm-8
+                    =@order.product.name
+                    -if !@order.product.correction_pack? && @order.exercises.map(&:state).all?("pending")
+                      %br
+                      =link_to "Change product",admin_order_update_product_path(@order)
                 %tr
                   %td.col-sm-4=t('views.orders.show.subject_course_id')
                   -if @order.subject_course
@@ -30,6 +34,6 @@
                   %td.col-sm-8=@order.stripe_customer_id
                 %tr
                   %td.col-sm-4=t('views.orders.show.stripe_status')
-                  %td.col-sm-8=@order.stripe_status
+                  %td.col-sm-8=@order.state
               %p
-                =link_to t('views.general.back'), orders_url
+                =link_to t('views.general.back'), admin_orders_url

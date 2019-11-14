@@ -31,6 +31,7 @@ describe Order do
   it { should belong_to(:mock_exam) }
   it { should belong_to(:user) }
   it { should have_one(:order_transaction) }
+  it { should have_many(:exercises) }
 
   describe 'factories' do
     it 'has a valid factory' do

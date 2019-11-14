@@ -122,7 +122,7 @@ module Admin
 
     def exercise_params
       params.require(:exercise).permit(
-        :correction, :corrector_id, :submission, :product_id
+        :correction, :corrector_id, :submission, :product_id, :order_id
       )
     end
   end
