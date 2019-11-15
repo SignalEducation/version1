@@ -119,4 +119,18 @@ RSpec.describe 'Api::V1::Cbe::ResourcesController', type: :request do
       end
     end
   end
+
+  describe 'post /api/v1/resources/:id' do
+    context 'destroy a CBE resources' do
+      let(:resource) { create(:cbe_resource, cbe: cbe) }
+
+      before do
+        delete "/api/v1/cbes/#{cbe.id}/resources/#{resource.id}"
+      end
+
+      it 'returns HTTP status 202' do
+        expect(response).to have_http_status 202
+      end
+    end
+  end
 end

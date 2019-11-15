@@ -69,8 +69,12 @@
               :initial-kind="page.kind"
               :initial-sorting-order="page.sorting_order"
               :initial-content="page.content"
+              @rm-introduction-page="removePage"
             />
-            <IntroductionPage @add-introduction-page="updatePages" />
+            <IntroductionPage
+              :initial-sorting-order="edit_cbe_data.introduction_pages.length + 1"
+              @add-introduction-page="updatePages"
+            />
           </b-tabs>
         </b-card>
       </b-collapse>
@@ -83,6 +87,7 @@
         <Resources
           :resources="edit_cbe_data.resources"
           @add-resource="updateResources"
+          @rm-resource="removeResource"
         />
       </b-collapse>
 
@@ -108,6 +113,7 @@
                       :initial-sorting-order="section.sorting_order"
                       :initial-kind="section.kind"
                       :initial-content="section.content"
+                      @rm-section="removeSection"
                     />
                   </b-card>
                 </b-collapse>
@@ -170,6 +176,7 @@
                             :initial-sorting-order="question.sorting_order"
                             :initial-kind="question.kind"
                             :initial-answers="question.answers"
+                            @rm-question="removeQuestion"
                           />
                         </div>
                       </div>
@@ -205,6 +212,7 @@
                   <b-card-body>
                     <Question
                       :section-id="section.id"
+                      :initial-sorting-order="section.questions.length + 1"
                       @add-question="updateQuestions"
                     />
                   </b-card-body>
@@ -237,8 +245,10 @@
                                 <b-card>
                                   <Scenario
                                     :id="scenario.id"
+                                    :section-id="scenario.section_id"
                                     :initial-name="scenario.name"
                                     :initial-content="scenario.content"
+                                    @rm-scenario="removeScenario"
                                   />
                                 </b-card>
                               </b-collapse>
@@ -297,6 +307,7 @@
                                           :initial-score="question.score"
                                           :initial-kind="question.kind"
                                           :initial-answers="question.answers"
+                                          @rm-question="removeScenarioQuestion"
                                         />
                                       </b-card>
                                     </div>
@@ -335,6 +346,7 @@
                                 <Question
                                   :section-id="section.id"
                                   :scenario-id="scenario.id"
+                                  :initial-sorting-order="scenario.questions.length + 1"
                                   @add-question="updateScenarioQuestions"
                                 />
                               </b-card-body>
@@ -357,7 +369,10 @@
             </div>
           </b-tab>
           <b-tab title="New Section">
-            <Section @add-section="updateSections" />
+            <Section
+              :initial-sorting-order="edit_cbe_data.sections.length + 1"
+              @add-section="updateSections"
+            />
           </b-tab>
         </b-tabs>
       </b-card>
@@ -440,11 +455,26 @@ export default {
     updateSections(data) {
       this.edit_cbe_data.sections.push(data);
     },
+    removeSection(sectionId) {
+      const filtered = this.edit_cbe_data.sections.filter((section) => section.id !== sectionId);
+
+      this.edit_cbe_data.sections = filtered;
+    },
     updatePages(data) {
-      this.edit_cbe_data.introPages.push(data);
+      this.edit_cbe_data.introduction_pages.push(data);
+    },
+    removePage(pageId) {
+      const filtered = this.edit_cbe_data.introduction_pages.filter((page) => page.id !== pageId);
+
+      this.edit_cbe_data.introduction_pages = filtered;
     },
     updateResources(data) {
       this.edit_cbe_data.resources.push(data);
+    },
+    removeResource(resourceId) {
+      const filtered = this.edit_cbe_data.resources.filter((resource) => resource.id !== resourceId);
+
+      this.edit_cbe_data.resources = filtered;
     },
     updateScenarios(data) {
       let sectionIndex = 0;
@@ -463,6 +493,15 @@ export default {
       }
       currentSection.scenarios.push(data);
     },
+    removeScenario(data) {
+      const filtered =
+        this.edit_cbe_data.sections.filter(function(section){
+          section.scenarios = section.scenarios.filter((scenario) => scenario.id !== data.scenarioId);
+          return section
+        });
+
+      this.edit_cbe_data.sections = filtered;
+    },
     updateQuestions(data) {
       let sectionIndex = 0;
       this.edit_cbe_data.sections.forEach((s, i) => {
@@ -477,6 +516,15 @@ export default {
         this.$set(currentSection, 'questions', []);
       }
       currentSection.questions.push(data);
+    },
+    removeQuestion(data) {
+      const filtered =
+        this.edit_cbe_data.sections.filter(function(section){
+          section.questions = section.questions.filter((question) => question.id !== data.questionId);
+          return section
+        });
+
+      this.edit_cbe_data.sections = filtered;
     },
     updateScenarioQuestions(data) {
       let scenarioIndex = 0;
@@ -501,6 +549,15 @@ export default {
         this.$set(currentScenario, 'questions', []);
       }
       currentScenario.questions.push(data);
+    },
+    removeScenarioQuestion(removeScenarioQuestion) {
+      const filtered =
+        this.edit_cbe_data.sections.filter(function(section){
+          section.questions = section.questions.filter((question) => question.id !== data.questionId);
+          return section
+        });
+
+      this.edit_cbe_data.sections = filtered;
     },
   },
 };

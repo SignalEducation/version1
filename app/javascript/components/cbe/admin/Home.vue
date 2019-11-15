@@ -68,8 +68,12 @@
                 :initial-sorting-order="page.sorting_order"
                 :initial-kind="page.kind"
                 :initial-content="page.content"
+                @rm-introduction-page="removePage"
               />
-              <IntroductionPage @add-introduction-page="updatePages" />
+              <IntroductionPage
+                :initial-sorting-order="introPages.length + 1"
+                @add-introduction-page="updatePages"
+              />
             </b-tabs>
           </b-card>
         </b-collapse>
@@ -82,6 +86,7 @@
           <Resources
             :resources="resources"
             @add-resource="updateResources"
+            @rm-resource="removeResource"
           />
         </b-collapse>
 
@@ -107,6 +112,7 @@
                         :initial-sorting-order="section.sorting_order"
                         :initial-kind="section.kind"
                         :initial-content="section.content"
+                        @rm-section="removeSection"
                       />
                     </b-card>
                   </b-collapse>
@@ -171,6 +177,7 @@
                               :initial-sorting-order="question.sorting_order"
                               :initial-kind="question.kind"
                               :initial-answers="question.answers_attributes"
+                              @rm-question="removeQuestion"
                             />
                           </div>
                         </div>
@@ -206,6 +213,7 @@
                     <b-card-body>
                       <Question
                         :section-id="section.id"
+                        :initial-sorting-order="section.questions.length + 1"
                         @add-question="updateQuestions"
                       />
                     </b-card-body>
@@ -240,6 +248,7 @@
                                       :id="scenario.id"
                                       :initial-name="scenario.name"
                                       :initial-content="scenario.content"
+                                      @rm-scenario="removeScenario"
                                     />
                                   </b-card>
                                 </b-collapse>
@@ -301,6 +310,7 @@
                                             :initial-content="question.content"
                                             :initial-score="question.score"
                                             :initial-kind="question.kind"
+                                            @rm-question="removeScenarioQuestion"
                                           />
                                         </b-card>
                                       </div>
@@ -339,6 +349,7 @@
                                   <Question
                                     :section-id="section.id"
                                     :scenario-id="scenario.id"
+                                    :initial-sorting-order="scenario.questions.length + 1"
                                     @add-question="updateScenarioQuestions"
                                   />
                                 </b-card-body>
@@ -361,7 +372,10 @@
               </div>
             </b-tab>
             <b-tab title="New Section">
-              <Section @add-section="updateSections" />
+              <Section
+                :initial-sorting-order="sections.length + 1"
+                @add-section="updateSections"
+              />
             </b-tab>
           </b-tabs>
         </b-card>
@@ -440,11 +454,26 @@ export default {
     updateSections(data) {
       this.sections.push(data);
     },
+    removeSection(sectionId) {
+      const filtered = this.sections.filter((section) => section.id !== sectionId);
+
+      this.sections = filtered;
+    },
     updatePages(data) {
       this.introPages.push(data);
     },
+    removePage(pageid) {
+      const filtered = this.introPages.filter((page) => page.id !== pageid);
+
+      this.introPages = filtered;
+    },
     updateResources(data) {
       this.resources.push(data);
+    },
+    removeResource(resourceId) {
+      const filtered = this.resources.filter((resource) => resource.id !== resourceId);
+
+      this.resources = filtered;
     },
     updateScenarios(data) {
       let sectionIndex = 0;
@@ -463,6 +492,15 @@ export default {
       }
       currentSection.scenarios.push(data);
     },
+    removeScenario(data) {
+      const filtered =
+        this.sections.filter(function(section){
+          section.scenarios = section.scenarios.filter((scenario) => scenario.id !== data.scenarioId);
+          return section
+        });
+
+      this.sections = filtered;
+    },
     updateQuestions(data) {
       let sectionIndex = 0;
       this.sections.forEach((s, i) => {
@@ -477,6 +515,15 @@ export default {
         this.$set(currentSection, 'questions', []);
       }
       currentSection.questions.push(data);
+    },
+    removeQuestion(questionId) {
+      const filtered =
+        this.sections.filter(function(section){
+          section.questions = section.questions.filter((question) => question.id !== questionId);
+          return section
+        });
+
+      this.sections = filtered;
     },
     updateScenarioQuestions(data) {
       let scenarioIndex = 0;
@@ -501,6 +548,15 @@ export default {
         this.$set(currentScenario, 'questions', []);
       }
       currentScenario.questions.push(data);
+    },
+    removeScenarioQuestion(questionId) {
+      const filtered =
+        this.sections.filter(function(section){
+          section.questions = section.questions.filter((question) => question.id !== questionId);
+          return section
+        });
+
+      this.sections = filtered;
     },
   },
 };

@@ -10,23 +10,16 @@
             %th=t('views.invoices.form.status')
             %th=t('views.invoices.form.line_total_inc_vat')
             %th=t('views.invoices.form.invoice')
-            %th=t('views.invoices.form.pdf')
+            %th=t('views.invoices.form.link')
         %tbody
           -@orders.each do |order|
             %tr
-              %td
-                -if order.product && order.product.mock_exam
-                  =order.product.mock_exam.name.to_s.truncate(20)
-              %td=order.stripe_status.to_s.capitalize
+              %td=order_name(order)
+              %td=order.state.capitalize
               %td=number_in_local_currency(order.product.price, order.product.currency)
               %td
-                -if order.product && order.product.mock_exam
-                  =link_to pdf_invoice_path(order.invoice.id, format: 'pdf'), target: '_blank' do
-                    .btn.btn-link.btn-xs
-                      View
-              %td
-                -if order.product && order.product.mock_exam
-                  =link_to order.product.mock_exam.file.url, target: '_blank' do
-                    .btn.btn-link.btn-xs
-                      View
+                =link_to pdf_invoice_path(order.invoice.id, format: 'pdf'), target: '_blank' do
+                  .btn.btn-link.btn-xs
+                    View
+              %td=order_link(order)
 

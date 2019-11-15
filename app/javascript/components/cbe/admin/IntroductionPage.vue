@@ -69,6 +69,13 @@
           Update Page
         </button>
         <button
+          v-if="id"
+          class="btn btn-danger"
+          @click="deletePage"
+        >
+          Delete Page
+        </button>
+        <button
           v-else
           class="btn btn-primary"
           @click="savePage"
@@ -87,6 +94,12 @@
           class="typo__p"
         >
           Updating...
+        </p>
+        <p
+          v-if="deleteStatus === 'PENDING'"
+          class="typo__p"
+        >
+          Deleting...
         </p>
         <p
           v-if="submitStatus === 'ERROR'"
@@ -142,6 +155,7 @@ export default {
       content: this.initialContent,
       submitStatus: null,
       updateStatus: null,
+      deleteStatus: null,
     };
   },
   validations: {
@@ -188,7 +202,7 @@ export default {
               this.pageDetails = {};
               this.title = this.initialTitle;
               this.content = null;
-              this.sortingOrder = this.initialSortingOrder;
+              this.sortingOrder += 1;
               this.$v.$reset();
             }
           })
@@ -230,6 +244,31 @@ export default {
             this.updateStatus = 'ERROR';
             console.log(error);
           });
+      }
+    },
+    deletePage() {
+      if(confirm("Do you really want to delete?")){
+        this.$v.$touch();
+        if (this.$v.$invalid) {
+          this.updateStatus = 'ERROR';
+        } else {
+          this.deleteStatus = 'PENDING';
+          const pageId = this.id;
+
+          axios
+            .delete(
+              `/api/v1/cbes/${this.$store.state.cbeId}/introduction_pages/${pageId}`
+            )
+            .then(response => {
+              this.$emit('rm-introduction-page', pageId);
+              this.updateStatus = 'OK';
+              this.$v.$reset();
+            })
+            .catch(error => {
+              this.updateStatus = 'ERROR';
+              console.log(error);
+            });
+        }
       }
     },
   },

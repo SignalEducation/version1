@@ -4,6 +4,7 @@ RSpec.describe CbesController, type: :controller do
   let(:sys_group) { create(:system_requirements_user_group) }
   let(:sys_user)  { create(:system_requirements_user, user_group_id: sys_group.id) }
   let(:cbe)       { create(:cbe) }
+  let!(:pages)    { create_list(:cbe_introduction_page, 5, cbe: cbe) }
   let(:exercise)  { create(:exercise) }
 
   before(:each) do
@@ -37,6 +38,9 @@ RSpec.describe CbesController, type: :controller do
     end
 
     it 'user has not a peding exercise' do
+      expect_any_instance_of(User).to receive('purchased_cbe?').and_return(true)
+      expect_any_instance_of(User).to receive('non_student_user?').and_return(false)
+
       exercise.update(state: 'submitted')
 
       get :show, params: { id: cbe.id, exercise_id: exercise.id }

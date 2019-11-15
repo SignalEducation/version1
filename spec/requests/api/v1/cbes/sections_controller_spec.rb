@@ -147,4 +147,18 @@ RSpec.describe 'Api::V1::Cbe::SectionsController', type: :request do
     end
   end
 
+  describe 'post /api/v1/sections/:id' do
+    context 'destroy a valid CBE section' do
+      let!(:cbe) { create(:cbe) }
+      let(:section) { create(:cbe_section, cbe: cbe) }
+
+      before do
+        delete "/api/v1/sections/#{section.id}"
+      end
+
+      it 'returns HTTP status 202' do
+        expect(response).to have_http_status 202
+      end
+    end
+  end
 end

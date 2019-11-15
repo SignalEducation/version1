@@ -94,4 +94,18 @@ RSpec.describe 'Api::V1::Cbe::ScenariosController', type: :request do
       end
     end
   end
+
+  describe 'post /api/v1/scenarios/:id' do
+    context 'destroy a CBE scenario' do
+      let(:scenario) { create(:cbe_scenario, :with_section) }
+
+      before do
+        delete "/api/v1/scenarios/#{scenario.id}"
+      end
+
+      it 'returns HTTP status 202' do
+        expect(response).to have_http_status 202
+      end
+    end
+  end
 end

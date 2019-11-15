@@ -1,0 +1,35 @@
+%body
+  .container
+    %header.management-console-section
+      %h1
+        CBEs
+    %section.pb-7
+      = render partial: 'management_consoles/course_content_nav'
+      .row
+        .col-sm-12
+          .box-item.table-box
+            .row
+              .col-sm
+                = link_to 'New CBE', new_admin_cbe_url, class: 'btn btn-primary btn-sm', title: t('views.general.new_tooltip')
+            .table-responsive.pt-4
+              %table.table.sorted_table
+                %thead
+                  %tr
+                    %th Name
+                    %th Course
+                    %th Active
+                    %th
+                    %th
+                %tbody
+                  - @cbes.each do |cbe|
+                    %tr
+                      %td
+                        = cbe.name
+                      %td
+                        = cbe.subject_course.name
+                      %td
+                        = tick_or_cross(cbe.active)
+                      %td
+                        = link_to t('views.general.edit'), admin_cbe_url(cbe.id), class: 'btn btn-xs btn-primary'
+                      %td
+                        = link_to t('views.general.show'), cbe_url(cbe.id), class: 'btn btn-xs btn-secondary'
