@@ -1,4 +1,5 @@
 const { environment } = require('@rails/webpacker')
+const { VueLoaderPlugin } = require("vue-loader");
 const vue =  require('./loaders/vue')
 
 const babelLoader = environment.loaders.get("babel");
@@ -19,5 +20,6 @@ environment.loaders.insert(
 const fileLoader = environment.loaders.get("file");
 fileLoader.exclude = /\.(svg)$/i;
 
-environment.loaders.append('vue', vue)
+environment.plugins.prepend("VueLoaderPlugin", new VueLoaderPlugin());
+environment.loaders.prepend('vue', vue)
 module.exports = environment

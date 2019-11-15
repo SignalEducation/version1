@@ -64,7 +64,7 @@
 </template>
 
 <script>
-  import Modal from '../../../lib/Modal';
+  import Modal from '../../../lib/Modal/index.vue';
   import '../SpreadsheetEditor.scss';
 
   export default {

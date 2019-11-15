@@ -18,7 +18,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import AgreementModal from '../../components/cbe/AgreementModal';
+import AgreementModal from '../../components/cbe/AgreementModal.vue';
 
 export default {
   components: {

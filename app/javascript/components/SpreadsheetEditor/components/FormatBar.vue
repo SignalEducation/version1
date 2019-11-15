@@ -99,7 +99,7 @@
 import '@grapecity/wijmo.vue2.core';
 import '@grapecity/wijmo.vue2.input';
 // eslint-disable-next-line import/no-unresolved
-import DropDownSelect from '../../../lib/DropDownSelect';
+import DropDownSelect from '../../../lib/DropDownSelect/index.vue';
 
 export default {
   components: {

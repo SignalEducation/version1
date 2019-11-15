@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import PDFViewer from "../../lib/PDFViewer";
+import PDFViewer from "../../lib/PDFViewer/index.vue";
 
 export default {
   components: {
