@@ -31,11 +31,11 @@ class Cbe
     def update_exercise_status
       questions_kind = questions.map { |q| q.cbe_question.kind }.uniq
 
-      exercise.submit
+      exercise&.submit
       return unless questions_kind.exclude?('spreadsheet' && 'open')
 
-      exercise.correct
-      exercise.return
+      exercise&.correct
+      exercise&.return
     end
   end
 end

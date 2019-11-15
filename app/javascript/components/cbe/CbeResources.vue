@@ -40,7 +40,7 @@ export default {
   props: {
     cbe_data: {
       type: Object,
-      default: () => {},
+      default: () => ({}),
     },
   },
   data() {
@@ -53,7 +53,7 @@ export default {
       if (!this.cbe_data.resources) {
         return [];
       }
-      return this.cbe_data.resources.map((resource) => ({id: resource.id, title: resource.name, url: resource.url}))
+      return this.cbe_data.resources.map((resource) => ({id: resource.id, sorting_order: resource.sorting_order, title: resource.name, url: resource.file.url}))
     },
   },
 };
