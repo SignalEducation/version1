@@ -16,7 +16,7 @@
 </template>
 
 <script>
-  import DropDownSelect from '../../../lib/DropDownSelect';
+  import DropDownSelect from '../../../lib/DropDownSelect/index.vue';
   import '../SpreadsheetEditor.scss';
 
   export default {

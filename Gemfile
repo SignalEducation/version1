@@ -76,7 +76,7 @@ gem "recaptcha"
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
-gem 'webpacker', '~> 3.5'
+gem 'webpacker', '~> 4.2'
 gem 'rack-cors'
 
 # Environment-specific gems
