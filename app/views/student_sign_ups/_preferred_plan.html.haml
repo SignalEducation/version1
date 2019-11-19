@@ -1,6 +1,6 @@
 =render partial: 'layouts/external_navbar'
 %main
-  .container-bg.home-hero-alt-2
+  .container-bg.home-hero-alt-2{style: @home_page&.background_image.present? ? "background-image: url(#{image_url(@home_page.background_image)});" : ''}
     .container
       %article.home-hero.home-hero-preferred-plan
         .row.justify-content-between
@@ -14,7 +14,7 @@
                   ="The smarter way to study."
               -if @home_page&.header_paragraph.present?
                 %p.text-white.mb-5.pr-xl-4
-                  =@home_page.header_paragraph
+                  =@home_page.header_paragraph.html_safe
               -else
                 %p.text-white.mb-5.pr-xl-4
                   Designed by experts and delivered online so that you can study on a schedule that suits your needs.
@@ -72,6 +72,7 @@
                         =link_to subscription_checkout_special_link(@group.exam_body_id, @preferred_plan.guid), class: 'btn btn-secondary btn-sm', onclick: "addToCart('#{@preferred_plan.currency.iso_code}', '#{@preferred_plan.name}', '#{@preferred_plan.id}', '#{number_in_local_currency(@preferred_plan.price, @preferred_plan.currency)}', '#{@preferred_plan.exam_body.name}');" do
                           Choose this plan
 
+  =render partial: 'usage_numbers_section'
 
   -if @home_page&.video_guid.present?
     .container
