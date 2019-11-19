@@ -30,13 +30,13 @@
     </b-navbar>
 
     <b-navbar
-      v-if="showNavOptions(['sections', 'questions'])"
+      v-show="showNavOptions(['sections', 'questions'])"
       class="nav nav-underline bg-cbe-gray"
     >
       <b-navbar-nav>
         <!-- <b-nav-text class="symbols-icon">Symbol</b-nav-text> -->
         <CbeCalculator
-          v-if="showNavOptions(['questions'])"
+          v-show="showNavOptions(['questions'])"
         />
 
         <CbeScratchPad
