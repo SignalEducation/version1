@@ -3,12 +3,13 @@
 require 'rails_helper'
 
 describe OrdersHelper do
-  let(:order)                   { build(:order) }
+  let(:order)                   { create(:order) }
   let(:cbe)                     { create(:cbe) }
   let(:cbe_product)             { create(:product, cbe: cbe, product_type: 'cbe') }
   let(:correction_pack_product) { create(:product, cbe: cbe, product_type: 'correction_pack', correction_pack_count: 3) }
-  let(:cbe_order)               { build(:order, product: cbe_product) }
-  let(:correction_pack_order)   { build(:order, product: correction_pack_product) }
+  let!(:exercise)               { create(:exercise, product: cbe_product) }
+  let(:cbe_order)               { create(:order, product: cbe_product, exercises: [exercise]) }
+  let(:correction_pack_order)   { create(:order, product: correction_pack_product) }
 
   describe '#order_name' do
     context 'returns product name' do
@@ -18,6 +19,26 @@ describe OrdersHelper do
 
       it 'not cbe product' do
         expect(order_name(order)).to eq("#{order.product.mock_exam.name} Purchase")
+      end
+    end
+  end
+
+  describe '#order_link' do
+    context 'returns product link' do
+      context 'cbe product' do
+        it 'pending exercise' do
+          expect(order_link(cbe_order)).to eq("<a target=\"_blank\" href=\"/en/exercises/#{exercise.id}/cbes/#{cbe.id}\">View</a>")
+        end
+
+        it 'submitted exercise' do
+          exercise.update(state: 'submitted')
+
+          expect(order_link(cbe_order)).to eq("<a target=\"_blank\" href=\"/en/exercises/#{exercise.id}\">View</a>")
+        end
+      end
+
+      it 'not cbe product' do
+        expect(order_link(order)).to eq('<a target="_blank" href="images/missing_image.jpg">View</a>')
       end
     end
   end

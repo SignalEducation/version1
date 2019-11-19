@@ -8,10 +8,11 @@
         :initial-name="resource.name"
         :initial-file="resource.file"
         :initial-sorting-order="resource.sorting_order"
+        @rm-resource="$emit('rm-resource', resourceId)"
       />
       <Resource
         :initial-sorting-order="resources.length + 1"
-        @add-resource="updateResources"
+        @add-resource="$emit('add-resource', data)"
       />
     </b-tabs>
   </b-card>
@@ -30,10 +31,5 @@ export default {
       default: () => [],
     },
   },
-  methods: {
-    updateResources(data) {
-      this.$emit("add-resource", data);
-    }
-  }
 };
 </script>

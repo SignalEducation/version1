@@ -5,6 +5,7 @@ module Api
     module Cbes
       class QuestionsController < Api::V1::ApplicationController
         before_action :set_parent
+        before_action :set_question, only: %i[update destroy]
 
         def index
           @questions = @parent.questions.order(:sorting_order)
@@ -13,18 +14,23 @@ module Api
         def create
           @question = @parent.questions.build(permitted_params)
 
-          unless @question.save
-            render json: { errors: @question.errors }, status: :unprocessable_entity
-          end
+          return if @question.save
+
+          render json: { errors: @question.errors }, status: :unprocessable_entity
         end
 
         def update
-          @question = ::Cbe::Question.find(params[:id])
           records_to_be_destroyed(@question.answers, permitted_params[:answers_attributes])
 
-          unless @question.update(permitted_params)
-            render json: { errors: @question.errors }, status: :unprocessable_entity
-          end
+          return if @question.update(permitted_params)
+
+          render json: { errors: @question.errors }, status: :unprocessable_entity
+        end
+
+        def destroy
+          @question.destroy
+
+          render json: { message: "Question #{@question.id} was deleted." }, status: :accepted
         end
 
         private
@@ -49,7 +55,11 @@ module Api
                     end
         end
 
-        # Update permitted_params to add records to be destroye.
+        def set_question
+          @question = ::Cbe::Question.find(params[:id])
+        end
+
+        # Update permitted_params to add records to be destroyed.
         def records_to_be_destroyed(question_answers, answers)
           current_ids    = answers.map { |a| a[:id] }.compact
           ids_to_destroy = question_answers.where.not(id: current_ids).pluck(:id)

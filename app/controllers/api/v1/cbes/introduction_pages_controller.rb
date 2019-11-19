@@ -4,7 +4,8 @@ module Api
   module V1
     module Cbes
       class IntroductionPagesController < Api::V1::ApplicationController
-        before_action :set_cbe
+        before_action :set_cbe, only: %i[index create update]
+        before_action :set_page, only: %i[update destroy]
 
         def index
           @pages = @cbe.introduction_pages
@@ -18,10 +19,15 @@ module Api
         end
 
         def update
-          @page = ::Cbe::IntroductionPage.find(params[:id])
           return if @page.update(introduction_page_params)
 
           render json: { errors: @page.errors }, status: :unprocessable_entity
+        end
+
+        def destroy
+          @page.destroy
+
+          render json: { message: "Page #{@page.id} was deleted." }, status: :accepted
         end
 
         private
@@ -34,6 +40,10 @@ module Api
 
         def set_cbe
           @cbe = Cbe.find(params[:cbe_id])
+        end
+
+        def set_page
+          @page = ::Cbe::IntroductionPage.find(params[:id])
         end
       end
     end

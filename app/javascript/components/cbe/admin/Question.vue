@@ -161,6 +161,13 @@
         Update Question
       </button>
       <button
+        v-if="id"
+        class="btn btn-danger"
+        @click="deleteQuestion"
+      >
+        Delete Question
+      </button>
+      <button
         v-else
         :disabled="submitStatus === 'PENDING'"
         class="btn btn-primary"
@@ -255,6 +262,7 @@ export default {
         'open',
       ],
       submitStatus: null,
+      deleteStatus: null,
     };
   },
   validations: {
@@ -345,7 +353,7 @@ export default {
             this.questionContent = null;
             this.questionSolution = null;
             this.questionScore = null;
-            this.questionSortingOrder = null;
+            this.questionSortingOrder += 1;
             this.questionAnswers = [];
             this.submitStatus = 'OK';
             this.$v.$reset();
@@ -391,6 +399,29 @@ export default {
           .catch(error => {
             this.submitStatus = 'ERROR';
           });
+      }
+    },
+    deleteQuestion() {
+      if(confirm("Do you really want to delete?")){
+        this.$v.$touch();
+        if (this.$v.$invalid) {
+          this.updateStatus = 'ERROR';
+        } else {
+          this.deleteStatus = 'PENDING';
+          const questionId = this.id;
+
+          axios
+            .delete(`/api/v1/questions/${questionId}`)
+            .then(response => {
+              this.$emit('rm-question', questionId);
+              this.updateStatus = 'OK';
+              this.$v.$reset();
+            })
+            .catch(error => {
+              this.updateStatus = 'ERROR';
+              console.log(error);
+            });
+        }
       }
     },
     shouldAppendValidClass(field) {

@@ -1001,6 +1001,7 @@ en:
         tax: "Tax"
         original_stripe_data: "Original Stripe data"
         pdf: PDF
+        link: Link
         invoice: Invoice
 
       edit:

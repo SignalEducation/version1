@@ -52,6 +52,13 @@
         Update Scenario
       </button>
       <button
+        v-if="id"
+        class="btn btn-danger"
+        @click="deleteScenario"
+      >
+        Delete Scenario
+      </button>
+      <button
         v-else
         :disabled="submitStatus === 'PENDING'"
         class="btn btn-primary"
@@ -109,7 +116,8 @@ export default {
       scenarioDetails: {},
       scenarioName: this.initialName,
       scenarioContent: this.initialContent,
-      submitStatus: null
+      submitStatus: null,
+      deleteStatus: null
     };
   },
   validations: {
@@ -178,6 +186,31 @@ export default {
           .catch(error => {
             this.submitStatus = "ERROR";
           });
+      }
+    },
+    deleteScenario() {
+      if(confirm("Do you really want to delete?")){
+        this.$v.$touch();
+        if (this.$v.$invalid) {
+          this.updateStatus = 'ERROR';
+        } else {
+          this.deleteStatus = 'PENDING';
+          const scenarioId = this.id;
+          const {sectionId} = this;
+
+
+          axios
+            .delete(`/api/v1/scenarios/${scenarioId}`)
+            .then(response => {
+              this.$emit('rm-scenario', { scenarioId, sectionId });
+              this.updateStatus = 'OK';
+              this.$v.$reset();
+            })
+            .catch(error => {
+              this.updateStatus = 'ERROR';
+              console.log(error);
+            });
+        }
       }
     },
     shouldAppendValidClass(field) {

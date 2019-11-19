@@ -85,6 +85,13 @@
           Update File
         </button>
         <button
+          v-if="id"
+          class="btn btn-danger"
+          @click="deleteFile"
+        >
+          Delete File
+        </button>
+        <button
           v-else
           class="btn btn-primary"
           @click="saveFile"
@@ -252,6 +259,28 @@ export default {
             this.updateStatus = 'ERROR';
             console.log(error);
           });
+      }
+    },
+    deleteFile() {
+      if(confirm("Do you really want to delete?")){
+        this.$v.$touch();
+        if (this.$v.$invalid) {
+          this.updateStatus = 'ERROR';
+        } else {
+          this.deleteStatus = 'PENDING';
+          const resourceId = this.id;
+          axios
+            .delete(`/api/v1/cbes/${this.$store.state.cbeId}/resources/${resourceId}`)
+            .then(response => {
+              this.$emit('rm-resource', resourceId);
+              this.updateStatus = 'OK';
+              this.$v.$reset();
+            })
+            .catch(error => {
+              this.updateStatus = 'ERROR';
+              console.log(error);
+            });
+        }
       }
     },
   },

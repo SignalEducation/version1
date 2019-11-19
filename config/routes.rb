@@ -23,14 +23,14 @@ Rails.application.routes.draw do
       resources :subject_courses, only: :index
       resources :cbes, format: 'json', only: %i[index show create edit update] do
         scope module: 'cbes' do
-          resources :sections, only: %i[index create update], shallow: true do
-            resources :questions, only: %i[index create update]
-            resources :scenarios, only: %i[create update] do
-              resources :questions, only: %i[index create update]
+          resources :sections, only: %i[index create update destroy], shallow: true do
+            resources :questions, only: %i[index create update destroy]
+            resources :scenarios, only: %i[create update destroy] do
+              resources :questions, only: %i[index create update destroy]
             end
           end
-          resources :introduction_pages, only: %i[index create update]
-          resources :resources, only: %i[index create update]
+          resources :introduction_pages, only: %i[index create update destroy]
+          resources :resources, only: %i[index create update destroy]
           resources :users_log, only: %i[index show create update]
         end
       end

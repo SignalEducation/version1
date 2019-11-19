@@ -133,6 +133,13 @@
         Update Section
       </button>
       <button
+        v-if="id"
+        class="btn btn-danger"
+        @click="deleteSection"
+      >
+        Delete Section
+      </button>
+      <button
         v-else
         :disabled="submitStatus === 'PENDING'"
         class="btn btn-primary"
@@ -206,7 +213,8 @@ export default {
         "objective_test_case",
         "constructed_response"
       ],
-      submitStatus: null
+      submitStatus: null,
+      deleteStatus: null
     };
   },
   validations: {
@@ -257,7 +265,7 @@ export default {
               this.name = this.initialName;
               this.kind = this.initialKind;
               this.score = this.initialScore;
-              this.sortingOrder = this.initialSortingOrder;
+              this.sortingOrder += 1;
               this.content = null;
               this.submitStatus = "OK";
               this.$v.$reset();
@@ -288,7 +296,6 @@ export default {
           .then(response => {
             this.updatedSection = response.data;
             this.sectionDetails.id = this.updatedSection.id;
-            // this.$emit('add-section', this.sectionDetails);
             this.$emit("update-content", this.TinyEditor);
             this.sectionDetails = {};
             this.name = this.updatedSection.name;
@@ -302,6 +309,29 @@ export default {
           .catch(error => {
             this.submitStatus = "ERROR";
           });
+      }
+    },
+    deleteSection() {
+      if(confirm("Do you really want to delete?")){
+        this.$v.$touch();
+        if (this.$v.$invalid) {
+          this.updateStatus = 'ERROR';
+        } else {
+          this.deleteStatus = 'PENDING';
+          const sectionId = this.id;
+
+          axios
+            .delete(`/api/v1/sections/${sectionId}`)
+            .then(response => {
+              this.$emit('rm-section', sectionId);
+              this.updateStatus = 'OK';
+              this.$v.$reset();
+            })
+            .catch(error => {
+              this.updateStatus = 'ERROR';
+              console.log(error);
+            });
+        }
       }
     },
     shouldAppendValidClass(field) {

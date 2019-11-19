@@ -5,6 +5,7 @@ module Api
     module Cbes
       class ResourcesController < Api::V1::ApplicationController
         before_action :set_cbe
+        before_action :set_resource, only: %i[update destroy]
 
         def index
           @resources = @cbe.resources
@@ -18,10 +19,15 @@ module Api
         end
 
         def update
-          @resource = ::Cbe::Resource.find(params[:id])
           return if @resource.update(permitted_params)
 
           render json: { errors: @resource.errors }, status: :unprocessable_entity
+        end
+
+        def destroy
+          @resource.destroy
+
+          render json: { message: "Resource #{@resource.id} was deleted." }, status: :accepted
         end
 
         private
@@ -34,6 +40,10 @@ module Api
 
         def set_cbe
           @cbe = Cbe.find(params[:cbe_id])
+        end
+
+        def set_resource
+          @resource = ::Cbe::Resource.find(params[:id])
         end
       end
     end
