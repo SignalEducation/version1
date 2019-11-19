@@ -39,7 +39,7 @@ class HomePage < ApplicationRecord
   # Constants
   LOGO_IMAGES = %w[learning-partner-badge.png acca_approved_white.png acca_approved_red.png ALP_LOGO_(GOLD).png ALP_LOGO_GOLD_REVERSED.png].freeze
   TEMPLATES = %w[default.html.haml basic_registration.html.haml basic_login.html.haml pricing_plans.html.haml preferred_plan.html.haml bootcamp.html.haml podcast.html.haml open_week.html.haml resources.html.haml about_us.html.haml testimonials.html.haml].freeze
-  BG_IMAGES = %w[hero-bg.jpg hero-bg-1.jpg hero-bg-2.jpg hero-bg-3.jpg hero-bg-4.jpg hero-bg-5.jpg hero-bg-6.jpg hero-bg-7.jpg hero-bg-8.jpg].freeze
+  BG_IMAGES = %w[hero-bg.jpg hero-bg-1.jpg hero-bg-2.jpg hero-bg-3.jpg hero-bg-4.jpg hero-bg-5.jpg hero-bg-6.jpg hero-bg-7.jpg hero-bg-8.jpg black-bg.jpg black-friday-bg.jpg].freeze
   FOOTER_OPTIONS = %w[white dark].freeze
 
   # relationships
