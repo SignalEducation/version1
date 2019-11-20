@@ -40,12 +40,10 @@ class FooterPagesController < ApplicationController
 
     @currency_id   = user_currency_id
     valid_products = Product.in_currency(@currency_id).all_active.all_in_order
-    @products      = valid_products.where('mock_exam_id IS NOT NULL').
-                       where('product_type = ?', Product.product_types[:mock_exam])
+    @products      = valid_products.where('mock_exam_id IS NOT NULL OR cbe_id IS NOT NULL').
+                       where('product_type IN (?)', [Product.product_types[:mock_exam], Product.product_types[:cbe]])
     @questions     = valid_products.where('mock_exam_id IS NOT NULL').
                        where('product_type = ?', Product.product_types[:correction_pack])
-    @cbes          = valid_products.where('cbe_id IS NOT NULL').
-                       where('product_type = ?', Product.product_types[:cbe])
   end
 
   def profile

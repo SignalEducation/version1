@@ -28,7 +28,7 @@
                           %h4.text-ellipsis.mb-4
                             =order_name(@order)
                           .pt-2
-                            %i.budicon-files-tick{"aria-label" => "", :role => "img"}
+                            =product_icon(@order.product)
                           .pt-4.pb-2
                             .h6.text-ellipsis
                               Total:
