@@ -272,13 +272,7 @@
           if (!!cellFormat) {
             format = cellFormat;
           } else {
-            if (wijmo.isInt(cellContent)) {
-              format = '0';
-            } else if (wijmo.isNumber(cellContent)) {
-              format = 'n2';
-            } else if (wijmo.isDate(cellContent)) {
-              format = 'd';
-            }
+            format = this._defaultCellFormat(cellContent);
           }
           const colName = flexSheet.columnHeaders.getCellData(0, sel.leftCol);
           const rowName = flexSheet.rowHeaders.getCellData(sel.topRow, 0);
@@ -297,6 +291,15 @@
         }
 
         this._updatingSelection = false;
+      },
+      _defaultCellFormat(cellContent) {
+        if (wijmo.isInt(cellContent)) {
+          return '0';
+        } else if (wijmo.isNumber(cellContent)) {
+          return 'n2';
+        } else if (wijmo.isDate(cellContent)) {
+          return 'd';
+        } else { return '' }
       },
       _checkFontSize(fontSize) {
         let sizeList = this.fontSizeList;
@@ -324,6 +327,18 @@
       _setInitialData (flex) {
         for (let cellIdx = 0; cellIdx < this.spreadsheetData.length; cellIdx += 1) {
           flex.setCellData(this.spreadsheetData[cellIdx].row, this.spreadsheetData[cellIdx].col, this.spreadsheetData[cellIdx].value);
+          if (this.spreadsheetData[cellIdx].format) {
+            flex.applyCellsStyle(
+              { format: this.spreadsheetData[cellIdx].format },
+              [ new wjcGrid.CellRange(this.spreadsheetData[cellIdx].row, this.spreadsheetData[cellIdx].col) ]
+            );
+          }
+          if (this.spreadsheetData[cellIdx].fontSizeIdx) {
+            flex.applyCellsStyle(
+              { fontSize: this.fontSizeList[this.spreadsheetData[cellIdx].fontSizeIdx].value },
+              [ new wjcGrid.CellRange(this.spreadsheetData[cellIdx].row, this.spreadsheetData[cellIdx].col) ]
+            );
+          }
         }
       },
       _getJsonData(flexSheet){
@@ -336,7 +351,17 @@
             cell['row'] = r;
             cell['col'] = c;
             cell['colBinding'] = cells.columns[c].binding;
-            cell['style'] = flexSheet.selectedSheet._styledCells
+            cell['style'] = flexSheet.selectedSheet._styledCells;
+            const cellStyle = flexSheet.selectedSheet.getCellStyle(r, c);
+            if (cellStyle) {
+              const fontSizeIdx = this._checkFontSize(cellStyle.fontSize);
+              cell['format'] = cellStyle.format;
+              cell['fontSizeIdx'] = this._checkFontSize(cellStyle.fontSize);
+            } else {
+              cell['format'] = this._defaultCellFormat(cell['value']);
+              cell['fontSizeIdx'] = 5;
+            }
+
             [r * cells.columns.length + c + ''] ? flexSheet.selectedSheet._styledCells[ r * cells.columns.length + c + ''] : null;
             cellsJson.push(cell);
           }
