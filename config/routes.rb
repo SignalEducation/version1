@@ -21,6 +21,7 @@ Rails.application.routes.draw do
 
     namespace :v1, constraints: ApiConstraint.new(version: 1) do
       resources :subject_courses, only: :index
+      resources :uploads, only: :create
       resources :cbes, format: 'json', only: %i[index show create edit update] do
         scope module: 'cbes' do
           resources :sections, only: %i[index create update destroy], shallow: true do

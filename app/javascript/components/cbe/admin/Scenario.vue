@@ -28,7 +28,7 @@
           <TinyEditor
             :class="{error: shouldAppendErrorClass($v.scenarioContent), valid: shouldAppendValidClass($v.scenarioContent)}"
             :field-model.sync="scenarioContent"
-            :aditional-toolbar-options="['fullscreen code']"
+            :aditional-toolbar-options="['fullscreen code image']"
             :editor-id="'scenarioEditor' + '-' + sectionId + '-' + id"
             @blur="$v.scenarioContent.$touch()"
           />

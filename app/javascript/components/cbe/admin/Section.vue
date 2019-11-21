@@ -110,7 +110,7 @@
         <TinyEditor
           :class="{error: shouldAppendErrorClass($v.content), valid: shouldAppendValidClass($v.content)}"
           :field-model.sync="content"
-          :aditional-toolbar-options="['fullscreen code']"
+          :aditional-toolbar-options="['fullscreen code image']"
           :editor-id="'sectionEditor' + id"
           @blur="$v.content.$touch()"
         />

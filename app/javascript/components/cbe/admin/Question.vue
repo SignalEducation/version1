@@ -109,7 +109,7 @@
               valid: shouldAppendValidClass($v.questionContent),
             }"
             :field-model.sync="questionContent"
-            :aditional-toolbar-options="['fullscreen code']"
+            :aditional-toolbar-options="['fullscreen code image']"
             :editor-id="
               'questionEditor-' + sectionId + '-' + scenarioId + '-' + id
             "
@@ -131,7 +131,7 @@
         <div id="questionSolution">
           <TinyEditor
             :field-model.sync="questionSolution"
-            :aditional-toolbar-options="['fullscreen code']"
+            :aditional-toolbar-options="['fullscreen code image']"
             :editor-id="
               'questionSolution-' + sectionId + '-' + scenarioId + '-' + id
             "
