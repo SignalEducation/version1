@@ -490,9 +490,7 @@ export default {
         }
       });
       const currentSection = this.edit_cbe_data.sections[sectionIndex];
-      if (currentSection.hasOwnProperty('scenarios')) {
-        console.log(currentSection);
-      } else {
+      if (!currentSection.hasOwnProperty('scenarios')) {
         // This $set syntax is required by Vue to ensure the section.questions array is reactive
         // It is inside the conditional to ensure section.questions is not reset to empty
         this.$set(currentSection, 'scenarios', []);
