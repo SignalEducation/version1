@@ -20,12 +20,6 @@
             %li.nav-item
               %a{href: "#questions", role: 'tab', class: 'nav-link', data: {toggle: 'tab'}, aria: {controls: "questions", selected: 'false'}}
                 ='Correction Packs'
-          -if @cbes.any?
-            %li.nav-item
-              %a{href: "#cbes", role: 'tab', class: 'nav-link', data: {toggle: 'tab'}, aria: {controls: "cbes", selected: 'false'}}
-                ='Computer Based Exams'
-
-
 
 .bg-gray5
   .container.py-5.py-sm-6
@@ -38,17 +32,18 @@
             .row.row-lg
               -@products.each do |product|
                 .col-xs-12.col-sm-6.col-md-4
-                  - if product.mock_exam.subject_course.group.exam_body.id && product.mock_exam.subject_course.exam_body.name
-                    =link_to product_checkout_special_link(product.mock_exam.subject_course.group.exam_body.id, product.id), class: 'card card-link text-center mb-5', onclick: "addToCart('#{product.currency.iso_code}', '#{product.name}', '#{product.id}', '#{product.price}', '#{product.mock_exam.subject_course.exam_body.name}');" do
-                      .py-4
-                        %h4.text-ellipsis.mb-4
-                          =product.mock_exam.try(:name)
-                        .pt-2
-                          %i.budicon-files-tick{"aria-label" => "", :role => "img"}
-                        %p.h6.text-ellipsis.pt-4
-                          =number_in_local_currency(product.price, product.currency)
-                        .pt-2
-                          %span.btn.btn-secondary.btn-sm.btn-sm-arrow-right Buy Now
+                  -link = product_link(product, current_user)
+                  -name = product_name(product)
+                  =link_to link, class: 'card card-link text-center mb-5', onclick: "addToCart('#{product.currency.iso_code}', '#{product.name}', '#{product.id}', '#{product.price}', '#{name}');" do
+                    .py-4
+                      %h4.text-ellipsis.mb-4
+                        =name
+                      .pt-2
+                        =product_icon(product)
+                      %p.h6.text-ellipsis.pt-4
+                        =number_in_local_currency(product.price, product.currency)
+                      .pt-2
+                        %span.btn.btn-secondary.btn-sm.btn-sm-arrow-right Buy Now
 
 
       -if @questions.any?
@@ -68,29 +63,9 @@
                         =number_in_local_currency(question.price, question.currency)
                       .pt-2
                         %span.btn.btn-secondary.btn-sm.btn-sm-arrow-right Buy Now
-      -if @cbes.any?
-        .tab-pane.tab-questions{id: 'cbes', role: 'tabpanel', 'aria-labelledby': 'questions-tab'}
-          %section.mb-5
-            %p.mb-4.mb-sm-5 - WE NEED A TEXT FOR THIS - - WE NEED A TEXT FOR THIS - - WE NEED A TEXT FOR THIS -
-            .row.row-lg
-              -@cbes.each do |product|
-                .col-xs-12.col-sm-6.col-md-4
-                  =link_to product_checkout_special_link(product.cbe.subject_course.exam_body.id, product.id), class: 'card card-link text-center mb-5',onclick: "addToCart('#{product.currency.iso_code}', '#{product.name}', '#{product.id}', '#{product.price}', '#{product.cbe.subject_course.exam_body.name}');" do
-                    .py-4
-                      %h4.text-ellipsis.mb-4
-                        =product.cbe.try(:name)
-                      .pt-2
-                        %i.budicon-files-tick{"aria-label" => "", :role => "img"}
-                      %p.h6.text-ellipsis.pt-4
-                        =number_in_local_currency(product.price, product.currency)
-                      .pt-2
-                        %span.btn.btn-secondary.btn-sm.btn-sm-arrow-right Buy Now
-
 
 :javascript
-
   $(document).ready(function(){
-
     hash = window.location.hash;
     elements = $('a[href="' + hash + '"]');
     if (elements.length > 0) {

@@ -50,7 +50,7 @@ describe OrdersHelper do
       end
 
       it 'cbe short description' do
-        expect(order_short_description(cbe_order)).to eq('WE NEED A SHORT DESCRIPTION HERE - - WE NEED A SHORT DESCRIPTION HERE - - WE NEED A SHORT DESCRIPTION HERE')
+        expect(order_short_description(cbe_order)).to eq('Purchase an ACCA CBE and increase your chances of passing the ACCA exams.')
       end
 
       it 'correction pack short description' do
@@ -66,7 +66,7 @@ describe OrdersHelper do
       end
 
       it 'cbe description' do
-        expect(order_description(cbe_order)).to eq('WE NEED A DESCRIPTION HERE - - WE NEED A DESCRIPTION HERE  - - WE NEED A DESCRIPTION HERE')
+        expect(order_description(cbe_order)).to eq('Purchase your CBE today. Once submitted we will give you a solution paper, your result, question by question, personalised feedback on your exam and study topic recommendations.')
       end
 
       it 'correction pack description' do
