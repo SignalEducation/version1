@@ -11,7 +11,7 @@ class OrdersController < ApplicationController
     @order   = @product.orders.build
     @layout  = 'standard'
 
-    seo_title_maker("#{order_name(@order)} Payment | LearnSignal", 'Get access to ACCA question and solution correction packs from learnsignal designed by experts to help you pass your exams the first time.', true)
+    seo_title_maker("#{@order.product.name_by_type} Payment | LearnSignal", 'Get access to ACCA question and solution correction packs from learnsignal designed by experts to help you pass your exams the first time.', true)
   end
 
   def create

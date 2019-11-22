@@ -103,7 +103,7 @@ class User < ApplicationRecord
   has_many :charges
   has_many :refunds
   has_many :ahoy_events, :class_name => 'Ahoy::Event'
-  has_many :exercises
+  has_many :exercises, inverse_of: :user
   has_many :corrections, foreign_key: :corrector_id, class_name: 'Exercise'
 
   has_attached_file :profile_image, default_url: 'images/missing_image.jpg'

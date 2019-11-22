@@ -28,12 +28,11 @@ class Exercise < ApplicationRecord
   include Filterable
   belongs_to :product
   belongs_to :order
-  belongs_to :user
-  belongs_to :corrector, class_name: 'User', foreign_key: 'corrector_id',
-                         optional: true, inverse_of: :exercise
+  belongs_to :user, inverse_of: :exercises
+  belongs_to :corrector, class_name: 'User', foreign_key: 'corrector_id', optional: true, inverse_of: :exercises
 
-  has_one :cbe_user_log, class_name: 'Cbe::UserLog', dependent: :destroy,
-                         inverse_of: :exercise
+  has_one :cbe_user_log, class_name: 'Cbe::UserLog', dependent: :destroy, inverse_of: :exercise
+
   has_attached_file :submission, default_url: nil
   has_attached_file :correction, default_url: nil
   validates_attachment_content_type :submission,
@@ -104,6 +103,17 @@ class Exercise < ApplicationRecord
     send_submitted_slack_message
   end
 
+  def correction_returned_email
+    MandrillWorker.perform_async(
+      user_id,
+      'send_correction_returned_email',
+      UrlHelper.instance.user_exercises_url(
+        user_id: user_id,
+        host: LEARNSIGNAL_HOST
+      ), product.name_by_type
+    )
+  end
+
   private
 
   def check_corrector
@@ -135,17 +145,6 @@ class Exercise < ApplicationRecord
       product.mock_exam.name,
       product.mock_exam.file,
       reference_guid
-    )
-  end
-
-  def correction_returned_email
-    MandrillWorker.perform_async(
-      user_id,
-      'send_correction_returned_email',
-      UrlHelper.instance.user_exercises_url(
-        user_id: user_id,
-        host: LEARNSIGNAL_HOST
-      ), product.mock_exam.name
     )
   end
 end

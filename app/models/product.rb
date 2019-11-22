@@ -81,6 +81,10 @@ class Product < ApplicationRecord
     end
   end
 
+  def name_by_type
+    cbe? ? cbe.name : mock_exam.name
+  end
+
   private
 
   def create_on_stripe

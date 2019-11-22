@@ -14,7 +14,7 @@
         %tbody
           -@orders.each do |order|
             %tr
-              %td=order_name(order)
+              %td=order.product.name_by_type
               %td=order.state.capitalize
               %td=number_in_local_currency(order.product.price, order.product.currency)
               %td
