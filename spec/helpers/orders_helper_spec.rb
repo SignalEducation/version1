@@ -11,18 +11,6 @@ describe OrdersHelper do
   let(:cbe_order)               { create(:order, product: cbe_product, exercises: [exercise]) }
   let(:correction_pack_order)   { create(:order, product: correction_pack_product) }
 
-  describe '#order_name' do
-    context 'returns product name' do
-      it 'cbe product' do
-        expect(order_name(cbe_order)).to eq("#{cbe_order.product.cbe.name} Purchase")
-      end
-
-      it 'not cbe product' do
-        expect(order_name(order)).to eq("#{order.product.mock_exam.name} Purchase")
-      end
-    end
-  end
-
   describe '#order_link' do
     context 'returns product link' do
       context 'cbe product' do

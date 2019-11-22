@@ -7,18 +7,6 @@ describe ProductsHelper do
   let(:cbe_product)             { create(:product, cbe: cbe, product_type: 'cbe') }
   let(:correction_pack_product) { create(:product, cbe: cbe, product_type: 'correction_pack', correction_pack_count: 3) }
 
-  describe '#product_name' do
-    context 'returns product name' do
-      it 'cbe product' do
-        expect(product_name(cbe_product)).to eq("#{cbe_product.cbe.name} Purchase")
-      end
-
-      it 'not cbe product' do
-        expect(product_name(correction_pack_product)).to eq("#{cbe_product.mock_exam.name} Purchase")
-      end
-    end
-  end
-
   describe '#product_link' do
     context 'returns product link to a logged user' do
       it 'cbe product' do

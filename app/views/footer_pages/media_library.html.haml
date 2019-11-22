@@ -33,7 +33,7 @@
               -@products.each do |product|
                 .col-xs-12.col-sm-6.col-md-4
                   -link = product_link(product, current_user)
-                  -name = product_name(product)
+                  -name = product.name_by_type
                   =link_to link, class: 'card card-link text-center mb-5', onclick: "addToCart('#{product.currency.iso_code}', '#{product.name}', '#{product.id}', '#{product.price}', '#{name}');" do
                     .py-4
                       %h4.text-ellipsis.mb-4

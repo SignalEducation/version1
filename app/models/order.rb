@@ -126,12 +126,10 @@ class Order < ApplicationRecord
   def execute_order_completion
     return if Rails.env.test?
 
-    product_name = product.cbe? ? product.cbe.name : product.mock_exam.name
-
     MandrillWorker.perform_async(user_id,
                                  'send_mock_exam_email',
                                  user_exercise_url(user_id),
-                                 product_name, reference_guid)
+                                 product.name_by_type, reference_guid)
     invoice.update(paid: true, payment_closed: true)
   end
 

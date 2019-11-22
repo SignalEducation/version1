@@ -178,7 +178,7 @@ export default {
   data() {
     return {
       name: this.initialName,
-      agreementContent: this.initialAgreementContent,
+      agreementContent: this.initialAgreementContent ? this.initialAgreementContent : "<p>If you are ready to begin your exam, please click '<strong>Yes</strong>'.</p><p>If you are not ready to begin your exam, please click '<strong>No</strong>'.</p>",
       active: this.initialActive,
       subjectCourseId: this.initialCourseId,
       subjectCourses: [],

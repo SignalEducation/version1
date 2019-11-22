@@ -3,7 +3,7 @@
     .container
       %header.hero-section
         %h1.h1-hero.mb-2
-          =order_name(@order)
+          =@order.product.name_by_type
         %p.p-hero.px-lg-8
           =order_short_description(@order)
 
@@ -26,7 +26,7 @@
                       .card.card-link.text-center.mb-5
                         .py-4
                           %h4.text-ellipsis.mb-4
-                            =order_name(@order)
+                            =@order.product.name_by_type
                           .pt-2
                             =product_icon(@order.product)
                           .pt-4.pb-2

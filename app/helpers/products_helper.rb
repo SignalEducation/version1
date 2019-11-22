@@ -1,14 +1,6 @@
 # frozen_string_literal: true
 
 module ProductsHelper
-  def product_name(product)
-    if product.cbe?
-      "#{product.cbe.name} Purchase"
-    else
-      "#{product.mock_exam.name} Purchase"
-    end
-  end
-
   def product_link(product, current_user)
     return new_product_order_url(product.id) if current_user
 
