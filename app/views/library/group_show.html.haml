@@ -90,7 +90,6 @@
 
 
     :javascript
-
       function addToCart(currency, name, id, price, body) {
         dataLayer.push({
           'event': 'addToCart',
@@ -110,9 +109,33 @@
         });
 
       }
+
+      const isMobile = {
+        Android: function() {
+            return navigator.userAgent.match(/Android/i);
+        },
+        BlackBerry: function() {
+            return navigator.userAgent.match(/BlackBerry/i);
+        },
+        iOS: function() {
+            return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+        },
+        Opera: function() {
+            return navigator.userAgent.match(/Opera Mini/i);
+        },
+        Windows: function() {
+            return navigator.userAgent.match(/IEMobile/i);
+        },
+        any: function() {
+            return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+        }
+      };
+
       $(function () {
-        $('[data-toggle="tooltip"]').tooltip({
-          template: '<div class="tooltip tooltip-custom" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
-        })
+        if( !isMobile.any() ){
+          $('[data-toggle="tooltip"]').tooltip({
+            template: '<div class="tooltip tooltip-custom" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
+          })
+        }
       })
 
