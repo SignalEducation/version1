@@ -53,6 +53,7 @@ gem 'sass-rails', '~> 5.0' # Use SCSS for stylesheets
 gem 'sidekiq', require: %w(sidekiq sidekiq/web)
 # background processor for tasks that can be run 'later' or take too long
 # Requires Redis NoSQL datastore
+gem 'split', require: 'split/dashboard'
 gem 'state_machines-activerecord'
 gem 'stripe', '~> 4.21.0' #, git: 'https://github.com/stripe/stripe-ruby'
 gem 'paypal-sdk-rest'

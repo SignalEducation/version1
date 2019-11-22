@@ -141,7 +141,7 @@ body {
     margin-top: 85px;
   }
   .margin-top-lg {
-    margin-top: 127px;
+    margin-top: 124px;
   }
 }
 body.page-light {
@@ -152,6 +152,13 @@ body.page-light {
   outline: 0!important
 }
 
+@media (min-width:500px) {
+  body {
+    .margin-top-lg {
+      margin-top: 100px;
+    }
+  }
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -237,7 +244,7 @@ ol li {
 
 b,
 strong {
-  font-weight: 500
+  font-weight: 600
 }
 p, .p, ol, .ol, address, dl {
   color: $colour-20;
@@ -2224,6 +2231,9 @@ body {
 body.page-light {
   background-color: #fff
 }
+body.page-gray {
+  background-color: #F5F8FA
+}
 img {
   max-width: 100%
 }
@@ -3823,10 +3833,21 @@ label {
     min-height: 8rem
   }
 }
+.card.card-horizontal.card-horizontal-xs {
+  min-height: 4rem
+}
+@media (min-width:576px) {
+  .card.card-horizontal.card-horizontal-xs {
+    min-height: 6rem
+  }
+}
 .card.card-horizontal .card-header {
   width: 5.5rem;
   min-width: 5.5rem;
   padding: .5rem
+}
+.card.card-horizontal .card-header.white-header {
+  background-color: #ffffff;
 }
 .card.card-horizontal .card-header [class*=budicon] {
   font-size: 2.5rem
@@ -3936,7 +3957,14 @@ a.card:hover .card-title .card-explanation {
   padding: 2.5rem 0;
 
 }
-
+.onboarding-card:hover,
+.onboarding-card:hover .card-header {
+  text-decoration: none;
+  cursor: pointer;
+}
+.onboarding-card:hover .card-title {
+  color: #000032;
+}
 
 .dropdown.show .dropdown-toggle::after {
   -webkit-transform: rotate(180deg);
@@ -4483,6 +4511,10 @@ a.card:hover .card-title .card-explanation {
 .podcast-img {
   //max-width: 40%;
   //margin: auto;
+}
+.onboarding-img {
+  max-width: 70%;
+  margin: auto;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

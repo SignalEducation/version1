@@ -28,7 +28,14 @@
         dataType: 'json',
         data: JSON.stringify({ 'video_log_id': logId, 'cme_id': video_cme_id }),
         method: 'PATCH',
-        contentType: "application/json; charset=utf-8"
+        contentType: "application/json; charset=utf-8",
+        success: function(data,status,xhr){
+            $("#next-lesson-modal").addClass('d-none');
+            $("#next-lesson-link").removeClass('d-none');
+        },
+        error: function(xhr,status,error){
+          console.log(xhr);
+        }
       });
       player.off('timeupdate', timeUpdate);
       videoFinishedEvent(logId);

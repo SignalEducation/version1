@@ -41,6 +41,8 @@
       contentType: "application/json; charset=utf-8",
       data: JSON.stringify({ 'video_log_id': log_id, 'cme_id': video_cme_id }),
       success: function(data,status,xhr){
+        $("#next-lesson-modal").addClass('d-none');
+        $("#next-lesson-link").removeClass('d-none');
         videoFinishedEvent();
       },
       error: function(xhr,status,error){

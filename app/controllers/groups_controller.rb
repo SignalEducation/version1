@@ -17,9 +17,12 @@ class GroupsController < ApplicationController
 
   def new
     @group = Group.new
+    @group.levels.build
   end
 
-  def edit; end
+  def edit
+    @group.levels.build
+  end
 
   def create
     @group = Group.new(allowed_params)
@@ -69,6 +72,13 @@ class GroupsController < ApplicationController
     params.require(:group).permit(:name, :name_url, :active, :sorting_order,
                                   :description, :image, :background_image,
                                   :background_colour, :exam_body_id,
-                                  :seo_title, :seo_description, :short_description)
+                                  :seo_title, :seo_description,
+                                  :short_description, :onboarding_level_heading,
+                                  :onboarding_level_subheading,
+                                  levels_attributes: [:id, :name, :name_url,
+                                                      :active, :highlight_colour,
+                                                      :icon_label, :onboarding_course_heading,
+                                                      :onboarding_course_heading, :_destroy]
+                                  )
   end
 end

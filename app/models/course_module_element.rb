@@ -183,18 +183,6 @@ class CourseModuleElement < ApplicationRecord
     end
   end
 
-  def available_for_subscription(user, exam_body_id, scul=nil)
-    if related_course_module_element_id && previous_cme_restriction(scul)
-      { view: false, reason: 'related-lesson-restriction' }
-    else
-      if user.valid_subscription_for_exam_body?(exam_body_id)
-        { view: true, reason: nil }
-      else
-        available_on_trial ? { view: true, reason: nil } : { view: false, reason: 'invalid-subscription' }
-      end
-    end
-  end
-
   def available_for_complimentary(scul = nil)
     if related_course_module_element_id && previous_cme_restriction(scul)
       { view: false, reason: 'related-lesson-restriction' }
@@ -203,20 +191,24 @@ class CourseModuleElement < ApplicationRecord
     end
   end
 
-  def available_to_user(user, exam_body_id, scul = nil)
+  def available_to_user(user, valid_subscription, scul = nil)
     result =
       if user.non_verified_user?
         { view: false, reason: 'verification-required' }
+      elsif user.complimentary_user? || user.non_student_user?
+        available_for_complimentary(scul)
       elsif user.standard_student_user?
-        # available_for_subscription(user, exam_body_id, scul)
-
-        if related_course_module_element_id && previous_cme_restriction(scul)
+        if valid_subscription
+          if related_course_module_element_id && previous_cme_restriction(scul)
+            { view: false, reason: 'related-lesson-restriction' }
+          else
+            { view: true, reason: nil }
+          end
+        elsif available_on_trial && related_course_module_element_id && previous_cme_restriction(scul)
           { view: false, reason: 'related-lesson-restriction' }
         else
           available_on_trial ? { view: true, reason: nil } : { view: false, reason: 'invalid-subscription' }
         end
-      elsif user.complimentary_user? || user.non_student_user?
-        available_for_complimentary(scul)
       else
         { view: false, reason: nil }
       end

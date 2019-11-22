@@ -55,9 +55,19 @@ class ApplicationController < ActionController::Base
     navbar_links = %w[about-us testimonials resources]
     @navbar_landing_pages = HomePage.where(public_url: navbar_links)
 
-    return if ExternalBanner::BANNER_CONTROLLERS.exclude?(controller_name)
+    return unless current_user&.preferred_exam_body && current_user&.standard_student_user?
 
-    @banner = ExternalBanner.all_without_parent.render_for(controller_name).all_in_order.first
+    # TODO: (James) This can be done better!
+    @banner =
+      if current_user.valid_subscription_for_exam_body?(current_user.preferred_exam_body_id)
+        ExternalBanner.all_active.
+          for_exam_body(current_user.preferred_exam_body).
+          for_paid.all_in_order.first
+      else
+        ExternalBanner.all_active.
+          for_exam_body(current_user.preferred_exam_body).
+          for_basic.all_in_order.first
+      end
   end
 
   def management_layout

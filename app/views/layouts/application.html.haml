@@ -71,7 +71,7 @@
           =yield
 
   - else
-    %body{class: (controller_name == 'student_sign_ups' && action_name != 'new') ? 'page-light' : ''}
+    %body{class: (controller_name == 'student_sign_ups' && action_name != 'new') ? 'page-light' : (action_name == 'account_verified') ? 'page-gray' : ''}
       -if controller_name == 'courses' || controller_name == 'course_module_elements' || controller_name == 'preview_course_module_elements' || controller_name == 'content_activations'
         %script{src: 'https://kendo.cdn.telerik.com/2018.2.516/js/jszip.min.js'}
         %script{src: 'https://kendo.cdn.telerik.com/2018.2.516/js/kendo.all.min.js'}
@@ -84,7 +84,7 @@
           =render partial: 'layouts/navbar'
 
         -if @top_margin
-          -if @banner && !current_user
+          -if @banner
             .margin-top-lg
           -else
             .margin-top
@@ -146,5 +146,6 @@
 
       -unless controller_name == 'home_pages'
         %script{type: 'text/javascript'} try{Typekit.load();}catch(e){}
-      -if current_user&.student_user?
+
+      -if !current_user || current_user&.student_user?
         =render partial: 'layouts/hubspot_js'
