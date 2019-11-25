@@ -72,7 +72,7 @@
               @rm-introduction-page="removePage"
             />
             <IntroductionPage
-              :initial-sorting-order="edit_cbe_data.introduction_pages.length + 1"
+              :initial-sorting-order="sortingOrderValue(edit_cbe_data.introduction_pages)"
               @add-introduction-page="updatePages"
             />
           </b-tabs>
@@ -156,7 +156,7 @@
                       href="#"
                       variant="secondary"
                     >
-                      Question - {{ question.id }}
+                      Question - {{ question.sorting_order }}
                     </b-button>
                   </b-card-header>
 
@@ -212,7 +212,7 @@
                   <b-card-body>
                     <Question
                       :section-id="section.id"
-                      :initial-sorting-order="section.questions.length + 1"
+                      :initial-sorting-order="sortingOrderValue(section.questions)"
                       @add-question="updateQuestions"
                     />
                   </b-card-body>
@@ -286,7 +286,7 @@
                                   href="#"
                                   variant="secondary"
                                 >
-                                  Question - {{ question.id }}
+                                  Question - {{ question.sorting_order }}
                                 </b-button>
                               </b-card-header>
 
@@ -346,7 +346,7 @@
                                 <Question
                                   :section-id="section.id"
                                   :scenario-id="scenario.id"
-                                  :initial-sorting-order="scenario.questions.length + 1"
+                                  :initial-sorting-order="sortingOrderValue(scenario.questions)"
                                   @add-question="updateScenarioQuestions"
                                 />
                               </b-card-body>
@@ -370,7 +370,7 @@
           </b-tab>
           <b-tab title="New Section">
             <Section
-              :initial-sorting-order="edit_cbe_data.sections.length + 1"
+              :initial-sorting-order="sortingOrderValue(edit_cbe_data.sections)"
               @add-section="updateSections"
             />
           </b-tab>
@@ -558,6 +558,12 @@ export default {
         });
 
       this.edit_cbe_data.sections = filtered;
+    },
+    sortingOrderValue(object) {
+      let order = 1;
+      if ( object ) order = object.length + 1;
+
+      return order;
     },
   },
 };

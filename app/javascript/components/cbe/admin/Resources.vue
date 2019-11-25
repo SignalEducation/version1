@@ -11,8 +11,8 @@
         @rm-resource="$emit('rm-resource', resourceId)"
       />
       <Resource
-        :initial-sorting-order="resources.length + 1"
-        @add-resource="$emit('add-resource', data)"
+        :initial-sorting-order="sortingOrderValue(resources)"
+        @add-resource="updateResources"
       />
     </b-tabs>
   </b-card>
@@ -31,5 +31,16 @@ export default {
       default: () => [],
     },
   },
+  methods:{
+    sortingOrderValue(object) {
+      let order = 1;
+      if ( object ) order = object.length + 1;
+
+      return order;
+    },
+    updateResources(data) {
+      this.$emit("add-resource", data);
+    }
+  }
 };
 </script>

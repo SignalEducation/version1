@@ -46,12 +46,6 @@
                         =link_to 'Begin Exercise', exercise_cbes_path(id: exercise.product.cbe.id, exercise_id: exercise.id), class: 'btn btn-primary'
                       -else
                         =link_to 'Begin Exercise', edit_exercise_path(exercise), class: 'btn btn-primary'
-              -if current_user.exercises.with_states(:returned).any?
-                %h2 Returned Exercises
-                -current_user.exercises.with_states(:returned).each do |exercise|
-                  .card
-                    =exercise.user.name
-                    View Corrections
 
             -else
               .row.row-lg

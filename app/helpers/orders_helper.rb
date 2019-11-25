@@ -1,14 +1,6 @@
 # frozen_string_literal: true
 
 module OrdersHelper
-  def order_name(order)
-    if order.product.cbe?
-      "#{order.product.cbe.name} Purchase"
-    else
-      "#{order.product.mock_exam.name} Purchase"
-    end
-  end
-
   def order_link(order)
     if order.product.cbe?
       exercise = order.exercises.first

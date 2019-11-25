@@ -22,9 +22,13 @@
 require 'rails_helper'
 
 describe Product do
-  let(:order_product)    { create(:product, :with_order) }
-  let(:active_product)   { create(:product) }
-  let(:inactive_product) { create(:product, :inactive) }
+  let(:order_product)           { create(:product, :with_order) }
+  let(:active_product)          { create(:product) }
+  let(:inactive_product)        { create(:product, :inactive) }
+  let(:cbe)                     { create(:cbe) }
+  let(:cbe_product)             { create(:product, cbe: cbe, product_type: 'cbe') }
+  let(:correction_pack_product) { create(:product, cbe: cbe, product_type: 'correction_pack', correction_pack_count: 3) }
+
 
   # relationships
   it { should belong_to(:currency) }
@@ -114,6 +118,16 @@ describe Product do
 
         expect(result).to include(active_product)
         expect(result).to include(inactive_product)
+      end
+    end
+
+    context '.name_by_type' do
+      it 'cbe product' do
+        expect(cbe_product.name_by_type).to eq(cbe_product.cbe.name)
+      end
+
+      it 'not cbe product' do
+        expect(correction_pack_product.name_by_type).to eq(correction_pack_product.mock_exam.name)
       end
     end
   end

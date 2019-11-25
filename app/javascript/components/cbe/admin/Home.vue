@@ -156,7 +156,7 @@
                         href="#"
                         variant="secondary"
                       >
-                        Question - {{ question.id }}
+                        Question - {{ question.sorting_order }}
                       </b-button>
                     </b-card-header>
 
@@ -288,7 +288,7 @@
                                     href="#"
                                     variant="secondary"
                                   >
-                                    Question - {{ question.id }}
+                                    Question - {{ question.sorting_order }}
                                   </b-button>
                                 </b-card-header>
 
