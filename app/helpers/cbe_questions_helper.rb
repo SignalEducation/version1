@@ -1,17 +1,6 @@
 # frozen_string_literal: true
 
 module CbeQuestionsHelper
-  def question_title(question)
-    klass        = question_title_class(question)
-    cbe_question = question.cbe_question
-
-    tag.h6 class: 'text-gray2' do
-      tag.div class: klass do
-        "Question ##{cbe_question.sorting_order} - #{cbe_question.kind.humanize}(#{cbe_question.score})"
-      end
-    end
-  end
-
   def question_corrected_link(question)
     button_tag question.cbe_question.kind.humanize,
                'class': 'btn btn-link', 'aria-controls': "collapse_#{question.id}",
@@ -26,18 +15,18 @@ module CbeQuestionsHelper
     render partial: partial, locals: { question: question, question_kind: question_kind }
   end
 
-  private
-
   def question_title_class(question)
     case question.correct
     when true
-      'text-green'
+      "<span style='color: #00b67B;' class='glyphicon glyphicon-ok pull-right'></span>".html_safe
     when false
-      'text-red'
+      "<span style='color: #dc3545;' class='glyphicon glyphicon-remove pull-right'></span>".html_safe
     else
-      'text-yellow'
+      "<span style='color: #f0ca28;' class='glyphicon glyphicon-pencil pull-right'></span>".html_safe
     end
   end
+
+  private
 
   def admin_answers_partial(question_kind)
     case question_kind

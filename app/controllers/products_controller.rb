@@ -74,6 +74,7 @@ class ProductsController < ApplicationController
     @mock_exams      = MockExam.all_in_order
     @cbes            = Cbe.all
     @subject_courses = SubjectCourse.all_active.all_in_order
+    @groups          = Group.all_in_order
   end
 
   def seo_title
@@ -83,6 +84,7 @@ class ProductsController < ApplicationController
   def allowed_params
     params.require(:product).permit(:name, :active, :price, :currency_id, :livemode,
                                     :cbe_id, :mock_exam_id, :sorting_order,
-                                    :product_type, :correction_pack_count)
+                                    :product_type, :correction_pack_count, :group_id,
+                                    :payment_heading, :payment_subheading, :payment_description)
   end
 end

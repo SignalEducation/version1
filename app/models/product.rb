@@ -30,6 +30,7 @@ class Product < ApplicationRecord
 
   # relationships
   belongs_to :currency
+  belongs_to :group
   belongs_to :mock_exam, optional: true
   belongs_to :cbe, optional: true
   has_many :orders, dependent: :restrict_with_error
@@ -41,6 +42,7 @@ class Product < ApplicationRecord
   validates :price, presence: true
   validates :stripe_guid, presence: true, uniqueness: true, on: :update
   validates :stripe_sku_guid, presence: true, uniqueness: true, on: :update
+  validates :group_id, numericality: { only_integer: true, greater_than: 0 }
   validates :mock_exam_id, numericality: { only_integer: true,
                                            greater_than: 0 }, if: :mock_exam?
   validates :cbe_id, numericality: { only_integer: true,
@@ -54,11 +56,12 @@ class Product < ApplicationRecord
   after_update :update_on_stripe
 
   # scopes
-  scope :all_in_order, -> { order(:sorting_order, :name) }
-  scope :all_active,   -> { where(active: true).includes(mock_exam: :subject_course) }
-  scope :in_currency,  ->(ccy_id) { where(currency_id: ccy_id) }
-  scope :cbes,         -> { where.not(cbe_id: nil) }
-  scope :mock_exams,   -> { where.not(mock_exam_id: nil) }
+  scope :all_in_order,  -> { order(:sorting_order, :name) }
+  scope :all_active,    -> { where(active: true).includes(mock_exam: :subject_course) }
+  scope :in_currency,   ->(ccy_id) { where(currency_id: ccy_id) }
+  scope :cbes,          -> { where.not(cbe_id: nil) }
+  scope :mock_exams,    -> { where.not(mock_exam_id: nil) }
+  scope :for_group,     ->(group_id) { where(group_id: group_id) }
 
   # instance methods
   def destroyable?

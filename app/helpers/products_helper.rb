@@ -11,8 +11,10 @@ module ProductsHelper
   def product_icon(product)
     if product.cbe?
       tag.i class: 'budicon-desktop', role: 'img'
-    else
+    elsif product.product_type == 'correction_pack'
       tag.i class: 'budicon-files-tick', role: 'img'
+    else
+      tag.i class: 'budicon-file-tick', role: 'img'
     end
   end
 end

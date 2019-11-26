@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_12_155114) do
+ActiveRecord::Schema.define(version: 2019_11_26_161210) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -536,8 +536,14 @@ ActiveRecord::Schema.define(version: 2019_11_12_155114) do
     t.string "logo_image"
     t.string "registration_form_heading"
     t.string "login_form_heading"
+    t.string "audience_guid"
     t.string "landing_page_h1"
     t.text "landing_page_paragraph"
+    t.boolean "has_products", default: false
+    t.string "products_heading"
+    t.text "products_subheading"
+    t.string "products_seo_title"
+    t.string "products_seo_description"
     t.index ["name"], name: "index_exam_bodies_on_name"
   end
 
@@ -605,6 +611,7 @@ ActiveRecord::Schema.define(version: 2019_11_12_155114) do
     t.boolean "student_sign_ups", default: false
     t.integer "home_page_id"
     t.integer "content_page_id"
+    t.integer "exam_body_id"
     t.index ["active"], name: "index_external_banners_on_active"
     t.index ["name"], name: "index_external_banners_on_name"
   end
@@ -658,11 +665,12 @@ ActiveRecord::Schema.define(version: 2019_11_12_155114) do
     t.string "background_image_content_type"
     t.integer "background_image_file_size"
     t.datetime "background_image_updated_at"
-    t.bigint "exam_body_id"
     t.string "background_colour"
+    t.bigint "exam_body_id"
     t.string "seo_title"
     t.string "seo_description"
     t.string "short_description"
+    t.text "onboarding_message"
     t.index ["exam_body_id"], name: "index_groups_on_exam_body_id"
     t.index ["name"], name: "index_groups_on_name"
   end
@@ -861,7 +869,6 @@ ActiveRecord::Schema.define(version: 2019_11_12_155114) do
 
   create_table "products", id: :serial, force: :cascade do |t|
     t.string "name"
-    t.integer "subject_course_id"
     t.integer "mock_exam_id"
     t.string "stripe_guid"
     t.boolean "live_mode", default: false
@@ -871,15 +878,19 @@ ActiveRecord::Schema.define(version: 2019_11_12_155114) do
     t.integer "currency_id"
     t.decimal "price"
     t.string "stripe_sku_guid"
+    t.integer "subject_course_id"
     t.integer "sorting_order"
     t.integer "product_type", default: 0
     t.integer "correction_pack_count"
     t.bigint "cbe_id"
+    t.integer "group_id"
+    t.string "payment_heading"
+    t.string "payment_subheading"
+    t.text "payment_description"
     t.index ["cbe_id"], name: "index_products_on_cbe_id"
     t.index ["mock_exam_id"], name: "index_products_on_mock_exam_id"
     t.index ["name"], name: "index_products_on_name"
     t.index ["stripe_guid"], name: "index_products_on_stripe_guid"
-    t.index ["subject_course_id"], name: "index_products_on_subject_course_id"
   end
 
   create_table "quiz_answers", id: :serial, force: :cascade do |t|
@@ -1175,6 +1186,7 @@ ActiveRecord::Schema.define(version: 2019_11_12_155114) do
     t.text "short_description"
     t.boolean "on_welcome_page", default: false
     t.string "unit_label"
+    t.integer "level_id"
     t.index ["name"], name: "index_subject_courses_on_name"
   end
 
@@ -1282,6 +1294,7 @@ ActiveRecord::Schema.define(version: 2019_11_12_155114) do
     t.string "cancellation_reason"
     t.text "cancellation_note"
     t.bigint "changed_from_id"
+    t.string "temp_guid"
     t.string "completion_guid"
     t.uuid "ahoy_visit_id"
     t.index ["changed_from_id"], name: "index_subscriptions_on_changed_from_id"

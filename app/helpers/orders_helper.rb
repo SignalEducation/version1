@@ -14,23 +14,31 @@ module OrdersHelper
     end
   end
 
+  def order_heading(order)
+    order.product.payment_heading.presence || "#{order.product.name_by_type} Purchase"
+  end
+
   def order_short_description(order)
-    if order.product.mock_exam?
-      'Purchase an ACCA Mock Exam and increase your chances of passing the ACCA exams.'
+    if order.product.payment_subheading.present?
+      order.product.payment_subheading
+    elsif order.product.mock_exam?
+      'Purchase a Mock Exam and increase your chances of passing the your exams.'
     elsif order.product.cbe?
-      'Purchase an ACCA CBE and increase your chances of passing the ACCA exams.'
+      'Purchase a CBE and increase your chances of passing your exams.'
     else
-      'Pass your ACCA exams faster with a question and solution correction pack.'
+      'Pass your exams faster with a question and solution correction pack.'
     end
   end
 
   def order_description(order)
-    if order.product.mock_exam?
+    if order.product.payment_description.present?
+      order.product.payment_description
+    elsif order.product.mock_exam?
       'Purchase your Mock Exam today. Once submitted we will give you a solution paper, your result, question by question, personalised feedback on your exam and study topic recommendations.'
     elsif order.product.cbe?
-      'Purchase your CBE today. Once submitted we will give you a solution paper, your result, question by question, personalised feedback on your exam and study topic recommendations.'
+      'Purchase your CBE today to start practicing for your online exam by simulating the computer based exam on the learnsignal site.'
     else
-      'This correction pack is applicable to all ACCA courses. Pick and complete any ACCA question from any resource. Once you have submitted your work, our expert tutors will correct it and give you feedback within 3 days.'
+      'This correction pack is applicable to all courses. Pick and complete any question from any resource. Once you have submitted your work, our expert tutors will correct it and give you feedback within 3 days.'
     end
   end
 

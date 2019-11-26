@@ -36,10 +36,15 @@ class FooterPagesController < ApplicationController
   end
 
   def media_library
-    seo_title_maker('ACCA Correction Packs and Mock Exams | LearnSignal', 'Get access to ACCA question and solution correction packs and mock exams designed by experts to help you pass your exams the first time.', nil)
-
-    @currency_id   = user_currency_id
-    valid_products = Product.in_currency(@currency_id).all_active.all_in_order
+    @group        = Group.find_by(name_url: params[:group_name_url])
+    @currency_id  = user_currency_id
+    if @group&.exam_body&.has_products?
+      seo_title_maker(@group.exam_body.products_seo_title, @group.exam_body.products_seo_description, false)
+      valid_products = Product.for_group(@group.id).in_currency(@currency_id).all_active.all_in_order
+    else
+      seo_title_maker('Mock Exams and Correction Packs | LearnSignal', 'Get access to question and solution correction packs and mock exams designed by experts to help you pass your exams the first time.', nil)
+      valid_products = Product.in_currency(@currency_id).all_active.all_in_order
+    end
     @products      = valid_products.where('mock_exam_id IS NOT NULL OR cbe_id IS NOT NULL').
                        where('product_type IN (?)', [Product.product_types[:mock_exam], Product.product_types[:cbe]])
     @questions     = valid_products.where('mock_exam_id IS NOT NULL').

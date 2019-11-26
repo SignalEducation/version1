@@ -128,7 +128,7 @@ class Order < ApplicationRecord
 
     MandrillWorker.perform_async(user_id,
                                  'send_mock_exam_email',
-                                 user_exercise_url(user_id),
+                                 user_exercise_url,
                                  product.name_by_type, reference_guid)
     invoice.update(paid: true, payment_closed: true)
   end
@@ -181,8 +181,8 @@ class Order < ApplicationRecord
                                              user_id, id, product_id)
   end
 
-  def user_exercise_url(user_id)
-    UrlHelper.instance.user_exercises_url(user_id: user_id,
+  def user_exercise_url
+    UrlHelper.instance.student_dashboard_url(anchor: :exercises,
                                           host: LEARNSIGNAL_HOST)
   end
 end
