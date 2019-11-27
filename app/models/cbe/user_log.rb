@@ -32,7 +32,8 @@ class Cbe
       questions_kind = questions.map { |q| q.cbe_question.kind }.uniq
 
       exercise&.submit
-      return unless questions_kind.exclude?('spreadsheet' && 'open')
+      return unless questions_kind.exclude?('open') &&
+                    questions_kind.exclude?('spreadsheet')
 
       exercise&.correct
       exercise&.return

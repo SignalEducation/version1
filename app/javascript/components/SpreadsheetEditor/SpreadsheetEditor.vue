@@ -18,7 +18,7 @@
         :redo="() => flex.redo()"
         @reset-spreadsheet="resetSpreadsheet"
       />
-      
+
       <FormatBar
         :applyBoldStyle="() => applyBoldStyle()"
         :applyItalicStyle="() => applyItalicStyle()"
@@ -52,7 +52,7 @@
 </template>
 
 <script>
-/* eslint-disable */ 
+/* eslint-disable */
 
   import * as wjcGrid from "@grapecity/wijmo.grid";
   import "@grapecity/wijmo.vue2.grid";
@@ -288,7 +288,7 @@
           this.selectedCellData = flexSheet.cells.getCellData(sel.topRow, sel.leftCol);
 
           this.fontSizeIdx = fontSizeIdx;
-          
+
           let state = flexSheet.getSelectionFormatState();
           this.isBold = state.isBold;
           this.isItalic = state.isItalic;

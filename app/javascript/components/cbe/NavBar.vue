@@ -46,9 +46,10 @@
       </b-navbar-nav>
       <b-navbar-nav align="right">
         <CbeFlagToReview
+          v-if="showNavOptions(['sections', 'questions'])"
           :user_cbe_data="userCbeData"
           :type="$route.name"
-          :flag-id="$route.params.id"
+          :flag-id="Number($route.params.id)"
         />
       </b-navbar-nav>
     </b-navbar>

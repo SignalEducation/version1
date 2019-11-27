@@ -520,7 +520,7 @@ export default {
     removeQuestion(data) {
       const filtered =
         this.edit_cbe_data.sections.filter(function(section){
-          section.questions = section.questions.filter((question) => question.id !== data.questionId);
+          section.questions = section.questions.filter((question) => question.id !== data);
           return section
         });
 
