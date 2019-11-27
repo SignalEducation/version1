@@ -71,7 +71,7 @@
                 @rm-introduction-page="removePage"
               />
               <IntroductionPage
-                :initial-sorting-order="introPages.length + 1"
+                :initial-sorting-order="sortingOrderValue(introPages)"
                 @add-introduction-page="updatePages"
               />
             </b-tabs>
@@ -213,7 +213,7 @@
                     <b-card-body>
                       <Question
                         :section-id="section.id"
-                        :initial-sorting-order="section.questions.length + 1"
+                        :initial-sorting-order="sortingOrderValue(section.questions)"
                         @add-question="updateQuestions"
                       />
                     </b-card-body>
@@ -349,7 +349,7 @@
                                   <Question
                                     :section-id="section.id"
                                     :scenario-id="scenario.id"
-                                    :initial-sorting-order="scenario.questions.length + 1"
+                                    :initial-sorting-order="sortingOrderValue(scenario.questions)"
                                     @add-question="updateScenarioQuestions"
                                   />
                                 </b-card-body>
@@ -373,7 +373,7 @@
             </b-tab>
             <b-tab title="New Section">
               <Section
-                :initial-sorting-order="sections.length + 1"
+                :initial-sorting-order="sortingOrderValue(sections)"
                 @add-section="updateSections"
               />
             </b-tab>
@@ -557,6 +557,12 @@ export default {
         });
 
       this.sections = filtered;
+    },
+    sortingOrderValue(object) {
+      let order = 1;
+      if ( object ) order = object.length + 1;
+
+      return order;
     },
   },
 };
