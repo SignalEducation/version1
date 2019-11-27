@@ -112,44 +112,6 @@ describe FooterPagesController, type: :controller do
         expect(response).to render_template(:profile_index)
       end
     end
-
-    describe "Post 'complaints_intercom'" do
-      #TODO - fix this post to intercom
-      xit 'should render with 200' do
-        post :complaints_intercom
-        expect(flash[:success]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:profile_index)
-      end
-
-      xit 'should reject with invalid params' do
-        post :complaints_intercom
-        expect(flash[:success]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:profile_index)
-      end
-    end
-
-    describe "Post 'contact_us_intercom'" do
-      #TODO - fix this post to intercom
-      xit 'should respond OK to valid params' do
-        post :contact_us_intercom
-        expect(flash[:success]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:profile_index)
-      end
-
-      xit 'should reject with invalid params' do
-        post :contact_us_intercom
-        expect(flash[:success]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:profile_index)
-      end
-    end
   end
 
   context 'Logged in: ' do
