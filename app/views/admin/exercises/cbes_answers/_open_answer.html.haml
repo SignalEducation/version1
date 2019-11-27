@@ -1,10 +1,15 @@
+-# VueJS include
+= javascript_pack_tag 'exercise'
 .card.mb-5
   .card-body
     .row
       -if question_kind == 'open'
-        =raw(question.answers.first.content['text'])
+        #open-answers-component{ data: { answer_type: 'TextEditor', content: question.answers.first.content['text'] } }
       -else
-        WE NEED CALL SPREADSHEET VUEJS HERE
+        #open-answers-component{ data: { answer_type: 'Spreadsheet',
+                                               answer_id: question.answers.first.id,
+                                               cbe_id: question.user_log.cbe_id,
+                                               cbe_user_log_id: question.cbe_user_log_id } }
 
 .h6.text-gray2
   Educator Section
