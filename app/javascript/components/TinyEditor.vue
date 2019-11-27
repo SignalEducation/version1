@@ -2,35 +2,38 @@
 <template>
   <div>
     <editor
-      :id="this.editorId"
-      :api-key="this.apiKey"
+      :id="editorId"
+      v-model="localFieldModel"
+      :api-key="apiKey"
       :init="{
-        branding:  false,
-        menubar:   false,
+        branding: false,
+        menubar: false,
         statusbar: false,
-        resize:    false,
-        toolbar:   ['newdocument | \
+        resize: false,
+        toolbar: ['newdocument | \
                     cut copy paste | \
                     undo redo | \
                     searchreplace | \
                     bold italic underline strikethrough | \
                     subscript superscript | \
                     removeformat',
-                    'formatselect | \
+                  'formatselect | \
                     table | \
                     alignleft aligncenter alignright alignjustify | \
                     numlist bullist | \
-                    outdent indent'].concat(this.aditionalToolbarOptions),
-        plugins:   'fullscreen lists table code paste',
+                    outdent indent'].concat(aditionalToolbarOptions),
+        plugins: 'fullscreen lists table code paste searchreplace',
+        skin: 'custom'
       }"
-      v-model="localFieldModel"
       @input="$emit('update:fieldModel', localFieldModel)"
-    ></editor>
+    />
   </div>
 </template>
 
 <script>
 import Editor from "@tinymce/tinymce-vue";
+import '../lib/TinyEditor/styles/custom/skin.min.css';
+import '../lib/TinyEditor/styles/custom/content.min.css';
 
 export default {
   components: {
