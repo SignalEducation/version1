@@ -90,23 +90,12 @@
 
                         .col-sm-10.offset-1.text-center
                           =f.submit 'Change Plan Now', class: 'btn btn-primary full-width', id: 'changePlan'
-                          .sk-circle
-                            .sk-circle1.sk-child
-                            .sk-circle2.sk-child
-                            .sk-circle3.sk-child
-                            .sk-circle4.sk-child
-                            .sk-circle5.sk-child
-                            .sk-circle6.sk-child
-                            .sk-circle7.sk-child
-                            .sk-circle8.sk-child
-                            .sk-circle9.sk-child
-                            .sk-circle10.sk-child
-                            .sk-circle11.sk-child
-                            .sk-circle12.sk-child
+                          %button.btn.btn-primary.spinning-loading{:disabled => "disabled", :type => "button"}
+                            %span.spinner-border.spinner-border-sm{"aria-hidden" => "true", :role => "status"}
+                            %span.spinner-message
 
 
 =render partial: 'update_card_modal'
-
 
 
 :javascript
@@ -171,7 +160,7 @@
     var cardElement = elements.create('card', {hidePostalCode: true, style: style});
     cardElement.mount('#card-element');
 
-    $(".sk-circle").hide();
+    $(".spinning-loading").hide();
     choosePlan($('.plan-option')[0]);
     $('.option').bind('click', function(event) {
       event.stopPropagation();
@@ -185,9 +174,10 @@
 
     $("#upgrade-subscription-form").submit(function(ev) {
       ev.preventDefault();
-      $(".sk-circle").show();
       displayError.text('');
       $("#changePlan").hide();
+      $(".spinner-message").html("Please wait...");
+      $(".spinning-loading").show();
 
       if ($('#subscription_use_paypal').val() === 'true') {
         this.submit();
@@ -270,9 +260,11 @@
     cardButton.addEventListener('click', function(ev) {
       ev.preventDefault();
       $('#card_submit').hide();
-      $(".sk-circle").show();
+      $(".spinner-message").html("Please wait...");
+      $(".spinning-loading").show();
 
       stripe.handleCardPayment(clientSecret, cardElement).then(function(result) {
+        $(".spinner-message").html("Still processing...");
         if (result.error) {
           resetCardForm(result.error.message);
           intentStatus = 'pending';
@@ -297,14 +289,14 @@
     });
 
     function resetForm(error){
-      $(".sk-circle").hide();
+      $(".spinning-loading").hide();
       $("#changePlan").show();
       displayError.text(error);
       $("#changePlan").attr("disabled", false);
     }
 
     function resetCardForm(error){
-      $(".sk-circle").hide();
+      $(".spinning-loading").hide();
       $("#card_submit").show();
       displayCardError.text(error);
       $("#card_submit").attr("disabled", false);

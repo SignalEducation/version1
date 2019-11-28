@@ -168,7 +168,7 @@
     }
 
 
-    $(".sk-circle").hide();
+    $(".spinning-loading").hide();
 
     var style = {
       base: {
@@ -202,7 +202,8 @@
       $('#card_submit').hide();
       $('#paypal_submit').prop('disabled',true);
       $('#paypal_submit').hide();
-      $(".sk-circle").show();
+      $(".spinner-message").html("Please wait...");
+      $(".spinning-loading").show();
       if ($('#order_use_paypal').val() === 'true') {
         if(acceptedTerms('paypal')){
           document.getElementById('orders-form').submit();
@@ -251,6 +252,7 @@
 
     function handlePayment(client_secret, order_id){
       let orderStatus = '';
+      $(".spinner-message").html("Still processing...");
       stripe.handleCardAction(client_secret, card).then(function(result) {
         if (result.error) {
           resetForm(result.error);
@@ -282,7 +284,8 @@
       errorElement.textContent = error.message;
       $('#card_submit').prop('disabled',false);
       $('#card_submit').show();
-      $(".sk-circle").hide();
+      $('#paypal_submit').show();
+      $(".spinning-loading").hide();
     }
 
     $('#pay-with-card').click(); // To open the stripe card section on page load
