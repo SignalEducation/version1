@@ -3,7 +3,7 @@
     .container
       %header.hero-section
         %h1.h1-hero.mb-2
-          =@order.product.name_by_type
+          =order_heading(@order)
         %p.p-hero.px-lg-8
           =order_short_description(@order)
 

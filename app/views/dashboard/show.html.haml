@@ -31,7 +31,7 @@
                       Exercises
 
           .col-lg-5-7
-            #accountTabsContent.tab-content
+            #dashboardTabsContent.tab-content
               -if @enrollments.any?
                 #enrollments.tab-pane.show.active.tab-dashboard.tab-enrollments{"aria-labelledby" => "enrollments-tab", :role => "tabpanel"}
                   =render partial: 'enrollments'
@@ -46,3 +46,19 @@
                 #exercises.tab-pane.show.tab-dashboard.tab-exercises{"aria-labelledby" => "exercises-tab", :role => "tabpanel"}
                   =render partial: 'exercises'
 
+
+
+:javascript
+  $(document).ready(function(){
+    hash = window.location.hash;
+    elements = $('a[href="' + hash + '"]');
+    if (elements.length > 0) {
+      elements.click();
+    }
+    if (location.hash) {
+      setTimeout(function() {
+          window.scrollTo(0, 0);
+      }, 1);
+    }
+
+  });

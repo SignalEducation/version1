@@ -8,29 +8,26 @@ describe CbeQuestionsHelper do
   let(:cbe_user_log) { create(:cbe_user_log, cbe: cbe, exercise: exercise_cbe) }
   let!(:question)    { create(:cbe_user_question, user_log: cbe_user_log) }
 
-  describe '#question_title' do
-    it 'return correct stylized question title' do
+  describe '#question_title_class' do
+    it 'return correct stylized question title class' do
       question.correct = true
-      title = question_title(question)
+      title = question_title_class(question)
 
-      expect(title).to include('text-green')
-      expect(title).to include(question.cbe_question.sorting_order.to_s)
-      expect(title).to include(question.cbe_question.kind.humanize)
-      expect(title).to include(question.cbe_question.score.to_s)
+      expect(title).to include('glyphicon-ok')
     end
 
     it 'return incorrect stylized question title' do
       question.correct = false
-      title = question_title(question)
+      title = question_title_class(question)
 
-      expect(title).to include('text-red')
+      expect(title).to include('glyphicon-remove')
     end
 
     it 'return not corrected stylized question title' do
       question.correct = nil
-      title = question_title(question)
+      title = question_title_class(question)
 
-      expect(title).to include('text-yellow')
+      expect(title).to include('glyphicon-pencil')
     end
   end
 

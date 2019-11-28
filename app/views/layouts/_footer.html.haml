@@ -15,8 +15,10 @@
                     %li.nav-item
                       =link_to "#{group.name} Courses", library_special_link(group), class: 'nav-link'
 
-              %li.nav-item
-                =link_to 'Prep Products', prep_products_url, class: 'nav-link'
+                -@groups.all_in_order.each do |group|
+                  -if group.active && group.exam_body.has_products?
+                    %li.nav-item
+                      =link_to "#{group.name} Products", exam_products_url(group.name_url), class: 'nav-link'
 
               %li.nav-item
                 =link_to 'ACCA Info', acca_info_url, class: 'nav-link'

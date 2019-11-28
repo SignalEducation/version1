@@ -278,6 +278,8 @@ Rails.application.routes.draw do
     get 'mock_exams',           to: 'footer_pages#media_library', as: :media_library
     get 'prep_products',        to: 'footer_pages#media_library', as: :prep_products
 
+    get 'prep_products/:group_name_url', to: 'footer_pages#media_library', as: :exam_products
+
     # HomePages Structure
     get 'home', to: 'routes#root', as: :home
     get 'course/:name_url', to: 'student_sign_ups#group', as: :group_landing

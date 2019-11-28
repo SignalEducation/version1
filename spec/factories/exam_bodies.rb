@@ -29,5 +29,9 @@ FactoryBot.define do
     constructed_response_intro_text    { 'Intro Text' }
     landing_page_h1                    { 'Header H1' }
     landing_page_paragraph             { 'Header P Text' }
+    products_heading                   { 'Header H1' }
+    products_subheading                { 'Header P Text' }
+    products_seo_title                 { 'Header H1' }
+    products_seo_description           { 'Header P Text' }
   end
 end

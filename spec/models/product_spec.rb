@@ -29,6 +29,27 @@ describe Product do
   let(:cbe_product)             { create(:product, cbe: cbe, product_type: 'cbe') }
   let(:correction_pack_product) { create(:product, cbe: cbe, product_type: 'correction_pack', correction_pack_count: 3) }
 
+  describe 'Should Respond' do
+    it { should respond_to(:name) }
+    it { should respond_to(:mock_exam_id) }
+    it { should respond_to(:stripe_guid) }
+    it { should respond_to(:live_mode) }
+    it { should respond_to(:created_at) }
+    it { should respond_to(:updated_at) }
+    it { should respond_to(:active) }
+    it { should respond_to(:currency_id) }
+    it { should respond_to(:price) }
+    it { should respond_to(:stripe_sku_guid) }
+    it { should respond_to(:subject_course_id) }
+    it { should respond_to(:sorting_order) }
+    it { should respond_to(:product_type) }
+    it { should respond_to(:correction_pack_count) }
+    it { should respond_to(:cbe_id) }
+    it { should respond_to(:group_id) }
+    it { should respond_to(:payment_heading) }
+    it { should respond_to(:payment_subheading) }
+    it { should respond_to(:payment_description) }
+  end
 
   # relationships
   it { should belong_to(:currency) }

@@ -1,31 +1,22 @@
 -if @exercise.returned?
-  %table.table
-    %thead.thead-dark
-      %tr
-        %th{:scope => "col"} #
-        %th{:scope => "col"} Question Type
-        %th{:scope => "col"} Score
-    %tbody.scrollbar
-      #accordionExample.accordion
-        -@exercise.cbe_user_log.questions.each do |question|
-          %tr
-            %td
-              =question.cbe_question.sorting_order
-            %td
-              %div.question-listed
-                =question_corrected_link(question)
-                .collapse{"aria-labelledby" => "heading_#{question.id}", "data-parent" => "#accordionExample", id:  "collapse_#{question.id}"}
-                  %div
-                    %b
-                      Suggested Solution:
-                    =raw(question.cbe_question.solution)
-                  -if question.educator_comment.present?
-                    %div
-                      %b Educator Comment:
-                      =raw(question.educator_comment)
-            %td
-              =question.score
-    %tfoot
-      %tr
-        %td{:colspan => "3"}
-          ="Total Score: #{@exercise.cbe_user_log.score}"
+  %h3='Results by question'
+  .row
+    .col-12.col-md-3.mb-4
+      #v-pills-tab.nav.flex-column.nav-pills{"aria-orientation" => "vertical", :role => "tablist"}
+        -@exercise.cbe_user_log.questions.each_with_index do |question, index|
+          %a#v-pills-home-tab.nav-link{"aria-controls" => "v-pills-#{question.id}", "aria-selected" => index == 0 ? 'true' : 'false', "data-toggle" => "pill", :href => "#v-pills-#{question.id}", :role => "tab", class: index == 0 ? 'active' : ''}
+            ="Question #{index+1}"
+
+    .col-12.col-md-9
+      #v-pills-tabContent.tab-content
+        -@exercise.cbe_user_log.questions.each_with_index do |question, index|
+          .tab-pane.fade{id: "v-pills-#{question.id}", "aria-labelledby" => "v-pills-#{question.id}-tab", :role => "tabpanel", class: index == 0 ? 'active show' : ''}
+            %h4.mb-4
+              ="Marks: #{question.score.to_i}/#{question.cbe_question.score.to_i}"
+
+            %h6='Suggested Solution:'
+            =raw(question.cbe_question.solution)
+
+            -if question.educator_comment.present?
+              %h6='Educator Comment:'
+              =raw(question.educator_comment)

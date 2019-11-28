@@ -3,9 +3,15 @@
     .container
       %header.hero-section
         %h1.h1-hero.mb-3
-          Exam Preparation Products
+          -if @group
+            =@group.exam_body&.products_heading
+          -else
+            Exam Preparation Products
         %p.p-hero.px-lg-6
-          Invest in your ACCA exam success today with our question and solution correction packs and mock exams.
+          -if @group
+            =@group.exam_body&.products_subheading
+          -else
+            Invest in your exam success today with our question and solution correction packs, mock exams and CBEs.
 
       =render partial: 'layouts/flash_messages'
 
@@ -28,7 +34,6 @@
       -if @products.any?
         .tab-pane.tab-mocks.active.show{id: 'mocks', role: 'tabpanel', 'aria-labelledby': 'mocks-tab'}
           %section.mb-5
-            %p.mb-4.mb-sm-5 Complete your ACCA Mock Exam. Once submitted we will give you a solution paper, your result, question by question personalised feedback on your exam, and study topic recommendations.
             .row.row-lg
               -@products.each do |product|
                 .col-xs-12.col-sm-6.col-md-4
@@ -49,7 +54,6 @@
       -if @questions.any?
         .tab-pane.tab-questions{id: 'questions', role: 'tabpanel', 'aria-labelledby': 'questions-tab'}
           %section.mb-5
-            %p.mb-4.mb-sm-5 These correction packs are applicable to all ACCA courses. Pick and complete any ACCA question from any resource. Once you have submitted your work, our expert tutors will correct it and give you feedback within 3 days.
             .row.row-lg
               -@questions.each do |question|
                 .col-xs-12.col-sm-6.col-md-4

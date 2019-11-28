@@ -26,7 +26,28 @@ describe ExamBody do
 
   subject { FactoryBot.build(:exam_body) }
 
-  # Constants
+  describe 'Should Respond' do
+    it { should respond_to(:name) }
+    it { should respond_to(:url) }
+    it { should respond_to(:created_at) }
+    it { should respond_to(:updated_at) }
+    it { should respond_to(:active) }
+    it { should respond_to(:has_sittings) }
+    it { should respond_to(:preferred_payment_frequency) }
+    it { should respond_to(:subscription_page_subheading_text) }
+    it { should respond_to(:constructed_response_intro_heading) }
+    it { should respond_to(:constructed_response_intro_text) }
+    it { should respond_to(:logo_image) }
+    it { should respond_to(:registration_form_heading) }
+    it { should respond_to(:login_form_heading) }
+    it { should respond_to(:landing_page_h1) }
+    it { should respond_to(:landing_page_paragraph) }
+    it { should respond_to(:has_products) }
+    it { should respond_to(:products_heading) }
+    it { should respond_to(:products_subheading) }
+    it { should respond_to(:products_seo_title) }
+    it { should respond_to(:products_seo_description) }
+  end
 
   # relationships
   it { should have_one(:group) }
