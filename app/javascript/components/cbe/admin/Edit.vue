@@ -47,7 +47,7 @@
           <Details
             :id="edit_cbe_data.id"
             :initial-name="edit_cbe_data.name"
-            :initial-course-id="edit_cbe_data.subject_course.id"
+            :initial-course-id="edit_cbe_data.subject_course_id"
             :initial-agreement-content="edit_cbe_data.agreement_content"
             :initial-active="edit_cbe_data.active"
           />
@@ -171,7 +171,9 @@
                           <Question
                             :id="question.id"
                             :section-id="section.id"
+                            :section-kind="section.kind"
                             :initial-content="question.content"
+                            :initial-solution="question.solution"
                             :initial-score="question.score"
                             :initial-sorting-order="question.sorting_order"
                             :initial-kind="question.kind"
@@ -212,6 +214,7 @@
                   <b-card-body>
                     <Question
                       :section-id="section.id"
+                      :section-kind="section.kind"
                       :initial-sorting-order="sortingOrderValue(section.questions)"
                       @add-question="updateQuestions"
                     />
@@ -302,8 +305,10 @@
                                         <Question
                                           :id="question.id"
                                           :section-id="section.id"
+                                          :section-kind="section.kind"
                                           :scenario-id="scenario.id"
                                           :initial-content="question.content"
+                                          :initial-solution="question.solution"
                                           :initial-score="question.score"
                                           :initial-kind="question.kind"
                                           :initial-answers="question.answers"
@@ -345,8 +350,9 @@
                               <b-card-body>
                                 <Question
                                   :section-id="section.id"
+                                  :section-kind="section.kind"
                                   :scenario-id="scenario.id"
-                                  :initial-sorting-order="sortingOrderValue(scenario.questions)"
+                                  :initial-sorting-order="sortingOrderValue(scenario.section_questions)"
                                   @add-question="updateScenarioQuestions"
                                 />
                               </b-card-body>
@@ -550,7 +556,7 @@ export default {
       }
       currentScenario.questions.push(data);
     },
-    removeScenarioQuestion(removeScenarioQuestion) {
+    removeScenarioQuestion(data) {
       const filtered =
         this.edit_cbe_data.sections.filter(function(section){
           section.questions = section.questions.filter((question) => question.id !== data.questionId);

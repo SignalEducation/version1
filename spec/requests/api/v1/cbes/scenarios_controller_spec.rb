@@ -27,7 +27,9 @@ RSpec.describe 'Api::V1::Cbe::ScenariosController', type: :request do
         expect([body.keys]).to contain_exactly(%w[id
                                                   name
                                                   content
-                                                  section_id])
+                                                  section_id
+                                                  questions
+                                                  section_questions])
       end
     end
 
@@ -71,7 +73,9 @@ RSpec.describe 'Api::V1::Cbe::ScenariosController', type: :request do
         expect([body.keys]).to contain_exactly(%w[id
                                                   name
                                                   content
-                                                  section_id])
+                                                  section_id
+                                                  questions
+                                                  section_questions])
       end
     end
 

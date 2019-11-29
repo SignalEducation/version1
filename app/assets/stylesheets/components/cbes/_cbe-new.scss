@@ -15,6 +15,9 @@ span.navbar-text {
 .cbe-section > .cbe-content {
   margin-top: 76px;
   height: 100%;
+  width: 100%;
+  overflow-y: scroll;
+  position: absolute;
   display: block;
   overflow: auto;
   background-color: #ffffff;

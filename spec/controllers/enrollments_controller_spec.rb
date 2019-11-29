@@ -48,13 +48,11 @@ RSpec.describe EnrollmentsController, type: :controller do
   let!(:enrollment_2) { FactoryBot.create(:enrollment, user_id: basic_student.id, subject_course_id: subject_course_2.id, subject_course_user_log_id: scul_2.id, exam_body_id: exam_body_1.id) }
 
   let!(:valid_params) { FactoryBot.attributes_for(:enrollment, user_id: basic_student.id, subject_course_id: subject_course_1.id, subject_course_user_log_id: nil, exam_sitting_id: standard_exam_sitting.id) }
-  let!(:custom_date_params) { FactoryBot.attributes_for(:enrollment, user_id: basic_student.id, subject_course_id: subject_course_2.id, subject_course_user_log_id: nil, exam_sitting_id: computer_based_exam_sitting.id, exam_date: '2019-12-01') }
-  let!(:existing_log_params) { FactoryBot.attributes_for(:enrollment, user_id: basic_student.id, subject_course_id: subject_course_2.id, subject_course_user_log_id: scul_2.id, exam_sitting_id: computer_based_exam_sitting.id, exam_date: '2019-12-01') }
-  let!(:invalid_params) { FactoryBot.attributes_for(:enrollment, user_id: basic_student.id, subject_course_id: nil, subject_course_user_log_id: scul_2.id, exam_sitting_id: nil, exam_date: '2019-12-01') }
-
+  let!(:custom_date_params) { FactoryBot.attributes_for(:enrollment, user_id: basic_student.id, subject_course_id: subject_course_2.id, subject_course_user_log_id: nil, exam_sitting_id: computer_based_exam_sitting.id, exam_date: Date.today + 1.year) }
+  let!(:existing_log_params) { FactoryBot.attributes_for(:enrollment, user_id: basic_student.id, subject_course_id: subject_course_2.id, subject_course_user_log_id: scul_2.id, exam_sitting_id: computer_based_exam_sitting.id, exam_date: Date.today + 1.year) }
+  let!(:invalid_params) { FactoryBot.attributes_for(:enrollment, user_id: basic_student.id, subject_course_id: nil, subject_course_user_log_id: scul_2.id, exam_sitting_id: nil, exam_date: Date.today + 1.year) }
 
   context 'Logged in as a basic_student: ' do
-
     before(:each) do
       activate_authlogic
       UserSession.create!(basic_student)
