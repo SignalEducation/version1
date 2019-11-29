@@ -7,6 +7,7 @@ describe CbeQuestionsHelper do
   let(:cbe)          { create(:cbe) }
   let(:cbe_user_log) { create(:cbe_user_log, cbe: cbe, exercise: exercise_cbe) }
   let!(:question)    { create(:cbe_user_question, user_log: cbe_user_log) }
+  let!(:answer)      { create(:cbe_user_answer, cbe_user_question_id: question.id) }
 
   describe '#question_title_class' do
     it 'return correct stylized question title class' do
@@ -28,6 +29,30 @@ describe CbeQuestionsHelper do
       title = question_title_class(question)
 
       expect(title).to include('glyphicon-pencil')
+    end
+  end
+
+  describe '#question_answer' do
+    it 'return correct stylized question answer class' do
+      answer.content['correct'] = true
+      question_answer = question_answer(answer)
+
+      expect(question_answer).to include('glyphicon-ok')
+    end
+
+    it 'return incorrect stylized question answer class' do
+      answer.content['correct'] = false
+      question_answer = question_answer(answer)
+
+      expect(question_answer).to include('glyphicon-remove')
+    end
+
+    it 'return not corrected stylized question answer class' do
+      answer.content['correct'] = nil
+      question_answer = question_answer(answer)
+
+      expect(question_answer).not_to include('glyphicon-ok')
+      expect(question_answer).not_to include('glyphicon-remove')
     end
   end
 

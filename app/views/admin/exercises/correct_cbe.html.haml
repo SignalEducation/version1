@@ -6,21 +6,24 @@
       =@cbe_user_log.user.email
 
   %section.pb-7
-    .row
-      .col-sm-12
-        .box-item.table-box
-          %div.cbe_score
-            ="Current Score: #{@cbe_user_log.score}"
-
     %h3='Questions'
     .box-item.table-box
       .row
         .col-12.col-md-3.mb-4
-          #v-pills-tab.nav.flex-column.nav-pills{"aria-orientation" => "vertical", :role => "tablist"}
-            -@cbe_user_log.questions.each_with_index do |question, index|
-              %a#v-pills-home-tab.nav-link.mb-3{"aria-controls" => "v-pills-#{question.id}", "aria-selected" => index == 0 ? 'true' : 'false', "data-toggle" => "pill", :href => "#v-pills-#{question.id}", :role => "tab", class: index == 0 ? 'active' : ''}
-                ="Question #{index+1}"
-                =question_title_class(question)
+          #accordionExample.accordion
+            -@cbe_user_log.cbe.sections.each_with_index do |section, section_index|
+              .card
+                #headingOne.card-header
+                  %h2.mb-0
+                    %button.btn.btn-link{"aria-controls" => "collapse_#{section.id}", "aria-expanded" => "false", "data-target" => "#collapse_#{section.id}", "data-toggle" => "collapse", :type => "button"}
+                      =section.name
+                .collapse{"aria-labelledby" => "heading_#{section.id}", "id" => "collapse_#{section.id}"}
+                  .card-body
+                    #v-pills-tab.nav.flex-column.nav-pills{"aria-orientation" => "vertical", :role => "tablist"}
+                      -@cbe_user_log.questions.by_section(section.id).each_with_index do |question, index|
+                        %a#v-pills-home-tab.nav-link.mb-3{"aria-controls" => "v-pills-#{question.id}", "data-toggle" => "pill", :href => "#v-pills-#{question.id}", :role => "tab"}
+                          ="Question #{index+1}"
+                          =question_title_class(question)
 
         .col-12.col-md-9
           #v-pills-tabContent.tab-content
@@ -41,6 +44,24 @@
                   .h5
                     Answer Content
                   =render_admin_answers(question)
+    .row
+      .col-sm-12
+        .box-item.table-box
+          %div.cbe_score
+            ="Current Score: #{@cbe_user_log.score}"
+          %div.cbe_user_log_comment
+            =form_with(url: cbe_user_log_update_admin_exercise_path(cbe_user_log_id: @cbe_user_log.id, id: @cbe_user_log.exercise_id), html: {class: 'form-horizontal', role: 'form'}) do
+              .row.pt-5
+                .col-sm-12
+                  .form-group
+                    .input-group.input-group-lg
+                      =label_tag :educator_comment, 'Overrall Comment:'
+                      %br
+                      =text_area_tag(:educator_comment, @cbe_user_log.educator_comment, id: "#{@cbe_user_log.id}-editor", as: 'summernote')
+              .row.pt-5
+                .col-sm-6
+                  =submit_tag("Update", class: 'btn btn-primary')
+                  %div{:id => "#{@cbe_user_log.id}-response"}
 
     .row
       .col-sm-12
@@ -49,3 +70,9 @@
             =link_to t('views.general.back'), admin_exercises_path, class: 'btn btn-warning btn-xs'
             -unless @exercise.returned?
               =link_to t('views.general.return'), return_cbe_admin_exercise_path(@exercise.id), data: {confirm: 'Do you want to finish your correction and return it to user?'}, method: :post, class: 'btn btn-primary btn-xs'
+
+:javascript
+  $("##{@cbe_user_log.id}-editor").summernote({
+    disableDragAndDrop: true,
+    height: 150
+  });

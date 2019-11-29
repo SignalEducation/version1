@@ -22,10 +22,17 @@
                     %p.mb-1
                       Returned on
                       %span=humanize_datetime_full(@exercise.returned_on)
-                .col-md-9
+                .col-md-4
                   -if @exercise.returned_on && @exercise.cbe_user_log
                     %h3
-                      ="Total Score: #{@exercise.cbe_user_log.score}"
+                      =cbe_score(@exercise.cbe_user_log)
+
+              .row
+                .col-md-12
+                  %h3
+                    %span.mr-1
+                      ="Educator Comment: "
+                      =raw(@exercise.cbe_user_log.educator_comment)
 
               .row.pt-6
                 .col-md-12

@@ -2,10 +2,23 @@
   %h3='Results by question'
   .row
     .col-12.col-md-3.mb-4
-      #v-pills-tab.nav.flex-column.nav-pills{"aria-orientation" => "vertical", :role => "tablist"}
-        -@exercise.cbe_user_log.questions.each_with_index do |question, index|
-          %a#v-pills-home-tab.nav-link{"aria-controls" => "v-pills-#{question.id}", "aria-selected" => index == 0 ? 'true' : 'false', "data-toggle" => "pill", :href => "#v-pills-#{question.id}", :role => "tab", class: index == 0 ? 'active' : ''}
-            ="Question #{index+1}"
+      #accordionExample.accordion
+        -@exercise.cbe_user_log.cbe.sections.each_with_index do |section, section_index|
+          -section_questions =  @exercise.cbe_user_log.questions.by_section(section.id)
+          .card
+            #headingOne.card-header
+              %h2.mb-0
+                %button.btn.btn-link{"aria-controls" => "collapse_#{section.id}", "aria-expanded" => "false", "data-target" => "#collapse_#{section.id}", "data-toggle" => "collapse", :type => "button"}
+                  =section.name
+                  %br
+                  =cbe_section_score(section_questions)
+            .collapse{"aria-labelledby" => "heading_#{section.id}", "id" => "collapse_#{section.id}"}
+              .card-body
+                #v-pills-tab.nav.flex-column.nav-pills{"aria-orientation" => "vertical", :role => "tablist"}
+                  -section_questions.each_with_index do |question, index|
+                    %a#v-pills-home-tab.nav-link{"aria-controls" => "v-pills-#{question.id}", "aria-selected" => index == 0 ? 'true' : 'false', "data-toggle" => "pill", :href => "#v-pills-#{question.id}", :role => "tab", class: index == 0 ? 'active' : ''}
+                      ="Question #{index+1}"
+                      =question_title_class(question)
 
     .col-12.col-md-9
       #v-pills-tabContent.tab-content
@@ -13,6 +26,23 @@
           .tab-pane.fade{id: "v-pills-#{question.id}", "aria-labelledby" => "v-pills-#{question.id}-tab", :role => "tabpanel", class: index == 0 ? 'active show' : ''}
             %h4.mb-4
               ="Marks: #{question.score.to_i}/#{question.cbe_question.score.to_i}"
+
+            %h6='Question:'
+            =raw(question.cbe_question.content)
+
+            -if question.cbe_question.answers.present?
+              %h6='Options:'
+              %ul
+                -question.cbe_question.answers.each do |answer|
+                  %li
+                    =question_answer(answer)
+
+            -if question.answers.present?
+              %h6='Answered:'
+              %ul
+                -question.answers.each do |answer|
+                  %li
+                    =raw(question_answer(answer))
 
             %h6='Suggested Solution:'
             =raw(question.cbe_question.solution)
