@@ -8,9 +8,6 @@
   display: none;
 }
 
-span.navbar-text {
-  margin-left: 15px;
-}
 
 .cbe-section > .cbe-content {
   margin-top: 76px;
@@ -177,6 +174,9 @@ button.flagged{
         color: #000000;
       }
     }
+    span.navbar-text {
+      margin-left: 15px;
+    }
 
   }
 
@@ -206,6 +206,7 @@ button.flagged{
       }
       .page-item .page-link {
         font-size: 14px;
+        line-height: 1.6;
       }
       li.page-item.disabled {
         display: none;
@@ -243,51 +244,53 @@ button.flagged{
     background-image: asset-url('cbe-calc-icon.png');
     background-repeat: no-repeat;
     padding: 0 0 0 25px;
+    background-size: 20% 90%;
   }
   .calculator-icon:hover {
-    background-image: asset-url('cbe-calc-icon-red.png');
-    color: #C80000!important;
+    background-image: asset-url('cbe-calc-icon-green.png');
+    color: #00b67B!important;
     cursor: pointer;
   }
   .scratch-pad-icon {
     background-image: asset-url('scratch-pad-icon.png');
     background-repeat: no-repeat;
     padding: 0 0 0 25px;
+    background-size: 20% 90%;
   }
   .scratch-pad-icon:hover {
-    background-image: asset-url('scratch-pad-icon-red.png');
-    color: #C80000!important;
+    background-image: asset-url('scratch-pad-icon-green.png');
+    color: #00b67B!important;
     cursor: pointer;
   }
   .navigation-icon {
     background-image: asset-url('navigation-icon.png');
     background-repeat: no-repeat;
-    padding: 0 0 0 25px;
+    padding: 0 0 0 30px;
   }
   .navigation-icon:hover {
-    background-image: asset-url('navigation-icon-red.png');
-    color: #C80000!important;
+    background-image: asset-url('navigation-icon-green.png');
+    color: #00b67B!important;
     cursor: pointer;
   }
   .arrow-right-icon {
     background-image: asset-url('arrow-right-icon.png');
     background-repeat: no-repeat;
-    padding: 0 25px 0 0;
+    padding: 0 30px 0 0;
     background-position: right;
   }
   .arrow-right-icon:hover {
-    background-image: asset-url('arrow-right-icon-red.png');
-    color: #C80000!important;
+    background-image: asset-url('arrow-right-icon-green.png');
+    color: #00b67B!important;
     cursor: pointer;
   }
   .arrow-left-icon {
     background-image: asset-url('arrow-left-icon.png');
     background-repeat: no-repeat;
-    padding: 0 0 0 25px;
+    padding: 0 0 0 30px;
   }
   .arrow-left-icon:hover {
-    background-image: asset-url('arrow-left-icon-red.png');
-    color: #C80000!important;
+    background-image: asset-url('arrow-left-icon-green.png');
+    color: #00b67B!important;
     cursor: pointer;
   }
   .symbols-icon {
@@ -297,18 +300,8 @@ button.flagged{
   }
   .symbols-icon:hover {
     background-image: asset-url('symbols-icon-red.png');
-    color: #C80000!important;
+    color: #00b67B!important;
     cursor: pointer;
-  }
-  .progress-count-icon {
-    background-image: asset-url('progress-count-icon.png');
-    background-repeat: no-repeat;
-    padding: 0 0 0 25px;
-  }
-  .progress-count-icon-white {
-    background-image: asset-url('progress-count-icon-white.png');
-    background-repeat: no-repeat;
-    padding: 0 0 0 25px;
   }
   .flag-icon {
     background-image: asset-url('flag-icon.png');
@@ -318,8 +311,8 @@ button.flagged{
     height: 20px;
   }
   .flag-icon:hover {
-    background-image: asset-url('flag-icon-red.png');
-    color: #C80000!important;
+    background-image: asset-url('flag-icon-green.png');
+    color: #00b67B!important;
     cursor: pointer;
   }
   .flagged {
@@ -327,17 +320,19 @@ button.flagged{
   }
   .flagged:hover {
     background-image: asset-url('flagged-icon.png');
-    color: #C80000!important;
+    color: #00b67B!important;
     cursor: pointer;
   }
   .help-icon {
     background-image: asset-url('help-icon.png');
     background-repeat: no-repeat;
     padding: 0 0 0 25px;
+    margin-left: 10px;
+    background-size: 30% 90%;
   }
   .help-icon:hover {
-    background-image: asset-url('help-icon-red.png');
-    color: #C80000!important;
+    background-image: asset-url('help-icon-green.png');
+    color: #00b67B!important;
     cursor: pointer;
   }
 
