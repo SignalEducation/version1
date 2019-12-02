@@ -41,7 +41,7 @@ module Api
             answers_attributes: [
               :id, :cbe_question_id, :kind, :_destroy,
               content: [
-                :text, :correct, data: %i[value row col colBinding style]
+                :text, :correct, data: [:value, :row, :col, :colBinding, { style: {} }, :format, :fontSizeIdx]
               ]
             ]
           )

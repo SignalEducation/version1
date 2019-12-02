@@ -182,48 +182,38 @@
       },
       numberFormatChanged (format) {
         this.flex.applyCellsStyle({ format: format });
+        this._updateSelection(this.flex, this.flex.selection);
       },
       initializeFlexSheet (flex) {
-        flex.deferUpdate(() => {
-          for (let sheetIdx = 0; sheetIdx < flex.sheets.length; sheetIdx++) {
-            flex.selectedSheetIndex = sheetIdx;
+        this.flex = flex;
+        this.flex.deferUpdate(() => {
+          for (let sheetIdx = 0; sheetIdx < this.flex.sheets.length; sheetIdx++) {
+            this.flex.selectedSheetIndex = sheetIdx;
 
-            this._setInitialData(flex);
+            this._setInitialData(this.flex);
           }
 
-          flex.selectedSheetIndex = 0;
-          setTimeout(() => this._updateSelection(flex, flex.selection), 100);
+          this.flex.selectedSheetIndex = 0;
+          setTimeout(() => this._updateSelection(this.flex, this.flex.selection), 100);
         });
-        flex.selectionChanged.addHandler((sender, args) => {
-          this._updateSelection(flex, args.range);
+        this.flex.selectionChanged.addHandler((sender, args) => {
+          this._updateSelection(this.flex, args.range);
         });
-        flex.lostFocus.addHandler((sender, args) => {
-          this.commitUpdatedData(flex);
+        this.flex.lostFocus.addHandler((sender, args) => {
+          this.commitUpdatedData(this.flex);
         });
-        flex.copied.addHandler((s,e)=>{
+        this.flex.copied.addHandler((s,e)=>{
           this.copyString = s.getClipString();
         });
-        flex.rows.defaultSize = 22;
-        flex.rowHeaders.defaultSize = 100;
-        flex.columns.defaultSize = 75;
-        flex.columnHeaders.rows.defaultSize = 22;
-        this.commitUpdatedData(flex);
-
-        this.flex = flex;
-      },
-      fontChanged(sender) {
-        if (sender.selectedItem && !this._updatingSelection) {
-          this.flex.applyCellsStyle({ fontFamily: sender.selectedItem.value });
-        }
+        this.flex.rows.defaultSize = 22;
+        this.flex.rowHeaders.defaultSize = 100;
+        this.flex.columns.defaultSize = 75;
+        this.flex.columnHeaders.rows.defaultSize = 22;
+        this.commitUpdatedData(this.flex);
       },
       fontSizeChanged(value) {
         if (!this._updatingSelection) {
           this.flex.applyCellsStyle({ fontSize: value });
-        }
-      },
-      formatChanged(sender) {
-        if (sender.selectedIndex >= 0) {
-          this.flex.applyCellsStyle({ format: sender.selectedValue });
         }
       },
       applyCellTextAlign(textAlign) {
@@ -267,18 +257,10 @@
             fontSizeIdx = this._checkFontSize(cellStyle.fontSize);
             cellFormat = cellStyle.format;
           }
-
-          let format;
           if (!!cellFormat) {
-            format = cellFormat;
+            this.format = cellFormat;
           } else {
-            if (wijmo.isInt(cellContent)) {
-              format = '0';
-            } else if (wijmo.isNumber(cellContent)) {
-              format = 'n2';
-            } else if (wijmo.isDate(cellContent)) {
-              format = 'd';
-            }
+            this.format = this._defaultCellFormat(cellContent);
           }
           const colName = flexSheet.columnHeaders.getCellData(0, sel.leftCol);
           const rowName = flexSheet.rowHeaders.getCellData(sel.topRow, 0);
@@ -297,6 +279,15 @@
         }
 
         this._updatingSelection = false;
+      },
+      _defaultCellFormat(cellContent) {
+        if (wijmo.isInt(cellContent)) {
+          return '0';
+        } else if (wijmo.isNumber(cellContent)) {
+          return 'n2';
+        } else if (wijmo.isDate(cellContent)) {
+          return 'd';
+        } else { return '' }
       },
       _checkFontSize(fontSize) {
         let sizeList = this.fontSizeList;
@@ -324,11 +315,31 @@
       _setInitialData (flex) {
         for (let cellIdx = 0; cellIdx < this.spreadsheetData.length; cellIdx += 1) {
           flex.setCellData(this.spreadsheetData[cellIdx].row, this.spreadsheetData[cellIdx].col, this.spreadsheetData[cellIdx].value);
+          if (this.spreadsheetData[cellIdx]['format']) {
+            flex.applyCellsStyle(
+              { format: this.spreadsheetData[cellIdx]['format'] },
+              [ new wjcGrid.CellRange(this.spreadsheetData[cellIdx].row, this.spreadsheetData[cellIdx].col) ]
+            );
+          }
+          if (this.spreadsheetData[cellIdx]['fontSizeIdx']) {
+            flex.applyCellsStyle(
+              { fontSize: this.fontSizeList[this.spreadsheetData[cellIdx].fontSizeIdx].value },
+              [ new wjcGrid.CellRange(this.spreadsheetData[cellIdx].row, this.spreadsheetData[cellIdx].col) ]
+            );
+          }
+          if (this.spreadsheetData[cellIdx]['style']) {
+            flex.applyCellsStyle(
+              this.spreadsheetData[cellIdx]['style'],
+              [ new wjcGrid.CellRange(this.spreadsheetData[cellIdx].row, this.spreadsheetData[cellIdx].col) ]
+            );
+          }
         }
       },
-      _getJsonData(flexSheet){
-        const cells = flexSheet.cells;
+      _getJsonData(){
+        const cells = this.flex.cells;
+        const styledCells = this.flex.selectedSheet._styledCells;
         let cellsJson = [];
+        let index = 0;
         for(let r = 0; r < cells.rows.length; r += 1){
           for(let c = 0; c < cells.columns.length; c += 1){
             let cell = {};
@@ -336,9 +347,19 @@
             cell['row'] = r;
             cell['col'] = c;
             cell['colBinding'] = cells.columns[c].binding;
-            cell['style'] = flexSheet.selectedSheet._styledCells
-            [r * cells.columns.length + c + ''] ? flexSheet.selectedSheet._styledCells[ r * cells.columns.length + c + ''] : null;
+            const cellStyle = styledCells[index]
+            if (cellStyle) {
+              cell['style'] = cellStyle;
+              cell['format'] = cellStyle.format;
+              cell['fontSizeIdx'] = this._checkFontSize(cellStyle.fontSize);
+            } else {
+              cell['format'] = this._defaultCellFormat(cell['value']);
+              cell['fontSizeIdx'] = 5;
+            }
+
+            [r * cells.columns.length + c + ''] ? this.flex.selectedSheet._styledCells[ r * cells.columns.length + c + ''] : null;
             cellsJson.push(cell);
+            index += 1;
           }
         }
         return cellsJson;
