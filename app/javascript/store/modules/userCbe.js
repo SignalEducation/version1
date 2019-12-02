@@ -33,12 +33,13 @@ const actions = {
   },
 };
 
-const examPageObject = (description, type, param, state = 'Unseen') => ({
+const examPageObject = (description, type, param, page, state = 'Unseen') => ({
   description,
   state,
   flagged: false,
   type,
   param,
+  page
 });
 
 const functions = {
@@ -50,7 +51,7 @@ const functions = {
       examPages.push(examPageObject(section.name, 'sections', section.id, null));
       section.questions.forEach((question) => {
         page += 1;
-        examPages.push(examPageObject(`Question ${page}`, 'questions', question.id));
+        examPages.push(examPageObject(`Question ${page}`, 'questions', question.id, page));
       });
     });
 

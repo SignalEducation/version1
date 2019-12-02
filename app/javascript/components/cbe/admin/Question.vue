@@ -210,6 +210,10 @@ export default {
       type: Number,
       default: null,
     },
+    sectionKind: {
+      type: String,
+      default: null,
+    },
     scenarioId: {
       type: Number,
       default: null,
@@ -253,14 +257,7 @@ export default {
       questionSortingOrder: this.initialSortingOrder,
       questionAnswers: this.initialAnswers || [],
       selectedSelectQuestion: null,
-      questionKinds: [
-        'dropdown_list',
-        'fill_in_the_blank',
-        'multiple_choice',
-        'multiple_response',
-        'spreadsheet',
-        'open',
-      ],
+      questionKinds: ['dropdown_list', 'fill_in_the_blank', 'multiple_choice', 'multiple_response', 'spreadsheet', 'open'],
       submitStatus: null,
       deleteStatus: null,
     };
@@ -318,7 +315,21 @@ export default {
       },
     },
   },
+  created() {
+    this.loadQuestionsKind(this.sectionKind);
+  },
   methods: {
+    loadQuestionsKind(sectionKind) {
+      switch (sectionKind) {
+        case 'objective':
+          this.questionKinds = ['dropdown_list', 'fill_in_the_blank', 'multiple_choice', 'multiple_response'];
+          break;
+        case 'constructed_response':
+          this.questionKinds = ['spreadsheet', 'open'];
+          break;
+        default:
+      }
+    },
     saveQuestion() {
       this.$v.$touch();
       if (this.$v.$invalid) {

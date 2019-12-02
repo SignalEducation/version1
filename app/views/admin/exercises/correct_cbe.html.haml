@@ -47,4 +47,5 @@
         .box-item.table-box
           %div
             =link_to t('views.general.back'), admin_exercises_path, class: 'btn btn-warning btn-xs'
-            =link_to t('views.general.return'), return_cbe_admin_exercise_path(@exercise.id), data: {confirm: 'Do you want to finish your correction and return it to user?'}, method: :post, class: 'btn btn-primary btn-xs'
+            -unless @exercise.returned?
+              =link_to t('views.general.return'), return_cbe_admin_exercise_path(@exercise.id), data: {confirm: 'Do you want to finish your correction and return it to user?'}, method: :post, class: 'btn btn-primary btn-xs'

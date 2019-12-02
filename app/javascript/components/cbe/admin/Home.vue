@@ -108,7 +108,7 @@
                       <Section
                         :id="parseInt(section.id)"
                         :initial-name="section.name"
-                        :initial-score="section.score"
+                        :initial-score="parseInt(section.score)"
                         :initial-sorting-order="section.sorting_order"
                         :initial-kind="section.kind"
                         :initial-content="section.content"
@@ -171,6 +171,7 @@
                             <Question
                               :id="question.id"
                               :section-id="section.id"
+                              :section-kind="section.kind"
                               :initial-content="question.content"
                               :initial-solution="question.solution"
                               :initial-score="question.score"
@@ -213,6 +214,7 @@
                     <b-card-body>
                       <Question
                         :section-id="section.id"
+                        :section-kind="section.kind"
                         :initial-sorting-order="sortingOrderValue(section.questions)"
                         @add-question="updateQuestions"
                       />
@@ -304,6 +306,7 @@
                                           <Question
                                             :id="question.id"
                                             :section-id="section.id"
+                                            :section-kind="section.kind"
                                             :scenario-id="scenario.id"
                                             :initial-solution="question.solution"
                                             :initial-sorting-order="question.sorting_order"
@@ -348,8 +351,9 @@
                                 <b-card-body>
                                   <Question
                                     :section-id="section.id"
+                                    :section-kind="section.kind"
                                     :scenario-id="scenario.id"
-                                    :initial-sorting-order="sortingOrderValue(scenario.questions)"
+                                    :initial-sorting-order="sectionSortingOrderValue(section)"
                                     @add-question="updateScenarioQuestions"
                                   />
                                 </b-card-body>
@@ -484,7 +488,7 @@ export default {
       });
       const currentSection = this.sections[sectionIndex];
       if (currentSection.hasOwnProperty('scenarios')) {
-        console.log(currentSection);
+        // console.log(currentSection);
       } else {
         // This $set syntax is required by Vue to ensure the section.questions array is reactive
         // It is inside the conditional to ensure section.questions is not reset to empty
@@ -564,6 +568,20 @@ export default {
 
       return order;
     },
+    sectionSortingOrderValue(section){
+      const totalQuestions = section.scenarios.reduce(this.totalQuestions, 0);
+      return totalQuestions + 1;
+    },
+    totalQuestions(sum, scenario){
+      let totalQuestions = 0
+      if(scenario.questions){
+        totalQuestions = scenario.questions.length;
+      } else {
+        totalQuestions = 0
+      }
+
+      return totalQuestions + sum;
+    }
   },
 };
 </script>

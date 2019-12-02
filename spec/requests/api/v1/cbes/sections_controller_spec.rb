@@ -27,6 +27,7 @@ RSpec.describe 'Api::V1::Cbe::SectionsController', type: :request do
                                                             kind
                                                             sorting_order
                                                             content
+                                                            scenarios
                                                             questions])
       end
     end
@@ -71,6 +72,7 @@ RSpec.describe 'Api::V1::Cbe::SectionsController', type: :request do
                                                   kind
                                                   sorting_order
                                                   content
+                                                  scenarios
                                                   questions])
       end
     end
@@ -122,6 +124,7 @@ RSpec.describe 'Api::V1::Cbe::SectionsController', type: :request do
                                                   kind
                                                   sorting_order
                                                   content
+                                                  scenarios
                                                   questions])
       end
     end
