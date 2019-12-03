@@ -32,7 +32,7 @@ export default {
     };
   },
   methods: {
-    syncSpreadsheetData(jsonData) {
+    syncSpreadsheetData(jsonData, sheetData) {
       this.$store.dispatch('userCbe/recordAnswer', {
         id: this.questionId,
         score: 0,
@@ -41,6 +41,7 @@ export default {
         answers_attributes: [{
           content: {
             data: jsonData,
+            sheetData,
           },
         }],
       });
