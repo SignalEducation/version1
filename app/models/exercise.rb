@@ -27,7 +27,7 @@
 class Exercise < ApplicationRecord
   include Filterable
   belongs_to :product
-  belongs_to :order
+  belongs_to :order, optional: true
   belongs_to :user, inverse_of: :exercises
   belongs_to :corrector, class_name: 'User', foreign_key: 'corrector_id', optional: true, inverse_of: :exercises
 
