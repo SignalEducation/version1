@@ -79,7 +79,7 @@
     props: {
       initialData: {
         type: Object,
-        default: () => ({ kind: 'spreadsheet', content: { data: [] }}),
+        default: () => ({ kind: 'spreadsheet', content: { data: [], sheetData: {} }}),
       },
     },
     computed: {
@@ -90,6 +90,13 @@
           return getData();
         }
       },
+      spreadsheetLayoutData: function() {
+        if (this.initialData.content && this.initialData.content.sheetData) {
+          return this.initialData.content.sheetData;
+        } else {
+          return { rows: {}, cols: {} };
+        }
+      }
     },
     data() {
       return {
@@ -232,8 +239,8 @@
         this.isItalic = !this.isItalic;
       },
       commitUpdatedData(flexSheet){
-        const cellsJson = this._getJsonData(flexSheet);
-        this.$emit('spreadsheet-updated', cellsJson);
+        const { cellsJson, sheetData } = this._getJsonData(flexSheet);
+        this.$emit('spreadsheet-updated', cellsJson, sheetData);
       },
       resetSpreadsheet() {
         this._setInitialData(this.flex);
@@ -311,6 +318,26 @@
           }
         }
       },
+      _setCols(flex) {
+        const cols = this.spreadsheetLayoutData['cols']
+        if (!cols) { return; }
+
+        Object.entries(cols).map((col) => {
+          if (col[1]['width']) {
+            flex.columns[col[0]].width = col[1]['width']
+          }
+        })
+      },
+      _setRows(flex) {
+        const rows = this.spreadsheetLayoutData['rows'];
+        if (!rows) { return; }
+
+        Object.entries(rows).map((row) => {
+          if (row[1]['height']) {
+            flex.rows[row[0]].height = row[1]['height']
+          }
+        })
+      },
       _setInitialData (flex) {
         for (let cellIdx = 0; cellIdx < this.spreadsheetData.length; cellIdx += 1) {
           flex.setCellData(this.spreadsheetData[cellIdx].row, this.spreadsheetData[cellIdx].col, this.spreadsheetData[cellIdx].value);
@@ -333,14 +360,19 @@
             );
           }
         }
+        this._setRows(flex);
+        this._setCols(flex);
       },
       _getJsonData(){
-        const cells = this.flex.cells;
+        const {cells, rows, columns} = this.flex;
         const styledCells = this.flex.selectedSheet._styledCells;
         let cellsJson = [];
+        let sheetData = { rows: {}, cols: {} };
         let index = 0;
         for(let r = 0; r < cells.rows.length; r += 1){
+          sheetData.rows[r] = { height: rows[r].height };
           for(let c = 0; c < cells.columns.length; c += 1){
+            sheetData.cols[c] = { width: columns[c].width };
             let cell = {};
             cell['value'] = cells.getCellData(r,c);
             cell['row'] = r;
@@ -361,7 +393,7 @@
             index += 1;
           }
         }
-        return cellsJson;
+        return { cellsJson, sheetData };
       }
     }
   };
