@@ -79,7 +79,7 @@
           <TinyEditor
             :class="{error: shouldAppendErrorClass($v.agreementContent), valid: shouldAppendValidClass($v.agreementContent)}"
             :field-model.sync="agreementContent"
-            :aditional-toolbar-options="['fullscreen code']"
+            :aditional-toolbar-options="['fullscreen code image']"
             :editor-id="'detailsEditor'"
             @blur="$v.agreementContent.$touch()"
           />

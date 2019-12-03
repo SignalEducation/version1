@@ -182,7 +182,6 @@
       },
       numberFormatChanged (format) {
         this.flex.applyCellsStyle({ format: format });
-        this._updateSelection(this.flex, this.flex.selection);
       },
       initializeFlexSheet (flex) {
         this.flex = flex;

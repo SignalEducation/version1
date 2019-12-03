@@ -47,7 +47,7 @@
           <label for="pageContent">Page Content</label>
           <TinyEditor
             :field-model.sync="content"
-            :aditional-toolbar-options="['fullscreen code']"
+            :aditional-toolbar-options="['fullscreen code image']"
             :editor-id="'introPagesEditor' + id"
           />
 
