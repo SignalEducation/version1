@@ -5,14 +5,19 @@
         <label for="scenarioName">Name</label>
         <div class="input-group input-group-lg">
           <input
-              v-model="scenarioName"
-              @blur="$v.scenarioName.$touch()"
-              :class="'form-control ' + {error: shouldAppendErrorClass($v.scenarioName), valid: shouldAppendValidClass($v.scenarioName)}"
-              id="scenarioName"
-              placeholder="Name"
-          />
+            id="scenarioName"
+            v-model="scenarioName"
+            :class="'form-control ' + {error: shouldAppendErrorClass($v.scenarioName), valid: shouldAppendValidClass($v.scenarioName)}"
+            placeholder="Name"
+            @blur="$v.scenarioName.$touch()"
+          >
         </div>
-        <p v-if="!$v.scenarioName.required && $v.scenarioName.$error" class="error-message">field is required</p>
+        <p
+          v-if="!$v.scenarioName.required && $v.scenarioName.$error"
+          class="error-message"
+        >
+          field is required
+        </p>
       </div>
     </div>
 
@@ -21,16 +26,18 @@
         <label for="scenarioContent">Content</label>
         <div id="scenarioContent">
           <TinyEditor
-            @blur="$v.scenarioContent.$touch()"
             :class="{error: shouldAppendErrorClass($v.scenarioContent), valid: shouldAppendValidClass($v.scenarioContent)}"
-            :fieldModel.sync="scenarioContent"
-            :aditionalToolbarOptions="['fullscreen code']"
-            :editorId="'scenarioEditor' + '-' + sectionId + '-' + id"
+            :field-model.sync="scenarioContent"
+            :aditional-toolbar-options="['fullscreen code image']"
+            :editor-id="'scenarioEditor' + '-' + sectionId + '-' + id"
+            @blur="$v.scenarioContent.$touch()"
           />
           <p
             v-if="!$v.scenarioContent.required && $v.scenarioContent.$error"
             class="error-message"
-          >field is required</p>
+          >
+            field is required
+          </p>
         </div>
       </div>
     </div>
@@ -38,45 +45,79 @@
     <div class="form-group">
       <button
         v-if="id"
-        v-on:click="updateScenario"
         :disabled="submitStatus === 'PENDING'"
         class="btn btn-primary"
-      >Update Scenario</button>
+        @click="updateScenario"
+      >
+        Update Scenario
+      </button>
+      <button
+        v-if="id"
+        class="btn btn-danger"
+        @click="deleteScenario"
+      >
+        Delete Scenario
+      </button>
       <button
         v-else
-        v-on:click="saveScenario"
         :disabled="submitStatus === 'PENDING'"
         class="btn btn-primary"
-      >Save Scenario</button>
-      <p class="typo__p" v-if="submitStatus === 'ERROR'">Please fill the form correctly.</p>
-      <p class="typo__p" v-if="submitStatus === 'PENDING'">Sending...</p>
+        @click="saveScenario"
+      >
+        Save Scenario
+      </button>
+      <p
+        v-if="submitStatus === 'ERROR'"
+        class="typo__p"
+      >
+        Please fill the form correctly.
+      </p>
+      <p
+        v-if="submitStatus === 'PENDING'"
+        class="typo__p"
+      >
+        Sending...
+      </p>
     </div>
   </div>
 </template>
 
 <script>
 import axios from "axios";
-import TinyEditor from "../../TinyEditor";
 import { validationMixin } from "vuelidate";
 import { required } from "vuelidate/lib/validators";
+import TinyEditor from "../../TinyEditor.vue";
 
 export default {
-  props: {
-    sectionId: Number,
-    id: Number,
-    initialName: String,
-    initialContent: String
-  },
   components: {
     TinyEditor
   },
   mixins: [validationMixin],
-  data: function() {
+  props: {
+    id: {
+      type: Number,
+      default: null,
+    },
+    sectionId: {
+      type: Number,
+      default: null,
+    },
+    initialName: {
+      type: String,
+      default: '',
+    },
+    initialContent: {
+      type: String,
+      default: '',
+    },
+  },
+  data() {
     return {
       scenarioDetails: {},
       scenarioName: this.initialName,
       scenarioContent: this.initialContent,
-      submitStatus: null
+      submitStatus: null,
+      deleteStatus: null
     };
   },
   validations: {
@@ -88,16 +129,16 @@ export default {
     }
   },
   methods: {
-    saveScenario: function() {
+    saveScenario() {
       this.$v.$touch();
       if (this.$v.$invalid) {
         this.submitStatus = "ERROR";
       } else {
         this.submitStatus = "PENDING";
         this.scenarioDetails = {};
-        this.scenarioDetails["name"] = this.scenarioName;
-        this.scenarioDetails["content"] = this.scenarioContent;
-        this.scenarioDetails["cbe_section_id"] = this.sectionId;
+        this.scenarioDetails.name = this.scenarioName;
+        this.scenarioDetails.content = this.scenarioContent;
+        this.scenarioDetails.cbe_section_id = this.sectionId;
 
         axios
           .post(`/api/v1/sections/${this.sectionId}/scenarios/`, {
@@ -105,7 +146,7 @@ export default {
           })
           .then(response => {
             this.createdScenario = response.data;
-            this.scenarioDetails["id"] = this.createdScenario.id;
+            this.scenarioDetails.id = this.createdScenario.id;
             this.$emit("add-scenario", this.scenarioDetails);
             this.scenarioDetails = {};
             this.scenarioName = null;
@@ -118,15 +159,15 @@ export default {
           });
       }
     },
-    updateScenario: function() {
+    updateScenario() {
       this.$v.$touch();
       if (this.$v.$invalid) {
         this.submitStatus = "ERROR";
       } else {
         this.submitStatus = "PENDING";
-        this.scenarioDetails["name"] = this.scenarioName;
-        this.scenarioDetails["content"] = this.scenarioContent;
-        this.scenarioDetails["cbe_section_id"] = this.sectionId;
+        this.scenarioDetails.name = this.scenarioName;
+        this.scenarioDetails.content = this.scenarioContent;
+        this.scenarioDetails.cbe_section_id = this.sectionId;
 
         axios
           .patch(`/api/v1/scenarios/${this.id}`, {
@@ -134,7 +175,7 @@ export default {
           })
           .then(response => {
             this.updatedScenario = response.data;
-            this.scenarioDetails["id"] = this.updatedScenario.id;
+            this.scenarioDetails.id = this.updatedScenario.id;
             this.$emit("update-content", this.TinyEditor);
             this.scenarioDetails = {};
             this.name = this.scenarioName;
@@ -145,6 +186,31 @@ export default {
           .catch(error => {
             this.submitStatus = "ERROR";
           });
+      }
+    },
+    deleteScenario() {
+      if(confirm("Do you really want to delete?")){
+        this.$v.$touch();
+        if (this.$v.$invalid) {
+          this.updateStatus = 'ERROR';
+        } else {
+          this.deleteStatus = 'PENDING';
+          const scenarioId = this.id;
+          const {sectionId} = this;
+
+
+          axios
+            .delete(`/api/v1/scenarios/${scenarioId}`)
+            .then(response => {
+              this.$emit('rm-scenario', { scenarioId, sectionId });
+              this.updateStatus = 'OK';
+              this.$v.$reset();
+            })
+            .catch(error => {
+              this.updateStatus = 'ERROR';
+              console.log(error);
+            });
+        }
       }
     },
     shouldAppendValidClass(field) {

@@ -1,0 +1,51 @@
+.container-fluid
+  %header.management-console-section
+    %h1
+      =t('views.exercises.admin.correct_cbe.h1') + " - #{@cbe&.name}"
+    %p
+      =@cbe_user_log.user.email
+
+  %section.pb-7
+    .row
+      .col-sm-12
+        .box-item.table-box
+          %div.cbe_score
+            ="Current Score: #{@cbe_user_log.score}"
+
+    %h3='Questions'
+    .box-item.table-box
+      .row
+        .col-12.col-md-3.mb-4
+          #v-pills-tab.nav.flex-column.nav-pills{"aria-orientation" => "vertical", :role => "tablist"}
+            -@cbe_user_log.questions.each_with_index do |question, index|
+              %a#v-pills-home-tab.nav-link.mb-3{"aria-controls" => "v-pills-#{question.id}", "aria-selected" => index == 0 ? 'true' : 'false', "data-toggle" => "pill", :href => "#v-pills-#{question.id}", :role => "tab", class: index == 0 ? 'active' : ''}
+                ="Question #{index+1}"
+                =question_title_class(question)
+
+        .col-12.col-md-9
+          #v-pills-tabContent.tab-content
+            -@cbe_user_log.questions.each_with_index do |question, index|
+              .tab-pane.fade{id: "v-pills-#{question.id}", "aria-labelledby" => "v-pills-#{question.id}-tab", :role => "tabpanel", class: index == 0 ? 'active show' : ''}
+                .h4=question.cbe_question.kind.humanize
+                .question_content.pb-5
+                  .h5
+                    Question Content
+                  =raw(question.cbe_question.content)
+
+                .question_solution.pb-5
+                  .h5
+                    Solution Content
+                  =raw(question.cbe_question.solution)
+
+                .question_answers.pb-5
+                  .h5
+                    Answer Content
+                  =render_admin_answers(question)
+
+    .row
+      .col-sm-12
+        .box-item.table-box
+          %div
+            =link_to t('views.general.back'), admin_exercises_path, class: 'btn btn-warning btn-xs'
+            -unless @exercise.returned?
+              =link_to t('views.general.return'), return_cbe_admin_exercise_path(@exercise.id), data: {confirm: 'Do you want to finish your correction and return it to user?'}, method: :post, class: 'btn btn-primary btn-xs'

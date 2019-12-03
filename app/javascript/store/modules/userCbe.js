@@ -5,6 +5,7 @@ const state = {
   user_cbe_data: {
     user_id: null,
     cbe_id: null,
+    exercise_id: null,
     questions: {},
     exam_pages: {
       state: null,
@@ -32,12 +33,13 @@ const actions = {
   },
 };
 
-const examPageObject = (description, type, param, state = 'Unseen') => ({
+const examPageObject = (description, type, param, page, state = 'Unseen') => ({
   description,
   state,
   flagged: false,
   type,
   param,
+  page
 });
 
 const functions = {
@@ -49,7 +51,7 @@ const functions = {
       examPages.push(examPageObject(section.name, 'sections', section.id, null));
       section.questions.forEach((question) => {
         page += 1;
-        examPages.push(examPageObject(`Question ${page}`, 'questions', question.id));
+        examPages.push(examPageObject(`Question ${page}`, 'questions', question.id, page));
       });
     });
 
@@ -61,6 +63,7 @@ const mutations = {
   setUserCbeData(state, newDat) {
     state.user_cbe_data.cbe_id = newDat.cbe_id;
     state.user_cbe_data.user_id = newDat.user_id;
+    state.user_cbe_data.exercise_id = newDat.exercise_id;
     state.user_cbe_data.exam_pages = functions.reviewPageLinks(newDat.cbe_data.sections);
   },
   setUserLog(state, id) {

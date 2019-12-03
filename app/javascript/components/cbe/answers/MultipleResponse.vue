@@ -1,14 +1,20 @@
 <template>
   <section>
-    <div class="answers" v-for="answer in answers" :key="answer.id">
+    <div
+      v-for="answer in answersData"
+      :key="answer.id"
+      class="answers"
+    >
       <input
-        type="checkbox"
         :id="answer.id"
-        :value="{ id: question_id, answers: { cbe_answer_id: answer.id, content: answer.content, cbe_question_id: question_id } }"
         v-model="question"
-      />
+        type="checkbox"
+        :value="{ id: questionId,
+                  cbe_question_id: questionId,
+                  answers_attributes: { cbe_answer_id: answer.id, content: answer.content } }"
+      >
       <label :for="answer.id">{{ answer.content['text'] }}</label>
-      <br />
+      <br>
     </div>
   </section>
 </template>
@@ -16,47 +22,85 @@
 <script>
 export default {
   props: {
-    answers: {},
-    question_id: Number
+    answersData: {
+      type: Array,
+      required: true,
+    },
+    questionId: {
+      type: Number,
+      required: true,
+    },
+    questionScore: {
+      type: Number,
+      required: true,
+    },
   },
   data() {
     return {
-      question: this.getPickedValue()
+      question: this.getPickedValue(),
     };
   },
   watch: {
-    question(newValue, oldValue) {
+    question(newValue) {
       this.$store.dispatch("userCbe/recordAnswer", this.getQuestionFormated(newValue));
     }
   },
   methods: {
     getPickedValue() {
-      var initial_value = this.$store.state.userCbe.user_cbe_data.questions[
-        this.question_id
+      const initialValue = this.$store.state.userCbe.user_cbe_data.questions[
+        this.questionId
       ];
-      if (initial_value != null) {
-        return this.undoQuestionFormat(initial_value);
-      } else {
-        return [];
+      if (initialValue != null) {
+        return this.undoQuestionFormat(initialValue);
       }
+
+      return [];
     },
     // format value from checkbox to fit in same format as others answers components.
     getQuestionFormated(questions) {
-      var question = {};
-      question.id = [...new Set(questions.map(a => a.id))][0];
-      question.answers = questions.map(a => a.answers);
+      const question = {};
+      const check = this.checkAnswers();
+
+      question.id = this.questionId;
+      question.cbe_question_id = this.questionId;
+      question.score = (check ? this.questionScore : 0);
+      question.correct = check;
+      question.answers_attributes = questions.map(a => a.answers_attributes);
 
       return question;
     },
     // undo format value from vuex to set in component.
     undoQuestionFormat(question) {
-      var questions = [];
-      question.answers.filter(answers => {
-        questions.push({ id: question.id, answers: answers })
+      const questions = [];
+
+      question.answers_attributes.filter(answers_attributes => {
+        questions.push({ id: question.id, cbe_question_id: this.questionId, answers_attributes })
       });
 
       return questions;
     },
+    checkAnswers(){
+      const check = false;
+
+      if( this.question.length > 0 ) {
+        const pickedAnswers = this.question.
+                                map(a => a.answers_attributes).
+                                map(answer => answer.content.correct);
+        // checking if all picked answers are correct
+        if (pickedAnswers.some(x => x === false)){
+          return false
+        }
+
+        const correctAnswers = this.answersData.
+                                 filter(answer => answer.content.correct === true).
+                                 map(answer => answer.content.correct);
+
+        // checking if all the correct answers are picked.
+        return correctAnswers.length === pickedAnswers.length;
+      }
+
+      return check;
+    }
   }
 };
 </script>

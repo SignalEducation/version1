@@ -27,7 +27,9 @@ RSpec.describe 'Api::V1::CbesController', type: :request do
                                                             agreement_content
                                                             active
                                                             score
+                                                            subject_course_id
                                                             introduction_pages
+                                                            resources
                                                             sections
                                                             questions
                                                             subject_course
@@ -66,17 +68,19 @@ RSpec.describe 'Api::V1::CbesController', type: :request do
         expect(body['id']).to eq(cbe.id)
         expect(body['name']).to eq(cbe.name)
         expect([body.keys]).to contain_exactly(%w[id
-                                                name
-                                                title
-                                                content
-                                                agreement_content
-                                                active
-                                                score
-                                                introduction_pages
-                                                sections
-                                                questions
-                                                subject_course
-                                                exam_body])
+                                                  name
+                                                  title
+                                                  content
+                                                  agreement_content
+                                                  active
+                                                  score
+                                                  subject_course_id
+                                                  introduction_pages
+                                                  resources
+                                                  sections
+                                                  questions
+                                                  subject_course
+                                                  exam_body])
       end
     end
   end
@@ -107,7 +111,9 @@ RSpec.describe 'Api::V1::CbesController', type: :request do
                                                   agreement_content
                                                   active
                                                   score
+                                                  subject_course_id
                                                   introduction_pages
+                                                  resources
                                                   sections
                                                   questions
                                                   subject_course
@@ -160,7 +166,9 @@ RSpec.describe 'Api::V1::CbesController', type: :request do
                                                   agreement_content
                                                   active
                                                   score
+                                                  subject_course_id
                                                   introduction_pages
+                                                  resources
                                                   sections
                                                   questions
                                                   subject_course

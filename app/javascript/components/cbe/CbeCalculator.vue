@@ -1,51 +1,46 @@
 <template>
-  <div class="cbe-calculator" id="cbe-calculator" v-show="modalIsOpen" >
-    <Modal @close="toggleResetModal()">
-      <h3 slot="header">
-        Calculator
-      </h3>
-      <p slot="body">
+  <div id="cbe-modals">
+    <b-nav-text
+      class="calculator-icon"
+      @click="modalIsOpen = !modalIsOpen"
+    >
+      Calculator
+    </b-nav-text>
+
+    <VueWindow
+      :window-header="'Calculator'"
+      :window-width="520"
+      :window-height="370"
+      :window-is-open="modalIsOpen"
+      @updateWindowClose="handleChange"
+    >
+      <div
+        slot="body"
+      >
         <Calculator />
-      </p>
-    </Modal>
+      </div>
+    </VueWindow>
   </div>
 </template>
 
 <script>
 import Calculator from '../Calculator.vue';
-import Modal from '../../lib/Modal/index.vue';
+import VueWindow from '../VueWindow.vue'
 
 export default {
   components: {
     Calculator,
-    Modal,
+    VueWindow,
   },
   data() {
     return {
-      modalIsOpen: true,
+      modalIsOpen: false,
     };
   },
   methods: {
-    toggleResetModal() {
-      this.modalIsOpen = !this.modalIsOpen;
-    },
+    handleChange(value) {
+      this.modalIsOpen = value
+    }
   },
 };
 </script>
-
-<style>
-.cbe-calculator .modal-container {
-  width: 560px !important;
-  height: 400px;
-}
-
-.cbe-calculator .modal-mask .modal-wrapper .modal-container .modal-header {
-  display: block;
-  height: 172px;
-}
-
-.cbe-calculator .modal-mask .modal-wrapper .modal-container .modal-header h3 {
-  color: #000000 !important;
-  font-size: initial !important;
-}
-</style>

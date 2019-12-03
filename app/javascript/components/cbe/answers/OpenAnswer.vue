@@ -2,9 +2,9 @@
   <section>
     <div class="answers">
       <TinyEditor
+        :field-model.sync="question"
+        :aditional-toolbar-options="[]"
         @blur="$v.question.$touch()"
-        :fieldModel.sync="question"
-        :aditionalToolbarOptions="[]"
       />
     </div>
   </section>
@@ -17,7 +17,10 @@ export default {
     TinyEditor
   },
   props: {
-    question_id: Number
+    questionId: {
+      type: Number,
+      default: null,
+    }
   },
   data() {
     return {
@@ -25,28 +28,30 @@ export default {
     };
   },
   watch: {
-    question(newValue, oldValue) {
+    question(newValue) {
       this.$store.dispatch("userCbe/recordAnswer", {
-        id: this.question_id,
-        answers: {
+        id: this.questionId,
+        score: 0,
+        correct: null,
+        cbe_question_id: this.questionId,
+        answers_attributes: [{
           content: {
-            text: newValue
+            text: newValue,
           },
-          cbe_question_id: this.question_id
-        }
+        }]
       });
     }
   },
   methods: {
     getPickedValue() {
-      var initial_value = this.$store.state.userCbe.user_cbe_data.questions[
-        this.question_id
+      const initialValue = this.$store.state.userCbe.user_cbe_data.questions[
+        this.questionId
       ];
-      if (initial_value != null) {
-        return initial_value;
-      } else {
-        return "";
+      if (initialValue != null) {
+        return initialValue.answers_attributes[0].content.text;
       }
+        return "";
+
     }
   }
 };

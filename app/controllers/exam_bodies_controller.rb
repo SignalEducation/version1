@@ -62,6 +62,8 @@ class ExamBodiesController < ApplicationController
                                       :constructed_response_intro_text,
                                       :logo_image, :registration_form_heading,
                                       :login_form_heading, :landing_page_h1,
-                                      :landing_page_paragraph)
+                                      :landing_page_paragraph, :products_heading,
+                                      :products_subheading, :products_seo_title,
+                                      :products_seo_description, :has_products)
   end
 end

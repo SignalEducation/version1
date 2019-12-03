@@ -1,12 +1,11 @@
 -if current_user.exercises.any?
 
   -if current_user.exercises.with_states([:submitted, :correcting]).any?
-    %h2 Submitted Exercises
     -current_user.exercises.with_states([:submitted, :correcting]).each do |exercise|
       .card.card-horizontal.flex-md-row{style: 'margin-bottom: 1.5rem;'}
         .card-body.d-flex.flex-column.justify-content-center
           %small.card-category.mb-2{style: 'color: #5e90ef'}
-            =exercise.state
+            =exercise.product.name_by_type
 
           %h5.card-title.mb-1
             %span.mr-1
@@ -18,29 +17,26 @@
           =link_to 'View Exercise', exercise, class: 'btn btn-primary'
 
   -if current_user.exercises.with_state(:pending).any?
-    %h2 Pending Exercises
     -current_user.exercises.with_state(:pending).each do |exercise|
       .card.card-horizontal.flex-md-row{style: 'margin-bottom: 1.5rem;'}
         .card-body.d-flex.flex-column.justify-content-center
           %small.card-category.mb-2{style: 'color: #5e90ef'}
-            =exercise.product.name
-
+            =exercise.product.name_by_type
           %h5.card-title.mb-1
             %span.mr-1
-              -if exercise.product.mock_exam?
-                Start your mock exam
-              -else
-                Submit work for correction
+              =pending_exercise_message(exercise)
         .card-footer.d-flex.justify-content-center.align-items-center{style: 'background-color: #fff; border-top: none;'}
-          =link_to 'Begin Exercise', edit_exercise_path(exercise), class: 'btn btn-primary'
+          -if exercise.product.cbe?
+            =link_to 'Begin CBE', exercise_cbes_path(id: exercise.product.cbe.id, exercise_id: exercise.id), class: 'btn btn-primary'
+          -else
+            =link_to 'Begin Exercise', edit_exercise_path(exercise), class: 'btn btn-primary'
 
   -if current_user.exercises.with_states(:returned).any?
-    %h2 Returned Exercises
     -current_user.exercises.with_states(:returned).each do |exercise|
       .card.card-horizontal.flex-md-row{style: 'margin-bottom: 1.5rem;'}
         .card-body.d-flex.flex-column.justify-content-center
           %small.card-category.mb-2{style: 'color: #5e90ef'}
-            =exercise.product.name
+            =exercise.product.name_by_type
 
           %h5.card-title.mb-1
             %span.mr-1

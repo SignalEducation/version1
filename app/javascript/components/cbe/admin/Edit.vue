@@ -38,14 +38,18 @@
     </div>
 
     <div>
-      <b-collapse id="collapse-cbe" v-model="showCbeDetails" class="mb-2">
+      <b-collapse
+        id="collapse-cbe"
+        v-model="showCbeDetails"
+        class="mb-2"
+      >
         <b-card>
           <Details
             :id="edit_cbe_data.id"
-            :initialName="edit_cbe_data.name"
-            :initialCourseId="edit_cbe_data.subject_course.id"
-            :initialAgreementContent="edit_cbe_data.agreement_content"
-            :initialActive="edit_cbe_data.active"
+            :initial-name="edit_cbe_data.name"
+            :initial-course-id="edit_cbe_data.subject_course_id"
+            :initial-agreement-content="edit_cbe_data.agreement_content"
+            :initial-active="edit_cbe_data.active"
           />
         </b-card>
       </b-collapse>
@@ -61,11 +65,16 @@
               v-for="page in edit_cbe_data.introduction_pages"
               :id="page.id"
               :key="'intro-page-tab-' + page.id"
-              :initialTitle="page.title"
-              :initialKind="page.kind"
-              :initialContent="page.content"
+              :initial-title="page.title"
+              :initial-kind="page.kind"
+              :initial-sorting-order="page.sorting_order"
+              :initial-content="page.content"
+              @rm-introduction-page="removePage"
             />
-            <IntroductionPage @add-introduction-page="updatePages" />
+            <IntroductionPage
+              :initial-sorting-order="sortingOrderValue(edit_cbe_data.introduction_pages)"
+              @add-introduction-page="updatePages"
+            />
           </b-tabs>
         </b-card>
       </b-collapse>
@@ -78,6 +87,7 @@
         <Resources
           :resources="edit_cbe_data.resources"
           @add-resource="updateResources"
+          @rm-resource="removeResource"
         />
       </b-collapse>
 
@@ -98,10 +108,12 @@
                   <b-card>
                     <Section
                       :id="section.id"
-                      :initialName="section.name"
-                      :initialScore="section.score"
-                      :initialKind="section.kind"
-                      :initialContent="section.content"
+                      :initial-name="section.name"
+                      :initial-score="section.score"
+                      :initial-sorting-order="section.sorting_order"
+                      :initial-kind="section.kind"
+                      :initial-content="section.content"
+                      @rm-section="removeSection"
                     />
                   </b-card>
                 </b-collapse>
@@ -135,7 +147,8 @@
                 >
                   <b-card-header
                     header-tag="header"
-                    class="p-1" role="tab"
+                    class="p-1"
+                    role="tab"
                   >
                     <b-button
                       v-b-toggle="'accordion-' + question.id"
@@ -143,7 +156,7 @@
                       href="#"
                       variant="secondary"
                     >
-                      Question - {{ question.id }}
+                      Question - {{ question.sorting_order }}
                     </b-button>
                   </b-card-header>
 
@@ -158,10 +171,14 @@
                           <Question
                             :id="question.id"
                             :section-id="section.id"
-                            :initialContent="question.content"
-                            :initialScore="question.score"
-                            :initialKind="question.kind"
-                            :initialAnswers="question.answers"
+                            :section-kind="section.kind"
+                            :initial-content="question.content"
+                            :initial-solution="question.solution"
+                            :initial-score="question.score"
+                            :initial-sorting-order="question.sorting_order"
+                            :initial-kind="question.kind"
+                            :initial-answers="question.answers"
+                            @rm-question="removeQuestion"
                           />
                         </div>
                       </div>
@@ -197,6 +214,8 @@
                   <b-card-body>
                     <Question
                       :section-id="section.id"
+                      :section-kind="section.kind"
+                      :initial-sorting-order="sortingOrderValue(section.questions)"
                       @add-question="updateQuestions"
                     />
                   </b-card-body>
@@ -229,8 +248,10 @@
                                 <b-card>
                                   <Scenario
                                     :id="scenario.id"
-                                    :initialName="scenario.name"
-                                    :initialContent="scenario.content"
+                                    :section-id="scenario.section_id"
+                                    :initial-name="scenario.name"
+                                    :initial-content="scenario.content"
+                                    @rm-scenario="removeScenario"
                                   />
                                 </b-card>
                               </b-collapse>
@@ -248,7 +269,7 @@
                               </b-button>
                             </div>
                           </div>
-                          <br >
+                          <br>
                           <div
                             v-for="question in scenario.questions"
                             :key="question.id"
@@ -268,7 +289,7 @@
                                   href="#"
                                   variant="secondary"
                                 >
-                                  Question - {{ question.id }}
+                                  Question - {{ question.sorting_order }}
                                 </b-button>
                               </b-card-header>
 
@@ -284,11 +305,14 @@
                                         <Question
                                           :id="question.id"
                                           :section-id="section.id"
+                                          :section-kind="section.kind"
                                           :scenario-id="scenario.id"
-                                          :initialContent="question.content"
-                                          :initialScore="question.score"
-                                          :initialKind="question.kind"
-                                          :initialAnswers="question.answers"
+                                          :initial-content="question.content"
+                                          :initial-solution="question.solution"
+                                          :initial-score="question.score"
+                                          :initial-kind="question.kind"
+                                          :initial-answers="question.answers"
+                                          @rm-question="removeScenarioQuestion"
                                         />
                                       </b-card>
                                     </div>
@@ -326,7 +350,9 @@
                               <b-card-body>
                                 <Question
                                   :section-id="section.id"
+                                  :section-kind="section.kind"
                                   :scenario-id="scenario.id"
+                                  :initial-sorting-order="sortingOrderValue(scenario.section_questions)"
                                   @add-question="updateScenarioQuestions"
                                 />
                               </b-card-body>
@@ -349,7 +375,10 @@
             </div>
           </b-tab>
           <b-tab title="New Section">
-            <Section @add-section="updateSections" />
+            <Section
+              :initial-sorting-order="sortingOrderValue(edit_cbe_data.sections)"
+              @add-section="updateSections"
+            />
           </b-tab>
         </b-tabs>
       </b-card>
@@ -360,20 +389,20 @@
 <script>
 import { mapGetters } from 'vuex';
 import Details from './Details.vue';
-import Section from './Section.vue';
 import IntroductionPage from './IntroductionPage.vue';
-import Scenario from './Scenario.vue';
 import Question from './Question.vue';
 import Resources from './Resources.vue';
+import Scenario from './Scenario.vue';
+import Section from './Section.vue';
 
 export default {
   components: {
     Details,
     IntroductionPage,
-    Section,
-    Scenario,
     Question,
     Resources,
+    Section,
+    Scenario,
   },
   data() {
     return {
@@ -432,11 +461,26 @@ export default {
     updateSections(data) {
       this.edit_cbe_data.sections.push(data);
     },
-    updatePages(data) {
-      this.edit_cbe_data.introPages.push(data);
+    removeSection(sectionId) {
+      const filtered = this.edit_cbe_data.sections.filter((section) => section.id !== sectionId);
+
+      this.edit_cbe_data.sections = filtered;
     },
-    updateResources: (data) => {
+    updatePages(data) {
+      this.edit_cbe_data.introduction_pages.push(data);
+    },
+    removePage(pageId) {
+      const filtered = this.edit_cbe_data.introduction_pages.filter((page) => page.id !== pageId);
+
+      this.edit_cbe_data.introduction_pages = filtered;
+    },
+    updateResources(data) {
       this.edit_cbe_data.resources.push(data);
+    },
+    removeResource(resourceId) {
+      const filtered = this.edit_cbe_data.resources.filter((resource) => resource.id !== resourceId);
+
+      this.edit_cbe_data.resources = filtered;
     },
     updateScenarios(data) {
       let sectionIndex = 0;
@@ -446,14 +490,21 @@ export default {
         }
       });
       const currentSection = this.edit_cbe_data.sections[sectionIndex];
-      if (currentSection.hasOwnProperty('scenarios')) {
-        console.log(currentSection);
-      } else {
+      if (!currentSection.hasOwnProperty('scenarios')) {
         // This $set syntax is required by Vue to ensure the section.questions array is reactive
         // It is inside the conditional to ensure section.questions is not reset to empty
         this.$set(currentSection, 'scenarios', []);
       }
       currentSection.scenarios.push(data);
+    },
+    removeScenario(data) {
+      const filtered =
+        this.edit_cbe_data.sections.filter(function(section){
+          section.scenarios = section.scenarios.filter((scenario) => scenario.id !== data.scenarioId);
+          return section
+        });
+
+      this.edit_cbe_data.sections = filtered;
     },
     updateQuestions(data) {
       let sectionIndex = 0;
@@ -469,6 +520,15 @@ export default {
         this.$set(currentSection, 'questions', []);
       }
       currentSection.questions.push(data);
+    },
+    removeQuestion(data) {
+      const filtered =
+        this.edit_cbe_data.sections.filter(function(section){
+          section.questions = section.questions.filter((question) => question.id !== data);
+          return section
+        });
+
+      this.edit_cbe_data.sections = filtered;
     },
     updateScenarioQuestions(data) {
       let scenarioIndex = 0;
@@ -493,6 +553,21 @@ export default {
         this.$set(currentScenario, 'questions', []);
       }
       currentScenario.questions.push(data);
+    },
+    removeScenarioQuestion(data) {
+      const filtered =
+        this.edit_cbe_data.sections.filter(function(section){
+          section.questions = section.questions.filter((question) => question.id !== data.questionId);
+          return section
+        });
+
+      this.edit_cbe_data.sections = filtered;
+    },
+    sortingOrderValue(object) {
+      let order = 1;
+      if ( object ) order = object.length + 1;
+
+      return order;
     },
   },
 };

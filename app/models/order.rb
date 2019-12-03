@@ -38,9 +38,10 @@ class Order < ApplicationRecord
   belongs_to :user
   visitable :ahoy_visit
 
-  has_one :order_transaction
-  has_one :invoice, autosave: true
+  has_one :order_transaction, dependent: :destroy
+  has_one :invoice, autosave: true, dependent: :restrict_with_error
 
+  has_many :exercises, dependent: :restrict_with_error
   delegate :mock_exam, to: :product
 
   # validation
@@ -124,16 +125,17 @@ class Order < ApplicationRecord
 
   def execute_order_completion
     return if Rails.env.test?
+
     MandrillWorker.perform_async(user_id,
                                  'send_mock_exam_email',
-                                 user_exercise_url(user_id),
-                                 product.mock_exam.name, reference_guid)
+                                 user_exercise_url,
+                                 product.name_by_type, reference_guid)
     invoice.update(paid: true, payment_closed: true)
   end
 
   def generate_exercises
     count = product.correction_pack_count || 1
-    (1..count).each { user.exercises.create(product_id: product_id) }
+    (1..count).each { user.exercises.create(product_id: product_id, order_id: id) }
   end
 
   def paypal?
@@ -156,6 +158,12 @@ class Order < ApplicationRecord
     Rails.logger.error "ERROR: Order#generate_invoice failed to create. Error:#{e.inspect}"
   end
 
+  def exam_body_name
+    return product.cbe.subject_course.exam_body.name if product.cbe?
+
+    product.mock_exam.subject_course.exam_body.name
+  end
+
   protected
 
   def assign_random_guid
@@ -173,8 +181,8 @@ class Order < ApplicationRecord
                                              user_id, id, product_id)
   end
 
-  def user_exercise_url(user_id)
-    UrlHelper.instance.user_exercises_url(user_id: user_id,
+  def user_exercise_url
+    UrlHelper.instance.student_dashboard_url(anchor: :exercises,
                                           host: LEARNSIGNAL_HOST)
   end
 end

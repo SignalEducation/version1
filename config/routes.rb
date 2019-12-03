@@ -21,17 +21,19 @@ Rails.application.routes.draw do
 
     namespace :v1, constraints: ApiConstraint.new(version: 1) do
       resources :subject_courses, only: :index
+      resources :uploads, only: :create
       resources :cbes, format: 'json', only: %i[index show create edit update] do
         scope module: 'cbes' do
-          resources :sections, only: %i[index create update], shallow: true do
-            resources :questions, only: %i[index create update]
-            resources :scenarios, only: %i[create update] do
-              resources :questions, only: %i[index create update]
+          resources :sections, only: %i[index create update destroy], shallow: true do
+            resources :questions, only: %i[index create update destroy]
+            resources :scenarios, only: %i[create update destroy] do
+              resources :questions, only: %i[index create update destroy]
             end
           end
-          resources :introduction_pages, only: %i[index create update]
-          resources :resources, only: %i[index create]
+          resources :introduction_pages, only: %i[index create update destroy]
+          resources :resources, only: %i[index create update destroy]
           resources :users_log, only: %i[index show create update]
+          resources :users_answer, only: :show
         end
       end
     end
@@ -40,13 +42,18 @@ Rails.application.routes.draw do
   namespace :admin do
     resources :exercises, only: %i[index show new create edit update] do
       get 'generate_daily_summary', on: :collection
+      get 'correct_cbe', to: 'exercises#correct_cbe', as: :correct_cbe, on: :member
+      post 'return_cbe', to: 'exercises#return_cbe', as: :return_cbe, on: :member
+      post 'cbe_user_question_update/answer/:question_id', to: 'exercises#cbe_user_question_update', as: :cbe_user_question_update, on: :member
     end
     resources :user do
       resources :exercises, only: %i[index new create]
     end
 
     resources :cbes,   only: %i[index new show update]
-    resources :orders, only: %i[index show]
+    resources :orders, only: %i[index show update] do
+      get :update_product
+    end
     post 'search_exercises', to: 'exercises#index', as: :search_exercises
   end
 
@@ -102,6 +109,12 @@ Rails.application.routes.draw do
       resources :visits,    only: %i[index show]
       resources :exercises, only: %i[index show edit update], shallow: true
     end
+
+    # Exercises/Cbes
+    get 'exercises/:exercise_id/cbes/:id', to: 'cbes#show', as: :exercise_cbes
+
+    # Cbes
+    resources :cbes, only: :show
 
     post '/search_visits', to: 'visits#all_index', as: :search_visits
 
@@ -266,14 +279,13 @@ Rails.application.routes.draw do
     get 'mock_exams',           to: 'footer_pages#media_library', as: :media_library
     get 'prep_products',        to: 'footer_pages#media_library', as: :prep_products
 
+    get 'prep_products/:group_name_url', to: 'footer_pages#media_library', as: :exam_products
+
     # HomePages Structure
     get 'home', to: 'routes#root', as: :home
     get 'course/:name_url', to: 'student_sign_ups#group', as: :group_landing
 
     root 'student_sign_ups#home'
-
-    # CBE
-    resources :cbes, only: :show
 
     # Catch-all
     get '404', to: 'footer_pages#missing_page', first_element: '404-page', as: :missing_page

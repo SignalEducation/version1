@@ -41,11 +41,12 @@ export default {
     },
   },
   methods: {
-    syncSpreadsheetData(jsonData) {
+    syncSpreadsheetData(jsonData, sheetData) {
       this.answersArray[0] = {
         kind: 'spreadsheet',
         content: {
           data: jsonData,
+          sheetData
         },
       };
     },

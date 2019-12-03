@@ -84,4 +84,5 @@ dump.rdb
 #eslint config file
 .eslintrc.js
 
+# yarn lock files
 package-lock.json

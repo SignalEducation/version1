@@ -39,5 +39,11 @@
 </template>
 
 <script>
-  import './styles.scss';
+import './styles.scss';
+
+export default {
+  data () {
+    return {}
+  }
+};
 </script>

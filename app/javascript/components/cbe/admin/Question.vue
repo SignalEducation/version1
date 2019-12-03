@@ -4,14 +4,17 @@
       <div class="form-group">
         <label for="questionKindSelect">Question Type</label>
         <b-form-select
-          v-model="questionKind"
-          @change="resetAnwers()"
           id="questionKindSelect"
+          v-model="questionKind"
           :options="questionKinds"
           class="input-group input-group-lg"
+          @change="resetAnwers()"
         >
           <template slot="first">
-            <option :value="null" disabled>
+            <option
+              :value="null"
+              disabled
+            >
               -- Please select a type --
             </option>
           </template>
@@ -28,7 +31,10 @@
     <div class="col-sm-4">
       <div class="form-group">
         <label for="questionScore">Score</label>
-        <div class="input-group input-group-lg" id="questionScore">
+        <div
+          id="questionScore"
+          class="input-group input-group-lg"
+        >
           <input
             id="questionScore"
             v-model.number="questionScore"
@@ -42,7 +48,7 @@
                 }
             "
             @blur="$v.questionScore.$touch()"
-          />
+          >
         </div>
         <p
           v-if="!$v.questionScore.required && $v.questionScore.$error"
@@ -65,12 +71,12 @@
         <label for="questionSortingOrder">Sorting Order</label>
         <div class="input-group input-group-lg">
           <input
+            id="questionSortingOrder"
             v-model="questionSortingOrder"
             type="number"
             placeholder="Sorting Order"
             class="form-control"
-            id="questionSortingOrder"
-          />
+          >
         </div>
 
         <p
@@ -102,9 +108,9 @@
               error: shouldAppendErrorClass($v.questionContent),
               valid: shouldAppendValidClass($v.questionContent),
             }"
-            :fieldModel.sync="questionContent"
-            :aditionalToolbarOptions="['fullscreen code']"
-            :editorId="
+            :field-model.sync="questionContent"
+            :aditional-toolbar-options="['fullscreen code image']"
+            :editor-id="
               'questionEditor-' + sectionId + '-' + scenarioId + '-' + id
             "
             @blur="$v.questionContent.$touch()"
@@ -124,9 +130,9 @@
         <label for="questionSolution">Solution</label>
         <div id="questionSolution">
           <TinyEditor
-            :fieldModel.sync="questionSolution"
-            :aditionalToolbarOptions="['fullscreen code']"
-            :editorId="
+            :field-model.sync="questionSolution"
+            :aditional-toolbar-options="['fullscreen code image']"
+            :editor-id="
               'questionSolution-' + sectionId + '-' + scenarioId + '-' + id
             "
             @blur="$v.questionSolution.$touch()"
@@ -137,12 +143,12 @@
 
     <div class="col-sm-12">
       <AdminAnswers
-        :question_kind="questionKind"
-        :questionId="id"
-        :answers="questionAnswers"
-        :validateData="$v"
         v-model="questionAnswers"
-      ></AdminAnswers>
+        :question-kind="questionKind"
+        :question-id="id"
+        :answers="questionAnswers"
+        :validate-data="$v"
+      />
     </div>
 
     <div class="form-group">
@@ -155,6 +161,13 @@
         Update Question
       </button>
       <button
+        v-if="id"
+        class="btn btn-danger"
+        @click="deleteQuestion"
+      >
+        Delete Question
+      </button>
+      <button
         v-else
         :disabled="submitStatus === 'PENDING'"
         class="btn btn-primary"
@@ -162,10 +175,16 @@
       >
         Save Question
       </button>
-      <p v-if="submitStatus === 'ERROR'" class="typo__p">
+      <p
+        v-if="submitStatus === 'ERROR'"
+        class="typo__p"
+      >
         Please fill the form correctly.
       </p>
-      <p v-if="submitStatus === 'PENDING'" class="typo__p">
+      <p
+        v-if="submitStatus === 'PENDING'"
+        class="typo__p"
+      >
         Sending...
       </p>
     </div>
@@ -189,6 +208,10 @@ export default {
   props: {
     sectionId: {
       type: Number,
+      default: null,
+    },
+    sectionKind: {
+      type: String,
       default: null,
     },
     scenarioId: {
@@ -224,7 +247,7 @@ export default {
       default: () => [],
     },
   },
-  data: function() {
+  data() {
     return {
       questionDetails: {},
       questionKind: this.initialKind,
@@ -234,15 +257,9 @@ export default {
       questionSortingOrder: this.initialSortingOrder,
       questionAnswers: this.initialAnswers || [],
       selectedSelectQuestion: null,
-      questionKinds: [
-        'dropdown_list',
-        'fill_in_the_blank',
-        'multiple_choice',
-        'multiple_response',
-        'spreadsheet',
-        'open',
-      ],
+      questionKinds: ['dropdown_list', 'fill_in_the_blank', 'multiple_choice', 'multiple_response', 'spreadsheet', 'open'],
       submitStatus: null,
+      deleteStatus: null,
     };
   },
   validations: {
@@ -257,7 +274,6 @@ export default {
     questionSortingOrder: {
       required,
       numeric,
-      between: between(1, 10),
     },
     questionContent: {
       required,
@@ -299,8 +315,22 @@ export default {
       },
     },
   },
+  created() {
+    this.loadQuestionsKind(this.sectionKind);
+  },
   methods: {
-    saveQuestion(page, index) {
+    loadQuestionsKind(sectionKind) {
+      switch (sectionKind) {
+        case 'objective':
+          this.questionKinds = ['dropdown_list', 'fill_in_the_blank', 'multiple_choice', 'multiple_response'];
+          break;
+        case 'constructed_response':
+          this.questionKinds = ['spreadsheet', 'open'];
+          break;
+        default:
+      }
+    },
+    saveQuestion() {
       this.$v.$touch();
       if (this.$v.$invalid) {
         this.submitStatus = 'ERROR';
@@ -326,7 +356,7 @@ export default {
           .then(response => {
             this.createdQuestion = response.data;
             this.questionDetails.id = this.createdQuestion.id;
-            this.questionDetails.answers_attributes = this.createdQuestion.answers;
+            this.questionDetails.answers = this.createdQuestion.answers;
             this.$emit('add-question', this.questionDetails);
             this.$emit('update-content', this.TinyEditor);
             this.questionDetails = {};
@@ -334,7 +364,7 @@ export default {
             this.questionContent = null;
             this.questionSolution = null;
             this.questionScore = null;
-            this.questionSortingOrder = null;
+            this.questionSortingOrder += 1;
             this.questionAnswers = [];
             this.submitStatus = 'OK';
             this.$v.$reset();
@@ -344,7 +374,7 @@ export default {
           });
       }
     },
-    updateQuestion: function() {
+    updateQuestion() {
       this.$v.$touch();
       if (this.$v.$invalid) {
         this.submitStatus = 'ERROR';
@@ -366,7 +396,7 @@ export default {
           })
           .then(response => {
             this.updatedQuestion = response.data;
-            this.questionDetails['id'] = this.updatedQuestion.id;
+            this.questionDetails.id = this.updatedQuestion.id;
             this.$emit('update-content', this.TinyEditor);
             this.questionDetails = {};
             this.questionKind = this.initialKind;
@@ -380,6 +410,29 @@ export default {
           .catch(error => {
             this.submitStatus = 'ERROR';
           });
+      }
+    },
+    deleteQuestion() {
+      if(confirm("Do you really want to delete?")){
+        this.$v.$touch();
+        if (this.$v.$invalid) {
+          this.updateStatus = 'ERROR';
+        } else {
+          this.deleteStatus = 'PENDING';
+          const questionId = this.id;
+
+          axios
+            .delete(`/api/v1/questions/${questionId}`)
+            .then(response => {
+              this.$emit('rm-question', questionId);
+              this.updateStatus = 'OK';
+              this.$v.$reset();
+            })
+            .catch(error => {
+              this.updateStatus = 'ERROR';
+              console.log(error);
+            });
+        }
       }
     },
     shouldAppendValidClass(field) {

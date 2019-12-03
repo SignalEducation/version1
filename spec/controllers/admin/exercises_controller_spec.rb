@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Admin::ExercisesController, type: :controller do
@@ -103,7 +105,7 @@ describe Admin::ExercisesController, type: :controller do
     describe 'POST create' do
       it 'creates a new exercise' do
         post :create, params: {
-          exercise: { product_id: exercise.product_id },
+          exercise: { product_id: exercise.product_id, order_id: exercise.order.id },
           user_id: exercise.user_id
         }
         expect_create_success_with_model(
@@ -147,6 +149,59 @@ describe Admin::ExercisesController, type: :controller do
       it 'redirects to the correct url with flash' do
         get :generate_daily_summary
         expect(response).to redirect_to(admin_exercises_url)
+      end
+    end
+
+    context 'CBE Exercises' do
+      let(:exercise_cbe)            { create(:exercise) }
+      let(:exercise_cbe_to_return)  { create(:exercise, state: 'correcting') }
+      let(:cbe)                     { create(:cbe) }
+      let(:cbe_question)            { create(:cbe_question, :with_section) }
+      let(:cbe_user_log)            { create(:cbe_user_log, cbe: cbe, exercise: exercise_cbe) }
+      let!(:cbe_user_log_to_return) { create(:cbe_user_log, cbe: cbe, exercise: exercise_cbe_to_return, status: 'corrected') }
+      let!(:cbe_user_question)      { create(:cbe_user_question, user_log: cbe_user_log, cbe_question: cbe_question) }
+
+      before do
+        SlackService.any_instance.stub(:notify_channel).and_return(false)
+        Exercise.any_instance.stub(:correction_returned_email).and_return(false)
+
+        exercise_cbe.submit
+      end
+
+      describe 'GET /admin/exercises/:id/correct_cbe' do
+
+        it 'redirects the user' do
+          get :correct_cbe, params: { id: exercise_cbe.id }
+
+          expect(response.status).to eq(200)
+          expect(response).to render_template(:correct_cbe)
+        end
+      end
+
+      describe 'POST /admin/exercises/:id/cbe_user_question_update/answer/:question_id', js: true do
+        it 'update cbe question data' do
+          post :cbe_user_question_update,
+               params: { id: exercise_cbe.id, question_id: cbe_user_question.id, format: :js }
+
+          expect(response.status).to eq(200)
+          expect(response).to render_template(:cbe_user_question_update)
+        end
+      end
+
+      describe 'POST/admin/exercises/:id/return_cbe', js: true do
+        it 'should return cbe correctio to user' do
+          post :return_cbe, params: { id: exercise_cbe_to_return.id }
+
+          expect(response.status).to eq(302)
+          redirect_to(admin_exercises_path)
+        end
+
+        it 'should redirect to correction' do
+          post :return_cbe, params: { id: exercise_cbe.id }
+
+          expect(response.status).to eq(200)
+          expect(response).to render_template(:correct_cbe)
+        end
       end
     end
   end

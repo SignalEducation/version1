@@ -10,8 +10,10 @@ module InvoicesHelper
 
     if subscription?(invoice)
       I18n.t("views.general.subscription_in_months.a#{invoice.subscription.subscription_plan.payment_frequency_in_months}")
-    else
+    elsif invoice.order.product.mock_exam?
       invoice.order.product.mock_exam.name.to_s.truncate(20)
+    elsif invoice.order.product.cbe?
+      invoice.order.product.cbe.name.to_s.truncate(20)
     end
   end
 

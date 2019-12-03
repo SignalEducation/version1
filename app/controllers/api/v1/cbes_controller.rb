@@ -12,18 +12,18 @@ module Api
 
       def edit; end
 
-      def update
-        if @cbe.update(cbe_params)
+      def create
+        @cbe = ::Cbe.new(cbe_params)
+
+        if @cbe.save
           render 'api/v1/cbes/show.json'
         else
           render json: { errors: @cbe.errors }, status: :unprocessable_entity
         end
       end
 
-      def create
-        @cbe = ::Cbe.new(cbe_params)
-
-        if @cbe.save
+      def update
+        if @cbe.update(cbe_params)
           render 'api/v1/cbes/show.json'
         else
           render json: { errors: @cbe.errors }, status: :unprocessable_entity

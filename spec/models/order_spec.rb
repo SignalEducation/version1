@@ -31,6 +31,7 @@ describe Order do
   it { should belong_to(:mock_exam) }
   it { should belong_to(:user) }
   it { should have_one(:order_transaction) }
+  it { should have_many(:exercises) }
 
   describe 'factories' do
     it 'has a valid factory' do
@@ -216,6 +217,14 @@ describe Order do
       )
 
       order.confirm_payment_intent
+    end
+  end
+
+  describe 'exam_body_name' do
+    let(:order) { build(:order) }
+
+    it 'return exam body name' do
+      expect(order.exam_body_name).to eq(order.product.mock_exam.subject_course.exam_body.name)
     end
   end
 end

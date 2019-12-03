@@ -8,7 +8,7 @@ gem 'rails', '5.2.2'
 gem 'puma', '~> 3.11'
 
 # Core gems - common to all environments
-gem 'airbrake', '~> 9.2'
+gem 'airbrake', '~> 9.5'
 gem 'authlogic', '~> 5.0.0'
 gem 'ahoy_matey', '>= 3.0.0' # visit tracking
 gem 'uuidtools', '~> 2.1', '>= 2.1.5'
@@ -76,7 +76,7 @@ gem "recaptcha"
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
-gem 'webpacker', '~> 3.5'
+gem 'webpacker', '~> 4.2'
 gem 'rack-cors'
 
 # Environment-specific gems

@@ -16,7 +16,7 @@ RSpec.describe LibraryController, type: :controller do
                                                exam_body_id: exam_body_1.id) }
 
   let!(:mock_exam_1) { FactoryBot.create(:mock_exam, subject_course_id: subject_course_1.id) }
-  let!(:product_1) { FactoryBot.create(:product, mock_exam_id: mock_exam_1.id, currency_id: gbp.id) }
+  let!(:product_1) { FactoryBot.create(:product, mock_exam_id: mock_exam_1.id, currency_id: gbp.id, group_id: group_1.id) }
 
   context 'Not logged in: ' do
 

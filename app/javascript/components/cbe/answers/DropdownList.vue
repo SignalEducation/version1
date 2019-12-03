@@ -3,14 +3,16 @@
     <div class="answers">
       <select v-model="question">
         <option
-          v-for="answer in answers"
+          v-for="answer in answersData"
           :key="`option-${answer.id}`"
           :value="{
-            id: question_id,
-            answers: [{
+            id: questionId,
+            score: answerScore(answer),
+            correct: answer.content.correct,
+            cbe_question_id: questionId,
+            answers_attributes: [{
               cbe_answer_id: answer.id,
               content: answer.content,
-              cbe_question_id: question_id
             }]
           }"
         >
@@ -23,8 +25,18 @@
 <script>
 export default {
   props: {
-    answers: {},
-    question_id: Number
+    answersData: {
+      type: Array,
+      required: true,
+    },
+    questionId: {
+      type: Number,
+      required: true,
+    },
+    questionScore: {
+      type: Number,
+      required: true,
+    },
   },
   data() {
     return {
@@ -32,20 +44,22 @@ export default {
     };
   },
   watch: {
-    question(newValue, oldValue) {
+    question(newValue) {
       this.$store.dispatch("userCbe/recordAnswer", newValue);
     }
   },
   methods: {
     getPickedValue() {
-      var initial_value = this.$store.state.userCbe.user_cbe_data.questions[
-        this.question_id
+      const initialValue = this.$store.state.userCbe.user_cbe_data.questions[
+        this.questionId
       ];
-      if (initial_value != null) {
-        return initial_value;
-      } else {
-        return [];
-      }
+
+      if (initialValue != null) { return initialValue; }
+
+      return [];
+    },
+    answerScore(answer) {
+      return answer.content.correct ? this.questionScore : 0
     }
   }
 };

@@ -31,10 +31,10 @@ class ExamBody < ApplicationRecord
   has_many :subject_courses
   has_many :exam_body_user_details
   has_many :subscription_plans
+  has_many :products
 
   validates :name, presence: true, uniqueness: true
-  validates :landing_page_h1, presence: true
-  validates :landing_page_paragraph, presence: true
+  validates :landing_page_h1, :landing_page_paragraph, :products_heading, presence: true
 
   before_destroy :check_dependencies
 

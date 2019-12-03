@@ -5,25 +5,43 @@
         <div class="form-group">
           <label for="subjectCoursesSelect">Course</label>
           <b-form-select
+            id="subjectCoursesSelect"
             v-model="subjectCourseId"
             :options="subjectCourses"
-            id="subjectCoursesSelect"
             class="input-group input-group-lg"
           >
             <template slot="first">
-              <option :value="null" disabled>-- Please select a course --</option>
+              <option
+                :value="null"
+                disabled
+              >
+                -- Please select a course --
+              </option>
             </template>
           </b-form-select>
           <p
             v-if="!$v.subjectCourseId.required && $v.subjectCourseId.$error"
             class="error-message"
-          >field is required</p>
+          >
+            field is required
+          </p>
         </div>
       </div>
 
-      <div v-if="this.$store.state.cbeId" class="col-sm-6">
-        <b-form-group id="checkbox-input-group" class="mt-5 mx-4">
-          <b-form-checkbox v-model="active" id="active-checkbox">Active</b-form-checkbox>
+      <div
+        v-if="this.$store.state.cbeId"
+        class="col-sm-6"
+      >
+        <b-form-group
+          id="checkbox-input-group"
+          class="mt-5 mx-4"
+        >
+          <b-form-checkbox
+            id="active-checkbox"
+            v-model="active"
+          >
+            Active
+          </b-form-checkbox>
         </b-form-group>
       </div>
 
@@ -32,19 +50,26 @@
           <label for="cbeName">Name</label>
           <div class="input-group input-group-lg">
             <input
-              v-model="name"
-              @blur="$v.name.$touch()"
-              :class="'form-control ' + {error: shouldAppendErrorClass($v.name), valid: shouldAppendValidClass($v.name)}"
               id="cbeName"
+              v-model="name"
+              :class="'form-control ' + {error: shouldAppendErrorClass($v.name), valid: shouldAppendValidClass($v.name)}"
               placeholder="Name"
-            />
+              @blur="$v.name.$touch()"
+            >
           </div>
 
-          <p v-if="!$v.name.required && $v.name.$error" class="error-message">field is required</p>
+          <p
+            v-if="!$v.name.required && $v.name.$error"
+            class="error-message"
+          >
+            field is required
+          </p>
           <p
             v-if="!$v.name.alphaNum && $v.name.$error"
             class="error-message"
-          >field should be alphanumeric.</p>
+          >
+            field should be alphanumeric.
+          </p>
         </div>
       </div>
 
@@ -52,16 +77,18 @@
         <div class="form-group">
           <label for="cbeAgreementContent">Agreement Text</label>
           <TinyEditor
-            @blur="$v.agreementContent.$touch()"
             :class="{error: shouldAppendErrorClass($v.agreementContent), valid: shouldAppendValidClass($v.agreementContent)}"
-            :fieldModel.sync="agreementContent"
-            :aditionalToolbarOptions="['fullscreen code']"
-            :editorId="'detailsEditor'"
+            :field-model.sync="agreementContent"
+            :aditional-toolbar-options="['fullscreen code image']"
+            :editor-id="'detailsEditor'"
+            @blur="$v.agreementContent.$touch()"
           />
           <p
             v-if="!$v.agreementContent.required && $v.agreementContent.$error"
             class="error-message"
-          >field is required</p>
+          >
+            field is required
+          </p>
         </div>
       </div>
     </div>
@@ -70,21 +97,45 @@
       <div class="col-sm-12">
         <button
           v-if="this.$store.state.cbeId"
-          v-on:click="updateCBE"
           :disabled="updateStatus === 'PENDING'"
           class="btn btn-primary"
-        >Update CBE</button>
+          @click="updateCBE"
+        >
+          Update CBE
+        </button>
         <button
           v-else
-          v-on:click="saveNewCBE"
           :disabled="submitStatus === 'PENDING' || submitStatus === 'OK'"
           class="btn btn-primary"
-        >Save CBE</button>
+          @click="saveNewCBE"
+        >
+          Save CBE
+        </button>
 
-        <p class="typo__p" v-if="updateStatus === 'ERROR'">Please fill the form correctly.</p>
-        <p class="typo__p" v-if="updateStatus === 'PENDING'">Updating...</p>
-        <p class="typo__p" v-if="submitStatus === 'ERROR'">Please fill the form correctly.</p>
-        <p class="typo__p" v-if="submitStatus === 'PENDING'">Sending...</p>
+        <p
+          v-if="updateStatus === 'ERROR'"
+          class="typo__p"
+        >
+          Please fill the form correctly.
+        </p>
+        <p
+          v-if="updateStatus === 'PENDING'"
+          class="typo__p"
+        >
+          Updating...
+        </p>
+        <p
+          v-if="submitStatus === 'ERROR'"
+          class="typo__p"
+        >
+          Please fill the form correctly.
+        </p>
+        <p
+          v-if="submitStatus === 'PENDING'"
+          class="typo__p"
+        >
+          Sending...
+        </p>
       </div>
     </div>
   </div>
@@ -94,7 +145,7 @@
 <script>
 import axios from 'axios';
 import { validationMixin } from 'vuelidate';
-import { required, numeric, between } from 'vuelidate/lib/validators';
+import { required } from 'vuelidate/lib/validators';
 import TinyEditor from '../../TinyEditor.vue';
 
 export default {
@@ -102,20 +153,32 @@ export default {
     TinyEditor,
   },
   mixins: [validationMixin],
-  mounted() {
-    this.getSubjects();
-  },
   props: {
-    id: Number,
-    initialName: String,
-    initialCourseId: Number,
-    initialAgreementContent: String,
-    initialActive: Boolean,
+    id: {
+      type: Number,
+      default: null,
+    },
+    initialName: {
+      type: String,
+      default: '',
+    },
+    initialCourseId: {
+      type: Number,
+      default: null,
+    },
+    initialAgreementContent: {
+      type: String,
+      default: '',
+    },
+    initialActive: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
       name: this.initialName,
-      agreementContent: this.initialAgreementContent,
+      agreementContent: this.initialAgreementContent ? this.initialAgreementContent : "<p>If you are ready to begin your exam, please click '<strong>Yes</strong>'.</p><p>If you are not ready to begin your exam, please click '<strong>No</strong>'.</p>",
       active: this.initialActive,
       subjectCourseId: this.initialCourseId,
       subjectCourses: [],
@@ -123,6 +186,9 @@ export default {
       submitStatus: null,
       updateStatus: null,
     };
+  },
+  mounted() {
+    this.getSubjects();
   },
   validations: {
     subjectCourseId: {
@@ -171,7 +237,7 @@ export default {
       }
     },
     updateCBE() {
-      const cbe_id = (this.id ? this.id  : this.$store.state.cbeId);
+      const cbeId = (this.id ? this.id  : this.$store.state.cbeId);
 
       this.$v.$touch();
       if (this.$v.$invalid) {
@@ -184,7 +250,7 @@ export default {
         this.cbeDetails.active = this.active;
         this.cbeDetails.subject_course_id = this.subjectCourseId;
         axios
-          .patch(`/api/v1/cbes/${cbe_id}`, {
+          .patch(`/api/v1/cbes/${cbeId}`, {
             cbe: this.cbeDetails,
           })
 

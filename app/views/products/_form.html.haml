@@ -10,6 +10,11 @@
               .input-group.input-group-lg
                 =f.text_field :name, placeholder: t('views.products.form.name_placeholder'), class: 'form-control'
 
+            .form-group
+              =f.label :group_id, t('views.products.form.group_id')
+              .input-group.input-group-lg
+                =f.collection_select :group_id, @groups, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
+
             -if @product.new_record?
               .form-group
                 =f.label :price, t('views.products.form.price')
@@ -20,32 +25,72 @@
                 =f.label :currency_id, t('views.products.form.currency')
                 .input-group.input-group-lg
                   =f.collection_select :currency_id, @currencies, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
+            .form-group.pt-5
+              .col-sm-8.col-sm-offset-4
+                .checkbox
+                  %label
+                    =f.check_box :active
+                    =t('views.currencies.form.active')
 
           .col-sm-6
             .form-group
-              =f.label :mock_exam_id, t('views.products.form.mock_exam_id')
-              .input-group.input-group-lg
-                =f.collection_select :mock_exam_id, @mock_exams, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
-
-            .form-group
               =f.label :product_type, t('views.products.form.product_type')
               .input-group.input-group-lg
-                =f.select :product_type, [['Mock Exam', 'mock_exam'], ['Correction Pack', 'correction_pack']], {}, {class: 'form-control custom-select'}
-
+                =f.select :product_type,  Product.product_types.keys.map {|key| [key.humanize, key]}, {}, { class: 'form-control custom-select' }
+            .form-group{class: 'mock_exam_form_group'}
+              =f.label :mock_exam_id, t('views.products.form.mock_exam_id')
+              .input-group.input-group-lg
+                =f.collection_select :mock_exam_id, @mock_exams, :id, :name, {include_blank: t('views.general.select')}, { class: 'form-control custom-select' }
+            .form-group{class: 'cbe_form_group', style: 'display:none;'}
+              =f.label :mock_exam_id, t('views.products.form.cbe')
+              .input-group.input-group-lg
+                =f.collection_select :cbe_id, @cbes, :id, :name, { include_blank: t('views.general.select') }, { class: 'form-control custom-select' }
             .form-group
               =f.label :correction_pack_count, t('views.products.form.correction_pack_count')
               .input-group.input-group-lg
                 =f.number_field :correction_pack_count, class: 'form-control'
-
-            .col-md-6
-              .form-group
-                .col-sm-8.col-sm-offset-4
-                  .checkbox
-                    %label
-                      =f.check_box :active
-                      =t('views.currencies.form.active')
+            .form-group
+              =f.label :payment_heading, t('views.products.form.payment_heading')
+              .input-group.input-group-lg
+                =f.text_field :payment_heading, placeholder: t('views.products.form.payment_heading_placeholder'), class: 'form-control'
+            .form-group
+              =f.label :payment_subheading, t('views.products.form.payment_subheading')
+              .input-group.input-group-lg
+                =f.text_field :payment_subheading, placeholder: t('views.products.form.payment_subheading_placeholder'), class: 'form-control'
+            .form-group
+              =f.label :payment_description, t('views.products.form.payment_description')
+              .input-group.input-group-lg
+                =f.text_area :payment_description, placeholder: t('views.products.form.payment_description_placeholder'), class: 'form-control'
 
     .row
       .col-sm-12
         =f.submit t('views.general.save'), class: 'btn btn-primary'
         =link_to t('views.general.cancel'), products_path, class: 'btn btn-secondary'
+
+:javascript
+  $(function(){
+    $('#product_product_type').change(function() {
+      switch( $(this).val() ) {
+        case 'cbe':
+          $('.mock_exam_form_group').hide();
+          $('.cbe_form_group').show();
+          $('#product_mock_exam_id').val('');
+          $('#product_correction_pack_count').val(1);
+          $('#product_correction_pack_count').prop('disabled', true);
+
+          break;
+        case 'mock_exam':
+          $('.cbe_form_group').hide();
+          $('.mock_exam_form_group').show();
+          $('#product_cbe_id').val('');
+          $('#product_correction_pack_count').val('');
+          $('#product_correction_pack_count').prop('disabled', false);
+          break;
+        default:
+          $('.cbe_form_group').hide();
+          $('.mock_exam_form_group').hide();
+          $('#product_correction_pack_count').val('');
+          $('#product_correction_pack_count').prop('disabled', false);
+      }
+    });
+  });

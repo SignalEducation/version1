@@ -22,9 +22,34 @@
 require 'rails_helper'
 
 describe Product do
-  let(:order_product)    { create(:product, :with_order) }
-  let(:active_product)   { create(:product) }
-  let(:inactive_product) { create(:product, :inactive) }
+  let(:order_product)           { create(:product, :with_order) }
+  let(:active_product)          { create(:product) }
+  let(:inactive_product)        { create(:product, :inactive) }
+  let(:cbe)                     { create(:cbe) }
+  let(:cbe_product)             { create(:product, cbe: cbe, product_type: 'cbe') }
+  let(:correction_pack_product) { create(:product, cbe: cbe, product_type: 'correction_pack', correction_pack_count: 3) }
+
+  describe 'Should Respond' do
+    it { should respond_to(:name) }
+    it { should respond_to(:mock_exam_id) }
+    it { should respond_to(:stripe_guid) }
+    it { should respond_to(:live_mode) }
+    it { should respond_to(:created_at) }
+    it { should respond_to(:updated_at) }
+    it { should respond_to(:active) }
+    it { should respond_to(:currency_id) }
+    it { should respond_to(:price) }
+    it { should respond_to(:stripe_sku_guid) }
+    it { should respond_to(:subject_course_id) }
+    it { should respond_to(:sorting_order) }
+    it { should respond_to(:product_type) }
+    it { should respond_to(:correction_pack_count) }
+    it { should respond_to(:cbe_id) }
+    it { should respond_to(:group_id) }
+    it { should respond_to(:payment_heading) }
+    it { should respond_to(:payment_subheading) }
+    it { should respond_to(:payment_description) }
+  end
 
   # relationships
   it { should belong_to(:currency) }
@@ -48,6 +73,8 @@ describe Product do
   it { expect(Product).to respond_to(:all_in_order) }
   it { expect(Product).to respond_to(:all_active) }
   it { expect(Product).to respond_to(:in_currency) }
+  it { expect(Product).to respond_to(:cbes) }
+  it { expect(Product).to respond_to(:mock_exams) }
 
   # class methods
   it { expect(Product).to respond_to(:search) }
@@ -112,6 +139,16 @@ describe Product do
 
         expect(result).to include(active_product)
         expect(result).to include(inactive_product)
+      end
+    end
+
+    context '.name_by_type' do
+      it 'cbe product' do
+        expect(cbe_product.name_by_type).to eq(cbe_product.cbe.name)
+      end
+
+      it 'not cbe product' do
+        expect(correction_pack_product.name_by_type).to eq(correction_pack_product.mock_exam.name)
       end
     end
   end

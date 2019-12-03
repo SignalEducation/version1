@@ -15,4 +15,7 @@ class Cbe < ApplicationRecord
 
   # validations
   validates :name, :agreement_content, :subject_course_id, presence: true
+
+  # scopes
+  scope :all_in_order, -> { order(:sorting_order, :subject_course_id) }
 end

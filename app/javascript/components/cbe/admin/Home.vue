@@ -68,8 +68,12 @@
                 :initial-sorting-order="page.sorting_order"
                 :initial-kind="page.kind"
                 :initial-content="page.content"
+                @rm-introduction-page="removePage"
               />
-              <IntroductionPage @add-introduction-page="updatePages" />
+              <IntroductionPage
+                :initial-sorting-order="sortingOrderValue(introPages)"
+                @add-introduction-page="updatePages"
+              />
             </b-tabs>
           </b-card>
         </b-collapse>
@@ -82,6 +86,7 @@
           <Resources
             :resources="resources"
             @add-resource="updateResources"
+            @rm-resource="removeResource"
           />
         </b-collapse>
 
@@ -103,10 +108,11 @@
                       <Section
                         :id="parseInt(section.id)"
                         :initial-name="section.name"
-                        :initial-score="section.score"
+                        :initial-score="parseInt(section.score)"
                         :initial-sorting-order="section.sorting_order"
                         :initial-kind="section.kind"
                         :initial-content="section.content"
+                        @rm-section="removeSection"
                       />
                     </b-card>
                   </b-collapse>
@@ -150,7 +156,7 @@
                         href="#"
                         variant="secondary"
                       >
-                        Question - {{ question.id }}
+                        Question - {{ question.sorting_order }}
                       </b-button>
                     </b-card-header>
 
@@ -165,12 +171,14 @@
                             <Question
                               :id="question.id"
                               :section-id="section.id"
+                              :section-kind="section.kind"
                               :initial-content="question.content"
                               :initial-solution="question.solution"
                               :initial-score="question.score"
                               :initial-sorting-order="question.sorting_order"
                               :initial-kind="question.kind"
-                              :initial-answers="question.answers_attributes"
+                              :initial-answers="question.answers"
+                              @rm-question="removeQuestion"
                             />
                           </div>
                         </div>
@@ -206,6 +214,8 @@
                     <b-card-body>
                       <Question
                         :section-id="section.id"
+                        :section-kind="section.kind"
+                        :initial-sorting-order="sortingOrderValue(section.questions)"
                         @add-question="updateQuestions"
                       />
                     </b-card-body>
@@ -240,6 +250,7 @@
                                       :id="scenario.id"
                                       :initial-name="scenario.name"
                                       :initial-content="scenario.content"
+                                      @rm-scenario="removeScenario"
                                     />
                                   </b-card>
                                 </b-collapse>
@@ -279,7 +290,7 @@
                                     href="#"
                                     variant="secondary"
                                   >
-                                    Question - {{ question.id }}
+                                    Question - {{ question.sorting_order }}
                                   </b-button>
                                 </b-card-header>
 
@@ -295,12 +306,14 @@
                                           <Question
                                             :id="question.id"
                                             :section-id="section.id"
+                                            :section-kind="section.kind"
                                             :scenario-id="scenario.id"
                                             :initial-solution="question.solution"
                                             :initial-sorting-order="question.sorting_order"
                                             :initial-content="question.content"
                                             :initial-score="question.score"
                                             :initial-kind="question.kind"
+                                            @rm-question="removeScenarioQuestion"
                                           />
                                         </b-card>
                                       </div>
@@ -338,7 +351,9 @@
                                 <b-card-body>
                                   <Question
                                     :section-id="section.id"
+                                    :section-kind="section.kind"
                                     :scenario-id="scenario.id"
+                                    :initial-sorting-order="sectionSortingOrderValue(section)"
                                     @add-question="updateScenarioQuestions"
                                   />
                                 </b-card-body>
@@ -361,7 +376,10 @@
               </div>
             </b-tab>
             <b-tab title="New Section">
-              <Section @add-section="updateSections" />
+              <Section
+                :initial-sorting-order="sortingOrderValue(sections)"
+                @add-section="updateSections"
+              />
             </b-tab>
           </b-tabs>
         </b-card>
@@ -372,20 +390,20 @@
 
 <script>
 import Details from './Details.vue';
-import Section from './Section.vue';
 import IntroductionPage from './IntroductionPage.vue';
-import Scenario from './Scenario.vue';
 import Question from './Question.vue';
 import Resources from './Resources.vue';
+import Scenario from './Scenario.vue';
+import Section from './Section.vue';
 
 export default {
   components: {
     Details,
     IntroductionPage,
-    Section,
-    Scenario,
     Question,
     Resources,
+    Scenario,
+    Section,
   },
   data() {
     return {
@@ -440,11 +458,26 @@ export default {
     updateSections(data) {
       this.sections.push(data);
     },
+    removeSection(sectionId) {
+      const filtered = this.sections.filter((section) => section.id !== sectionId);
+
+      this.sections = filtered;
+    },
     updatePages(data) {
       this.introPages.push(data);
     },
+    removePage(pageid) {
+      const filtered = this.introPages.filter((page) => page.id !== pageid);
+
+      this.introPages = filtered;
+    },
     updateResources(data) {
       this.resources.push(data);
+    },
+    removeResource(resourceId) {
+      const filtered = this.resources.filter((resource) => resource.id !== resourceId);
+
+      this.resources = filtered;
     },
     updateScenarios(data) {
       let sectionIndex = 0;
@@ -454,14 +487,21 @@ export default {
         }
       });
       const currentSection = this.sections[sectionIndex];
-      if (currentSection.hasOwnProperty('scenarios')) {
-        console.log(currentSection);
-      } else {
+      if (!currentSection.hasOwnProperty('scenarios')) {
         // This $set syntax is required by Vue to ensure the section.questions array is reactive
         // It is inside the conditional to ensure section.questions is not reset to empty
         this.$set(currentSection, 'scenarios', []);
       }
       currentSection.scenarios.push(data);
+    },
+    removeScenario(data) {
+      const filtered =
+        this.sections.filter(function(section){
+          section.scenarios = section.scenarios.filter((scenario) => scenario.id !== data.scenarioId);
+          return section
+        });
+
+      this.sections = filtered;
     },
     updateQuestions(data) {
       let sectionIndex = 0;
@@ -477,6 +517,15 @@ export default {
         this.$set(currentSection, 'questions', []);
       }
       currentSection.questions.push(data);
+    },
+    removeQuestion(questionId) {
+      const filtered =
+        this.sections.filter(function(section){
+          section.questions = section.questions.filter((question) => question.id !== questionId);
+          return section
+        });
+
+      this.sections = filtered;
     },
     updateScenarioQuestions(data) {
       let scenarioIndex = 0;
@@ -502,6 +551,35 @@ export default {
       }
       currentScenario.questions.push(data);
     },
+    removeScenarioQuestion(questionId) {
+      const filtered =
+        this.sections.filter(function(section){
+          section.questions = section.questions.filter((question) => question.id !== questionId);
+          return section
+        });
+
+      this.sections = filtered;
+    },
+    sortingOrderValue(object) {
+      let order = 1;
+      if ( object ) order = object.length + 1;
+
+      return order;
+    },
+    sectionSortingOrderValue(section){
+      const totalQuestions = section.scenarios.reduce(this.totalQuestions, 0);
+      return totalQuestions + 1;
+    },
+    totalQuestions(sum, scenario){
+      let totalQuestions = 0
+      if(scenario.questions){
+        totalQuestions = scenario.questions.length;
+      } else {
+        totalQuestions = 0
+      }
+
+      return totalQuestions + sum;
+    }
   },
 };
 </script>

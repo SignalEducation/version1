@@ -1,6 +1,6 @@
 <template>
   <b-navbar-nav class="ml-auto">
-    <b-nav-text class="progress-count-icon-white">
+    <b-nav-text>
       {{ pageNumber }} of {{ pageTotal }}
     </b-nav-text>
   </b-navbar-nav>

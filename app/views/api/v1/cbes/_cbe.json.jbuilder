@@ -7,12 +7,23 @@ json.content                  cbe.content
 json.agreement_content        cbe.agreement_content
 json.active                   cbe.active
 json.score                    cbe.score
+json.subject_course_id        cbe.subject_course.id
 
 json.introduction_pages cbe.introduction_pages.order(:sorting_order) do |page|
   json.id            page.id
   json.title         page.title
   json.content       page.content
   json.sorting_order page.sorting_order
+end
+
+json.resources cbe.resources.order(:sorting_order) do |resource|
+  json.id            resource.id
+  json.name          resource.name
+  json.sorting_order resource.sorting_order
+  json.file do
+    json.name resource.document_file_name
+    json.url  resource.document.url(:original, timestamp: false)
+  end
 end
 
 json.sections cbe.sections.order(:sorting_order) do |section|

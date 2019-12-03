@@ -2,35 +2,30 @@
 <template>
   <div>
     <editor
-      :id="this.editorId"
-      :api-key="this.apiKey"
-      :init="{
-        branding:  false,
-        menubar:   false,
-        statusbar: false,
-        resize:    false,
-        toolbar:   ['newdocument | \
-                    cut copy paste | \
-                    undo redo | \
-                    searchreplace | \
-                    bold italic underline strikethrough | \
-                    subscript superscript | \
-                    removeformat',
-                    'formatselect | \
-                    table | \
-                    alignleft aligncenter alignright alignjustify | \
-                    numlist bullist | \
-                    outdent indent'].concat(this.aditionalToolbarOptions),
-        plugins:   'fullscreen lists table code paste',
-      }"
+      :id="editorId"
       v-model="localFieldModel"
+      :api-key="apiKey"
+      :init="{
+        branding: false,
+        menubar: false,
+        statusbar: false,
+        image_dimensions: true,
+        toolbar: toolbarOptions(),
+        plugins: 'fullscreen lists table code paste searchreplace image',
+        images_upload_handler: imageUploadHandler,
+        image_advtab: true,
+        skin: 'custom'
+      }"
       @input="$emit('update:fieldModel', localFieldModel)"
-    ></editor>
+    />
   </div>
 </template>
 
 <script>
+import axios from 'axios';
 import Editor from "@tinymce/tinymce-vue";
+import '../lib/TinyEditor/styles/custom/skin.min.css';
+import '../lib/TinyEditor/styles/custom/content.min.css';
 
 export default {
   components: {
@@ -51,14 +46,49 @@ export default {
     localFieldModel(fieldModel) {
       this.$emit("update", fieldModel);
     },
-    fieldModel: function () {
+    fieldModel() {
       if(this.fieldModel === null){
         tinymce.get(this.editorId).setContent('');
       }
     }
   },
   methods: {
-    updateContent: function(data) {
+    imageUploadHandler(blobInfo, uploadSuccess, uploadFailure) {
+      const blob = blobInfo.blob();
+      const filename = blobInfo.filename();
+      axios({
+            method: 'post',
+            url: `/api/v1/uploads`,
+            data: { upload: { filename } },
+          })
+            .then(response => {
+              const {data} = response;
+              axios({
+                url: data.upload.url,
+                method: 'PUT',
+                headers: {
+                  'Content-Type': data.content_type,
+                  'Content-Encoding': 'base64'
+                },
+                data: blob,
+              }).then(s3Response => {
+                const {url} = s3Response.config
+                uploadSuccess(url.split('?')[0]);
+              })
+            })
+            .catch(error => {
+              uploadFailure(error);
+            });
+    },
+    toolbarOptions() {
+      const toolbar = [
+        'newdocument | cut copy paste | undo redo | searchreplace | bold italic underline strikethrough | subscript superscript | removeformat',
+        'formatselect | table | alignleft aligncenter alignright alignjustify | numlist bullist | outdent indent'
+      ]
+
+      return toolbar.concat(this.aditionalToolbarOptions);
+    },
+    updateContent() {
       this.editor.value = "";
     },
   }

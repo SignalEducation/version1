@@ -29,6 +29,7 @@ FactoryBot.define do
     sequence(:stripe_sku_guid) { |n| "stripe-sku-guid-#{n}" }
     currency
     mock_exam
+    group
 
     factory :mock_product do
       product_type { 'mock_exam' }

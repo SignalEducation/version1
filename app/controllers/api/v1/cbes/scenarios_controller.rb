@@ -5,21 +5,28 @@ module Api
     module Cbes
       class ScenariosController < Api::V1::ApplicationController
         before_action :set_section
+        before_action :set_scenario, only: %i[update destroy]
 
         def create
           @scenario = @section.scenarios.build(permitted_params)
 
-          unless @scenario.save
-            render json: { errors: @scenario.errors }, status: :unprocessable_entity
-          end
+          return if @scenario.save
+
+          render json: { errors: @scenario.errors }, status: :unprocessable_entity
         end
 
         def update
           @scenario = ::Cbe::Scenario.find(params[:id])
 
-          unless @scenario.update(permitted_params)
-            render json: { errors: @scenario.errors }, status: :unprocessable_entity
-          end
+          return if @scenario.update(permitted_params)
+
+          render json: { errors: @scenario.errors }, status: :unprocessable_entity
+        end
+
+        def destroy
+          @scenario.destroy
+
+          render json: { message: "Scenario #{@scenario.id} was deleted." }, status: :accepted
         end
 
         private
@@ -34,6 +41,10 @@ module Api
 
         def set_section
           @section = ::Cbe::Section.find_by(id: params[:section_id])
+        end
+
+        def set_scenario
+          @scenario = ::Cbe::Scenario.find(params[:id])
         end
       end
     end

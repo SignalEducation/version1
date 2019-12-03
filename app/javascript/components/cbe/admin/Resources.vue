@@ -3,27 +3,42 @@
     <b-tabs card>
       <Resource
         v-for="resource in resources"
-        v-bind:key="'resource-tab-' + resource.id"
-        v-bind:id="resource.id"
-        v-bind:initialTitle="resource.name"
+        :id="resource.id"
+        :key="'resource-tab-' + resource.id"
+        :initial-name="resource.name"
+        :initial-file="resource.file"
+        :initial-sorting-order="resource.sorting_order"
+        @rm-resource="$emit('rm-resource', resourceId)"
       />
-      <Resource v-on:add-resource="updateResources" />
+      <Resource
+        :initial-sorting-order="sortingOrderValue(resources)"
+        @add-resource="updateResources"
+      />
     </b-tabs>
   </b-card>
 </template>
 
 <script>
-import Resource from "./Resource";
+import Resource from "./Resource.vue";
 
 export default {
   components: {
     Resource
   },
   props: {
-    resources: Array
+    resources: {
+      type: Array,
+      default: () => [],
+    },
   },
-  methods: {
-    updateResources: function(data) {
+  methods:{
+    sortingOrderValue(object) {
+      let order = 1;
+      if ( object ) order = object.length + 1;
+
+      return order;
+    },
+    updateResources(data) {
       this.$emit("add-resource", data);
     }
   }

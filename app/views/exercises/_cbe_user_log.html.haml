@@ -1,0 +1,22 @@
+-if @exercise.returned?
+  %h3='Results by question'
+  .row
+    .col-12.col-md-3.mb-4
+      #v-pills-tab.nav.flex-column.nav-pills{"aria-orientation" => "vertical", :role => "tablist"}
+        -@exercise.cbe_user_log.questions.each_with_index do |question, index|
+          %a#v-pills-home-tab.nav-link{"aria-controls" => "v-pills-#{question.id}", "aria-selected" => index == 0 ? 'true' : 'false', "data-toggle" => "pill", :href => "#v-pills-#{question.id}", :role => "tab", class: index == 0 ? 'active' : ''}
+            ="Question #{index+1}"
+
+    .col-12.col-md-9
+      #v-pills-tabContent.tab-content
+        -@exercise.cbe_user_log.questions.each_with_index do |question, index|
+          .tab-pane.fade{id: "v-pills-#{question.id}", "aria-labelledby" => "v-pills-#{question.id}-tab", :role => "tabpanel", class: index == 0 ? 'active show' : ''}
+            %h4.mb-4
+              ="Marks: #{question.score.to_i}/#{question.cbe_question.score.to_i}"
+
+            %h6='Suggested Solution:'
+            =raw(question.cbe_question.solution)
+
+            -if question.educator_comment.present?
+              %h6='Educator Comment:'
+              =raw(question.educator_comment)

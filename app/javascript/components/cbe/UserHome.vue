@@ -1,33 +1,37 @@
 <template>
-  <section class="cbe-section" id="student-cbe">
+  <section
+    id="student-cbe"
+    class="cbe-section"
+  >
     <NavBar
       :logo="cbe_data.name"
       :title="cbe_data.name"
-      :user_cbe_data="user_cbe_data"
+      :user-cbe-data="user_cbe_data"
     />
 
     <div class="cbe-content">
       <router-view :id="$route.path" />
-      <CbeCalculator />
     </div>
 
     <div id="cbe-footer">
       <footer>
         <b-navbar class="nav nav-underline bg-cbe-gray">
           <b-navbar-nav>
-            <b-nav-text
+            <CbeResources
               v-if="['sections', 'questions'].includes(this.$route.name)"
-              class="help-icon"
-              >Help</b-nav-text
-            >
+              :cbe_data="cbe_data"
+            />
           </b-navbar-nav>
           <b-navbar-nav v-if="$route.name == 'review'">
-            <b-nav-text class="arrow-right-icon" v-on:click="submitExam"
-              >End Exam</b-nav-text
+            <b-nav-text
+              class="arrow-right-icon"
+              @click="submitExam"
             >
+              End Exam
+            </b-nav-text>
           </b-navbar-nav>
           <b-navbar-nav>
-            <NavPagination v-bind:link_data="cbe_data" />
+            <NavPagination :link_data="cbe_data" />
           </b-navbar-nav>
         </b-navbar>
       </footer>
@@ -38,13 +42,13 @@
 <script>
 import axios from 'axios';
 import { mapGetters } from 'vuex';
-import CbeCalculator from '../cbe/CbeCalculator';
+import CbeResources from './CbeResources.vue';
 import NavBar from './NavBar.vue';
 import NavPagination from './NavPagination.vue';
 
 export default {
   components: {
-    CbeCalculator,
+    CbeResources,
     NavBar,
     NavPagination,
   },
@@ -52,6 +56,7 @@ export default {
     return {
       cbe_id: this.$parent.cbe_id,
       userId: this.$parent.user_id,
+      exerciseId: this.$parent.exercise_id,
     };
   },
   computed: {
@@ -68,11 +73,12 @@ export default {
         this.$store.dispatch('userCbe/startUserCbeData', {
           cbe_id: this.cbe_id,
           user_id: this.userId,
+          exercise_id: this.exerciseId,
           cbe_data: this.cbe_data,
         });
       },
     },
-    $route(to, from) {
+    $route(to) {
       this.updateExamPageState(to);
     },
   },
@@ -80,7 +86,7 @@ export default {
     this.$store.dispatch('cbe/getCbe', this.cbe_id);
   },
   methods: {
-    submitExam: function() {
+    submitExam() {
       axios
         .patch(
           `/api/v1/cbes/${this.cbe_id}/users_log/${this.user_cbe_data.user_log_id}`,
@@ -89,35 +95,33 @@ export default {
           }
         )
         .then(response => {
-          this.$router.push({ name: 'exam_submited' })
+          window.location.href = `/en/exercises/${this.exerciseId}`;
         })
         .catch(error => {});
     },
-    formatedData: function() {
-      let data = {};
-      // get questions from user_cbe_data and map those answers in a array.
-      // concat in a kind of flatten in that array.
-      let answers = [].concat.apply(
-        [],
-        Object.values(this.user_cbe_data.questions).map(a => a.answers)
-      );
+    formatedData() {
+      const data = {};
+      const questions = Object.values(this.user_cbe_data.questions);
+      for (let i = 0; i < questions.length; i++) {
+        delete questions[i].id;
+      }
+
       data.status = 'finished';
-      data.score = 100;
       data.cbe_id = this.user_cbe_data.cbe_id;
       data.user_id = this.user_cbe_data.user_id;
-      data.answers_attributes = answers;
+      data.exercise_id = this.user_cbe_data.exercise_id;
+      data.questions_attributes = [].concat.apply([], questions);
       return data;
     },
-    updateExamPageState: function(route) {
+    updateExamPageState(route) {
       if (route.name === 'sections' || route.name === 'questions') {
-        let id = route.params.id;
-        let type = route.name;
+        const {id} = route.params;
 
         this.user_cbe_data.exam_pages.forEach(page => {
           if (
-            page.type == 'questions' &&
-            page.param == id &&
-            page.state == 'Unseen'
+            page.type === 'questions' &&
+            page.param === id &&
+            page.state === 'Unseen'
           ) {
             page.state = 'Seen';
           }

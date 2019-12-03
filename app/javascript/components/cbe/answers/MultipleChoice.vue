@@ -1,14 +1,29 @@
 <template>
   <section>
-    <div class="answers" v-for="answer in answers" :key="answer.id">
+    <div
+      v-for="answer in answersData"
+      :key="answer.id"
+      class="answers"
+    >
       <input
-        type="radio"
         :id="answer.id"
-        :value="{ id: question_id, answers: [{ cbe_answer_id: answer.id, content: answer.content, cbe_question_id: question_id }] }"
         v-model="question"
-      />
+        type="radio"
+        :value="{
+          id: questionId,
+          score: answerScore(answer),
+          cbe_question_id: questionId,
+          correct: answer.content.correct,
+          answers_attributes: [
+            {
+              cbe_answer_id: answer.id,
+              content: answer.content,
+            },
+          ],
+        }"
+      >
       <label :for="answer.id">{{ answer.content['text'] }}</label>
-      <br />
+      <br>
     </div>
   </section>
 </template>
@@ -16,30 +31,43 @@
 <script>
 export default {
   props: {
-    answers: {},
-    question_id: Number
+    answersData: {
+      type: Array,
+      required: true,
+    },
+    questionId: {
+      type: Number,
+      required: true,
+    },
+    questionScore: {
+      type: Number,
+      required: true,
+    },
   },
   data() {
     return {
-      question: this.getPickedValue()
+      question: this.getPickedValue(),
     };
   },
   watch: {
-    question(newValue, oldValue) {
-      this.$store.dispatch("userCbe/recordAnswer", newValue);
-    }
+    question(newValue) {
+      this.$store.dispatch('userCbe/recordAnswer', newValue);
+    },
   },
   methods: {
     getPickedValue() {
-      var initial_value = this.$store.state.userCbe.user_cbe_data.questions[
-        this.question_id
+      const initialValue = this.$store.state.userCbe.user_cbe_data.questions[
+        this.questionId
       ];
-      if (initial_value != null) {
-        return initial_value;
-      } else {
-        return [];
+      if (initialValue != null) {
+        return initialValue;
       }
+
+      return [];
+    },
+    answerScore(answer) {
+      return answer.content.correct ? this.questionScore : 0
     }
-  }
+  },
 };
 </script>

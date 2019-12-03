@@ -58,7 +58,7 @@ en:
       ok: ok
       or: or
       review: Review
-      return: Return
+      return: Return Correction
       save: Save
       continue: Continue
       download: Download Now
@@ -178,6 +178,9 @@ en:
           due_on: Due On
           corrected_on: Corrected On
           returned_on: Returned On
+        correct_cbe:
+          h1: Correction
+          question: Question
         form:
           correction: Upload Correction
         show:
@@ -720,7 +723,8 @@ en:
         url_placeholder: Home URL of Examining Body
         active: Active
         has_sittings: Has Sittings?
-        preferred_payment_frequency: Preferred Payment Interval
+        has_products: Has Products?
+        preferred_payment_frequency: Preferred Payment Interval (optional)
         subscription_page_subheading_text: Subscription Payment Subheading
         subscription_page_subheading_text_placeholder: Subscription Payment Subheading
         constructed_response_intro_heading: Constructed Response Start Screen Heading
@@ -730,11 +734,19 @@ en:
         registration_form_heading_placeholder: Basic Registration Form Heading
         login_form_heading: Login Form Heading
         login_form_heading_placeholder: Login Form Heading
-        landing_page_h1: Landing Page H1
-        landing_page_h1_placeholder: Landing Page H1
-        landing_page_paragraph: Landing Page Paragraph
-        landing_page_paragraph_placeholder: Landing Page Sub-heading
+        landing_page_h1: External Library Page H1
+        landing_page_h1_placeholder: External Library Page H1
+        landing_page_paragraph: External Library Page Paragraph
+        landing_page_paragraph_placeholder: External Library Page Sub-heading
         logo_image: Logo Image
+        products_heading: Products Heading
+        products_heading_placeholder: Products Page H1
+        products_subheading: Products Sub-Heading
+        products_subheading_placeholder: Products Page Sub-heading
+        products_seo_title: Products SEO Title
+        products_seo_title_placeholder: Products Page SEO Title
+        products_seo_description: Products SEO Description
+        products_seo_description_placeholder: Products Page SEO Description
 
       index:
         h1: Exam Bodies
@@ -998,6 +1010,7 @@ en:
         tax: "Tax"
         original_stripe_data: "Original Stripe data"
         pdf: PDF
+        link: Link
         invoice: Invoice
 
       edit:
@@ -1097,10 +1110,18 @@ en:
         active: Active
         currency: Currency
         mock_exam_id: Mock Exam
+        cbe: CBE
         product_type: Product Type
         correction_pack_count: Number of Corrections
         subject_course: Course
         type: Type
+        group_id: Group
+        payment_heading: Payment Page Heading
+        payment_heading_placeholder: Product Payment Checkout Page Heading
+        payment_subheading: Payment Page Sub-Heading
+        payment_subheading_placeholder: Product Payment Checkout Page Sub-Heading
+        payment_description: Product Description
+        payment_description_placeholder: Product Payment Page Description
 
       index:
         h1: Products

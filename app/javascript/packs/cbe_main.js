@@ -4,6 +4,9 @@ import Vue from 'vue';
 import BootstrapVue from 'bootstrap-vue';
 import store from '../store';
 import router from '../router';
+import * as VueWindow from '@hscmap/vue-window';
+
+
 
 // ##### CBE #####
 //
@@ -18,6 +21,7 @@ import CbeHome from '../components/cbe/UserHome.vue';
 // ##############
 
 Vue.use(BootstrapVue);
+Vue.use(VueWindow)
 
 const mountCbeElement = (element, theComponent) =>
   new Vue({
@@ -47,6 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
       data: {
         cbe_id: cbeFront.dataset.id,
         user_id: cbeFront.dataset.userId,
+        exercise_id: cbeFront.dataset.exerciseId,
       },
       render: (h) => h(CbeHome),
     }))();

@@ -6,13 +6,16 @@
           <label for="pageTitle">Title</label>
           <div class="input-group input-group-lg">
             <input
+              id="pageTitle"
               v-model="title"
               placeholder="Title"
               class="form-control"
-              id="pageTitle"
-            />
+            >
           </div>
-          <p v-if="!$v.title.required && $v.title.$error" class="error-message">
+          <p
+            v-if="!$v.title.required && $v.title.$error"
+            class="error-message"
+          >
             field is required
           </p>
         </div>
@@ -23,12 +26,12 @@
           <label for="sortingOrder">Sorting Order</label>
           <div class="input-group input-group-lg">
             <input
+              id="sortingOrder"
               v-model="sortingOrder"
               placeholder="Sorting Order"
               class="form-control"
-              id="sortingOrder"
               type="number"
-            />
+            >
           </div>
           <p
             v-if="!$v.sortingOrder.required && $v.sortingOrder.$error"
@@ -43,9 +46,9 @@
         <div class="form-group">
           <label for="pageContent">Page Content</label>
           <TinyEditor
-            :fieldModel.sync="content"
-            :aditionalToolbarOptions="['fullscreen code']"
-            :editorId="'introPagesEditor' + id"
+            :field-model.sync="content"
+            :aditional-toolbar-options="['fullscreen code image']"
+            :editor-id="'introPagesEditor' + id"
           />
 
           <p
@@ -58,21 +61,58 @@
       </div>
 
       <div>
-        <button v-if="id" v-on:click="updatePage" class="btn btn-primary">
+        <button
+          v-if="id"
+          class="btn btn-primary"
+          @click="updatePage"
+        >
           Update Page
         </button>
-        <button v-else v-on:click="savePage" class="btn btn-primary">
+        <button
+          v-if="id"
+          class="btn btn-danger"
+          @click="deletePage"
+        >
+          Delete Page
+        </button>
+        <button
+          v-else
+          class="btn btn-primary"
+          @click="savePage"
+        >
           Save Page
         </button>
 
-        <p class="typo__p" v-if="updateStatus === 'ERROR'">
+        <p
+          v-if="updateStatus === 'ERROR'"
+          class="typo__p"
+        >
           Please fill the form correctly.
         </p>
-        <p class="typo__p" v-if="updateStatus === 'PENDING'">Updating...</p>
-        <p class="typo__p" v-if="submitStatus === 'ERROR'">
+        <p
+          v-if="updateStatus === 'PENDING'"
+          class="typo__p"
+        >
+          Updating...
+        </p>
+        <p
+          v-if="deleteStatus === 'PENDING'"
+          class="typo__p"
+        >
+          Deleting...
+        </p>
+        <p
+          v-if="submitStatus === 'ERROR'"
+          class="typo__p"
+        >
           Please fill the form correctly.
         </p>
-        <p class="typo__p" v-if="submitStatus === 'PENDING'">Sending...</p>
+        <p
+          v-if="submitStatus === 'PENDING'"
+          class="typo__p"
+        >
+          Sending...
+        </p>
       </div>
     </div>
   </b-tab>
@@ -81,8 +121,8 @@
 <script>
 import axios from 'axios';
 import { validationMixin } from 'vuelidate';
-import { required } from 'vuelidate/lib/validators';
-import TinyEditor from '../../TinyEditor';
+import { required, numeric } from 'vuelidate/lib/validators';
+import TinyEditor from '../../TinyEditor.vue';
 
 export default {
   components: {
@@ -102,9 +142,12 @@ export default {
       type: Number,
       default: 1,
     },
-    initialContent: String,
+    initialContent: {
+      type: String,
+      default: '',
+    },
   },
-  data: function() {
+  data() {
     return {
       pageDetails: {},
       title: this.initialTitle,
@@ -112,6 +155,7 @@ export default {
       content: this.initialContent,
       submitStatus: null,
       updateStatus: null,
+      deleteStatus: null,
     };
   },
   validations: {
@@ -120,29 +164,30 @@ export default {
     },
     sortingOrder: {
       required,
+      numeric,
     },
     content: {
       required,
     },
   },
   computed: {
-    tabTitle: function() {
+    tabTitle() {
       return this.initialTitle.length > 0
         ? this.initialTitle
         : 'New Introduction Page';
     },
   },
   methods: {
-    savePage: function() {
+    savePage() {
       this.$v.$touch();
       if (this.$v.$invalid) {
         this.submitStatus = 'ERROR';
       } else {
         this.submitStatus = 'PENDING';
-        this.pageDetails['title'] = this.title;
-        this.pageDetails['content'] = this.content;
-        this.pageDetails['cbe_id'] = this.$store.state.cbeId;
-        this.pageDetails['sorting_order'] = this.sortingOrder;
+        this.pageDetails.title = this.title;
+        this.pageDetails.content = this.content;
+        this.pageDetails.cbe_id = this.$store.state.cbeId;
+        this.pageDetails.sorting_order = this.sortingOrder;
 
         axios
           .post(`/api/v1/cbes/${this.$store.state.cbeId}/introduction_pages`, {
@@ -152,12 +197,12 @@ export default {
             this.createdPage = response.data;
             if (this.createdPage.id > 0) {
               this.submitStatus = 'OK';
-              this.pageDetails['id'] = this.createdPage.id;
+              this.pageDetails.id = this.createdPage.id;
               this.$emit('add-introduction-page', this.pageDetails);
               this.pageDetails = {};
               this.title = this.initialTitle;
               this.content = null;
-              this.sortingOrder = this.initialSortingOrder;
+              this.sortingOrder += 1;
               this.$v.$reset();
             }
           })
@@ -167,15 +212,15 @@ export default {
           });
       }
     },
-    updatePage: function() {
+    updatePage() {
       this.$v.$touch();
       if (this.$v.$invalid) {
         this.updateStatus = 'ERROR';
       } else {
         this.updateStatus = 'PENDING';
-        this.pageDetails['title'] = this.title;
-        this.pageDetails['content'] = this.content;
-        this.pageDetails['sorting_order'] = this.sortingOrder;
+        this.pageDetails.title = this.title;
+        this.pageDetails.content = this.content;
+        this.pageDetails.sorting_order = this.sortingOrder;
 
         axios
           .patch(
@@ -187,7 +232,7 @@ export default {
           .then(response => {
             this.updateStatus = 'OK';
             this.updatedPage = response.data;
-            this.pageDetails['id'] = this.updatedPage.id;
+            this.pageDetails.id = this.updatedPage.id;
             this.$emit('add-introduction-page', this.pageDetails);
             this.pageDetails = {};
             this.title = this.updatedPage.title;
@@ -199,6 +244,31 @@ export default {
             this.updateStatus = 'ERROR';
             console.log(error);
           });
+      }
+    },
+    deletePage() {
+      if(confirm("Do you really want to delete?")){
+        this.$v.$touch();
+        if (this.$v.$invalid) {
+          this.updateStatus = 'ERROR';
+        } else {
+          this.deleteStatus = 'PENDING';
+          const pageId = this.id;
+
+          axios
+            .delete(
+              `/api/v1/cbes/${this.$store.state.cbeId}/introduction_pages/${pageId}`
+            )
+            .then(response => {
+              this.$emit('rm-introduction-page', pageId);
+              this.updateStatus = 'OK';
+              this.$v.$reset();
+            })
+            .catch(error => {
+              this.updateStatus = 'ERROR';
+              console.log(error);
+            });
+        }
       }
     },
   },

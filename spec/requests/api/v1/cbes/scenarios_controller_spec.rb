@@ -27,7 +27,9 @@ RSpec.describe 'Api::V1::Cbe::ScenariosController', type: :request do
         expect([body.keys]).to contain_exactly(%w[id
                                                   name
                                                   content
-                                                  section_id])
+                                                  section_id
+                                                  questions
+                                                  section_questions])
       end
     end
 
@@ -71,7 +73,9 @@ RSpec.describe 'Api::V1::Cbe::ScenariosController', type: :request do
         expect([body.keys]).to contain_exactly(%w[id
                                                   name
                                                   content
-                                                  section_id])
+                                                  section_id
+                                                  questions
+                                                  section_questions])
       end
     end
 
@@ -91,6 +95,20 @@ RSpec.describe 'Api::V1::Cbe::ScenariosController', type: :request do
         body = JSON.parse(response.body)
 
         expect(body['errors']).to eq("content"=>["can't be blank"])
+      end
+    end
+  end
+
+  describe 'post /api/v1/scenarios/:id' do
+    context 'destroy a CBE scenario' do
+      let(:scenario) { create(:cbe_scenario, :with_section) }
+
+      before do
+        delete "/api/v1/scenarios/#{scenario.id}"
+      end
+
+      it 'returns HTTP status 202' do
+        expect(response).to have_http_status 202
       end
     end
   end
