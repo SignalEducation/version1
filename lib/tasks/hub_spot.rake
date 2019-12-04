@@ -67,6 +67,37 @@ namespace :hub_spot do
     Rails.logger.info total_time.real
     Rails.logger.info '=============================================='
   end
+
+  desc 'Update hubspot users dada who have/had a valid subscrition'
+  task update_subscribed_contacts: :environment do
+    Rails.logger = Logger.new(Rails.root.join('log', 'tasks.log'))
+    Rails.logger.info 'Updating subscribed contacts...'
+
+    total_time = Benchmark.measure do
+      @errors = []
+      batches = User.includes(:subscriptions).
+                  where(subscriptions: {
+                          state: %i[incomplete active past_due canceled canceled-pending pending_cancellation]
+                  }).find_in_batches(batch_size: 100)
+
+      batches.each do |users|
+        ActiveRecord::Base.transaction do
+          Rails.logger.info "======= #{users.count} USERS ========="
+          bench_time = Benchmark.measure do
+            HubSpotContactWorker.perform_async(user.id)
+          end
+
+          Rails.logger.info '============ Bench time execution ==============='
+          Rails.logger.info bench_time.real
+          Rails.logger.info '================================================='
+        end
+      end
+    end
+
+    Rails.logger.info '============ Total time execution ============'
+    Rails.logger.info total_time.real
+    Rails.logger.info '=============================================='
+  end
 end
 
 def blacklist
