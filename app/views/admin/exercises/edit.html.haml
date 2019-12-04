@@ -13,20 +13,36 @@
             .row
               .col-sm-6
                 .form-group
-                  -if f.object&.correction&.present?
-                    =f.label :correction, t('views.exercises.admin.form.correction'), class: 'control-label'
+                  -if f.object&.submission&.present?
+                    =f.label :submission, 'PDF Exercise Submission', class: 'control-label'
                     .form-control-static
-                      =link_to f.object.correction_file_name, f.object.correction.url, target: '_blank'
+                      =link_to f.object.submission_file_name, f.object.submission.url, class: 'uploaded-file', target: '_blank'
+                      =number_to_human_size(f.object.submission_file_size)
+                      %br/
+                      =f.label :submission, 'Upload a replacement submission', class: 'control-label'
+                      .input-group.input-group-lg
+                        =f.file_field :submission, class: 'form-control'
+                  -else
+                    =f.label :submission, 'Upload a submission', class: 'control-label'
+                    .input-group.input-group-lg
+                      =f.file_field :submission, class: 'form-control'
+                .form-group
+                  -if f.object&.correction&.present?
+                    =f.label :correction, 'PDF Correction', class: 'control-label'
+                    .form-control-static
+                      =link_to f.object.correction_file_name, f.object.correction.url, class: 'uploaded-file', target: '_blank'
                       =number_to_human_size(f.object.correction_file_size)
                       %br/
-                      =f.label :correction, t('views.white_papers.form.file_replacement'), class: 'control-label'
+                      =f.label :correction, 'Upload a replacement correction', class: 'control-label'
+                      .input-group.input-group-lg
+                        =f.file_field :correction, class: 'form-control'
                   -else
-                    =f.label :correction, t('views.exercises.admin.form.correction'), class: 'control-label'
+                    =f.label :correction, 'Upload a correction', class: 'control-label'
                     .input-group.input-group-lg
                       =f.file_field :correction, class: 'form-control'
                 =f.label :corrector_id, 'Corrector', class: 'control-label'
                 .input-group.input-group-lg.mb-4
-                  =f.select :corrector_id, UserGroup.where(exercise_corrections_access: true).first.users.map{|u| [u.name, u.id]}, class: 'form-control'
+                  =f.select :corrector_id, User.joins(:user_group).where(user_groups: { exercise_corrections_access: true }).map{|u| [u.name, u.id]}, class: 'form-control'
 
         .row
           .col-sm-12
