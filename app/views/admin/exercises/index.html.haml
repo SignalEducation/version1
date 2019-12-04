@@ -14,7 +14,7 @@
                 =form_tag(admin_search_exercises_url, role: 'form', class: 'form-inline') do
                   =select_tag :state, options_for_select([['Submitted', 'submitted'], ['Correcting', 'correcting'], ['Returned', 'returned'], ['All', 'all']], @filters['state']), class: 'form-control custom-select filter mr-3'
                   =select_tag :product, options_from_collection_for_select(Product.all_active, 'id', 'name', @filters['product']), prompt: 'All Products', class: 'form-control custom-select filter mr-3'
-                  =select_tag :corrector, options_from_collection_for_select(UserGroup.where(exercise_corrections_access: true).first.users, 'id', 'name', @filters['corrector']), prompt: 'All Correctors', class: 'form-control custom-select filter mr-3'
+                  =select_tag :corrector, options_from_collection_for_select(User.joins(:user_group).where(user_groups: { exercise_corrections_access: true }), 'id', 'name', @filters['corrector']), prompt: 'All Correctors', class: 'form-control custom-select filter mr-3'
                   =text_field_tag :search, @filters['search'], class: 'form-control', placeholder: 'Search term'
                   %button{type: "submit", class: 'ml-3'}
                     %i{:role => "img", class: 'budicon-search-list'}
