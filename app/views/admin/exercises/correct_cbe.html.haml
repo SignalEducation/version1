@@ -12,15 +12,18 @@
         .col-12.col-md-3.mb-4
           #accordionExample.accordion
             -@cbe_user_log.cbe.sections.each_with_index do |section, section_index|
+              -section_questions = @cbe_user_log.questions.by_section(section.id)
               .card
                 #headingOne.card-header
                   %h2.mb-0
                     %button.btn.btn-link{"aria-controls" => "collapse_#{section.id}", "aria-expanded" => "false", "data-target" => "#collapse_#{section.id}", "data-toggle" => "collapse", :type => "button"}
                       =section.name
+                      %br
+                      =cbe_section_score(section_questions)
                 .collapse{"aria-labelledby" => "heading_#{section.id}", "id" => "collapse_#{section.id}"}
                   .card-body
                     #v-pills-tab.nav.flex-column.nav-pills{"aria-orientation" => "vertical", :role => "tablist"}
-                      -@cbe_user_log.questions.by_section(section.id).each_with_index do |question, index|
+                      -section_questions.each_with_index do |question, index|
                         %a#v-pills-home-tab.nav-link.mb-3{"aria-controls" => "v-pills-#{question.id}", "data-toggle" => "pill", :href => "#v-pills-#{question.id}", :role => "tab"}
                           ="Question #{index+1}"
                           =question_title_class(question)

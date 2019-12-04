@@ -37,8 +37,7 @@
                   %li
                     =question_answer(answer)
 
-            -if question.answers.present?
-              %h6='Answered:'
+            -if question.answers.present? && %w[open spreadsheet].exclude?(question.cbe_question.kind)
               %ul
                 -question.answers.each do |answer|
                   %li
