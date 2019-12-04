@@ -93,6 +93,19 @@ module Admin
       end
     end
 
+    def cbe_user_educator_comment
+      @user_log = Cbe::UserLog.find(params[:cbe_user_log_id])
+      @response = 'Cbe was updated.'
+
+      ActiveRecord::Base.transaction do
+        @user_log.update(educator_comment: params[:educator_comment])
+      end
+
+      respond_to do |format|
+        format.js
+      end
+    end
+
     def return_cbe
       @cbe_user_log = @exercise.cbe_user_log
       @cbe          = @cbe_user_log.cbe

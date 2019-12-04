@@ -26,6 +26,16 @@ module CbeQuestionsHelper
     end
   end
 
+  def question_answer(answer)
+    if answer.content['correct']
+      "#{answer.content['text']} <span style='color: #00b67B;' class='glyphicon glyphicon-ok pull-right'></span>".html_safe
+    elsif answer.content['correct'] == false
+      "#{answer.content['text']} <span style='color: #dc3545;' class='glyphicon glyphicon-remove pull-right'></span>".html_safe
+    else
+      answer.content['text']
+    end
+  end
+
   private
 
   def admin_answers_partial(question_kind)
