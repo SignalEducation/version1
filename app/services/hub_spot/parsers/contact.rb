@@ -38,7 +38,7 @@ module HubSpot
       def subscriptions_statuses(user, statuses = [])
         ExamBody.where(active: true).each do |body|
           subscriptions_for_body = user.subscriptions.for_exam_body(body.id).where.not(state: :pending).order(created_at: :desc)
-          statuses << { property: "#{body&.name&.downcase}_status",
+          statuses << { property: "#{body&.name}_status".parameterize(separator: '_'),
                         value: subscriptions_for_body.any? ? subscriptions_for_body.first.user_readable_status : 'Basic' }
         end
 
