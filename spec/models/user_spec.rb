@@ -103,22 +103,15 @@ describe User do
   end
 
   it { should validate_presence_of(:email) }
-
   it { should validate_length_of(:email).is_at_least(5).is_at_most(50) }
-
   it { should validate_presence_of(:first_name) }
   it { should validate_length_of(:first_name).is_at_least(2).is_at_most(20) }
-
   it { should validate_presence_of(:last_name) }
   it { should validate_length_of(:last_name).is_at_least(2).is_at_most(30) }
-
-
   it { should validate_presence_of(:password).on(:create) }
   it { should validate_confirmation_of(:password).on(:create) }
   it { should validate_length_of(:password).is_at_least(6).is_at_most(255) }
-
   it { should_not validate_presence_of(:country_id) }
-
   it { should validate_presence_of(:user_group_id) }
 
   context 'is a tutor' do
@@ -131,7 +124,6 @@ describe User do
     it { should_not validate_presence_of(:name_url)}
   end
 
-
   context "user email validation" do
     before do
       user_group = FactoryBot.create(:student_user_group)
@@ -142,7 +134,6 @@ describe User do
       expect(@user).to validate_uniqueness_of(:email).case_insensitive
     end
   end
-
 
   it { should validate_inclusion_of(:locale).in_array(User::LOCALES) }
 
@@ -230,6 +221,7 @@ describe User do
 
   it { should respond_to(:completed_course_module_element) }
   it { should respond_to(:started_course_module_element) }
+  it { should respond_to(:last_subscription) }
 
   describe 'Methods' do
     describe '.viewable_subscriptions' do
@@ -317,6 +309,24 @@ describe User do
           )
 
           expect(user.viewable_subscriptions.count).to eq 0
+        end
+      end
+    end
+
+    describe '.last_subscription' do
+      before :each do
+        allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
+      end
+
+      let(:user) { create(:user) }
+
+      context 'for in-active exam bodies' do
+        let(:bad_exam_body) { create(:exam_body, active: false) }
+        let(:sub_plan)      { create(:subscription_plan, exam_body_id: bad_exam_body.id) }
+        let!(:subscription) { create(:subscription, state: :active, user_id: user.id, subscription_plan_id: sub_plan.id) }
+
+        it 'does not return active subscriptions' do
+          expect(user.last_subscription).to eq (subscription)
         end
       end
     end

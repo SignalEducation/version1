@@ -725,6 +725,10 @@ class User < ApplicationRecord
     (subscriptions.map(&:state) & %w[active past_due pending_cancellation]).present?
   end
 
+  def last_subscription
+    subscriptions.where(state: %i[incomplete active past_due canceled canceled-pending pending_cancellation]).in_reverse_created_order.first
+  end
+
   private
 
   def add_guid

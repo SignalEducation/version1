@@ -26,13 +26,13 @@
                   -if @exercise.returned_on && @exercise.cbe_user_log
                     %h3
                       =cbe_score(@exercise.cbe_user_log)
-
-              .row
-                .col-md-12
-                  %h3
-                    %span.mr-1
-                      ="Educator Comment: "
-                      =raw(@exercise.cbe_user_log.educator_comment)
+              -if @exercise.returned? and @exercise.cbe_user_log.educator_comment.present?
+                .row
+                  .col-md-12
+                    %h3
+                      %span.mr-1
+                        ="Educator Comment: "
+                        =raw(@exercise.cbe_user_log.educator_comment)
 
               .row.pt-6
                 .col-md-12
