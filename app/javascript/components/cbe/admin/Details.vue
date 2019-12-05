@@ -187,6 +187,28 @@ export default {
       updateStatus: null,
     };
   },
+  watch: {
+    initialName: {
+      handler(value) {
+        this.name = value;
+      }
+    },
+    initialAgreementContent: {
+      handler(value) {
+        this.agreementContent = value;
+      }
+    },
+    initialActive: {
+      handler(value) {
+        this.active = value;
+      }
+    },
+    initialCourseId: {
+      handler(value) {
+        this.subjectCourseId = value;
+      }
+    },
+  },
   mounted() {
     this.getSubjects();
   },
