@@ -155,6 +155,9 @@ class StudentSignUpsController < ApplicationController
     else
       redirect_to root_url
     end
+  rescue ActionController::InvalidAuthenticityToken
+    flash[:error] = 'Sorry. Your sign up attempt failed. Please try again'
+    redirect_to root_url
   end
 
   def show

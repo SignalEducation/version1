@@ -167,6 +167,7 @@
     displayCardError.text('');
     var stripe = Stripe('#{ENV['LEARNSIGNAL_V3_STRIPE_PUBLIC_KEY']}');
     var elements = stripe.elements();
+    var cardId = "#{@card&.id}"
 
     var cardElement = elements.create('card', {hidePostalCode: true, style: style});
     cardElement.mount('#card-element');
@@ -192,7 +193,9 @@
       if ($('#subscription_use_paypal').val() === 'true') {
         this.submit();
       } else {
-        upgradeStripeSubscription();
+        if (cardId && cardId.length > 0) {
+          upgradeStripeSubscription();
+        }
       }
     });
 

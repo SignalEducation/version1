@@ -142,13 +142,23 @@ describe Product do
       end
     end
 
-    context '.name_by_type' do
-      it 'cbe product' do
-        expect(cbe_product.name_by_type).to eq(cbe_product.cbe.name)
+    describe '.name_by_type' do
+      context 'for CBE Products' do
+        it 'returns the name of the CBE' do
+          expect(cbe_product.name_by_type).to eq(cbe_product.cbe.name)
+        end
       end
 
-      it 'not cbe product' do
-        expect(correction_pack_product.name_by_type).to eq(correction_pack_product.mock_exam.name)
+      context 'for non-CBE Procucts' do
+        let(:product_without_mock) { build_stubbed(:product, mock_exam: nil) }
+
+        it 'returns the name of the MockExam (if it exists as an association)' do
+          expect(correction_pack_product.name_by_type).to eq(correction_pack_product.mock_exam.name)
+        end
+
+        it 'returns the name of the Product (if there is no MockExam)' do
+          expect(product_without_mock.name_by_type).to eq(correction_pack_product.mock_exam.name)
+        end
       end
     end
   end
