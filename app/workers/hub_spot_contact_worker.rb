@@ -5,7 +5,7 @@ class HubSpotContactWorker
 
   sidekiq_options queue: :high
 
-  def perform(user_id)
-    HubSpot::Contacts.new.batch_create([user_id])
+  def perform(users_id)
+    HubSpot::Contacts.new.batch_create(Array(users_id))
   end
 end

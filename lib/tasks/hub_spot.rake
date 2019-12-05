@@ -76,15 +76,14 @@ namespace :hub_spot do
     total_time = Benchmark.measure do
       @errors = []
       batches = User.includes(:subscriptions).
-                  where(subscriptions: {
-                          state: %i[incomplete active past_due canceled canceled-pending pending_cancellation]
-                  }).find_in_batches(batch_size: 100)
+                  where(subscriptions: { state: %i[incomplete active past_due canceled canceled-pending pending_cancellation] }).
+                  find_in_batches(batch_size: 100)
 
       batches.each do |users|
         ActiveRecord::Base.transaction do
           Rails.logger.info "======= #{users.count} USERS ========="
           bench_time = Benchmark.measure do
-            HubSpotContactWorker.perform_async(user.id)
+            HubSpotContactWorker.perform_async(users.map(&:id))
           end
 
           Rails.logger.info '============ Bench time execution ==============='
