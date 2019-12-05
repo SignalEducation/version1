@@ -177,7 +177,7 @@
                             :initial-score="question.score"
                             :initial-sorting-order="question.sorting_order"
                             :initial-kind="question.kind"
-                            :initial-answers="question.answers_attributes"
+                            :initial-answers="question.answers"
                             @rm-question="removeQuestion"
                           />
                         </div>
