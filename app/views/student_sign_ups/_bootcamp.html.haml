@@ -1,6 +1,6 @@
 =render partial: 'layouts/external_navbar'
 %main
-  .container-bg.home-hero-alt-bg.bg-bootcamp
+  .container-bg.home-hero-alt-bg.bg-bootcamp{style: @home_page&.background_image.present? ? "background-image: url(#{image_url(@home_page.background_image)});" : ''}
     .container
       %article.home-hero.home-hero-bootcamp
         .row{class: "#{(@home_page.registration_form || @home_page.login_form) ? 'justify-content-between' : ''}"}
