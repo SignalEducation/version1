@@ -4,7 +4,15 @@
   .card-body
     .row
       -if question_kind == 'open'
-        #open-answers-component{ data: { answer_type: 'TextEditor', content: question.answers.first.content['text'] } }
+        %div{ id: "questionContent-#{question.answers.first.id}" }
+        =text_area_tag(:question_content, question.answers.first.content['text'], id: "#{question.answers.first.id}-editor", as: 'summernote')
+        -# TODO, change this to our vue text editor component
+        -# I needed to remove because vue component is not showing
+        -# when have more then one question.
+        -#
+        -# #open-answers-component{ data: { answer_type: 'TextEditor',
+        -#                                  answer_id: question.answers.first.id,
+        -#                                  content: question.answers.first.content['text'] } }
       -else
         #open-answers-component{ data: { answer_type: 'Spreadsheet',
                                                answer_id: question.answers.first.id,
@@ -36,6 +44,11 @@
 
 :javascript
   $("##{question.id}-editor").summernote({
+    disableDragAndDrop: true,
+    height: 150
+  });
+
+   $("##{question.answers.first.id}-editor").summernote({
     disableDragAndDrop: true,
     height: 150
   });

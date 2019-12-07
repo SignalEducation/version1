@@ -12,23 +12,24 @@ describe CbeQuestionsHelper do
   describe '#question_title_class' do
     it 'return correct stylized question title class' do
       question.correct = true
-      title = question_title_class(question)
 
-      expect(title).to include('glyphicon-ok')
+      expect(question_title_class(question)).to include('glyphicon-ok')
     end
 
     it 'return incorrect stylized question title' do
       question.correct = false
-      title = question_title_class(question)
 
-      expect(title).to include('glyphicon-remove')
+      expect(question_title_class(question)).to include('glyphicon-remove')
     end
 
     it 'return not corrected stylized question title' do
       question.correct = nil
-      title = question_title_class(question)
 
-      expect(title).to include('glyphicon-pencil')
+      expect(question_title_class(question)).to include('glyphicon-pencil')
+    end
+
+    it 'return not answered stylized question title' do
+      expect(question_title_class(nil)).to include('glyphicon-exclamation')
     end
   end
 

@@ -16,7 +16,9 @@ module CbeQuestionsHelper
   end
 
   def question_title_class(question)
-    case question.correct
+    return "<span style='color: #f59037f2;' class='glyphicon glyphicon-exclamation-sign pull-right'></span>".html_safe if question.nil?
+
+    case question&.correct
     when true
       "<span style='color: #00b67B;' class='glyphicon glyphicon-ok pull-right'></span>".html_safe
     when false
