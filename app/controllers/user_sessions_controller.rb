@@ -41,6 +41,9 @@ class UserSessionsController < ApplicationController
     else
       render action: :new
     end
+  rescue ActionController::InvalidAuthenticityToken
+    flash[:error] = 'Sorry. Your login attempt failed. Please try again'
+    redirect_to sign_in_url
   end
 
   def destroy

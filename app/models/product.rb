@@ -85,7 +85,7 @@ class Product < ApplicationRecord
   end
 
   def name_by_type
-    cbe? ? cbe.name : mock_exam.name
+    cbe? ? cbe.name : (mock_exam&.name || name)
   end
 
   private

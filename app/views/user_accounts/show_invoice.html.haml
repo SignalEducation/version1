@@ -39,36 +39,40 @@
 
                   .col-12.col-md-6.mb-4
                     .invoice-payment-details
-                      .invoice-payment-details-wrap
-                        %span.payment-content
-                          =image_tag('ico-card.svg', alt: 'Credit Card Icon', class: 'logo-icon mr-2 mr-sm-3')
-                          =@card.brand
-                          &#8226;
-                          &#8226;
-                          &#8226;
-                          =@card.last_4
+                      -if @card
+                        .invoice-payment-details-wrap
+                          %span.payment-content
+                            =image_tag('ico-card.svg', alt: 'Credit Card Icon', class: 'logo-icon mr-2 mr-sm-3')
+                            =@card.brand
+                            &#8226;
+                            &#8226;
+                            &#8226;
+                            =@card.last_4
 
 
-                      -if @invoice.status == 'Pending'
-                        %p
-                          The last charge attempt failed with this card.
-                        %p.invalid-details
-                          Your subscription will be cancelled if this invoice is not paid.
+                        -if @invoice.status == 'Pending'
+                          %p
+                            The last charge attempt failed with this card.
+                          %p.invalid-details
+                            Your subscription will be cancelled if this invoice is not paid.
 
-                        .col-10.offset-1
-                          %a{data: {target: '#add-card-modal', toggle: 'modal'}, href: '#', class: 'btn btn-primary full-width add-card'}
-                            =t('views.users.show.new_card')
+                          .col-10.offset-1
+                            %a{data: {target: '#add-card-modal', toggle: 'modal'}, href: '#', class: 'btn btn-primary full-width add-card'}
+                              =t('views.users.show.new_card')
 
+                        -else
+                          %p.invalid-details
+                            Your subscription will be cancelled if this invoice is not paid.
+                          .col-10.offset-1.mt-5
+                            .btn.btn-primary.full-width#triggerAuth{onclick: 'ReAuth(); return false;'}
+                              ='Confirm Payment'
+                            .spinner
+                              .bounce1
+                              .bounce2
+                              .bounce3
                       -else
                         %p.invalid-details
-                          Your subscription will be cancelled if this invoice is not paid.
-                        .col-10.offset-1.mt-5
-                          .btn.btn-primary.full-width#triggerAuth{onclick: 'ReAuth(); return false;'}
-                            ='Confirm Payment'
-                          .spinner
-                            .bounce1
-                            .bounce2
-                            .bounce3
+                          You need to add a valid payment card to your account. Your subscription will be cancelled if this invoice is not paid. Please visit the card details section in your account.
 
 
 
