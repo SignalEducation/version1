@@ -5,7 +5,7 @@ ruby '2.5.3'
 gem 'rails', '5.2.2'
 
 # Use Puma as the app server
-gem 'puma', '~> 3.11'
+gem 'puma', '~> 3.12'
 
 # Core gems - common to all environments
 gem 'airbrake', '~> 9.5'
