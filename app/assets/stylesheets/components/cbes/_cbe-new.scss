@@ -10,18 +10,23 @@
 
 
 .cbe-section > .cbe-content {
-  margin-top: 76px;
+  padding: 10px;
   height: 100%;
   width: 100%;
   overflow-y: scroll;
   position: absolute;
   display: block;
-  overflow: auto;
   background-color: #ffffff;
   font-family: Arial, OakesGrotesk, sans-serif;
   color: #595959;
+  padding-top: 90px;
+  padding-bottom: 40px;
 }
 
+#cbe-footer{
+  margin-top: 76px;
+  position: fixed;
+}
 .intructions-counter {
   text-align: center;
   font-size: x-large;
@@ -139,6 +144,8 @@ button.flagged{
   }
 
   #cbe-nav-header {
+    position: fixed;
+
     .bg-cbe-gray {
       background-color: #F2F2F2;
     }
@@ -241,7 +248,6 @@ button.flagged{
     }
 
   }
-
 
   .calculator-icon {
     background-image: asset-url('cbe-calc-icon.png');

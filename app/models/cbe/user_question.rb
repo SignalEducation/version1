@@ -14,6 +14,6 @@ class Cbe
     accepts_nested_attributes_for :answers
 
     # scopes
-    scope :by_section, ->(section_id) { joins(cbe_question: :section).where('cbe_sections.id': section_id) }
+    scope :by_section, ->(section_id) { joins(cbe_question: :section).where('cbe_sections.id': section_id).order('cbe_questions.sorting_order') }
   end
 end

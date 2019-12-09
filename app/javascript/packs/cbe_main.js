@@ -5,9 +5,8 @@ import BootstrapVue from 'bootstrap-vue';
 import store from '../store';
 import router from '../router';
 import * as VueWindow from '@hscmap/vue-window';
-
-
-
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
 // ##### CBE #####
 //
 // Admin View
@@ -21,7 +20,8 @@ import CbeHome from '../components/cbe/UserHome.vue';
 // ##############
 
 Vue.use(BootstrapVue);
-Vue.use(VueWindow)
+Vue.use(Loading);
+Vue.use(VueWindow);
 
 const mountCbeElement = (element, theComponent) =>
   new Vue({

@@ -87,6 +87,12 @@ export default {
   },
   methods: {
     submitExam() {
+      this.loader = this.$loading.show({
+        loader: 'dots',
+        color: '#00b67B',
+        container: this.fullPage ? null : this.$refs.formContainer,
+      });
+
       axios
         .patch(
           `/api/v1/cbes/${this.cbe_id}/users_log/${this.user_cbe_data.user_log_id}`,

@@ -23,30 +23,32 @@
                 .collapse{"aria-labelledby" => "heading_#{section.id}", "id" => "collapse_#{section.id}"}
                   .card-body
                     #v-pills-tab.nav.flex-column.nav-pills{"aria-orientation" => "vertical", :role => "tablist"}
-                      -section_questions.each_with_index do |question, index|
+                      -section.questions.order(:sorting_order).each_with_index do |question, index|
+                      -user_question = @cbe_user_log.questions.select{ |q| q.cbe_question.id == question.id }.first
                         %a#v-pills-home-tab.nav-link.mb-3{"aria-controls" => "v-pills-#{question.id}", "data-toggle" => "pill", :href => "#v-pills-#{question.id}", :role => "tab"}
                           ="Question #{index+1}"
-                          =question_title_class(question)
+                          =question_title_class(user_question)
 
         .col-12.col-md-9
           #v-pills-tabContent.tab-content
-            -@cbe_user_log.questions.each_with_index do |question, index|
+            -@cbe_user_log.cbe.questions.each_with_index do |question, index|
+              -user_question = @cbe_user_log.questions.select{ |q| q.cbe_question.id == question.id }.first
               .tab-pane.fade{id: "v-pills-#{question.id}", "aria-labelledby" => "v-pills-#{question.id}-tab", :role => "tabpanel", class: index == 0 ? 'active show' : ''}
-                .h4=question.cbe_question.kind.humanize
+                .h4=question.kind.humanize
                 .question_content.pb-5
                   .h5
                     Question Content
-                  =raw(question.cbe_question.content)
+                  =raw(question.content)
 
                 .question_solution.pb-5
                   .h5
                     Solution Content
-                  =raw(question.cbe_question.solution)
-
-                .question_answers.pb-5
-                  .h5
-                    Answer Content
-                  =render_admin_answers(question)
+                  =raw(question.solution)
+                -if user_question
+                  .question_answers.pb-5
+                    .h5
+                      Answer Content
+                    =render_admin_answers(user_question)
     .row
       .col-sm-12
         .box-item.table-box

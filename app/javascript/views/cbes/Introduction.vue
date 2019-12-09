@@ -1,18 +1,20 @@
 <template>
   <section style="padding: 25px;">
     <div
-      :id="'introductions-' + page.id"
       v-for="page in cbe_data.introduction_pages"
+      :id="'introductions-' + page.id"
       v-if="page.id == id"
       :key="page.id"
     >
-<div class="content">
+      <div class="content">
         <div v-html="page.content" />
       </div>
     </div>
 
-    <AgreementModal v-if="agreementModalIsOpen"
-:next-action="this.nextAction" />
+    <AgreementModal
+      v-if="agreementModalIsOpen"
+      :next-action="nextAction"
+    />
   </section>
 </template>
 
@@ -41,6 +43,12 @@ export default {
       user_cbe_data: 'userCbeData',
     }),
   },
+  mounted() {
+    this.showLoading();
+  },
+  beforeUpdate() {
+    this.closeLoading();
+  },
   beforeRouteLeave (to, from, next) {
     this.agreementModalIsOpen = true
     this.nextAction = next;
@@ -49,6 +57,20 @@ export default {
     for (const link of navLinks) {
       link.style.display = 'none';
     }
-  }
+  },
+  methods: {
+    showLoading() {
+      this.loader = this.$loading.show({
+        loader: 'dots',
+        color: '#00b67B',
+        container: this.fullPage ? null : this.$refs.formContainer,
+        canCancel: true,
+        onCancel: this.onCancel,
+      });
+    },
+    closeLoading() {
+      this.loader.hide();
+    },
+  },
 };
 </script>
