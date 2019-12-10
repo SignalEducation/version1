@@ -37,7 +37,7 @@
                                   =link_to pdf_invoice_path(invoice.id, format: 'pdf'), target: '_blank' do
                                     .btn.btn-link.btn-xs
                                       View
-                                -elsif (invoice&.subscription.pending_3d_secure? && invoice.requires_3d_secure) || invoice.status == 'Past Due'
+                                -elsif (invoice&.subscription.pending_3d_secure? && invoice.requires_3d_secure) || (invoice.status == 'Past Due' && invoice.sca_verification_guid.present?)
                                   =link_to show_invoice_url(invoice.sca_verification_guid) do
                                     .btn.btn-primary.btn-xs
                                       =invoice.requires_3d_secure ? 'Authenticate' : 'Confirm Payment'

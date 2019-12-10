@@ -7,6 +7,7 @@
           <TextCorrection
             v-if="answerType === 'TextEditor'"
             :question-content="questionContent"
+            :editor-id="answerId"
           />
           <SpreadsheetCorrection
             v-if="answerType === 'Spreadsheet' && spreadsheetData != null"

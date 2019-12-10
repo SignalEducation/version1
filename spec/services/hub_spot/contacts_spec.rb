@@ -20,9 +20,10 @@ RSpec.describe HubSpot::Contacts do
 
     it 'save parsed data in hubspot' do
       subject
+      prederred_exam_body = "#{user_01&.preferred_exam_body&.name}_status".parameterize(separator: '_')
 
       stub_request(:post, "#{uri}/contacts/v1/contact?hapikey=#{key}").
-        with(body: "{\"properties\":[{\"property\":\"email\",\"value\":\"#{user_01.email}\"},{\"property\":\"firstname\",\"value\":\"#{user_01.first_name}\"},{\"property\":\"lastname\",\"value\":\"#{user_01.last_name}\"},{\"property\":\"email_verified\",\"value\":false},{\"property\":\"date_of_birth\",\"value\":\"#{user_01.date_of_birth}\"},{\"property\":\"currency\",\"value\":\"#{user_01.currency.name}\"},{\"property\":\"country\",\"value\":\"#{user_01&.country&.name}\"},{\"property\":\"sub_close_date\",\"value\":null},{\"property\":\"sub_payment_interval\",\"value\":null},{\"property\":\"sub_exam_body\",\"value\":null},{\"property\":\"preferred_exam_body\",\"value\":\"#{user_01&.preferred_exam_body&.name}\"},{\"property\":\"#{user_01&.preferred_exam_body&.name&.downcase}_status\",\"value\":\"Basic\"}]}").
+        with(body: "{\"properties\":[{\"property\":\"email\",\"value\":\"#{user_01.email}\"},{\"property\":\"firstname\",\"value\":\"#{user_01.first_name}\"},{\"property\":\"lastname\",\"value\":\"#{user_01.last_name}\"},{\"property\":\"email_verified\",\"value\":false},{\"property\":\"date_of_birth\",\"value\":\"#{user_01.date_of_birth}\"},{\"property\":\"currency\",\"value\":\"#{user_01.currency.name}\"},{\"property\":\"country\",\"value\":\"#{user_01&.country&.name}\"},{\"property\":\"sub_close_date\",\"value\":null},{\"property\":\"sub_payment_interval\",\"value\":null},{\"property\":\"sub_exam_body\",\"value\":null},{\"property\":\"preferred_exam_body\",\"value\":\"#{user_01&.preferred_exam_body&.name}\"},{\"property\":\"#{prederred_exam_body}\",\"value\":\"Basic\"}]}").
         to_return(status: 200, body: 'OK', headers: {})
 
       response = contacts.create(user_01)

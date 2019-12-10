@@ -13,7 +13,7 @@ module Api
         def show; end
 
         def create
-          @user_log = ::Cbe::UserLog.first_or_initialize(permitted_params)
+          @user_log = ::Cbe::UserLog.where(permitted_params).first_or_initialize
 
           return if @user_log.save
 

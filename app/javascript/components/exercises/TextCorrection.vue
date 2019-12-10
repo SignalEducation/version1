@@ -3,7 +3,7 @@
     <TinyEditor
       :field-model.sync="questionContent"
       :aditional-toolbar-options="['fullscreen code']"
-      :editor-id="'questionEditor'"
+      :editor-id="editorId"
       @blur="$v.questionContent.$touch()"
     />
   </section>
@@ -21,6 +21,10 @@ export default {
       type: String,
       default: "",
     },
+    editorId:{
+      type: Number,
+      default: null,
+    }
   },
 };
 </script>
