@@ -10,16 +10,16 @@
 
       .modal-body.pt-4
         %p.mb-4
-          Unlock the next module by completing <b class="font-weight-medium">Test Quiz</b>.
+          Unlock that step by completing previous step.
 
 
 :javascript
   $('#related-lesson-restriction').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget); // Button that triggered the modal
     var recipient = button.data('related'); // Extract info from data-* attributes
-    // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
     // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-    var modal = $(this);
-    modal.find('.modal-body p').text('Unlock the next module by completing ' + recipient + '.')
-
+    if (recipient) {
+      var modal = $(this);
+      modal.find('.modal-body p').html("Unlock the next step by completing <b>" + recipient + '</b>.')
+    }
   })

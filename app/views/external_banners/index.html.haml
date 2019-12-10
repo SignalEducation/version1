@@ -29,7 +29,6 @@
                     %td=tick_or_cross(external_banner.active)
                     %td=external_banner.background_colour
                     %td
-                      =link_to 'Preview', external_banner, class: 'btn btn-secondary btn-xs'
                       =link_to t('views.general.edit'), edit_external_banner_url(external_banner), class: 'btn btn-primary btn-xs'
                       -if external_banner.destroyable?
                         =link_to t('views.general.delete'), external_banner, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-secondary btn-xs'

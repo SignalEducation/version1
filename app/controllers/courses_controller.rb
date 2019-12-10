@@ -26,6 +26,8 @@ class CoursesController < ApplicationController
     @course_module_element = @course_module_element_user_log.course_module_element
     @course_module = @course_module_element_user_log.course_module
     @course = @course_module.subject_course
+    @group = @course.group
+    @valid_subscription = current_user.active_subscriptions_for_exam_body(@group.exam_body_id).all_valid.first
     @course_module_element_user_log.subject_course_id = @course.id
     @results = true
 
@@ -89,6 +91,7 @@ class CoursesController < ApplicationController
     respond_to do |format|
       format.json do
         if video_cme_user_log.save
+          ab_finished(:user_onboarding) unless Rails.env.test?
           render json: { video_log_id: video_cme_user_log.id }, status: :ok
         else
           render json: { video_log_id: video_cme_user_log.errors.messages }, status: :error
@@ -336,18 +339,21 @@ class CoursesController < ApplicationController
   def check_permission
     @course = SubjectCourse.find_by(name_url: params[:subject_course_name_url])
     @group = @course.group
-    @course_section = @course.course_sections.find_by(name_url: params[:course_section_name_url]) if @course
-    @course_module = @course_section.course_modules.find_by(name_url: params[:course_module_name_url]) if @course_section
-    @course_module_element = @course_module.course_module_elements.find_by(name_url: params[:course_module_element_name_url]) if @course_module
+    @course_section = @course.course_sections.all_active.find_by(name_url: params[:course_section_name_url]) if @course
+    @course_module = @course_section.course_modules.all_active.find_by(name_url: params[:course_module_name_url]) if @course_section
+    @course_module_element = @course_module.course_module_elements.all_active.find_by(name_url: params[:course_module_element_name_url]) if @course_module
     @subject_course_user_log = current_user.subject_course_user_logs.for_subject_course(@course.id).all_in_order.last
     @valid_subscription = current_user.active_subscriptions_for_exam_body(@group.exam_body_id).all_valid.first
+    permission = @course_module_element.available_to_user(current_user, @valid_subscription, @subject_course_user_log)
 
-    unless @course&.active && @course_section && @course_section.active && @course_module &&
-           @course_module.active && @course_module_element && @course_module_element.active &&
-           current_user && (@valid_subscription || @course_module_element.available_to_user(current_user, @group.exam_body_id, @subject_course_user_log)[:view])
+    return if @course_module_element && permission[:view]
 
-      flash[:warning] = 'Sorry, you are not permitted to access that content. '
+    if permission[:reason]
+      redirect_to library_course_url(@group.name_url, @course.name_url, anchor: permission[:reason])
+    else
+      flash[:warning] = 'Sorry, you are not permitted to access that content.'
       redirect_to library_special_link(@course)
     end
+
   end
 end

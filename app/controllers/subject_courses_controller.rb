@@ -134,6 +134,7 @@ class SubjectCoursesController < ApplicationController
   def get_variables
     @subject_course = SubjectCourse.find_by(id: params[:id]) if params[:id].to_i > 0
     @groups = Group.all_in_order
+    @levels = Level.all
     @tutors = User.all_tutors.all_in_order
     @exam_bodies = ExamBody.all_in_order
   end
@@ -145,7 +146,7 @@ class SubjectCoursesController < ApplicationController
       :background_image, :survey_url, :quiz_pass_rate, :group_id, :preview,
       :computer_based, :highlight_colour, :category_label, :icon_label,
       :seo_title, :seo_description, :has_correction_packs, :short_description,
-      :on_welcome_page, :unit_label,
+      :on_welcome_page, :unit_label, :level_id,
       course_sections_attributes: [
         course_modules_attributes: [
           course_module_elements_attributes: [

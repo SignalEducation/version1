@@ -1,5 +1,5 @@
-.box-item.form-box
-  =form_for(@group, html: {class: 'form-horizontal', role: 'form'}) do |f|
+=form_for(@group, html: {class: 'form-horizontal', role: 'form'}) do |f|
+  .box-item.form-box
     =render partial: '/layouts/error_messages', locals: {thing: @group, message: nil}
     .row
       .col-sm-6
@@ -45,6 +45,16 @@
             =f.text_field :seo_description, placeholder: t('views.groups.form.seo_description_placeholder'), class: 'form-control'
 
         .form-group
+          =f.label :onboarding_level_heading, t('views.groups.form.onboarding_level_heading')
+          .input-group.input-group-lg
+            =f.text_field :onboarding_level_heading, placeholder: t('views.groups.form.onboarding_level_heading_placeholder'), class: 'form-control'
+
+        .form-group
+          =f.label :onboarding_level_subheading, t('views.groups.form.onboarding_level_subheading')
+          .input-group.input-group-lg
+            =f.text_area :onboarding_level_subheading, placeholder: t('views.groups.form.onboarding_level_subheading_placeholder'), class: 'form-control'
+
+        .form-group
           =f.label :background_colour, t('views.groups.form.background_colour')
           .input-group.input-group-lg
             =f.select :background_colour, options_for_select([%w[Red #fd5c63], %w[Blue #30aabc], %w[Yellow #f0ca28],
@@ -69,9 +79,9 @@
         %br/
         =f.file_field :background_image
 
+  =render partial: 'fields_for_levels', locals: {f: f}
 
-
-    .row.pt-4
-      .col-sm-12
-        =f.submit t('views.general.save'), class: 'btn btn-primary'
-        =link_to t('views.general.cancel'), groups_path, class: 'btn btn-secondary'
+  .row.pt-4
+    .col-sm-12
+      =f.submit t('views.general.save'), class: 'btn btn-primary'
+      =link_to t('views.general.cancel'), groups_path, class: 'btn btn-secondary'

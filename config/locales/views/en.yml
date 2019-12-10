@@ -544,6 +544,7 @@ en:
         previous_step: Previous Lesson
         preview: Preview
         continue: Continue
+        completed_section: Complete Section
 
         tabs:
           description: Description
@@ -800,6 +801,9 @@ en:
         subscription_plans: Pricing Page
         footer_pages: Footer Pages [Contact, Privacy, T+C, ACCA, Lecturers, Media]
         student_sign_ups: Sign Up Page
+        exam_body_id: Exam Body
+        basic_students: Basic Students
+        paid_students: Subscription Students
 
       index:
         h1: External Banners
@@ -892,6 +896,24 @@ en:
         seo_description_placeholder: SEO Description
         short_description: Short Description
         short_description_placeholder: Subheading Tagline
+        onboarding_level_heading: Onboarding Heading
+        onboarding_level_heading_placeholder: Onboarding Heading
+        onboarding_level_subheading: Onboarding Sub-Heading
+        onboarding_level_subheading_placeholder: Onboarding Sub-Heading
+
+        levels:
+          name: Name
+          name_placeholder: Level Name
+          name_url: Name URL
+          name_url_placeholder: Level Link Label
+          active: Active
+          highlight_colour: Colour
+          icon_label: Icon Label
+          icon_label_placeholder: Budicon Label
+          onboarding_course_heading: Onboarding Heading
+          onboarding_course_heading_placeholder: Onboarding Heading
+          onboarding_course_subheading: Onboarding Sub-Heading
+          onboarding_course_subheading_placeholder: Onboarding Sub-Heading
 
       index:
         h1: Groups
@@ -1247,6 +1269,7 @@ en:
         icon_label_placeholder: Budicon Text Label
         unit_label: Unit Label
         unit_label_placeholder: CPD Unit/Hours Label
+        level: Level
         category_label: Category Label
         category_label_placeholder: Category Label [Applied Knowledge]
         seo_title: SEO Title
@@ -1542,6 +1565,7 @@ en:
         stripe_account_balance: Stripe Account Balance (in Cents)
         stripe_account_balance_placeholder: Student Number
         preferred_exam_body_id: Preferred Exam Body
+        preferred_exam_body: Exam Body
 
         student_access:
           account_type: Account Type

@@ -157,7 +157,7 @@ describe Product do
         end
 
         it 'returns the name of the Product (if there is no MockExam)' do
-          expect(product_without_mock.name_by_type).to eq(correction_pack_product.mock_exam.name)
+          expect(product_without_mock.name_by_type).to eq(product_without_mock.name)
         end
       end
     end

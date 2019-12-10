@@ -80,6 +80,11 @@ function subscriptionCreation(e) {
   ahoy.track('Create Subscription', {'status': status, 'id': id});
 }
 
+function onBoardingClick(e) {
+  let data = e.dataset;
+  ahoy.track('Onboarding Click', data);
+}
+
 
 ////////////////////////////////////////////////
 // Listeners
@@ -105,6 +110,10 @@ $(document).ready(function(){
 
   $("ul > li > .btn.course-lesson ").on( "click", function() {
     courseLessonClick(this)
+  });
+
+  $(".onboarding-select").on( "click", function() {
+    onBoardingClick(this)
   });
 
 });

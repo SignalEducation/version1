@@ -20,8 +20,13 @@ class UserVerificationsController < ApplicationController
         if @user.preferred_exam_body&.group == Group.find_by(name: 'CPD')
           redirect_to registration_onboarding_url(@user.preferred_exam_body.group.name_url)
         else
-          flash[:success] = 'Thank you! Your email is now verified'
-          redirect_to library_special_link(@user.preferred_exam_body.group)
+          lib_version = library_special_link(@user.preferred_exam_body.group)
+          onboarding_version = registration_onboarding_url(@user.preferred_exam_body.group.name_url)
+
+          ab_test(:user_onboarding, 'library', 'onboarding') do |test|
+            # flash[:success] = 'Thank you! Your email is now verified'
+            redirect_to test == 'onboarding' ? onboarding_version : lib_version
+          end
         end
       else
         flash[:success] = 'Thank you! Your email is now verified'
@@ -41,6 +46,7 @@ class UserVerificationsController < ApplicationController
     @group = Group.find_by(name_url: params[:group_url])
     seo_title_maker("Welcome to learnsignal #{@group.name}", @group.seo_description, nil)
 
+    @levels = @group.levels.all_active
     @courses = @group.subject_courses.all_active.where(on_welcome_page: true)
 
     ip_country = IpAddress.get_country(request.remote_ip)
@@ -54,7 +60,9 @@ class UserVerificationsController < ApplicationController
               payment_frequency_in_months: @group.exam_body.preferred_payment_frequency).
               includes(:currency).in_currency(@currency_id).all_active.all_in_order.first
     end
-
+    @navbar     = false
+    @top_margin = false
+    @footer     = false
   end
 
   def resend_verification_mail
