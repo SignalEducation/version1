@@ -4,6 +4,7 @@
       <TinyEditor
         :field-model.sync="question"
         :aditional-toolbar-options="[]"
+        :editor-height="520"
         @blur="$v.question.$touch()"
       />
     </div>
