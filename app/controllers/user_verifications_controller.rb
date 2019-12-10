@@ -44,6 +44,8 @@ class UserVerificationsController < ApplicationController
     # redirect_to root_url unless current_user
 
     @group = Group.find_by(name_url: params[:group_url])
+    redirect_to root_url and return unless @group&.active && @group&.exam_body&.active
+
     seo_title_maker("Welcome to learnsignal #{@group.name}", @group.seo_description, nil)
 
     @levels = @group.levels.all_active
