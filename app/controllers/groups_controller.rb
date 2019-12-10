@@ -78,7 +78,7 @@ class GroupsController < ApplicationController
                                   levels_attributes: [:id, :name, :name_url,
                                                       :active, :highlight_colour,
                                                       :icon_label, :onboarding_course_heading,
-                                                      :onboarding_course_heading, :_destroy]
+                                                      :onboarding_course_subheading, :_destroy]
                                   )
   end
 end

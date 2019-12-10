@@ -16,7 +16,7 @@
         %article.py-4
           %header.pb-sm-4.pb-md-5
             .row.row-lg
-              .col-12
+              .col-10.offset-1
                 .d-md-none
                   =image_tag('onboarding-bg-image-sm.png', alt: 'Logo')
                 .d-none.d-md-block
@@ -25,69 +25,96 @@
 
 
 
-  %article
-    .d-none#level-selection-screen
-      .container
-        %header.hero-section{style: 'padding-top: 2rem;'}
-          %h1.h2-hero.my-4
-            -if @group.onboarding_level_heading.present?
-              =@group.onboarding_level_heading
-            -else
-              What level are you doing?
-          %p.p-hero.px-lg-6
-            -if @group.onboarding_level_subheading.present?
-              =@group.onboarding_level_subheading
-            -else
-              Select your course so we can guide you on your learning journey
-
-      .container-bg.mt-4
-        .container-md
-          %article.py-4
-            %header.pb-sm-4.pb-md-5
-              .row
-                -@levels.each do |level|
-                  .col-12.col-md-8.offset-md-2
-                    .card.card-horizontal.card-horizontal-xs.flex-row.onboarding-card.onboarding-select{onclick: "showCourses(#{level.id}); return false;", data: { exam_body: @group.name, type: 'Select Level', name: level.name }}
-                      .card-header.white-header.d-flex.justify-content-center.align-items-center
-                        %i{"aria-label" => level.icon_label, :role => "img", class: level.icon_label, style: "color: #{level.highlight_colour};"}
-                      .card-body.d-flex.flex-column.justify-content-center
-                        %h5.card-title.mb-1
-                          %span.mr-1
-                            =level.name
-
-          .py-2.text-center
-            %btn.btn.btn-secondary.btn-sm.btn-sm-arrow-left.onboarding-select{onclick: 'showStartScreen(); return false;', data: { exam_body: @group.name, type: 'Back Button', name: 'To Start' }}
-              Go Back
-
-
-
-    -@levels.each do |level|
-      .d-none.course-selection-screens{id: "course-selection-screen-#{level.id}"}
+  -if @levels.any?
+    %article
+      .d-none#level-selection-screen
         .container
           %header.hero-section{style: 'padding-top: 2rem;'}
             %h1.h2-hero.my-4
-              =level.onboarding_course_heading
+              -if @group.onboarding_level_heading.present?
+                =@group.onboarding_level_heading
+              -else
+                What level are you doing?
             %p.p-hero.px-lg-6
-              =level.onboarding_course_subheading
+              -if @group.onboarding_level_subheading.present?
+                =@group.onboarding_level_subheading
+              -else
+                Select your course so we can guide you on your learning journey
 
         .container-bg.mt-4
           .container-md
             %article.py-4
               %header.pb-sm-4.pb-md-5
-                .row.row-lg
-                  -level.subject_courses.all_active.all_in_order.each do |course|
-                    .col-12.col-md-6
-                      =link_to course_special_link(course.first_active_cme), class: 'card card-horizontal flex-row card-mint onboarding-select', data: { exam_body: @group.name, type: 'Course Select', name: course.name } do
-                        .card-header.d-flex.justify-content-center.align-items-center
-                          %i{"aria-label" => course.icon_label, :role => "img", class: course.icon_label ? course.icon_label : 'budicon-office-bag-c', style: "color: #{course.highlight_colour};"}
+                .row
+                  -@levels.each do |level|
+                    .col-12.col-md-8.offset-md-2
+                      .card.card-horizontal.card-horizontal-xs.flex-row.onboarding-card.onboarding-select{onclick: "showCourses(#{level.id}); return false;", data: { exam_body: @group.name, type: 'Select Level', name: level.name }}
+                        .card-header.white-header.d-flex.justify-content-center.align-items-center
+                          %i{"aria-label" => level.icon_label, :role => "img", class: level.icon_label, style: "color: #{level.highlight_colour};"}
                         .card-body.d-flex.flex-column.justify-content-center
                           %h5.card-title.mb-1
                             %span.mr-1
-                              =course.name
+                              =level.name
 
-              .py-2.text-center
-                %btn.btn.btn-secondary.btn-sm.btn-sm-arrow-left.onboarding-select{onclick: 'showLevelSelection(); return false;', data: { exam_body: @group.name, type: 'Back Button', name: 'To Level Selection' }}
-                  Go Back
+            .py-2.text-center
+              %btn.btn.btn-secondary.btn-sm.btn-sm-arrow-left.onboarding-select{onclick: 'showStartScreen(); return false;', data: { exam_body: @group.name, type: 'Back Button', name: 'To Start' }}
+                Go Back
+
+
+
+      -@levels.each do |level|
+        .d-none.course-selection-screens{id: "course-selection-screen-#{level.id}"}
+          .container
+            %header.hero-section{style: 'padding-top: 2rem;'}
+              %h1.h2-hero.my-4
+                =level.onboarding_course_heading
+              %p.p-hero.px-lg-6
+                =level.onboarding_course_subheading
+
+          .container-bg.mt-4
+            .container-md
+              %article.py-4
+                %header.pb-sm-4.pb-md-5
+                  .row.row-lg
+                    -level.subject_courses.all_active.all_in_order.each do |course|
+                      .col-12.col-md-6
+                        =link_to course_special_link(course.first_active_cme), class: 'card card-horizontal flex-row card-mint onboarding-select', data: { exam_body: @group.name, type: 'Course Select', name: course.name } do
+                          .card-header.d-flex.justify-content-center.align-items-center
+                            %i{"aria-label" => course.icon_label, :role => "img", class: course.icon_label ? course.icon_label : 'budicon-office-bag-c', style: "color: #{course.highlight_colour};"}
+                          .card-body.d-flex.flex-column.justify-content-center
+                            %h5.card-title.mb-1
+                              %span.mr-1
+                                =course.name
+
+                .py-2.text-center
+                  %btn.btn.btn-secondary.btn-sm.btn-sm-arrow-left.onboarding-select{onclick: 'showLevelSelection(); return false;', data: { exam_body: @group.name, type: 'Back Button', name: 'To Level Selection' }}
+                    Go Back
+
+  - else
+    .d-none.course-selection-screens{id: "fallback-course-selection-screen"}
+      .container
+        %header.hero-section{style: 'padding-top: 2rem;'}
+          %h1.h2-hero.my-4
+            What course are you doing?
+
+      .container-bg.mt-4
+        .container-md
+          %article.py-4
+            %header.pb-sm-4.pb-md-5
+              .row.row-lg
+                -@group.subject_courses.all_active.all_in_order.each do |course|
+                  .col-12.col-md-6
+                    =link_to course_special_link(course.first_active_cme), class: 'card card-horizontal flex-row card-mint onboarding-select', data: { exam_body: @group.name, type: 'Course Select', name: course.name } do
+                      .card-header.d-flex.justify-content-center.align-items-center
+                        %i{"aria-label" => course.icon_label, :role => "img", class: course.icon_label ? course.icon_label : 'budicon-office-bag-c', style: "color: #{course.highlight_colour};"}
+                      .card-body.d-flex.flex-column.justify-content-center
+                        %h5.card-title.mb-1
+                          %span.mr-1
+                            =course.name
+
+            .py-2.text-center
+              %btn.btn.btn-secondary.btn-sm.btn-sm-arrow-left.onboarding-select{onclick: 'showStartScreen(); return false;', data: { exam_body: @group.name, type: 'Back Button', name: 'To Start' }}
+                Go Back
 
 
 :javascript
@@ -97,6 +124,7 @@
     $("#start-screen").addClass('d-none');
     $(".course-selection-screens").addClass('d-none');
     $("#level-selection-screen").removeClass('d-none');
+    $("#fallback-course-selection-screen").removeClass('d-none');
   };
 
   function showStartScreen() {
