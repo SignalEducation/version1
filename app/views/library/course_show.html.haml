@@ -155,12 +155,12 @@
 
               - @mock_exam_products.each do |product|
                 .col-sm-6
-                  =link_to product_checkout_special_link(product.mock_exam.subject_course.group.exam_body.id, product.id), class: 'card card-horizontal card-horizontal-sm flex-row' do
+                  =link_to product_link(product, current_user), class: 'card card-horizontal card-horizontal-sm flex-row' do
                     .card-header.bg-white.d-flex.align-items-center.justify-content-center
                       %i.budicon-files-tick{"aria-label" => "", :role => "img"}
                     .card-body.d-flex.align-items-center.pl-1
                       %h5.m-0.text-truncate.text-gray2
-                        =product.mock_exam.try(:name)
+                        =product.name_by_type
 
 
       -#locked.tab-pane.tab-locked{"aria-labelledby" => "locked-tab", :role => "tabpanel"}

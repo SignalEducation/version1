@@ -107,21 +107,21 @@ class LibraryController < ApplicationController
     @country = ip_country || Country.find_by(name: 'United Kingdom')
     @currency_id = @country ? @country.currency_id : Currency.all_active.all_in_order.first
     @correction_pack_products = []
+
+    valid_products = Product.includes(mock_exam: :subject_course).
+                       in_currency(@currency_id).all_active.all_in_order
+
     if @course.has_correction_packs
-      @correction_pack_products = Product.includes(mock_exam: :subject_course).
-                                    in_currency(@currency_id).
-                                    all_active.
-                                    all_in_order.
+      @correction_pack_products = valid_products.
                                     where('mock_exam_id IS NOT NULL').
                                     where('product_type = ?', Product.product_types[:correction_pack])
     end
-    mock_exam_ids = @course.mock_exams.map(&:id)
-    @mock_exam_products = Product.includes(mock_exam: :subject_course).
-        in_currency(@currency_id).
-        all_active.
-        all_in_order.
-        where('product_type = ?', Product.product_types[:mock_exam]).
-        where(mock_exam_id: mock_exam_ids)
+    cbes_ids            = @course.cbes.map(&:id)
+    mock_exam_ids       = @course.mock_exams.map(&:id)
+    @mock_exam_products = valid_products.
+                            where('mock_exam_id IN (?) OR cbe_id IN (?)',
+                                  mock_exam_ids, cbes_ids)
+
     @products = @mock_exam_products + @correction_pack_products
 
     @subject_course_resources = @course.subject_course_resources.all_active.all_in_order

@@ -63,10 +63,15 @@ export default {
       this.loader = this.$loading.show({
         loader: 'dots',
         color: '#00b67B',
+        width: 30,
         container: this.fullPage ? null : this.$refs.formContainer,
         canCancel: true,
         onCancel: this.onCancel,
-      });
+      },
+      {
+        before: 'loading '
+      }
+      );
     },
     closeLoading() {
       this.loader.hide();
