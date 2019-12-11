@@ -25,6 +25,19 @@ describe ExternalBanner do
 
   subject { FactoryBot.build(:external_banner) }
 
+  describe 'Should Respond' do
+    it { should respond_to(:name) }
+    it { should respond_to(:sorting_order) }
+    it { should respond_to(:active) }
+    it { should respond_to(:background_colour) }
+    it { should respond_to(:text_content) }
+    it { should respond_to(:created_at) }
+    it { should respond_to(:updated_at) }
+    it { should respond_to(:exam_body_id) }
+    it { should respond_to(:basic_students) }
+    it { should respond_to(:paid_students) }
+  end
+
   # Constants
   it { expect(ExternalBanner.const_defined?(:BANNER_CONTROLLERS)).to eq(true) }
 

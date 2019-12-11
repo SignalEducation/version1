@@ -31,7 +31,31 @@ require 'rails_helper'
 describe Group do
   subject { FactoryBot.build(:group) }
 
-  # Constants
+  describe 'Should Respond' do
+    it { should respond_to(:name) }
+    it { should respond_to(:name_url) }
+    it { should respond_to(:active) }
+    it { should respond_to(:sorting_order) }
+    it { should respond_to(:description) }
+    it { should respond_to(:created_at) }
+    it { should respond_to(:updated_at) }
+    it { should respond_to(:destroyed_at) }
+    it { should respond_to(:image_file_name) }
+    it { should respond_to(:image_content_type) }
+    it { should respond_to(:image_file_size) }
+    it { should respond_to(:image_updated_at) }
+    it { should respond_to(:background_image_file_name) }
+    it { should respond_to(:background_image_content_type) }
+    it { should respond_to(:background_image_file_size) }
+    it { should respond_to(:background_image_updated_at) }
+    it { should respond_to(:background_colour) }
+    it { should respond_to(:exam_body_id) }
+    it { should respond_to(:seo_title) }
+    it { should respond_to(:seo_description) }
+    it { should respond_to(:short_description) }
+    it { should respond_to(:onboarding_level_subheading) }
+    it { should respond_to(:onboarding_level_heading) }
+  end
 
   # relationships
   it { should have_many(:subject_courses) }

@@ -9,12 +9,13 @@
         branding: false,
         menubar: false,
         statusbar: false,
+        height: editorHeight,
         image_dimensions: true,
         toolbar: toolbarOptions(),
         plugins: 'fullscreen lists table code paste searchreplace image',
         images_upload_handler: imageUploadHandler,
         image_advtab: true,
-        skin: 'custom'
+        skin: 'custom',
       }"
       @input="$emit('update:fieldModel', localFieldModel)"
     />
@@ -34,7 +35,11 @@ export default {
   props: {
     editorId: String,
     fieldModel: String,
-    aditionalToolbarOptions: Array
+    aditionalToolbarOptions: Array,
+    editorHeight: {
+      type: Number,
+      default: 300,
+    }
   },
   data() {
     return {

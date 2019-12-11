@@ -45,6 +45,7 @@ class SubjectCourse < ApplicationRecord
   # relationships
   belongs_to :exam_body
   belongs_to :group
+  belongs_to :level, optional: true
   has_many :course_tutor_details
   has_many :home_pages
   has_many :subject_course_resources

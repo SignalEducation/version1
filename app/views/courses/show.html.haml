@@ -2,18 +2,16 @@
   %article.courses.bg-gray5
     .container
       %header
-        .d-flex.flex-wrap.flex-sm-nowrap.justify-content-between.py-4.py-md-4
+        .d-flex.flex-wrap.flex-sm-nowrap.justify-content-between.py-4.py-md-5
           .mw-0
             =link_to navigation_special_link(@course_module_element), class: 'btn btn-secondary btn-sm btn-sm-arrow-left mb-3 mb-sm-0' do
               =@course_module_element.course_module.course_section.subject_course.name
 
-          -if @course_module_element && @course_module_element.is_video?
+          -if @course_module_element && (@course_module_element.is_video? || @course_module_element.is_constructed_response?)
             .mw-0
-              =link_to course_url(@course.name_url, @course_module.course_section.name_url, @course_module.name_url, @course_module_element.next_element.name_url) do
-                .btn.btn-primary.btn-sm.btn-sm-arrow-right
-                  =t('views.course_module_elements.show.next_step')
+              =render partial: 'next_lesson_navigation'
 
-        -if @course_module_element.try(:is_video)
+        -if @course_module_element.is_video?
           .pt-3
             %h1.h3
               =@course_module_element.name
@@ -36,36 +34,7 @@
 
 
 
-      -# Tabs for Question, Answer, Notes and Description
-      -#if @course_module_element.try(:is_video) && (@course_module_element.description? || @course_module_element.course_module_element_resources.count > 0 || @course_module_element.video_resource)
-        .row.l-margin-top-huge
-          .col-md-12{role: 'tablist'}
-            .col-sm-12
-              .signal-tabs
-                -if @course_module_element.video_resource
-                  -if @course_module_element.description?
-                    %a{href: '#description', aria: {controls: 'active'}, role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
-                      =t('views.course_module_elements.show.tabs.description')
-                  -if @course_module_element.video_resource.question
-                    %a{href: '#question', aria: {controls: 'in-active'}, role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
-                      =t('views.course_module_elements.show.tabs.question')
-                  -if @course_module_element.video_resource.answer
-                    %a{href: '#answer', aria: {controls: 'in-active'}, role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
-                      =t('views.course_module_elements.show.tabs.answer')
-                  -if @course_module_element.video_resource.transcript
-                    %a{href: '#transcript', aria: {controls: 'in-active'}, role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
-                      =t('views.course_module_elements.show.tabs.transcript')
-                  -if @course_module_element.video_resource.notes || @course_module_element.course_module_element_resources.count > 0
-                    %a{href: '#notes', aria: {controls: 'in-active'}, role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
-                      =t('views.course_module_elements.show.tabs.notes')
 
-                -else
-                  -if @course_module_element.description?
-                    %a{href: '#description', aria: {controls: 'active'}, role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
-                      =t('views.course_module_elements.show.tabs.description')
-
-
-        =render partial: 'resources'
-
-
-
+- if current_user
+  =render partial: 'library/subscription_restriction_modal'
+  =render partial: 'library/related_lesson_restriction_modal'

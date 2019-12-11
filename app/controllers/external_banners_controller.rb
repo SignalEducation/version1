@@ -5,7 +5,7 @@ class ExternalBannersController < ApplicationController
   before_action do
     ensure_user_has_access_rights(%w[content_management_access marketing_resources_access])
   end
-  before_action :management_layout
+  before_action :management_layout, :get_variables
   before_action :set_external_banner, only: %i[show edit update destroy]
 
   def index
@@ -60,12 +60,16 @@ class ExternalBannersController < ApplicationController
 
   protected
 
+  def get_variables
+    @exam_bodies = ExamBody.all_in_order
+  end
+
   def set_external_banner
     @external_banner = ExternalBanner.where(id: params[:id]).first if params[:id].to_i > 0
   end
 
   def allowed_params
-    params.require(:external_banner).permit(:name, :sorting_order, :active, :background_colour, :text_content,
-                                            :user_sessions, :library, :subscription_plans, :footer_pages, :student_sign_ups)
+    params.require(:external_banner).permit(:name, :sorting_order, :active, :background_colour,
+                                            :text_content, :exam_body_id, :basic_students, :paid_students)
   end
 end

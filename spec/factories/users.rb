@@ -121,6 +121,17 @@ FactoryBot.define do
         email_verified_at               { nil }
       end
 
+      factory :password_change_user do
+        sequence(:email)                       { |n| "pw-change-student-user-#{n}@example.com" }
+        active                                 { true }
+        account_activation_code                { nil }
+        account_activated_at                   { nil }
+        email_verified                         { false }
+        email_verification_code                { SecureRandom.hex(10) }
+        email_verified_at                      { nil }
+        password_change_required               { true }
+      end
+
       factory :verified_user do
         sequence(:email)                { |n| "active-student-#{n}@example.com" }
         active                          { true }

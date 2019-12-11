@@ -24,6 +24,10 @@
 
 
           .form-group
+            =f.label :level_id, t('views.subject_courses.form.level')
+            .input-group.input-group-lg
+              =f.collection_select :level_id, @levels, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
+          .form-group
             =f.label :category_label, t('views.subject_courses.form.category_label')
             .input-group.input-group-lg
               =f.text_field :category_label, placeholder: t('views.subject_courses.form.category_label_placeholder'), class: 'form-control'

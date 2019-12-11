@@ -85,7 +85,6 @@ describe CourseModuleElement do
     it { should respond_to(:started_by_user) }
 
     it { should respond_to(:previous_cme_restriction) }
-    it { should respond_to(:available_for_subscription) }
     it { should respond_to(:available_for_complimentary) }
     it { should respond_to(:available_to_user) }
 

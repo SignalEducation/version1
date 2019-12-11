@@ -43,27 +43,21 @@ class SubjectCourseResource < ApplicationRecord
   # class methods
 
   # instance methods
-  def available_for_subscription(user, exam_body_id)
-
-    if user.valid_subscription_for_exam_body?(exam_body_id)
-      {view: true, reason: nil}
-    else
-      self.available_on_trial ? {view: true, reason: nil} : {view: false, reason: 'invalid-subscription'}
-    end
-
-  end
-
-
-  def available_to_user(user, exam_body_id)
-    result = {view: false, reason: nil}
-    if user.non_verified_user?
-      result = {view: false, reason: 'verification-required'}
-    elsif user.standard_student_user?
-      #result = available_for_subscription(user, exam_body_id)
-      result = self.available_on_trial ? {view: true, reason: nil} : {view: false, reason: 'invalid-subscription'}
-    else
-      result = {view: true, reason: nil}
-    end
+  def available_to_user(user, valid_subscription)
+    result =
+      if user.non_verified_user?
+        { view: false, reason: 'verification-required' }
+      elsif user.complimentary_user? || user.non_student_user?
+        { view: true, reason: nil }
+      elsif user.standard_student_user?
+        if valid_subscription
+          { view: true, reason: nil }
+        else
+          available_on_trial ? { view: true, reason: nil } : { view: false, reason: 'invalid-subscription' }
+        end
+      else
+        { view: false, reason: nil }
+      end
 
     result
 

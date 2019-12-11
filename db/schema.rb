@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_02_154124) do
+ActiveRecord::Schema.define(version: 2019_12_09_134915) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -611,6 +611,9 @@ ActiveRecord::Schema.define(version: 2019_12_02_154124) do
     t.boolean "student_sign_ups", default: false
     t.integer "home_page_id"
     t.integer "content_page_id"
+    t.integer "exam_body_id"
+    t.boolean "basic_students", default: false
+    t.boolean "paid_students", default: false
     t.index ["active"], name: "index_external_banners_on_active"
     t.index ["name"], name: "index_external_banners_on_name"
   end
@@ -664,11 +667,13 @@ ActiveRecord::Schema.define(version: 2019_12_02_154124) do
     t.string "background_image_content_type"
     t.integer "background_image_file_size"
     t.datetime "background_image_updated_at"
-    t.bigint "exam_body_id"
     t.string "background_colour"
+    t.bigint "exam_body_id"
     t.string "seo_title"
     t.string "seo_description"
     t.string "short_description"
+    t.text "onboarding_level_subheading"
+    t.string "onboarding_level_heading"
     t.index ["exam_body_id"], name: "index_groups_on_exam_body_id"
     t.index ["name"], name: "index_groups_on_name"
   end
@@ -787,6 +792,21 @@ ActiveRecord::Schema.define(version: 2019_12_02_154124) do
     t.datetime "rechecked_on"
   end
 
+  create_table "levels", force: :cascade do |t|
+    t.integer "group_id"
+    t.string "name"
+    t.string "name_url"
+    t.boolean "active", default: false, null: false
+    t.string "highlight_colour", default: "#ef475d"
+    t.integer "sorting_order"
+    t.string "icon_label"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.text "onboarding_course_subheading"
+    t.string "onboarding_course_heading"
+    t.index ["group_id"], name: "index_levels_on_group_id"
+  end
+
   create_table "mock_exams", id: :serial, force: :cascade do |t|
     t.integer "subject_course_id"
     t.string "name"
@@ -867,7 +887,6 @@ ActiveRecord::Schema.define(version: 2019_12_02_154124) do
 
   create_table "products", id: :serial, force: :cascade do |t|
     t.string "name"
-    t.integer "subject_course_id"
     t.integer "mock_exam_id"
     t.string "stripe_guid"
     t.boolean "live_mode", default: false
@@ -877,6 +896,7 @@ ActiveRecord::Schema.define(version: 2019_12_02_154124) do
     t.integer "currency_id"
     t.decimal "price"
     t.string "stripe_sku_guid"
+    t.integer "subject_course_id"
     t.integer "sorting_order"
     t.integer "product_type", default: 0
     t.integer "correction_pack_count"
@@ -889,7 +909,6 @@ ActiveRecord::Schema.define(version: 2019_12_02_154124) do
     t.index ["mock_exam_id"], name: "index_products_on_mock_exam_id"
     t.index ["name"], name: "index_products_on_name"
     t.index ["stripe_guid"], name: "index_products_on_stripe_guid"
-    t.index ["subject_course_id"], name: "index_products_on_subject_course_id"
   end
 
   create_table "quiz_answers", id: :serial, force: :cascade do |t|
@@ -1185,6 +1204,7 @@ ActiveRecord::Schema.define(version: 2019_12_02_154124) do
     t.text "short_description"
     t.boolean "on_welcome_page", default: false
     t.string "unit_label"
+    t.integer "level_id"
     t.index ["name"], name: "index_subject_courses_on_name"
   end
 
@@ -1292,6 +1312,7 @@ ActiveRecord::Schema.define(version: 2019_12_02_154124) do
     t.string "cancellation_reason"
     t.text "cancellation_note"
     t.bigint "changed_from_id"
+    t.string "temp_guid"
     t.string "completion_guid"
     t.uuid "ahoy_visit_id"
     t.index ["changed_from_id"], name: "index_subscriptions_on_changed_from_id"
