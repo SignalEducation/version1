@@ -95,7 +95,7 @@ class Order < ApplicationRecord
     end
 
     after_transition all => :completed do |order, _transition|
-      order.execute_order_completion unless Rails.env.test?
+      order.execute_order_completion
       order.generate_exercises
     end
   end
@@ -124,7 +124,7 @@ class Order < ApplicationRecord
   end
 
   def execute_order_completion
-    return if Rails.env.test?
+    return if Rails.env.test? || product.cbe?
 
     MandrillWorker.perform_async(user_id,
                                  'send_mock_exam_email',
