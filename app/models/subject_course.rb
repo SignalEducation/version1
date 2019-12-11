@@ -36,7 +36,6 @@
 #
 
 class SubjectCourse < ApplicationRecord
-
   include LearnSignalModelExtras
   include Archivable
 
@@ -50,6 +49,7 @@ class SubjectCourse < ApplicationRecord
   has_many :home_pages
   has_many :subject_course_resources
   has_many :orders
+  has_many :cbes
   has_many :mock_exams
   has_many :exam_sittings
   has_many :enrollments
