@@ -43,6 +43,8 @@
               Your work has been corrected
         .card-footer.d-flex.justify-content-center.align-items-center{style: 'background-color: #fff; border-top: none;'}
           =link_to 'View Response', exercise_path(exercise), class: 'btn btn-primary'
+          -if exercise.product.cbe?
+            =link_to 'Rerun CBE', exercise_cbes_path(id: exercise.product.cbe.id, exercise_id: exercise.id), class: 'btn btn-warning'
 
 -else
   .row.row-lg

@@ -19,11 +19,16 @@ class Cbe
     enum status: { started: 0, paused: 1, finished: 3, corrected: 4 }
 
     # callbacks
+    before_save   :default_status
     before_update :update_score
-    after_update :update_exercise_status, if: proc { |u_log| u_log.status == 'finished' }
+    after_update  :update_exercise_status, if: proc { |u_log| u_log.status == 'finished' }
 
     def update_score
       self.score = questions.map(&:score).sum
+    end
+
+    def default_status
+      self.status ||= 'started'
     end
 
     private

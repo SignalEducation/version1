@@ -57,14 +57,13 @@ export default {
           cbe_user_log: this.formatedData(),
         })
         .then(response => {
-          this.$store.dispatch('userCbe/recordUserLog', response.data.id);
+          this.$store.dispatch('userCbe/recordUserLog', response.data);
           this.nextAction();
         })
         .catch(error => {});
     },
     formatedData() {
       const data = {};
-      data.status = 'started';
       data.cbe_id = this.userCbeData.cbe_id;
       data.user_id = this.userCbeData.user_id;
       data.exercise_id = this.userCbeData.exercise_id;

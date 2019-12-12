@@ -24,7 +24,7 @@ class CbesController < ApplicationController
 
   def exercise_access?
     return if current_user.non_student_user?
-    return if Exercise.find(params[:exercise_id]).pending?
+    return if %w[pending returned].include?(Exercise.find(params[:exercise_id]).state)
 
     flash[:error] = 'You have not access to this CBE.'
     redirect_to prep_products_url

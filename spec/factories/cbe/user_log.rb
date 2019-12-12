@@ -15,8 +15,8 @@ FactoryBot.define do
       status { :finished }
     end
 
-    trait :with_answers do
-      answers { build_list :cbe_user_answer, 3, :with_question }
+    trait :with_questions do
+      questions { build_list :cbe_user_question, 5 }
     end
 
     trait :with_cbe do
