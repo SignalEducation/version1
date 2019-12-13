@@ -32,7 +32,6 @@
 require 'rails_helper'
 
 describe CourseModule do
-
   describe 'relationships' do
     it { should belong_to(:subject_course) }
     it { should belong_to(:course_section) }
@@ -41,13 +40,12 @@ describe CourseModule do
     it { should have_many(:course_module_element_quizzes) }
     it { should have_many(:course_module_element_videos) }
     it { should have_many(:course_module_element_user_logs) }
-
   end
 
   describe 'validations' do
-    it { should validate_presence_of(:subject_course_id)}
+    it { should validate_presence_of(:subject_course) }
 
-    it { should validate_presence_of(:course_section_id)}
+    it { should validate_presence_of(:course_section) }
 
     it { should validate_presence_of(:name) }
     it { should validate_uniqueness_of(:name).scoped_to(:course_section_id).with_message('must be unique within the course section') }
@@ -96,5 +94,4 @@ describe CourseModule do
     it { should respond_to(:percentage_complete_for_scul) }
     it { should respond_to(:all_content_restricted?) }
   end
-
 end

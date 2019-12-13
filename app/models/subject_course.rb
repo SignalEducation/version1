@@ -120,6 +120,34 @@ class SubjectCourse < ApplicationRecord
     end
   end
 
+  def duplicate
+    new_course = deep_clone include: [
+      :subject_course_resources,
+      course_sections: {
+        course_modules: {
+          course_module_elements: [
+            :course_module_element_resources,
+            :video_resource,
+            :course_module_element_video,
+            constructed_response: {
+              scenario: {
+                scenario_questions: :scenario_answer_templates
+              }
+            },
+            course_module_element_quiz: {
+              quiz_questions: [
+                :quiz_solutions,
+                :quiz_contents,
+                quiz_answers: :quiz_contents
+              ]
+            }
+          ]
+        }
+      }
+    ]
+
+    new_course.update(name: "#{name} copy", name_url: "#{name_url}_copy", active: false)
+  end
 
   # instance methods
 

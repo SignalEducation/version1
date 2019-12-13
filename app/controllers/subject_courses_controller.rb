@@ -69,6 +69,16 @@ class SubjectCoursesController < ApplicationController
     redirect_to subject_courses_url
   end
 
+  def clone
+    if @subject_course.duplicate
+      flash[:success] = 'Course successfully duplicaded'
+    else
+      flash[:error] = 'Course not successfully duplicaded'
+    end
+
+    redirect_to subject_courses_url
+  end
+
   # Non-standard Actions #
   ## Index, New & Create Actions for SubjectCourseResources that belong_to this SubjectCourse ##
   def subject_course_resources

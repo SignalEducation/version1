@@ -192,6 +192,7 @@ Rails.application.routes.draw do
     get 'subject_courses/:id/resources',                                                              to: 'subject_courses#subject_course_resources',        as: :course_resources
     get 'subject_courses/:id/new_subject_course_resources',                                           to: 'subject_courses#new_subject_course_resources',    as: :new_course_resources
     post 'subject_courses/:id/create_subject_course_resources',                                       to: 'subject_courses#create_subject_course_resources', as: :create_course_resources
+    post 'subject_courses/:id/clone',                                                                 to: 'subject_courses#clone',                           as: :subject_course_clone
     resources :subject_courses, concerns: :supports_reordering do
       resources :course_tutor_details, concerns: :supports_reordering
     end

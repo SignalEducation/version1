@@ -28,8 +28,7 @@ class SubjectCourseResource < ApplicationRecord
 
   # validation
   validates :name, presence: true
-  validates :subject_course_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+  validates :subject_course, presence: true
   validates_attachment_content_type :file_upload,
                                     content_type: %w(image/jpg image/jpeg image/png image/gif application/pdf application/xlsx application/xls application/doc application/docx application/vnd.openxmlformats-officedocument.wordprocessingml.document text/csv application/octet-stream application/vnd.openxmlformats-officedocument.spreadsheetml.sheet application/vnd.ms-excel.sheet.macroenabled.12 application/vnd.openxmlformats-officedocument.presentationml.presentation text/css)
 

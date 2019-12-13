@@ -48,8 +48,8 @@ class CourseModule < ApplicationRecord
   accepts_nested_attributes_for :course_module_elements
 
   # validation
-  validates :subject_course_id, presence: true
-  validates :course_section_id, presence: true
+  validates :subject_course, presence: true
+  validates :course_section, presence: true
   validates :name, presence: true, uniqueness: {
     scope: :course_section_id,
     message: "must be unique within the course section"
