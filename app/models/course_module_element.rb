@@ -55,7 +55,7 @@ class CourseModuleElement < ApplicationRecord
                                 reject_if: lambda { |attributes| nested_resource_is_blank?(attributes) }, allow_destroy: true
 
   # validation
-  validates :course_module_id, presence: true
+  validates :course_module, presence: true
   validates :name, presence: true, length: {maximum: 255}
   validates :name_url, presence: true, uniqueness: { scope: :course_module_id,
                                      message: "must be unique within the course module" }

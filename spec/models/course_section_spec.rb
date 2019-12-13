@@ -22,8 +22,6 @@
 require 'rails_helper'
 
 describe CourseSection do
-
-
   describe 'relationships' do
     it { should belong_to(:subject_course) }
     it { should have_many(:course_modules) }
@@ -33,7 +31,7 @@ describe CourseSection do
   end
 
   describe 'validations' do
-    it { should validate_presence_of(:subject_course_id) }
+    it { should validate_presence_of(:subject_course) }
     it { should validate_presence_of(:name) }
     it { should validate_presence_of(:name_url) }
     xit { should validate_uniqueness_of(:name_url).scoped_to(:subject_course) }
@@ -62,6 +60,4 @@ describe CourseSection do
     it { should respond_to(:destroyable_children) }
     it { should respond_to(:recalculate_fields) }
   end
-
-
 end

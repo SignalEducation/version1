@@ -30,6 +30,8 @@ en:
       browse: Browse
       by: by
       cancel: Cancel
+      clone: Clone
+      clone_confirmation: Are you sure?
       close: Close
       coming_soon: Coming soon
       delete: Delete

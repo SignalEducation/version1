@@ -18,7 +18,6 @@
 require 'rails_helper'
 
 describe CourseModuleElementResource do
-
   describe 'relationships' do
     it { should belong_to(:course_module_element) }
   end
@@ -41,5 +40,4 @@ describe CourseModuleElementResource do
   describe 'instance methods' do
     it { should respond_to(:destroyable?) }
   end
-
 end

@@ -28,7 +28,6 @@
 require 'rails_helper'
 
 describe CourseModuleElement do
-
   describe 'relationships' do
     it { should belong_to(:course_module) }
     it { should belong_to(:related_course_module_element) }
@@ -43,15 +42,11 @@ describe CourseModuleElement do
   end
 
   describe 'validations' do
-
     it { should validate_presence_of(:name) }
     it { should validate_length_of(:name).is_at_most(255) }
-
     it { should validate_presence_of(:name_url) }
     it { should validate_uniqueness_of(:name_url).scoped_to(:course_module_id).with_message('must be unique within the course module') }
-
-    it { should validate_presence_of(:course_module_id) }
-
+    it { should validate_presence_of(:course_module) }
     it { should validate_presence_of(:sorting_order) }
   end
 
@@ -113,7 +108,5 @@ describe CourseModuleElement do
         expect(cme.available_to_user(user, nil)).to eq(view: false, reason: 'invalid-subscription')
       end
     end
-
   end
-
 end
