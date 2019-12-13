@@ -24,7 +24,7 @@
                   .card-body
                     #v-pills-tab.nav.flex-column.nav-pills{"aria-orientation" => "vertical", :role => "tablist"}
                       -section.questions.order(:sorting_order).each_with_index do |question, index|
-                      -user_question = @cbe_user_log.questions.select{ |q| q.cbe_question.id == question.id }.first
+                        -user_question = @cbe_user_log.questions.select{ |q| q.cbe_question.id == question.id }.first
                         %a#v-pills-home-tab.nav-link.mb-3{"aria-controls" => "v-pills-#{question.id}", "data-toggle" => "pill", :href => "#v-pills-#{question.id}", :role => "tab"}
                           ="Question #{index+1}"
                           =question_title_class(user_question)
