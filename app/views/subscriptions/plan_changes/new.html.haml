@@ -211,6 +211,7 @@
           if (['incomplete', 'past_due'].includes(data.status)) {
             handleStripeAction(data.client_secret, data.subscription_id)
           } else if(data.status == 'active') {
+            // TODO: This url is incorrect as @subscription is the old sub not the new sub
             window.location.replace("#{personal_upgrade_complete_url(@subscription.completion_guid)}");
           }
         },
@@ -243,6 +244,7 @@
             dataType: 'json',
             success: function(data,status,xhr){
               if ($.inArray(intentStatus, statusArray) !== -1){
+                // TODO: This url is incorrect as @subscription is the old sub not the new sub
                 window.location.replace("#{personal_upgrade_complete_url(@subscription.completion_guid)}");
               }
             },
@@ -288,6 +290,7 @@
             dataType: 'json',
             success: function(data,status,xhr){
               if( $.inArray(intentStatus, statusArray) !== -1){
+                // TODO: This url is incorrect as @subscription is the old sub not the new sub
                 window.location.replace("#{personal_upgrade_complete_url(@subscription.completion_guid)}");
               }
             },

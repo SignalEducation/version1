@@ -82,7 +82,7 @@
                 %div.mr-3.mb-4
                   =link_to 'View All Invoices', user_invoices_path(current_user)
                 %div
-                  -if subscription.can_change_plan?
+                  -if %w[active canceled-pending pending_cancellation].include?(subscription.state)
                     =link_to 'Change Subscription Plan', new_subscription_plan_changes_path(subscription), class: 'btn btn-primary btn-xs', style: 'vertical-align: top;'
                   -if subscription.paused?
                     =link_to 'Reactivate Subscription', subscriptions_suspension_path(id: subscription.id), method: :delete, class: 'btn btn-secondary btn-xs', style: 'vertical-align: top;'

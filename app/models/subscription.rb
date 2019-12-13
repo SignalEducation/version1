@@ -484,7 +484,7 @@ class Subscription < ApplicationRecord
 
   def subscription_change_allowable
     return unless stripe?
-    return if %w[active past_due].include?(changed_from.stripe_status)
+    return if %w[active canceled-pending pending_cancellation].include?(changed_from.stripe_status)
 
     errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.this_subscription_cant_be_upgraded'))
   end
