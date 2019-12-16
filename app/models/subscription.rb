@@ -446,6 +446,8 @@ class Subscription < ApplicationRecord
   protected
 
   def create_subscription_payment_card
+    return if stripe_token.blank?
+
     stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
     array_of_cards  = stripe_customer.sources.data
 
@@ -453,6 +455,8 @@ class Subscription < ApplicationRecord
   end
 
   def update_subscription_status
+    return if stripe_token.blank?
+
     if stripe_status == 'active'
       start
     elsif payment_intent_status == 'requires_action'
