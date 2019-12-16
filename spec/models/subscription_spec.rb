@@ -227,6 +227,8 @@ describe Subscription do
         let(:subscription) { create(:subscription, state: 'active') }
 
         it 'starts the subscription' do
+          subscription.update(stripe_token: 'sdfgsdfghs')
+          subscription.reload
           expect(subscription).to receive(:start)
 
           subscription.send(:update_subscription_status)
@@ -239,6 +241,8 @@ describe Subscription do
         }
 
         it 'calls mark_payment_action_required transition' do
+          subscription.update(stripe_token: 'sdfgsdfghs')
+          subscription.reload
           expect(subscription).to receive(:start)
 
           subscription.send(:update_subscription_status)
