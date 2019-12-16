@@ -131,8 +131,6 @@ describe SubjectCourse do
     it { should respond_to(:total_enrollments) }
 
     it { should respond_to(:home_page) }
+    it { should respond_to(:duplicate) }
   end
-
-
-
 end

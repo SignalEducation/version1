@@ -7,6 +7,7 @@ const state = {
     cbe_id: null,
     exercise_id: null,
     questions: {},
+    status: "",
     exam_pages: {
       state: null,
       flagged: false,
@@ -66,8 +67,9 @@ const mutations = {
     state.user_cbe_data.exercise_id = newDat.exercise_id;
     state.user_cbe_data.exam_pages = functions.reviewPageLinks(newDat.cbe_data.sections);
   },
-  setUserLog(state, id) {
-    state.user_cbe_data.user_log_id = id;
+  setUserLog(state, data) {
+    state.user_cbe_data.status = data.status;
+    state.user_cbe_data.user_log_id = data.id;
   },
   setAnswerData(state, question) {
     state.user_cbe_data.questions[question.id] = question;

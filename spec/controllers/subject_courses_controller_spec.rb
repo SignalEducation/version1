@@ -154,5 +154,29 @@ describe SubjectCoursesController, type: :controller do
         expect_delete_success_with_model('subject_course', subject_courses_url)
       end
     end
+
+    describe '#clone' do
+      context 'clone subject course' do
+        it 'should duplicate subject course' do
+          post :clone, params: { id: subject_course_1.id }
+
+          expect(response.status).to eq(302)
+          expect(response).to redirect_to(subject_courses_url)
+          expect(flash[:success]).to be_present
+          expect(flash[:success]).to eq('Course successfully duplicaded')
+        end
+
+        it 'should not duplicate subject course' do
+          subject_course_dup = subject_course_1.dup
+          subject_course_dup.update(name:  "#{subject_course_1.name} copy", name_url:  "#{subject_course_1.name}_copy")
+          post :clone, params: { id: subject_course_1.id }
+
+          expect(response.status).to eq(302)
+          expect(response).to redirect_to(subject_courses_url)
+          expect(flash[:error]).to be_present
+          expect(flash[:error]).to eq('Course not successfully duplicaded')
+        end
+      end
+    end
   end
 end

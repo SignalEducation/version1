@@ -89,25 +89,27 @@ class InvoiceDocument < Prawn::Document
       ['Discount', invoice.currency.format_number((invoice.sub_total - invoice.total))],
       ['Total',    invoice.currency.format_number(invoice.total)]
     ]
-
-    table(summary_details, column_widths: [480, 60], header: true,
-          cell_style: { padding: 5, border_width: 0.5 }) do
-      row(0..100).style(size: 9, font_style: :bold)
-      row(0..100).borders = []
-      cells.columns(0..100).align = :right
+    font(Rails.root.join('app', 'assets', 'fonts', 'PingFangRegular.ttf')) do
+      table(summary_details, column_widths: [480, 60], header: true,
+            cell_style: { padding: 5, border_width: 0.5 }) do
+        row(0..100).style(size: 9)
+        row(0..100).borders = []
+        cells.columns(0..100).align = :right
+      end
     end
 
     move_down 25
   end
 
   def footer
-    move_down 250
-    stroke_horizontal_rule
-    stroke_horizontal_rule
-    move_down 25
-    text "Signal Education Limited t/a LearnSignal, Fleming Court, Fleming's Place, Dublin, D04 N4X9, Ireland", size: 10, align: :center
-    text 'email: info@learnsignal.com   phone: +353 1 443 4575', size: 10, align: :center
-    text 'VAT Number: IE3313351FH', size: 10, align: :center
+    bounding_box([bounds.left, bounds.top - 650], width: bounds.width, height: bounds.height - 100) do
+      stroke_horizontal_rule
+      stroke_horizontal_rule
+      move_down 25
+      text "Signal Education Limited t/a LearnSignal, Fleming Court, Fleming's Place, Dublin, D04 N4X9, Ireland", size: 10, align: :center
+      text 'email: info@learnsignal.com   phone: +353 1 443 4575', size: 10, align: :center
+      text 'VAT Number: IE3313351FH', size: 10, align: :center
+    end
   end
 
   def recipient_name

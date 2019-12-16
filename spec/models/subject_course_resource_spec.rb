@@ -21,16 +21,12 @@
 require 'rails_helper'
 
 describe SubjectCourseResource do
-
   # relationships
   it { should belong_to(:subject_course) }
 
   # validation
   it { should validate_presence_of(:name) }
-
-  it { should validate_presence_of(:subject_course_id) }
-  it { should validate_numericality_of(:subject_course_id) }
-
+  it { should validate_presence_of(:subject_course) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
@@ -43,6 +39,4 @@ describe SubjectCourseResource do
 
   # instance methods
   it { should respond_to(:destroyable?) }
-
-
 end

@@ -97,7 +97,6 @@
                   %p.m-0.text-left.text-md-center Tutor support 24 hours a day, 7 days a week
 
 :javascript
-
   let plan_id = '1';
   let couponCode = $('#coupon_code');
   let searchParams = new URLSearchParams(window.location.search);
@@ -277,7 +276,7 @@
       choosePlan($(this).val());
       validateCoupon();
     });
-    $(".sk-circle").hide();
+    $(".spinning-loading").hide();
     $('.invalid-code').hide();
     $('.discounted-price').hide();
     if (searchParams.has('login') === true) {
@@ -371,6 +370,19 @@
       }
     });
 
+    var paypalButton = document.getElementById('paypal_submit');
+
+    paypalButton.addEventListener('click', function(ev) {
+      $('#plans-options').prop('disabled', true);
+      $('#card_submit').prop('disabled', true);
+      $('#paypal_submit').prop('disabled', true);
+      $('#card_submit').hide();
+      $('#paypal_submit').hide();
+      $(".spinning-loading").show();
+      $('#hidden_coupon_code').val($('#coupon_code').val());
+      document.getElementById('upgrade-form').submit();
+    });
+
     var cardButton = document.getElementById('card_submit');
 
     cardButton.addEventListener('click', function(ev) {
@@ -382,7 +394,8 @@
       $('#paypal_submit').prop('disabled', true);
       $('#card_submit').hide();
       $('#paypal_submit').hide();
-      $(".sk-circle").show();
+      $(".spinner-message").html("Please wait...");
+      $(".spinning-loading").show();
       $('#hidden_coupon_code').val($('#coupon_code').val());
 
       if ($('#subscription_use_paypal').val() === 'true') {
@@ -428,6 +441,9 @@
     function handlePayment(client_secret, subscription_id){
       let statusArray = ['active', 'succeeded'];
       let intentStatus = '';
+
+      $(".spinner-message").html("Still processing...");
+
       stripe.handleCardPayment(client_secret, cardElement).then(function(result) {
         if (result.error) {
           resetForm(result.error.message);
@@ -461,7 +477,7 @@
       $('.custom-check').prop('disabled', false);
       $('#card_submit').prop('disabled', false);
       $('#paypal_submit').prop('disabled', false);
-      $(".sk-circle").hide();
+      $(".spinning-loading").hide();
 
       displayError.textContent = error;
     }

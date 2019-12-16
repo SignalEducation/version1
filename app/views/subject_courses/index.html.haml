@@ -50,6 +50,8 @@
                     %td
                       =link_to 'CSV', export_course_log_data_path(id: subject_course.id, format: :xls), class: 'btn btn-xs btn-secondary'
                     %td
+                      =link_to t('views.general.clone'), subject_course_clone_path(id: subject_course.id), data: {confirm: t('views.general.clone_confirmation')}, method: :post, class: 'btn btn-xs btn-warning'
+                    %td
 
 
 

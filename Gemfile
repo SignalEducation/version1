@@ -21,6 +21,7 @@ gem 'bootstrap', '~> 4.3.1'
 gem 'browser' # user-agent detection
 gem 'chart-js-rails', '~> 0.1.6' #Graphs
 gem 'coffee-rails', '~> 4.2' # enables CoffeeScript (abbreviated javascript)
+gem 'deep_cloneable', '~> 3.0.0'
 gem 'dynamic_sitemaps' # Sitemap generation grm
 gem 'faraday', '~> 0.15.4'
 gem 'geocoder', '~> 1.3', '>= 1.3.7' #  a public API for geo-locating IP addresses
