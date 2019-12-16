@@ -13,7 +13,7 @@
       >
         <b-navbar-brand
           :href="href"
-          @click="navigate"
+          @click.native.prevent="confirmNavigate(href)"
         >
           {{
             logo
@@ -80,6 +80,13 @@ export default {
     },
     toggleResetModal() {
       document.getElementById('cbe-calculator').style.display = 'block'
+    },
+    confirmNavigate(url){
+      if (confirm('Are you sure do you wanna leave?')) {
+        window.location.href = url;
+      } else {
+        return false;
+      }
     },
   },
 };
