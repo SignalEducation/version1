@@ -8,7 +8,7 @@ module OrdersHelper
         'View'
       end
     else
-      link_to order.product.mock_exam.file.url, target: '_blank' do
+      link_to order&.product&.mock_exam&.file&.url, target: '_blank' do
         'View'
       end
     end
