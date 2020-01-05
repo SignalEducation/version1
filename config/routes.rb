@@ -71,6 +71,7 @@ Rails.application.routes.draw do
         get 'execute'
         get 'unapproved'
         post 'status_from_stripe'
+        post 'expire_incomplete'
       end
       scope module: 'subscriptions' do
         resources :cancellations, only: %i[new create]

@@ -424,8 +424,8 @@
           if(data.status == 'incomplete'){
             handlePayment(data.client_secret, data.subscription_id)
           } else if(data.status == 'active'){
-            subscriptionCreation(data);
             window.location.replace("#{personal_upgrade_complete_url(@subscription.completion_guid)}");
+            subscriptionCreation(data);
           }
         },
         error: function(request, status, error){
@@ -448,25 +448,30 @@
         if (result.error) {
           resetForm(result.error.message);
           intentStatus = 'pending';
+          $.ajax({
+            type: 'post',
+            url: "/subscriptions/" + subscription_id + "/expire_incomplete",
+            data: { },
+            dataType: 'json'
+          });
         } else {
           intentStatus = result['paymentIntent']['status'];
-        }
-
-        $.ajax({
-          type: 'post',
-          url: "/subscriptions/" + subscription_id + "/status_from_stripe",
-          data: { status: intentStatus },
-          dataType: 'json',
-          success: function(data,status,xhr){
-            if( $.inArray(intentStatus, statusArray) !== -1){
-              subscriptionCreation(data);
-              window.location.replace("#{personal_upgrade_complete_url(@subscription.completion_guid)}");
+          $.ajax({
+            type: 'post',
+            url: "/subscriptions/" + subscription_id + "/status_from_stripe",
+            data: { status: intentStatus },
+            dataType: 'json',
+            success: function(data,status,xhr){
+              if( $.inArray(intentStatus, statusArray) !== -1){
+                window.location.replace("#{personal_upgrade_complete_url(@subscription.completion_guid)}");
+                subscriptionCreation(data);
+              }
+            },
+            error: function(xhr,status,error){
+              resetForm(error);
             }
-          },
-          error: function(xhr,status,error){
-            resetForm(error);
-          }
-        });
+          });
+        }
       });
     }
 
