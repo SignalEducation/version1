@@ -222,10 +222,6 @@ export default {
       type: Number,
       default: null,
     },
-    initialScore: {
-      type: Number,
-      default: null,
-    },
     initialSortingOrder: {
       type: Number,
       default: 1,
