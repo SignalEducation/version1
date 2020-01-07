@@ -80,7 +80,7 @@
                   Learnsignal became a gold approved ACCA partner in April 2017. Since then, we have continued to challenge the traditional way of learning and grown our student base across 130 countries to over 100,000.
 
 
-  -if @home_page.student_testimonials.any?
+  -if @home_page&.student_testimonials&.any?
     =render partial: 'student_testimonials', locals: {home_page: @home_page}
   -else
     .container
@@ -99,7 +99,7 @@
                   %cite.font-weight-semi-bold.text-gray2
                     Rebecca Nagujja, Ireland
 
-  -if @home_page.blog_posts.any?
+  -if @home_page&.blog_posts&.any?
     =render partial: 'blog_posts_section', locals: {home_page: @home_page}
 
   =render partial: 'customer_support_section'

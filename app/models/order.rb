@@ -42,7 +42,7 @@ class Order < ApplicationRecord
   has_one :invoice, autosave: true, dependent: :restrict_with_error
 
   has_many :exercises, dependent: :restrict_with_error
-  delegate :mock_exam, to: :product
+  delegate :mock_exam, to: :product, allow_nil: true
 
   # validation
   validates :reference_guid, uniqueness: true, allow_blank: true

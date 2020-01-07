@@ -22,10 +22,10 @@ require 'rails_helper'
 describe CourseSectionUserLog do
 
   describe 'relationships' do
-    it { should belong_to(:user) }
-    it { should belong_to(:subject_course) }
-    it { should belong_to(:subject_course_user_log) }
-    it { should belong_to(:course_section) }
+    it { should belong_to(:user).optional }
+    it { should belong_to(:subject_course).optional }
+    it { should belong_to(:subject_course_user_log).optional }
+    it { should belong_to(:course_section).optional }
     it { should have_many(:student_exam_tracks) }
     it { should have_many(:course_module_element_user_logs) }
   end

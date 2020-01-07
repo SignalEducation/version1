@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Cbe::IntroductionPage, type: :model do
-  let(:cbe_introduction_page) { build(:cbe_introduction_page, :with_cbe) }
+  let(:cbe_introduction_page) { create(:cbe_introduction_page, :with_cbe) }
 
   describe 'Should Respond' do
     it { should respond_to(:sorting_order) }

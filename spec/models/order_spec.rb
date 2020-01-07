@@ -25,13 +25,15 @@
 require 'rails_helper'
 
 describe Order do
-  # relationships
-  it { should belong_to(:product) }
-  it { should belong_to(:subject_course) }
-  it { should belong_to(:mock_exam) }
-  it { should belong_to(:user) }
-  it { should have_one(:order_transaction) }
-  it { should have_many(:exercises) }
+  describe 'relationships' do
+    it { should belong_to(:product) }
+    it { should belong_to(:subject_course).optional }
+    it { should belong_to(:mock_exam).optional }
+    it { should belong_to(:user) }
+    it { should have_one(:order_transaction) }
+    it { should have_many(:exercises) }
+    it { should delegate_method(:mock_exam).to(:product) }
+  end
 
   describe 'factories' do
     it 'has a valid factory' do

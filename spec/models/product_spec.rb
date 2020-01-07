@@ -53,7 +53,7 @@ describe Product do
 
   # relationships
   it { should belong_to(:currency) }
-  it { should belong_to(:mock_exam) }
+  it { should belong_to(:mock_exam).optional }
   it { should have_many(:exercises) }
   it { should have_many(:orders) }
 

@@ -21,7 +21,7 @@ RSpec.describe Cbe::UserLog, type: :model do
   describe 'Associations' do
     it { should belong_to(:cbe) }
     it { should belong_to(:user) }
-    it { should belong_to(:exercise) }
+    it { should belong_to(:exercise).optional }
     it { should have_many(:questions) }
   end
 

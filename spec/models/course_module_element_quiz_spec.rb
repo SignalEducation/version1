@@ -20,7 +20,7 @@ describe CourseModuleElementQuiz do
   end
 
   describe 'relationships' do
-    it { should belong_to(:course_module_element) }
+    it { should belong_to(:course_module_element).optional }
     it { should have_many(:quiz_questions) }
   end
 

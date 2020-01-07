@@ -38,8 +38,8 @@ describe Charge do
     it { should belong_to(:user) }
     it { should belong_to(:subscription_payment_card) }
     it { should belong_to(:currency) }
-    it { should belong_to(:coupon) }
-    it { should belong_to(:stripe_api_event) }
+    it { should belong_to(:coupon).optional }
+    it { should belong_to(:stripe_api_event).optional }
     it { should have_many(:refunds) }
   end
 

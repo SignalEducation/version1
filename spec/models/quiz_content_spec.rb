@@ -22,9 +22,9 @@ require 'rails_helper'
 describe QuizContent do
 
   # relationships
-  it { should belong_to(:quiz_answer) }
-  it { should belong_to(:quiz_question) }
-  it { should belong_to(:quiz_solution) }
+  it { should belong_to(:quiz_answer).optional }
+  it { should belong_to(:quiz_question).optional }
+  it { should belong_to(:quiz_solution).optional }
 
   # validation
   # tests for custom-validator 'one_parent_only'

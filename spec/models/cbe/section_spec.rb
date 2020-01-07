@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Cbe::Section, type: :model do
-  let(:cbe_section) { build(:cbe_section, :with_cbe) }
+  let(:cbe_section) { create(:cbe_section, :with_cbe) }
 
   describe 'Should Respond' do
     it { should respond_to(:name) }

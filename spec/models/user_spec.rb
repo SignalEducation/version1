@@ -61,7 +61,7 @@ require 'rails_helper'
 
 describe User do
   it 'should have a valid factory' do
-    expect(build(:user)).to be_valid
+    expect(create(:user)).to be_valid
   end
 
   # Constants
@@ -69,7 +69,7 @@ describe User do
   it { expect(User.const_defined?(:SORT_OPTIONS)).to eq(true) }
 
   # relationships
-  it { should belong_to(:country) }
+  it { should belong_to(:country).optional }
   it { should have_many(:course_module_element_user_logs) }
   it { should have_many(:completed_course_module_element_user_logs) }
   it { should have_many(:incomplete_course_module_element_user_logs) }
@@ -93,8 +93,8 @@ describe User do
   it { should have_one(:referral_code) }
   it { should have_one(:student_access) }
   it { should have_one(:referred_signup) }
-  it { should belong_to(:subscription_plan_category) }
-  it { should belong_to(:currency) }
+  it { should belong_to(:subscription_plan_category).optional }
+  it { should belong_to(:currency).optional }
 
   # validation
   context 'test uniqueness validation' do

@@ -27,7 +27,7 @@ describe SubjectCourseUserLog do
   describe 'relationships' do
     it { should belong_to(:user) }
     it { should belong_to(:subject_course) }
-    it { should belong_to(:latest_course_module_element) }
+    it { should belong_to(:latest_course_module_element).optional }
     it { should have_many(:enrollments) }
     it { should have_many(:course_section_user_logs) }
     it { should have_many(:student_exam_tracks) }

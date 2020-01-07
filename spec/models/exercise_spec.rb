@@ -26,9 +26,9 @@ RSpec.describe Exercise, type: :model do
 
   describe 'Associations' do
     it { should belong_to(:product) }
-    it { should belong_to(:order) }
+    it { should belong_to(:order).optional }
     it { should belong_to(:user) }
-    it { should belong_to(:corrector) }
+    it { should belong_to(:corrector).optional }
     it { should have_one(:cbe_user_log) }
     it { should have_attached_file(:submission) }
     it { should have_attached_file(:correction) }

@@ -18,7 +18,7 @@ require 'rails_helper'
 describe VideoResource do
   let(:video) { build(:video_resource) }
   # relationships
-  it { should belong_to :course_module_element }
+  it { should belong_to(:course_module_element).optional }
 
   # validation
   it { should validate_presence_of(:course_module_element_id).on(:update) }

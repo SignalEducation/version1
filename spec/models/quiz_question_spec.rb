@@ -19,8 +19,8 @@ require 'rails_helper'
 describe QuizQuestion do
 
   # relationships
-  it { should belong_to(:subject_course) }
-  it { should belong_to(:course_module_element) }
+  it { should belong_to(:subject_course).optional }
+  it { should belong_to(:course_module_element).optional }
   it { should belong_to(:course_module_element_quiz) }
   it { should have_many(:quiz_attempts) }
   it { should have_many(:quiz_answers) }

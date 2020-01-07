@@ -30,7 +30,7 @@ RSpec.describe EnrollmentManagementController, :type => :controller do
   let!(:scul_2) { FactoryBot.create(:subject_course_user_log, user_id: basic_student.id, subject_course_id: subject_course_2.id, percentage_complete: 10) }
   let!(:enrollment_2) { FactoryBot.create(:enrollment, user_id: basic_student.id, subject_course_id: subject_course_2.id, subject_course_user_log_id: scul_2.id, exam_body_id: exam_body_1.id) }
 
-  let!(:valid_params) { FactoryBot.attributes_for(:enrollment, user_id: basic_student.id, subject_course_id: subject_course_1.id, subject_course_user_log_id: nil, exam_sitting_id: standard_exam_sitting.id) }
+  let!(:valid_params) { FactoryBot.attributes_for(:enrollment, user_id: basic_student.id, subject_course_id: subject_course_1.id, subject_course_user_log_id: scul_1.id, exam_sitting_id: standard_exam_sitting.id) }
 
   context 'Logged in as a user_management_user: ' do
 

@@ -88,7 +88,7 @@ RSpec.describe 'Api::V1::CbesController', type: :request do
   # create
   describe 'post /api/v1/cbes' do
     context 'create a valid cbe' do
-      let(:cbe) { build(:cbe) }
+      let(:cbe) { create(:cbe) }
 
       before do
         post '/api/v1/cbes', params: { cbe: cbe.attributes }

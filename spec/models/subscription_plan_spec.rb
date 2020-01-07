@@ -43,7 +43,7 @@ describe SubscriptionPlan, type: :model do
     it { should belong_to(:currency) }
     it { should have_many(:invoice_line_items) }
     it { should have_many(:subscriptions) }
-    it { should belong_to(:subscription_plan_category) }
+    it { should belong_to(:subscription_plan_category).optional }
   end
 
   describe 'validations' do

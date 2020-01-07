@@ -84,6 +84,8 @@ class CourseSectionUserLog < ApplicationRecord
   protected
 
   def create_subject_course_user_log
+    return if Rails.env.test?
+
     scul = SubjectCourseUserLog.create!(user_id: self.user_id, subject_course_id: self.subject_course_id)
     self.subject_course_user_log_id = scul.id
   end

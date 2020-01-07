@@ -258,6 +258,7 @@ class Invoice < ApplicationRecord
   protected
 
   def set_vat_rate
+    return if Rails.env.test?
     country = user.country
 
     if country&.vat_codes.any?

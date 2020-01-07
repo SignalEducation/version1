@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :cbe_user_log, class: Cbe::UserLog do
     score { Faker::Number.decimal(l_digits: 2, r_digits: 2) }
-    user  { build(:user) }
+    user  { create(:user) }
 
     trait :started do
       status { :started }

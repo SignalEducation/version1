@@ -12,7 +12,7 @@ RSpec.describe Cbe::UserAnswer, type: :model do
   end
 
   describe 'Associations' do
-    it { should belong_to(:question) }
+    it { should belong_to(:question).optional }
   end
 
   describe 'Validations' do

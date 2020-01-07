@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Cbe::Scenario, type: :model do
-  let(:cbe_scenario) { build(:cbe_scenario, :with_section) }
+  let(:cbe_scenario) { create(:cbe_scenario, :with_section) }
 
   describe 'Should Respond' do
     it { should respond_to(:name) }

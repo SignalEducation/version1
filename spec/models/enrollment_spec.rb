@@ -24,11 +24,11 @@ require 'rails_helper'
 describe Enrollment do
 
   describe 'relationships' do
-    it { should belong_to(:exam_body) }
-    it { should belong_to(:exam_sitting) }
-    it { should belong_to(:user) }
-    it { should belong_to(:subject_course) }
-    it { should belong_to(:subject_course_user_log) }
+    it { should belong_to(:exam_body).optional }
+    it { should belong_to(:exam_sitting).optional }
+    it { should belong_to(:user).optional }
+    it { should belong_to(:subject_course).optional }
+    it { should belong_to(:subject_course_user_log).optional }
   end
 
   describe 'validations' do

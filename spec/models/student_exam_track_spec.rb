@@ -27,13 +27,13 @@ require 'rails_helper'
 describe StudentExamTrack do
 
   describe 'relationships' do
-    it { should belong_to(:user) }
-    it { should belong_to(:subject_course) }
-    it { should belong_to(:subject_course_user_log) }
-    it { should belong_to(:course_section) }
-    it { should belong_to(:course_section_user_log) }
-    it { should belong_to(:course_module) }
-    it { should belong_to(:latest_course_module_element) }
+    it { should belong_to(:user).optional }
+    it { should belong_to(:subject_course).optional }
+    it { should belong_to(:subject_course_user_log).optional }
+    it { should belong_to(:course_section).optional }
+    it { should belong_to(:course_section_user_log).optional }
+    it { should belong_to(:course_module).optional }
+    it { should belong_to(:latest_course_module_element).optional }
     it { should have_many(:course_module_element_user_logs) }
   end
 
@@ -94,6 +94,4 @@ describe StudentExamTrack do
     it { should respond_to(:enrollment) }
     it { should respond_to(:recalculate_set_completeness) }
   end
-
-
 end

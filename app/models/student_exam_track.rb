@@ -116,6 +116,8 @@ class StudentExamTrack < ApplicationRecord
 
   # Before Validation
   def create_course_section_user_log
+    return if Rails.env.test?
+
     csul = CourseSectionUserLog.create!(user_id: self.user_id, course_section_id: self.course_section_id,
                                         subject_course_id: self.course_module.subject_course_id,
                                         subject_course_user_log_id: self.try(:subject_course_user_log_id))

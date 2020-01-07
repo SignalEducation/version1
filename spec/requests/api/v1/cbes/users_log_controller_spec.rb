@@ -107,7 +107,7 @@ RSpec.describe 'Api::V1::Cbe::UsersLogController', type: :request do
     end
 
     context 'try to create a invalid user log' do
-      let(:user_log) { build(:cbe_user_log, :finished) }
+      let(:user_log) { build(:cbe_user_log, :finished, user: nil) }
 
       before do
         post "/api/v1/cbes/#{cbe.id}/users_log", params: { cbe_user_log: user_log.attributes }

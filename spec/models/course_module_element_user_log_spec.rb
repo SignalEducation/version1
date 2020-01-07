@@ -31,16 +31,15 @@
 require 'rails_helper'
 
 describe CourseModuleElementUserLog do
-
   describe 'relationships' do
-    it { should belong_to(:user) }
-    it { should belong_to(:subject_course) }
-    it { should belong_to(:subject_course_user_log) }
-    it { should belong_to(:course_section) }
-    it { should belong_to(:course_section_user_log) }
-    it { should belong_to(:course_module) }
-    it { should belong_to(:student_exam_track) }
-    it { should belong_to(:course_module_element) }
+    it { should belong_to(:user).optional }
+    it { should belong_to(:subject_course).optional }
+    it { should belong_to(:subject_course_user_log).optional }
+    it { should belong_to(:course_section).optional }
+    it { should belong_to(:course_section_user_log).optional }
+    it { should belong_to(:course_module).optional }
+    it { should belong_to(:student_exam_track).optional }
+    it { should belong_to(:course_module_element).optional }
     it { should have_many(:quiz_attempts) }
     it { should have_one(:constructed_response_attempt) }
   end

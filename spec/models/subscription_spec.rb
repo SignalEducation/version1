@@ -46,7 +46,7 @@ describe Subscription do
     end
 
     it 'should have a valid factory' do
-      expect(build(:subscription)).to be_valid
+      expect(create(:subscription)).to be_valid
     end
   end
 
@@ -58,7 +58,7 @@ describe Subscription do
   it { should have_many(:invoices) }
   it { should have_many(:invoice_line_items) }
   it { should belong_to(:subscription_plan) }
-  it { should belong_to(:coupon) }
+  it { should belong_to(:coupon).optional }
   it { should have_one(:student_access) }
   it { should have_many(:subscription_transactions) }
   it { should have_many(:charges) }

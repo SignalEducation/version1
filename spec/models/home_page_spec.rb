@@ -41,9 +41,9 @@ describe HomePage do
   # Constants
 
   # relationships
-  it { should belong_to(:subscription_plan_category) }
-  it { should belong_to(:group) }
-  it { should belong_to(:subject_course) }
+  it { should belong_to(:subscription_plan_category).optional }
+  it { should belong_to(:group).optional }
+  it { should belong_to(:subject_course).optional }
   it { should have_many(:blog_posts) }
   it { should have_many(:external_banners) }
 

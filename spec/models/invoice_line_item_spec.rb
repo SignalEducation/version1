@@ -23,8 +23,8 @@ describe InvoiceLineItem do
   # relationships
   it { should belong_to(:invoice) }
   it { should belong_to(:currency) }
-  it { should belong_to(:subscription) }
-  it { should belong_to(:subscription_plan) }
+  it { should belong_to(:subscription).optional }
+  it { should belong_to(:subscription_plan).optional }
 
   # validation
   it { should validate_presence_of(:invoice_id) }

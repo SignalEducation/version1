@@ -142,6 +142,8 @@ class CourseModuleElementUserLog < ApplicationRecord
   # Before Validation
   #This triggers the creation of parent CSUL and its parent SCUL
   def create_student_exam_track
+    return if Rails.env.test?
+
     set = StudentExamTrack.create!(user_id: self.user_id, course_module_id: self.course_module_id,
                                    course_section_id: self.course_module.course_section_id,
                                    subject_course_id: self.course_section.subject_course_id,
@@ -190,6 +192,7 @@ class CourseModuleElementUserLog < ApplicationRecord
 
   # After Save
   def update_student_exam_track
+    return if Rails.env.test?
     set = self.student_exam_track
     set.latest_course_module_element_id = self.course_module_element_id if self.element_completed
     set.recalculate_set_completeness # Includes a save!

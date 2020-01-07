@@ -30,8 +30,8 @@ describe Coupon do
   end
 
   describe 'relationships' do
-    it { should belong_to(:currency) }
-    it { should belong_to(:exam_body) }
+    it { should belong_to(:currency).optional }
+    it { should belong_to(:exam_body).optional }
     it { should have_many(:charges) }
     it { should have_many(:subscriptions) }
   end

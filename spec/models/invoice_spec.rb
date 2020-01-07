@@ -39,10 +39,9 @@
 require 'rails_helper'
 
 describe Invoice do
-  
   it 'has a valid factory' do
     allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
-    expect(build(:invoice)).to be_valid
+    expect(create(:invoice)).to be_valid
   end
 
   # Constants
@@ -51,10 +50,10 @@ describe Invoice do
   # relationships
   it { should belong_to(:currency) }
   it { should have_many(:invoice_line_items) }
-  it { should belong_to(:subscription_transaction) }
-  it { should belong_to(:subscription) }
+  it { should belong_to(:subscription_transaction).optional }
+  it { should belong_to(:subscription).optional }
   it { should belong_to(:user) }
-  it { should belong_to(:vat_rate) }
+  it { should belong_to(:vat_rate).optional }
 
   # validation
   it { should validate_presence_of(:user_id) }
@@ -120,9 +119,9 @@ describe Invoice do
           invoice.send_receipt('')
         end
       end
-      
+
     end
-    
+
     describe '#send_receipt' do
       describe 'for Rails.env.test?' do
         it 'does nothing' do

@@ -185,6 +185,8 @@ class Enrollment < ApplicationRecord
   end
 
   def create_subject_course_user_log
+    return if Rails.env.test?
+
     subject_course_user_log = SubjectCourseUserLog.create!(user_id: self.user_id,
                                                            session_guid: self.user.try(:session_guid),
                                                            subject_course_id: self.subject_course_id)

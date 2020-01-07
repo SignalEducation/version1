@@ -73,6 +73,8 @@ class Refund < ApplicationRecord
   end
 
   def create_on_stripe
+    return if Rails.env.test?
+
     stripe_refund = Stripe::Refund.create(charge: self.stripe_charge_guid, amount: self.amount, reason: self.reason)
     self.stripe_guid = stripe_refund[:id]
     self.status = stripe_refund[:status]

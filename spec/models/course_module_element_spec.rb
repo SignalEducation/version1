@@ -30,7 +30,7 @@ require 'rails_helper'
 describe CourseModuleElement do
   describe 'relationships' do
     it { should belong_to(:course_module) }
-    it { should belong_to(:related_course_module_element) }
+    it { should belong_to(:related_course_module_element).optional }
     it { should have_one(:course_module_element_quiz) }
     it { should have_one(:course_module_element_video) }
     it { should have_one(:constructed_response) }
