@@ -1209,7 +1209,7 @@ en:
         subscription_id: Subscription ID
         invoice_id: Invoice ID
         user_id: User ID
-        amount: Amount (In Cents)
+        amount: "Amount In Cents - (Max: %{amount})"
         amount_placeholder: Refund Amount
         reason: Reason for Refund
 
