@@ -37,9 +37,9 @@
         >
           <input
             id="questionScore"
-            v-model.number="questionScore"
+            v-model="questionScore"
             placeholder="Score"
-            type="number"
+            type="decimal"
             :class="
               'form-control ' +
                 {
@@ -194,7 +194,7 @@
 <script>
 import axios from 'axios';
 import { validationMixin } from 'vuelidate';
-import { required, numeric, between } from 'vuelidate/lib/validators';
+import { required, numeric, decimal, between } from 'vuelidate/lib/validators';
 
 import TinyEditor from '../../TinyEditor.vue';
 import AdminAnswers from './QuestionAnswers.vue';
@@ -220,6 +220,10 @@ export default {
     },
     id: {
       type: Number,
+      default: null,
+    },
+    initialScore: {
+      type: String,
       default: null,
     },
     initialSortingOrder: {
@@ -264,7 +268,7 @@ export default {
     },
     questionScore: {
       required,
-      numeric,
+      decimal,
       between: between(1, 100),
     },
     questionSortingOrder: {

@@ -108,7 +108,7 @@
                       <Section
                         :id="parseInt(section.id)"
                         :initial-name="section.name"
-                        :initial-score="parseInt(section.score)"
+                        :initial-score="section.score"
                         :initial-sorting-order="section.sorting_order"
                         :initial-kind="section.kind"
                         :initial-content="section.content"
