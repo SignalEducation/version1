@@ -76,7 +76,7 @@ describe OrdersHelper do
   describe '#order_description' do
     context 'returns order description name' do
       it 'mock exam description' do
-        expect(order_description(order)).to eq('Purchase your Mock Exam today. Once submitted we will give you a solution paper, your result, question by question, personalised feedback on your exam and study topic recommendations.')
+        expect(order_description(order)).to eq('Purchase your Mock Exam today. Once submitted we will give you a solution paper, your result, question by question, personalised feedback on your exam and study topic recommendations within 3 days.')
       end
 
       it 'cbe description' do

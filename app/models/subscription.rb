@@ -37,7 +37,7 @@ class Subscription < ApplicationRecord
   delegate :currency, to: :subscription_plan
 
   # Constants
-  STATUSES        = %w[incomplete active past_due canceled canceled-pending pending_cancellation].freeze
+  STATUSES        = %w[incomplete active past_due canceled canceled-pending pending_cancellation incomplete_expired].freeze
   VALID_STATES    = %w[active past_due canceled-pending pending_cancellation paused].freeze
   PAYPAL_STATUSES = %w[Pending Active Suspended Cancelled Expired].freeze
 
