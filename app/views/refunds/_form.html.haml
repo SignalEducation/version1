@@ -30,9 +30,9 @@
 
           .col-sm-8.col-md-offset-2
             %hr/
-            =f.label :amount, t('views.refunds.form.amount'), class: 'control-label'
+            =f.label :amount, t('views.refunds.form.amount', amount: @charge.amount), class: 'control-label'
             .input-group.input-group-lg.full-width
-              =f.text_field :amount, placeholder: t('views.refunds.form.amount_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+              =f.number_field :amount, placeholder: t('views.refunds.form.amount_placeholder'), class: 'form-control', style: 'border-radius: 6px;', required: true, max: @charge.amount
             %br/
             =f.label :reason, t('views.refunds.form.reason'), class: 'control-label'
             .input-group.input-group-lg.full-width
