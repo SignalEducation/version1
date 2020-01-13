@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_09_134915) do
+ActiveRecord::Schema.define(version: 2020_01_16_090622) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -409,9 +409,9 @@ ActiveRecord::Schema.define(version: 2019_12_09_134915) do
     t.boolean "is_video", default: false, null: false
     t.boolean "is_quiz", default: false, null: false
     t.boolean "active", default: true, null: false
-    t.string "seo_description", limit: 255
-    t.boolean "seo_no_index", default: false
     t.datetime "destroyed_at"
+    t.string "seo_description"
+    t.boolean "seo_no_index", default: false
     t.integer "number_of_questions", default: 0
     t.float "duration", default: 0.0
     t.string "temporary_label"
@@ -430,9 +430,9 @@ ActiveRecord::Schema.define(version: 2019_12_09_134915) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer "cme_count", default: 0
-    t.string "seo_description", limit: 255
-    t.boolean "seo_no_index", default: false
     t.datetime "destroyed_at"
+    t.string "seo_description"
+    t.boolean "seo_no_index", default: false
     t.integer "number_of_questions", default: 0
     t.integer "subject_course_id"
     t.float "video_duration", default: 0.0
@@ -667,8 +667,8 @@ ActiveRecord::Schema.define(version: 2019_12_09_134915) do
     t.string "background_image_content_type"
     t.integer "background_image_file_size"
     t.datetime "background_image_updated_at"
-    t.string "background_colour"
     t.bigint "exam_body_id"
+    t.string "background_colour"
     t.string "seo_title"
     t.string "seo_description"
     t.string "short_description"
@@ -887,6 +887,7 @@ ActiveRecord::Schema.define(version: 2019_12_09_134915) do
 
   create_table "products", id: :serial, force: :cascade do |t|
     t.string "name"
+    t.integer "subject_course_id"
     t.integer "mock_exam_id"
     t.string "stripe_guid"
     t.boolean "live_mode", default: false
@@ -896,7 +897,6 @@ ActiveRecord::Schema.define(version: 2019_12_09_134915) do
     t.integer "currency_id"
     t.decimal "price"
     t.string "stripe_sku_guid"
-    t.integer "subject_course_id"
     t.integer "sorting_order"
     t.integer "product_type", default: 0
     t.integer "correction_pack_count"
@@ -909,6 +909,7 @@ ActiveRecord::Schema.define(version: 2019_12_09_134915) do
     t.index ["mock_exam_id"], name: "index_products_on_mock_exam_id"
     t.index ["name"], name: "index_products_on_name"
     t.index ["stripe_guid"], name: "index_products_on_stripe_guid"
+    t.index ["subject_course_id"], name: "index_products_on_subject_course_id"
   end
 
   create_table "quiz_answers", id: :serial, force: :cascade do |t|
@@ -1312,9 +1313,10 @@ ActiveRecord::Schema.define(version: 2019_12_09_134915) do
     t.string "cancellation_reason"
     t.text "cancellation_note"
     t.bigint "changed_from_id"
-    t.string "temp_guid"
     t.string "completion_guid"
     t.uuid "ahoy_visit_id"
+    t.bigint "cancelled_by_id"
+    t.index ["cancelled_by_id"], name: "index_subscriptions_on_cancelled_by_id"
     t.index ["changed_from_id"], name: "index_subscriptions_on_changed_from_id"
   end
 

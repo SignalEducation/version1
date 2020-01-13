@@ -44,10 +44,10 @@ class InvoiceDocument < Prawn::Document
         row(0).column(0).style(font_style: :bold)
       end
 
-    invoice_date    = invoice.issued_at.strftime('%e %b %Y')
     invoice_id      = invoice.id.to_s
+    invoice_date    = invoice.issued_at.strftime('%e %b %Y')
     invoice_details =
-      make_table([['Invoice Date:', invoice_date], ['Invoice No:', invoice_id]], width: 185, cell_style: { padding: 5, border_width: 0.5 }) do
+      make_table([['Invoice Date:', invoice_date], ['Invoice No:', invoice_id], ['Invoice Status:', invoice.status]], width: 185, cell_style: { padding: 5, border_width: 0.5 }) do
         row(0..10).style(size: 9)
         row(0..10).column(0).style(font_style: :bold)
       end

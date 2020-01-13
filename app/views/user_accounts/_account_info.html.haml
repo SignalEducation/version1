@@ -26,10 +26,9 @@
               .col-md-4.text-md-right
                 -if subscription.pending_3d_secure? && subscription.pending_3ds_invoice
                   =link_to show_invoice_url(subscription.pending_3ds_invoice&.sca_verification_guid) do
-                    .btn.btn-secondary
+                    .btn.btn-primary.mb-3
                       Authenticate
-                -else
-                  %button.btn.btn-secondary.btn-sm.js-show-hide-details.collapsed.sub-details{"aria-controls" => "#sub-#{subscription.id}", "aria-expanded" => "false", "data-target" => "#sub-#{subscription.id}", "data-toggle" => "collapse"}
+                %button.btn.btn-secondary.js-show-hide-details.collapsed.sub-details{"aria-controls" => "#sub-#{subscription.id}", "aria-expanded" => "false", "data-target" => "#sub-#{subscription.id}", "data-toggle" => "collapse"}
 
             .collapse{id: "sub-#{subscription.id}"}
               .pt-5.pb-4
@@ -88,11 +87,12 @@
                     =link_to 'Reactivate Subscription', subscriptions_suspension_path(id: subscription.id), method: :delete, class: 'btn btn-secondary btn-xs', style: 'vertical-align: top;'
                   -if subscription.active?
                     =link_to 'Cancel Subscription', new_subscription_cancellation_path(subscription), class: 'btn btn-danger btn-xs', style: 'vertical-align: top;'
+                  -if subscription.pending_3d_secure? || subscription.past_due?
+                    =link_to 'Cancel Subscription', new_subscription_cancellation_path(subscription), data: { confirm: 'Warning: Because your latest invoice is overdue this cancelation will be immediate and full access will be removed.' }, class: 'btn btn-danger btn-xs', style: 'vertical-align: top;'
+                  -if subscription.pending_cancellation?
+                    =link_to 'Undo Subscription Cancel', un_cancel_subscription_path(subscription), data: { confirm: 'By clicking here you agree to undo the cancelation of  your currently plan.' }, method: :put, class: 'btn btn-primary btn-xs', style: 'vertical-align: top;'
                   -if subscription.cancelled?
                     =link_to 'Renew Subscription', subscription_checkout_special_link(subscription.subscription_plan.exam_body_id), class: 'btn btn-primary btn-xs', style: 'vertical-align: top;'
-
-
-
     -else
       %article.card.mb-5
         .card-body.card-body-sm

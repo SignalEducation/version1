@@ -96,6 +96,7 @@ class User < ApplicationRecord
   has_many :subscriptions, inverse_of: :user
   has_many :subscription_payment_cards
   has_many :subscription_transactions
+  has_many :subscriptions_cancelled, class_name: 'Subscription', foreign_key: 'cancelled_by_id', inverse_of: :cancelled_by
   has_many :student_exam_tracks
   has_many :course_section_user_logs
   has_many :subject_course_user_logs
@@ -444,7 +445,7 @@ class User < ApplicationRecord
   end
 
   def default_card
-    subscription_payment_cards.where(is_default_card: true, status: 'card-live').first
+    subscription_payment_cards.find_by(is_default_card: true, status: 'card-live')
   end
 
   def subscriptions_for_exam_body(exam_body_id)
