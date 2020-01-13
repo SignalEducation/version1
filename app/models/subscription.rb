@@ -46,6 +46,7 @@ class Subscription < ApplicationRecord
   belongs_to :subscription_plan
   belongs_to :coupon, optional: true
   belongs_to :changed_from, class_name: 'Subscription', foreign_key: :changed_from_id, optional: true
+  belongs_to :cancelled_by, class_name: 'User', inverse_of: :subscriptions_cancelled, optional: true
   visitable :ahoy_visit
 
   has_one :changed_to, class_name: 'Subscription', foreign_key: 'changed_from_id', inverse_of: :changed_from
@@ -67,7 +68,7 @@ class Subscription < ApplicationRecord
   validates :cancellation_reason, presence: true, if: proc { |sub| sub.cancelling_subscription }
   validates :stripe_guid, :stripe_customer_id, length: { maximum: 255 }, allow_blank: true
   validate :plan_change_currencies, :plan_change_active,
-           :subscription_change_allowable, :user_has_default_card,
+           :subscription_change_allowable,
            :user_is_student, if: proc { |sub| sub.changed_from.present? }, on: :create
 
   # callbacks
@@ -115,7 +116,7 @@ class Subscription < ApplicationRecord
 
     event :cancel do
       transition %i[pending active errored pending_cancellation
-                    paused pending_3d_secure] => :cancelled
+                    paused past_due pending_3d_secure] => :cancelled
     end
 
     event :restart do
@@ -222,7 +223,7 @@ class Subscription < ApplicationRecord
       end
 
       # return true or false - if everything went well
-      errors.messages.zero?
+      errors.messages.blank?
     else
       Rails.logger.error "ERROR: Subscription#cancel failed because it didn't have a stripe_customer_id OR a stripe_guid. Subscription:#{self}."
     end

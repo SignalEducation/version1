@@ -15,6 +15,8 @@
                 Why do you want to cancel?
 
               =form_for @subscription, url: subscription_cancellations_path(id: @subscription.id), method: :post, html: { :id => "attempt_subscription_cancellation" } do |f|
+                =f.hidden_field(:cancelled_by_id, value: current_user.id)
+                =f.hidden_field(:cancelling_subscription, value: true)
                 .row
                   .col-sm-6
                     .form-group.cancellation-reason

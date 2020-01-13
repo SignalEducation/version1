@@ -44,10 +44,12 @@ module Subscriptions
     private
 
     def change_stripe_subscription(subscription, plan_id)
-      @subscription, data = StripeSubscriptionService.new(subscription).
-                              change_plan(plan_id)
+      sub_service = StripeSubscriptionService.new(subscription)
+      @subscription, data = sub_service.change_plan(plan_id)
 
       if data[:status] == :ok
+        retrieved_subscription = StripeSubscriptionService.new(@subscription).retrieve_subscription
+        @subscription.un_cancel if retrieved_subscription[:cancel_at_period_end]
         render 'subscriptions/create'
       else
         render json: { subscription_id: @subscription.id,
