@@ -77,7 +77,6 @@
   }
 
   import GC from "@grapecity/spread-sheets";
-  GC.Spread.Sheets.LicenseKey = licenseKey();
 
   import '@grapecity/spread-sheets/styles/gc.spread.sheets.excel2016colorful.css';
   import '@grapecity/spread-sheets-vue';
@@ -87,6 +86,8 @@
   import FileBar from './components/FileBar.vue';
 
   import './SpreadsheetEditor.scss';
+
+  GC.Spread.Sheets.LicenseKey = licenseKey();
 
   export default {
     components: {
