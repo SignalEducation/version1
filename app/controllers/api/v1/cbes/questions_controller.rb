@@ -40,9 +40,10 @@ module Api
             :kind, :content, :score, :sorting_order, :cbe_scenario_id, :cbe_section_id, :solution,
             answers_attributes: [
               :id, :cbe_question_id, :kind, :_destroy,
-              content: [:text, :correct,
-                        data: [:value, :row, :col, :colBinding, { style: {} }, :format, :fontSizeIdx],
-                        sheetData: [{ rows: {} }, { cols: {} }]]
+              content: [
+                :text, :correct,
+                data: [:name, :activeRow, :activeCol, :theme, { data: {} }, { rowHeaderData: {} }, { colHeaderData: {} }, :rows, :columns, :leftCellIndex, :topCellIndex, { selections: {} }, { cellStates: {} }, { outlineColumnOptions: {} }, { autoMergeRangeInfos: {} }]
+              ]
             ]
           )
         end

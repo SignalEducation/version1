@@ -302,9 +302,9 @@ export default {
           case 'multiple_choice':
           case 'multiple_response':
             check = this.questionAnswers
-              .map(function(answer) {
-                return answer.content.correct;
-              })
+              .map(answer =>
+                answer.content.correct
+              )
               .includes(true);
             break;
           default:

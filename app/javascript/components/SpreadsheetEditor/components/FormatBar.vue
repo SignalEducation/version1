@@ -1,15 +1,13 @@
 <template>
   <div class="btn-row">
-    <wj-combo-box
-      style="width:80px"
-      :items-source="fontSizeList"
-      :selected-index="fontSizeIdx"
-      display-member-path="name"
-      selected-value-path="value"
-      :is-editable="false"
-      :selected-index-changed="fontSizeChanged"
-    />
     <div class="btn-group">
+      <b-form-select
+        :value="fontSizeIdx"
+        class="font-size-select"
+        :plain="true"
+        :options="fontSizeList"
+        @change="fontSizeChanged"
+      />
       <button
         type="button"
         :class="['btn btn-default bold', { active: isBold }]"
@@ -35,9 +33,13 @@
         class="btn btn-default fillcolor"
         @click="showColorPicker($event, true)"
       />
-      <wj-color-picker
-        style="display:none;z-index:100"
-        :initialized="colorPickerInit"
+      <chrome-picker
+        v-if="colorPickerVisible"
+        ref="colorPicker"
+        v-on-clickaway="resetColorPicker"
+        class="color-picker visible"
+        :value="colors"
+        @input="updateColorValue"
       />
       <button
         type="button"
@@ -57,7 +59,7 @@
 
       <DropDownSelect
         :icon-class="'number-format'"
-        :dropdown-options="[['General', 'g'], ['Custom', 'r'], ['#0.00', 'f2'], ['#,##0', 'n0'], ['#,##0.00', 'n2']]"
+        :dropdown-options="[['General', 'General'], ['Custom', 'r'], ['#0.00', '#0.00'], ['#,##0', '#,##0'], ['#,##0.00', '#,##0.00']]"
         @selected-value-updated="(format) => $emit('number-format-changed', format)"
       />
 
@@ -69,13 +71,13 @@
 
       <DropDownSelect
         :icon-class="'percent'"
-        :dropdown-options="[['0%', 'p0'], ['0.00%', 'p2'], ['0.0%', 'p1']]"
+        :dropdown-options="[['0%', '#%'], ['0.00%', '#.00%'], ['0.0%', '#.0%']]"
         @selected-value-updated="(format) => $emit('number-format-changed', format)"
       />
 
       <DropDownSelect
         :icon-class="'fraction'"
-        :dropdown-options="[['# ?/?', '#/#'], ['# ??/??', '##/##']]"
+        :dropdown-options="[['# ?/?', '# ?/?'], ['# ??/??', '# ??/??']]"
         @selected-value-updated="(format) => $emit('number-format-changed', format)"
       />
 
@@ -94,17 +96,40 @@
 </template>
 
 <script>
-// eslint-disable-next-line import/no-extraneous-dependencies
-
-import '@grapecity/wijmo.vue2.core';
-import '@grapecity/wijmo.vue2.input';
-// eslint-disable-next-line import/no-unresolved
+import { Chrome } from 'vue-color';
+import { mixin as clickaway } from 'vue-clickaway';
 import DropDownSelect from '../../../lib/DropDownSelect/index.vue';
+
+const defaultProps = {
+  hex: '#194d33e6',
+  hsl: {
+    h: 150,
+    s: 0.5,
+    l: 0.2,
+    a: 0.9
+  },
+  hsv: {
+    h: 150,
+    s: 0.66,
+    v: 0.30,
+    a: 0.9
+  },
+  rgba: {
+    r: 25,
+    g: 77,
+    b: 51,
+    a: 0.9
+  },
+  a: 0.9
+}
+
 
 export default {
   components: {
     DropDownSelect,
+    'chrome-picker': Chrome,
   },
+  mixins: [ clickaway ],
   props: {
     applyBoldStyle: {
       type: Function,
@@ -119,8 +144,8 @@ export default {
       default: () => 1,
     },
     fontSizeIdx: {
-      type: Number,
-      default: 0,
+      type: String,
+      default: '12',
     },
     fontSizeList: {
       type: Array,
@@ -145,51 +170,58 @@ export default {
   },
   data () {
     return {
-      colorPicker: {},
+      colorPickerVisible: false,
       currencyOptions: [
-        ['General', 'c'], ['Custom', 'r'], ["$#,##0", "c0"], ['$#,##0.00', "c2"]
+        ['General', '$#0'], ['Custom', '$0'], ["$#,##0", "$#,##0"], ['$#,##0.00', "$#,##0.00"]
       ],
       applyFillColor: false,
+      colors: defaultProps,
+      fontSize: this.fontSizeIdx,
     };
   },
   methods: {
-    colorPickerInit(colorPicker) {
-      const blurEvt = /firefox/i.test(window.navigator.userAgent) ? 'blur' : 'focusout';
-      colorPicker.hostElement.addEventListener(blurEvt, () => {
-        setTimeout(() => {
-          if (!colorPicker.containsFocus()) {
-            this.applyFillColor = false;
-            colorPicker.hostElement.style.display = 'none';
-          }
-        }, 0);
-      });
-      colorPicker.valueChanged.addHandler(() => {
-        if (this.applyFillColor) {
-          this.$emit('set-background-color', colorPicker.value)
-        } else {
-          this.$emit('set-font-color', colorPicker.value)
-        }
-      });
-
-      this.colorPicker = colorPicker;
-    },
-    fontSizeChanged(sender) {
-      if (sender.selectedItem) {
-        this.$emit('font-size-changed', sender.selectedItem.value)
+    resetColorPicker() {
+      if (this.colorPickerVisible){
+        this.applyFillColor = false;
+        this.colorPickerVisible = false;
       }
     },
+    updateColorValue (value) {
+      if (this.applyFillColor) {
+        this.$emit('set-background-color', value.hex);
+      } else {
+        this.$emit('set-font-color', value.hex);
+      }
+      this.colors = value;
+    },
+    fontSizeChanged(value) {
+      this.$emit('font-size-changed', value)
+    },
     showColorPicker(e, isFillColor) {
-      const he = this.colorPicker.hostElement;
-
-      he.style.display = 'inline';
-      he.style.position = 'fixed';
+      this.colorPickerVisible = true;
       const boundingRec = e.target.getBoundingClientRect();
-      he.style.left = `${ boundingRec.left }px`;
-      he.style.top = `${ boundingRec.top + boundingRec.height + 5 }px`;
-      he.focus();
 
-      this.applyFillColor = isFillColor;
+      setTimeout(() => {
+        if(this.$refs.colorPicker) {
+          const he = this.$refs.colorPicker.$el;
+          he.style.left = `${ boundingRec.left }px`;
+          he.style.top = `${ boundingRec.top + boundingRec.height + 5 }px`;
+          he.focus();
+          this.applyFillColor = isFillColor;
+        }
+      }, 0);
     },
   },
 }
 </script>
+<style scoped>
+  .font-size-select {
+    width: 50px;
+    margin-right: 10px;
+  }
+  .color-picker.visible {
+    display: inline;
+    position: fixed;
+    z-index: 1;
+  }
+</style>

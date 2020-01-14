@@ -2,8 +2,8 @@
   <section class="answers">
     <div class="answers">
       <SpreadsheetEditor
-        :initialData="answersArray.slice(-1).pop()"
-        v-on:spreadsheet-updated="syncSpreadsheetData"
+        :initial-data="answersArray.slice(-1).pop()"
+        @spreadsheet-updated="syncSpreadsheetData"
       />
     </div>
   </section>
@@ -41,12 +41,11 @@ export default {
     },
   },
   methods: {
-    syncSpreadsheetData(jsonData, sheetData) {
+    syncSpreadsheetData(jsonData) {
       this.answersArray[0] = {
         kind: 'spreadsheet',
         content: {
-          data: jsonData,
-          sheetData
+          data: jsonData
         },
       };
     },
