@@ -57,7 +57,7 @@
             v-model="score"
             :class="'form-control ' + {error: shouldAppendErrorClass($v.score), valid: shouldAppendValidClass($v.score)}"
             placeholder="Score"
-            type="number"
+            type="decimal"
             @blur="$v.score.$touch()"
           >
         </div>
@@ -166,7 +166,7 @@
 <script>
 import axios from "axios";
 import { validationMixin } from "vuelidate";
-import { required, numeric, between } from "vuelidate/lib/validators";
+import { required, numeric, decimal, between } from "vuelidate/lib/validators";
 import TinyEditor from "../../TinyEditor.vue";
 
 export default {
@@ -184,7 +184,7 @@ export default {
       default: ""
     },
     initialScore: {
-      type: Number,
+      type: String,
       default: null
     },
     initialSortingOrder: {
@@ -226,7 +226,7 @@ export default {
     },
     score: {
       required,
-      numeric,
+      decimal,
       between: between(1, 1000)
     },
     sortingOrder: {

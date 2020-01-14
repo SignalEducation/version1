@@ -116,8 +116,19 @@ class SubscriptionsController < ApplicationController
 
   def status_from_stripe
     update_status(params[:status])
+    render json: { status: @subscription&.state,
+                   subscription_id: @subscription&.id }
+  end
 
-    flash[:notice] = 'Your subscription is confirmed!'
+  def expire_incomplete
+    stripe_subscription = Stripe::Subscription.retrieve(@subscription.stripe_guid)
+    stripe_subscription = stripe_subscription.delete.to_hash
+    if stripe_subscription[:status] == 'incomplete_expired'
+      @subscription.update_attributes(stripe_status: 'incomplete_expired')
+      @subscription.mark_pending
+    else
+      @subscription.record_error
+    end
   end
 
   private

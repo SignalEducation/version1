@@ -40,18 +40,16 @@
                     %td=subject_course.name
                     %td=tick_or_cross(subject_course.active)
                     %td=tick_or_cross(subject_course.preview)
+                    %td=link_to t('views.general.show'), subject_course_url(subject_course), class: 'btn btn-xs btn-secondary'
                     %td
-                      =link_to t('views.general.edit'), edit_subject_course_url(subject_course), class: 'btn btn-xs btn-primary'
-                    %td
-                      =link_to t('views.general.show'), subject_course_url(subject_course), class: 'btn btn-xs btn-secondary'
-                    -if subject_course.destroyable?
-                      %td
-                        =link_to t('views.general.delete'), subject_course, method: :delete, data: {confirm: t('views.general.delete_confirmation')}, class: 'btn btn-xs btn-danger'
-                    %td
-                      =link_to 'CSV', export_course_log_data_path(id: subject_course.id, format: :xls), class: 'btn btn-xs btn-secondary'
-                    %td
-                      =link_to t('views.general.clone'), subject_course_clone_path(id: subject_course.id), data: {confirm: t('views.general.clone_confirmation')}, method: :post, class: 'btn btn-xs btn-warning'
-                    %td
+                      %button.btn.btn-primary.btn-xs.dropdown-toggle{type:'button', 'data-toggle':'dropdown', 'aria-haspopup':'true', 'aria-expanded': 'false'}
+                        Edit
+                      .dropdown-menu
+                        =link_to t('views.general.edit'), edit_subject_course_url(subject_course), class: 'dropdown-item'
+                        =link_to 'CSV', export_course_log_data_path(id: subject_course.id, format: :xls), class: 'dropdown-item'
+                        -if subject_course.destroyable?
+                          =link_to t('views.general.delete'), subject_course, method: :delete, data: {confirm: t('views.general.delete_confirmation')}, class: 'dropdown-item', style: 'color: #dc3545;'
+                        =link_to t('views.general.clone'), subject_course_clone_path(id: subject_course.id), data: {confirm: t('views.general.clone_confirmation')}, method: :post, class: 'dropdown-item', style: 'color: #fd7e14;'
 
 
 

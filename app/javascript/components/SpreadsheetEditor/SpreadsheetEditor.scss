@@ -8,9 +8,10 @@ $wj-msel-bkg: #77afc9;
 $wj-cell-grp-bkg: #777777;
 //� etc �
 
-@import "@grapecity/wijmo.styles/wijmo.css";
-
 .spreadsheetwrapper {
+  .spread-host {
+    height: 300px;
+  }
   .wj-flexsheet {
     height: 500px;
     margin: 6px 0;

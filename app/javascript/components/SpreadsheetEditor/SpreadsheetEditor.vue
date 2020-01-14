@@ -12,10 +12,10 @@
         :cut="cut"
         :copy="copy"
         :paste="paste"
-        :canUndo="flex.undoStack && flex.undoStack.canUndo"
-        :canRedo="flex.undoStack && flex.undoStack.canRedo"
-        :undo="() => flex.undo()"
-        :redo="() => flex.redo()"
+        :canUndo="flex.parent && flex.parent.undoManager() && flex.parent.undoManager().canUndo()"
+        :canRedo="flex.parent && flex.parent.undoManager() && flex.parent.undoManager().canRedo()"
+        :undo="() => flex.parent.undoManager().undo()"
+        :redo="() => flex.parent.undoManager().redo()"
         @reset-spreadsheet="resetSpreadsheet"
       />
 
@@ -32,39 +32,58 @@
         @apply-cell-text-align="applyCellTextAlign"
         @font-size-changed="fontSizeChanged"
         @number-format-changed="numberFormatChanged"
-        @set-background-color="(color) => flex.applyCellsStyle({ backgroundColor: color })"
-        @set-font-color="(color) => flex.applyCellsStyle({ color: color })"
+        @set-background-color="setBackColor"
+        @set-font-color="setFontColor"
       />
-
-      <FormulaBar
-        :selectedCellRow="selectedCellRow"
-        :selectedCellCol="selectedCellCol"
-        :selectedCellReference="selectedCell"
-        :selectedCellData="selectedCellData"
-        @formula-box-focussed="formulaBoxFocussed"
-        @formula-updated="formulaUpdated"
-      />
+      <div class="formula-row">
+        <div class="cell-number">{{ selectedCell }}</div>
+        <div class="formula-box">
+          <div
+            ref="fbxRef"
+            contenteditable="true"
+            spellcheck="false"
+            style="font-family: Calibri;height:100%;width:100%;padding: 4px;"
+          ></div>
+        </div>
+      </div>
     </div>
-    <wj-flex-sheet :initialized="initializeFlexSheet" :isTabHolderVisible="false">
-      <wj-sheet :alternating-row-step="0"></wj-sheet>
-    </wj-flex-sheet>
+    <gc-spread-sheets
+        :hostClass='hostClass'
+        :enableFormulaTextbox='true'
+        @cellChanged='commitUpdatedData'
+        @selectionChanged='updateSelection'
+        @workbookInitialized='initializeFlexSheet'
+        v-observe-visibility="sheetIsVisible"
+      >
+        <gc-worksheet
+          :autoGenerateColumns='autoGenerateColumns'
+        />
+      </gc-spread-sheets>
   </div>
 </template>
 
 <script>
-/* eslint-disable */
+  /* eslint-disable */
+  import Vue from 'vue';
+  import VueObserveVisibility from 'vue-observe-visibility';
+  Vue.use(VueObserveVisibility);
 
-  import * as wjcGrid from "@grapecity/wijmo.grid";
-  import "@grapecity/wijmo.vue2.grid";
-  import * as wjcCore from "@grapecity/wijmo";
-  import '@grapecity/wijmo.vue2.input';
-  import '@grapecity/wijmo.vue2.grid.sheet';
-  import { UndoStack } from '@grapecity/wijmo.undo';
-  import getData from "./data";
+  const licenseKey = () => {
+    if (location.hostname === 'www.learnsignal.com') {
+      return "Learnsignal,www.learnsignal.com,298494625431851#B0uxsOzlUaSR4RRVnYwsWdJB5L6M5b5gkc8FjNalDZmFDSIpVZoNHatFFMqFVQi94aYl6SvB7UYRFN4NFTaFTQtRTazdTN6lHbsZ5QhNFSmF7N9k4cBJTa5MXcwcnUmVDRxR7ZkdTWLNVRrEUUYNmTsZUYoljQyRWbvt6dDVlWBh5NuZTUSFWcmNnY4UlTRdEeadnRth7L9JzZvRzcRNGZ8VTayk6N8h4ZFVFcRxGewl5Yx2kNJVzNPNkZYN6MJplbV34U7MnZXNFb59kYmxWahBjboFkRrhnN7QHeyonYVxmQMxGRrkmZ6k6Yux6aiojITJCLiIkNzQTOGRjMiojIIJCLwMjNycDNzITN0IicfJye#4Xfd5nIV34M6IiOiMkIsIyMx8idgMlSgQWYlJHcTJiOi8kI1tlOiQmcQJCLicDM4UTMwAiMxITM9EDMyIiOiQncDJCLi46bj9Cbh96ZpNnbyFWZs9yd7dnI0IyctRkIsICbh96ZpNnbyFWZMJiOiEmTDJCLiETN8EzM4UjM6QTO4gTOyIiOiQWSiwSflNHbhZmOiI7ckJye0ICbuFkI1pjIEJCLi4TPBJlU5FWQmR4YWNjc4IzLWtmTOFVQXFHcxZUT4oVdw5ETPdHc4E7Lyp4RLZkUnd5bBVza6o7bi94ZllWcnZ6U9V7VTJFeI9GNOF6M5kjcjhGOwAzYBxkQwNHVTplRVdTbQJ7T7QDWKZgU";
+    } else {
+      return "Learnsignal,learnsignal.com,937219162519253#B0HMvUYEpVcylkUrFVaxVzKxFVV44GRNZlRaZlaoJXc8okUZJ7MUNVV7MHRtFkVOtUeFNFNSR5bBpWWZNmNzkXTwN5c4oXOGNWTPdnc6InRs3CUMVGc7RkZF5GUwkUdo3CZkFkTSFFaG3WYvgUQih6S5sESI9mboVTOaRmdkBza6IFRJ5UTzRWOIZGUydlbWZWMihXet9WeyITOVBXUFZXbzgjYBF4M5EWevkHVFVVbS5mTw3EOHlmRqtCe5UHMThmMYZVawgjZIVndLlla4RFTw4UOttGcrR6MOZnT9ETaK3CWKNlSRV5Z4FXViojITJCLiATQxADO8UUNiojIIJCL7UzN8ATN4UjM0IicfJye&Qf35VfiU5TzYjI0IyQiwiIzEjL6ByUKBCZhVmcwNlI0IiTis7W0ICZyBlIsIiM5IDNxADIyEjMxkTMwIjI0ICdyNkIsISbvNmLsFmbnl6cuJXYlxmI0IyctRkIsICbh96ZpNnbyFWZMJiOiEmTDJCLiMTNykTM5IjNxkTMyczM9IiOiQWSiwSflNHbhZmOiI7ckJye0ICbuFkI1pjIEJCLi4TPRNmZjtmUER4NXVHaB94LoFGa5hUcLdFeotWT8pmb7tGMpdlMVV6LVF6ZBlnUUxWeGV4T8EWeYJkekFjaNNFMndTUmNjY9JXZ8k7MVdFS5IFeX34KsN4KSd6YKNkVppEUuZDZPZVVyRVTxDi";
+    }
+  }
+
+  import GC from "@grapecity/spread-sheets";
+  GC.Spread.Sheets.LicenseKey = licenseKey();
+
+  import '@grapecity/spread-sheets/styles/gc.spread.sheets.excel2016colorful.css';
+  import '@grapecity/spread-sheets-vue';
 
   import CopyPasteBar from './components/CopyPasteBar.vue';
   import FormatBar from './components/FormatBar.vue';
-  import FormulaBar from './components/FormulaBar.vue';
   import FileBar from './components/FileBar.vue';
 
   import './SpreadsheetEditor.scss';
@@ -74,63 +93,47 @@
       CopyPasteBar,
       FileBar,
       FormatBar,
-      FormulaBar,
     },
     props: {
       initialData: {
         type: Object,
-        default: () => ({ kind: 'spreadsheet', content: { data: [], sheetData: {} }}),
+        default: () => ({ kind: 'spreadsheet', content: { data: {} }}),
       },
     },
     computed: {
       spreadsheetData: function() {
-        if (this.initialData.content && this.initialData.content.data && this.initialData.content.data.length > 0) {
+        if (this.initialData.content && this.initialData.content.data && this.initialData.content.data.data) {
           return this.initialData.content.data;
         } else {
-          return getData();
-        }
-      },
-      spreadsheetLayoutData: function() {
-        if (this.initialData.content && this.initialData.content.sheetData) {
-          return this.initialData.content.sheetData;
-        } else {
-          return { rows: {}, cols: {} };
+          return null;
         }
       }
     },
     data() {
       return {
+        hostClass:'spread-host',
+        autoGenerateColumns:true,
+        width:300,
+        visible:true,
+        resizable:true,
         selectedCellRow: null,
         selectedCellCol: null,
         selectedCell: '',
         selectedCellData: '',
         copyString: '',
         format: '0',
-        fontSizeIdx: 5,
+        fontSizeIdx: '12',
         isBold: false,
         isItalic: false,
         isUnderline: false,
         textAlign: 'left',
-        _updatingSelection: false,
         flex: {},
-        fontSizeList: [
-          { name: '8', value: '8px' },
-          { name: '9', value: '9px' },
-          { name: '10', value: '10px' },
-          { name: '11', value: '11px' },
-          { name: '12', value: '12px' },
-          { name: '14', value: '14px' },
-          { name: '16', value: '16px' },
-          { name: '18', value: '18px' },
-          { name: '20', value: '20px' },
-          { name: '22', value: '22px' },
-          { name: '24', value: '24px' }
-        ],
+        fbx: {},
+        fontSizeList: ['8','9','10','11','12','14','16','18','20','22','24'],
       };
     },
     methods: {
       formulaBoxFocussed (row, col) {
-        this.flex.startEditing(true, row, col, false);
       },
       formulaUpdated(row, col, value) {
         this.flex.cells.setCellData(row, col, value);
@@ -152,10 +155,10 @@
       editActionCalled (action) {
         switch (action) {
           case 'undo':
-            this.flex.undo();
+            this.flex.parent.undoManager().undo();
             break;
           case 'redo':
-            this.flex.redo();
+            this.flex.parent.undoManager().redo();
             break;
           case 'cut':
             this.cut();
@@ -165,151 +168,155 @@
           case 'paste':
             this.paste();
             break;
-          case 'select-all':
-            this.flex.select(1, 4000);
-            break;
           default:
             break;
         }
       },
       cut() {
-        this.copyString = this.flex.getClipString(this.flex.selection);
-        wijmo.Clipboard.copy(this.copyString);
-        this._clearCellData(this.flex.selection);
+        this.flex.parent.commandManager().execute({ cmd: 'cut',  sheetName: this.flex.name()});
       },
       copy() {
-        this.copyString = this.flex.getClipString(this.flex.selection);
-        document.execCommand('copy');
-        wijmo.Clipboard.copy(this.copyString);
+        this.flex.parent.commandManager().execute({ cmd: 'copy',  sheetName: this.flex.name()});
       },
       paste() {
-        if (this.copyString){
-          this.flex.setClipString(this.copyString, this.flex.selection);
-        }
+        this.flex.parent.commandManager().execute({ cmd: 'paste',  sheetName: this.flex.name()});
       },
       numberFormatChanged (format) {
-        this.flex.applyCellsStyle({ format: format });
-      },
-      initializeFlexSheet (flex) {
-        this.flex = flex;
-        this.flex.deferUpdate(() => {
-          for (let sheetIdx = 0; sheetIdx < this.flex.sheets.length; sheetIdx++) {
-            this.flex.selectedSheetIndex = sheetIdx;
-
-            this._setInitialData(this.flex);
+        let sel = this.flex.getSelections()[0];
+        for (let row = sel.row; row < (sel.row + sel.rowCount); row += 1) {
+          for (let col = sel.col; col < (sel.col + sel.colCount); col += 1) {
+            this.flex.getCell(sel.row, sel.col).formatter(format);
           }
-
-          this.flex.selectedSheetIndex = 0;
-          setTimeout(() => this._updateSelection(this.flex, this.flex.selection), 100);
-        });
-        this.flex.selectionChanged.addHandler((sender, args) => {
-          this._updateSelection(this.flex, args.range);
-        });
-        this.flex.lostFocus.addHandler((sender, args) => {
-          this.commitUpdatedData(this.flex);
-        });
-        this.flex.copied.addHandler((s,e)=>{
-          this.copyString = s.getClipString();
-        });
-        this.flex.rows.defaultSize = 22;
-        this.flex.rowHeaders.defaultSize = 100;
-        this.flex.columns.defaultSize = 75;
-        this.flex.columnHeaders.rows.defaultSize = 22;
-        this.commitUpdatedData(this.flex);
-      },
-      fontSizeChanged(value) {
-        if (!this._updatingSelection) {
-          this.flex.applyCellsStyle({ fontSize: value });
         }
       },
+      initializeFlexSheet (spread) {
+        const fbx = new GC.Spread.Sheets.FormulaTextBox.FormulaTextBox(this.$refs.fbxRef);
+        fbx.workbook(spread);
+        this.flex = spread.getSheet(0);
+        if (this.spreadsheetData) {
+          spread.suspendPaint();
+          this.flex.setDataSource(this.flex.fromJSON(JSON.parse(JSON.stringify(this.spreadsheetData))));
+          spread.resumePaint();
+        }
+        for (var i = 0; i < this.flex.getRowCount(); i++) {
+          this.flex.autoFitRow(i);
+        }
+        for (var i = 0; i < this.flex.getColumnCount(); i++) {
+          this.flex.autoFitColumn(i);
+        }
+      },
+      fontSizeChanged(value) {
+        let sel = this.flex.getSelections()[0];
+        let range = this.flex.getRange(sel.row, sel.col, sel.rowCount, sel.colCount);
+        range.font(`${ value }px ${ this.isBold ? 'bold' : '' } ${ this.isItalic ? 'italic' : '' } Calibri`);
+      },
       applyCellTextAlign(textAlign) {
-        this.flex.applyCellsStyle({ textAlign: textAlign });
+        const align = {
+          'left': GC.Spread.Sheets.HorizontalAlign.left,
+          'center': GC.Spread.Sheets.HorizontalAlign.center,
+          'right': GC.Spread.Sheets.HorizontalAlign.right,
+        }
+        let sel = this.flex.getSelections()[0];
+        let range = this.flex.getRange(sel.row, sel.col, sel.rowCount, sel.colCount);
+        range.hAlign(align[textAlign]);
         this.textAlign = textAlign;
       },
+      _applyFontStyle(isStyle, style) {
+        const sel = this.flex.getSelections()[0];
+        for (let row = sel.row; row < sel.row + sel.rowCount; row += 1) {
+          for (let col = sel.col; col < sel.col + sel.colCount; col += 1) {
+            let cell = this.flex.getCell(row, col)
+            let font = cell.font();
+            cell.font(`${isStyle ? '' : style} ${ font.replace(style, '') }`)
+          }
+        }
+      },
       applyBoldStyle() {
-        this.flex.applyCellsStyle({ fontWeight: this.isBold ? 'none' : 'bold' });
+        this._applyFontStyle(this.isBold, 'bold');
         this.isBold = !this.isBold;
       },
       applyUnderlineStyle() {
-        this.flex.applyCellsStyle({ textDecoration: this.isUnderline ? 'none' : 'underline' });
+        let sel = this.flex.getSelections()[0];
+        for (let row = sel.row; row < (sel.row + sel.rowCount); row += 1) {
+          for (let col = sel.col; col < (sel.col + sel.colCount); col += 1) {
+            this.flex.getCell(sel.row, sel.col).textDecoration(GC.Spread.Sheets.TextDecorationType.underline);
+          }
+        }
         this.isUnderline = !this.isUnderline;
       },
       applyItalicStyle() {
-        this.flex.applyCellsStyle({ fontStyle: this.isItalic ? 'none' : 'italic' });
+        this._applyFontStyle(this.isItalic, 'italic');
         this.isItalic = !this.isItalic;
       },
-      commitUpdatedData(flexSheet){
-        const { cellsJson, sheetData } = this._getJsonData(flexSheet);
-        this.$emit('spreadsheet-updated', cellsJson, sheetData);
+      commitUpdatedData(event, info){
+        this.$emit('spreadsheet-updated', info.sheet.toJSON());
       },
       resetSpreadsheet() {
         this._setInitialData(this.flex);
-        this.$emit('spreadsheet-updated', this.spreadsheetData);
+        this.$emit('spreadsheet-updated', this.flex.toJSON());
       },
-      _updateSelection(flexSheet, sel) {
-        let row = flexSheet.rows[sel.row],
-            rCnt = flexSheet.rows.length,
-            cCnt = flexSheet.columns.length,
-            fontSizeIdx = 5;
-
-        this._updatingSelection = true;
-
-        if (sel.row > -1 && sel.col > -1 && rCnt > 0 && cCnt > 0 && sel.col < cCnt && sel.col2 < cCnt && sel.row < rCnt && sel.row2 < rCnt) {
-          let cellContent = flexSheet.getCellData(sel.row, sel.col, false),
-              cellStyle = flexSheet.selectedSheet.getCellStyle(sel.row, sel.col),
-              cellFormat = null;
-
-          if (cellStyle) {
-            fontSizeIdx = this._checkFontSize(cellStyle.fontSize);
-            cellFormat = cellStyle.format;
-          }
-          if (!!cellFormat) {
-            this.format = cellFormat;
-          } else {
-            this.format = this._defaultCellFormat(cellContent);
-          }
-          const colName = flexSheet.columnHeaders.getCellData(0, sel.leftCol);
-          const rowName = flexSheet.rowHeaders.getCellData(sel.topRow, 0);
-          this.selectedCell = `${ colName }${ rowName }`;
-          this.selectedCellRow = sel.topRow;
-          this.selectedCellCol = sel.leftCol;
-          this.selectedCellData = flexSheet.cells.getCellData(sel.topRow, sel.leftCol);
-
-          this.fontSizeIdx = fontSizeIdx;
-
-          let state = flexSheet.getSelectionFormatState();
-          this.isBold = state.isBold;
-          this.isItalic = state.isItalic;
-          this.isUnderline = state.isUnderline;
-          this.textAlign = state.textAlign;
+      sheetIsVisible(isVisible, entry) {
+        if(isVisible) {
+          this.flex.parent.refresh();
         }
-
-        this._updatingSelection = false;
       },
-      _defaultCellFormat(cellContent) {
-        if (wijmo.isInt(cellContent)) {
-          return '0';
-        } else if (wijmo.isNumber(cellContent)) {
-          return 'n2';
-        } else if (wijmo.isDate(cellContent)) {
-          return 'd';
-        } else { return '' }
+      setBackColor(color) {
+        let sel = this.flex.getSelections()[0];
+        let range = this.flex.getRange(sel.row, sel.col, sel.rowCount, sel.colCount);
+        range.backColor(color);
+      },
+      setFontColor(color) {
+        let sel = this.flex.getSelections()[0];
+        let range = this.flex.getRange(sel.row, sel.col, sel.rowCount, sel.colCount);
+        range.foreColor(color);
+      },
+      updateSelection(event, sel) {
+        const selection = sel.newSelections[0];
+        const sheet = sel.sheet;
+        const {rowCount, colCount, row, col} = selection;
+        const fontSizeIdx = '12';
+        const cell = sheet.getCell(row, col);
+
+        if (row > -1 && col > -1 && rowCount > 0 && colCount > 0) {
+          let cellContent = cell.value(),
+              cellStyle = sheet.getStyle(row, col),
+              cellFormat = cell.formatter();
+
+          this.format = cell.formatter();
+          const colName = this.flex.getCell(row, col, GC.Spread.Sheets.SheetArea.colHeader).value();
+          const rowName = this.flex.getCell(row, col, GC.Spread.Sheets.SheetArea.rowHeader).value();
+          this.selectedCell = GC.Spread.Sheets.CalcEngine.rangeToFormula(selection);
+          this.selectedCellData = cellContent;
+          this.fontSizeIdx = this._checkFontSize(cell.font());
+          this.isBold = cell.font().includes('bold');
+          this.isItalic = cell.font().includes('italic');
+          this.isUnderline = cellStyle && cellStyle.textDecoration && cellStyle.textDecoration === 1;
+          switch (cell.hAlign()) {
+            case 0:
+              this.textAlign = 'left';
+              break;
+            case 1:
+              this.textAlign = 'center';
+            case 2:
+              this.textAlign = 'right';
+              break;
+            default:
+              this.textAlign = 'right';
+              break;
+          }
+        }
       },
       _checkFontSize(fontSize) {
-        let sizeList = this.fontSizeList;
+        const sizeList = this.fontSizeList;
 
         if (fontSize == null) {
-          return 5;
+          return '12';
         }
 
-        for (let index = 0; index < sizeList.length; index++) {
-          let size = sizeList[index];
-          if (size.value === fontSize || size.name === fontSize) {
-            return index;
-          }
-        }
-
-        return 5;
+        const estimatedSize = Math.round((Number(fontSize.match(/\d*\.?\d*/)[0])));
+        return sizeList.reduce((prev, curr) => {
+          return Math.abs(Number(curr) - estimatedSize) < Math.abs(Number(prev) - estimatedSize) ? curr : prev
+        });
       },
       _clearCellData(cellRange) {
         for (let colIdx = cellRange.leftCol; colIdx < (cellRange.leftCol + cellRange.columnSpan); colIdx += 1) {
@@ -318,83 +325,6 @@
           }
         }
       },
-      _setCols(flex) {
-        const cols = this.spreadsheetLayoutData['cols']
-        if (!cols) { return; }
-
-        Object.entries(cols).map((col) => {
-          if (col[1]['width']) {
-            flex.columns[col[0]].width = col[1]['width']
-          }
-        })
-      },
-      _setRows(flex) {
-        const rows = this.spreadsheetLayoutData['rows'];
-        if (!rows) { return; }
-
-        Object.entries(rows).map((row) => {
-          if (row[1]['height']) {
-            flex.rows[row[0]].height = row[1]['height']
-          }
-        })
-      },
-      _setInitialData (flex) {
-        for (let cellIdx = 0; cellIdx < this.spreadsheetData.length; cellIdx += 1) {
-          flex.setCellData(this.spreadsheetData[cellIdx].row, this.spreadsheetData[cellIdx].col, this.spreadsheetData[cellIdx].value);
-          if (this.spreadsheetData[cellIdx]['format']) {
-            flex.applyCellsStyle(
-              { format: this.spreadsheetData[cellIdx]['format'] },
-              [ new wjcGrid.CellRange(this.spreadsheetData[cellIdx].row, this.spreadsheetData[cellIdx].col) ]
-            );
-          }
-          if (this.spreadsheetData[cellIdx]['fontSizeIdx']) {
-            flex.applyCellsStyle(
-              { fontSize: this.fontSizeList[this.spreadsheetData[cellIdx].fontSizeIdx].value },
-              [ new wjcGrid.CellRange(this.spreadsheetData[cellIdx].row, this.spreadsheetData[cellIdx].col) ]
-            );
-          }
-          if (this.spreadsheetData[cellIdx]['style']) {
-            flex.applyCellsStyle(
-              this.spreadsheetData[cellIdx]['style'],
-              [ new wjcGrid.CellRange(this.spreadsheetData[cellIdx].row, this.spreadsheetData[cellIdx].col) ]
-            );
-          }
-        }
-        this._setRows(flex);
-        this._setCols(flex);
-      },
-      _getJsonData(){
-        const {cells, rows, columns} = this.flex;
-        const styledCells = this.flex.selectedSheet._styledCells;
-        let cellsJson = [];
-        let sheetData = { rows: {}, cols: {} };
-        let index = 0;
-        for(let r = 0; r < cells.rows.length; r += 1){
-          sheetData.rows[r] = { height: rows[r].height };
-          for(let c = 0; c < cells.columns.length; c += 1){
-            sheetData.cols[c] = { width: columns[c].width };
-            let cell = {};
-            cell['value'] = cells.getCellData(r,c);
-            cell['row'] = r;
-            cell['col'] = c;
-            cell['colBinding'] = cells.columns[c].binding;
-            const cellStyle = styledCells[index]
-            if (cellStyle) {
-              cell['style'] = cellStyle;
-              cell['format'] = cellStyle.format;
-              cell['fontSizeIdx'] = this._checkFontSize(cellStyle.fontSize);
-            } else {
-              cell['format'] = this._defaultCellFormat(cell['value']);
-              cell['fontSizeIdx'] = 5;
-            }
-
-            [r * cells.columns.length + c + ''] ? this.flex.selectedSheet._styledCells[ r * cells.columns.length + c + ''] : null;
-            cellsJson.push(cell);
-            index += 1;
-          }
-        }
-        return { cellsJson, sheetData };
-      }
     }
   };
 </script>

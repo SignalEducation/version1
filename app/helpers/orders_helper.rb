@@ -7,7 +7,7 @@ module OrdersHelper
       link_to exercise_path_by_state(exercise), target: '_blank' do
         'View'
       end
-    else
+    elsif order.product&.mock_exam
       link_to order.product.mock_exam.file.url, target: '_blank' do
         'View'
       end
@@ -34,7 +34,7 @@ module OrdersHelper
     if order.product.payment_description.present?
       order.product.payment_description
     elsif order.product.mock_exam?
-      'Purchase your Mock Exam today. Once submitted we will give you a solution paper, your result, question by question, personalised feedback on your exam and study topic recommendations.'
+      'Purchase your Mock Exam today. Once submitted we will give you a solution paper, your result, question by question, personalised feedback on your exam and study topic recommendations within 3 days.'
     elsif order.product.cbe?
       'Purchase your CBE today to start practicing for your online exam by simulating the computer based exam on the learnsignal site.'
     else
