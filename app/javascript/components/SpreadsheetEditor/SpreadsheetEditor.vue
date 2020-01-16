@@ -64,10 +64,6 @@
 
 <script>
   /* eslint-disable */
-  import Vue from 'vue';
-  import VueObserveVisibility from 'vue-observe-visibility';
-  Vue.use(VueObserveVisibility);
-
   const licenseKey = () => {
     if (location.hostname === 'www.learnsignal.com') {
       return "Learnsignal,www.learnsignal.com,298494625431851#B0uxsOzlUaSR4RRVnYwsWdJB5L6M5b5gkc8FjNalDZmFDSIpVZoNHatFFMqFVQi94aYl6SvB7UYRFN4NFTaFTQtRTazdTN6lHbsZ5QhNFSmF7N9k4cBJTa5MXcwcnUmVDRxR7ZkdTWLNVRrEUUYNmTsZUYoljQyRWbvt6dDVlWBh5NuZTUSFWcmNnY4UlTRdEeadnRth7L9JzZvRzcRNGZ8VTayk6N8h4ZFVFcRxGewl5Yx2kNJVzNPNkZYN6MJplbV34U7MnZXNFb59kYmxWahBjboFkRrhnN7QHeyonYVxmQMxGRrkmZ6k6Yux6aiojITJCLiIkNzQTOGRjMiojIIJCLwMjNycDNzITN0IicfJye#4Xfd5nIV34M6IiOiMkIsIyMx8idgMlSgQWYlJHcTJiOi8kI1tlOiQmcQJCLicDM4UTMwAiMxITM9EDMyIiOiQncDJCLi46bj9Cbh96ZpNnbyFWZs9yd7dnI0IyctRkIsICbh96ZpNnbyFWZMJiOiEmTDJCLiETN8EzM4UjM6QTO4gTOyIiOiQWSiwSflNHbhZmOiI7ckJye0ICbuFkI1pjIEJCLi4TPBJlU5FWQmR4YWNjc4IzLWtmTOFVQXFHcxZUT4oVdw5ETPdHc4E7Lyp4RLZkUnd5bBVza6o7bi94ZllWcnZ6U9V7VTJFeI9GNOF6M5kjcjhGOwAzYBxkQwNHVTplRVdTbQJ7T7QDWKZgU";
@@ -76,18 +72,21 @@
     }
   }
 
+  import GC from "@grapecity/spread-sheets";
+  GC.Spread.Sheets.LicenseKey = licenseKey();
+
+  import Vue from 'vue';
+  import VueObserveVisibility from 'vue-observe-visibility';
+  Vue.use(VueObserveVisibility);
+
   import '@grapecity/spread-sheets/styles/gc.spread.sheets.excel2016colorful.css';
   import '@grapecity/spread-sheets-vue';
-
-  import GC from "@grapecity/spread-sheets";
 
   import CopyPasteBar from './components/CopyPasteBar.vue';
   import FormatBar from './components/FormatBar.vue';
   import FileBar from './components/FileBar.vue';
 
   import './SpreadsheetEditor.scss';
-
-  GC.Spread.Sheets.LicenseKey = licenseKey();
 
   export default {
     components: {
