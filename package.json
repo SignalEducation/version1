@@ -3,7 +3,7 @@
   "private": true,
   "dependencies": {
     "@grapecity/spread-sheets": "^13.0.3",
-    "@grapecity/spread-sheets-vue": "^13.0.1",
+    "@grapecity/spread-sheets-vue": "^13.0.3",
     "@grapecity/wijmo.all": "^5.20192.631",
     "@hscmap/vue-window": "^2.4.2",
     "@rails/webpacker": "4.2",
