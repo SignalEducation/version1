@@ -731,19 +731,14 @@
   resolved "https://registry.yarnpkg.com/@csstools/convert-colors/-/convert-colors-1.4.0.tgz#ad495dc41b12e75d588c6db8b9834f08fa131eb7"
   integrity sha512-5a6wqoJV/xEdbRNKVo6I4hO3VjyDq//8q2f9I6PBAvMesJHFauXDorcNCsr9RzvsZnaWi5NYCcfyqP1QeFHFbw==
 
-"@grapecity/spread-sheets-vue@^13.0.1":
-  version "13.0.1"
-  resolved "https://registry.yarnpkg.com/@grapecity/spread-sheets-vue/-/spread-sheets-vue-13.0.1.tgz#0e64e6c630508481b7d10ee0d2a65a1bd838003c"
-  integrity sha512-+8s3VdyQgyQ+ehb1ZI3EKUZWig/HvwywSLu0Da4dhJ/P8rucqGYCz0dW9emozvVIyaKYM3YNzYfB2VIcU7Vg4g==
+"@grapecity/spread-sheets-vue@^13.0.3":
+  version "13.0.3"
+  resolved "https://registry.yarnpkg.com/@grapecity/spread-sheets-vue/-/spread-sheets-vue-13.0.3.tgz#6adee7227934f60c45e0a3b96716b9f5cdbc7a8f"
+  integrity sha512-ndsvXgVhfGIFPIBr8aukLQxgrVq8i9wcOk9TEjdl5M8fddC6VRijxPC82GZ1eq0AivZHve8li8tXM3UEt54XNQ==
   dependencies:
-    "@grapecity/spread-sheets" "13.0.1"
+    "@grapecity/spread-sheets" "13.0.3"
 
-"@grapecity/spread-sheets@13.0.1":
-  version "13.0.1"
-  resolved "https://registry.yarnpkg.com/@grapecity/spread-sheets/-/spread-sheets-13.0.1.tgz#b12bc992f69d70381cb30221537721a76b8ee445"
-  integrity sha512-N5OeNaef1aeBOqY7b8o0RQquNKHHNw15OC6pcV5of0mMESljJRJ6ULL7r08P0PhiJ0yZ4dDbxrbDGwOHLZVotw==
-
-"@grapecity/spread-sheets@^13.0.3":
+"@grapecity/spread-sheets@13.0.3", "@grapecity/spread-sheets@^13.0.3":
   version "13.0.3"
   resolved "https://registry.yarnpkg.com/@grapecity/spread-sheets/-/spread-sheets-13.0.3.tgz#979d7e162db31397146b5b9b4bdfab6442606b8d"
   integrity sha512-6lR0f5SateDbvySCBthPd4T9H58FJINxoNccBhGGcZWlLW40d8CXRno7WG0dTZh9VT9ajJ4b5rmuyFrYhkcIlg==
