@@ -74,9 +74,6 @@
                         %p.invalid-details
                           You need to add a valid payment card to your account. Your subscription will be cancelled if this invoice is not paid. Please visit the card details section in your account.
 
-
-
-
 #add-card.col-md-12.l-margin-top-big
 
 =render partial: 'add_card_modal_ajax'
@@ -124,6 +121,8 @@
             type: "POST",
             data: {id: "#{@invoice.id}"}
           })
+
+          window.location.replace("#{personal_upgrade_complete_url(@subscription.completion_guid)}");
         }
       });
     }
