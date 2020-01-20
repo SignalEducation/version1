@@ -54,9 +54,11 @@ describe Country do
     it { expect(Country).to respond_to(:all_in_eu) }
   end
 
+  describe 'class methods' do
+    it { expect(Country).to respond_to(:search) }
+  end
+
   describe 'instance methods' do
     it { should respond_to(:destroyable?) }
   end
-
-
 end

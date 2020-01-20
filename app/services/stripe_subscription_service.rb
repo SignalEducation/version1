@@ -116,7 +116,12 @@ class StripeSubscriptionService < StripeService
       subscription_id: new_subscription.id, account_type: 'Subscription',
       content_access: true
     )
-    @subscription.update(stripe_status: 'canceled', state: 'cancelled')
+
+    reason = "Changed plan to #{new_subscription.subscription_plan.interval_name}"
+    @subscription.update(stripe_status: 'canceled',
+                         state: 'cancelled',
+                         cancelled_at: Time.current,
+                         cancellation_reason: reason)
   end
 
   def client_secret_from_sub(subscription)

@@ -12,7 +12,8 @@ module Subscriptions
     def redirects_conditions
       exam_body_check ||
         active_subscriptions_check ||
-        standard_student? || return
+        standard_student? ||
+        return
     end
 
     def filtered_plan
@@ -39,19 +40,19 @@ module Subscriptions
     end
 
     def active_subscriptions_check
+      exam_body_id = params[:exam_body_id] || current_user.preferred_exam_body&.id
       active_subscriptions =
-        current_user.active_subscriptions_for_exam_body(params[:exam_body_id])
-
+        current_user.active_subscriptions_for_exam_body(exam_body_id)
       return if active_subscriptions.blank?
 
-      plans = get_relevant_subscription_plans
-      url   = redirect_url(plans, active_subscriptions)
+      url = redirect_url(active_subscriptions)
 
       redirect_to(url) && return
     end
 
-    def redirect_url(plans, active_subscriptions)
-      plans.count <= 1 ? account_url : new_subscription_plan_changes_url(active_subscriptions.first)
+    def redirect_url(active_subscriptions)
+      states = (active_subscriptions.map(&:state) & %w[active pending_cancellation])
+      states.any? ? new_subscription_plan_changes_url(active_subscriptions.first) : account_url
     end
 
     def standard_student?
