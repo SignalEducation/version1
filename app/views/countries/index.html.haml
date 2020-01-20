@@ -10,7 +10,16 @@
       .col-sm-12
         .box-item.table-box
           .row
-            =link_to 'New Country', new_country_url, class: 'btn btn-primary btn-xs'
+            .col-sm
+              .mb-3.float-left
+                =link_to 'New Country', new_country_url, class: 'btn btn-primary btn-xs'
+            .col-sm
+              .search-container.mb-3.float-right
+                =form_tag(search_countries_url, method: :get, role: 'form', class: 'form-inline') do
+                  =text_field_tag :term, @term, class: 'form-control', placeholder: 'Search term'
+                  %button{type: "submit", class: 'ml-3'}
+                    %i{:role => "img", class: 'budicon-search-list'}
+
 
           .table-responsive.pt-4
             %table.table.sorted_table{data: {destination: countries_url}}
@@ -36,4 +45,3 @@
                       %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
 
             =will_paginate @countries, renderer: BootstrapPagination::Rails
-

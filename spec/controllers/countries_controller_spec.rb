@@ -42,6 +42,16 @@ describe CountriesController, type: :controller do
         get :index
         expect_index_success_with_model('countries', 3)
       end
+
+      it 'should search for a country' do
+        get :index, params: {term: ireland.name }
+
+        countries = assigns(:countries)
+
+        expect(response.successful?).to be_truthy
+        expect(countries).to include(ireland)
+        expect(countries).not_to include(uk)
+      end
     end
 
     describe 'GET show' do
