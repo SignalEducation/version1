@@ -15,7 +15,6 @@
 #
 
 class Country < ApplicationRecord
-
   include LearnSignalModelExtras
 
   # Constants
@@ -43,14 +42,14 @@ class Country < ApplicationRecord
   scope :all_in_eu, -> { where(in_the_eu: true) }
 
   # class methods
-
-  # instance methods
+  def self.search(term)
+    joins(:currency).
+      where("countries.name ILIKE :t OR countries.iso_code ILIKE :t OR countries.continent ILIKE :t OR
+             currencies.name ILIKE :t OR currencies.iso_code ILIKE :t", t: "%#{term}%")
+  end
 
   ## Check if the Country can be deleted ##
   def destroyable?
     false
   end
-
-  protected
-
 end

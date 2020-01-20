@@ -8,9 +8,11 @@ class CountriesController < ApplicationController
 
   # Standard Actions #
   def index
-    @countries = Country.includes(:vat_codes, :users,
-                                  :subscription_payment_cards,
-                                  :currency).paginate(per_page: 50, page: params[:page]).all_in_order
+    @term = params[:term]
+    @countries = Country.includes(:currency).
+                   search(@term).
+                   paginate(per_page: 50, page: params[:page]).
+                   all_in_order
   end
 
   def show; end

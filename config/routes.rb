@@ -206,7 +206,9 @@ Rails.application.routes.draw do
     end
     get 'course_module_elements/:id/quiz_questions_order', to: 'course_module_elements#quiz_questions_order', as: :quiz_questions_order
 
-    resources :countries, concerns: :supports_reordering
+    resources :countries, concerns: :supports_reordering do
+      get 'search', to: 'countries#index', on: :collection
+    end
     resources :currencies, concerns: :supports_reordering
     resources :coupons
     post 'coupon_validation', to: 'coupons#validate_coupon', as: :coupon_validation
