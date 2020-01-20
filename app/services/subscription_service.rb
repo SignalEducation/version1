@@ -25,6 +25,16 @@ class SubscriptionService
     raise Learnsignal::SubscriptionError.new('Sorry! That is not a valid coupon code.')
   end
 
+  def un_cancel
+    return false unless @subscription.pending_cancellation?
+
+    if paypal?
+      PaypalSubscriptionsService.new(@subscription).un_cancel
+    elsif stripe? && @subscription.stripe_status == 'canceled-pending'
+      @subscription.un_cancel
+    end
+  end
+
   def cancel_subscription
     if paypal?
       PaypalSubscriptionsService.new(@subscription).cancel_billing_agreement

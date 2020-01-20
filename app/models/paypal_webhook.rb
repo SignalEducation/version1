@@ -36,10 +36,10 @@ class PaypalWebhook < ApplicationRecord
   end
 
   def process_sale_denied
-    if invoice = Invoice.build_from_paypal_data(payload)
+    if (invoice = Invoice.build_from_paypal_data(payload))
       invoice.update!(paid: false, payment_closed: false)
       invoice.increment!(:attempt_count)
-      update!(processed_at: Time.now)
+      update!(processed_at: Time.zone.now)
       subscription = Subscription.find_by(paypal_subscription_guid: payload['resource']['billing_agreement_id'])
       subscription.record_error!
     else
@@ -47,21 +47,24 @@ class PaypalWebhook < ApplicationRecord
     end
   end
 
-  def process_subscription_cancelled
-    if subscription = Subscription.find_by(paypal_subscription_guid: payload['resource']['id'])
-      subscription.schedule_paypal_cancellation
+  def verify_subscription(guid)
+    if (subscription = Subscription.find_by(paypal_subscription_guid: guid))
       update!(verified: true)
+      yield(subscription) if block_given?
     else
       update!(verified: false)
     end
   end
 
+  def process_subscription_cancelled
+    verify_subscription(payload['resource']['id']) do |subscription|
+      subscription.schedule_paypal_cancellation unless subscription.pending_cancellation?
+    end
+  end
+
   def process_subscription_suspended
-    if subscription = Subscription.find_by(paypal_subscription_guid: payload['resource']['id'])
+    verify_subscription(payload['resource']['id']) do |subscription|
       subscription.paypal_suspended unless subscription.paused?
-      update!(verified: true)
-    else
-      update!(verified: false)
     end
   end
 
@@ -72,9 +75,9 @@ class PaypalWebhook < ApplicationRecord
   private
 
   def check_dependencies
-    unless destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
+    return if destroyable?
+
+    errors.add(:base, I18n.t('models.general.dependencies_exist'))
+    false
   end
 end

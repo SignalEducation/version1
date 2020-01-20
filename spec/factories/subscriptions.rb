@@ -65,17 +65,18 @@ FactoryBot.define do
 
     factory :canceled_pending_subscription do
       stripe_status        { 'canceled-pending' }
-      active                { true }
+      state                { 'pending_cancellation' }
+      active               { true }
     end
 
     factory :canceled_subscription do
       stripe_status        { 'canceled' }
-      active                { true }
+      active               { true }
     end
 
     factory :unpaid_subscription do
       stripe_status        { 'unpaid' }
-      active                { true }
+      active               { true }
     end
   end
 end
