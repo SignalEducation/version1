@@ -305,7 +305,7 @@ describe SubscriptionsController, type: :controller do
       it 'should redirect to account page as subscription is not canceled-pending' do
         put :un_cancel, params: { id: valid_subscription.id }
         expect(flash[:success]).to be_nil
-        expect(flash[:error]).to eq(I18n.t('controllers.application.you_are_not_permitted_to_do_that'))
+        expect(flash[:error]).to eq(I18n.t('controllers.subscriptions.un_cancel.flash.error'))
         expect(response.status).to eq(302)
         redirect_to account_url(anchor: 'account-info')
       end

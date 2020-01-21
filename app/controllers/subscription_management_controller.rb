@@ -4,7 +4,7 @@ class SubscriptionManagementController < ApplicationController
   before_action :logged_in_required
   before_action { ensure_user_has_access_rights(%w[user_management_access]) }
   before_action :management_layout
-  before_action :set_subscrition, except: %i[show pdf_invoice]
+  before_action :set_subscription, except: %i[show pdf_invoice]
   before_action :set_invoice, only: %i[invoice pdf_invoice charge]
 
   def show
@@ -60,7 +60,13 @@ class SubscriptionManagementController < ApplicationController
   end
 
   def cancel
-    if SubscriptionService.new(@subscription).cancel_subscription
+    @layout = 'management'
+    @url = params[:type] == 'standard' ? subscription_management_standard_cancellation_url(id: @subscription.id) : subscription_management_immediate_cancellation_url(id: @subscription.id)
+    render :admin_new
+  end
+
+  def standard_cancellation
+    if @subscription.update(subscription_params) && SubscriptionService.new(@subscription).cancel_subscription
       flash[:success] = I18n.t('controllers.subscription_management.cancel.flash.success')
     else
       Rails.logger.warn "WARN: SubscriptionManagement#cancel failed to cancel a subscription. Errors:#{@subscription.errors.inspect}"
@@ -73,8 +79,8 @@ class SubscriptionManagementController < ApplicationController
     redirect_to subscription_management_url(@subscription)
   end
 
-  def immediate_cancel
-    if SubscriptionService.new(@subscription).cancel_subscription_immediately
+  def immediate_cancellation
+    if @subscription.update(subscription_params) && SubscriptionService.new(@subscription).cancel_subscription_immediately
       flash[:success] = I18n.t('controllers.subscription_management.immediately_cancel.flash.success')
     else
       Rails.logger.warn "WARN: SubscriptionManagement#immediately_cancel failed to cancel a subscription. Errors:#{@subscription.errors.inspect}"
@@ -100,11 +106,20 @@ class SubscriptionManagementController < ApplicationController
 
   protected
 
-  def set_subscrition
+  def set_subscription
     @subscription = Subscription.find_by(id: params[:subscription_management_id])
   end
 
   def set_invoice
     @invoice = Invoice.find_by(id: params[:invoice_id])
+  end
+
+  def subscription_params
+    params.require(:subscription).permit(
+      :cancellation_reason,
+      :cancellation_note,
+      :cancelled_by_id,
+      :cancelling_subscription
+    )
   end
 end

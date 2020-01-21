@@ -85,9 +85,10 @@ Rails.application.routes.draw do
       get '/invoice/:invoice_id',            action: :invoice,                 as: :invoice
       get '/pdf_invoice/:invoice_id',        action: :pdf_invoice,             as: :pdf_invoice
       get '/invoice/:invoice_id/charge/:id', action: :charge,                  as: :invoice_charge
-      put '/cancel',                         action: :cancel,                  as: :cancel
+      get '/cancellations',                  action: :cancel,                  as: :admin_cancellations
       put '/un_cancel',                      action: :un_cancel_subscription,  as: :un_cancel_subscription
-      put '/immediate_cancel',               action: :immediate_cancel,        as: :immediate_cancel
+      post '/standard_cancellation',          action: :standard_cancellation,   as: :standard_cancellation
+      post '/immediate_cancellation',         action: :immediate_cancellation,  as: :immediate_cancellation
       put '/reactivate',                     action: :reactivate_subscription, as: :reactivate_subscription
     end
 

@@ -38,8 +38,8 @@ class StripeSubscriptionService < StripeService
       raise_subscription_error({}, __method__.to_s, :sub_cancellation)
     end
 
-    stripe_subscription = cancel_stripe_subscription(period_end: !immediately)
-    @subscription.update(stripe_status: stripe_subscription.status)
+    cancel_stripe_subscription(period_end: !immediately)
+    @subscription.update(stripe_status: immediately ? 'canceled' : 'canceled-pending')
     immediately ? @subscription.cancel : @subscription.cancel_pending
   end
 

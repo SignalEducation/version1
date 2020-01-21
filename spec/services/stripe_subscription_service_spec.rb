@@ -200,7 +200,7 @@ describe StripeSubscriptionService, type: :service do
       it 'updates the subscription with the correct stripe_status' do
         allow(subject).to receive(:cancel_stripe_subscription).and_return(stripe_sub)
 
-        expect{ subject.cancel_subscription(immediately: true) }.not_to change {
+        expect{ subject.cancel_subscription(immediately: true) }.to change {
           test_sub.stripe_status
         }
       end

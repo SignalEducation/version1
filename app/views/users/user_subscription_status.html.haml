@@ -42,11 +42,9 @@
                     %td
                       =subscription.stripe? ? 'Stripe' : 'PayPal'
                     %td
-                      -if subscription.pending_3d_secure? || subscription.past_due?
-                        =link_to 'Cancel', new_subscription_cancellation_path(subscription, role: :admin), data:  { confirm: "Warning: Because your latest invoice is overdue this cancelation will be immediate and full access will be removed." } , class: 'btn btn-danger btn-xs', style: 'vertical-align: top;'
-                        =link_to subscription_management_url(subscription) do
-                          .btn.btn-secondary.btn-xs
-                            View
+                      =link_to subscription_management_url(subscription) do
+                        .btn.btn-secondary.btn-xs
+                          View
 
     .row
       .col-md-12

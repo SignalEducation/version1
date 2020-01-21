@@ -8,12 +8,7 @@ module Subscriptions
     end
     before_action :set_subscription
 
-    def new
-      if params[:role] == 'admin'
-        @layout = 'management'
-        render :admin_new
-      end
-    end
+    def new; end
 
     def create
       ActiveRecord::Base.transaction do

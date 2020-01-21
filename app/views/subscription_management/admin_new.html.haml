@@ -2,19 +2,17 @@
   %article.dashboard.bg-gray5
     .container
       %header
-        %h1.h1-hero.pt-5
-          ="Cancel #{@subscription.user.name} subscription"
+        %h1.h2-hero.pt-5
+          ="#{params[:type].capitalize} Cancellation of #{@subscription.user.name} subscription"
 
       %section.pb-md-6.pt-4
         .form-box
           .row
             .col-sm-12
-              %p
-                At LearnSignal we’re keen to keep improving our service.
               %p.h6
-                Why do you want to cancel?
+                Why are you canceling this subscription?
 
-              =form_for @subscription, url: subscription_cancellations_path(id: @subscription.id), method: :post do |f|
+              =form_for @subscription, url: @url, method: :post do |f|
                 =f.hidden_field(:cancelled_by_id, value: current_user.id)
                 =f.hidden_field(:cancelling_subscription, value: true)
                 =f.hidden_field(:cancellation_reason, value: "Admin(#{current_user.email}) canceled it.")
@@ -29,4 +27,6 @@
 
                 .row.mt-4
                   .col-sm-4
-                    =f.submit 'Cancel', id: 'confirm_cancellation_button', class: 'btn btn-danger btn-sm', data: { disable_with: false }
+                    =link_to 'Return', subscription_management_url(@subscription), class: 'btn btn-danger btn-sm'
+                  .col-sm-4
+                    =f.submit 'Cancel Subscription', id: 'confirm_cancellation_button', class: 'btn btn-primary btn-sm', data: { disable_with: false }

@@ -88,7 +88,7 @@ class SubscriptionsController < ApplicationController
         flash[:error] = I18n.t('controllers.subscriptions.un_cancel.flash.error')
       end
     else
-      flash[:error] = I18n.t('controllers.application.you_are_not_permitted_to_do_that')
+      flash[:error] = I18n.t('controllers.subscriptions.un_cancel.flash.error')
     end
 
     redirect_to account_url(anchor: 'account-info')
