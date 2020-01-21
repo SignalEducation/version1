@@ -100,7 +100,7 @@
                   .btn.btn-secondary.mb-3
                     =t('views.users.user_subscription_status.subscription_info.cancel_immediately')
 
-              -elsif @subscription.canceled_pending_status?
+              -if @subscription.canceled_pending_status?
                 =link_to t('views.users.show.un_cancel_subscription.button_call_to_action'), subscription_management_un_cancel_subscription_url(@subscription.id), method: :put, class: 'btn btn-primary mb-3', data: {confirm: 'Are you sure you want to Un-Cancel this subscription?'}
 
               -elsif @subscription.canceled_status?
