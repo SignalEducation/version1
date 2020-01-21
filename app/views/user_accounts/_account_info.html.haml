@@ -88,9 +88,9 @@
                   -if subscription.active?
                     =link_to 'Cancel Subscription', new_subscription_cancellation_path(subscription), class: 'btn btn-danger btn-xs', style: 'vertical-align: top;'
                   -if subscription.pending_3d_secure? || subscription.past_due?
-                    =link_to 'Cancel Subscription', new_subscription_cancellation_path(subscription), data: { confirm: 'Warning: Because your latest invoice is overdue this cancelation will be immediate and full access will be removed.' }, class: 'btn btn-danger btn-xs', style: 'vertical-align: top;'
+                    =link_to 'Cancel Subscription', new_subscription_cancellation_path(subscription), data: { confirm: 'Warning: Because your latest invoice is overdue this cancellation will be immediate and full access will be removed.' }, class: 'btn btn-danger btn-xs', style: 'vertical-align: top;'
                   -if subscription.pending_cancellation?
-                    =link_to 'Undo Subscription Cancel', un_cancel_subscription_path(subscription), data: { confirm: 'By clicking here you agree to undo the cancelation of  your currently plan.' }, method: :put, class: 'btn btn-primary btn-xs', style: 'vertical-align: top;'
+                    =link_to 'Undo Subscription Cancel', un_cancel_subscription_path(subscription), data: { confirm: 'By clicking here you agree to undo the cancellation request for your current plan.' }, method: :put, class: 'btn btn-primary btn-xs', style: 'vertical-align: top;'
                   -if subscription.cancelled?
                     =link_to 'Renew Subscription', subscription_checkout_special_link(subscription.subscription_plan.exam_body_id), class: 'btn btn-primary btn-xs', style: 'vertical-align: top;'
     -else
