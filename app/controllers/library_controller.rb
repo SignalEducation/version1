@@ -108,7 +108,7 @@ class LibraryController < ApplicationController
     @currency_id = @country ? @country.currency_id : Currency.all_active.all_in_order.first
     @correction_pack_products = []
 
-    valid_products = Product.includes(mock_exam: :subject_course).
+    valid_products = Product.includes(mock_exam: :subject_course).for_group(@group.id).
                        in_currency(@currency_id).all_active.all_in_order
 
     if @course.has_correction_packs
