@@ -164,7 +164,7 @@ class CourseModuleElement < ApplicationRecord
 
   def previous_cme_restriction(scul)
 
-    if self.related_course_module_element_id
+    if related_course_module_element&.active
 
       if scul
         student_exam_track = scul.student_exam_tracks.for_course_module(self.course_module_id).last
@@ -199,12 +199,12 @@ class CourseModuleElement < ApplicationRecord
         available_for_complimentary(scul)
       elsif user.standard_student_user?
         if valid_subscription
-          if related_course_module_element_id && previous_cme_restriction(scul)
+          if related_course_module_element && previous_cme_restriction(scul)
             { view: false, reason: 'related-lesson-restriction' }
           else
             { view: true, reason: nil }
           end
-        elsif available_on_trial && related_course_module_element_id && previous_cme_restriction(scul)
+        elsif available_on_trial && related_course_module_element && previous_cme_restriction(scul)
           { view: false, reason: 'related-lesson-restriction' }
         else
           available_on_trial ? { view: true, reason: nil } : { view: false, reason: 'invalid-subscription' }
