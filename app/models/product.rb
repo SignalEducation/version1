@@ -32,6 +32,7 @@ class Product < ApplicationRecord
   belongs_to :currency
   belongs_to :group
   belongs_to :mock_exam, optional: true
+  belongs_to :subject_course, optional: true
   belongs_to :cbe, optional: true
   has_many :orders, dependent: :restrict_with_error
   has_many :exercises, dependent: :restrict_with_error
@@ -44,7 +45,7 @@ class Product < ApplicationRecord
   validates :stripe_sku_guid, presence: true, uniqueness: true, on: :update
   validates :group_id, numericality: { only_integer: true, greater_than: 0 }
   validates :mock_exam_id, numericality: { only_integer: true,
-                                           greater_than: 0 }, if: :mock_exam?
+                                           greater_than: 0 }, unless: :cbe?
   validates :cbe_id, numericality: { only_integer: true,
                                      greater_than: 0 }, if: :cbe?
   validates :correction_pack_count, presence: true,

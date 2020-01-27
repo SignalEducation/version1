@@ -25,7 +25,7 @@ class MockExam < ApplicationRecord
   # Constants
 
   # relationships
-  belongs_to :subject_course
+  belongs_to :subject_course, optional: true
   has_many :products
   has_many :orders
 

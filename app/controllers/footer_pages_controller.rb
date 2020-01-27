@@ -48,7 +48,7 @@ class FooterPagesController < ApplicationController
     @products      = valid_products.where('mock_exam_id IS NOT NULL OR cbe_id IS NOT NULL').
                        where('product_type IN (?)', [Product.product_types[:mock_exam], Product.product_types[:cbe]])
     @questions     = valid_products.where('mock_exam_id IS NOT NULL').
-                       where('product_type = ?', Product.product_types[:correction_pack])
+                       where('product_type = ?', Product.product_types[:correction_pack]).order(:group_id).limit(3)
   end
 
   def profile
