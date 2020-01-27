@@ -14,11 +14,11 @@ shared_context 'course_content' do
 
   # Available on Trial
   let!(:course_module_element_2) { FactoryBot.create(:course_module_element, :cme_video, course_module: course_module_1, available_on_trial: true) }
-  let!(:course_module_element_video_1) { FactoryBot.create(:course_module_element_video, course_module_element_id: course_module_element_2.id, vimeo_guid: 'abc123') }
+  let!(:course_module_element_video_1) { FactoryBot.create(:course_module_element_video, course_module_element_id: course_module_element_2.id, vimeo_guid: 'abc123', dacast_id: 1234) }
 
   # Subscription Required
   let!(:course_module_element_3) { FactoryBot.create(:course_module_element, :cme_video, course_module: course_module_1) }
-  let!(:course_module_element_video_2) { FactoryBot.create(:course_module_element_video, course_module_element_id: course_module_element_3.id, vimeo_guid: '123abc') }
+  let!(:course_module_element_video_2) { FactoryBot.create(:course_module_element_video, course_module_element_id: course_module_element_3.id, vimeo_guid: '123abc', dacast_id: 1234) }
 
   let!(:course_module_element_4) { FactoryBot.create(:course_module_element, :cme_constructed_response, course_module: course_module_1, available_on_trial: true) }
   let!(:constructed_response_1) { FactoryBot.create(:constructed_response, course_module_element_id: course_module_element_4.id) }

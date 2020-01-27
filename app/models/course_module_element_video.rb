@@ -28,6 +28,10 @@ class CourseModuleElementVideo < ApplicationRecord
   validates :course_module_element_id, presence: true, on: :update
   validates :vimeo_guid, presence: true, length: { maximum: 255 }, on: :create
   validates :duration, presence: true, numericality: true
+  validates :vimeo_guid, :dacast_id,
+            presence: true, if: lambda {
+              course_module_element&.active && course_module_element&.is_video
+            }
 
   # callbacks
 
