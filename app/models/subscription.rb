@@ -36,10 +36,13 @@ class Subscription < ApplicationRecord
 
   delegate :currency, to: :subscription_plan
 
-  # Constants
+  # constants
   STATUSES        = %w[incomplete active past_due canceled canceled-pending pending_cancellation incomplete_expired].freeze
   VALID_STATES    = %w[active past_due canceled-pending pending_cancellation paused].freeze
   PAYPAL_STATUSES = %w[Pending Active Suspended Cancelled Expired].freeze
+
+  # enums
+  enum kind: { new_subscription: 0, reactivation: 1, change_plan: 2 }
 
   # relationships
   belongs_to :user, inverse_of: :subscriptions

@@ -87,8 +87,8 @@ Rails.application.routes.draw do
       get '/invoice/:invoice_id/charge/:id', action: :charge,                  as: :invoice_charge
       get '/cancellations',                  action: :cancel,                  as: :admin_cancellations
       put '/un_cancel',                      action: :un_cancel_subscription,  as: :un_cancel_subscription
-      post '/standard_cancellation',          action: :standard_cancellation,   as: :standard_cancellation
-      post '/immediate_cancellation',         action: :immediate_cancellation,  as: :immediate_cancellation
+      post '/standard_cancellation',         action: :standard_cancellation,   as: :standard_cancellation
+      post '/immediate_cancellation',        action: :immediate_cancellation,  as: :immediate_cancellation
       put '/reactivate',                     action: :reactivate_subscription, as: :reactivate_subscription
     end
 
@@ -107,6 +107,7 @@ Rails.application.routes.draw do
       get  '/subject_course_user_log_details/:scul_id', action: :subject_course_user_log_details, as: :scul_activity
       get  '/orders',                                   action: :user_purchases_details,          as: :orders
       get  '/referrals',                                action: :user_referral_details,           as: :referrals
+      post '/udpate_hubspot',                           action: :udpate_hubspot,                  as: :udpate_hubspot
       patch '/update_courses',                          action: :update_courses,                  as: :update_courses
       get 'search', on: :collection
       resources :invoices,  only: :index, shallow: true

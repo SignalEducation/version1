@@ -13,6 +13,7 @@
           =form_for(@subscription, url: subscription_plan_changes_path(@subscription), method: :post, html: {class: 'form-horizontal', role: 'form', id: 'upgrade-subscription-form'}) do |f|
             =f.hidden_field :subscription_plan_id
             =f.hidden_field :use_paypal, value: @subscription.paypal?
+            =f.hidden_field :kind, value: :change_plan
             .row
               .col-12.col-lg-8
                 .row.row-md.justify-content-center
@@ -308,4 +309,3 @@
       $("#card_submit").attr("disabled", false);
     }
   });
-
