@@ -22,6 +22,7 @@
                   %th=t('views.content_pages.form.name')
                   %th=t('views.content_pages.form.public_url')
                   %th=t('views.content_pages.form.active')
+                  %th=t('views.content_pages.form.footer_link')
                   %th
                   %th
                   %th
@@ -32,6 +33,7 @@
                     %td=content_page.name
                     %td=content_page.public_url
                     %td=tick_or_cross(content_page.active)
+                    %td=tick_or_cross(content_page.footer_link)
                     %td
                       -unless content_page.active
                         =link_to 'Activate', new_content_activation_url(type: content_page.class, id: content_page.id), class: 'btn btn-green btn-xs'

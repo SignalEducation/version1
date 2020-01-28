@@ -41,6 +41,10 @@
         .row
           .col-lg-6
             %ul.nav.flex-column
+              -@footer_content_pages.each do |content_page|
+                %li.nav-item
+                  =link_to content_page.name, footer_content_page_url(content_page.public_url), class: 'nav-link'
+
               %li.nav-item
                 =link_to 'Contact Us', contact_url, class: 'nav-link'
               %li.nav-item
