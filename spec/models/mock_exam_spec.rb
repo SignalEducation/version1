@@ -27,8 +27,8 @@ describe MockExam do
   it { should have_many(:orders) }
 
   # validation
-  it 'is invalid without a subject_course' do
-    expect(build_stubbed(:mock_exam, subject_course: nil)).not_to be_valid
+  it 'is valid without a subject_course' do
+    expect(build_stubbed(:mock_exam, subject_course: nil)).to be_valid
   end
 
   it { should validate_presence_of(:name) }
