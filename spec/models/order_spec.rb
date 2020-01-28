@@ -224,7 +224,7 @@ describe Order do
     let(:order) { build(:order) }
 
     it 'return exam body name' do
-      expect(order.exam_body_name).to eq(order.product.mock_exam.subject_course.exam_body.name)
+      expect(order.exam_body_name).to eq(order.product.group.exam_body.name)
     end
   end
 end
