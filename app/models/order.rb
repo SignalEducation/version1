@@ -161,7 +161,7 @@ class Order < ApplicationRecord
   def exam_body_name
     return product.cbe.subject_course.exam_body.name if product.cbe?
 
-    product.mock_exam.subject_course.exam_body.name
+    product.group.exam_body.name
   end
 
   protected
