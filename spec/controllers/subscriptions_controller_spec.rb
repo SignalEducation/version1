@@ -79,7 +79,6 @@ describe SubscriptionsController, type: :controller do
   let!(:canceled_pending_subscription) {
     create(
         :canceled_pending_subscription,
-        state: 'pending_cancellation',
         user: canceled_pending_student,
         subscription_plan: subscription_plan_gbp_m,
         stripe_guid: 'sub_abc123',
@@ -309,7 +308,6 @@ describe SubscriptionsController, type: :controller do
         expect(response.status).to eq(302)
         redirect_to account_url(anchor: 'account-info')
       end
-
     end
 
     describe "DELETE 'destroy'" do

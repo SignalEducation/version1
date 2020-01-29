@@ -78,19 +78,14 @@ class SubscriptionsController < ApplicationController
   end
 
   def un_cancel
-    if @subscription&.stripe_status == 'canceled-pending'
-      @subscription.un_cancel
-
-      if @subscription&.errors&.count&.zero?
-        flash[:success] = I18n.t('controllers.subscriptions.un_cancel.flash.success')
-      else
-        Rails.logger.error 'ERROR: SubscriptionsController#un_cancel - something went wrong.'
-        flash[:error] = I18n.t('controllers.subscriptions.un_cancel.flash.error')
-      end
+    if @subscription.pending_cancellation? && @subscription.un_cancel
+      flash[:success] = I18n.t('controllers.subscriptions.un_cancel.flash.success')
     else
       flash[:error] = I18n.t('controllers.subscriptions.un_cancel.flash.error')
     end
-
+  rescue Learnsignal::SubscriptionError => e
+    flash[:error] = e.message
+  ensure
     redirect_to account_url(anchor: 'account-info')
   end
 

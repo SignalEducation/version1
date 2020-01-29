@@ -35,6 +35,41 @@ describe SubscriptionService, type: :service do
     it 'does stuff'
   end
 
+  describe '#un_cancel' do
+    it 'returns FALSE unless the subscription is :pending_cancellation:' do
+      expect(sub_service.send(:un_cancel)).to be false
+    end
+
+    describe 'for Stripe subscriptions' do
+      let(:stripe_sub) { build_stubbed(:subscription, stripe_guid: 'test_guid', state: 'pending_cancellation') }
+      let(:stripe_sub_service) { SubscriptionService.new(stripe_sub) }
+
+      it 'returns FALSE unless the stripe_status is canceled-pending' do
+        expect(stripe_sub_service.send(:un_cancel)).not_to be true
+      end
+
+      it 'calls Subscription#un_cancel for Stripe subscriptions that are canceled-pending' do
+        expect(stripe_sub).to receive(:un_cancel)
+        stripe_sub.stripe_status = 'canceled-pending'
+
+        stripe_sub_service.send(:un_cancel)
+      end
+    end
+
+    describe 'for Paypal Subscriptions' do
+      let(:paypal_sub) {
+        build_stubbed(:subscription, paypal_token: 'test_paypal_token', state: 'pending_cancellation')
+      }
+      let(:paypal_sub_service) { SubscriptionService.new(paypal_sub) }
+
+      it 'calls PaypalSubscriptionsService#un_cancel for Paypal subscriptions' do
+        expect_any_instance_of(PaypalSubscriptionsService).to receive(:un_cancel)
+
+        paypal_sub_service.un_cancel
+      end
+    end
+  end
+
   describe '#paypal?' do
     describe 'with :use_paypal param' do
       let(:paypal_sub) { build_stubbed(:subscription, use_paypal: 'true') }

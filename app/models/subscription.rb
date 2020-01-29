@@ -155,7 +155,8 @@ class Subscription < ApplicationRecord
       end
     end
 
-    after_transition [:active, :paused] => :pending_cancellation do |subscription, _transition|
+    after_transition %i[active paused] => :pending_cancellation do |subscription, _transition|
+      subscription.schedule_paypal_cancellation if subscription.paypal?
       subscription.update(cancelled_at: Time.zone.now)
     end
 
@@ -342,7 +343,7 @@ class Subscription < ApplicationRecord
   end
 
   def schedule_paypal_cancellation
-    self.cancel_pending if self.active?
+    cancel_pending if active?
     PaypalSubscriptionsService.new(self).set_cancellation_date
   end
 
@@ -383,22 +384,15 @@ class Subscription < ApplicationRecord
   end
 
   def un_cancel
-    stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
-    latest_subscription = stripe_customer.subscriptions.retrieve(self.stripe_guid)
+    stripe_customer = Stripe::Customer.retrieve(stripe_customer_id)
+    latest_subscription = stripe_customer.subscriptions.retrieve(stripe_guid)
     latest_subscription.cancel_at_period_end = false
     response = latest_subscription.save
-    if !response.cancel_at_period_end && response.canceled_at.nil?
-      self.update_attributes(stripe_status: 'active',
-                             terms_and_conditions: true,
-                             cancelled_at: nil,
-                             cancellation_reason: nil,
-                             cancellation_note: nil,
-                             cancelled_by_id: nil)
-      self.restart
-    else
-      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
-    end
-    self
+    return false unless !response.cancel_at_period_end && response.canceled_at.nil?
+
+    update(stripe_status: 'active', terms_and_conditions: true, cancelled_at: nil,
+           cancellation_reason: nil, cancellation_note: nil, cancelled_by_id: nil)
+    restart
   end
 
   def update_invoice_payment_success

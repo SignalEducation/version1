@@ -38,9 +38,20 @@ class PaypalSubscriptionsService
 
   def cancel_billing_agreement(note: 'User cancelling the agreement')
     agreement = Agreement.find(@subscription.paypal_subscription_guid)
-    if %w(Active Suspended).include?(agreement.state) && agreement.cancel(AgreementStateDescriptor.new(note: note))
+    if %w[Active Suspended].include?(agreement.state) && agreement.suspend(AgreementStateDescriptor.new(note: note))
       @subscription.update!(paypal_status: agreement.state)
       @subscription.cancel_pending
+    else
+      raise_subscription_error(agreement, __method__.to_s, :sub_cancellation)
+    end
+  end
+
+  def un_cancel
+    agreement = Agreement.find(@subscription.paypal_subscription_guid)
+    note = AgreementStateDescriptor.new(note: 'Un-cancelling the subscription for the user')
+    if agreement.state == 'Suspended' && agreement.re_activate(note)
+      @subscription.update!(paypal_status: agreement.state)
+      @subscription.restart
     else
       raise_subscription_error(agreement, __method__.to_s, :sub_cancellation)
     end
@@ -60,20 +71,20 @@ class PaypalSubscriptionsService
   end
 
   def update_next_billing_date
-    if @subscription.paypal_subscription_guid
-      agreement = Agreement.find(@subscription.paypal_subscription_guid)
-      @subscription.update!(next_renewal_date: agreement.agreement_details.next_billing_date)
-    end
+    return unless @subscription.paypal_subscription_guid
+
+    agreement = Agreement.find(@subscription.paypal_subscription_guid)
+    @subscription.update!(next_renewal_date: agreement.agreement_details.next_billing_date)
   end
 
   def set_cancellation_date
     agreement = Agreement.find(@subscription.paypal_subscription_guid)
     @subscription.update(paypal_status: agreement.state)
-    if agreement.agreement_details.last_payment_date
-      future = agreement.agreement_details.last_payment_date.to_time +
-        @subscription.subscription_plan.payment_frequency_in_months.months
-      SubscriptionCancellationWorker.perform_at(future, @subscription.id)
-    end
+    return unless agreement.agreement_details.last_payment_date
+
+    future = agreement.agreement_details.last_payment_date.to_time +
+             @subscription.subscription_plan.payment_frequency_in_months.months
+    PaypalSubscriptionCancellationWorker.perform_at(future, @subscription.id)
   end
 
   def change_plan(plan_id)
