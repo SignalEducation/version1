@@ -49,7 +49,7 @@ class ApplicationController < ActionController::Base
     @navbar = 'standard'
     @top_margin = true
     @footer = 'standard'
-    @groups = Group.all_active.with_active_body.all_in_order
+    @groups = Group.includes(:exam_body).all_active.with_active_body.all_in_order
     @footer_content_pages = ContentPage.all_active.for_footer
     @footer_landing_pages = HomePage.for_footer
     navbar_links = %w[about-us testimonials resources]
