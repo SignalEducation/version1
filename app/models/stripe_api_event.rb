@@ -184,7 +184,7 @@ class StripeApiEvent < ApplicationRecord
 
       # A NextPaymentAttempt Date value means that another payment attempt will be made
       MandrillWorker.perform_async(user.id, 'send_card_payment_failed_email', self.account_url) unless Rails.env.test?
-
+      subscription.mark_past_due
     else
       set_process_error "Error finding User-#{stripe_customer_guid}, Invoice-#{stripe_invoice_guid} OR Subscription- #{stripe_subscription_guid}. InvoicePaymentFailed Event"
     end

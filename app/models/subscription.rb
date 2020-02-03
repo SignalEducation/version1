@@ -83,7 +83,7 @@ class Subscription < ApplicationRecord
   scope :in_created_order,         -> { order(:created_at) }
   scope :in_reverse_created_order, -> { order(created_at: :desc) }
   scope :all_of_status,            ->(status) { where(stripe_status: status) }
-  scope :all_active,               -> { with_states(:active, :paused, :errored, :pending_cancellation) }
+  scope :all_active,               -> { with_states(:active, :past_due, :paused, :errored, :pending_cancellation) }
   scope :all_valid,                -> { where(state: VALID_STATES) }
   scope :not_pending,              -> { where.not(state: 'pending') }
   scope :this_week,                -> { where(created_at: Time.zone.now.beginning_of_week..Time.zone.now.end_of_week) }
@@ -112,6 +112,10 @@ class Subscription < ApplicationRecord
 
     event :cancel_pending do
       transition active: :pending_cancellation
+    end
+
+    event :mark_past_due do
+      transition active: :past_due
     end
 
     event :cancel do
