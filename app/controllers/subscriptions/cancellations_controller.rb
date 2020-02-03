@@ -22,7 +22,7 @@ module Subscriptions
           flash[:error] = I18n.t('controllers.subscriptions.destroy.flash.error')
           @subscription.errors.add(:cancellation_reason, 'please select an option')
 
-          redirect_to redirect_back(fallback_location: root_path)
+          redirect_back(fallback_location: root_path)
         end
       end
     rescue Learnsignal::SubscriptionError
