@@ -18,18 +18,35 @@ RSpec.describe HubSpot::Contacts do
       allow_any_instance_of(User).to receive(:viewable_subscriptions).and_return([subscription])
     end
 
-    it 'save parsed data in hubspot' do
-      subject
-      prederred_exam_body = "#{user_01&.preferred_exam_body&.name}_status".parameterize(separator: '_')
+    context 'Correct request' do
+      it 'save parsed data in hubspot' do
+        subject
+        prederred_exam_body = "#{user_01&.preferred_exam_body&.name}_status".parameterize(separator: '_')
 
-      stub_request(:post, "#{uri}/contacts/v1/contact?hapikey=#{key}").
-        with(body: "{\"properties\":[{\"property\":\"email\",\"value\":\"#{user_01.email}\"},{\"property\":\"firstname\",\"value\":\"#{user_01.first_name}\"},{\"property\":\"lastname\",\"value\":\"#{user_01.last_name}\"},{\"property\":\"email_verified\",\"value\":false},{\"property\":\"date_of_birth\",\"value\":\"#{user_01.date_of_birth}\"},{\"property\":\"currency\",\"value\":\"#{user_01.currency.name}\"},{\"property\":\"country\",\"value\":\"#{user_01&.country&.name}\"},{\"property\":\"sub_close_date\",\"value\":null},{\"property\":\"sub_payment_interval\",\"value\":null},{\"property\":\"sub_exam_body\",\"value\":null},{\"property\":\"preferred_exam_body\",\"value\":\"#{user_01&.preferred_exam_body&.name}\"},{\"property\":\"#{prederred_exam_body}\",\"value\":\"Basic\"}]}").
-        to_return(status: 200, body: 'OK', headers: {})
+        stub_request(:post, "#{uri}/contacts/v1/contact?hapikey=#{key}").
+          with(body: "{\"properties\":[{\"property\":\"email\",\"value\":\"#{user_01.email}\"},{\"property\":\"firstname\",\"value\":\"#{user_01.first_name}\"},{\"property\":\"lastname\",\"value\":\"#{user_01.last_name}\"},{\"property\":\"email_verified\",\"value\":false},{\"property\":\"date_of_birth\",\"value\":\"#{user_01.date_of_birth}\"},{\"property\":\"currency\",\"value\":\"#{user_01.currency.name}\"},{\"property\":\"country\",\"value\":\"#{user_01&.country&.name}\"},{\"property\":\"sub_close_date\",\"value\":null},{\"property\":\"sub_payment_interval\",\"value\":null},{\"property\":\"sub_exam_body\",\"value\":null},{\"property\":\"preferred_exam_body\",\"value\":\"#{user_01&.preferred_exam_body&.name}\"},{\"property\":\"#{prederred_exam_body}\",\"value\":\"Basic\"}]}").
+          to_return(status: 200, body: 'OK', headers: {})
 
-      response = contacts.create(user_01)
+        response = contacts.create(user_01)
 
-      expect(response.code).to eq('200')
-      expect(response.body).to eq('OK')
+        expect(response.code).to eq('200')
+        expect(response.body).to eq('OK')
+      end
+    end
+
+    context 'Incorrect request' do
+      it 'no save parsed data in hubspot' do
+        subject
+        prederred_exam_body = "#{user_01&.preferred_exam_body&.name}_status".parameterize(separator: '_')
+
+        stub_request(:post, "#{uri}/contacts/v1/contact?hapikey=#{key}").
+          with(body: "{\"properties\":[{\"property\":\"email\",\"value\":\"#{user_01.email}\"},{\"property\":\"firstname\",\"value\":\"#{user_01.first_name}\"},{\"property\":\"lastname\",\"value\":\"#{user_01.last_name}\"},{\"property\":\"email_verified\",\"value\":false},{\"property\":\"date_of_birth\",\"value\":\"#{user_01.date_of_birth}\"},{\"property\":\"currency\",\"value\":\"#{user_01.currency.name}\"},{\"property\":\"country\",\"value\":\"#{user_01&.country&.name}\"},{\"property\":\"sub_close_date\",\"value\":null},{\"property\":\"sub_payment_interval\",\"value\":null},{\"property\":\"sub_exam_body\",\"value\":null},{\"property\":\"preferred_exam_body\",\"value\":\"#{user_01&.preferred_exam_body&.name}\"},{\"property\":\"#{prederred_exam_body}\",\"value\":\"Basic\"}]}").
+          to_return(status: 404, body: 'OK', headers: {})
+
+        response = contacts.create(user_01)
+
+        expect(response).to be_truthy
+      end
     end
   end
 
@@ -37,33 +54,67 @@ RSpec.describe HubSpot::Contacts do
     let(:users) { [user_01, user_02] }
 
     subject do
-      allow(User).to receive(:find).and_return(users)
+      allow(User).to receive(:where).and_return(users)
     end
 
-    it 'save parsed data in hubspot' do
-      subject
+    context 'Correct request' do
+      it 'save parsed data in hubspot' do
+        subject
 
-      stub_request(:post, "#{uri}/contacts/v1/contact/batch/?hapikey=#{key}").
-        with(body: '[]').
-        to_return(status: 202, body: '', headers: {})
+        prederred_exam_body1 = "#{user_01&.preferred_exam_body&.name}_status".parameterize(separator: '_')
+        prederred_exam_body2 = "#{user_02&.preferred_exam_body&.name}_status".parameterize(separator: '_')
 
-      response = contacts.batch_create(users)
+        stub_request(:post, "#{uri}/contacts/v1/contact/batch/?hapikey=#{key}").
+          with(
+            body: "[{\"email\":\"#{user_01.email}\",\"properties\":[{\"property\":\"email\",\"value\":\"#{user_01.email}\"},{\"property\":\"firstname\",\"value\":\"#{user_01.first_name}\"},{\"property\":\"lastname\",\"value\":\"#{user_01.last_name}\"},{\"property\":\"email_verified\",\"value\":false},{\"property\":\"date_of_birth\",\"value\":\"#{user_01.date_of_birth}\"},{\"property\":\"currency\",\"value\":\"#{user_01.currency.name}\"},{\"property\":\"country\",\"value\":\"#{user_01&.country&.name}\"},{\"property\":\"sub_close_date\",\"value\":null},{\"property\":\"sub_payment_interval\",\"value\":null},{\"property\":\"sub_exam_body\",\"value\":null},{\"property\":\"preferred_exam_body\",\"value\":\"#{user_01&.preferred_exam_body&.name}\"},{\"property\":\"#{prederred_exam_body1}\",\"value\":\"Basic\"},{\"property\":\"#{prederred_exam_body2}\",\"value\":\"Basic\"}]},{\"email\":\"#{user_02&.email}\",\"properties\":[{\"property\":\"email\",\"value\":\"#{user_02&.email}\"},{\"property\":\"firstname\",\"value\":\"#{user_02&.first_name}\"},{\"property\":\"lastname\",\"value\":\"#{user_02&.last_name}\"},{\"property\":\"email_verified\",\"value\":false},{\"property\":\"date_of_birth\",\"value\":\"#{user_02&.date_of_birth}\"},{\"property\":\"currency\",\"value\":\"#{user_02&.currency&.name}\"},{\"property\":\"country\",\"value\":\"#{user_02&.country&.name}\"},{\"property\":\"sub_close_date\",\"value\":null},{\"property\":\"sub_payment_interval\",\"value\":null},{\"property\":\"sub_exam_body\",\"value\":null},{\"property\":\"preferred_exam_body\",\"value\":\"#{user_02&.preferred_exam_body&.name}\"},{\"property\":\"#{prederred_exam_body1}\",\"value\":\"Basic\"},{\"property\":\"#{prederred_exam_body2}\",\"value\":\"Basic\"}]}]",
+            headers: { 'Accept' => '*/*', 'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type' => 'application/json', 'User-Agent' => 'Ruby' }
+          ).
+          to_return(status: 202, body: '', headers: {})
 
-      expect(response.body).to    eq('')
-      expect(response.code).to    eq('202')
+        response = contacts.batch_create(users)
+
+        expect(response.body).to eq('')
+        expect(response.code).to eq('202')
+      end
+
+      it 'save parsed data with custom data in hubspot' do
+        subject
+
+        prederred_exam_body1 = "#{user_01&.preferred_exam_body&.name}_status".parameterize(separator: '_')
+        prederred_exam_body2 = "#{user_02&.preferred_exam_body&.name}_status".parameterize(separator: '_')
+
+        stub_request(:post, "#{uri}/contacts/v1/contact/batch/?hapikey=#{key}").
+          with(
+            body: "[{\"email\":\"#{user_01.email}\",\"properties\":[{\"property\":\"email\",\"value\":\"#{user_01.email}\"},{\"property\":\"firstname\",\"value\":\"#{user_01.first_name}\"},{\"property\":\"lastname\",\"value\":\"#{user_01.last_name}\"},{\"property\":\"email_verified\",\"value\":false},{\"property\":\"date_of_birth\",\"value\":\"#{user_01.date_of_birth}\"},{\"property\":\"currency\",\"value\":\"#{user_01.currency.name}\"},{\"property\":\"country\",\"value\":\"#{user_01&.country&.name}\"},{\"property\":\"sub_close_date\",\"value\":null},{\"property\":\"sub_payment_interval\",\"value\":null},{\"property\":\"sub_exam_body\",\"value\":null},{\"property\":\"preferred_exam_body\",\"value\":\"#{user_01&.preferred_exam_body&.name}\"},{\"property\":\"#{prederred_exam_body1}\",\"value\":\"Basic\"},{\"property\":\"#{prederred_exam_body2}\",\"value\":\"Basic\"},{\"custom_data\":\"any_data_here\"}]},{\"email\":\"#{user_02&.email}\",\"properties\":[{\"property\":\"email\",\"value\":\"#{user_02&.email}\"},{\"property\":\"firstname\",\"value\":\"#{user_02&.first_name}\"},{\"property\":\"lastname\",\"value\":\"#{user_02&.last_name}\"},{\"property\":\"email_verified\",\"value\":false},{\"property\":\"date_of_birth\",\"value\":\"#{user_02&.date_of_birth}\"},{\"property\":\"currency\",\"value\":\"#{user_02&.currency&.name}\"},{\"property\":\"country\",\"value\":\"#{user_02&.country&.name}\"},{\"property\":\"sub_close_date\",\"value\":null},{\"property\":\"sub_payment_interval\",\"value\":null},{\"property\":\"sub_exam_body\",\"value\":null},{\"property\":\"preferred_exam_body\",\"value\":\"#{user_02&.preferred_exam_body&.name}\"},{\"property\":\"#{prederred_exam_body1}\",\"value\":\"Basic\"},{\"property\":\"#{prederred_exam_body2}\",\"value\":\"Basic\"},{\"custom_data\":\"any_data_here\"}]}]",
+            headers: { 'Accept' => '*/*', 'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type' => 'application/json', 'User-Agent' => 'Ruby' }
+          ).
+          to_return(status: 202, body: '', headers: {})
+
+        response = contacts.batch_create(users, custom_data: 'any_data_here')
+
+        expect(response.body).to eq('')
+        expect(response.code).to eq('202')
+      end
     end
 
-    it 'save parsed data with custom data in hubspot' do
-      subject
+    context 'Incorrect request' do
+      it 'no save parsed data in hubspot' do
+        subject
 
-      stub_request(:post, "#{uri}/contacts/v1/contact/batch/?hapikey=#{key}").
-        with(body: '[]').
-        to_return(status: 202, body: '', headers: {})
+        prederred_exam_body1 = "#{user_01&.preferred_exam_body&.name}_status".parameterize(separator: '_')
+        prederred_exam_body2 = "#{user_02&.preferred_exam_body&.name}_status".parameterize(separator: '_')
 
-      response = contacts.batch_create(users, custom_data: 'any_data_here')
+        stub_request(:post, "#{uri}/contacts/v1/contact/batch/?hapikey=#{key}").
+          with(
+            body: "[{\"email\":\"#{user_01.email}\",\"properties\":[{\"property\":\"email\",\"value\":\"#{user_01.email}\"},{\"property\":\"firstname\",\"value\":\"#{user_01.first_name}\"},{\"property\":\"lastname\",\"value\":\"#{user_01.last_name}\"},{\"property\":\"email_verified\",\"value\":false},{\"property\":\"date_of_birth\",\"value\":\"#{user_01.date_of_birth}\"},{\"property\":\"currency\",\"value\":\"#{user_01.currency.name}\"},{\"property\":\"country\",\"value\":\"#{user_01&.country&.name}\"},{\"property\":\"sub_close_date\",\"value\":null},{\"property\":\"sub_payment_interval\",\"value\":null},{\"property\":\"sub_exam_body\",\"value\":null},{\"property\":\"preferred_exam_body\",\"value\":\"#{user_01&.preferred_exam_body&.name}\"},{\"property\":\"#{prederred_exam_body1}\",\"value\":\"Basic\"},{\"property\":\"#{prederred_exam_body2}\",\"value\":\"Basic\"}]},{\"email\":\"#{user_02&.email}\",\"properties\":[{\"property\":\"email\",\"value\":\"#{user_02&.email}\"},{\"property\":\"firstname\",\"value\":\"#{user_02&.first_name}\"},{\"property\":\"lastname\",\"value\":\"#{user_02&.last_name}\"},{\"property\":\"email_verified\",\"value\":false},{\"property\":\"date_of_birth\",\"value\":\"#{user_02&.date_of_birth}\"},{\"property\":\"currency\",\"value\":\"#{user_02&.currency&.name}\"},{\"property\":\"country\",\"value\":\"#{user_02&.country&.name}\"},{\"property\":\"sub_close_date\",\"value\":null},{\"property\":\"sub_payment_interval\",\"value\":null},{\"property\":\"sub_exam_body\",\"value\":null},{\"property\":\"preferred_exam_body\",\"value\":\"#{user_02&.preferred_exam_body&.name}\"},{\"property\":\"#{prederred_exam_body1}\",\"value\":\"Basic\"},{\"property\":\"#{prederred_exam_body2}\",\"value\":\"Basic\"}]}]",
+            headers: { 'Accept' => '*/*', 'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type' => 'application/json', 'User-Agent' => 'Ruby' }
+          ).
+          to_return(status: 404, body: '', headers: {})
 
-      expect(response.body).to    eq('')
-      expect(response.code).to    eq('202')
+        response = contacts.batch_create(users)
+
+        expect(response).to be_truthy
+      end
     end
   end
 end
