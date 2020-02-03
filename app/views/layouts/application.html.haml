@@ -127,8 +127,9 @@
       -#General partials
       =render partial: 'layouts/misc_javascript'
       -if current_user
+        -data = current_user.analytics_exam_body_plan_data
         :javascript
-          dataLayer.push({'user_id':"#{current_user.id}", 'user_plan':"#{current_user.analytics_exam_body_plan_data[0]}", 'plan_type':"#{current_user.analytics_exam_body_plan_data[1]}", 'plan_status':"#{current_user.analytics_exam_body_plan_data[2]}"});
+          dataLayer.push({'user_id':"#{current_user.id}", 'user_plan':"#{data[0]}", 'plan_type':"#{data[1]}", 'plan_status':"#{data[2]}"});
 
         -if flash[:datalayer_verify]
           :javascript
