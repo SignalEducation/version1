@@ -150,4 +150,5 @@
 
       -if !current_user || current_user&.student_user?
         =render partial: 'layouts/hubspot_js'
-      =render partial: 'layouts/zendesk_js'
+      -if ENV['ZENDESK_ON'] == 'true'
+        =render partial: 'layouts/zendesk_js'
