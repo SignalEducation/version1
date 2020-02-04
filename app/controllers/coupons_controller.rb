@@ -19,6 +19,8 @@ class CouponsController < ApplicationController
     @coupon = Coupon.new
   end
 
+  def edit; end
+
   def create
     @coupon = Coupon.new(allowed_params)
 
