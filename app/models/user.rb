@@ -707,7 +707,10 @@ class User < ApplicationRecord
   end
 
   def last_subscription
-    subscriptions.where(state: %i[incomplete active past_due canceled canceled-pending pending_cancellation]).in_reverse_created_order.first
+    subscriptions.
+      where(state: %i[incomplete active past_due canceled cancelled canceled-pending pending_cancellation]).
+      in_reverse_created_order.
+      first
   end
 
   private

@@ -4,7 +4,7 @@ module Subscriptions
   class PlanChangesController < ApplicationController
     before_action :logged_in_required
     before_action do
-      ensure_user_has_access_rights(%w(student_user))
+      ensure_user_has_access_rights(%w[student_user])
     end
     before_action :set_subscription
 

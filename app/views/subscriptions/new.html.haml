@@ -22,6 +22,7 @@
             =f.hidden_field :completion_guid
             =f.hidden_field :stripe_token
             =f.hidden_field :use_paypal, value: false
+            =f.hidden_field :kind, value: @kind
             =hidden_field_tag :hidden_coupon_code
 
             .bg-gray5

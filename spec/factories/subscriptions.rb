@@ -37,6 +37,7 @@ FactoryBot.define do
     livemode                        { false }
     terms_and_conditions            { true }
     sequence(:completion_guid)      { |n| "guid_#{n}" }
+    kind                            { :new_subscription }
 
     factory :stripe_subscription do
       sequence(:stripe_guid) { |n| "sub_DUMMY-#{n}" }

@@ -78,7 +78,7 @@
                   .row.row-lg
                     -level.subject_courses.all_active.all_in_order.each do |course|
                       .col-12.col-md-6
-                        =link_to course_special_link(course.first_active_cme), class: 'card card-horizontal flex-row card-mint onboarding-select', data: { exam_body: @group.name, type: 'Course Select', name: course.name } do
+                        =link_to course_special_link(course.first_active_cme), class: 'card card-horizontal flex-row card-mint onboarding-select course-link', data: { exam_body: @group.name, type: 'Course Select', name: course.name } do
                           .card-header.d-flex.justify-content-center.align-items-center
                             %i{"aria-label" => course.icon_label, :role => "img", class: course.icon_label ? course.icon_label : 'budicon-office-bag-c', style: "color: #{course.highlight_colour};"}
                           .card-body.d-flex.flex-column.justify-content-center
@@ -104,7 +104,7 @@
               .row.row-lg
                 -@group.subject_courses.all_active.all_in_order.each do |course|
                   .col-12.col-md-6
-                    =link_to course_special_link(course.first_active_cme), class: 'card card-horizontal flex-row card-mint onboarding-select', data: { exam_body: @group.name, type: 'Course Select', name: course.name } do
+                    =link_to course_special_link(course.first_active_cme), class: 'card card-horizontal flex-row card-mint onboarding-select course-link', data: { exam_body: @group.name, type: 'Course Select', name: course.name } do
                       .card-header.d-flex.justify-content-center.align-items-center
                         %i{"aria-label" => course.icon_label, :role => "img", class: course.icon_label ? course.icon_label : 'budicon-office-bag-c', style: "color: #{course.highlight_colour};"}
                       .card-body.d-flex.flex-column.justify-content-center
@@ -118,8 +118,6 @@
 
 
 :javascript
-
-
   function showLevelSelection() {
     $("#start-screen").addClass('d-none');
     $(".course-selection-screens").addClass('d-none');
@@ -137,3 +135,17 @@
     $("#course-selection-screen-" + level_id).removeClass('d-none');
   };
 
+  $('.course-link').click(function (event) {
+    $.ajax({
+      url: "#{user_udpate_hubspot_path(current_user.id)}",
+      method: 'post',
+      data: JSON.stringify({'custom_data': {'onboarding_course': this.dataset.name } } ),
+      contentType: 'application/json',
+      success: function(data,status,xhr){
+        console.log(xhr)
+      },
+      error: function(xhr,status,error){
+        console.log(xhr);
+      }
+    });
+  });
