@@ -18,8 +18,7 @@
                   %th=t('views.coupons.index.code')
                   %th=t('views.coupons.index.active')
                   %th=t('views.coupons.index.currency_id')
-                  %th
-                  %th
+                  %th{ colspan: 3 }
               %tbody
                 -@coupons.each do |coupon|
                   %tr
@@ -28,7 +27,8 @@
                     %td=tick_or_cross(coupon.active)
                     %td=coupon.currency_id ? coupon.currency.leading_symbol : ''
                     %td
-                      =link_to t('views.general.view'), coupon_url(coupon), class: 'btn btn-primary btn-xs'
+                      =link_to t('views.general.view'), coupon_path(coupon), class: 'btn btn-primary btn-xs'
+                      =link_to t('views.general.edit'), edit_coupon_path(coupon), class: 'btn btn-primary btn-xs'
                       =link_to t('views.general.delete'), coupon, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-secondary btn-xs'
 
             =will_paginate @coupons, renderer: BootstrapPagination::Rails

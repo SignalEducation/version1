@@ -349,6 +349,7 @@ en:
         redeem_by: Redeem By (Optional)
         redeem_by_placeholder: Redeem By Specific Date
         exam_body_id: Exam Body Restriction
+        plans_interval: Plans Interval
         monthly_interval: Monthly
         quarterly_interval: Quarterly
         yearly_interval: Yearly
