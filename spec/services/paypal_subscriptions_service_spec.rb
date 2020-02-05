@@ -46,6 +46,55 @@ describe PaypalSubscriptionsService, type: :service do
     end
   end
 
+  describe '#un_cancel' do
+    let(:pending_agreement_dbl) {
+      double(
+        'Agreement',
+        token: 'tok_FDAF343DFDA',
+        links: [double( rel: 'approval_url', href: 'https://example.com/approval' )],
+        state: 'Pending'
+      )
+    }
+
+    let(:suspended_agreement_dbl) {
+      double(
+        'Agreement',
+        token: 'tok_FDAF343DFDA',
+        links: [double( rel: 'approval_url', href: 'https://example.com/approval' )],
+        state: 'Suspended'
+      )
+    }
+
+    it 'raises an error unless the associated Billing Agreement is SUSPENDED' do
+      allow(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(pending_agreement_dbl)
+
+      expect { subject.un_cancel }.to raise_error(Learnsignal::SubscriptionError)
+    end
+
+    it 'calls #re_activate on the Agreement' do
+      allow(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(suspended_agreement_dbl)
+      expect(suspended_agreement_dbl).to receive(:re_activate).and_return(true)
+
+      subject.un_cancel
+    end
+
+    it 'raises an error if #re_activate fails' do
+      allow(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(suspended_agreement_dbl)
+      allow(suspended_agreement_dbl).to receive(:re_activate).and_return(false)
+
+      expect { subject.un_cancel }.to raise_error(Learnsignal::SubscriptionError)
+    end
+
+    it 'updates the subscription if #re_activate succeeds' do
+      allow(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(suspended_agreement_dbl)
+      allow(suspended_agreement_dbl).to receive(:re_activate).and_return(true)
+      expect(subscription).to receive(:update!)
+      expect(subscription).to receive(:restart)
+
+      subject.un_cancel
+    end
+  end
+
   describe '#create_and_return_subscription' do
     let(:agreement_dbl) {
       double(
@@ -92,13 +141,13 @@ describe PaypalSubscriptionsService, type: :service do
 
     it 'calls FIND on an instance of PayPal::SDK::REST::DataTypes::Agreement::Plan' do
       expect(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(@dbl)
-      allow(@dbl).to receive(:cancel).and_return(true)
+      allow(@dbl).to receive(:suspend).and_return(true)
 
       subject.cancel_billing_agreement
     end
 
-    it 'calls CANCEL on an instance of PayPal::SDK::REST::DataTypes::Agreement::Plan' do
-      expect(@dbl).to receive(:cancel).and_return(true)
+    it 'calls SUSPEND on an instance of PayPal::SDK::REST::DataTypes::Agreement::Plan' do
+      expect(@dbl).to receive(:suspend).and_return(true)
       allow(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(@dbl)
 
       subject.cancel_billing_agreement
@@ -106,7 +155,7 @@ describe PaypalSubscriptionsService, type: :service do
 
     it 'updates the state of the subscription to PENDING_CANCELLATION' do
       allow(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(@dbl)
-      allow(@dbl).to receive(:cancel).and_return(true)
+      allow(@dbl).to receive(:suspend).and_return(true)
       new_subscription = create(:subscription, state: 'active')
 
       PaypalSubscriptionsService.new(new_subscription).cancel_billing_agreement
@@ -158,6 +207,61 @@ describe PaypalSubscriptionsService, type: :service do
         new_subscription.reload
         expect(new_subscription.state).to eq 'cancelled'
       end
+    end
+  end
+
+  describe '#update_next_billing_date' do
+    let(:billing_date) { Time.zone.now + 1.week }
+    let(:agreement_dbl) {
+      double(
+        'Agreement',
+        agreement_details: double(next_billing_date: billing_date)
+      )
+    }
+
+    let(:new_subscription) { create(:subscription, paypal_subscription_guid: 'test_guid') }
+    let(:new_subject) { PaypalSubscriptionsService.new(new_subscription) }
+
+    it 'returns NIL unless there is a paypal_subscription_guid' do
+      expect(subject.update_next_billing_date).to be_nil
+    end
+
+    it 'updates the subscription' do
+      allow(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(agreement_dbl)
+      expect(new_subscription).to receive(:update!).with(
+        next_renewal_date: billing_date
+      ).and_return(true)
+
+      new_subject.update_next_billing_date
+    end
+  end
+
+  describe '#set_cancellation_date' do
+    let(:billing_date) { Time.zone.now + 1.week }
+    let(:agreement_dbl) {
+      double(
+        'Agreement',
+        state: 'Suspended',
+        agreement_details: double(last_payment_date: billing_date)
+      )
+    }
+    let(:new_subscription) { create(:subscription, paypal_subscription_guid: 'test_guid') }
+    let(:new_subject) { PaypalSubscriptionsService.new(new_subscription) }
+
+    before :each do
+      allow(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(agreement_dbl)
+    end
+
+    it 'updates the subscription with the Agreement state' do
+      expect(new_subscription).to receive(:update).with(paypal_status: 'Suspended')
+
+      new_subject.set_cancellation_date
+    end
+
+    it 'calls the PaypalSubscriptionCancellationWorker' do
+      expect(PaypalSubscriptionCancellationWorker).to receive(:perform_at)
+
+      new_subject.set_cancellation_date
     end
   end
 

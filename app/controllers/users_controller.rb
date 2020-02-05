@@ -2,7 +2,7 @@
 
 class UsersController < ApplicationController
   before_action :logged_in_required
-  before_action { ensure_user_has_access_rights(%w[user_management_access]) }
+  before_action(except: :udpate_hubspot) { ensure_user_has_access_rights(%w[user_management_access]) }
   before_action :management_layout
   before_action :get_variables, except: %i[user_personal_details user_subscription_status
                                            user_activity_details user_purchases_details
@@ -10,6 +10,7 @@ class UsersController < ApplicationController
   before_action :get_user_variables, only: %i[user_personal_details user_subscription_status
                                               user_activity_details user_purchases_details
                                               user_courses_status user_referral_details]
+  skip_before_action :verify_authenticity_token, only: :udpate_hubspot
 
   def index
     @users = User.page(params[:page]).
@@ -151,6 +152,16 @@ class UsersController < ApplicationController
     redirect_to users_url
   end
 
+  def udpate_hubspot
+    response =
+      HubSpot::Contacts.new.batch_create(
+        Array(params[:user_id]),
+        format_hubspot_properties(params[:custom_data])
+      )
+
+    render json: { message: response.body }, status: response.code.to_i
+  end
+
   protected
 
   def allowed_params
@@ -172,5 +183,9 @@ class UsersController < ApplicationController
     @user = User.find_by(id: params[:user_id])
 
     seo_title_maker("#{@user.full_name} - Details", '', true)
+  end
+
+  def format_hubspot_properties(data)
+    data.to_unsafe_h.map { |k, v| { property: k, value: v } }
   end
 end

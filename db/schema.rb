@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_16_090622) do
+ActiveRecord::Schema.define(version: 2020_01_27_154941) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -1316,6 +1316,7 @@ ActiveRecord::Schema.define(version: 2020_01_16_090622) do
     t.string "completion_guid"
     t.uuid "ahoy_visit_id"
     t.bigint "cancelled_by_id"
+    t.integer "kind"
     t.index ["cancelled_by_id"], name: "index_subscriptions_on_cancelled_by_id"
     t.index ["changed_from_id"], name: "index_subscriptions_on_changed_from_id"
   end

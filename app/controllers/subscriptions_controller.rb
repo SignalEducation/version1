@@ -6,6 +6,7 @@ class SubscriptionsController < ApplicationController
   before_action :logged_in_required
   before_action { ensure_user_has_access_rights(%w[student_user]) }
   before_action :set_subscription, except: %i[new create personal_upgrade_complete]
+  before_action :set_variables, only: :new
   before_action :set_flash, :redirects_conditions, only: :new
 
   def show
@@ -13,10 +14,6 @@ class SubscriptionsController < ApplicationController
   end
 
   def new
-    @plans        = get_relevant_subscription_plans
-    @subscription = Subscription.new(user_id: current_user.id,
-                                     subscription_plan_id: filtered_plan.id)
-
     seo_title_maker('Course Membership Payment | LearnSignal', 'Pay monthly, quarterly or yearly for learnsignal and access professional course materials, expert notes and corrected questions anytime, anywhere.', false)
   rescue Learnsignal::SubscriptionError => e
     flash[:error] = e.message
@@ -78,19 +75,14 @@ class SubscriptionsController < ApplicationController
   end
 
   def un_cancel
-    if @subscription&.stripe_status == 'canceled-pending'
-      @subscription.un_cancel
-
-      if @subscription&.errors&.count&.zero?
-        flash[:success] = I18n.t('controllers.subscriptions.un_cancel.flash.success')
-      else
-        Rails.logger.error 'ERROR: SubscriptionsController#un_cancel - something went wrong.'
-        flash[:error] = I18n.t('controllers.subscriptions.un_cancel.flash.error')
-      end
+    if @subscription.pending_cancellation? && @subscription.un_cancel
+      flash[:success] = I18n.t('controllers.subscriptions.un_cancel.flash.success')
     else
       flash[:error] = I18n.t('controllers.subscriptions.un_cancel.flash.error')
     end
-
+  rescue Learnsignal::SubscriptionError => e
+    flash[:error] = e.message
+  ensure
     redirect_to account_url(anchor: 'account-info')
   end
 
@@ -190,6 +182,13 @@ class SubscriptionsController < ApplicationController
     end
   end
 
+  def set_variables
+    @plans        = get_relevant_subscription_plans
+    @kind         = current_user.subscriptions.for_exam_body(params[:exam_body_id]).where(state: %w[canceled cancelled]).empty? ? :new_subscription : :reactivation
+    @subscription = Subscription.new(user_id: current_user.id,
+                                     subscription_plan_id: filtered_plan&.id)
+  end
+
   def set_flash
     return if params[:flash].blank?
 
@@ -197,8 +196,10 @@ class SubscriptionsController < ApplicationController
   end
 
   def subscription_params
-    params.require(:subscription).permit(:user_id, :subscription_plan_id, :stripe_token, :terms_and_conditions,
-                                         :hidden_coupon_code, :use_paypal, :completion_guid)
+    params.require(:subscription).permit(
+      :user_id, :subscription_plan_id, :stripe_token, :terms_and_conditions,
+      :hidden_coupon_code, :use_paypal, :completion_guid, :kind
+    )
   end
 
   def set_subscription

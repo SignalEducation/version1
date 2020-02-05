@@ -7,7 +7,10 @@ module HubSpot
       path            = '/contacts/v1/contact'
       user_properties = Parsers::Contact.new.properties(user)
 
-      service(path, 'post', properties: user_properties)
+      response = service(path, 'post', properties: user_properties)
+
+      return response if response.code == '200'
+      Airbrake::AirbrakeLogger.new(Logger.new(STDOUT)).error response.body
     end
 
     def batch_create(users_ids, custom_data = {})
@@ -15,7 +18,10 @@ module HubSpot
       path             = '/contacts/v1/contact/batch/'
       users_properties = Parsers::Contact.new.batch_properties(users, custom_data)
 
-      service(path, 'post', users_properties)
+      response = service(path, 'post', users_properties)
+
+      return response if response.code == '202'
+      Airbrake::AirbrakeLogger.new(Logger.new(STDOUT)).error response.body
     end
 
     private

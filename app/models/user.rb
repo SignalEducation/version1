@@ -162,17 +162,16 @@ class User < ApplicationRecord
   end
 
   def self.get_and_verify(email_verification_code, country_id)
-    time_now = Proc.new{Time.now}.call
-    user = User.where(email_verification_code: email_verification_code, email_verified_at: nil).first
-    if user
-      user.update_attributes(account_activated_at: time_now, account_activation_code: nil, active: true) unless user.active
-      user.update_attributes(email_verified_at: time_now, email_verification_code: nil, email_verified: true, country_id: country_id)
-      return user
-    end
+    time_now = proc { Time.zone.now }.call
+    user = User.find_by(email_verification_code: email_verification_code, email_verified_at: nil)
+    return unless user
+
+    user.update_attributes(account_activated_at: time_now, account_activation_code: nil, active: true) unless user.active
+    user.update_attributes(email_verified_at: time_now, email_verification_code: nil, email_verified: true, country_id: country_id)
+    user
   end
 
   def self.start_password_reset_process(the_email_address, root_url)
-
     return unless the_email_address.to_s.length > 5 # a@b.co
 
     user = User.find_by(email: the_email_address.to_s)
@@ -188,13 +187,14 @@ class User < ApplicationRecord
   end
 
   def self.resend_pw_reset_email(user_id, root_url)
-    user = User.where(id: user_id).first
-    if user && user.active && user.email_verified && user.password_reset_requested_at && user.password_reset_token && !user.password_change_required?
-      #Send reset password email from Mandrill
-      MandrillWorker.perform_async(user.id, 'password_reset_email', "#{root_url}/reset_password/#{user.password_reset_token}")
-    else
+    user = User.find(user_id)
+    return if user.nil?
 
+    if user.sactive && user.email_verified && user.password_reset_requested_at &&
+       user.password_reset_token && !user.password_change_required?
+      MandrillWorker.perform_async(user.id, 'password_reset_email', "#{root_url}/reset_password/#{user.password_reset_token}")
     end
+
     user
   end
 
@@ -223,14 +223,14 @@ class User < ApplicationRecord
   def self.sort_by(choice)
     if SORT_OPTIONS.include?(choice)
       case choice
-        when 'name'
-          sort_by_name
-        when 'email'
-          sort_by_email
-        when 'created'
-          sort_by_recent_registration
-        else # also covers 'user_group'
-          all_in_order
+      when 'name'
+        sort_by_name
+      when 'email'
+        sort_by_email
+      when 'created'
+        sort_by_recent_registration
+      else # also covers 'user_group'
+        all_in_order
       end
     else
       all_in_order
@@ -238,12 +238,12 @@ class User < ApplicationRecord
   end
 
   def self.to_csv(options = {})
-    attributes = %w{first_name last_name email id student_number}
+    attributes = %w[first_name last_name email id student_number]
     CSV.generate(options) do |csv|
       csv << attributes
 
-      all.each do |user|
-        csv << attributes.map{ |attr| user.send(attr) }
+      find_each do |user|
+        csv << attributes.map { |attr| user.send(attr) }
       end
     end
   end
@@ -347,15 +347,11 @@ class User < ApplicationRecord
                            email_verification_code: verification_code, free_trial: true,
                            user_group_id: user_group.id)
 
-
     if user.valid? && user.save
       stripe_customer = Stripe::Customer.create(email: user.email)
       user.update_column(:stripe_customer_id, stripe_customer.id)
       MandrillWorker.perform_async(user.id, 'csv_webinar_invite', "#{root_url}/user_verification/#{user.email_verification_code}")
-    else
-
     end
-
   end
 
   ### INSTANCE METHODS =========================================================
@@ -449,7 +445,7 @@ class User < ApplicationRecord
   end
 
   def subscriptions_for_exam_body(exam_body_id)
-    subscriptions.for_exam_body(exam_body_id).all_in_order
+    subscriptions.includes(:subscription_plan).for_exam_body(exam_body_id).all_in_order
   end
 
   def active_subscriptions_for_exam_body(exam_body_id)
@@ -457,16 +453,7 @@ class User < ApplicationRecord
   end
 
   def viewable_subscriptions
-    subs = []
-    ExamBody.where(active: true).each do |body|
-      compliant_subs = subscriptions.
-                         for_exam_body(body.id).
-                         where.not(state: :pending).
-                         order(created_at: :desc)
-
-      subs << compliant_subs.first if compliant_subs.any?
-    end
-    subs
+    last_subscription_per_exam.where.not(state: :pending)
   end
 
   def active_subscription_for_exam_body?(exam_body_id)
@@ -485,30 +472,26 @@ class User < ApplicationRecord
     invoices.where(payment_attempted: true).where.not(next_payment_attempt_at: nil).last
   end
 
-  def analytics_exam_body_plan_data
-    user_plans = ''
-    plans_type = ''
-    plans_status = ''
-    ExamBody.all_active.each_with_index do |body, counter|
-      if subscriptions_for_exam_body(body.id).any?
-        user_plans << subscriptions_for_exam_body(body.id).last.subscription_plan.interval_name + (counter == 1 ? '' : ' - ')
-        plans_type << subscriptions_for_exam_body(body.id).last.subscription_plan.exam_body.name + (counter == 1 ? '' : ' - ')
-        plans_status << subscriptions_for_exam_body(body.id).last.state + (counter == 1 ? '' : ' - ')
-      end
+  def analytics_exam_body_plan_data(user_plans = '', plans_type = '', plans_status = '')
+    last_subscription_per_exam.each_with_index do |sub, counter|
+      user_plans   << sub.subscription_plan.interval_name + (counter == 1 ? '' : ' - ')
+      plans_type   << sub.subscription_plan.exam_body.name + (counter == 1 ? '' : ' - ')
+      plans_status << sub.state + (counter == 1 ? '' : ' - ')
     end
-    return user_plans, plans_type, plans_status
+
+    [user_plans, plans_type, plans_status]
   end
 
   def enrolled_course?(course_id)
-    #Returns true if an active enrollment exists for this user/course
+    # Returns true if an active enrollment exists for this user/course
 
-    self.enrollments.all_active.map(&:subject_course_id).include?(course_id)
+    enrollments.all_active.map(&:subject_course_id).include?(course_id)
   end
 
   def enrolled_in_course?(course_id)
-    #Returns true if a non-expired active enrollment exists for this user/course
+    # Returns true if a non-expired active enrollment exists for this user/course
 
-    self.enrollments.all_valid.map(&:subject_course_id).include?(course_id)
+    enrollments.all_valid.map(&:subject_course_id).include?(course_id)
   end
 
   def referred_user?
@@ -518,26 +501,25 @@ class User < ApplicationRecord
   # Orders/Products
   def valid_order_ids
     order_ids = []
-    self.orders.each do |order|
-      if %w(paid).include?(order.stripe_status)
-        order_ids << order.id
-      end
+    orders.each do |order|
+      order_ids << order.id if ['paid'].include?(order.stripe_status)
     end
-    return order_ids
+
+    order_ids
   end
 
   def valid_orders?
-    self.valid_order_ids.any?
+    valid_order_ids.any?
   end
 
   def purchased_products
-    if self.valid_orders?
-      ids = self.valid_order_ids
-      orders = Order.where(id: ids)
-      product_ids = orders.map(&:product_id)
-      products = Product.where(id: product_ids)
-      products
-    end
+    return unless valid_orders?
+
+    ids         = valid_order_ids
+    orders      = Order.where(id: ids)
+    product_ids = orders.map(&:product_id)
+    products    = Product.where(id: product_ids)
+    products
   end
 
   def purchased_cbe?(cbe_id)
@@ -546,9 +528,9 @@ class User < ApplicationRecord
 
   def change_the_password(options)
     if options[:password] == options[:password_confirmation] &&
-            options[:password].to_s != '' &&
-            self.valid_password?(options[:current_password].to_s) &&
-            options[:current_password].to_s != ''
+       options[:password].to_s != '' &&
+       valid_password?(options[:current_password].to_s) &&
+       options[:current_password].to_s != ''
       update(
         password: options[:password],
         password_confirmation: options[:password_confirmation]
@@ -563,11 +545,9 @@ class User < ApplicationRecord
   end
 
   def send_verification_email(url)
-    MandrillWorker.perform_async(
-      id,
-      'send_verification_email',
-      url
-    ) unless Rails.env.test?
+    return if Rails.env.test?
+
+    MandrillWorker.perform_async(id, 'send_verification_email', url)
   end
 
   def create_stripe_customer
@@ -591,26 +571,26 @@ class User < ApplicationRecord
   end
 
   def activate_user
-    update(active: true, account_activated_at: Proc.new{Time.now}.call, account_activation_code: nil)
+    update(active: true, account_activated_at: proc { Time.zone.now }.call, account_activation_code: nil)
   end
 
   def validate_user
-    self.email_verified = true
-    self.email_verified_at = Proc.new{Time.now}.call
+    self.email_verified           = true
+    self.email_verified_at        = proc { Time.zone.now }.call
     self.email_verification_code = nil
   end
 
   def generate_email_verification_code
     self.email_verified = false
     self.email_verified_at = nil
-    self.email_verification_code = ApplicationController::generate_random_code(20)
+    self.email_verification_code = ApplicationController.generate_random_code(20)
   end
 
   def create_referral
-    unless self.referral_code
-      new_referral_code = ReferralCode.new
-      new_referral_code.generate_referral_code(self.id)
-    end
+    return if referral_code
+
+    new_referral_code = ReferralCode.new
+    new_referral_code.generate_referral_code(id)
   end
 
   def destroyable?
@@ -625,12 +605,12 @@ class User < ApplicationRecord
   end
 
   def full_name
-    self.first_name.titleize + ' ' + self.last_name.gsub('O\'','O\' ').gsub('O\' ','O\'')
+    first_name.titleize + ' ' + last_name.gsub('O\'', 'O\' ').gsub('O\' ', 'O\'')
   end
 
   def get_currency(country)
     if currency_id.present?
-      return currency
+      currency
     elsif existing_sub = subscriptions.all_stripe.not_pending.first
       existing_sub.subscription_plan&.currency || country.currency
     elsif existing_order = orders.all_stripe.first
@@ -641,16 +621,16 @@ class User < ApplicationRecord
   end
 
   def this_hour
-    self.created_at > Time.now.beginning_of_hour
+    created_at > Time.now.beginning_of_hour
   end
 
   def subject_course_user_log_course_ids
-    self.subject_course_user_logs.map(&:subject_course_id)
+    subject_course_user_logs.map(&:subject_course_id)
   end
 
   def enrolled_courses
     course_names = []
-    self.enrollments.each do |enrollment|
+    enrollments.each do |enrollment|
       course_names << enrollment.subject_course.name if enrollment.subject_course
     end
     course_names
@@ -658,7 +638,7 @@ class User < ApplicationRecord
 
   def valid_enrolled_courses
     course_names = []
-    self.enrollments.all_valid.each do |enrollment|
+    enrollments.all_valid.each do |enrollment|
       course_names << enrollment.subject_course.name if enrollment.subject_course
     end
     course_names
@@ -689,36 +669,36 @@ class User < ApplicationRecord
   end
 
   def enrolled_course_ids
-    self.enrollments.map(&:subject_course_id)
+    enrollments.map(&:subject_course_id)
   end
 
   def valid_enrollments_in_sitting_order
-    self.enrollments.for_active_course.by_sitting_date
+    enrollments.for_active_course.by_sitting_date
   end
 
   def expired_enrollments_in_sitting_order
-    self.enrollments.for_active_course.by_sitting_date
+    enrollments.for_active_course.by_sitting_date
   end
 
   def active_enrollments_in_sitting_order
-    self.enrollments.all_active.by_sitting_date
+    enrollments.all_active.by_sitting_date
   end
 
   def next_enrollment
-    self.valid_enrollments_in_sitting_order.first
+    valid_enrollments_in_sitting_order.first
   end
 
   def next_exam_date
-    self.next_enrollment.days_until_exam
+    next_enrollment.days_until_exam
   end
 
   def completed_course_module_element(cme_id)
-    cmeuls = self.completed_course_module_element_user_logs.where(course_module_element_id: cme_id)
+    cmeuls = completed_course_module_element_user_logs.where(course_module_element_id: cme_id)
     cmeuls.any?
   end
 
   def started_course_module_element(cme_id)
-    cmeuls = self.incomplete_course_module_element_user_logs.where(course_module_element_id: cme_id)
+    cmeuls = incomplete_course_module_element_user_logs.where(course_module_element_id: cme_id)
     cmeuls.any?
   end
 
@@ -727,18 +707,21 @@ class User < ApplicationRecord
   end
 
   def last_subscription
-    subscriptions.where(state: %i[incomplete active past_due canceled canceled-pending pending_cancellation]).in_reverse_created_order.first
+    subscriptions.
+      where(state: %i[incomplete active past_due canceled cancelled canceled-pending pending_cancellation]).
+      in_reverse_created_order.
+      first
   end
 
   private
 
   def add_guid
     self.guid ||= ApplicationController.generate_random_code(10)
-    Rails.logger.debug "DEBUG: User#add_guid - FINISH at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}"
+    Rails.logger.debug "DEBUG: User#add_guid - FINISH at #{proc { Time.zone.now }.call.strftime('%H:%M:%S.%L')}"
   end
 
   def create_referral_code_record
-    self.create_referral_code
+    create_referral_code
   end
 
   def set_additional_user_attributes
@@ -748,13 +731,13 @@ class User < ApplicationRecord
   end
 
   def update_stripe_customer
-    unless Rails.env.test?
-      if self.saved_change_to_email?
-        Rails.logger.debug "DEBUG: Updating stripe customer object #{self.stripe_customer_id}"
-        stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
-        stripe_customer.email = self.email
-        stripe_customer.save
-      end
+    return if Rails.env.test?
+
+    if saved_change_to_email?
+      Rails.logger.debug "DEBUG: Updating stripe customer object #{stripe_customer_id}"
+      stripe_customer = Stripe::Customer.retrieve(stripe_customer_id)
+      stripe_customer.email = email
+      stripe_customer.save
     end
   end
 
@@ -771,5 +754,10 @@ class User < ApplicationRecord
     return if saved_changes.include?(:last_request_at) || Rails.env.test?
 
     HubSpotContactWorker.perform_async(id)
+  end
+
+  def last_subscription_per_exam
+    ids = subscriptions.joins(:exam_body).group('exam_bodies.name').maximum(:id).values
+    subscriptions.includes(subscription_plan: :exam_body).where(id: ids)
   end
 end

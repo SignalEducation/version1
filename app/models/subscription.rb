@@ -36,10 +36,13 @@ class Subscription < ApplicationRecord
 
   delegate :currency, to: :subscription_plan
 
-  # Constants
+  # constants
   STATUSES        = %w[incomplete active past_due canceled canceled-pending pending_cancellation incomplete_expired].freeze
   VALID_STATES    = %w[active past_due canceled-pending pending_cancellation paused].freeze
   PAYPAL_STATUSES = %w[Pending Active Suspended Cancelled Expired].freeze
+
+  # enums
+  enum kind: { new_subscription: 0, reactivation: 1, change_plan: 2 }
 
   # relationships
   belongs_to :user, inverse_of: :subscriptions
@@ -83,7 +86,7 @@ class Subscription < ApplicationRecord
   scope :in_created_order,         -> { order(:created_at) }
   scope :in_reverse_created_order, -> { order(created_at: :desc) }
   scope :all_of_status,            ->(status) { where(stripe_status: status) }
-  scope :all_active,               -> { with_states(:active, :paused, :errored, :pending_cancellation) }
+  scope :all_active,               -> { with_states(:active, :past_due, :paused, :errored, :pending_cancellation) }
   scope :all_valid,                -> { where(state: VALID_STATES) }
   scope :not_pending,              -> { where.not(state: 'pending') }
   scope :this_week,                -> { where(created_at: Time.zone.now.beginning_of_week..Time.zone.now.end_of_week) }
@@ -112,6 +115,10 @@ class Subscription < ApplicationRecord
 
     event :cancel_pending do
       transition active: :pending_cancellation
+    end
+
+    event :mark_past_due do
+      transition active: :past_due
     end
 
     event :cancel do
@@ -155,7 +162,8 @@ class Subscription < ApplicationRecord
       end
     end
 
-    after_transition [:active, :paused] => :pending_cancellation do |subscription, _transition|
+    after_transition %i[active paused] => :pending_cancellation do |subscription, _transition|
+      subscription.schedule_paypal_cancellation if subscription.paypal?
       subscription.update(cancelled_at: Time.zone.now)
     end
 
@@ -342,7 +350,7 @@ class Subscription < ApplicationRecord
   end
 
   def schedule_paypal_cancellation
-    self.cancel_pending if self.active?
+    cancel_pending if active?
     PaypalSubscriptionsService.new(self).set_cancellation_date
   end
 
@@ -383,22 +391,15 @@ class Subscription < ApplicationRecord
   end
 
   def un_cancel
-    stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
-    latest_subscription = stripe_customer.subscriptions.retrieve(self.stripe_guid)
+    stripe_customer = Stripe::Customer.retrieve(stripe_customer_id)
+    latest_subscription = stripe_customer.subscriptions.retrieve(stripe_guid)
     latest_subscription.cancel_at_period_end = false
     response = latest_subscription.save
-    if !response.cancel_at_period_end && response.canceled_at.nil?
-      self.update_attributes(stripe_status: 'active',
-                             terms_and_conditions: true,
-                             cancelled_at: nil,
-                             cancellation_reason: nil,
-                             cancellation_note: nil,
-                             cancelled_by_id: nil)
-      self.restart
-    else
-      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
-    end
-    self
+    return false unless !response.cancel_at_period_end && response.canceled_at.nil?
+
+    update(stripe_status: 'active', terms_and_conditions: true, cancelled_at: nil,
+           cancellation_reason: nil, cancellation_note: nil, cancelled_by_id: nil)
+    restart
   end
 
   def update_invoice_payment_success

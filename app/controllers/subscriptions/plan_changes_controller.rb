@@ -4,7 +4,7 @@ module Subscriptions
   class PlanChangesController < ApplicationController
     before_action :logged_in_required
     before_action do
-      ensure_user_has_access_rights(%w(student_user))
+      ensure_user_has_access_rights(%w[student_user])
     end
     before_action :set_subscription
 
@@ -23,7 +23,7 @@ module Subscriptions
 
     def create
       send("change_#{@subscription.subscription_type}_subscription",
-           @subscription, plan_change_params[:subscription_plan_id].to_i)
+           @subscription, plan_change_params[:subscription_plan_id].to_i, params[:subscription][:kind])
     rescue Learnsignal::SubscriptionError => e
       if request.xhr?
         render json: { subscription_id: @subscription&.id,
@@ -43,13 +43,14 @@ module Subscriptions
 
     private
 
-    def change_stripe_subscription(subscription, plan_id)
+    def change_stripe_subscription(subscription, plan_id, kind)
       sub_service = StripeSubscriptionService.new(subscription)
       @subscription, data = sub_service.change_plan(plan_id)
 
       if data[:status] == :ok
         retrieved_subscription = StripeSubscriptionService.new(@subscription).retrieve_subscription
         @subscription.un_cancel if retrieved_subscription[:cancel_at_period_end]
+        @subscription.update(kind: kind)
         render 'subscriptions/create'
       else
         render json: { subscription_id: @subscription.id,
@@ -57,10 +58,10 @@ module Subscriptions
       end
     end
 
-    def change_paypal_subscription(subscription, plan_id)
+    def change_paypal_subscription(subscription, plan_id, kind)
       @subscription =
         PaypalSubscriptionsService.new(subscription).change_plan(plan_id)
-
+      @subscription.update(kind: kind)
       redirect_to @subscription.paypal_approval_url
     end
 
@@ -70,7 +71,7 @@ module Subscriptions
     end
 
     def plan_change_params
-      params.require(:subscription).permit(:subscription_plan_id)
+      params.require(:subscription).permit(:subscription_plan_id, :kind)
     end
 
     def set_subscription
