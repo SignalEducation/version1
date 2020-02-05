@@ -1,3 +1,5 @@
+-persisted = @coupon.persisted?
+
 =form_for(@coupon, html: {class: 'form-horizontal', role: 'form'}) do |f|
   .box-item.form-box
     =render partial: '/layouts/error_messages', locals: {thing: @coupon, message: nil}
@@ -11,16 +13,16 @@
         .form-group
           =f.label :code, t('views.coupons.form.code')
           .input-group.input-group-lg
-            =f.text_field :code, placeholder: t('views.coupons.form.code_placeholder'), class: 'form-control'
+            =f.text_field :code, placeholder: t('views.coupons.form.code_placeholder'), class: 'form-control', readonly: persisted
       .col-sm-6
         .form-group
           =f.label :max_redemptions, t('views.coupons.form.max_redemptions')
           .input-group.input-group-lg
-            =f.text_field :max_redemptions, placeholder: t('views.coupons.form.max_redemptions_placeholder'), class: 'form-control'
+            =f.text_field :max_redemptions, placeholder: t('views.coupons.form.max_redemptions_placeholder'), class: 'form-control', readonly: persisted
         .form-group
           =f.label :redeem_by, t('views.coupons.form.redeem_by')
           .input-group.input-group-lg
-            =f.text_field :redeem_by, placeholder: t('views.exam_sittings.form.date_placeholder'), class: 'form-control', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}, id: 'datetimepicker'
+            =f.text_field :redeem_by, placeholder: t('views.exam_sittings.form.date_placeholder'), class: 'form-control', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}, id: 'datetimepicker', readonly: persisted
     .row
       .col-sm-6
         .form-group
@@ -56,17 +58,17 @@
         .form-group
           =f.label :percent_off, t('views.coupons.form.percent_off')
           .input-group.input-group-lg
-            =f.text_field :percent_off, placeholder: t('views.coupons.form.percent_off_placeholder'), class: 'form-control'
+            =f.text_field :percent_off, placeholder: t('views.coupons.form.percent_off_placeholder'), class: 'form-control', readonly: persisted
       .col-sm-6
         .form-group
           =f.label :amount_off, t('views.coupons.form.amount_off')
           .input-group.input-group-lg
-            =f.text_field :amount_off, placeholder: t('views.coupons.form.amount_off_placeholder'), class: 'form-control'
+            =f.text_field :amount_off, placeholder: t('views.coupons.form.amount_off_placeholder'), class: 'form-control', readonly: persisted
         #currency_select
           .form-group
             =f.label :currency_id, t('views.coupons.form.currency_id')
             .input-group.input-group-lg
-              =f.collection_select :currency_id, @currencies, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
+              =f.collection_select :currency_id, @currencies, :id, :name, { include_blank: t('views.general.select') }, { class: 'form-control', readonly: persisted }
 
       .col-sm-12
         %hr/
@@ -74,23 +76,20 @@
           .form-group
             =f.label :duration, t('views.coupons.form.duration')
             .input-group.input-group-lg
-              =f.select :duration, Coupon::DURATIONS, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
+              =f.select :duration, Coupon::DURATIONS, { include_blank: t('views.general.select') }, { class: 'form-control custom-select', disabled: persisted }
         .col-sm-6
           #duration_in_months_date
             .form-group
               =f.label :duration_in_months, t('views.coupons.form.duration_in_months')
               .input-group.input-group-lg
-                =f.text_field :duration_in_months, placeholder: t('views.coupons.form.duration_in_months_placeholder'), class: 'form-control'
-
+                =f.text_field :duration_in_months, placeholder: t('views.coupons.form.duration_in_months_placeholder'), class: 'form-control', readonly: persisted
 
   .row
     .col-sm-12
       =f.submit t('views.general.save'), class: 'btn btn-primary'
       =link_to t('views.general.cancel'), coupons_path, class: 'btn btn-secondary'
 
-
 :javascript
-
   $(function () {
     $('#datetimepicker').datetimepicker();
       format: 'DD/MM/YYYY'
@@ -102,8 +101,6 @@
   $( document ).ready(function() {
     $("#currency_select").hide();
     $("#duration_in_months_date").hide();
-
-
 
     if (couponDuration.val() == 'repeating') {
       $("#duration_in_months_date").show();

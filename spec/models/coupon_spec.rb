@@ -51,10 +51,10 @@ describe Coupon do
   end
 
   describe 'callbacks' do
-    it { should callback(:check_dependencies).before(:destroy) }
     it { should callback(:create_on_stripe).before(:create) }
-    it { should callback(:activate).after(:create) }
     it { should callback(:delete_on_stripe).before(:destroy) }
+    it { should callback(:update_on_stripe).after(:update) }
+    it { should callback(:activate).after(:create) }
   end
 
   describe 'scopes' do
@@ -68,7 +68,6 @@ describe Coupon do
   end
 
   describe 'instance methods' do
-    it { should respond_to(:destroyable?) }
     it { should respond_to(:available_payment_intervals) }
     it { should respond_to(:amount_or_percent_off) }
     it { should respond_to(:duration_months_if_repeating) }

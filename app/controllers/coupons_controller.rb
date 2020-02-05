@@ -6,8 +6,8 @@ class CouponsController < ApplicationController
     ensure_user_has_access_rights(%w[stripe_management_access])
   end
   before_action :management_layout
-  before_action :set_coupon, only: %i[show destroy]
-  before_action :form_variables, only: %i[new create]
+  before_action :set_coupon, only: %i[show edit update destroy]
+  before_action :form_variables, only: %i[new edit create]
 
   def index
     @coupons = Coupon.paginate(per_page: 50, page: params[:page]).all_in_order
@@ -29,6 +29,16 @@ class CouponsController < ApplicationController
       redirect_to coupons_url
     else
       render action: :new
+    end
+  end
+
+  def update
+    if @coupon.update(allowed_params)
+      flash[:success] = I18n.t('controllers.coupons.update.flash.success')
+      redirect_to coupons_url
+    else
+      flash[:error] = I18n.t('controllers.coupons.update.flash.error')
+      render action: :edit
     end
   end
 

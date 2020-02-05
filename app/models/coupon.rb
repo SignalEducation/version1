@@ -27,8 +27,8 @@ class Coupon < ApplicationRecord
   # relationships
   belongs_to :currency, optional: true
   belongs_to :exam_body, optional: true
-  has_many :charges
-  has_many :subscriptions
+  has_many :charges, dependent: :restrict_with_error
+  has_many :subscriptions, dependent: :restrict_with_error
 
   # validation
   validates :name, presence: true, uniqueness: true, length: { maximum: 255 }
@@ -43,10 +43,10 @@ class Coupon < ApplicationRecord
   validate :currency_if_amount_off_set
 
   # callbacks
-  before_destroy :check_dependencies
-  before_create :create_on_stripe
-  after_create :activate
+  before_create  :create_on_stripe
   before_destroy :delete_on_stripe
+  after_create   :activate
+  after_update   :update_on_stripe
 
   # scopes
   scope :all_in_order, -> { order(:name) }
@@ -98,10 +98,6 @@ class Coupon < ApplicationRecord
 
   # instance methods
 
-  def destroyable?
-    true
-  end
-
   def available_payment_intervals
     intervals = []
     intervals << 'Monthly' if monthly_interval
@@ -132,14 +128,11 @@ class Coupon < ApplicationRecord
     update(active: false) if stripe_coupon && !stripe_coupon[:valid]
   end
 
-  protected
-
-  def check_dependencies
-    return if destroyable?
-
-    errors.add(:base, I18n.t('models.general.dependencies_exist'))
-    false
+  def update_on_stripe
+    Stripe::Coupon.update(code, name: name)
   end
+
+  protected
 
   def activate
     return if Rails.env.test?
