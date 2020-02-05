@@ -1,36 +1,27 @@
-
 require 'rails_helper'
 
 describe CouponsController, type: :controller do
-
-  let(:stripe_management_user_group) { FactoryBot.create(:stripe_management_user_group) }
-  let(:system_requirements_user) { FactoryBot.create(:system_requirements_user, user_group_id: stripe_management_user_group.id) }
-
-  let!(:coupon_1) { FactoryBot.create(:coupon, active: true) }
-  let!(:coupon_2) { FactoryBot.create(:coupon) }
-  let!(:coupon_2) { FactoryBot.create(:coupon) }
   before :each do
     allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
   end
 
-  let!(:exam_body_1) { FactoryBot.create(:exam_body) }
-  let!(:gbp) { create(:gbp) }
-  let!(:uk) { create(:uk, currency: gbp) }
-  let!(:uk_vat_code) { create(:vat_code, country: uk) }
-  let!(:subscription_plan_gbp_m) {
-    create(
-        :student_subscription_plan_m,
-        currency: gbp, price: 7.50, stripe_guid: 'stripe_plan_guid_m',
-        payment_frequency_in_months: 3,
-        exam_body: exam_body_1
-    )
-  }
-
-  let!(:valid_params) { FactoryBot.attributes_for(:coupon) }
-
+  let(:stripe_management_user_group) { create(:stripe_management_user_group) }
+  let(:system_requirements_user)     { create(:system_requirements_user, user_group_id: stripe_management_user_group.id) }
+  let!(:coupon_1)                    { create(:coupon, active: true) }
+  let!(:coupon_2)                    { create(:coupon) }
+  let!(:coupon_2)                    { create(:coupon) }
+  let(:coupon_subscriptions)         { create(:coupon, :list_subscriptions) }
+  let!(:valid_params)                { attributes_for(:coupon) }
+  let!(:exam_body_1)                 { create(:exam_body) }
+  let!(:gbp)                         { create(:gbp) }
+  let!(:uk)                          { create(:uk, currency: gbp) }
+  let!(:uk_vat_code)                 { create(:vat_code, country: uk) }
+  let!(:subscription_plan_gbp_m)     { create(:student_subscription_plan_m,
+                                              currency: gbp, price: 7.50, stripe_guid: 'stripe_plan_guid_m',
+                                              payment_frequency_in_months: 3,
+                                              exam_body: exam_body_1) }
 
   context 'Logged in as a system_requirements_user: ' do
-
     before(:each) do
       activate_authlogic
       UserSession.create!(system_requirements_user)
@@ -75,15 +66,50 @@ describe CouponsController, type: :controller do
       end
     end
 
+    describe 'GET edit' do
+      before { get :edit, params: { id: coupon_1.id } }
+
+      it 'renders the new template' do
+        expect(response).to render_template('edit')
+      end
+    end
+
+    describe "POST 'update'" do
+      before do
+        allow(coupon_1).to receive(:update_on_stripe).and_return(true)
+      end
+
+      it 'should report OK for valid params' do
+        patch :update, params: { id: coupon_1.id, coupon: coupon_1.attributes }
+
+        expect(response).to have_http_status 302
+        expect(flash[:success]).to be_present
+        expect(flash[:error]).to be_nil
+      end
+
+      it 'should report OK for valid params' do
+        coupon_1.code = ' invalid code %%&& '
+        patch :update, params: { id: coupon_1.id, coupon: coupon_1.attributes }
+
+        expect(response).to have_http_status 200
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_present
+      end
+    end
+
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
-        delete :destroy, params: { id: coupon_1.id }
-        expect_delete_success_with_model('coupon', coupons_url)
+        delete :destroy, params: { id: coupon_subscriptions.id }
+
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_present
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, params: { id: coupon_2.id }
-        expect_delete_success_with_model('coupon', coupons_url)
+
+        expect(flash[:success]).to be_present
+        expect(flash[:error]).to be_nil
       end
     end
 
@@ -93,11 +119,9 @@ describe CouponsController, type: :controller do
         expect(response.status).to eq(200)
       end
     end
-
   end
 
   context 'Not logged in...' do
-
     describe "GET 'show/1'" do
       it 'should see content_page_1' do
         get :show, params: { id: coupon_1.id }
@@ -105,5 +129,4 @@ describe CouponsController, type: :controller do
       end
     end
   end
-
 end

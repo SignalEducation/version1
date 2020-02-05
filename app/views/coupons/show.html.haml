@@ -50,3 +50,4 @@
                   %td.col-sm-8=@coupon.times_redeemed
               %p
                 =link_to t('views.general.back'), coupons_url
+                =link_to t('views.general.edit'), edit_coupon_path(@coupon), class: 'btn btn-primary btn-xs'
