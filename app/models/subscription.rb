@@ -127,7 +127,7 @@ class Subscription < ApplicationRecord
     end
 
     event :restart do
-      transition %i[errored pending_cancellation paused
+      transition %i[errored pending_cancellation paused past_due
                     pending_3d_secure cancelled] => :active
     end
 
