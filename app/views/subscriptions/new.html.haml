@@ -1,3 +1,5 @@
+=javascript_include_tag 'coupons'
+
 %main
   %article.bg-gray5
     .container
@@ -99,7 +101,6 @@
 
 :javascript
   let plan_id = '1';
-  let couponCode = $('#coupon_code');
   let searchParams = new URLSearchParams(window.location.search);
 
   function addToCart() {
@@ -209,66 +210,6 @@
     choosePlan(selectedPlan);
   }
 
-  function validateCoupon() {
-    // Trigger Ajax call on every input into the coupon field.
-    // Ajax call params are the coupon field value and selected_plan_id
-    // If response contains 'valid:true' add green border to field input
-    // If response contains 'valid:false' add red border to field and show error text
-
-      if(!couponCode.value){
-        if(couponCode.val()!=""){
-          $.ajax({
-            url: '#{coupon_validation_path}',
-
-            dataType: 'json',
-            data: JSON.stringify({'coupon_code': couponCode.val(), 'plan_id': plan_id }),
-            method: 'POST',
-            contentType: "application/json; charset=utf-8",
-
-            success: function(data,status,xhr){
-              let validCoupon = data.valid;
-              let discountedPrice = data.discounted_price;
-              let reason = data.reason;
-
-              if(validCoupon === false){
-                couponCode.removeClass("coupon-success");
-                couponCode.addClass("coupon-error");
-                $('.invalid-code').show();
-                $('.discounted-price').hide();
-                $('#stripe-total-value').removeClass('strike');
-                $('.invalid-code').text(reason);
-
-              } else if(validCoupon === true){
-                $('#coupon_code').removeClass("coupon-error");
-                $('#coupon_code').addClass("coupon-success");
-                $('.invalid-code').hide();
-
-                $('.discounted-price').show();
-                $('#stripe-total-value').addClass('strike');
-                $('#discounted-value').text(discountedPrice);
-
-              } else {
-                couponCode.removeClass("coupon-error");
-                couponCode.removeClass("coupon-success");
-                $('.invalid-code').hide();
-              }
-
-            },
-            error: function(xhr,status,error){
-              console.log(xhr);
-            }
-
-          });
-        }
-
-    } else  {
-      couponCode.removeClass("coupon-error");
-      couponCode.removeClass("coupon-success");
-      couponCode.hide();
-    }
-
-  }
-
   $(document).on('ready', function() {
     initializePlan();
 
@@ -287,19 +228,6 @@
     } else {
       checkout1();
     }
-
-    $('#coupon_code').on('input',function(e) {
-      validateCoupon();
-    });
-
-    // Hide green/red border and coupon error text if input has no value
-    $('#coupon_code').blur(function() {
-      if ($('#coupon_code').val() === '') {
-        $('#coupon_code').removeClass("coupon-error");
-        $('#coupon_code').removeClass("coupon-success");
-        $('.invalid-code').hide();
-      }
-    });
 
     $('.form-group-expandable').on('change', '.custom-control-input[type="radio"][name="payment-options"]', function() {
       $(this).closest('.card').find('.custom-control-input[type="radio"]').closest('.custom-control').siblings('.payment-details').slideUp();

@@ -10,7 +10,8 @@ Rails.application.config.assets.version = '1.0'
 Rails.application.config.assets.precompile += %w[old_application.css
                                                  splitpanes.css]
 Rails.application.config.assets.precompile += %w[video_players/vimeo.js
-                                                 video_players/dacast.js]
+                                                 video_players/dacast.js
+                                                 coupons.js]
 
 # Add Yarn node_modules folder to the asset load path.
 Rails.application.config.assets.paths << Rails.root.join('node_modules')
