@@ -21,19 +21,20 @@
 #
 
 class Coupon < ApplicationRecord
-
   # Constants
   DURATIONS = %w[forever once repeating].freeze
 
   # relationships
   belongs_to :currency, optional: true
   belongs_to :exam_body, optional: true
-  has_many :charges
-  has_many :subscriptions
+  has_many :charges, dependent: :restrict_with_error
+  has_many :subscriptions, dependent: :restrict_with_error
 
   # validation
   validates :name, presence: true, uniqueness: true, length: { maximum: 255 }
-  validates :code, presence: true, uniqueness: true, length: { maximum: 255 }
+  validates :code, presence: true, uniqueness: true, length: { maximum: 255 },
+                   format: { with: /\A[a-zA-Z0-9_\-]+\z/,
+                             message: 'code may only contain alphanumeric characters in addition to - and _.' }
   validates :duration, presence: true, inclusion: { in: DURATIONS }
   validates :currency_id, allow_nil: true, numericality: { only_integer: true, greater_than: 0 }
 
@@ -42,10 +43,10 @@ class Coupon < ApplicationRecord
   validate :currency_if_amount_off_set
 
   # callbacks
-  before_destroy :check_dependencies
-  before_create :create_on_stripe
-  after_create :activate
+  before_create  :create_on_stripe
   before_destroy :delete_on_stripe
+  after_create   :activate
+  after_update   :update_on_stripe
 
   # scopes
   scope :all_in_order, -> { order(:name) }
@@ -55,10 +56,10 @@ class Coupon < ApplicationRecord
 
   # Called from Subscriptions new form with Ajax through Coupons Controller.
   def self.verify_coupon_and_get_discount(code, plan_id)
-    coupon = Coupon.find_by(code: code, active: true)
-    sub_plan = SubscriptionPlan.find(plan_id)
-    valid = false
-    reason = 'Invalid Code'
+    coupon           = Coupon.find_by(code: code, active: true)
+    sub_plan         = SubscriptionPlan.find(plan_id)
+    valid            = false
+    reason           = 'Invalid Code'
     discounted_price = sub_plan.currency.format_number(sub_plan.price)
 
     if coupon&.active
@@ -97,10 +98,6 @@ class Coupon < ApplicationRecord
 
   # instance methods
 
-  def destroyable?
-    true
-  end
-
   def available_payment_intervals
     intervals = []
     intervals << 'Monthly' if monthly_interval
@@ -131,29 +128,31 @@ class Coupon < ApplicationRecord
     update(active: false) if stripe_coupon && !stripe_coupon[:valid]
   end
 
-  protected
+  def update_on_stripe
+    return if Rails.env.test?
 
-  def check_dependencies
-    return if destroyable?
-
-    errors.add(:base, I18n.t('models.general.dependencies_exist'))
-    false
+    Stripe::Coupon.update(code, name: name)
   end
+
+  protected
 
   def activate
     return if Rails.env.test?
 
-    stripe_coupon = Stripe::Coupon.retrieve(id: self.code)
+    stripe_coupon = Stripe::Coupon.retrieve(id: code)
     update(active: true) if stripe_coupon && stripe_coupon[:valid]
   end
 
   def create_on_stripe
     return if stripe_coupon_data
 
-    stripe_coupon = Stripe::Coupon.create(id: code, currency: currency.try(:iso_code), percent_off: percent_off,
-                                          amount_off: amount_off, duration: duration,
-                                          duration_in_months: duration_in_months, max_redemptions: max_redemptions,
-                                          redeem_by: redeem_by.try(:to_i)) unless Rails.env.test?
+    stripe_coupon =
+      Stripe::Coupon.create(id: code, currency: currency.try(:iso_code),
+                            percent_off: percent_off,
+                            amount_off: amount_off, duration: duration,
+                            duration_in_months: duration_in_months,
+                            max_redemptions: max_redemptions,
+                            redeem_by: redeem_by.try(:to_i)) unless Rails.env.test?
 
     return unless stripe_coupon
 
@@ -167,5 +166,4 @@ class Coupon < ApplicationRecord
     stripe_coupon = Stripe::Coupon.retrieve(id: code) unless Rails.env.test?
     stripe_coupon&.delete
   end
-
 end
