@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class StudentSignUpsController < ApplicationController
-
   before_action :check_logged_in_status, except: %i[landing subscribe group]
   before_action :get_variables
   before_action :create_user_object, only: %i[new sign_in_or_register landing]
@@ -10,6 +9,7 @@ class StudentSignUpsController < ApplicationController
 
   def home
     @home_page = HomePage.where(home: true).where(public_url: '/').first
+    @vimeo_as_main = vimeo_as_main?
 
     if @home_page
       seo_title_maker(@home_page.seo_title, @home_page.seo_description, @home_page.seo_no_index)

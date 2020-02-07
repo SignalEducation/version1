@@ -2,7 +2,6 @@ require 'rails_helper'
 require 'support/course_content'
 
 RSpec.describe CoursesController, type: :controller do
-
   let!(:exam_body_1) { FactoryBot.create(:exam_body) }
   let!(:group_1) { FactoryBot.create(:group, exam_body_id: exam_body_1.id) }
   let!(:subject_course_1)  { FactoryBot.create(:active_subject_course,
@@ -20,7 +19,6 @@ RSpec.describe CoursesController, type: :controller do
                                                           exam_body_id: exam_body_1.id) }
 
   include_context 'course_content'
-
 
   let!(:student_user_group ) { FactoryBot.create(:student_user_group ) }
   let!(:basic_student) { FactoryBot.create(:basic_student,
@@ -91,8 +89,8 @@ RSpec.describe CoursesController, type: :controller do
                                                 "1"=>{"user_id"=>basic_student.id, "quiz_question_id"=>quiz_question_2.id,
                                                       "quiz_answer_id"=>quiz_answer_2.id, "answer_array"=>"288,287,285,286"}} } }
 
-
   describe 'Logged in as Basic Student User' do
+    let!(:_system) { create(:system_setting) }
 
     before(:each) do
       activate_authlogic
@@ -123,17 +121,14 @@ RSpec.describe CoursesController, type: :controller do
         expect(response.status).to eq(200)
         expect(response).to render_template(:show)
       end
-
     end
 
     describe 'Post to create with CMEUL data for CMEQ' do
-
       it 'should report OK for valid params' do
         post :create, params: { course_module_element_user_log: valid_cmeul_quiz_params }
         expect(response.status).to eq(200)
         expect(response).to render_template(:show)
       end
-
     end
 
     describe 'Post to video_watched_data with CMEUL data for CMEQ' do
@@ -144,16 +139,13 @@ RSpec.describe CoursesController, type: :controller do
     end
 
     describe 'Post to video_watched_data with CMEUL data for CMEQ' do
-
       it 'should respond to JSON with status 200' do
         post :create_video_user_log, params: {course: {cmeId: course_module_element_2.id, scul_id: scul.id}, format: :json }
         expect(response.status).to eq(200)
       end
-
     end
 
     describe 'Get to show_constructed_response with CMEUL data for CR' do
-
       it 'should respond to JSON with status 200' do
         get :show_constructed_response, params: { subject_course_name_url: subject_course_1.name_url, course_section_name_url: course_section_1.name_url, course_module_name_url: course_module_1.name_url, course_module_element_name_url: course_module_element_4.name_url }
         expect(flash[:success]).to be_nil
@@ -161,11 +153,9 @@ RSpec.describe CoursesController, type: :controller do
         expect(response.status).to eq(200)
         expect(response).to render_template(:show_constructed_response)
       end
-
     end
 
     describe 'Post to update_constructed_response_user_log with CMEUL data for CR' do
-
       it 'should respond to JSON with status 201' do
         cr_params = {params: {"course_module_element_user_log"=> {"id"=>cr_cmeul.id, "constructed_response_attempt_attributes"=>
             {"user_id"=>basic_student.id, "constructed_response_id"=>constructed_response_1.id, "scenario_id"=>scenario_1.id,
@@ -193,7 +183,6 @@ RSpec.describe CoursesController, type: :controller do
         expect(response.status).to eq(201)
         expect(JSON.parse(response.body).first[1]).to eq(cr_cmeul.id)
       end
-
     end
 
     describe 'Get submit_constructed_response_user_log with CMEUL data for CR for final submit' do

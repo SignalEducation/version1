@@ -13,6 +13,7 @@
 ActiveRecord::Schema.define(version: 2020_02_11_113807) do
 
   # These are extensions that must be enabled in order to support this database
+  enable_extension "hstore"
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
@@ -1318,6 +1319,13 @@ ActiveRecord::Schema.define(version: 2020_02_11_113807) do
     t.integer "kind"
     t.index ["cancelled_by_id"], name: "index_subscriptions_on_cancelled_by_id"
     t.index ["changed_from_id"], name: "index_subscriptions_on_changed_from_id"
+  end
+
+  create_table "system_settings", force: :cascade do |t|
+    t.string "environment"
+    t.hstore "settings"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "user_groups", id: :serial, force: :cascade do |t|

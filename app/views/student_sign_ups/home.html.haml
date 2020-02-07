@@ -1,3 +1,4 @@
+=javascript_include_tag 'video_players/vimeo'
 =render partial: 'layouts/external_navbar'
 %main
   .container.home-hero-container
@@ -21,9 +22,9 @@
                 %svg{:fill => "none", :viewbox => "0 0 312 312", :xmlns => "http://www.w3.org/2000/svg"}
                   %path.yellow-oval{:d => "M156 312C242.156 312 312 242.156 312 156C312 69.8436 242.156 1.52588e-05 156 1.52588e-05C69.8436 1.52588e-05 0 69.8436 0 156C0 242.156 69.8436 312 156 312Z", :fill => "#F0CA28", :opacity => "0.1"}
 
-              -if @home_page&.video_guid.present?
-                .laptop-wrapper
-                  %iframe{width: '560', height: '315', src: "https://player.vimeo.com/video/#{@home_page.video_guid}", frameborder: '0', allowfullscreen: true}
+              -if @home_page&.video_guid.present? && @vimeo_as_main
+                #laptop-wrapper.laptop-wrapper
+                  -# %iframe{width: '560', height: '315', src: "https://player.vimeo.com/video/#{@home_page.video_guid}", frameborder: '0', allowfullscreen: true}
               -else
                 =image_tag('laptop-with-lms-2.png', class: 'px-md-5 px-xl-0', alt: 'Laptop with Learn Signal page open')
 
@@ -109,3 +110,15 @@
   $('.carousel').carousel({
     interval: 2500
   })
+
+  // Video
+  let options = {
+    id: "#{@home_page.video_guid}",
+    frameborder: 0,
+    webkitAllowFullScreen: true,
+    mozallowfullscreen: true,
+    allowFullScreen: true
+  };
+
+  const player = new Vimeo.Player('laptop-wrapper', options);
+  player.ready();

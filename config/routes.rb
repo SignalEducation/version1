@@ -47,6 +47,7 @@ Rails.application.routes.draw do
       post 'cbe_user_question_update/answer/:question_id', to: 'exercises#cbe_user_question_update', as: :cbe_user_question_update, on: :member
       post 'cbe_user_educator_comment/:cbe_user_log_id', to: 'exercises#cbe_user_educator_comment', as: :cbe_user_log_update, on: :member
     end
+
     resources :user do
       resources :exercises, only: %i[index new create]
     end
@@ -55,10 +56,11 @@ Rails.application.routes.draw do
       post :clone, to: 'cbes#clone', as: :cbe_clone, on: :member
     end
 
-
+    resources :system_settings, only: %i[index update]
     resources :orders, only: %i[index show update] do
       get :update_product
     end
+
     post 'search_exercises', to: 'exercises#index', as: :search_exercises
   end
 
