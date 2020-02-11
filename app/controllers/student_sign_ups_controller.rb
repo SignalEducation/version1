@@ -35,33 +35,36 @@ class StudentSignUpsController < ApplicationController
 
     if @home_page
       @public_url = params[:public_url]
-      @group = @home_page.group
-      @exam_body = @group.exam_body
 
-      @currency_id =
-        if current_user&.currency_id
-          current_user.currency_id
-        else
-          ip_country = IpAddress.get_country(request.remote_ip)
-          country = ip_country || Country.find_by(name: 'United Kingdom')
-          country.currency_id
-        end
+      if @group
+        @group = @home_page.group
+        @exam_body = @group.exam_body
 
-      @subscription_plans =
-        if @home_page&.subscription_plan_category&.current
-          @home_page.subscription_plan_category.subscription_plans.for_exam_body(@group.exam_body_id).in_currency(@currency_id).all_active.all_in_order
-        else
-          SubscriptionPlan.where(subscription_plan_category_id: nil, exam_body_id: @group.exam_body_id).
-            includes(:currency).in_currency(@currency_id).all_active.all_in_order.limit(3)
-        end
+        @currency_id =
+          if current_user&.currency_id
+            current_user.currency_id
+          else
+            ip_country = IpAddress.get_country(request.remote_ip)
+            country = ip_country || Country.find_by(name: 'United Kingdom')
+            country.currency_id
+          end
 
-      @preferred_plan = @subscription_plans.where(payment_frequency_in_months: @home_page.preferred_payment_frequency).first
-      flash[:plan_guid] = @preferred_plan.guid if @preferred_plan
-      flash[:exam_body] = @exam_body.id if @exam_body
+        @subscription_plans =
+          if @home_page&.subscription_plan_category&.current
+            @home_page.subscription_plan_category.subscription_plans.for_exam_body(@group.exam_body_id).in_currency(@currency_id).all_active.all_in_order
+          else
+            SubscriptionPlan.where(subscription_plan_category_id: nil, exam_body_id: @group.exam_body_id).
+              includes(:currency).in_currency(@currency_id).all_active.all_in_order.limit(3)
+          end
 
-      referral_code = ReferralCode.find_by(code: request.params[:ref_code]) if params[:ref_code]
-      drop_referral_code_cookie(referral_code) if params[:ref_code] && referral_code
-      # This is for sticky sub plans
+        @preferred_plan = @subscription_plans.where(payment_frequency_in_months: @home_page.preferred_payment_frequency).first
+        flash[:plan_guid] = @preferred_plan.guid if @preferred_plan
+        flash[:exam_body] = @exam_body.id if @exam_body
+
+        referral_code = ReferralCode.find_by(code: request.params[:ref_code]) if params[:ref_code]
+        drop_referral_code_cookie(referral_code) if params[:ref_code] && referral_code
+        # This is for sticky sub plans
+      end
 
       seo_title_maker(@home_page.seo_title, @home_page.seo_description, @home_page.seo_no_index)
     else
