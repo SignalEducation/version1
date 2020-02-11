@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_27_154941) do
+ActiveRecord::Schema.define(version: 2020_02_11_113807) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -1300,7 +1300,6 @@ ActiveRecord::Schema.define(version: 2020_01_27_154941) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string "stripe_customer_id", limit: 255
-    t.text "stripe_customer_data"
     t.boolean "livemode", default: false
     t.boolean "active", default: false
     t.boolean "terms_and_conditions", default: false

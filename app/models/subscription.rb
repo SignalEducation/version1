@@ -30,7 +30,6 @@
 class Subscription < ApplicationRecord
   include LearnSignalModelExtras
 
-  serialize :stripe_customer_data, Hash
   attr_accessor :use_paypal, :paypal_approval_url, :cancelling_subscription,
                 :payment_intent_status, :client_secret
 
@@ -277,8 +276,7 @@ class Subscription < ApplicationRecord
         update_attributes(
           stripe_status: stripe_subscription.status,
           stripe_guid: stripe_subscription.id,
-          next_renewal_date: Time.zone.at(stripe_subscription.current_period_end),
-          stripe_customer_data: stripe_customer.to_hash.deep_dup
+          next_renewal_date: Time.zone.at(stripe_subscription.current_period_end)
         )
         restart
       end
@@ -375,7 +373,6 @@ class Subscription < ApplicationRecord
             subscription = Subscription.where(stripe_guid: stripe_subscription.id).in_reverse_created_order.last
             subscription.next_renewal_date = Time.at(stripe_subscription.current_period_end)
             subscription.stripe_status = stripe_subscription.status
-            subscription.stripe_customer_data = stripe_customer.to_hash.deep_dup
             subscription.livemode = stripe_subscription[:plan][:livemode]
             subscription.save(validate: false)
 
