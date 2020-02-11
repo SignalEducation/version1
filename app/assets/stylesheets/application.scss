@@ -4458,6 +4458,11 @@ a.card:hover .card-title .card-explanation {
   min-height: 100px;
   background-position: 40% 50%;
 }
+.home-hero-alt-bg.bg-careers {
+  background-image: asset-url('careers-background.png');
+  min-height: 100px;
+  background-position: 40% 40%;
+}
 .home-hero-alt-bg.bg-resources {
   background-image: asset-url('learnsignal_pattern_dark.jpg');
   min-height: 100px;
