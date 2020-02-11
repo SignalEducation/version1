@@ -1,62 +1,3 @@
-# == Schema Information
-#
-# Table name: users
-#
-#  id                              :integer          not null, primary key
-#  email                           :string
-#  first_name                      :string
-#  last_name                       :string
-#  address                         :text
-#  country_id                      :integer
-#  crypted_password                :string(128)      default(""), not null
-#  password_salt                   :string(128)      default(""), not null
-#  persistence_token               :string
-#  perishable_token                :string(128)
-#  single_access_token             :string
-#  login_count                     :integer          default(0)
-#  failed_login_count              :integer          default(0)
-#  last_request_at                 :datetime
-#  current_login_at                :datetime
-#  last_login_at                   :datetime
-#  current_login_ip                :string
-#  last_login_ip                   :string
-#  account_activation_code         :string
-#  account_activated_at            :datetime
-#  active                          :boolean          default(FALSE), not null
-#  user_group_id                   :integer
-#  password_reset_requested_at     :datetime
-#  password_reset_token            :string
-#  password_reset_at               :datetime
-#  stripe_customer_id              :string
-#  created_at                      :datetime
-#  updated_at                      :datetime
-#  locale                          :string
-#  guid                            :string
-#  subscription_plan_category_id   :integer
-#  password_change_required        :boolean
-#  session_key                     :string
-#  name_url                        :string
-#  profile_image_file_name         :string
-#  profile_image_content_type      :string
-#  profile_image_file_size         :bigint(8)
-#  profile_image_updated_at        :datetime
-#  email_verification_code         :string
-#  email_verified_at               :datetime
-#  email_verified                  :boolean          default(FALSE), not null
-#  stripe_account_balance          :integer          default(0)
-#  free_trial                      :boolean          default(FALSE)
-#  terms_and_conditions            :boolean          default(FALSE)
-#  date_of_birth                   :date
-#  description                     :text
-#  analytics_guid                  :string
-#  student_number                  :string
-#  unsubscribed_from_emails        :boolean          default(FALSE)
-#  communication_approval          :boolean          default(FALSE)
-#  communication_approval_datetime :datetime
-#  preferred_exam_body_id          :bigint(8)
-#  currency_id                     :bigint(8)
-#
-
 require 'rails_helper'
 
 describe User do
@@ -124,13 +65,13 @@ describe User do
     it { should_not validate_presence_of(:name_url)}
   end
 
-  context "user email validation" do
+  context 'user email validation' do
     before do
       user_group = FactoryBot.create(:student_user_group)
       @user = FactoryBot.create(:user, user_group_id: user_group.id)
     end
 
-    it "validates uniqueness of email" do
+    it 'validates uniqueness of email' do
       expect(@user).to validate_uniqueness_of(:email).case_insensitive
     end
   end
@@ -359,6 +300,19 @@ describe User do
 
           expect { worker.perform_async(rand(10)) }.to change(worker.jobs, :size).by(1)
         end
+      end
+    end
+
+    describe '#parse_csv' do
+      it 'parser a user csv file' do
+        data = File.read(Rails.root.join('spec', 'support', 'fixtures', 'file.csv'))
+        data_users  = data.split("\n")
+        data_parsed = User.parse_csv(data)
+        rand_count  = rand(0..9)
+
+        expect(data_users[rand_count].split(',').first).to eq(data_parsed[rand_count].email)
+        expect(data_users[rand_count].split(',').second).to eq(data_parsed[rand_count].first_name)
+        expect(data_users[rand_count].split(',').third).to eq(data_parsed[rand_count].last_name)
       end
     end
   end

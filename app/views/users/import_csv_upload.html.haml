@@ -26,22 +26,6 @@
                         %td=user_email
                         %td='Processing'
 
-
-          .col-sm-6
-            .table-box
-              .table-responsive
-                %table.table
-                  %thead
-                    %tr
-                      %th='Expired Trial Users - Trial Expired Email'
-                      %th
-                  %tbody
-                    -@existing_users.each do |user|
-                      %tr
-                        %td=user.email
-                        %td=user.id
-
-
       .row.l-margin-top.l-margin-bottom
         .col-md-12.l-margin-top-big
           =link_to 'Return', users_url, class: 'btn btn-cyan'
