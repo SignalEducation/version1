@@ -35,9 +35,9 @@ class StudentSignUpsController < ApplicationController
 
     if @home_page
       @public_url = params[:public_url]
+      @group = @home_page.group
 
       if @group
-        @group = @home_page.group
         @exam_body = @group.exam_body
 
         @currency_id =
