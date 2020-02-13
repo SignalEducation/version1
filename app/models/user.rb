@@ -190,7 +190,7 @@ class User < ApplicationRecord
     user = User.find(user_id)
     return if user.nil?
 
-    if user.sactive && user.email_verified && user.password_reset_requested_at &&
+    if user.active && user.email_verified && user.password_reset_requested_at &&
        user.password_reset_token && !user.password_change_required?
       MandrillWorker.perform_async(user.id, 'password_reset_email', "#{root_url}/reset_password/#{user.password_reset_token}")
     end
