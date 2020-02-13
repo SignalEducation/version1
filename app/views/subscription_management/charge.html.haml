@@ -107,7 +107,7 @@
             .col-md-3.col-sm-12.col-xs-12
               -if @charge.refundable?
                 .col-sm-12.l-margin-top-small
-                  =link_to 'Refund Charge', new_refund_url(subscription_id: @subscription.id, invoice_id: @invoice.id, charge_id: @charge.id, user_id: @user.id), class: 'btn btn-primary '
+                  =link_to 'Refund Charge', new_refund_url(charge_id: @charge.id), class: 'btn btn-primary '
 
 
 
