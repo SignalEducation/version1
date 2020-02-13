@@ -1,7 +1,8 @@
 .card.mb-5
   .card-body
     .row
-      %ul
-        -question.answers.each do |answer|
-          %li
-            =raw(answer.content['text'])
+      .col-sm-12
+        %ul
+          -question.answers.each do |answer|
+            %li
+              =raw(answer.content['text'])

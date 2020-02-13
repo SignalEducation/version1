@@ -1,6 +1,6 @@
 -# VueJS include
 = javascript_pack_tag 'exercise'
-.card.mb-5
+.card.card-primary{style: 'min-height: 10px;'}
   .card-body
     .row
       -if question_kind == 'open'
@@ -18,23 +18,22 @@
                                                answer_id: question.answers.first.id,
                                                cbe_id: question.user_log.cbe_id,
                                                cbe_user_log_id: question.cbe_user_log_id } }
-
-.h6.text-gray2
-  Educator Section
-.card.mb-5
+.card.card-primary
   .card-body
+    .h4.text-gray2
+      Question Score & Comment
     =form_with(url: cbe_user_question_update_admin_exercise_path(id: question.user_log.exercise_id, question_id: question.id), html: {class: 'form-horizontal', role: 'form'}) do
-      .row.pt-5
+      .row
+        .col-sm-3
+          .form-group
+            =label_tag :score, "Score"
+            .input-group.input-group-lg
+              =text_field_tag(:score, question.score, class: 'form-control')
+      .row.pt-3
         .col-sm-12
           .form-group
             .input-group.input-group-lg
-              =label_tag :score, 'Score'
-              =text_field_tag(:score, question.score)
-      .row.pt-5
-        .col-sm-12
-          .form-group
-            .input-group.input-group-lg
-              =label_tag :educator_comment, 'Comment'
+              =label_tag :educator_comment, 'Comment (optional)'
               =text_area_tag(:educator_comment, question.educator_comment, id: "#{question.id}-editor", as: 'summernote')
       .row.pt-5
         .col-sm-6
