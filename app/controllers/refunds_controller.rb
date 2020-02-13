@@ -8,7 +8,7 @@ class RefundsController < ApplicationController
   before_action :management_layout
 
   def show
-    @refund = Refund.find_by(id: params[:id])
+    @refund = Refund.find(params[:id])
   end
 
   def new

@@ -29,9 +29,8 @@ FactoryBot.define do
     user
     association :manager, factory: :user
     amount { 1 }
-    reason { "requested_by_customer" }
+    reason { 'requested_by_customer' }
     status { 'mystring' }
     stripe_refund_data { 'mystring' }
   end
-
 end
