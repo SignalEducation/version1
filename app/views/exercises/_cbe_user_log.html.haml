@@ -1,54 +1,89 @@
--if @exercise.returned?
-  %h3='Results by question'
-  .row
-    .col-12.col-md-3.mb-4
-      #accordionExample.accordion
-        -@exercise.cbe_user_log.cbe.sections.each_with_index do |section, section_index|
-          -section_questions =  @exercise.cbe_user_log.questions.by_section(section.id)
-          .card
-            #headingOne.card-header
-              %h2.mb-0
-                %button.btn.btn-link{"aria-controls" => "collapse_#{section.id}", "aria-expanded" => "false", "data-target" => "#collapse_#{section.id}", "data-toggle" => "collapse", :type => "button"}
-                  =section.name
-                  %br
-                  =cbe_section_score(section_questions)
-            .collapse{"aria-labelledby" => "heading_#{section.id}", "id" => "collapse_#{section.id}"}
-              .card-body
-                #v-pills-tab.nav.flex-column.nav-pills{"aria-orientation" => "vertical", :role => "tablist"}
-                  -section.questions.order(:sorting_order).each_with_index do |question, index|
-                    -user_question = @exercise.cbe_user_log.questions.select{ |q| q.cbe_question.id == question.id }.first
-                    %a#v-pills-home-tab.nav-link{"aria-controls" => "v-pills-#{question.id}", "aria-selected" => index == 0 ? 'true' : 'false', "data-toggle" => "pill", :href => "#v-pills-#{question.id}", :role => "tab", class: index == 0 ? 'active' : ''}
-                      ="Question #{index+1}"
-                      =question_title_class(user_question)
+%nav
+  %ul.nav.nav-tabs.nav-fill{id: 'sectionTabs', role: 'tablist'}
 
-    .col-12.col-md-9
-      #v-pills-tabContent.tab-content
-        -@exercise.cbe_user_log.cbe.questions.each_with_index do |question, index|
-          -user_question = @exercise.cbe_user_log.questions.select{ |q| q.cbe_question.id == question.id }.first
-          .tab-pane.fade{id: "v-pills-#{question.id}", "aria-labelledby" => "v-pills-#{question.id}-tab", :role => "tabpanel", class: index == 0 ? 'active show' : ''}
-            %h4.mb-4
-              ="Marks: #{question.score.to_i}/#{question.score.to_i}"
+    - @exercise.cbe_user_log.cbe.sections.order(:sorting_order).each_with_index do |section, section_index|
+      %li.nav-item
+        %a{class: "nav-link #{section_index == 0 ? 'active' : ''}", data: {toggle: 'tab'}, href: "#section-#{section.id}", aria: {controls: "#{section.id}", selected: 'false'}, role: 'tab'}
+          =section.name
 
-            %h6='Question:'
-            =raw(question.content)
+.container.py-4
+  #sectionTabsContent.tab-content
+    - @exercise.cbe_user_log.cbe.sections.order(:sorting_order).each_with_index do |section, section_index|
+      -section_questions =  @exercise.cbe_user_log.questions.by_section(section.id)
+      .tab-pane{id: "section-#{section.id}", class: "tab-#{section.id} #{section_index == 0 ? 'active show' : ''} ", "aria-labelledby" => "section-#{section.id}-tab", :role => "tabpanel"}
+        .row.row-lg.py-3
+          .col-xl-12
+            %h3
+              ='Score: '
+              =cbe_section_score(section_questions)
 
-            -if question.answers.present?
-              %h6='Options:'
-              %ul
-                -question.answers.each do |answer|
-                  %li
-                    =question_answer(answer)
+            .my-5.mb-xl-0
+              .row
+                .col-sm-2
+                  %nav.mb-4.account-nav
+                    %ul#questionTabs.nav.nav-tabs.nav-tabs-vertical{:role => "tablist"}
+                      -section.questions.order(:sorting_order).each_with_index do |question, index|
+                        %li.nav-item
+                          %a.nav-link{class: index == 0 ? 'active' : '', id: "#section-#{section.id}-question-#{question.id}", "aria-controls" => "section-#{section.id}-question-#{question.id}", "aria-selected" => "true", "data-toggle" => "tab", :href => "#section-#{section.id}-question-#{question.id}", :role => "tab"}
+                            ="Question #{index+1}"
 
-            -if user_question&.answers.present? && %w[open spreadsheet].exclude?(question.kind)
-              %h6='Answered:'
-              %ul
-                -user_question.answers.each do |answer|
-                  %li
-                    =raw(question_answer(answer))
+                .col-sm-10
+                  #questionTabsContent.tab-content
+                    -section.questions.order(:sorting_order).each_with_index do |question, index|
+                      -user_question = @exercise.cbe_user_log.questions.by_section(section.id).select{ |q| q.cbe_question.id == question.id }.first
+                      .tab-pane.tab-account{class: index == 0 ? 'show active' : '', id: "section-#{section.id}-question-#{question.id}", "aria-labelledby" => "section-#{section.id}-question-#{question.id}-tab", :role => "tabpanel"}
+                        -if user_question&.answers.present?
+                          %h4.mb-4
+                            ="Marks: #{user_question.score.to_i}/#{question.score.to_i}"
+                          .py-3
+                            -if user_question&.educator_comment.present?
+                              %h6='Educator Comment:'
+                              =raw(user_question.educator_comment)
+                          .py-3
+                            .accordion#resultsAccordion
+                              .card
+                                .card-header#questionHeading{type: "button", data:{toggle: "collapse", target: "#section#{section.id}-question-#{question.id}-questionsCard"}, aria:{expanded: "true", controls: "questionCard"}, style: 'padding: 10px;'}
+                                  %h2.mb-0
+                                    .btn.btn-link
+                                      ='Question Content: '
+                                .collapse.show{id: "section#{section.id}-question-#{question.id}-questionsCard", aria: {labelledby: "questionHeading"}, data: {parent: "#resultsAccordion"}}
+                                  .card-body{style: 'margin-left: 10px;'}
+                                    =raw(question.content)
 
-            %h6='Suggested Solution:'
-            =raw(question.solution)
+                              -if question.answers.present?
+                                .card
+                                  .card-header#optionsHeading{type: "button", data:{toggle: "collapse", target: "#section#{section.id}-question-#{question.id}-optionsCard"}, aria:{expanded: "true", controls: "optionsCard"}, style: 'padding: 10px;'}
+                                    %h2.mb-0
+                                      .btn.btn-link
+                                        ='Options: '
+                                  .collapse{id: "section#{section.id}-question-#{question.id}-optionsCard", aria: {labelledby: "optionsHeading"}, data: {parent: "#resultsAccordion"}}
+                                    .card-body{style: 'margin-left: 10px;'}
+                                      %ul
+                                        -question.answers.each do |answer|
+                                          %li
+                                            =question_answer(answer)
 
-            -if user_question&.educator_comment.present?
-              %h6='Educator Comment:'
-              =raw(user_question.educator_comment)
+                              -if user_question&.answers.present? && %w[open spreadsheet].exclude?(question.kind)
+                                .card
+                                  .card-header#answersHeading{type: "button", data:{toggle: "collapse", target: "#section#{section.id}-question-#{question.id}-answersCard"}, aria:{expanded: "true", controls: "answersCard"}, style: 'padding: 10px;'}
+                                    %h2.mb-0
+                                      .btn.btn-link
+                                        ='Answered:'
+                                  .collapse{id: "section#{section.id}-question-#{question.id}-answersCard", aria: {labelledby: "answersHeading"}, data: {parent: "#resultsAccordion"}}
+                                    .card-body{style: 'margin-left: 10px;'}
+                                      %ul
+                                        -user_question.answers.each do |answer|
+                                          %li
+                                            =raw(question_answer(answer))
+
+                              .card
+                                .card-header#solutionHeading{type: "button", data:{toggle: "collapse", target: "#section#{section.id}-question-#{question.id}-solutionCard"}, aria:{expanded: "true", controls: "solutionCard"}, style: 'padding: 10px;'}
+                                  %h2.mb-0
+                                    .btn.btn-link
+                                      ='Suggested Solution: '
+                                .collapse{id: "section#{section.id}-question-#{question.id}-solutionCard", aria: {labelledby: "solutionHeading"}, data: {parent: "#resultsAccordion"}}
+                                  .card-body{style: 'margin-left: 10px;'}
+                                    =raw(question.solution)
+                        - else
+                          %h4.mb-4
+                            Question not answered

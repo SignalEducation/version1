@@ -10,7 +10,12 @@
           %article.card.mb-5
             .card-body.card-body-sm
               .row
-                .col-md-3.mb-2
+                -if @exercise.returned?
+                  .col-sm-8
+                    -if @exercise.returned_on && @exercise.cbe_user_log
+                      %h3
+                        =cbe_score(@exercise.cbe_user_log)
+                .col-sm-4
                   %h3
                     %span.mr-1
                       ="Status: "
@@ -22,21 +27,21 @@
                     %p.mb-1
                       Returned on
                       %span=humanize_datetime_full(@exercise.returned_on)
-                .col-md-4
-                  -if @exercise.returned_on && @exercise.cbe_user_log
-                    %h3
-                      =cbe_score(@exercise.cbe_user_log)
+
               -if @exercise.returned? and @exercise.cbe_user_log.educator_comment.present?
-                .row
+                .row.pt-6
                   .col-md-12
                     %h3
                       %span.mr-1
                         ="Educator Comment: "
                         =raw(@exercise.cbe_user_log.educator_comment)
 
-              .row.pt-6
-                .col-md-12
-                  =render partial: 'cbe_user_log'
+          -if @exercise.returned?
+            %article.card.card-tabs.mb-5
+              .card-body
+                =render partial: 'cbe_user_log'
+
+
       -else
         %section.pb-md-6.pt-4
           %article.card.mb-5

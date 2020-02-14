@@ -31,6 +31,10 @@ RSpec.describe Cbe, type: :model do
     it { expect(Cbe).to respond_to(:all_in_order) }
   end
 
+  describe 'Methods' do
+    it { should respond_to(:duplicate) }
+  end
+
   describe 'Factory' do
     it { expect(cbe).to be_a Cbe }
     it { expect(cbe).to be_valid }

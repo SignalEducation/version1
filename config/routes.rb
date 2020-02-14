@@ -52,7 +52,11 @@ Rails.application.routes.draw do
       resources :exercises, only: %i[index new create]
     end
 
-    resources :cbes,   only: %i[index new show update]
+    resources :cbes, only: %i[index new show update] do
+      post :clone, to: 'cbes#clone', as: :cbe_clone, on: :member
+    end
+
+
     resources :orders, only: %i[index show update] do
       get :update_product
     end
