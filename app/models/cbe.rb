@@ -21,14 +21,19 @@ class Cbe < ApplicationRecord
 
   def duplicate
     new_cbe = deep_clone include: [
-      :introduction_pages,
-      :resources,
-      sections: [
-        questions: :answers,
-        scenarios: { questions: :answers }
-      ]
-    ], validate: false
-
+                            :introduction_pages,
+                            :resources,
+                            sections: [
+                              questions: :answers,
+                              scenarios: { questions: :answers }
+                            ]
+                          ],
+                          use_dictionary: true,
+                          except: [
+                            sections: [
+                              scenarios: { questions: :cbe_section_id }
+                            ]
+                          ], validate: false
     new_cbe.update(name: "#{name} COPY", active: false)
   end
 end
