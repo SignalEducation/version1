@@ -33,9 +33,20 @@
                       -section.questions.order(:sorting_order).each_with_index do |question, index|
                         -user_question = @cbe_user_log.questions.by_section(section.id).select{ |q| q.cbe_question.id == question.id }.first
                         .tab-pane.tab-account.tab-personal-info{class: index == 0 ? 'show active' : '', id: "section-#{section.id}-question-#{question.id}", "aria-labelledby" => "personal-info-tab", :role => "tabpanel"}
-                          .h4
-                            Question Type:
-                            =question.kind.humanize
+                          .row
+                            .col-sm
+                              .h4
+                                Question Type:
+                                =question.kind.humanize
+                            -if user_question
+                              .col-sm-3
+                                .h4
+                                  Correct:
+                                  =user_question.correct
+                              .col-sm-3
+                                .h4
+                                  Score:
+                                  =user_question.score
 
                           .accordion#resultsAccordion
                             .card
@@ -56,11 +67,14 @@
                                 .card-body{style: 'margin-left: 10px;'}
                                   =raw(question.solution)
 
-                          -if user_question
-                            .question_answers.pt-4
-                              .h5
-                                Answer Content
+                          .question_answers.pt-4
+                            .h5
+                              Answer Content
+                            -if user_question&.answers.present?
                               =render_admin_answers(user_question)
+                            -else
+                              Question not answered by the student
+
 
 
   .row
