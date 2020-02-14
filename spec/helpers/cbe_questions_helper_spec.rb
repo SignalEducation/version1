@@ -70,7 +70,7 @@ describe CbeQuestionsHelper do
       question.cbe_question.kind = Cbe::Question.kinds[:open]
       partial = render_admin_answers(question)
 
-      expect(partial).to include('Educator Section')
+      expect(partial).to include('Question Score & Comment')
     end
 
     it 'render a specific single_answer partial' do
