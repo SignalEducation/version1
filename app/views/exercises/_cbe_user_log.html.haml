@@ -32,54 +32,58 @@
                     -section.questions.order(:sorting_order).each_with_index do |question, index|
                       -user_question = @exercise.cbe_user_log.questions.by_section(section.id).select{ |q| q.cbe_question.id == question.id }.first
                       .tab-pane.tab-account{class: index == 0 ? 'show active' : '', id: "section-#{section.id}-question-#{question.id}", "aria-labelledby" => "section-#{section.id}-question-#{question.id}-tab", :role => "tabpanel"}
-                        %h4.mb-4
-                          ="Marks: #{user_question.score.to_i}/#{question.score.to_i}"
-                        .py-3
-                          -if user_question&.educator_comment.present?
-                            %h6='Educator Comment:'
-                            =raw(user_question.educator_comment)
-                        .py-3
-                          .accordion#resultsAccordion
-                            .card
-                              .card-header#questionHeading{type: "button", data:{toggle: "collapse", target: "#section#{section.id}-question-#{question.id}-questionsCard"}, aria:{expanded: "true", controls: "questionCard"}, style: 'padding: 10px;'}
-                                %h2.mb-0
-                                  .btn.btn-link
-                                    ='Question Content: '
-                              .collapse.show{id: "section#{section.id}-question-#{question.id}-questionsCard", aria: {labelledby: "questionHeading"}, data: {parent: "#resultsAccordion"}}
-                                .card-body{style: 'margin-left: 10px;'}
-                                  =raw(question.content)
-
-                            -if question.answers.present?
+                        -if user_question&.answers.present?
+                          %h4.mb-4
+                            ="Marks: #{user_question.score.to_i}/#{question.score.to_i}"
+                          .py-3
+                            -if user_question&.educator_comment.present?
+                              %h6='Educator Comment:'
+                              =raw(user_question.educator_comment)
+                          .py-3
+                            .accordion#resultsAccordion
                               .card
-                                .card-header#optionsHeading{type: "button", data:{toggle: "collapse", target: "#section#{section.id}-question-#{question.id}-optionsCard"}, aria:{expanded: "true", controls: "optionsCard"}, style: 'padding: 10px;'}
+                                .card-header#questionHeading{type: "button", data:{toggle: "collapse", target: "#section#{section.id}-question-#{question.id}-questionsCard"}, aria:{expanded: "true", controls: "questionCard"}, style: 'padding: 10px;'}
                                   %h2.mb-0
                                     .btn.btn-link
-                                      ='Options: '
-                                .collapse{id: "section#{section.id}-question-#{question.id}-optionsCard", aria: {labelledby: "optionsHeading"}, data: {parent: "#resultsAccordion"}}
+                                      ='Question Content: '
+                                .collapse.show{id: "section#{section.id}-question-#{question.id}-questionsCard", aria: {labelledby: "questionHeading"}, data: {parent: "#resultsAccordion"}}
                                   .card-body{style: 'margin-left: 10px;'}
-                                    %ul
-                                      -question.answers.each do |answer|
-                                        %li
-                                          =question_answer(answer)
+                                    =raw(question.content)
 
-                            -if user_question&.answers.present? && %w[open spreadsheet].exclude?(question.kind)
+                              -if question.answers.present?
+                                .card
+                                  .card-header#optionsHeading{type: "button", data:{toggle: "collapse", target: "#section#{section.id}-question-#{question.id}-optionsCard"}, aria:{expanded: "true", controls: "optionsCard"}, style: 'padding: 10px;'}
+                                    %h2.mb-0
+                                      .btn.btn-link
+                                        ='Options: '
+                                  .collapse{id: "section#{section.id}-question-#{question.id}-optionsCard", aria: {labelledby: "optionsHeading"}, data: {parent: "#resultsAccordion"}}
+                                    .card-body{style: 'margin-left: 10px;'}
+                                      %ul
+                                        -question.answers.each do |answer|
+                                          %li
+                                            =question_answer(answer)
+
+                              -if user_question&.answers.present? && %w[open spreadsheet].exclude?(question.kind)
+                                .card
+                                  .card-header#answersHeading{type: "button", data:{toggle: "collapse", target: "#section#{section.id}-question-#{question.id}-answersCard"}, aria:{expanded: "true", controls: "answersCard"}, style: 'padding: 10px;'}
+                                    %h2.mb-0
+                                      .btn.btn-link
+                                        ='Answered:'
+                                  .collapse{id: "section#{section.id}-question-#{question.id}-answersCard", aria: {labelledby: "answersHeading"}, data: {parent: "#resultsAccordion"}}
+                                    .card-body{style: 'margin-left: 10px;'}
+                                      %ul
+                                        -user_question.answers.each do |answer|
+                                          %li
+                                            =raw(question_answer(answer))
+
                               .card
-                                .card-header#answersHeading{type: "button", data:{toggle: "collapse", target: "#section#{section.id}-question-#{question.id}-answersCard"}, aria:{expanded: "true", controls: "answersCard"}, style: 'padding: 10px;'}
+                                .card-header#solutionHeading{type: "button", data:{toggle: "collapse", target: "#section#{section.id}-question-#{question.id}-solutionCard"}, aria:{expanded: "true", controls: "solutionCard"}, style: 'padding: 10px;'}
                                   %h2.mb-0
                                     .btn.btn-link
-                                      ='Answered:'
-                                .collapse{id: "section#{section.id}-question-#{question.id}-answersCard", aria: {labelledby: "answersHeading"}, data: {parent: "#resultsAccordion"}}
+                                      ='Suggested Solution: '
+                                .collapse{id: "section#{section.id}-question-#{question.id}-solutionCard", aria: {labelledby: "solutionHeading"}, data: {parent: "#resultsAccordion"}}
                                   .card-body{style: 'margin-left: 10px;'}
-                                    %ul
-                                      -user_question.answers.each do |answer|
-                                        %li
-                                          =raw(question_answer(answer))
-
-                            .card
-                              .card-header#solutionHeading{type: "button", data:{toggle: "collapse", target: "#section#{section.id}-question-#{question.id}-solutionCard"}, aria:{expanded: "true", controls: "solutionCard"}, style: 'padding: 10px;'}
-                                %h2.mb-0
-                                  .btn.btn-link
-                                    ='Suggested Solution: '
-                              .collapse{id: "section#{section.id}-question-#{question.id}-solutionCard", aria: {labelledby: "solutionHeading"}, data: {parent: "#resultsAccordion"}}
-                                .card-body{style: 'margin-left: 10px;'}
-                                  =raw(question.solution)
+                                    =raw(question.solution)
+                        - else
+                          %h4.mb-4
+                            Question not answered
