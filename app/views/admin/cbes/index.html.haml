@@ -20,6 +20,7 @@
                     %th Active
                     %th
                     %th
+                    %th
                 %tbody
                   - @cbes.each do |cbe|
                     %tr
@@ -33,3 +34,5 @@
                         = link_to t('views.general.edit'), admin_cbe_url(cbe.id), class: 'btn btn-xs btn-primary'
                       %td
                         = link_to t('views.general.show'), cbe_url(cbe.id), class: 'btn btn-xs btn-secondary'
+                      %td
+                        =link_to t('views.general.clone'), cbe_clone_admin_cbe_path(id: cbe.id), data: {confirm: t('views.general.clone_confirmation')}, method: :post, class: 'dropdown-item', style: 'color: #fd7e14;'

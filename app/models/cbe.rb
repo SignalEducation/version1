@@ -18,4 +18,17 @@ class Cbe < ApplicationRecord
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order, :subject_course_id) }
+
+  def duplicate
+    new_cbe = deep_clone include: [
+      :introduction_pages,
+      :resources,
+      sections: [
+        questions: :answers,
+        scenarios: { questions: :answers }
+      ]
+    ], validate: false
+
+    new_cbe.update(name: "#{name} COPY", active: false)
+  end
 end
