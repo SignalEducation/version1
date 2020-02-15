@@ -1,5 +1,8 @@
 version: 1
 cron:
- - name: "paypal-sync"
-   url: "/cron_tasks/paypal_sync"
+ - name: "ping"
+   url: "/api/cron_tasks/ping"
    schedule: "* * * * *"
+ - name: "paypal-sync"
+   url: "/api/cron_tasks/paypal_sync"
+   schedule: "30 6 * * *"
