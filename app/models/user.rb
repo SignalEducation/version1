@@ -265,70 +265,38 @@ class User < ApplicationRecord
       csv << attributes
 
       all.each do |user|
-        csv << attributes.map{ |attr| user.send(attr) }
+        csv << attributes.map { |attr| user.send(attr) }
       end
     end
   end
 
   def self.parse_csv(csv_content)
-    csv_data = []
-    duplicate_emails = []
-    has_errors = false
-    if csv_content.respond_to?(:each_line)
-      csv_content.each_line do |line|
-        line.strip.split(',').tap do |fields|
-          error_msgs = []
-          existing_user = User.where(email: fields[0]).first
+    users = []
+    csv   = CSV.new(csv_content)
 
-          if fields.length == 3
+    csv.each do |row|
+      user = new(email: row[0], first_name: row[1], last_name: row[2])
+      user.valid?
 
-            error_msgs << I18n.t('models.users.existing_emails') if existing_user
-
-            error_msgs << I18n.t('models.users.duplicated_emails') if duplicate_emails.include?(fields[0])
-
-            error_msgs << I18n.t('models.users.email_must_have_at_symbol') unless fields[0].include?('@')
-
-            error_msgs << I18n.t('models.users.email_must_have_dot') unless fields[0].include?('.')
-            error_msgs << I18n.t('models.users.email_too_short') unless fields[0].length >= 5
-
-            error_msgs << I18n.t('models.users.first_name_too_short') unless fields[1].length >= 2
-            error_msgs << I18n.t('models.users.first_name_too_long') unless fields[1].length <= 20
-
-            error_msgs << I18n.t('models.users.last_name_too_short') unless fields[2].length <= 30
-            error_msgs << I18n.t('models.users.last_name_too_long') unless fields[2].length >= 2
-
-            duplicate_emails << fields[0]
-          else
-            error_msgs << I18n.t('models.users.invalid_field_count')
-          end
-          has_errors = true unless error_msgs.empty?
-          csv_data << { values: fields, error_messages: error_msgs }
-        end
-      end
-    else
-      has_errors = true
+      users << user
     end
-    has_errors = true if csv_data.empty?
-    return csv_data, has_errors
+
+    users
   end
 
   def self.bulk_create(csv_data, user_group_id, root_url)
-    existing_users = []
     new_users = []
-    if csv_data.is_a?(Hash)
-      self.transaction do
-        csv_data.each do |k,v|
-          user = User.where(email: v['email']).first
-          if user
-            raise ActiveRecord::Rollback
-          else
-            CsvImportUserCreationWorker.perform_async(v['email'], v['first_name'], v['last_name'], user_group_id, root_url)
-            new_users << v['email']
-          end
-        end
+    transaction do
+      csv_data.each do |_k, v|
+        user = User.find_by(email: v['email'])
+        next if user
+
+        CsvImportUserCreationWorker.perform_async(v['email'], v['first_name'], v['last_name'], user_group_id, root_url)
+        new_users << v['email']
       end
     end
-    return new_users, existing_users
+
+    new_users
   end
 
   def self.create_csv_user(email, first_name, last_name, user_group_id, root_url)
