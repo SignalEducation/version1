@@ -1,7 +1,10 @@
 .container
   %header.management-console-section
     %h1
-      ='System Settings'
+      =t('views.home_pages.index.h1')
+
+  %section.pb-3
+    =render partial: 'management_consoles/system_requirements_nav'
 
   %section.pb-7
     .row
