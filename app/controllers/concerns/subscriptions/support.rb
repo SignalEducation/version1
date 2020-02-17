@@ -36,7 +36,7 @@ module Subscriptions
 
       return if exam_body_check || preferred_exam_body_check
 
-      redirect_to(edit_preferred_exam_body_path) && return
+      redirect_to(edit_preferred_exam_body_path) and return
     end
 
     def active_subscriptions_check
@@ -47,7 +47,7 @@ module Subscriptions
 
       url = redirect_url(active_subscriptions)
 
-      redirect_to(url) && return
+      redirect_to(url) and return
     end
 
     def redirect_url(active_subscriptions)
@@ -58,7 +58,7 @@ module Subscriptions
     def standard_student?
       return if current_user.standard_student_user?
 
-      redirect_to(root_url) && return
+      redirect_to(root_url) and return
     end
 
     def default_plan

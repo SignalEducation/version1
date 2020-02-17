@@ -12,7 +12,6 @@ Rails.application.routes.draw do
   mount Split::Dashboard, at: 'split', constraints: AdminConstraint.new
 
   get '404' => redirect('404-page')
-  get '500' => redirect('500-page')
 
   # API
   namespace :api do
@@ -66,7 +65,6 @@ Rails.application.routes.draw do
   # all standard, user-facing "resources" go inside this scope
   scope '(:locale)', locale: /en/ do # /en\nl\pl/
     get '404' => redirect('404-page')
-    get '500' => redirect('500-page')
 
     # Subscriptions
     resources :subscriptions, only: %i[show new create update destroy] do
@@ -301,6 +299,7 @@ Rails.application.routes.draw do
     # Catch-all
     get '404', to: 'footer_pages#missing_page', first_element: '404-page', as: :missing_page
     get '404-page', to: 'footer_pages#missing_page', first_element: '404-page'
+    get '/500', to: 'error#internal_error'
     get '/:public_url', to: 'student_sign_ups#landing', as: :footer_landing_page
     get 'content/:content_public_url', to: 'content_pages#show', as: :footer_content_page
 
