@@ -107,19 +107,17 @@ class Charge < ApplicationRecord
   end
 
   def self.update_refund_data(event)
+    charge = Charge.find_by(stripe_guid: event[:id])
+    return if charge.nil?
 
-    charge = Charge.where(stripe_guid: event[:id]).first
-    if charge
-      charge.update_attributes(
-          amount: event[:amount],
-          amount_refunded: event[:amount_refunded],
-          paid: event[:paid],
-          refunded: event[:refunded],
-          stripe_refunds_data: event[:refunds].to_hash.deep_dup,
-          status: event[:status]
-      )
-    end
-    return charge
+    charge.update(amount: event[:amount],
+                  amount_refunded: event[:amount_refunded],
+                  paid: event[:paid],
+                  refunded: event[:refunded],
+                  stripe_refunds_data: event[:refunds].to_hash.deep_dup,
+                  status: event[:status])
+
+    charge
   end
 
   def destroyable?

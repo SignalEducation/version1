@@ -15,17 +15,17 @@
 
             =f.label :invoice_id, t('views.refunds.form.invoice_id'), class: 'control-label'
             .input-group.input-group-lg.full-width
-              =f.text_field :invoice_id, value: @invoice.id, class: 'form-control', style: 'border-radius: 6px;', readonly: true
+              =f.text_field :invoice_id, value: @charge.invoice_id, class: 'form-control', style: 'border-radius: 6px;', readonly: true
             %br/
 
           .col-sm-6
             =f.label :user_id, t('views.refunds.form.user_id'), class: 'control-label'
             .input-group.input-group-lg.full-width
-              =f.text_field :user_id, value: @user.id, class: 'form-control', style: 'border-radius: 6px;', readonly: true
+              =f.text_field :user_id, value: @charge.user_id, class: 'form-control', style: 'border-radius: 6px;', readonly: true
             %br/
             =f.label :subscription_id, t('views.refunds.form.subscription_id'), class: 'control-label'
             .input-group.input-group-lg.full-width
-              =f.text_field :subscription_id, value: @subscription.id, class: 'form-control', style: 'border-radius: 6px;', readonly: true
+              =f.text_field :subscription_id, value: @charge.subscription_id, class: 'form-control', style: 'border-radius: 6px;', readonly: true
             %br/
 
           .col-sm-8.col-md-offset-2
@@ -43,4 +43,4 @@
         .row
           .col-sm-8.col-md-offset-2
             =f.submit t('views.general.save'), class: 'btn btn-primary'
-            =link_to t('views.general.cancel'), subscription_management_invoice_charge_url(@subscription.id, @invoice.id, @charge.id), class: 'btn btn-secondary'
+            =link_to t('views.general.cancel'), subscription_management_invoice_charge_url(@charge.subscription_id, @charge.invoice_id, @charge.id), class: 'btn btn-secondary'

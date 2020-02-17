@@ -21,7 +21,8 @@ FactoryBot.define do
   factory :subscription_transaction do
     user
     subscription
-    stripe_transaction_guid       { 'tran_ABC123123123' }
+    sequence(:stripe_transaction_guid)                  { |n| "tran_ABC123123123-#{n}" }
+    # stripe_transaction_guid       { 'tran_ABC123123123' }
     currency
     subscription_payment_card
     original_data                 { {some: 'value', data: 'present'} }

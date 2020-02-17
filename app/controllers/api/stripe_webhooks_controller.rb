@@ -6,9 +6,7 @@ module Api
     before_action :process_json, only: :create
 
     def create
-      if @event_json && StripeApiEvent.should_process?(@event_json)
-        record_webhook(@event_json)
-      end
+      record_webhook(@event_json) if @event_json && StripeApiEvent.should_process?(@event_json)
       head :no_content
     rescue StandardError => e
       Rails.logger.error('ERROR: Api/StripeWebhooks#Create: Error: ' \

@@ -143,7 +143,7 @@ RSpec.describe 'Api::V1::CbesController', type: :request do
   describe 'patch /api/v1/cbes/:id' do
     context 'update a cbe' do
       let!(:cbe) { create(:cbe) }
-      let!(:update_params) { FactoryBot.attributes_for(:cbe, name: 'Updated CBE') }
+      let!(:update_params) { attributes_for(:cbe, name: 'Updated CBE') }
 
       before do
         patch "/api/v1/cbes/#{cbe.id}", params: { cbe: update_params }
