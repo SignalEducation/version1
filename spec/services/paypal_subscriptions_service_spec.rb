@@ -4,7 +4,8 @@ describe PaypalSubscriptionsService, type: :service do
   before :each do
     allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
   end
-  let(:subscription) { create(:subscription) }
+  let(:user) { create(:student_user) }
+  let(:subscription) { create(:subscription, user: user) }
   subject { PaypalSubscriptionsService.new(subscription) }
 
   # INSTANCE METHODS ###########################################################
@@ -289,10 +290,28 @@ describe PaypalSubscriptionsService, type: :service do
     end
   end
 
+  describe '#create_new_subscription' do
+    let(:agreement_dbl) {
+      double(
+        'Agreement',
+        token: 'tok_FDAF343DFDA',
+        links: [double( rel: 'approval_url', href: 'https://example.com/approval' )],
+        state: 'Pending'
+      )
+    }
+    let(:plan) { create(:subscription_plan, paypal_guid: 'plan-id-12345', currency: subscription.subscription_plan.currency) }
+
+    it 'creates a new Learnsignal subscription' do
+      allow(subject).to receive(:create_billing_agreement).and_return(agreement_dbl)
+
+      expect { subject.create_new_subscription(plan.id, nil) }.to change { Subscription.count }.from(1).to(2)
+    end
+  end
+
   # PRIVATE METHODS ############################################################
 
   describe '#agreement_attributes' do
-    it 'returns the correct hash' do
+    it 'returns the correct hash when there is no start date' do
       expect(subject.send(:agreement_attributes, subscription: subscription))
         .to eq (
           {
@@ -320,6 +339,44 @@ describe PaypalSubscriptionsService, type: :service do
             }
           }
         )
+    end
+
+    it 'returns the correct hash when there is a start date (no setup fee)' do
+      new_time = Time.zone.now + 1.week
+      expect(subject.send(:agreement_attributes, subscription: subscription, start_date: new_time)).
+        to eq(
+          name: subscription.subscription_plan.name,
+          description: subscription.subscription_plan.description.delete("\n"),
+          start_date: new_time.iso8601,
+          payer: {
+            payment_method: 'paypal',
+            payer_info: {
+              email: subscription.user.email,
+              first_name: subscription.user.first_name,
+              last_name: subscription.user.last_name
+            }
+          },
+          override_merchant_preferences: {
+            setup_fee: {},
+            return_url: "https://staging.learnsignal.com/en/subscriptions/#{subscription.id}/execute?payment_processor=paypal",
+            cancel_url: 'https://staging.learnsignal.com/en/subscriptions/new?flash=It+seems+you+cancelled+your+subscription+on+Paypal.+Still+want+to+upgrade%3F'
+          },
+          plan: {
+            id: subscription.subscription_plan.paypal_guid
+          }
+        )
+    end
+  end
+
+  describe '#subscription_setup_fee' do
+    it 'returns an empty hash if a start_date is passed in' do
+      expect(subject.send(:subscription_setup_fee, Time.zone.tomorrow, subscription.subscription_plan)).to eq ({})
+    end
+
+    it 'returns the correct hash if no start_date is passed in' do
+      expect(
+        subject.send(:subscription_setup_fee, nil, subscription.subscription_plan)
+      ).to eq(currency: subscription.subscription_plan.currency.iso_code, value: subscription.subscription_plan.price.to_s)
     end
   end
 

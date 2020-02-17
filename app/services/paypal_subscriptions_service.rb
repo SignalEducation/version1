@@ -111,7 +111,7 @@ class PaypalSubscriptionsService
     )
     new_subscription.update(
       paypal_token: new_agreement.token,
-      paypal_approval_url: new_agreement.links.find{|v| v.rel == "approval_url" }.href,
+      paypal_approval_url: new_agreement.links.find { |v| v.rel == 'approval_url' }.href,
       paypal_status: new_agreement.state
     )
     new_subscription
@@ -145,10 +145,10 @@ class PaypalSubscriptionsService
 
     {
       name: subscription_plan.name,
-      description: subscription_plan.description.gsub("\n", ""),
+      description: subscription_plan.description.delete("\n"),
       start_date: (start_date.nil? ? subscription_start_date(subscription_plan) : start_date),
       payer: {
-        payment_method: "paypal",
+        payment_method: 'paypal',
         payer_info: {
           email: subscription.user.email,
           first_name: subscription.user.first_name,
@@ -156,16 +156,22 @@ class PaypalSubscriptionsService
         }
       },
       override_merchant_preferences: {
-        setup_fee: {
-          value: subscription_plan.price.to_s,
-          currency: subscription_plan.currency.iso_code
-        },
+        setup_fee: subscription_setup_fee(start_date, subscription_plan),
         return_url: execute_subscription_url(id: subscription.id, host: LEARNSIGNAL_HOST, payment_processor: 'paypal'),
         cancel_url: cancel_url(subscription)
       },
       plan: {
         id: subscription_plan.paypal_guid
       }
+    }
+  end
+
+  def subscription_setup_fee(start_date, subscription_plan)
+    return {} if start_date
+
+    {
+      value: subscription_plan.price.to_s,
+      currency: subscription_plan.currency.iso_code
     }
   end
 
