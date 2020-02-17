@@ -24,7 +24,7 @@ describe SubscriptionService, type: :service do
       end
 
       it 'calls #change_plan on the StripeService' do
-        expect_any_instance_of(StripeSubscriptionService).to receive(:change_plan).with('new_plan_id')
+        expect_any_instance_of(StripeSubscriptionService).to receive(:change_plan).with('', 'new_plan_id')
 
         sub_service.send(:change_plan, 'new_plan_id')
       end

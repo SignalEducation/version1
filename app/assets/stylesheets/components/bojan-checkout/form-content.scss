@@ -53,8 +53,7 @@
 
 }
 
-
-#upgrade-subscription, #product_purchase {
+#upgrade-subscription, #product_purchase, #plans {
   font-size: 16px;
   font-family: OakesGrotesk,sans-serif;
   h1, h2, .h2, h3, h4 {
@@ -212,7 +211,7 @@
   }
   @media (min-width:576px) {
     .form-control {
-      padding: 1.35em 1.25em
+      padding: 1.35em 0.75em
     }
   }
   .form-control.coupon-error,
@@ -223,6 +222,7 @@
   .form-control:valid.coupon-success {
     border:2px solid #00b67B!important;
   }
+
 
   .form-control.is-invalid,
   .form-control:invalid {
@@ -243,6 +243,9 @@
     border-color: #7f8599!important;
     -webkit-box-shadow: none!important;
     box-shadow: none!important
+  }
+  .change_plan {
+    background-color: #fff;
   }
   .invalid-feedback {
     margin-top: 0;

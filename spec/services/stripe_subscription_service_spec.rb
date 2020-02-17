@@ -33,7 +33,7 @@ describe StripeSubscriptionService, type: :service do
       expect(subject).to receive(:create_subscription).
                            and_return([new_sub, stripe_sub])
 
-      subject.change_plan(sub_plan.id)
+      subject.change_plan('', sub_plan.id)
     end
 
     it 'starts the new subscription' do
@@ -42,7 +42,7 @@ describe StripeSubscriptionService, type: :service do
       allow(subject).to receive(:update_old_subscription)
       expect_any_instance_of(Subscription).to receive(:start)
 
-      subject.change_plan(sub_plan.id)
+      subject.change_plan('', sub_plan.id)
     end
 
     it 'calls #update_old_subscription' do
@@ -50,7 +50,7 @@ describe StripeSubscriptionService, type: :service do
                           and_return([new_sub, stripe_sub])
       expect(subject).to receive(:update_old_subscription)
 
-      subject.change_plan(sub_plan.id)
+      subject.change_plan('', sub_plan.id)
     end
 
     it 'returns a subscription and stripe object' do
@@ -58,7 +58,7 @@ describe StripeSubscriptionService, type: :service do
                           and_return([new_sub, stripe_sub])
       allow(subject).to receive(:update_old_subscription)
 
-      expect(subject.change_plan(sub_plan.id)).to be_kind_of Array
+      expect(subject.change_plan('', sub_plan.id)).to be_kind_of Array
     end
 
     describe 'for payments failing 3DS' do
@@ -75,7 +75,7 @@ describe StripeSubscriptionService, type: :service do
         allow(subject).to receive(:update_old_subscription)
         expect_any_instance_of(Subscription).to receive(:mark_payment_action_required)
 
-        subject.change_plan(sub_plan.id)
+        subject.change_plan('', sub_plan.id)
       end
     end
   end
@@ -283,13 +283,13 @@ describe StripeSubscriptionService, type: :service do
     it 'calls #get_updated_stripe_subscription' do
       expect(subject).to receive(:get_updated_stripe_subscription).and_return(stripe_sub)
 
-      subject.send(:create_subscription, sub_plan)
+      subject.send(:create_subscription, '', sub_plan)
     end
 
     it 'creates a new Subscription record' do
       allow(subject).to receive(:get_updated_stripe_subscription).and_return(stripe_sub)
 
-      expect{ subject.send(:create_subscription, sub_plan) }.to(
+      expect{ subject.send(:create_subscription, '', sub_plan) }.to(
         change { Subscription.count }.from(1).to(2)
       )
     end
@@ -316,14 +316,14 @@ describe StripeSubscriptionService, type: :service do
       expect(Stripe::Subscription).to receive(:retrieve).and_return(stripe_sub)
       allow(Stripe::Subscription).to receive(:update)
 
-      subject.send(:get_updated_stripe_subscription, sub_plan)
+      subject.send(:get_updated_stripe_subscription, '', sub_plan)
     end
 
     it 'updates the Stripe Subscription' do
       allow(Stripe::Subscription).to receive(:retrieve).and_return(stripe_sub)
       expect(Stripe::Subscription).to receive(:update)
 
-      subject.send(:get_updated_stripe_subscription, sub_plan)
+      subject.send(:get_updated_stripe_subscription, '', sub_plan)
     end
   end
 
