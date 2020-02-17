@@ -146,7 +146,10 @@ class User < ApplicationRecord
 
   ### class methods
   def self.search(term)
-    where("email ILIKE :t OR first_name ILIKE :t OR last_name ILIKE :t OR stripe_customer_id ILIKE :t OR textcat(first_name, textcat(text(' '), last_name)) ILIKE :t", t: "%#{term}%")
+    left_outer_joins(:subscriptions).
+      where('email ILIKE :t OR first_name ILIKE :t OR last_name ILIKE :t OR users.stripe_customer_id ILIKE :t ' \
+            "OR textcat(first_name, textcat(text(' '), last_name)) ILIKE :t " \
+            'OR subscriptions.paypal_subscription_guid ILIKE :t', t: "%#{term}%")
   end
 
   def self.all_students

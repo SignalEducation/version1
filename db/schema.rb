@@ -409,9 +409,9 @@ ActiveRecord::Schema.define(version: 2020_02_11_113807) do
     t.boolean "is_video", default: false, null: false
     t.boolean "is_quiz", default: false, null: false
     t.boolean "active", default: true, null: false
-    t.datetime "destroyed_at"
-    t.string "seo_description"
+    t.string "seo_description", limit: 255
     t.boolean "seo_no_index", default: false
+    t.datetime "destroyed_at"
     t.integer "number_of_questions", default: 0
     t.float "duration", default: 0.0
     t.string "temporary_label"
@@ -430,9 +430,9 @@ ActiveRecord::Schema.define(version: 2020_02_11_113807) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer "cme_count", default: 0
-    t.datetime "destroyed_at"
-    t.string "seo_description"
+    t.string "seo_description", limit: 255
     t.boolean "seo_no_index", default: false
+    t.datetime "destroyed_at"
     t.integer "number_of_questions", default: 0
     t.integer "subject_course_id"
     t.float "video_duration", default: 0.0

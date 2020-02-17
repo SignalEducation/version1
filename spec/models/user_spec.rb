@@ -164,6 +164,19 @@ describe User do
   it { should respond_to(:started_course_module_element) }
   it { should respond_to(:last_subscription) }
 
+  describe '.search' do
+    let(:example_user) { create(:user) }
+
+    before :each do
+      allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
+      create(:subscription, user: example_user, paypal_subscription_guid: 'I-testGuid1234567')
+    end
+
+    it 'returns the correct user for a PayPal subscription' do
+      expect(User.search('I-test').first.id).to eq example_user.id
+    end
+  end
+
   describe 'Methods' do
     describe '.viewable_subscriptions' do
       before :each do
