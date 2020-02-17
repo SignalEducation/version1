@@ -22,7 +22,7 @@
               :cbe_data="cbe_data"
             />
           </b-navbar-nav>
-          <b-navbar-nav v-if="$route.name == 'review' && user_cbe_data.status !== 'corrected'">
+          <b-navbar-nav v-if="$route.name == 'review' && (user_cbe_data.status !== 'corrected' && user_cbe_data.status !== 'finished')">
             <b-nav-text
               class="arrow-right-icon"
               @click="submitExam"

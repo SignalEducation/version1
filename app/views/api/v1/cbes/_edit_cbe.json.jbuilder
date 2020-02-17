@@ -26,7 +26,7 @@ json.resources cbe.resources.order(:sorting_order) do |resource|
   end
 end
 
-json.sections cbe.sections.all_in_order do |section|
+json.sections cbe.sections.active.all_in_order do |section|
   json.partial! 'api/v1/cbes/sections/section_edit', locals: { section: section }
 end
 

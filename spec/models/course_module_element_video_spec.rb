@@ -14,6 +14,7 @@
 #
 
 require 'rails_helper'
+require 'concerns/archivable_spec.rb'
 
 describe CourseModuleElementVideo do
   let(:cme) { build_stubbed(:course_module_element_video) }
@@ -55,5 +56,9 @@ describe CourseModuleElementVideo do
         expect(cme.parent).to eq(cme.course_module_element)
       end
     end
+  end
+
+  describe 'Concern' do
+    it_behaves_like 'archivable'
   end
 end

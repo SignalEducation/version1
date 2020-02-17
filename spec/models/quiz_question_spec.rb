@@ -15,35 +15,39 @@
 #
 
 require 'rails_helper'
+require 'concerns/archivable_spec.rb'
 
 describe QuizQuestion do
+  describe 'relationships' do
+    it { should belong_to(:subject_course) }
+    it { should belong_to(:course_module_element) }
+    it { should belong_to(:course_module_element_quiz) }
+    it { should have_many(:quiz_attempts) }
+    it { should have_many(:quiz_answers) }
+    it { should have_many(:quiz_contents) }
+    it { should have_many(:quiz_solutions) }
+  end
 
-  # relationships
-  it { should belong_to(:subject_course) }
-  it { should belong_to(:course_module_element) }
-  it { should belong_to(:course_module_element_quiz) }
-  it { should have_many(:quiz_attempts) }
-  it { should have_many(:quiz_answers) }
-  it { should have_many(:quiz_contents) }
-  it { should have_many(:quiz_solutions) }
+  describe 'validations' do
+   it { should validate_presence_of(:course_module_element_id).on(:update) }
+  end
 
-  # validation
+  describe 'callbacks' do
+    it { should callback(:check_dependencies).before(:destroy) }
+    it { should callback(:set_course_module_element).before(:validation) }
+  end
+  describe 'scopes' do
+    it { expect(QuizQuestion).to respond_to(:all_in_order) }
+    it { expect(QuizQuestion).to respond_to(:in_created_order) }
+    it { expect(QuizQuestion).to respond_to(:all_destroyed) }
+  end
 
-  it { should validate_presence_of(:course_module_element_id).on(:update) }
+  describe 'instance methods' do
+    it { should respond_to(:destroyable?) }
+    it { should respond_to(:destroyable_children) }
+  end
 
-  # callbacks
-  it { should callback(:check_dependencies).before(:destroy) }
-  it { should callback(:set_course_module_element).before(:validation) }
-
-  # scopes
-  it { expect(QuizQuestion).to respond_to(:all_in_order) }
-  it { expect(QuizQuestion).to respond_to(:in_created_order) }
-  it { expect(QuizQuestion).to respond_to(:all_destroyed) }
-
-  # class methods
-
-  # instance methods
-  it { should respond_to(:destroyable?) }
-  it { should respond_to(:destroyable_children) }
-
+  describe 'Concern' do
+    it_behaves_like 'archivable'
+  end
 end

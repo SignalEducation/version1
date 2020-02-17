@@ -16,6 +16,7 @@
 #
 
 require 'rails_helper'
+require 'concerns/archivable_spec.rb'
 
 describe CourseModuleElementResource do
   describe 'relationships' do
@@ -39,5 +40,9 @@ describe CourseModuleElementResource do
 
   describe 'instance methods' do
     it { should respond_to(:destroyable?) }
+  end
+
+  describe 'Concern' do
+    it_behaves_like 'archivable'
   end
 end
