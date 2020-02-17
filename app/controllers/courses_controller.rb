@@ -6,6 +6,7 @@ class CoursesController < ApplicationController
   before_action :check_permission, only: %i[show show_constructed_response]
 
   def show
+    @vimeo_as_main = vimeo_as_main?
     @subject_course_user_log = current_user.subject_course_user_logs.for_subject_course(@course.id).last if current_user.subject_course_user_logs.any?
     @course_section_user_log = @subject_course_user_log.course_section_user_logs.where(course_section_id: @course_section.id).last if @subject_course_user_log
     @student_exam_track = @course_section_user_log.student_exam_tracks.where(course_module_id: @course_module.id).last if @course_section_user_log
