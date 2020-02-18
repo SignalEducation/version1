@@ -22,8 +22,7 @@ module Subscriptions
     end
 
     def create
-      send("change_#{@subscription.subscription_type}_subscription",
-           @subscription, plan_change_params[:subscription_plan_id].to_i, params[:subscription][:kind])
+      @subscription.stripe? ? change_stripe_subscription : change_paypal_subscription
     rescue Learnsignal::SubscriptionError => e
       if request.xhr?
         render json: { subscription_id: @subscription&.id,
@@ -43,9 +42,12 @@ module Subscriptions
 
     private
 
-    def change_stripe_subscription(subscription, plan_id, kind)
-      sub_service = StripeSubscriptionService.new(subscription)
-      @subscription, data = sub_service.change_plan(plan_id)
+    def change_stripe_subscription
+      kind                = params[:kind]
+      coupon              = params[:hidden_coupon_code]
+      plan_id             = params[:subscription][:subscription_plan_id]
+      sub_service         = StripeSubscriptionService.new(@subscription)
+      @subscription, data = sub_service.change_plan(coupon, plan_id)
 
       if data[:status] == :ok
         retrieved_subscription = StripeSubscriptionService.new(@subscription).retrieve_subscription
@@ -58,9 +60,10 @@ module Subscriptions
       end
     end
 
-    def change_paypal_subscription(subscription, plan_id, kind)
-      @subscription =
-        PaypalSubscriptionsService.new(subscription).change_plan(plan_id)
+    def change_paypal_subscription
+      kind          = params[:kind]
+      plan_id       = params[:subscription][:subscription_plan_id]
+      @subscription = PaypalSubscriptionsService.new(subscription).change_plan(plan_id)
       @subscription.update(kind: kind)
       redirect_to @subscription.paypal_approval_url
     end
@@ -71,7 +74,7 @@ module Subscriptions
     end
 
     def plan_change_params
-      params.require(:subscription).permit(:subscription_plan_id, :kind)
+      params.require(:subscription).permit(:subscription_plan_id, :kind, :hidden_coupon_code)
     end
 
     def set_subscription

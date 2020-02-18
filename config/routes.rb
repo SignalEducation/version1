@@ -12,7 +12,6 @@ Rails.application.routes.draw do
   mount Split::Dashboard, at: 'split', constraints: AdminConstraint.new
 
   get '404' => redirect('404-page')
-  get '500' => redirect('500-page')
 
   # API
   namespace :api do
@@ -48,6 +47,7 @@ Rails.application.routes.draw do
       post 'cbe_user_question_update/answer/:question_id', to: 'exercises#cbe_user_question_update', as: :cbe_user_question_update, on: :member
       post 'cbe_user_educator_comment/:cbe_user_log_id', to: 'exercises#cbe_user_educator_comment', as: :cbe_user_log_update, on: :member
     end
+
     resources :user do
       resources :exercises, only: %i[index new create]
     end
@@ -56,17 +56,17 @@ Rails.application.routes.draw do
       post :clone, to: 'cbes#clone', as: :cbe_clone, on: :member
     end
 
-
+    resources :system_settings, only: %i[index update]
     resources :orders, only: %i[index show update] do
       get :update_product
     end
+
     post 'search_exercises', to: 'exercises#index', as: :search_exercises
   end
 
   # all standard, user-facing "resources" go inside this scope
   scope '(:locale)', locale: /en/ do # /en\nl\pl/
     get '404' => redirect('404-page')
-    get '500' => redirect('500-page')
 
     # Subscriptions
     resources :subscriptions, only: %i[show new create update destroy] do
@@ -301,6 +301,7 @@ Rails.application.routes.draw do
     # Catch-all
     get '404', to: 'footer_pages#missing_page', first_element: '404-page', as: :missing_page
     get '404-page', to: 'footer_pages#missing_page', first_element: '404-page'
+    get '/500', to: 'error#internal_error'
     get '/:public_url', to: 'student_sign_ups#landing', as: :footer_landing_page
     get 'content/:content_public_url', to: 'content_pages#show', as: :footer_content_page
 

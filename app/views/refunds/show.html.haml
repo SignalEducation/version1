@@ -4,7 +4,7 @@
       .row.l-margin-bottom
         .col-md-12.text-center
           %h1.l-margin-bottom.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-            =@user.full_name
+            =@refund.user.full_name
           %p
             ='Refund Id:'
             =@refund.id
@@ -83,4 +83,3 @@
                   Reason
                 .h6
                   =@refund.reason
-

@@ -92,7 +92,8 @@ class UsersController < ApplicationController
     @user_groups = UserGroup.all_in_order
 
     if params[:upload]&.respond_to?(:read)
-      @csv_data, @has_errors = User.parse_csv(params[:upload].read)
+      @users      = User.parse_csv(params[:upload].read)
+      @has_errors = csv_parsed_errors?(@users)
     else
       flash[:error] = t('controllers.dashboard.preview_csv.flash.error')
       redirect_to users_url
@@ -100,8 +101,8 @@ class UsersController < ApplicationController
   end
 
   def import_csv_upload
-    if params[:csvdata] && params[:user_group_id]
-      @new_users, @existing_users = User.bulk_create(params[:csvdata], params[:user_group_id], root_url)
+    if params[:csvdata].present? && params[:user_group_id].present?
+      @new_users = User.bulk_create(params[:csvdata], params[:user_group_id], root_url)
       flash[:success] = t('controllers.dashboard.import_csv.flash.success')
     else
       flash[:error] = t('controllers.dashboard.import_csv.flash.error')
@@ -187,5 +188,10 @@ class UsersController < ApplicationController
 
   def format_hubspot_properties(data)
     data.to_unsafe_h.map { |k, v| { property: k, value: v } }
+  end
+
+  def csv_parsed_errors?(users)
+    users.map { |u| u.errors.keys }.flatten.uniq.
+      any? { |e| %i[email first_names last_name].include?(e) }
   end
 end

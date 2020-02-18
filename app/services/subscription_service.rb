@@ -12,7 +12,7 @@ class SubscriptionService
     if paypal?
       PaypalSubscriptionsService.new(@subscription).change_plan(new_plan_id)
     elsif stripe?
-      StripeSubscriptionService.new(@subscription).change_plan(new_plan_id)
+      StripeSubscriptionService.new(@subscription).change_plan('', new_plan_id)
     end
   end
 

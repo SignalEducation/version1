@@ -215,6 +215,13 @@ class ApplicationController < ActionController::Base
     the_answer
   end
 
+  def vimeo_as_main?
+    SystemSetting.find_by(environment: Rails.env).settings['vimeo_as_main_player?'].to_bool
+  rescue NoMethodError => e
+    Airbrake::AirbrakeLogger.new(logger).error e.message
+    true
+  end
+
   # content management links (non-student)
   def course_module_special_link(the_thing)
     # used for tutor-facing links

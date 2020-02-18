@@ -53,12 +53,13 @@ class CouponsController < ApplicationController
   end
 
   def validate_coupon
+    discount = Coupon.verify_coupon_and_get_discount(params[:coupon_code], params[:plan_id])
+
     respond_to do |format|
       format.json do
-        discount = Coupon.verify_coupon_and_get_discount(params[:coupon_code], params[:plan_id])
-        data = { valid: discount[0], discounted_price: discount[1], reason: discount[2] }
-
-        render json: data, status: :ok
+        render json: { valid: discount[0],
+                       discounted_price: discount[1],
+                       reason: discount[2] }, status: :ok
       end
     end
   end

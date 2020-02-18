@@ -9,12 +9,12 @@ class StripeSubscriptionService < StripeService
     Stripe::Subscription.retrieve(id: (id || @subscription.stripe_guid), **options)
   end
 
-  def change_plan(plan_id)
+  def change_plan(coupon, plan_id)
     if (new_sub = @subscription.changed_to) && new_sub.pending_3d_secure?
       stripe_sub = retrieve_subscription(id: new_sub.stripe_guid, expand: ['latest_invoice.payment_intent'])
       new_sub.client_secret = stripe_sub.latest_invoice[:payment_intent][:client_secret]
     else
-      new_sub, stripe_sub = create_subscription(SubscriptionPlan.find(plan_id))
+      new_sub, stripe_sub = create_subscription(coupon, SubscriptionPlan.find(plan_id))
       update_old_subscription(new_sub)
       new_sub.take_appropriate_action(stripe_sub.status)
     end
@@ -57,8 +57,8 @@ class StripeSubscriptionService < StripeService
     raise_subscription_error(e, __method__.to_s, :sub_cancellation)
   end
 
-  def create_subscription(new_plan)
-    stripe_sub    = get_updated_stripe_subscription(new_plan)
+  def create_subscription(coupon, new_plan)
+    stripe_sub    = get_updated_stripe_subscription(coupon, new_plan)
     client_secret = client_secret_from_sub(stripe_sub)
 
     [Subscription.create!(
@@ -83,14 +83,16 @@ class StripeSubscriptionService < StripeService
     raise_subscription_error(e.json_body[:error], __method__.to_s, :decline)
   end
 
-  def get_updated_stripe_subscription(new_sub_plan)
+  def get_updated_stripe_subscription(coupon, new_sub_plan)
     stripe_sub = retrieve_subscription
-
-    Stripe::Subscription.update(
-      @subscription.stripe_guid,
+    data = {
       items: [{ id: stripe_sub&.items&.first&.id, plan: new_sub_plan.stripe_guid }],
-      prorate: true, expand: ['latest_invoice.payment_intent']
-    )
+      prorate: true,
+      coupon: coupon,
+      expand: ['latest_invoice.payment_intent']
+    }
+
+    Stripe::Subscription.update(@subscription.stripe_guid, data)
   rescue Stripe::StripeError => e
     raise_subscription_error(e.json_body[:error], __method__.to_s, :generic)
   end

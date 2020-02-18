@@ -132,7 +132,6 @@
   });
 
   // Hide and show the Currency dropdown depending on AmountOff field having a value
-
   $('#coupon_amount_off').on('input',function(e) {
     if(amountOff.val()){
       $("#currency_select").show();
@@ -141,7 +140,6 @@
       $("#coupon_currency_id").val('');
     }
   });
-
 
   $('select[name="coupon[duration]"]').change(function () {
     if (couponDuration.val() == 'repeating') {

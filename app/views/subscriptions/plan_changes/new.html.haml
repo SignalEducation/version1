@@ -1,3 +1,5 @@
+=javascript_include_tag 'coupons'
+
 %main
   %article.bg-gray5
     .container-bg
@@ -14,6 +16,7 @@
             =f.hidden_field :subscription_plan_id
             =f.hidden_field :use_paypal, value: @subscription.paypal?
             =f.hidden_field :kind, value: :change_plan
+            =hidden_field_tag :hidden_coupon_code
             .row
               .col-12.col-lg-8
                 .row.row-md.justify-content-center
@@ -54,13 +57,11 @@
                             %fieldset
                               %legend.sr-only Select this plan
                               .custom-control.custom-radio.plan-option
-                                %input{id: 'chk-plan-' + plan.id.to_s, type: 'radio', class: 'custom-control-input style-radio option'}
+                                %input{id: 'chk-plan-' + plan.id.to_s, name: 'plans', type: 'radio', class: 'custom-control-input style-radio option', value: plan.id}
                                 %label{class: "custom-control-label ", for: 'chk-plan-' + plan.id.to_s}
                                   %span.custom-label-info
                                     %span Select this plan
                                   %span.custom-check
-
-
 
               .col-12.col-lg-4
                 %section#simply
@@ -85,6 +86,15 @@
                                 &#8226;
                                 =@card.last_4
 
+                            -# coupon
+                            .form-group{style: 'margin-bottom: 0;'}
+                              .col-sm-6{style: 'padding-left: 0;'}
+                                %span.payment-content
+                                  %input{type: 'text_field', id: 'coupon_code', class: 'form-control change_plan', placeholder: 'Coupon Code'}
+                                  .invalid-code.invalid-details
+                                    ='Invalid Code'
+                            -# coupon
+
                           %p.py-4
                             ='Any remaining time on your current billing period will be credited to your account, and used for this and any future payments until all credit is used.'
                           %div.invalid-details
@@ -100,7 +110,6 @@
 
 
 :javascript
-
   function addToCart(theThing) {
     let parentThing = $(theThing).parent().parent().parent().parent();
     dataLayer.push({
@@ -177,6 +186,7 @@
     $("#upgrade-subscription-form").submit(function(ev) {
       ev.preventDefault();
       displayError.text('');
+      $('#hidden_coupon_code').val($('#coupon_code').val());
       $("#changePlan").hide();
       $(".spinner-message").html("Please wait...");
       $(".spinning-loading").show();
