@@ -1,16 +1,5 @@
+%script{:src => "//cdn.iubenda.com/cs/tcf/stub.js", :type => "text/javascript"}
 :javascript
   var _iub = _iub || [];
-  _iub.csConfiguration = {
-    cookiePolicyId: 7779613,
-    siteId: 481960,
-    lang: "en",
-    banner: {
-      slideDown: false,
-      content: 'This website or its third party tools use cookies. By closing this banner, scrolling this page, clicking a link or continuing to browse, you agree to the use of cookies illustrated in the %{cookie_policy_link}.',
-      applyStyles: false
-    }
-  };
-  (function (w, d) {
-    var loader = function () { var s = d.createElement("script"), tag = d.getElementsByTagName("script")[0]; s.src = "//cdn.iubenda.com/cookie_solution/iubenda_cs.js"; tag.parentNode.insertBefore(s, tag); };
-    if (w.addEventListener) { w.addEventListener("load", loader, false); } else if (w.attachEvent) { w.attachEvent("onload", loader); } else { w.onload = loader; }
-  })(window, document);
+  _iub.csConfiguration = {"lang":"en","siteId":481960,"countryDetection":true,"consentOnContinuedBrowsing":false,"enableCMP":true,"googleAdsPreferenceManagement":true,"cookiePolicyId":7779613, "banner":{ "acceptButtonDisplay":true,"customizeButtonDisplay":true,"position":"float-top-center","acceptButtonColor":"#00b67b","acceptButtonCaptionColor":"white","customizeButtonColor":"#f5f8fa","customizeButtonCaptionColor":"#4D4D4D","textColor":"#ffffff","backgroundColor":"#000032","closeButtonDisplay":false }};
+%script{:async => "", :charset => "UTF-8", :src => "//cdn.iubenda.com/cs/iubenda_cs.js", :type => "text/javascript"}
