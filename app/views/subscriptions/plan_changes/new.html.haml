@@ -86,14 +86,14 @@
                                 &#8226;
                                 =@card.last_4
 
-                          -# coupon
-                          .form-group{style: 'margin-bottom: 0;'}
-                            .col-sm-6{style: 'padding-left: 0;'}
-                              %span.payment-content
-                                %input{type: 'text_field', id: 'coupon_code', class: 'form-control change_plan', placeholder: 'Coupon Code'}
-                                .invalid-code.invalid-details
-                                  ='Invalid Code'
-                          -# coupon
+                            -# coupon
+                            .form-group{style: 'margin-bottom: 0;'}
+                              .col-sm-6{style: 'padding-left: 0;'}
+                                %span.payment-content
+                                  %input{type: 'text_field', id: 'coupon_code', class: 'form-control change_plan', placeholder: 'Coupon Code'}
+                                  .invalid-code.invalid-details
+                                    ='Invalid Code'
+                            -# coupon
 
                           %p.py-4
                             ='Any remaining time on your current billing period will be credited to your account, and used for this and any future payments until all credit is used.'
