@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe LibraryController, type: :controller do
-
   let!(:gbp) { FactoryBot.create(:gbp) }
   let!(:uk) { FactoryBot.create(:uk, currency_id: gbp.id) }
   let!(:exam_body_1) { FactoryBot.create(:exam_body) }
@@ -19,7 +18,6 @@ RSpec.describe LibraryController, type: :controller do
   let!(:product_1) { FactoryBot.create(:product, mock_exam_id: mock_exam_1.id, currency_id: gbp.id, group_id: group_1.id) }
 
   context 'Not logged in: ' do
-
     describe 'GET index' do
       it 'renders the index view as 2 groups are active' do
         get :index
@@ -67,6 +65,15 @@ RSpec.describe LibraryController, type: :controller do
       end
     end
 
-  end
+    describe 'POST user_contact_form' do
+      it 'redirect and return a success message' do
+        expect(Zendesk::RequestWorker).to receive(:perform_async).and_return(true)
 
+        post :user_contact_form
+
+        expect(flash[:success]).to eq('Thank you! Your submission was successful. We will contact you shortly.')
+        expect(response.status).to eq(302)
+      end
+    end
+  end
 end

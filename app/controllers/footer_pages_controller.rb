@@ -90,18 +90,6 @@ class FooterPagesController < ApplicationController
       but don't worry. We're working on fixing this link.", nil)
   end
 
-  def complaints_intercom
-    # TODO: Added HubSpot API
-    flash[:success] = 'Thank you! Your submission was successful. We will contact you shortly.'
-    redirect_to contact_url
-  end
-
-  def contact_us_intercom
-    # TODO: Added HubSpot API
-    flash[:success] = 'Thank you! Your submission was successful. We will contact you shortly.'
-    redirect_to request.referer || root_url
-  end
-
   protected
 
   def get_variables

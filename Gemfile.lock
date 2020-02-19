@@ -210,6 +210,7 @@ GEM
       ruby_parser (~> 3.5)
     i18n (1.6.0)
       concurrent-ruby (~> 1.0)
+    inflection (1.0.0)
     io-like (0.3.0)
     jaro_winkler (1.5.3)
     jbuilder (2.8.0)
@@ -559,6 +560,12 @@ GEM
     xml-simple (1.1.5)
     xpath (3.2.0)
       nokogiri (~> 1.8)
+    zendesk_api (1.24.0)
+      faraday (>= 0.9.0, < 1.0.0)
+      hashie (>= 3.5.2, < 4.0.0)
+      inflection
+      mime-types
+      multipart-post (~> 2.0)
     zeroclipboard-rails (0.1.2)
       railties (>= 3.1)
 
@@ -665,6 +672,7 @@ DEPENDENCIES
   webrat
   will_paginate
   will_paginate-bootstrap
+  zendesk_api
   zeroclipboard-rails
 
 RUBY VERSION

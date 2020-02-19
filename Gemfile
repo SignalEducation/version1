@@ -70,7 +70,7 @@ gem 'scout_apm'
 gem 'rack-mini-profiler'
 gem 'flamegraph'
 gem 'stackprof'
-gem "recaptcha"
+gem 'recaptcha'
 # Use ActiveStorage variant
 # gem 'mini_magick', '~> 4.8'
 
@@ -78,6 +78,7 @@ gem "recaptcha"
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'webpacker', '~> 4.2'
 gem 'rack-cors'
+gem 'zendesk_api'
 
 # Environment-specific gems
 
