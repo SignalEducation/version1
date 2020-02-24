@@ -13,6 +13,8 @@ Rails.application.routes.draw do
 
   get '404' => redirect('404-page')
 
+  post 'cron_tasks/:id', to: 'cron_tasks#create'
+
   # API
   namespace :api do
     post 'stripe_webhooks', to: 'stripe_webhooks#create'
