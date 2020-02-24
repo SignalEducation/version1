@@ -343,11 +343,12 @@ describe PaypalSubscriptionsService, type: :service do
 
     it 'returns the correct hash when there is a start date (no setup fee)' do
       new_time = Time.zone.now + 1.week
+
       expect(subject.send(:agreement_attributes, subscription: subscription, start_date: new_time)).
         to eq(
           name: subscription.subscription_plan.name,
           description: subscription.subscription_plan.description.delete("\n"),
-          start_date: new_time.iso8601,
+          start_date: new_time.iso8601(9),
           payer: {
             payment_method: 'paypal',
             payer_info: {
