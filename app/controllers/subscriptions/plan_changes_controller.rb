@@ -63,7 +63,7 @@ module Subscriptions
     def change_paypal_subscription
       kind          = params[:kind]
       plan_id       = params[:subscription][:subscription_plan_id]
-      @subscription = PaypalSubscriptionsService.new(subscription).change_plan(plan_id)
+      @subscription = PaypalSubscriptionsService.new(@subscription).change_plan(plan_id)
       @subscription.update(kind: kind)
       redirect_to @subscription.paypal_approval_url
     end
