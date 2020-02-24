@@ -1,0 +1,5 @@
+version: 1
+cron:
+ - name: "paypal-sync"
+   url: "/cron_tasks/paypal_sync"
+   schedule: "1/1 * * * *"
