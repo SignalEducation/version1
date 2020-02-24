@@ -78,6 +78,16 @@ class LibraryController < ApplicationController
     end
   end
 
+  def user_contact_form
+    Zendesk::RequestWorker.perform_async(params[:full_name],
+                                        params[:email_address],
+                                        params[:type],
+                                        params[:question])
+
+    flash[:success] = 'Thank you! Your submission was successful. We will contact you shortly.'
+    redirect_to request.referer || root_url
+  end
+
   protected
 
   def check_course_available

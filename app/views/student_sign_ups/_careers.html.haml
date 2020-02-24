@@ -12,8 +12,6 @@
               %p.p-hero.px-lg-6.text-white
                 Learnsignal is a fast growing online education business looking to improve the way people learn through combining the best teaching methods with the best technological tools.
 
-
-
   .container-bg
     .container
       %article.text-gray3.text-center.py-4.py-sm-4
@@ -29,7 +27,7 @@
             =link_to 'https://learnsignaleducation.bamboohr.com/jobs/', class: 'btn btn-primary btn-lg' do
               Take a look at our open roles
 
-
+  =render partial: 'library/user_form_modal', locals: { ticket_type: 'Contact Us', form_id: 'contact-form-modal' }
   .container-bg.bg-gray5
     .container
       %article.text-center.py-6.py-lg-7
@@ -43,11 +41,5 @@
           - %w(Conor_CHD_5350.jpg Alan_CHD_5507.jpg Philip_CHD_5494.jpg Kate_CHD_5387.jpg).sample(3).each do |image|
             =image_tag(image, class: 'img-thumbnail img-thumbnail-sm m-1 m-sm-2', alt: "Contact person profile image")
         .py-3
-          .btn.btn-primary.btn-lg{onclick: 'openHubspotChat(); return false;'}
+          .btn.btn-primary.btn-lg{'data-target' => '#contact-form-modal', 'data-toggle' => 'modal', :href => '#'}
             Get in touch
-
-
-:javascript
-  function openHubspotChat() {
-    window.HubSpotConversations.widget.open();
-  };

@@ -34,12 +34,8 @@
             .progress
               .progress-bar{role: "progressbar", 'aria-valuenow': complete_percent, 'aria-valuemin': "0",
                'aria-valuemax': '100', style: "width: #{complete_percent}%"}
-
-
-
         - else
           =render partial: 'course_info'
-
 
       %nav.courses-nav
         %ul.nav.nav-tabs{id: 'coursesTabs', role: 'tablist'}
@@ -48,7 +44,6 @@
               -# TODO add active to first li
               %a{class: "nav-link #{counter == 0 ? 'active' : ''}", id: "#{course_section.name_url}-tab", data: {toggle: 'tab'}, href: "##{course_section.name_url}", aria: {controls: "#{course_section.name_url}", selected: 'false'}, role: 'tab'}
                 =course_section.name
-
 
           -if @subject_course_resources.any?
             %li.nav-item{data: {tab_name: 'Resources', course_name: @course.name}}
@@ -63,11 +58,10 @@
             %a#locked-tab.nav-link.locked{"aria-controls" => "locked", "aria-selected" => "false", "data-toggle" => "tab", :href => "#locked", :role => "tab"}
               Locked
 
-
+=render partial: 'library/user_form_modal', locals: { ticket_type: 'Contact Us', form_id: 'contact-form-modal' }
 .bg-gray5
   .container.py-5.py-sm-6
     #coursesTabsContent.tab-content
-
       - @course.course_sections.all_active.all_in_order.each_with_index do |course_section, counter|
         .tab-pane{id: course_section.name_url, class: "tab-#{course_section.name_url} #{counter == 0 ? 'active show' : ''} ", "aria-labelledby" => "#{course_section.name_url}-tab", :role => "tabpanel"}
           .row.row-lg
@@ -80,20 +74,8 @@
               =render partial: 'register_upgrade_links', locals: { user: current_user }
 
               %aside
-                .btn.btn-secondary.btn-sm.mb-5{onclick: 'openHubspotChat(); return false;'}
+                .btn.btn-secondary.btn-sm.mb-5{'data-target' => '#contact-form-modal', 'data-toggle' => 'modal', :href => '#'}
                   =@exam_body&.help_text
-                -#
-                  %h3.mb-4.text-gray2 Course Resources
-                  %ul.list-default
-                    %li
-                      %a.list-default-link{:href => "#"} SBR – ACCA Syllabus
-                    %li
-                      %a.list-default-link{:href => "#"} SBR – Useful Formulas
-                    %li
-                      %a.list-default-link{:href => "#"} Lorem ipsum dolor sit ipsum dolor sit amet dolor sit
-
-
-
       -if @subject_course_resources.any?
         .tab-pane.tab-resources{id: 'resources', role: 'tabpanel', 'aria-labelledby': 'resources-tab'}
           %section.mb-5
@@ -175,13 +157,7 @@
   =render partial: 'verification_restriction_modal'
   =render partial: 'related_lesson_restriction_modal'
 
-
 :javascript
-
-  function openHubspotChat() {
-    window.HubSpotConversations.widget.open();
-  };
-
   $(document).ready(function(){
 
     hash = window.location.hash;
@@ -222,4 +198,3 @@
           $('#enrollment-modal').modal('show');
         }, 900);
       });
-

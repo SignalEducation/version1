@@ -21,7 +21,7 @@
               If you are already a learnsignal member or have any specific questions about our service you can take a look at our Frequently Asked Questions section. If you don't find the answer you're looking we would love to help. Click the Contact Us button below, let us know your question and one of the members of our support team will be in touch with you shortly.
 
             .mt-4
-              .btn.btn-secondary.btn-sm.mb-5{onclick: 'openHubspotChat(); return false;'}
+              .btn.btn-secondary.btn-sm.mb-5{"data-target" => "#contact-form-modal", "data-toggle" => "modal", :href => "#"}
                 Contact Us
 
           .col-sm-12.mt-3
@@ -33,21 +33,8 @@
               After you have completed the form below, you will receive a confirmation email. You can expect an individual response within 48 hours. Following this, all communication will be replied to within five days until the issue is resolved. Should you encounter any problem you can email unresolved@learnsignal.com. Please include a copy of any previous correspondence.
 
             .mt-4
-              .btn.btn-secondary.btn-sm.mb-5{onclick: 'openHubspotChat(); return false;'}
+              .btn.btn-secondary.btn-sm.mb-5{"data-target" => "#complaint-form-modal", "data-toggle" => "modal", :href => "#"}
                 Complaints Form
 
-
-
-
-:javascript
-
-    hash = window.location.hash;
-    if (hash === '#contact-us-modal') {
-      $('#contact-us-modal').modal('show');
-    } else if (hash === '#complaints-modal') {
-      $('#complaints-modal').modal('show');
-    }
-
-  function openHubspotChat() {
-    window.HubSpotConversations.widget.open();
-  };
+=render partial: 'library/user_form_modal', locals: { ticket_type: 'Contact Us', form_id: 'contact-form-modal' }
+=render partial: 'library/user_form_modal', locals: { ticket_type: 'Complaints Form', form_id: 'complaint-form-modal' }

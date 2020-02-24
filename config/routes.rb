@@ -250,8 +250,7 @@ Rails.application.routes.draw do
     get '/student_new',        to: 'student_sign_ups#new'
     post '/student_create',    to: 'student_sign_ups#create', as: :create_student
 
-    post '/complaints_intercom', to: 'footer_pages#complaints_intercom'
-    post '/contact_us_intercom', to: 'footer_pages#contact_us_intercom'
+    post '/user_contact_form',   to: 'library#user_contact_form'
 
     get 'register_or_login', to: 'student_sign_ups#sign_in_or_register', as: :sign_in_or_register
 
