@@ -2,9 +2,6 @@
 
 class CbesController < ApplicationController
   before_action :logged_in_required
-  before_action do
-    ensure_user_has_access_rights(%w[system_requirements_access student_user])
-  end
   before_action :cbe_access?
   before_action :exercise_access?
 
