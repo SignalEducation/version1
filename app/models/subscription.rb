@@ -67,7 +67,6 @@ class Subscription < ApplicationRecord
   validates :subscription_plan_id, presence: true
   validates :stripe_status, inclusion: { in: STATUSES }, allow_blank: true
   validates :paypal_status, inclusion: { in: PAYPAL_STATUSES }, allow_blank: true
-  validates :cancellation_reason, presence: true, if: proc { |sub| sub.cancelling_subscription }
   validates :stripe_guid, :stripe_customer_id, length: { maximum: 255 }, allow_blank: true
   validate :plan_change_currencies, :plan_change_active,
            :subscription_change_allowable,
@@ -276,7 +275,11 @@ class Subscription < ApplicationRecord
         update_attributes(
           stripe_status: stripe_subscription.status,
           stripe_guid: stripe_subscription.id,
-          next_renewal_date: Time.zone.at(stripe_subscription.current_period_end)
+          next_renewal_date: Time.zone.at(stripe_subscription.current_period_end),
+          cancelled_at: nil,
+          cancellation_reason: nil,
+          cancellation_note: nil,
+          cancelled_by_id: nil
         )
         restart
       end

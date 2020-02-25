@@ -78,6 +78,7 @@ jobs:
                               --format RspecJunitFormatter \
                               --out test_results/rspec.xml \
                               --format progress \
+                              --color \
                               $(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
 
       # upload test coverage reporter
