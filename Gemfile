@@ -38,7 +38,7 @@ gem 'paperclip', '~> 6.1.0' # for uploading files (works with RemotiPart)
 gem 'mailchimp-api', '~> 2.0.4'
 gem 'momentjs-rails', '>= 2.9.0'
 gem 'modernizr-rails'
-gem "nokogiri", ">= 1.10.4"
+gem "nokogiri", ">= 1.10.8"
 gem 'bootstrap3-datetimepicker-rails', '~> 4.14.30'
 gem 'multipart-post' #To allow uploading wistia api
 gem 'pg' # PostgreSQL database engine
