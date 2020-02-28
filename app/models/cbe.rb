@@ -1,5 +1,20 @@
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: cbes
+#
+#  id                :bigint           not null, primary key
+#  name              :string
+#  title             :string
+#  content           :text
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  subject_course_id :bigint
+#  agreement_content :text
+#  active            :boolean          default("true"), not null
+#  score             :float
+#
 class Cbe < ApplicationRecord
   # relationships
   belongs_to :subject_course

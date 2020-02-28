@@ -6,10 +6,10 @@
 #  user_id                              :integer
 #  session_guid                         :string
 #  subject_course_id                    :integer
-#  percentage_complete                  :integer          default(0)
-#  count_of_cmes_completed              :integer          default(0)
+#  percentage_complete                  :integer          default("0")
+#  count_of_cmes_completed              :integer          default("0")
 #  latest_course_module_element_id      :integer
-#  completed                            :boolean          default(FALSE)
+#  completed                            :boolean          default("false")
 #  created_at                           :datetime         not null
 #  updated_at                           :datetime         not null
 #  count_of_questions_correct           :integer

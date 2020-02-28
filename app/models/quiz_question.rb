@@ -5,13 +5,13 @@
 #  id                            :integer          not null, primary key
 #  course_module_element_quiz_id :integer
 #  course_module_element_id      :integer
-#  difficulty_level              :string
+#  difficulty_level              :string(255)
 #  created_at                    :datetime
 #  updated_at                    :datetime
 #  destroyed_at                  :datetime
 #  subject_course_id             :integer
 #  sorting_order                 :integer
-#  custom_styles                 :boolean          default(TRUE)
+#  custom_styles                 :boolean          default("false")
 #
 
 class QuizQuestion < ApplicationRecord

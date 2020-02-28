@@ -4161,6 +4161,11 @@ a.card:hover .card-title .card-explanation {
   color: #fd5c63;
   background-color: rgba(253,92,99,.1)
 }
+
+.lesson-item.passed .icon-bg-round {
+  color: #00b67b;
+  background-color: rgba(0, 182, 123, 0.1)
+}
 .lesson-item-content {
   -webkit-box-flex: 1;
   -webkit-flex-grow: 1;

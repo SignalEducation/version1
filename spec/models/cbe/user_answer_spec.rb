@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: cbe_user_answers
+#
+#  id                   :bigint           not null, primary key
+#  content              :json
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#  cbe_answer_id        :bigint
+#  cbe_user_question_id :bigint
+#
 require 'rails_helper'
 
 RSpec.describe Cbe::UserAnswer, type: :model do

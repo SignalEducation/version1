@@ -4,9 +4,9 @@
 #
 #  id         :integer          not null, primary key
 #  country_id :integer
-#  name       :string
-#  label      :string
-#  wiki_url   :string
+#  name       :string(255)
+#  label      :string(255)
+#  wiki_url   :string(255)
 #  created_at :datetime
 #  updated_at :datetime
 #

@@ -17,10 +17,10 @@
 #  failure_message              :text
 #  stripe_customer_id           :string
 #  stripe_invoice_id            :string
-#  livemode                     :boolean          default(FALSE)
+#  livemode                     :boolean          default("false")
 #  stripe_order_id              :string
-#  paid                         :boolean          default(FALSE)
-#  refunded                     :boolean          default(FALSE)
+#  paid                         :boolean          default("false")
+#  refunded                     :boolean          default("false")
 #  stripe_refunds_data          :text
 #  status                       :string
 #  created_at                   :datetime         not null

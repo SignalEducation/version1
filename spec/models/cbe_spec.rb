@@ -1,3 +1,18 @@
+# == Schema Information
+#
+# Table name: cbes
+#
+#  id                :bigint           not null, primary key
+#  name              :string
+#  title             :string
+#  content           :text
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  subject_course_id :bigint
+#  agreement_content :text
+#  active            :boolean          default("true"), not null
+#  score             :float
+#
 require 'rails_helper'
 
 RSpec.describe Cbe, type: :model do

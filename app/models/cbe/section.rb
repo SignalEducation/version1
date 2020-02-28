@@ -1,5 +1,19 @@
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: cbe_sections
+#
+#  id            :bigint           not null, primary key
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  name          :string
+#  cbe_id        :bigint
+#  score         :float
+#  kind          :integer
+#  sorting_order :integer
+#  content       :text
+#
 class Cbe
   class Section < ApplicationRecord
     # concerns

@@ -18,9 +18,6 @@
           =@course_module_element_user_log.quiz_attempts.where(correct: true).count
           &#47;
           =@course_module_element_user_log.quiz_attempts.count
-
-
-
         -@course_module_element_user_log.quiz_attempts.each_with_index do |attempt, counter|
           .answer.mt-2{class: attempt.correct ? 'answer-correct' : 'answer-failed', id: "#{counter}", onclick: 'showSolution.call(this); return false;'}
             %p.text-inline.text-bold Question #{counter + 1}
@@ -31,6 +28,7 @@
               -attempt.answers.each_with_index do |qa, counter2|
                 -correct_answers << counter2 if qa.correct
                 -your_answer = counter2 if qa.id == attempt.quiz_answer_id
+
               -if correct_answers.count > 1
                 %p.text-inline
                   Correct Answers:
@@ -93,4 +91,3 @@
       cmeNav.show();
       $('#results').show();
     });
-

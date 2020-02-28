@@ -5,7 +5,7 @@
 #  id                          :integer          not null, primary key
 #  course_module_element_id    :integer
 #  number_of_questions         :integer
-#  question_selection_strategy :string
+#  question_selection_strategy :string(255)
 #  created_at                  :datetime
 #  updated_at                  :datetime
 #  destroyed_at                :datetime

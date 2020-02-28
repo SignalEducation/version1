@@ -3,26 +3,26 @@
 # Table name: subscription_plans
 #
 #  id                            :integer          not null, primary key
-#  payment_frequency_in_months   :integer          default(1)
+#  payment_frequency_in_months   :integer          default("1")
 #  currency_id                   :integer
 #  price                         :decimal(, )
 #  available_from                :date
 #  available_to                  :date
-#  stripe_guid                   :string
+#  stripe_guid                   :string(255)
 #  created_at                    :datetime
 #  updated_at                    :datetime
-#  name                          :string
+#  name                          :string(255)
 #  subscription_plan_category_id :integer
-#  livemode                      :boolean          default(FALSE)
+#  livemode                      :boolean          default("false")
 #  paypal_guid                   :string
 #  paypal_state                  :string
 #  monthly_percentage_off        :integer
 #  previous_plan_price           :float
-#  exam_body_id                  :bigint(8)
+#  exam_body_id                  :bigint
 #  guid                          :string
 #  bullet_points_list            :string
 #  sub_heading_text              :string
-#  most_popular                  :boolean          default(FALSE), not null
+#  most_popular                  :boolean          default("false"), not null
 #  registration_form_heading     :string
 #  login_form_heading            :string
 #

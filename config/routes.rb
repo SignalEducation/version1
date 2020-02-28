@@ -172,16 +172,17 @@ Rails.application.routes.draw do
     get 'personal_upgrade_complete(/:completion_guid)', to: 'subscriptions#personal_upgrade_complete', as: :personal_upgrade_complete
 
     # Courses
-    resources :courses, only: [:create] do
+    resources :courses, only: :update do
       match :create_video_user_log,                on: :collection, via: :post
       match :video_watched_data,                   on: :collection, via: %i[put patch]
       match :create_constructed_response_user_log, on: :collection, via: :post
       match :update_constructed_response_user_log, on: :collection, via: %i[put patch]
+      post :update_quiz_attempts, on: :collection
 
       get ':subject_course_name_url', to: redirect('/%{locale}/library/%{subject_course_name_url}'), on: :collection
     end
 
-    get 'courses/:subject_course_name_url/:course_section_name_url/:course_module_name_url(/:course_module_element_name_url)', to: 'courses#show', as: 'course'
+    get 'courses/:subject_course_name_url/:course_section_name_url/:course_module_name_url(/:course_module_element_name_url)', to: 'courses#show', as: 'show_course'
 
     get 'submit_constructed_response_user_log/:cmeul_id', to: 'courses#submit_constructed_response_user_log', as: :submit_constructed_response_user_log
     get 'courses_constructed_response/:subject_course_name_url/:course_section_name_url/:course_module_name_url/:course_module_element_name_url(/:course_module_element_user_log_id)', to: 'courses#show_constructed_response', as: :courses_constructed_response

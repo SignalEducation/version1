@@ -11,7 +11,7 @@
 #  original_scenario_text_content    :text
 #  user_edited_scenario_text_content :text
 #  status                            :string
-#  flagged_for_review                :boolean          default(FALSE)
+#  flagged_for_review                :boolean          default("false")
 #  time_in_seconds                   :integer
 #  created_at                        :datetime         not null
 #  updated_at                        :datetime         not null

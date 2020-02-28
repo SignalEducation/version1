@@ -3,7 +3,7 @@
 # Table name: ip_addresses
 #
 #  id           :integer          not null, primary key
-#  ip_address   :string
+#  ip_address   :string(255)
 #  latitude     :float
 #  longitude    :float
 #  country_id   :integer
