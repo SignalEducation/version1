@@ -9,8 +9,8 @@
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #  exam_body_id      :integer
-#  active            :boolean          default(TRUE)
-#  computer_based    :boolean          default(FALSE)
+#  active            :boolean          default("true")
+#  computer_based    :boolean          default("false")
 #
 
 class ExamSitting < ApplicationRecord

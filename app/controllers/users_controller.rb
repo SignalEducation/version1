@@ -6,7 +6,8 @@ class UsersController < ApplicationController
   before_action :management_layout
   before_action :get_variables, except: %i[user_personal_details user_subscription_status
                                            user_activity_details user_purchases_details
-                                           user_courses_status user_referral_details]
+                                           user_courses_status user_referral_details
+                                           preview_csv_upload]
   before_action :get_user_variables, only: %i[user_personal_details user_subscription_status
                                               user_activity_details user_purchases_details
                                               user_courses_status user_referral_details]

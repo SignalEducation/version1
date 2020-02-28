@@ -6,8 +6,8 @@
 #  name               :string
 #  code               :string
 #  currency_id        :integer
-#  livemode           :boolean          default(FALSE)
-#  active             :boolean          default(FALSE)
+#  livemode           :boolean          default("false")
+#  active             :boolean          default("false")
 #  amount_off         :integer
 #  duration           :string
 #  duration_in_months :integer
@@ -18,6 +18,10 @@
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
 #  stripe_coupon_data :text
+#  exam_body_id       :integer
+#  monthly_interval   :boolean          default("true")
+#  quarterly_interval :boolean          default("true")
+#  yearly_interval    :boolean          default("true")
 #
 
 require 'rails_helper'

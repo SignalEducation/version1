@@ -3,15 +3,15 @@
 # Table name: countries
 #
 #  id            :integer          not null, primary key
-#  name          :string
-#  iso_code      :string
-#  country_tld   :string
+#  name          :string(255)
+#  iso_code      :string(255)
+#  country_tld   :string(255)
 #  sorting_order :integer
-#  in_the_eu     :boolean          default(FALSE), not null
+#  in_the_eu     :boolean          default("false"), not null
 #  currency_id   :integer
 #  created_at    :datetime
 #  updated_at    :datetime
-#  continent     :string
+#  continent     :string(255)
 #
 
 require 'rails_helper'

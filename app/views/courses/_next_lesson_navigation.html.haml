@@ -1,7 +1,7 @@
 -if @course_module_element.next_element.class.name == 'CourseModuleElement'
   - permission = @course_module_element.next_element.available_to_user(current_user, @valid_subscription, @subject_course_user_log)
   - if permission[:view]
-    =link_to course_url(@course.name_url, @course_module_element.next_element.course_module.course_section.name_url, @course_module_element.next_element.course_module.name_url, @course_module_element.next_element.name_url) do
+    =link_to show_course_url(@course.name_url, @course_module_element.next_element.course_module.course_section.name_url, @course_module_element.next_element.course_module.name_url, @course_module_element.next_element.name_url) do
       .btn.btn-primary.btn-sm.btn-sm-arrow-right
         =t('views.course_module_elements.show.next_step')
   - else
@@ -11,7 +11,7 @@
           .btn.btn-primary.btn-sm.btn-sm-arrow-right
             =t('views.course_module_elements.show.next_step')
       -else
-        =link_to course_url(@course.name_url, @course_module_element.next_element.course_module.course_section.name_url, @course_module_element.next_element.course_module.name_url, @course_module_element.next_element.name_url) do
+        =link_to show_course_url(@course.name_url, @course_module_element.next_element.course_module.course_section.name_url, @course_module_element.next_element.course_module.name_url, @course_module_element.next_element.name_url) do
           .btn.btn-primary.btn-sm.btn-sm-arrow-right
             =t('views.course_module_elements.show.next_step')
     #next-lesson-modal

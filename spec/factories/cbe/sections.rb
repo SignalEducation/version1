@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: cbe_sections
+#
+#  id            :bigint           not null, primary key
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  name          :string
+#  cbe_id        :bigint
+#  score         :float
+#  kind          :integer
+#  sorting_order :integer
+#  content       :text
+#
 FactoryBot.define do
   factory :cbe_section, class: Cbe::Section do
     name    { Faker::Lorem.word }

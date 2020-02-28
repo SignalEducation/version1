@@ -10,12 +10,12 @@
 #  updated_at               :datetime         not null
 #  file_upload_file_name    :string
 #  file_upload_content_type :string
-#  file_upload_file_size    :bigint(8)
+#  file_upload_file_size    :integer
 #  file_upload_updated_at   :datetime
 #  external_url             :string
-#  active                   :boolean          default(FALSE)
+#  active                   :boolean          default("false")
 #  sorting_order            :integer
-#  available_on_trial       :boolean          default(FALSE)
+#  available_on_trial       :boolean          default("false")
 #
 
 FactoryBot.define do

@@ -4,19 +4,24 @@
 #
 #  id                    :integer          not null, primary key
 #  name                  :string
+#  subject_course_id     :integer
 #  mock_exam_id          :integer
 #  stripe_guid           :string
-#  live_mode             :boolean          default(FALSE)
+#  live_mode             :boolean          default("false")
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
-#  active                :boolean          default(FALSE)
+#  active                :boolean          default("false")
 #  currency_id           :integer
 #  price                 :decimal(, )
 #  stripe_sku_guid       :string
-#  subject_course_id     :integer
 #  sorting_order         :integer
-#  product_type          :integer          default("mock_exam")
+#  product_type          :integer          default("0")
 #  correction_pack_count :integer
+#  cbe_id                :bigint
+#  group_id              :integer
+#  payment_heading       :string
+#  payment_subheading    :string
+#  payment_description   :text
 #
 
 require 'rails_helper'

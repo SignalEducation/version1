@@ -3,58 +3,58 @@
 # Table name: users
 #
 #  id                              :integer          not null, primary key
-#  email                           :string
-#  first_name                      :string
-#  last_name                       :string
+#  email                           :string(255)
+#  first_name                      :string(255)
+#  last_name                       :string(255)
 #  address                         :text
 #  country_id                      :integer
 #  crypted_password                :string(128)      default(""), not null
 #  password_salt                   :string(128)      default(""), not null
-#  persistence_token               :string
+#  persistence_token               :string(255)
 #  perishable_token                :string(128)
-#  single_access_token             :string
-#  login_count                     :integer          default(0)
-#  failed_login_count              :integer          default(0)
+#  single_access_token             :string(255)
+#  login_count                     :integer          default("0")
+#  failed_login_count              :integer          default("0")
 #  last_request_at                 :datetime
 #  current_login_at                :datetime
 #  last_login_at                   :datetime
-#  current_login_ip                :string
-#  last_login_ip                   :string
-#  account_activation_code         :string
+#  current_login_ip                :string(255)
+#  last_login_ip                   :string(255)
+#  account_activation_code         :string(255)
 #  account_activated_at            :datetime
-#  active                          :boolean          default(FALSE), not null
+#  active                          :boolean          default("false"), not null
 #  user_group_id                   :integer
 #  password_reset_requested_at     :datetime
-#  password_reset_token            :string
+#  password_reset_token            :string(255)
 #  password_reset_at               :datetime
-#  stripe_customer_id              :string
+#  stripe_customer_id              :string(255)
 #  created_at                      :datetime
 #  updated_at                      :datetime
-#  locale                          :string
-#  guid                            :string
+#  locale                          :string(255)
+#  guid                            :string(255)
 #  subscription_plan_category_id   :integer
 #  password_change_required        :boolean
 #  session_key                     :string
 #  name_url                        :string
 #  profile_image_file_name         :string
 #  profile_image_content_type      :string
-#  profile_image_file_size         :bigint(8)
+#  profile_image_file_size         :integer
 #  profile_image_updated_at        :datetime
 #  email_verification_code         :string
 #  email_verified_at               :datetime
-#  email_verified                  :boolean          default(FALSE), not null
-#  stripe_account_balance          :integer          default(0)
-#  free_trial                      :boolean          default(FALSE)
-#  terms_and_conditions            :boolean          default(FALSE)
+#  email_verified                  :boolean          default("false"), not null
+#  stripe_account_balance          :integer          default("0")
+#  free_trial                      :boolean          default("false")
+#  terms_and_conditions            :boolean          default("false")
 #  date_of_birth                   :date
 #  description                     :text
 #  analytics_guid                  :string
 #  student_number                  :string
-#  unsubscribed_from_emails        :boolean          default(FALSE)
-#  communication_approval          :boolean          default(FALSE)
+#  unsubscribed_from_emails        :boolean          default("false")
+#  communication_approval          :boolean          default("false")
 #  communication_approval_datetime :datetime
-#  preferred_exam_body_id          :bigint(8)
-#  currency_id                     :bigint(8)
+#  preferred_exam_body_id          :bigint
+#  currency_id                     :bigint
 #
 
 class User < ApplicationRecord

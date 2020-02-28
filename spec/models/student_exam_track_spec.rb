@@ -7,10 +7,10 @@
 #  latest_course_module_element_id      :integer
 #  created_at                           :datetime
 #  updated_at                           :datetime
-#  session_guid                         :string
+#  session_guid                         :string(255)
 #  course_module_id                     :integer
-#  percentage_complete                  :float            default(0.0)
-#  count_of_cmes_completed              :integer          default(0)
+#  percentage_complete                  :float            default("0")
+#  count_of_cmes_completed              :integer          default("0")
 #  subject_course_id                    :integer
 #  count_of_questions_taken             :integer
 #  count_of_questions_correct           :integer

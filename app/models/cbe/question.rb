@@ -1,5 +1,20 @@
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: cbe_questions
+#
+#  id              :bigint           not null, primary key
+#  content         :text
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  kind            :integer
+#  cbe_section_id  :bigint
+#  score           :float
+#  sorting_order   :integer
+#  cbe_scenario_id :bigint
+#  solution        :text
+#
 class Cbe
   class Question < ApplicationRecord
     # enum

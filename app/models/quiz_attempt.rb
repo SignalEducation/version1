@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: quiz_attempts
@@ -6,19 +8,18 @@
 #  user_id                           :integer
 #  quiz_question_id                  :integer
 #  quiz_answer_id                    :integer
-#  correct                           :boolean          default(FALSE), not null
+#  correct                           :boolean          default("false"), not null
 #  course_module_element_user_log_id :integer
 #  created_at                        :datetime
 #  updated_at                        :datetime
-#  score                             :integer          default(0)
-#  answer_array                      :string
+#  score                             :integer          default("0")
+#  answer_array                      :string(255)
 #
 
 class QuizAttempt < ApplicationRecord
-
   include LearnSignalModelExtras
 
-  serialize :answer_array #, Array - seems to break in Rails 4.2.1
+  serialize :answer_array
 
   # Constants
 
@@ -31,19 +32,16 @@ class QuizAttempt < ApplicationRecord
   # validation
   validates :quiz_question_id, presence: true
   validates :quiz_answer_id, presence: true
-  validates :course_module_element_user_log_id, presence: true,
-            on: :update
+  validates :course_module_element_user_log_id, presence: true, on: :update
   validates :answer_array, presence: true, on: :update
 
   # callbacks
-  before_validation :serialize_the_array
-  before_create :calculate_score
+  after_create :calculate_score
 
   # scopes
   scope :all_in_order, -> { order(:user_id) }
   scope :all_correct, -> { where(correct: true) }
   scope :all_incorrect, -> { where(correct: false) }
-
 
   # class methods
 
@@ -52,9 +50,7 @@ class QuizAttempt < ApplicationRecord
   ## Misc. ##
 
   def answers
-    self.answer_array ?
-            QuizAnswer.ids_in_specific_order(self.answer_array) :
-            self.quiz_question.quiz_answers
+    answer_array ? QuizAnswer.ids_in_specific_order(answer_array.split(',')) : quiz_question.quiz_answers
   end
 
   def destroyable?
@@ -64,12 +60,8 @@ class QuizAttempt < ApplicationRecord
   protected
 
   def calculate_score
-    self.correct = self.quiz_answer.try(:correct) || false
-    self.score = self.correct ? 1 : 0
+    self.correct = quiz_answer.try(:correct) || false
+    self.score = correct ? 1 : 0
+    save
   end
-
-  def serialize_the_array
-    self.answer_array = self.answer_array.to_s.split(',') if self.answer_array.to_s.split(',').length > 1
-  end
-
 end

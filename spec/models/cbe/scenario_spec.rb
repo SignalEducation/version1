@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: cbe_scenarios
+#
+#  id             :bigint           not null, primary key
+#  content        :string
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  cbe_section_id :bigint
+#  name           :string
+#
 require 'rails_helper'
 
 RSpec.describe Cbe::Scenario, type: :model do

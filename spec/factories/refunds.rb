@@ -13,7 +13,7 @@
 #  amount             :integer
 #  reason             :text
 #  status             :string
-#  livemode           :boolean          default(TRUE)
+#  livemode           :boolean          default("true")
 #  stripe_refund_data :text
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null

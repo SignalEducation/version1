@@ -1,5 +1,19 @@
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: cbe_user_logs
+#
+#  id               :bigint           not null, primary key
+#  status           :integer
+#  score            :float
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#  cbe_id           :bigint
+#  user_id          :bigint
+#  exercise_id      :bigint
+#  educator_comment :text
+#
 class Cbe
   class UserLog < ApplicationRecord
     # relationships

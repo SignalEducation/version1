@@ -7,8 +7,8 @@
 #  url                                :string
 #  created_at                         :datetime         not null
 #  updated_at                         :datetime         not null
-#  active                             :boolean          default(FALSE), not null
-#  has_sittings                       :boolean          default(FALSE), not null
+#  active                             :boolean          default("false"), not null
+#  has_sittings                       :boolean          default("false"), not null
 #  preferred_payment_frequency        :integer
 #  subscription_page_subheading_text  :string
 #  constructed_response_intro_heading :string
@@ -18,6 +18,11 @@
 #  login_form_heading                 :string
 #  landing_page_h1                    :string
 #  landing_page_paragraph             :text
+#  has_products                       :boolean          default("false")
+#  products_heading                   :string
+#  products_subheading                :text
+#  products_seo_title                 :string
+#  products_seo_description           :string
 #
 
 class ExamBody < ApplicationRecord
