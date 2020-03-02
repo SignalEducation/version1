@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 git_source(:github) {|repo| "https://github.com/#{repo}.git"}
 
-ruby '2.5.3'
+ruby '2.6.5'
 gem 'rails', '5.2.2'
 
 # Use Puma as the app server
@@ -102,8 +102,10 @@ group :development, :test do
   gem 'pry-stack_explorer'
   gem 'factory_bot_rails' #A library for setting up Ruby objects as test data
   gem 'rspec-rails' # our core testing environment
-  gem 'rubocop-performance' # rubocop lint
-  gem 'rubocop-rails' # rubocop lint
+  gem 'rubocop', '~> 0.80.1', require: false
+  gem 'rubocop-performance', require: false # rubocop lint
+  gem 'rubocop-rails', require: false # rubocop lint
+  gem 'rubocop-rspec', require: false
   gem 'ultrahook' # allows incoming webhooks from stripe
   gem 'faker', '~> 2.1.2'
 end
@@ -125,7 +127,6 @@ group :test do
   gem 'selenium-webdriver'
   # Easy installation and use of chromedriver to run system tests with Chrome
   gem 'chromedriver-helper'
-  gem 'rubocop-rspec'
 end
 
 group :staging, :production do
