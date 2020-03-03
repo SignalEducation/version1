@@ -8,7 +8,7 @@ class SubscriptionManagementController < ApplicationController
   before_action :set_invoice, only: %i[invoice pdf_invoice charge]
 
   def show
-    @subscription = Subscription.find_by(id: params[:id])
+    @subscription = Subscription.find(params[:id])
     @user         = @subscription.user
   end
 
@@ -42,6 +42,25 @@ class SubscriptionManagementController < ApplicationController
     @charges      = @invoice.charges
   end
 
+  def cancellation
+    @type    = params[:type]
+    @layout  = 'management'
+    @reasons = ['Duplicate Payment', 'Requested by customer', 'Other (Please provide note)']
+
+    render :admin_new
+  end
+
+  def cancel_subscription
+    if subscription_cancelled?(@subscription)
+      flash[:success] = I18n.t('controllers.subscription_management.cancel.flash.success')
+    else
+      Rails.logger.warn "WARN: SubscriptionManagement#cancel failed to cancel a subscription. Errors:#{@subscription.errors.inspect}"
+      flash[:error] = I18n.t('controllers.subscription_management.cancel.flash.error')
+    end
+
+    redirect_to subscription_management_url(@subscription)
+  end
+
   def un_cancel_subscription
     if @subscription&.stripe_status == 'canceled-pending'
       @subscription.un_cancel
@@ -59,40 +78,6 @@ class SubscriptionManagementController < ApplicationController
     redirect_to subscription_management_url(@subscription)
   end
 
-  def cancel
-    @layout = 'management'
-    @url = params[:type] == 'standard' ? subscription_management_standard_cancellation_url(id: @subscription.id) : subscription_management_immediate_cancellation_url(id: @subscription.id)
-    render :admin_new
-  end
-
-  def standard_cancellation
-    if @subscription.update(subscription_params) && SubscriptionService.new(@subscription).cancel_subscription
-      flash[:success] = I18n.t('controllers.subscription_management.cancel.flash.success')
-    else
-      Rails.logger.warn "WARN: SubscriptionManagement#cancel failed to cancel a subscription. Errors:#{@subscription.errors.inspect}"
-      flash[:error] = I18n.t('controllers.subscription_management.cancel.flash.error')
-    end
-
-    redirect_to subscription_management_url(@subscription)
-  rescue Learnsignal::SubscriptionError => e
-    flash[:error] = e.message
-    redirect_to subscription_management_url(@subscription)
-  end
-
-  def immediate_cancellation
-    if @subscription.update(subscription_params) && SubscriptionService.new(@subscription).cancel_subscription_immediately
-      flash[:success] = I18n.t('controllers.subscription_management.immediately_cancel.flash.success')
-    else
-      Rails.logger.warn "WARN: SubscriptionManagement#immediately_cancel failed to cancel a subscription. Errors:#{@subscription.errors.inspect}"
-      flash[:error] = I18n.t('controllers.subscription_management.immediately_cancel.flash.error')
-    end
-
-    redirect_to subscription_management_url(@subscription)
-  rescue Learnsignal::SubscriptionError => e
-    flash[:error] = e.message
-    redirect_to subscription_management_url(@subscription)
-  end
-
   def reactivate_subscription
     if @subscription.reactivate_canceled
       flash[:success] = I18n.t('controllers.subscription_management.reactivate_canceled.flash.success')
@@ -107,7 +92,7 @@ class SubscriptionManagementController < ApplicationController
   protected
 
   def set_subscription
-    @subscription = Subscription.find_by(id: params[:subscription_management_id])
+    @subscription = Subscription.find(params[:subscription_management_id])
   end
 
   def set_invoice
@@ -121,5 +106,26 @@ class SubscriptionManagementController < ApplicationController
       :cancelled_by_id,
       :cancelling_subscription
     )
+  end
+
+  def subscription_cancelled?(subscription)
+    ActiveRecord::Base.transaction do
+      subscription.update(subscription_params)
+      stripe_cancellation(subscription)
+    end
+  rescue Learnsignal::SubscriptionError => e
+    flash[:error] = e.message
+    redirect_to subscription_management_url(@subscription)
+  end
+
+  def stripe_cancellation(subscription)
+    sub_service = SubscriptionService.new(subscription)
+
+    case params[:type]
+    when 'standard'
+      sub_service.cancel_subscription
+    when 'immediate'
+      sub_service.cancel_subscription_immediately
+    end
   end
 end

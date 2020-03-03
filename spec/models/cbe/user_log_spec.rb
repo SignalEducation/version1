@@ -42,8 +42,8 @@ RSpec.describe Cbe::UserLog, type: :model do
     let(:private_exercise)     { create(:exercise, cbe_user_log: cbe_user_log) }
 
     before do
-      SlackService.any_instance.stub(:notify_channel).and_return(false)
-      Exercise.any_instance.stub(:correction_returned_email).and_return(false)
+      allow_any_instance_of(SlackService).to receive(:notify_channel).and_return(false)
+      allow_any_instance_of(Exercise).to receive(:correction_returned_email).and_return(false)
     end
 
     it '.update_score' do

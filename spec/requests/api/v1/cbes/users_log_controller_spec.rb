@@ -8,8 +8,8 @@ RSpec.describe 'Api::V1::Cbe::UsersLogController', type: :request do
   let(:exercise) { create(:exercise) }
 
   before do
-    SlackService.any_instance.stub(:notify_channel).and_return(false)
-    Exercise.any_instance.stub(:correction_returned_email).and_return(false)
+    allow_any_instance_of(SlackService).to receive(:notify_channel).and_return(false)
+    allow_any_instance_of(Exercise).to receive(:correction_returned_email).and_return(false)
   end
 
   # index

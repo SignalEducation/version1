@@ -162,8 +162,8 @@ describe Admin::ExercisesController, type: :controller do
       let!(:cbe_user_question)      { create(:cbe_user_question, user_log: cbe_user_log, cbe_question: cbe_question) }
 
       before do
-        SlackService.any_instance.stub(:notify_channel).and_return(false)
-        Exercise.any_instance.stub(:correction_returned_email).and_return(false)
+        allow_any_instance_of(SlackService).to receive(:notify_channel).and_return(false)
+        allow_any_instance_of(Exercise).to receive(:correction_returned_email).and_return(false)
 
         exercise_cbe.submit
       end
