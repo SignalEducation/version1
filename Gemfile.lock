@@ -227,7 +227,7 @@ GEM
     launchy (2.4.3)
       addressable (~> 2.3)
     le (2.7.6)
-    libv8 (6.7.288.46.1)
+    libv8 (7.3.492.27.1)
     listen (3.1.5)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
@@ -255,8 +255,8 @@ GEM
     mimemagic (0.3.3)
     mini_mime (1.0.1)
     mini_portile2 (2.4.0)
-    mini_racer (0.2.4)
-      libv8 (>= 6.3)
+    mini_racer (0.2.9)
+      libv8 (>= 6.9.411)
     minitest (5.11.3)
     modernizr-rails (2.7.1)
     momentjs-rails (2.20.1)
@@ -307,7 +307,7 @@ GEM
       binding_of_caller (>= 0.7)
       pry (>= 0.9.11)
     public_suffix (3.0.3)
-    puma (3.12.3)
+    puma (3.12.4)
     rack (2.2.2)
     rack-attack (5.4.2)
       rack (>= 1.0, < 3)
@@ -629,7 +629,7 @@ DEPENDENCIES
   pry (~> 0.12.2)
   pry-byebug
   pry-stack_explorer
-  puma (~> 3.12)
+  puma (~> 3.12.4)
   rack-attack
   rack-cors
   rack-mini-profiler
