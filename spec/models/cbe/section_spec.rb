@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'concerns/cbe_support_spec.rb'
 
 RSpec.describe Cbe::Section, type: :model do
   let(:cbe_section) { build(:cbe_section, :with_cbe) }
@@ -10,6 +11,9 @@ RSpec.describe Cbe::Section, type: :model do
     it { should respond_to(:sorting_order) }
     it { should respond_to(:content) }
     it { should respond_to(:cbe_id) }
+    it { should respond_to(:active) }
+    it { should respond_to(:destroyed_at) }
+    it { should respond_to(:random) }
     it { should respond_to(:created_at) }
     it { should respond_to(:updated_at) }
   end
@@ -24,6 +28,10 @@ RSpec.describe Cbe::Section, type: :model do
     it { should validate_presence_of(:name) }
     it { should validate_presence_of(:kind) }
     it { should validate_presence_of(:cbe_id) }
+  end
+
+  describe 'Concern' do
+    it_behaves_like 'cbe_support'
   end
 
   describe 'Enums' do

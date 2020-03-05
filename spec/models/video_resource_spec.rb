@@ -14,6 +14,7 @@
 #
 
 require 'rails_helper'
+require 'concerns/archivable_spec.rb'
 
 describe VideoResource do
   let(:video) { build(:video_resource) }
@@ -46,5 +47,9 @@ describe VideoResource do
         expect(video).to be_destroyable
       end
     end
+  end
+
+  describe 'Concern' do
+    it_behaves_like 'archivable'
   end
 end

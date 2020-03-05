@@ -31,6 +31,10 @@ class Cbe
       self.status ||= 'started'
     end
 
+    def sections_in_user_log
+      questions.includes(:section).map(&:section).uniq.sort_by(&:sorting_order)
+    end
+
     private
 
     def update_exercise_status

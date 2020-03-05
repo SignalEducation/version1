@@ -9,7 +9,7 @@
     .card-body.bg-gray4
       %nav
         %ul.nav.nav-tabs.nav-fill{id: 'sectionTabs', role: 'tablist'}
-          - @cbe_user_log.cbe.sections.order(:sorting_order).each_with_index do |section, section_index|
+          - @cbe_user_log.sections_in_user_log.each_with_index do |section, section_index|
             %li.nav-item
               %a{class: "nav-link #{section_index == 0 ? 'active' : ''}", data: {toggle: 'tab'}, href: "#section-#{section.id}", aria: {controls: "#{section.id}", selected: 'false'}, role: 'tab'}
                 =section.name
@@ -17,22 +17,23 @@
       .bg-gray5
         .container.py-1
           #sectionTabsContent.tab-content
-            -@cbe_user_log.cbe.sections.order(:sorting_order).each_with_index do |section, section_index|
+            -@cbe_user_log.sections_in_user_log.each_with_index do |section, section_index|
+              -section_questions =  @cbe_user_log.questions.by_section(section.id)
               .tab-pane{id: "section-#{section.id}", class: "tab-#{section.id} #{section_index == 0 ? 'active show' : ''} ", "aria-labelledby" => "section-#{section.id}-tab", :role => "tabpanel"}
                 .row.pt-4
                   .col-sm-2
                     %nav.mb-4.account-nav
                       %ul#questionTabs.nav.nav-tabs.nav-tabs-vertical{:role => "tablist"}
-                        -section.questions.order(:sorting_order).each_with_index do |question, index|
+                        -section_questions.each_with_index do |question, index|
                           %li.nav-item
                             %a.nav-link{class: index == 0 ? 'active' : '', id: "#section-#{section.id}-question-#{question.id}", "aria-controls" => "section-#{section.id}-question-#{question.id}", "aria-selected" => "true", "data-toggle" => "tab", :href => "#section-#{section.id}-question-#{question.id}", :role => "tab"}
                               ="Question #{index+1}"
 
                   .col-sm-10
                     #questionTabsContent.tab-content
-                      -section.questions.order(:sorting_order).each_with_index do |question, index|
-                        -user_question = @cbe_user_log.questions.by_section(section.id).select{ |q| q.cbe_question.id == question.id }.first
-                        .tab-pane.tab-account.tab-personal-info{class: index == 0 ? 'show active' : '', id: "section-#{section.id}-question-#{question.id}", "aria-labelledby" => "personal-info-tab", :role => "tabpanel"}
+                      -section_questions.each_with_index do |user_question, index|
+                        -question = user_question.cbe_question
+                        .tab-pane.tab-account.tab-personal-info{class: index == 0 ? 'show active' : '', id: "section-#{section.id}-question-#{user_question.id}", "aria-labelledby" => "personal-info-tab", :role => "tabpanel"}
                           .row
                             .col-sm
                               .h4
@@ -44,7 +45,7 @@
                                   Correct:
                                   =user_question.correct
                               .col-sm-3
-                                .h4
+                                .h4{ id: "user_question_#{user_question.id}" }
                                   Score:
                                   =user_question.score
 
@@ -74,8 +75,6 @@
                               =render_admin_answers(user_question)
                             -else
                               Question not answered by the student
-
-
 
   .row
     .col-sm-12

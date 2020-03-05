@@ -27,6 +27,7 @@
 #
 
 require 'rails_helper'
+require 'concerns/archivable_spec.rb'
 
 describe Group do
   subject { FactoryBot.build(:group) }
@@ -91,5 +92,7 @@ describe Group do
   it { should respond_to(:destroyable?) }
   it { should respond_to(:destroyable_children) }
 
-
+  describe 'Concern' do
+    it_behaves_like 'archivable'
+  end
 end

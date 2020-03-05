@@ -2,6 +2,9 @@
 
 class Cbe
   class Section < ApplicationRecord
+    # concerns
+    include CbeSupport
+
     # relationships
     belongs_to :cbe
     has_many :questions, class_name: 'Cbe::Question', foreign_key: 'cbe_section_id',

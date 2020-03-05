@@ -111,6 +111,7 @@
                         :initial-score="section.score"
                         :initial-sorting-order="section.sorting_order"
                         :initial-kind="section.kind"
+                        :initial-random="section.random"
                         :initial-content="section.content"
                         @rm-section="removeSection"
                       />
@@ -554,7 +555,10 @@ export default {
     removeScenarioQuestion(questionId) {
       const filtered =
         this.sections.filter(function(section){
-          section.questions = section.questions.filter((question) => question.id !== questionId);
+          section.scenarios.filter(function(scenario){
+            scenario.questions = scenario.questions.filter((question) => question.id !== data);
+            return scenario
+          });
           return section
         });
 

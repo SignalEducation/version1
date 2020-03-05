@@ -134,5 +134,18 @@ RSpec.describe 'Api::V1::Cbe::IntroductionPagesController', type: :request do
         expect(body['message']).to eq("Page #{introduction_page.id} was deleted.")
       end
     end
+
+    context 'error when try to destroy a not valid CBE introduction_pages' do
+      let(:introduction_page) { create(:cbe_introduction_page, cbe: cbe) }
+
+      before do
+        allow_any_instance_of(Cbe::IntroductionPage).to receive(:destroy).and_return(false)
+        delete "/api/v1/cbes/#{cbe.id}/introduction_pages/#{introduction_page.id}"
+      end
+
+      it 'returns HTTP status 202' do
+        expect(response).to have_http_status 422
+      end
+    end
   end
 end

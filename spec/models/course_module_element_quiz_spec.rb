@@ -12,6 +12,7 @@
 #
 
 require 'rails_helper'
+require 'concerns/archivable_spec.rb'
 
 describe CourseModuleElementQuiz do
 
@@ -49,4 +50,7 @@ describe CourseModuleElementQuiz do
     it { should respond_to(:destroyable_children) }
   end
 
+  describe 'Concern' do
+    it_behaves_like 'archivable'
+  end
 end

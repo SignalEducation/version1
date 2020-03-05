@@ -36,13 +36,12 @@
 #
 
 require 'rails_helper'
+require 'concerns/archivable_spec.rb'
 
 describe SubjectCourse do
-
   describe 'relationships' do
     it { should belong_to(:exam_body) }
     it { should belong_to(:group) }
-
     it { should have_many(:course_tutor_details) }
     it { should have_many(:home_pages) }
     it { should have_many(:subject_course_resources) }
@@ -61,21 +60,15 @@ describe SubjectCourse do
   end
 
   describe 'validations' do
-    # Build a FactoryBot record for Rspec to test the uniqueness validations against
-    subject { FactoryBot.build(:subject_course) }
+    subject { build(:subject_course) }
 
     it { should validate_presence_of(:name) }
     it { should validate_uniqueness_of(:name) }
-
     it { should validate_presence_of(:name_url) }
     it { should validate_uniqueness_of(:name_url) }
-
     it { should validate_presence_of(:description) }
-
     it { should validate_presence_of(:quiz_pass_rate) }
-
     it { should validate_presence_of(:survey_url) }
-
     it { should validate_presence_of(:group_id) }
   end
 
@@ -107,13 +100,10 @@ describe SubjectCourse do
     it { should respond_to(:valid_children) }
     it { should respond_to(:first_active_child) }
     it { should respond_to(:first_active_cme) }
-
     it { should respond_to(:destroyable?) }
     it { should respond_to(:destroyable_children) }
-
     it { should respond_to(:recalculate_fields) }
     it { should respond_to(:set_count_fields) }
-
     it { should respond_to(:enrolled_user_ids) }
     it { should respond_to(:active_enrollment_user_ids) }
     it { should respond_to(:valid_enrollment_user_ids) }
@@ -122,15 +112,17 @@ describe SubjectCourse do
     it { should respond_to(:percentage_complete_by_user) }
     it { should respond_to(:number_complete_by_user) }
     it { should respond_to(:update_all_course_logs) }
-
     it { should respond_to(:new_enrollments) }
     it { should respond_to(:active_enrollments) }
     it { should respond_to(:expired_enrollments) }
     it { should respond_to(:non_expired_enrollments) }
     it { should respond_to(:completed_enrollments) }
     it { should respond_to(:total_enrollments) }
-
     it { should respond_to(:home_page) }
     it { should respond_to(:duplicate) }
+  end
+
+  describe 'Concern' do
+    it_behaves_like 'archivable'
   end
 end

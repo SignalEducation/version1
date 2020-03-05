@@ -12,7 +12,7 @@ module ExercisesHelper
   end
 
   def cbe_score(cbe_user_log)
-    total_scores  = cbe_user_log.cbe.questions.map(&:score).sum
+    total_scores  = cbe_user_log.questions.map { |q| q.cbe_question.score }.sum
     student_score = cbe_user_log.score
 
     "Total Score: #{student_score}/#{total_scores}"

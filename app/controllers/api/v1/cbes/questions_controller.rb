@@ -28,9 +28,11 @@ module Api
         end
 
         def destroy
-          @question.destroy
-
-          render json: { message: "Question #{@question.id} was deleted." }, status: :accepted
+          if @question.destroy
+            render json: { message: "Question #{@question.id} was deleted." }, status: :accepted
+          else
+            render json: { errors: @question.errors }, status: :unprocessable_entity
+          end
         end
 
         private
