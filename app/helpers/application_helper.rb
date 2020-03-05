@@ -16,9 +16,8 @@ module ApplicationHelper
     number_to_currency(amount, unit: currency.leading_symbol, separator: I18n.t('views.general.numbers.decimal_separator'), delimiter: I18n.t('views.general.numbers.decimal_separator'), precision: 2)
   end
 
-  def number_in_local_currency_no_precision(amount, currency_id)
-    ccy = Currency.find(currency_id)
-    number_to_currency(amount, unit: ccy.leading_symbol, separator: I18n.t('views.general.numbers.decimal_separator'), delimiter: I18n.t('views.general.numbers.decimal_separator'), precision: 0)
+  def number_in_local_currency_no_precision(amount, currency)
+    number_to_currency(amount, unit: currency.leading_symbol, separator: I18n.t('views.general.numbers.decimal_separator'), delimiter: I18n.t('views.general.numbers.decimal_separator'), precision: 0)
   end
 
   def sanitizer(some_text)
@@ -99,79 +98,57 @@ module ApplicationHelper
   end
 
   def plan_interval(interval)
-    if interval == 1
+    case interval
+    when 1
       'paym'
-    elsif interval == 3
+    when 3
       'payq'
-    elsif interval == 12
-      'paya'
     else
       'paya'
     end
   end
 
   def plan_interval_alt(interval)
-    if interval == 1
-      "plan-monthly l-margin-top-big"
-    elsif interval == 3
-      "plan-quarterly l-margin-top-big"
-    elsif interval == 12
-      "plan-yearly l-margin-top-big"
+    case interval
+    when 1
+      'plan-monthly l-margin-top-big'
+    when 3
+      'plan-quarterly l-margin-top-big'
+    when 12
+      'plan-yearly l-margin-top-big'
     end
   end
 
   def sub_interval_alt(interval)
-    if interval == 1
-      "sub-monthly l-margin-top-big"
-    elsif interval == 3
-      "sub-quarterly l-margin-top-big"
-    elsif interval == 12
-      "sub-yearly l-margin-top-big"
+    case interval
+    when 1
+      'sub-monthly l-margin-top-big'
+    when 3
+      'sub-quarterly l-margin-top-big'
+    when 12
+      'sub-yearly l-margin-top-big'
     end
   end
 
   def sub_interval_color(interval)
-    if interval == 1
-      "monthly-color"
-    elsif interval == 3
-      "quarterly-color"
-    elsif interval == 12
-      "yearly-color"
+    case interval
+    when 1
+      'monthly-color'
+    when 3
+      'quarterly-color'
+    when 12
+      'yearly-color'
     end
   end
 
   def sub_interval_btn_color(interval)
-    if interval == 1
-      "btn btn-cyan"
-    elsif interval == 3
-      "btn btn-red"
-    elsif interval == 12
-      "btn btn-purple"
+    case interval
+    when 1
+      'btn btn-cyan'
+    when 3
+      'btn btn-red'
+    when 12
+      'btn btn-purple'
     end
   end
-end
-
-class DanFormBuilder < ActionView::Helpers::FormBuilder
-
-  # http://api.rubyonrails.org/classes/ActionView/Helpers/FormBuilder.html
-
-  def collection_related_select(target_attribute, collection, collection_index,
-                                collection_label, collection_trigger, parent_field,
-                                options={}, html_options={})
-
-    new_collection = collection.map {|x| [x[collection_index], x[collection_label], x[collection_trigger] ] }
-    this_field_name = @object_name + '_' + target_attribute.to_s
-    other_field_name = @object_name + '_' + parent_field.to_s
-    @template.collection_select(@object_name, target_attribute, collection, collection_index, collection_label, options, html_options) + %(
-    <script>
-      if ($('script[src="/assets/related_select.js"]').length == 0) {
-        jQuery.getScript('/assets/related_select.js');
-      } // http://stackoverflow.com/questions/9521298/verify-external-script-is-loaded
-      $(document).on('ready page:load', function() {
-        watchChildSelect('#{this_field_name}', '#{other_field_name}', #{new_collection});
-      })
-    </script>
-    ).html_safe
-  end
-
 end

@@ -32,6 +32,15 @@ RSpec.describe ApplicationHelper, type: :helper do
     end
   end
 
+  describe '#number_in_local_currency_no_precision' do
+    let(:currency) { build_stubbed(:currency) }
+
+    it 'return a flagged span' do
+      amount = rand(01..99)
+      expect(number_in_local_currency_no_precision(amount, currency)).to eq("#{currency.leading_symbol}#{amount}")
+    end
+  end
+
   describe '#sanitizer' do
     it 'return a sanitized text' do
       html = '<h2 title="I\'m a header">The title Attribute</h2>'
@@ -42,22 +51,221 @@ RSpec.describe ApplicationHelper, type: :helper do
   describe '#head_sanitizer' do
     it 'return a sanitized text' do
       html = '<title>Page Title</title>'
-      expect(sanitizer(html)).to eq('Page Title')
+      expect(head_sanitizer(html)).to eq('<title>Page Title</title>')
     end
   end
 
   describe '#body_sanitizer' do
     it 'return a sanitized text' do
       html = '<p>Note that the form itself is not visible.</p>'
-      expect(sanitizer(html)).to eq('<p>Note that the form itself is not visible.</p>')
+      expect(body_sanitizer(html)).to eq('<p>Note that the form itself is not visible.</p>')
     end
   end
 
   describe '#seconds_to_time' do
-    seconds_to_time(seconds)
-    it 'return a sanitized text' do
-      html = '<p>Note that the form itself is not visible.</p>'
-      expect(seconds_to_time(300)).to eq('00:05')
+    context 'less then 3600 seconds' do
+      it 'return seconds formated to minutes:seconds' do
+        expect(seconds_to_time(300)).to eq('05:00')
+      end
+    end
+
+    context 'more then 3600 seconds' do
+      it 'return seconds formated to hours:minutes:seconds' do
+        expect(seconds_to_time(5000)).to eq('01:23:20')
+      end
+    end
+  end
+
+  describe '#humanize_time' do
+    context 'less then 3600 seconds' do
+      it 'return seconds formated to minutes:seconds' do
+        expect(humanize_time(300)).to eq('05m 00s')
+      end
+    end
+
+    context 'more then 3600 seconds' do
+      it 'return seconds formated to hours:minutes:seconds' do
+        expect(humanize_time(5000)).to eq('01h 23m')
+      end
+    end
+  end
+
+  describe '#simple_hour_time' do
+    context 'less then 3600 seconds' do
+      it 'return minutes' do
+        expect(simple_hour_time(300)).to eq('5m')
+      end
+    end
+
+    context 'more then 3600 seconds' do
+      it 'return hours' do
+        expect(simple_hour_time(5000)).to eq('1h')
+      end
+    end
+  end
+
+  describe '#simple_time' do
+    context 'less then 3600 seconds' do
+      it 'return minutes' do
+        expect(simple_time(300)).to eq('05m')
+      end
+    end
+
+    context 'more then 3600 seconds' do
+      it 'return hours' do
+        expect(simple_time(5000)).to eq('01h')
+      end
+    end
+  end
+
+  describe '#humanize_datetime' do
+    it 'humanize date' do
+      date = DateTime.new
+      expect(humanize_datetime(date)).to eq(date.utc.strftime('%d %b %y'))
+    end
+  end
+
+  describe '#humanize_datetime_full' do
+    it 'humanize date' do
+      date = DateTime.new
+      expect(humanize_datetime_full(date)).to eq(date.utc.strftime('%d %B %Y'))
+    end
+  end
+
+  describe '#timer_datetime' do
+    it 'humanize date' do
+      date = DateTime.new
+      expect(timer_datetime(date)).to eq(date.utc.strftime('%Y/%m/%d %H:%M:%S'))
+    end
+  end
+
+  describe '#humanize_date_and_month' do
+    context 'nil date' do
+      it 'return -' do
+        expect(humanize_date_and_month(nil)).to eq('-')
+      end
+    end
+
+    context 'more then 3600 seconds' do
+      it 'return formated date' do
+        date = DateTime.new
+        expect(humanize_date_and_month(date)).to eq(date.utc.strftime('%d %b'))
+      end
+    end
+  end
+
+  describe '#exam_sitting_date' do
+    it 'humanize date' do
+      date = DateTime.new
+      expect(exam_sitting_date(date)).to eq(date.utc.strftime('%B %Y'))
+    end
+  end
+
+  describe '#referral_code_sharing_url' do
+    let(:referral) { build(:referral_code) }
+
+    it 'return refer a friend link' do
+      expect(referral_code_sharing_url(referral)).to eq("#{refer_a_friend_url}/?ref_code=#{referral.code}")
+    end
+  end
+
+  describe '#plan_interval' do
+    context '1 as interval' do
+      it 'return paym' do
+        expect(plan_interval(1)).to eq('paym')
+      end
+    end
+
+    context '3 as interval' do
+      it 'return payq' do
+        expect(plan_interval(3)).to eq('payq')
+      end
+    end
+
+    context 'any other interval' do
+      it 'return paya' do
+        expect(plan_interval(rand(4..99))).to eq('paya')
+      end
+    end
+  end
+
+  describe '#plan_interval_alt' do
+    context '1 as interval' do
+      it 'monthly' do
+        expect(plan_interval_alt(1)).to include('plan-monthly')
+      end
+    end
+
+    context '3 as interval' do
+      it 'quarterly' do
+        expect(plan_interval_alt(3)).to include('plan-quarterly')
+      end
+    end
+
+    context 'any other interval' do
+      it 'yearly' do
+        expect(plan_interval_alt(12)).to include('plan-yearly')
+      end
+    end
+  end
+
+  describe '#sub_interval_alt' do
+    context '1 as interval' do
+      it 'monthly' do
+        expect(sub_interval_alt(1)).to include('sub-monthly')
+      end
+    end
+
+    context '3 as interval' do
+      it 'quarterly' do
+        expect(sub_interval_alt(3)).to include('sub-quarterly')
+      end
+    end
+
+    context 'any other interval' do
+      it 'yearly' do
+        expect(sub_interval_alt(12)).to include('sub-yearly')
+      end
+    end
+  end
+
+  describe '#sub_interval_color' do
+    context '1 as interval' do
+      it 'monthly' do
+        expect(sub_interval_color(1)).to include('monthly-color')
+      end
+    end
+
+    context '3 as interval' do
+      it 'quarterly' do
+        expect(sub_interval_color(3)).to include('quarterly-color')
+      end
+    end
+
+    context 'any other interval' do
+      it 'yearly' do
+        expect(sub_interval_color(12)).to include('yearly-color')
+      end
+    end
+  end
+
+   describe '#sub_interval_btn_color' do
+    context '1 as interval' do
+      it 'cyan' do
+        expect(sub_interval_btn_color(1)).to include('cyan')
+      end
+    end
+
+    context '3 as interval' do
+      it 'red' do
+        expect(sub_interval_btn_color(3)).to include('red')
+      end
+    end
+
+    context 'any other interval' do
+      it 'purple' do
+        expect(sub_interval_btn_color(12)).to include('purple')
+      end
     end
   end
 
