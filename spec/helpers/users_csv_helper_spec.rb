@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe UsersCsvHelper do
+describe UsersCsvHelper, type: :helper do
   let(:user) { build(:user) }
 
   describe '#preview_csv_user_errors' do
