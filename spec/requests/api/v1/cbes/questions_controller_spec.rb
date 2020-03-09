@@ -370,5 +370,19 @@ RSpec.describe 'Api::V1::Cbe::QuestionsController', type: :request do
         expect(response).to have_http_status 202
       end
     end
+
+    context 'error when try to destroy a not valid CBE question' do
+      let(:cbe_section) { create(:cbe_section, cbe: cbe) }
+      let(:question) { create(:cbe_question, section: cbe_section) }
+
+      before do
+        allow_any_instance_of(Cbe::Question).to receive(:destroy).and_return(false)
+        delete "/api/v1/questions/#{question.id}"
+      end
+
+      it 'returns HTTP status 202' do
+        expect(response).to have_http_status 422
+      end
+    end
   end
 end

@@ -1,3 +1,9 @@
+# frozen_string_literal: true
+
+# Important, you probably should not use this concern,
+# a default scope could be a nightmare to work.
+# Read this article: https://andycroll.com/ruby/dont-use-default-scope/
+
 # activate this module in any AR model using
 # include Archivable
 #
@@ -17,23 +23,22 @@ module Archivable
   included do
     scope :all_destroyed, -> { unscoped.where.not(destroyed_at: nil) }
     scope :all_not_destroyed, -> { where(destroyed_at: nil) }
-    default_scope{all_not_destroyed}
+    default_scope { all_not_destroyed }
   end
 
   def destroy
     Rails.logger.debug 'DEBUG: Archivable#destroy: activated'
     # Assumes the model has a "destroyed_at" attribute.
-    self.destroyed_at = Proc.new { Time.now }.call
-    self.active = false if self.respond_to?(:active)
-    self.live = false if self.respond_to?(:live)
-    self.name = "#{self.name}-destroyed" if self.respond_to?(:name)
-    self.name_url = "#{self.name_url}-destroyed" if self.respond_to?(:name_url)
-    self.destroyable_children.map { |x| x.destroy } if self.respond_to?(:destroyable_children)
-    self.save
+    self.destroyed_at = proc { Time.zone.now }.call
+    self.active       = false                   if respond_to?(:active)
+    self.live         = false                   if respond_to?(:live)
+    self.name         = "#{name}-destroyed"     if respond_to?(:name)
+    self.name_url     = "#{name_url}-destroyed" if respond_to?(:name_url)
+    destroyable_children.map(&:destroy)         if respond_to?(:destroyable_children)
+    save
   end
 
   def un_delete
-    self.update_attributes(destroyed_at: nil)
+    update_attributes(destroyed_at: nil)
   end
-
 end

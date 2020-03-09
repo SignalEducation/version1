@@ -89,7 +89,7 @@ RSpec.describe ProductsController, type: :controller do
         end
 
         it 'return a same product list' do
-          expect(Product.all.pluck(:sorting_order)).to eq([1, 2])
+          expect(Product.all_in_order.pluck(:sorting_order)).to eq([1, 2])
         end
       end
 

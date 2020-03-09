@@ -12,14 +12,13 @@
 #
 
 require 'rails_helper'
+require 'concerns/archivable_spec.rb'
 
 describe QuizAnswer do
-
   # Constants
   it { expect(QuizAnswer.const_defined?(:WRONGNESS)).to eq(true) }
 
   # relationships
-
   it { should have_many(:quiz_attempts) }
   it { should have_many(:quiz_contents) }
   it { should belong_to(:quiz_question) }
@@ -46,4 +45,7 @@ describe QuizAnswer do
   it { should respond_to(:destroyable?) }
   it { should respond_to(:destroyable_children) }
 
+  describe 'Concern' do
+    it_behaves_like 'archivable'
+  end
 end

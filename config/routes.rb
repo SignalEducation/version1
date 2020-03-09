@@ -13,6 +13,8 @@ Rails.application.routes.draw do
 
   get '404' => redirect('404-page')
 
+  post 'cron_tasks/:id', to: 'cron_tasks#create'
+
   # API
   namespace :api do
     post 'stripe_webhooks', to: 'stripe_webhooks#create'
@@ -89,10 +91,9 @@ Rails.application.routes.draw do
       get '/invoice/:invoice_id',            action: :invoice,                 as: :invoice
       get '/pdf_invoice/:invoice_id',        action: :pdf_invoice,             as: :pdf_invoice
       get '/invoice/:invoice_id/charge/:id', action: :charge,                  as: :invoice_charge
-      get '/cancellations',                  action: :cancel,                  as: :admin_cancellations
+      get '/cancellation',                   action: :cancellation,            as: :admin_cancellations
+      post '/cancel',                        action: :cancel_subscription,     as: :cancel_subscription
       put '/un_cancel',                      action: :un_cancel_subscription,  as: :un_cancel_subscription
-      post '/standard_cancellation',         action: :standard_cancellation,   as: :standard_cancellation
-      post '/immediate_cancellation',        action: :immediate_cancellation,  as: :immediate_cancellation
       put '/reactivate',                     action: :reactivate_subscription, as: :reactivate_subscription
     end
 
@@ -250,8 +251,7 @@ Rails.application.routes.draw do
     get '/student_new',        to: 'student_sign_ups#new'
     post '/student_create',    to: 'student_sign_ups#create', as: :create_student
 
-    post '/complaints_intercom', to: 'footer_pages#complaints_intercom'
-    post '/contact_us_intercom', to: 'footer_pages#contact_us_intercom'
+    post '/user_contact_form',   to: 'library#user_contact_form'
 
     get 'register_or_login', to: 'student_sign_ups#sign_in_or_register', as: :sign_in_or_register
 

@@ -26,6 +26,7 @@
 #
 
 require 'rails_helper'
+require 'concerns/archivable_spec.rb'
 
 describe CourseModuleElement do
   describe 'relationships' do
@@ -85,6 +86,10 @@ describe CourseModuleElement do
 
     it { should respond_to(:type_name) }
     it { should respond_to(:cme_is_video?) }
+
+    describe 'Concern' do
+      it_behaves_like 'archivable'
+    end
 
     describe User, '#available_to_user' do
       it 'for unverified_user it returns false and verification-required' do

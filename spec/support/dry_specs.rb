@@ -38,7 +38,7 @@ def expect_index_success_with_model(model_name, record_count, assign_name = nil)
   expect(response.status).to eq(200)
   expect(response).to render_template(:index)
   expect(assigns(assign_name.to_sym).first.class.name).to eq(model_name.classify)
-  expect(assigns(assign_name.to_sym).count).to eq(record_count)
+  expect(assigns(assign_name.to_sym).length).to eq(record_count)
 end
 
 def expect_show_success_with_model(model_name, expected_id=nil)

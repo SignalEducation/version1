@@ -25,6 +25,7 @@ RSpec.describe 'Api::V1::Cbe::SectionsController', type: :request do
                                                             name
                                                             score
                                                             kind
+                                                            random
                                                             sorting_order
                                                             content
                                                             scenarios
@@ -70,6 +71,7 @@ RSpec.describe 'Api::V1::Cbe::SectionsController', type: :request do
                                                   name
                                                   score
                                                   kind
+                                                  random
                                                   sorting_order
                                                   content
                                                   scenarios
@@ -122,6 +124,7 @@ RSpec.describe 'Api::V1::Cbe::SectionsController', type: :request do
                                                   name
                                                   score
                                                   kind
+                                                  random
                                                   sorting_order
                                                   content
                                                   scenarios
@@ -161,6 +164,20 @@ RSpec.describe 'Api::V1::Cbe::SectionsController', type: :request do
 
       it 'returns HTTP status 202' do
         expect(response).to have_http_status 202
+      end
+    end
+
+    context 'error when try to destroy a not valid CBE section' do
+      let!(:cbe) { create(:cbe) }
+      let(:section) { create(:cbe_section, cbe: cbe) }
+
+      before do
+        allow_any_instance_of(Cbe::Section).to receive(:destroy).and_return(false)
+        delete "/api/v1/sections/#{section.id}"
+      end
+
+      it 'returns HTTP status 202' do
+        expect(response).to have_http_status 422
       end
     end
   end

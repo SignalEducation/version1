@@ -2,8 +2,9 @@
 
 class Cbe
   class Question < ApplicationRecord
-    # enum
+    # concerns
     include CbeQuestionTypes
+    include CbeSupport
 
     # relationships
     belongs_to :section, class_name: 'Cbe::Section', foreign_key: 'cbe_section_id',

@@ -1,11 +1,11 @@
 source 'https://rubygems.org'
 git_source(:github) {|repo| "https://github.com/#{repo}.git"}
 
-ruby '2.5.3'
+ruby '2.6.5'
 gem 'rails', '5.2.2'
 
 # Use Puma as the app server
-gem 'puma', '~> 3.12'
+gem 'puma', '~> 3.12.4'
 
 # Core gems - common to all environments
 gem 'airbrake', '~> 9.5'
@@ -38,7 +38,7 @@ gem 'paperclip', '~> 6.1.0' # for uploading files (works with RemotiPart)
 gem 'mailchimp-api', '~> 2.0.4'
 gem 'momentjs-rails', '>= 2.9.0'
 gem 'modernizr-rails'
-gem "nokogiri", ">= 1.10.4"
+gem "nokogiri", ">= 1.10.8"
 gem 'bootstrap3-datetimepicker-rails', '~> 4.14.30'
 gem 'multipart-post' #To allow uploading wistia api
 gem 'pg' # PostgreSQL database engine
@@ -70,7 +70,7 @@ gem 'scout_apm'
 gem 'rack-mini-profiler'
 gem 'flamegraph'
 gem 'stackprof'
-gem "recaptcha"
+gem 'recaptcha'
 # Use ActiveStorage variant
 # gem 'mini_magick', '~> 4.8'
 
@@ -78,6 +78,7 @@ gem "recaptcha"
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'webpacker', '~> 4.2'
 gem 'rack-cors'
+gem 'zendesk_api'
 
 # Environment-specific gems
 
@@ -101,8 +102,10 @@ group :development, :test do
   gem 'pry-stack_explorer'
   gem 'factory_bot_rails' #A library for setting up Ruby objects as test data
   gem 'rspec-rails' # our core testing environment
-  gem 'rubocop-performance' # rubocop lint
-  gem 'rubocop-rails' # rubocop lint
+  gem 'rubocop', '~> 0.80.1', require: false
+  gem 'rubocop-performance', require: false # rubocop lint
+  gem 'rubocop-rails', require: false # rubocop lint
+  gem 'rubocop-rspec', require: false
   gem 'ultrahook' # allows incoming webhooks from stripe
   gem 'faker', '~> 2.1.2'
 end
@@ -124,7 +127,6 @@ group :test do
   gem 'selenium-webdriver'
   # Easy installation and use of chromedriver to run system tests with Chrome
   gem 'chromedriver-helper'
-  gem 'rubocop-rspec'
 end
 
 group :staging, :production do

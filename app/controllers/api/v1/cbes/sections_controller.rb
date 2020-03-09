@@ -25,9 +25,11 @@ module Api
         end
 
         def destroy
-          @section.destroy
-
-          render json: { message: "Section #{@section.id} was deleted." }, status: :accepted
+          if @section.destroy
+            render json: { message: "Section #{@section.id} was deleted." }, status: :accepted
+          else
+            render json: { errors: @section.errors }, status: :unprocessable_entity
+          end
         end
 
         private
@@ -36,6 +38,7 @@ module Api
           params.require(:cbe_section).permit(:name,
                                               :score,
                                               :kind,
+                                              :random,
                                               :sorting_order,
                                               :content,
                                               :cbe_id)

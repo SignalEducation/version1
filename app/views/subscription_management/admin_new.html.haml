@@ -12,12 +12,19 @@
               %p.h6
                 Why are you canceling this subscription?
 
-              =form_for @subscription, url: @url, method: :post do |f|
+              =form_for @subscription, url: subscription_management_cancel_subscription_path(id: @subscription.id, type: @type), method: :post do |f|
                 =f.hidden_field(:cancelled_by_id, value: current_user.id)
                 =f.hidden_field(:cancelling_subscription, value: true)
-                =f.hidden_field(:cancellation_reason, value: "Admin(#{current_user.email}) canceled it.")
 
                 .row
+                  .col-sm-6
+                    .form-group.cancellation-reason
+                      =f.label :cancellation_reason, 'Choose a reason', class: 'block-label h4'
+                      #cancellation-reason-error
+                        =f.collection_radio_buttons(:cancellation_reason, @reasons.map { |r| [r, r] }, :first, :last) do |b|
+                          %span.label.cancellation-label
+                            =b.radio_button
+                            =b.label
                   .col-sm-6
                     .form-group
                       =f.label :cancellation_note, 'Cancellation note:', class: 'block-label h4'

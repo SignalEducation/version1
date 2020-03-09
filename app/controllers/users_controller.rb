@@ -13,7 +13,8 @@ class UsersController < ApplicationController
   skip_before_action :verify_authenticity_token, only: :udpate_hubspot
 
   def index
-    @users = User.page(params[:page]).
+    @users = User.includes(:preferred_exam_body).
+               page(params[:page]).
                search(params[:search_term]).
                sort_by_most_recent
   end
@@ -79,8 +80,9 @@ class UsersController < ApplicationController
   end
 
   def search
-    @users = User.page(params[:page]).
+    @users = User.includes(:preferred_exam_body).
                search(params[:search_term]).
+               page(params[:page]).
                sort_by_most_recent
 
     respond_to do |format|

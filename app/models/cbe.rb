@@ -34,6 +34,7 @@ class Cbe < ApplicationRecord
                               scenarios: { questions: :cbe_section_id }
                             ]
                           ], validate: false
+
     new_cbe.update(name: "#{name} COPY", active: false)
   end
 end

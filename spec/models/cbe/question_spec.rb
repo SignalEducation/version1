@@ -1,4 +1,6 @@
+
 require 'rails_helper'
+require 'concerns/cbe_support_spec.rb'
 
 RSpec.describe Cbe::Question, type: :model do
   let(:cbe_question) { build(:cbe_question, :with_section) }
@@ -10,6 +12,8 @@ RSpec.describe Cbe::Question, type: :model do
     it { should respond_to(:sorting_order) }
     it { should respond_to(:cbe_section_id) }
     it { should respond_to(:cbe_scenario_id) }
+    it { should respond_to(:active) }
+    it { should respond_to(:destroyed_at) }
     it { should respond_to(:created_at) }
     it { should respond_to(:updated_at) }
   end
@@ -32,6 +36,10 @@ RSpec.describe Cbe::Question, type: :model do
                     fill_in_the_blank: 3, drag_drop: 4, dropdown_list: 5,
                     hot_spot: 6, spreadsheet: 7, open: 8)
     end
+  end
+
+  describe 'Concern' do
+    it_behaves_like 'cbe_support'
   end
 
   describe 'Factory' do

@@ -15,6 +15,7 @@ class UserSessionsController < ApplicationController
 
   def create
     @user_session = UserSession.new(user_session_params.to_h)
+
     if @user_session.save
       @user_session.user.check_country(request.remote_ip)
       @user_session.user.update_attribute(:session_key, session[:session_id])
@@ -23,6 +24,7 @@ class UserSessionsController < ApplicationController
       set_current_visit(@user_session.user)
       enrollment, flash_message = handle_course_enrollment(@user_session.user, params[:subject_course_id]) if params[:subject_course_id] && !params[:subject_course_id].blank?
       flash[:error] = nil
+
       if flash[:plan_guid]
         redirect_to new_subscription_url(plan_guid: flash[:plan_guid], exam_body_id: flash[:exam_body], login: true)
       elsif flash[:product_id]

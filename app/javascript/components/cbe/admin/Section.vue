@@ -28,6 +28,7 @@
           id="sectionKindSelect"
           v-model="kind"
           :options="sectionKinds"
+          @change="onChangeKind($event)"
           class="input-group input-group-lg"
         >
           <template slot="first">
@@ -45,6 +46,19 @@
         >
           field is required
         </p>
+      </div>
+
+      <div class="form-group" v-if="showRandom">
+        <b-form-group
+          id="checkbox-input-group"
+
+        >
+          <b-form-checkbox
+            v-model="random"
+          >
+            Randomize Questions?
+          </b-form-checkbox>
+        </b-form-group>
       </div>
     </div>
 
@@ -199,6 +213,10 @@ export default {
       type: String,
       default: ""
     },
+    initialRandom: {
+      type: Boolean,
+      default: false
+    },
   },
   data() {
     return {
@@ -213,6 +231,8 @@ export default {
         "objective_test_case",
         "constructed_response"
       ],
+      random: this.initialRandom,
+      showRandom: this.initialKind == "objective" ? true : false,
       submitStatus: null,
       deleteStatus: null
     };
@@ -248,6 +268,7 @@ export default {
         this.sectionDetails.score = this.score;
         this.sectionDetails.sorting_order = this.sortingOrder;
         this.sectionDetails.kind = this.kind;
+        this.sectionDetails.random = this.random;
         this.sectionDetails.content = this.content;
         this.sectionDetails.cbe_id = this.$store.state.cbeId;
 
@@ -264,6 +285,7 @@ export default {
               this.sectionDetails = {};
               this.name = this.initialName;
               this.kind = this.initialKind;
+              this.random = this.initialKind == "objective" ? true : false;
               this.score = this.initialScore;
               this.sortingOrder += 1;
               this.content = null;
@@ -286,6 +308,7 @@ export default {
         this.sectionDetails.score = this.score;
         this.sectionDetails.sorting_order = this.sortingOrder;
         this.sectionDetails.kind = this.kind;
+        this.sectionDetails.random = this.random;
         this.sectionDetails.content = this.content;
         this.sectionDetails.cbe_id = this.$store.state.cbeId;
 
@@ -303,6 +326,7 @@ export default {
             this.score = this.updatedSection.score;
             this.sortingOrder = this.updatedSection.sorting_order;
             this.kind = this.updatedSection.kind;
+            this.random = this.updatedSection.random;
             this.submitStatus = "OK";
             this.$v.$reset();
           })
@@ -339,6 +363,10 @@ export default {
     },
     shouldAppendErrorClass(field) {
       return field.$error;
+    },
+    onChangeKind(kind) {
+      this.random = false
+      this.showRandom = kind == "objective" ? true : false
     }
   }
 };

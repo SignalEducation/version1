@@ -24,9 +24,11 @@ module Api
         end
 
         def destroy
-          @scenario.destroy
-
-          render json: { message: "Scenario #{@scenario.id} was deleted." }, status: :accepted
+          if @scenario.destroy
+            render json: { message: "Scenario #{@scenario.id} was deleted." }, status: :accepted
+          else
+            render json: { errors: @scenario.errors }, status: :unprocessable_entity
+          end
         end
 
         private

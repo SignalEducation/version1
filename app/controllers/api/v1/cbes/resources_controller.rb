@@ -25,9 +25,11 @@ module Api
         end
 
         def destroy
-          @resource.destroy
-
-          render json: { message: "Resource #{@resource.id} was deleted." }, status: :accepted
+          if @resource.destroy
+            render json: { message: "Resource #{@resource.id} was deleted." }, status: :accepted
+          else
+            render json: { errors: @resource.errors }, status: :unprocessable_entity
+          end
         end
 
         private

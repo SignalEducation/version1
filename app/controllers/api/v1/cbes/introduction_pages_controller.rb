@@ -25,9 +25,11 @@ module Api
         end
 
         def destroy
-          @page.destroy
-
-          render json: { message: "Page #{@page.id} was deleted." }, status: :accepted
+          if @page.destroy
+            render json: { message: "Page #{@page.id} was deleted." }, status: :accepted
+          else
+            render json: { errors: @page.errors }, status: :unprocessable_entity
+          end
         end
 
         private

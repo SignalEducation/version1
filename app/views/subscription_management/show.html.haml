@@ -91,12 +91,12 @@
 
             .col-sm-3
               -if %w(active errored).include?(@subscription.state)
-                =link_to subscription_management_admin_cancellations_url(@subscription.id, type: :standard), data: {confirm: 'Are you sure you want to cancel subscription?'} do
+                =link_to subscription_management_admin_cancellations_path(@subscription.id, type: :standard), data: {confirm: 'Are you sure you want to cancel subscription?'} do
                   .btn.btn-primary.mb-3
                     =t('views.users.user_subscription_status.subscription_info.cancel_at_billing_end')
 
               -if %w(active pending_cancellation errored past_due).include?(@subscription.state)
-                =link_to subscription_management_admin_cancellations_url(@subscription.id, type: :immediate), data: {confirm: 'Are you sure you want to immediately cancel this subscription?'} do
+                =link_to subscription_management_admin_cancellations_path(@subscription.id, type: :immediate), data: {confirm: 'Are you sure you want to immediately cancel this subscription?'} do
                   .btn.btn-secondary.mb-3
                     =t('views.users.user_subscription_status.subscription_info.cancel_immediately')
 
@@ -116,8 +116,3 @@
           .table-responsive
             -@invoices = @subscription.invoices.all_in_order
             =render partial: 'subscription_management/invoices'
-
-
-
-
-

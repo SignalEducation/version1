@@ -1,4 +1,9 @@
+require:
+  - rubocop-rails
+  - rubocop-performance
+
 AllCops:
+  TargetRubyVersion: 2.6.5
   Exclude:
     - db/**/*
     - Gemfile
@@ -33,3 +38,6 @@ Naming/FileName:
 # Disables "Missing top-level class documentation comment" warning
 Documentation:
   Enabled: false
+
+Performance/Count:
+  SafeMode: false

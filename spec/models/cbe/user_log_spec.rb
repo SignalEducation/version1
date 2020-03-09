@@ -42,8 +42,8 @@ RSpec.describe Cbe::UserLog, type: :model do
     let(:private_exercise)     { create(:exercise, cbe_user_log: cbe_user_log) }
 
     before do
-      SlackService.any_instance.stub(:notify_channel).and_return(false)
-      Exercise.any_instance.stub(:correction_returned_email).and_return(false)
+      allow_any_instance_of(SlackService).to receive(:notify_channel).and_return(false)
+      allow_any_instance_of(Exercise).to receive(:correction_returned_email).and_return(false)
     end
 
     it '.update_score' do
@@ -52,6 +52,10 @@ RSpec.describe Cbe::UserLog, type: :model do
 
     it '.default_status' do
       expect { cbe_user_log.default_status }.to change { cbe_user_log.status }.from(nil).to('started')
+    end
+
+    it '.sections_in_user_log' do
+      expect(cbe_user_log.sections_in_user_log).to be_empty
     end
 
     it 'update_exercise_status' do

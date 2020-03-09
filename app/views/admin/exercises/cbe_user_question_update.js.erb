@@ -1,2 +1,3 @@
 $('.cbe_score').html("Score: <%= @user_log.score %>")
 $('#<%= @question.id %>-response').html("<%= @response %>")
+$('#user_question_<%= @question.id %>').html("Score: <%= @question.score %>")

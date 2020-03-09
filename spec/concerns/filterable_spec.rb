@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
-shared_examples_for "filterable" do
+shared_examples_for 'filterable' do
   let(:model) { described_class }
 
   describe '.search_scopes' do
@@ -24,9 +26,9 @@ shared_examples_for "filterable" do
       expect(model).to receive(model.search_scopes.first)
 
       model.filter(
-        ActionController::Parameters.new({
+        ActionController::Parameters.new(
           model.search_scopes.first.to_sym => 'test'
-        })
+        )
       )
     end
 
@@ -34,18 +36,18 @@ shared_examples_for "filterable" do
       expect(model).not_to receive(model.search_scopes.first)
 
       model.filter(
-        ActionController::Parameters.new({
+        ActionController::Parameters.new(
           model.search_scopes.first.to_sym => ''
-        })
+        )
       )
     end
 
     it 'returns an ActiveRecord::Relation' do
       expect(
         model.filter(
-          ActionController::Parameters.new({
+          ActionController::Parameters.new(
             model.search_scopes.first.to_sym => 'test'
-          })
+          )
         )
       ).to be_kind_of ActiveRecord::Relation
     end

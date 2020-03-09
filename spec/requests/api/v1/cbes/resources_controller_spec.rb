@@ -132,5 +132,18 @@ RSpec.describe 'Api::V1::Cbe::ResourcesController', type: :request do
         expect(response).to have_http_status 202
       end
     end
+
+    context 'error when try to destroy a not valid CBE resource' do
+      let(:resource) { create(:cbe_resource, cbe: cbe) }
+
+      before do
+        allow_any_instance_of(Cbe::Resource).to receive(:destroy).and_return(false)
+        delete "/api/v1/cbes/#{cbe.id}/resources/#{resource.id}"
+      end
+
+      it 'returns HTTP status 202' do
+        expect(response).to have_http_status 422
+      end
+    end
   end
 end
