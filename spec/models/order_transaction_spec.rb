@@ -8,7 +8,7 @@
 #  product_id       :integer
 #  stripe_order_id  :string
 #  stripe_charge_id :string
-#  live_mode        :boolean          default(FALSE)
+#  live_mode        :boolean          default("false")
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #

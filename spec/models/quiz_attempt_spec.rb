@@ -6,12 +6,12 @@
 #  user_id                           :integer
 #  quiz_question_id                  :integer
 #  quiz_answer_id                    :integer
-#  correct                           :boolean          default(FALSE), not null
+#  correct                           :boolean          default("false"), not null
 #  course_module_element_user_log_id :integer
 #  created_at                        :datetime
 #  updated_at                        :datetime
-#  score                             :integer          default(0)
-#  answer_array                      :string
+#  score                             :integer          default("0")
+#  answer_array                      :string(255)
 #
 
 require 'rails_helper'
@@ -36,8 +36,7 @@ describe QuizAttempt do
   it { should_not validate_presence_of(:user_id) }
 
   # callbacks
-  it { should callback(:serialize_the_array).before(:validation) }
-  it { should callback(:calculate_score).before(:create) }
+  it { should callback(:calculate_score).after(:create) }
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes

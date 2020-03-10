@@ -11,11 +11,11 @@
         .progress.mb-5
           .progress-bar{role: 'progressbar', aria: {valuenow: 0, valuemin: 0, valuemax: 100}, style: 'width: 0%;'}
 
-
         -@quiz_questions.each do |question|
           =render partial: 'quiz_questions/show', locals: {question: question, hide_me: true}
 
-        =form_for @course_module_element_user_log, url: courses_url, html: {style: 'display: none;'} do |f|
+        =form_for @course_module_element_user_log, url: course_path(@course_module_element_user_log), html: {style: 'display: none;'} do |f|
+          =f.hidden_field :id, value: @course_module_element_user_log.try(:id)
           =f.hidden_field :subject_course_user_log_id, value: @subject_course_user_log.try(:id)
           =f.hidden_field :course_section_user_log_id, value: @course_section_user_log.try(:id)
           =f.hidden_field :student_exam_track_id, value: @student_exam_track.try(:id)
@@ -24,12 +24,6 @@
           =f.text_field :course_section_id
           =f.text_field :course_module_element_id
           =f.text_field :time_taken_in_seconds, value: @course_module_element.try(:estimated_time_in_seconds)
-          =f.fields_for :quiz_attempts do |attempt|
-            =attempt.text_field :user_id
-            =attempt.text_field :quiz_question_id
-            =attempt.text_field :quiz_answer_id
-            =attempt.text_field :answer_array
-
     -else
       .row
         .col-sm-12
@@ -37,8 +31,7 @@
             Sorry, there are not enough questions to present this quiz
 
   :javascript
-
-    var allQuestionsList = #{@all_ids},
+    var allQuestionsList = #{@quiz_questions.pluck(:id)},
         selectionStrategy = '#{@strategy}',
         numberOfQuestions = #{@number_of_questions},
         currentQuestion = 1,
@@ -61,25 +54,37 @@
     }
 
     //Triggered by onclick event in page
-    function logAnswer(questionId, answerId, answerArray) {
-      // log the answer in the form fields_for
-      $('#course_module_element_user_log_quiz_attempts_attributes_' + (currentQuestion - 1) + '_quiz_question_id').val(questionId);
-      $('#course_module_element_user_log_quiz_attempts_attributes_' + (currentQuestion - 1) + '_quiz_answer_id').val(answerId);
-      $('#course_module_element_user_log_quiz_attempts_attributes_' + (currentQuestion - 1) + '_answer_array').val(answerArray);
+    function logAnswer(logId, questionId, answerId, answerArray) {
+      $('#answer_' + answerId).prop("onclick", null).off("click"); // remove onclick event after sent.
+      if (currentQuestion <= 1) quizStartEvent();
 
 
-      if (currentQuestion < numberOfQuestions) {
-        if (currentQuestion <= 1) {
-          quizStartEvent();
+      createQuizAttempts(logId, questionId, answerId, answerArray);
+    }
+
+    function createQuizAttempts(logId, questionId, answerId, answerArray) {
+      $.ajax({
+        url: '#{update_quiz_attempts_courses_path}',
+        method: 'post',
+        dataType: 'json',
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify({'cmeul_id': logId,
+                              'question_id': questionId,
+                              'answer_id': answerId,
+                              'answer_array': answerArray.toString() }),
+        success: function(data,status,xhr){
+          if (currentQuestion < numberOfQuestions) {
+            currentQuestion++;
+            updateProgressBar();
+            askQuestion(currentQuestion);
+          } else {
+            $('.edit_course_module_element_user_log').submit();
+          }
+        },
+        error: function(xhr,status,error){
+          console.log(xhr);
         }
-
-        allQuestionsList;
-        currentQuestion++;
-        updateProgressBar();
-        askQuestion(currentQuestion);
-      } else {
-        $('#new_course_module_element_user_log').submit();
-      }
+      });
     }
 
     $(document).on('ready page:load', function() {

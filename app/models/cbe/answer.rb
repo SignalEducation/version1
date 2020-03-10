@@ -1,5 +1,16 @@
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: cbe_answers
+#
+#  id              :bigint           not null, primary key
+#  kind            :integer
+#  content         :json
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  cbe_question_id :bigint
+#
 class Cbe
   class Answer < ApplicationRecord
     # enum

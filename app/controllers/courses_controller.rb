@@ -19,18 +19,13 @@ class CoursesController < ApplicationController
     end
   end
 
-  def create
-    # Create course_module_element_user_log for QUIZ from params sent in from previously initiated CMEUL record that was not saved
-    @course_module_element_user_log = CourseModuleElementUserLog.new(allowed_params)
-    @course_module_element_user_log.session_guid = current_session_guid
+  def update
+    @course_module_element_user_log =
+      CourseModuleElementUserLog.
+        includes(quiz_attempts: { quiz_question: %i[quiz_contents quiz_solutions]}).
+        find(params[:course_module_element_user_log][:id])
 
-    @course_module_element = @course_module_element_user_log.course_module_element
-    @course_module = @course_module_element_user_log.course_module
-    @course = @course_module.subject_course
-    @group = @course.group
-    @valid_subscription = current_user.active_subscriptions_for_exam_body(@group.exam_body_id).all_valid.first
-    @course_module_element_user_log.subject_course_id = @course.id
-    @results = true
+    set_up_course_module_element_user_log
 
     if @course_module_element_user_log.save
       pass_rate = @course_module_element.course_module.subject_course.quiz_pass_rate ? @course_module_element.course_module.subject_course.quiz_pass_rate : 65
@@ -47,7 +42,7 @@ class CoursesController < ApplicationController
 
     else
       # it did not save
-      Rails.logger.error "ERROR: CoursesController#create: Failed to save. CME-UserLog.inspect #{@course_module_element_user_log.errors.inspect}."
+      Rails.logger.error "ERROR: CoursesController#update: Failed to save. CME-UserLog.inspect #{@course_module_element_user_log.errors.inspect}."
       flash[:error] = I18n.t('controllers.courses.create.flash.error')
       redirect_to library_special_link(@course_module.parent)
     end
@@ -56,11 +51,11 @@ class CoursesController < ApplicationController
   def video_watched_data
     cme                = CourseModuleElement.find(params[:cme_id])
     video_cme_user_log = CourseModuleElementUserLog.find(params[:video_log_id])
+    update_params      = { element_completed: true, time_taken_in_seconds: cme&.duration&.to_i }
 
     respond_to do |format|
       format.json do
-        if video_cme_user_log.update(element_completed: true,
-                                     time_taken_in_seconds: cme&.duration&.to_i)
+        if video_cme_user_log.update(update_params)
           render json: {}, status: :ok
         else
           render json: { video_log_id: video_cme_user_log.errors.messages }, status: :error
@@ -128,7 +123,6 @@ class CoursesController < ApplicationController
 
   def update_constructed_response_user_log
     @course_module_element_user_log = CourseModuleElementUserLog.find(params[:course_module_element_user_log][:id])
-
     respond_to do |format|
       # update_columns ?? to stop callback chain will be called on final submit
       if @course_module_element_user_log.update_attributes(constructed_response_allowed_params)
@@ -149,6 +143,11 @@ class CoursesController < ApplicationController
     @course_module_element_user_log.update_attributes(element_completed: true)
 
     redirect_to course_special_link(@course_module_element_user_log.course_module_element, @subject_course_user_log)
+  end
+
+  def update_quiz_attempts
+    @course_module_element_user_log = CourseModuleElementUserLog.find(params[:cmeul_id])
+    @course_module_element_user_log.quiz_attempts.create(user_id: current_user.try(:id), quiz_question_id: params[:question_id], quiz_answer_id: params[:answer_id], answer_array: params[:answer_array])
   end
 
   private
@@ -210,8 +209,7 @@ class CoursesController < ApplicationController
   end
 
   def set_up_quiz
-    #Creates QUIZ log when page renders but does not save log, data is sent as params to create method where a new CMEUL is initiated and saved
-    @course_module_element_user_log = CourseModuleElementUserLog.new(
+    @course_module_element_user_log = CourseModuleElementUserLog.create(
       session_guid: current_session_guid,
       course_module_element_id: @course_module_element.id,
       course_module_id: @course_module_element.course_module_id,
@@ -220,32 +218,26 @@ class CoursesController < ApplicationController
       subject_course_user_log_id: @subject_course_user_log.try(:id),
       course_section_user_log_id: @course_section_user_log.try(:id),
       student_exam_track_id: @student_exam_track.try(:id),
+      quiz_result: 'started',
       is_quiz: true,
       is_video: false,
       user_id: current_user.try(:id)
     )
+
+    @mathjax_required    = true
+    @strategy            = @course_module_element.course_module_element_quiz.question_selection_strategy
     @number_of_questions = @course_module_element.course_module_element_quiz.number_of_questions
+    @quiz_questions      =
+      if @strategy == 'random'
+        @course_module_element.course_module_element_quiz.quiz_questions.includes(:quiz_contents).shuffle.take(@number_of_questions)
+      else
+        @course_module_element.course_module_element_quiz.quiz_questions.includes(:quiz_contents).take(@number_of_questions)
+      end
 
-    @number_of_questions.times do
-      @course_module_element_user_log.quiz_attempts.build(user_id: current_user.try(:id))
-    end
-
-    @strategy = @course_module_element.course_module_element_quiz.question_selection_strategy
-
-    if @strategy == 'random'
-      all_ids_random = @course_module_element.course_module_element_quiz.all_ids_random
-      @all_ids = all_ids_random.sample(@number_of_questions)
-    else
-      all_ids_ordered = @course_module_element.course_module_element_quiz.all_ids_ordered
-      @all_ids = all_ids_ordered[0..@number_of_questions]
-    end
-
-    @quiz_questions = QuizQuestion.includes(:quiz_contents).find(@all_ids)
-    @mathjax_required = true
   end
 
   def set_up_constructed_response_start_screen
-    #Order by most recently updated_at
+    # Order by most recently updated_at
     @course_module_element_user_logs = @subject_course_user_log.course_module_element_user_logs.for_course_module_element(@course_module_element.id).reverse[0...8] if @subject_course_user_log
   end
 
@@ -259,7 +251,7 @@ class CoursesController < ApplicationController
     @course_section_user_log = @subject_course_user_log.course_section_user_logs.where(course_section_id: @course_section.id).last if @subject_course_user_log
     @student_exam_track = @course_section_user_log.student_exam_tracks.where(course_module_id: @course_module.id).last if @course_section_user_log
 
-    #Creates CONSTRUCTED_RESPONSE log when page renders
+    # Creates CONSTRUCTED_RESPONSE log when page renders
     @course_module_element_user_log = CourseModuleElementUserLog.create!(
       preview_mode: @preview_mode,
       session_guid: current_session_guid,
@@ -335,6 +327,21 @@ class CoursesController < ApplicationController
     @all_scenario_question_attempt_ids = @constructed_response_attempt.scenario_question_attempts.all_in_order.map(&:id)
   end
 
+  def set_up_course_module_element_user_log
+    @course_module_element_user_log.calculate_score
+    @course_module_element_user_log.update(allowed_params)
+    @course_module_element_user_log.session_guid = current_session_guid
+
+    @course_module_element = @course_module_element_user_log.course_module_element
+    @course_module         = @course_module_element_user_log.course_module
+    @course                = @course_module.subject_course
+    @group                 = @course.group
+    @valid_subscription    = current_user.active_subscriptions_for_exam_body(@group.exam_body_id).
+                               all_valid.first
+    @course_module_element_user_log.subject_course_id = @course.id
+    @results = true
+  end
+
   protected
 
   def check_permission
@@ -355,6 +362,5 @@ class CoursesController < ApplicationController
       flash[:warning] = 'Sorry, you are not permitted to access that content.'
       redirect_to library_special_link(@course)
     end
-
   end
 end

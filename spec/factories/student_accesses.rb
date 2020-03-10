@@ -9,10 +9,10 @@
 #  trial_ended_date         :datetime
 #  trial_seconds_limit      :integer
 #  trial_days_limit         :integer
-#  content_seconds_consumed :integer          default(0)
+#  content_seconds_consumed :integer          default("0")
 #  subscription_id          :integer
 #  account_type             :string
-#  content_access           :boolean          default(FALSE)
+#  content_access           :boolean          default("false")
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
 #

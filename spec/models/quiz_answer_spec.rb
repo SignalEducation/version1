@@ -4,8 +4,8 @@
 #
 #  id                  :integer          not null, primary key
 #  quiz_question_id    :integer
-#  correct             :boolean          default(FALSE), not null
-#  degree_of_wrongness :string
+#  correct             :boolean          default("false"), not null
+#  degree_of_wrongness :string(255)
 #  created_at          :datetime
 #  updated_at          :datetime
 #  destroyed_at        :datetime

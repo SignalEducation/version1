@@ -333,10 +333,10 @@ class ApplicationController < ActionController::Base
                          the_thing.course_module.course_section.subject_course.name_url,
                          anchor: 'related-lesson-restriction')
     else
-      course_url(the_thing.course_module.course_section.subject_course.name_url,
-                 the_thing.course_module.course_section.name_url,
-                 the_thing.course_module.name_url,
-                 the_thing.name_url)
+      show_course_url(the_thing.course_module.course_section.subject_course.name_url,
+                      the_thing.course_module.course_section.name_url,
+                      the_thing.course_module.name_url,
+                      the_thing.name_url)
     end
   end
 

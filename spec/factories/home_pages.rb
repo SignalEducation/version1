@@ -13,14 +13,14 @@
 #  custom_file_name              :string
 #  group_id                      :integer
 #  name                          :string
-#  home                          :boolean          default(FALSE)
+#  home                          :boolean          default("false")
 #  logo_image                    :string
-#  footer_link                   :boolean          default(FALSE)
+#  footer_link                   :boolean          default("false")
 #  mailchimp_list_guid           :string
-#  registration_form             :boolean          default(FALSE), not null
-#  pricing_section               :boolean          default(FALSE), not null
-#  seo_no_index                  :boolean          default(FALSE), not null
-#  login_form                    :boolean          default(FALSE), not null
+#  registration_form             :boolean          default("false"), not null
+#  pricing_section               :boolean          default("false"), not null
+#  seo_no_index                  :boolean          default("false"), not null
+#  login_form                    :boolean          default("false"), not null
 #  preferred_payment_frequency   :integer
 #  header_h1                     :string
 #  header_paragraph              :string
@@ -30,6 +30,8 @@
 #  video_guid                    :string
 #  header_h3                     :string
 #  background_image              :string
+#  usp_section                   :boolean          default("true")
+#  stats_content                 :text
 #
 
 FactoryBot.define do
