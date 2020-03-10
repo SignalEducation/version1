@@ -23,7 +23,7 @@ Layout/DotPosition:
 Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented_relative_to_receiver
 
-Metrics/LineLength:
+Layout/LineLength:
   Enabled: false
 
 Style/Documentation:
@@ -32,12 +32,17 @@ Style/Documentation:
 Style/RaiseArgs:
   EnforcedStyle: exploded
 
-Naming/FileName:
-    Enabled: false
+Style/HashEachMethods:
+   Enabled: false
 
-# Disables "Missing top-level class documentation comment" warning
-Documentation:
+Style/HashTransformKeys:
+  Enabled: false
+
+Style/HashTransformValues:
+  Enabled: false
+
+Naming/FileName:
   Enabled: false
 
 Performance/Count:
-  SafeMode: false
+  SafeAutoCorrect: false

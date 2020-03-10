@@ -104,7 +104,7 @@ group :development, :test do
   gem 'factory_bot_rails' #A library for setting up Ruby objects as test data
   gem 'rspec-rails' # our core testing environment
   gem 'rubocop', '~> 0.80.1', require: false
-  gem 'rubocop-performance', require: false # rubocop lint
+  gem 'rubocop-performance', '~> 1.5.2', require: false # rubocop lint
   gem 'rubocop-rails', require: false # rubocop lint
   gem 'rubocop-rspec', require: false
   gem 'ultrahook' # allows incoming webhooks from stripe
