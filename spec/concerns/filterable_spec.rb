@@ -11,13 +11,13 @@ shared_examples_for 'filterable' do
     end
   end
 
-  describe '.filter' do
+  describe '.filter_from_params' do
     it 'implements the filter class method' do
-      expect(model).to respond_to :filter
+      expect(model).to respond_to :filter_from_params
     end
 
     it 'is raises an error if the first argument is not a hash' do
-      expect { model.filter('string') }.to(
+      expect { model.filter_from_params('string') }.to(
         raise_error(ArgumentError)
       )
     end
@@ -25,7 +25,7 @@ shared_examples_for 'filterable' do
     it 'calls the relevant scope on the model if a value is present' do
       expect(model).to receive(model.search_scopes.first)
 
-      model.filter(
+      model.filter_from_params(
         ActionController::Parameters.new(
           model.search_scopes.first.to_sym => 'test'
         )
@@ -35,7 +35,7 @@ shared_examples_for 'filterable' do
     it 'does not call a scope if a value is not present' do
       expect(model).not_to receive(model.search_scopes.first)
 
-      model.filter(
+      model.filter_from_params(
         ActionController::Parameters.new(
           model.search_scopes.first.to_sym => ''
         )
@@ -44,7 +44,7 @@ shared_examples_for 'filterable' do
 
     it 'returns an ActiveRecord::Relation' do
       expect(
-        model.filter(
+        model.filter_from_params(
           ActionController::Parameters.new(
             model.search_scopes.first.to_sym => 'test'
           )
