@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe CbeQuestionsHelper do
+describe CbeQuestionsHelper, type: :helper do
   let(:exercise_cbe) { create(:exercise) }
   let(:cbe)          { create(:cbe) }
   let(:cbe_user_log) { create(:cbe_user_log, cbe: cbe, exercise: exercise_cbe) }

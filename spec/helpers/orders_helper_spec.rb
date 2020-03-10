@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe OrdersHelper do
+describe OrdersHelper, type: :helper do
   let(:order)                   { create(:order) }
   let(:cbe)                     { create(:cbe) }
   let(:cbe_product)             { create(:product, cbe: cbe, product_type: 'cbe') }
