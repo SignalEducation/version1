@@ -40,7 +40,7 @@ FactoryBot.define do
     brand                 { 'visa' }
     last_4                { '4242' }
     expiry_month          { 1 }
-    expiry_year           { Time.now.year + 1 }
+    expiry_year           { Time.zone.now.year + 1 }
     address_line1         { '123 Fake Street' }
     account_country       { 'Ireland' }
     association :account_address_country, factory: :country
