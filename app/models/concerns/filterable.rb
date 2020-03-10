@@ -15,7 +15,7 @@ module Filterable
       @search_scopes << name
     end
 
-    def filter(filtering_params)
+    def filter_from_params(filtering_params)
       unless filtering_params.is_a? ActionController::Parameters
         raise ArgumentError, 'The filtering params arguement must be a hash'
       end
