@@ -16,16 +16,16 @@
             .col-sm-6
               .form-group
                 =label_tag :full_name, 'Name'
-                =text_field_tag :full_name, nil, class: 'form-control', placeholder: 'Enter your full name'
+                =text_field_tag :full_name, nil, class: 'form-control', placeholder: 'Enter your full name', required: true
 
             .col-sm-6
               .form-group
                 =label_tag :email, 'Email'
-                =email_field_tag :email_address, nil, class: 'form-control', placeholder: 'Enter your Email'
+                =email_field_tag :email_address, nil, class: 'form-control', placeholder: 'Enter your Email', required: true
 
             .col-sm-12
               .form-group
                 =label_tag :question, 'Question'
-                =text_area_tag :question, nil, rows: 3, class: 'form-control', placeholder: 'Please outline your question'
+                =text_area_tag :question, nil, rows: 3, class: 'form-control', placeholder: 'Please outline your question', required: true
           .pt-2
             =submit_tag 'Submit', class: 'btn btn-primary btn-sm'
