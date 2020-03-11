@@ -349,7 +349,7 @@ class CoursesController < ApplicationController
 
     return if @course_module_element && permission && permission[:view]
 
-    if permission[:reason]
+    if permission && permission[:reason]
       redirect_to library_course_url(@group.name_url, @course.name_url, anchor: permission[:reason])
     else
       flash[:warning] = 'Sorry, you are not permitted to access that content.'
