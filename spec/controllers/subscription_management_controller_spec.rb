@@ -1,50 +1,33 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-RSpec.describe SubscriptionManagementController, :type => :controller do
+RSpec.describe SubscriptionManagementController, type: :controller do
   before :each do
     allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
   end
 
-  let!(:exam_body_1) { FactoryBot.create(:exam_body) }
-  let!(:gbp) { create(:gbp) }
-  let!(:uk) { create(:uk, currency: gbp) }
-  let!(:uk_vat_code) { create(:vat_code, country: uk) }
-  let!(:uk_vat_rate) { create(:vat_rate, vat_code: uk_vat_code) }
-  let!(:subscription_plan_gbp_m) { FactoryBot.create(:student_subscription_plan_m,
-                                                     currency_id: gbp.id, price: 7.50, stripe_guid: 'stripe_plan_guid_m') }
-
-  let(:user_management_user_group) { FactoryBot.create(:user_management_user_group) }
-  let(:user_management_user) { FactoryBot.create(:user_management_user, user_group_id: user_management_user_group.id) }
-
-  let!(:student_user_group ) { FactoryBot.create(:student_user_group ) }
-  let!(:valid_subscription_student) { FactoryBot.create(:basic_student, user_group_id: student_user_group.id) }
-
-  let!(:valid_subscription) { FactoryBot.create(:valid_subscription, user_id: valid_subscription_student.id,
-                                                subscription_plan_id: subscription_plan_gbp_m.id,
-                                                stripe_customer_id: valid_subscription_student.stripe_customer_id ) }
-  let!(:invoice) { create(:invoice, user: valid_subscription_student,
-                          subscription_id: valid_subscription.id, issued_at: Time.now, vat_rate: uk_vat_rate) }
-
-  let!(:canceled_pending_student) { FactoryBot.create(:basic_student,
-                                                      user_group_id: student_user_group.id) }
-
-  let!(:canceled_pending_subscription) { FactoryBot.create(:canceled_pending_subscription, user_id: canceled_pending_student.id,
-                                                           subscription_plan_id: subscription_plan_gbp_m.id,
-                                                           stripe_customer_id: canceled_pending_student.stripe_customer_id ) }
-
-  let!(:canceled_student) { FactoryBot.create(:basic_student,
-                                                      user_group_id: student_user_group.id) }
-
-  let!(:canceled_subscription) { FactoryBot.create(:canceled_subscription, user_id: canceled_student.id,
-                                                           subscription_plan_id: subscription_plan_gbp_m.id,
-                                                           stripe_customer_id: canceled_student.stripe_customer_id ) }
-  let!(:default_card) { FactoryBot.create(:subscription_payment_card, user_id: canceled_student.id,
-                                          is_default_card: true, stripe_card_guid: 'guid_222',
-                                          status: 'card-live' ) }
-
+  let!(:exam_body_1)                   { create(:exam_body) }
+  let!(:gbp)                           { create(:gbp) }
+  let!(:uk)                            { create(:uk, currency: gbp) }
+  let!(:uk_vat_code)                   { create(:vat_code, country: uk) }
+  let!(:uk_vat_rate)                   { create(:vat_rate, vat_code: uk_vat_code) }
+  let!(:subscription_plan_gbp_m)       { create(:student_subscription_plan_m, currency_id: gbp.id, price: 7.50, stripe_guid: 'stripe_plan_guid_m') }
+  let(:user_management_user_group)     { create(:user_management_user_group) }
+  let(:user_management_user)           { create(:user_management_user, user_group_id: user_management_user_group.id) }
+  let!(:student_user_group )           { create(:student_user_group) }
+  let!(:valid_subscription_student)    { create(:basic_student, user_group_id: student_user_group.id) }
+  let!(:valid_subscription)            { create(:valid_subscription, user_id: valid_subscription_student.id, subscription_plan_id: subscription_plan_gbp_m.id, stripe_customer_id: valid_subscription_student.stripe_customer_id) }
+  let!(:invoice)                       { create(:invoice, user: valid_subscription_student, subscription_id: valid_subscription.id, issued_at: Time.zone.now, vat_rate: uk_vat_rate) }
+  let!(:canceled_pending_student)      { create(:basic_student, user_group_id: student_user_group.id) }
+  let!(:canceled_pending_subscription) { create(:canceled_pending_subscription, user_id: canceled_pending_student.id, subscription_plan_id: subscription_plan_gbp_m.id, stripe_customer_id: canceled_pending_student.stripe_customer_id) }
+  let!(:canceled_student)              { create(:basic_student, user_group_id: student_user_group.id) }
+  let!(:canceled_subscription)         { create(:canceled_subscription, user_id: canceled_student.id, subscription_plan_id: subscription_plan_gbp_m.id, stripe_customer_id: canceled_student.stripe_customer_id) }
+  let!(:default_card)                  { create(:subscription_payment_card, user_id: canceled_student.id, is_default_card: true, stripe_card_guid: 'guid_222', status: 'card-live') }
+  let!(:charge)                        { create(:charge, user: valid_subscription_student, subscription: valid_subscription, invoice: invoice, subscription_payment_card: default_card, stripe_api_event_id: nil) }
+  let(:cancellation_params)            { { cancellation_reason: 'reason', cancellation_note: 'note', cancelled_by_id: valid_subscription_student.id, cancelling_subscription: true } }
 
   context 'Logged in as a user_management_user: ' do
-
     before(:each) do
       activate_authlogic
       UserSession.create!(user_management_user)
@@ -68,240 +51,162 @@ RSpec.describe SubscriptionManagementController, :type => :controller do
         expect(response.status).to eq(200)
         expect(response).to render_template(:invoice)
       end
+    end
 
+    describe "GET 'pdf_invoice'" do
+      context 'valid invoice' do
+        it 'should see a pdf invoice' do
+          get :pdf_invoice, format: :pdf, params: { subscription_management_id: valid_subscription.id, invoice_id: invoice.id }
+          expect(response.status).to eq(200)
+          expect(response.content_type).to eq('application/pdf')
+        end
+      end
+
+      context 'invalid invoice' do
+        it 'should be redirecrt to user profile' do
+          get :pdf_invoice, format: :pdf, params: { subscription_management_id: valid_subscription.id, invoice_id: (invoice.id + 2) }
+          expect(response).to be_redirect
+          expect(response).to have_http_status(:redirect)
+          expect(response).to redirect_to(users_path)
+        end
+      end
     end
 
     describe "GET 'charge'" do
-      xit 'should see valid charge' do
+      it 'should see valid charge' do
         get :charge, params: { subscription_management_id: valid_subscription.id, invoice_id: invoice.id, id: charge.id }
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:charge)
       end
-
     end
 
-    describe "Post 'un_cancel_subscription'" do
-      xit 'should see valid invoice' do
-
-
-        sources = {"id": "src_Do8swBcNDszFmc", "object": "source", "client_secret": "src_client_secret_Do8sRLByihYpru4LuNCGYP8L",
-                   "created": 1539850277, "currency": "eur", "flow": "receiver", "livemode": false, "status": "pending"
-        }
-        subscriptions = {      "id": "sub_Do8snl73Oh0FRL", "object": "subscription", "billing": "charge_automatically",
-                               "billing_cycle_anchor": 1540455078, "cancel_at_period_end": false,
-                               "created": 1539850278, "current_period_end": 1540455078, "current_period_start": 1539850278,
-                               "customer": "cus_5oHUt1ZBHOcfUT"
-        }
-
-        get_url = "https://api.stripe.com/v1/customers/#{canceled_pending_student.stripe_customer_id}"
-        get_response_body = {"id": canceled_pending_student.stripe_customer_id, "object": "customer", "account_balance": 0,
-                             "invoice_prefix": "1C44D6D", "livemode": false,"default_source": "src_Do8swBcNDszFmc",
-                             "sources": {"object": "list", "data": [sources], "has_more": false, "total_count": 0,
-                                         "url": "/v1/customers/cus_Do8skFvJFlWtvy/sources"},
-                             "subscriptions": {
-                                 "object": "list",
-                                 "data": [subscriptions],
-                                 "has_more": false,
-                                 "total_count": 0,
-                                 "url": "/v1/customers/#{canceled_pending_student.stripe_customer_id}/subscriptions"
-                             }
-        }
-        stub_customer_get_request(get_url, get_response_body)
-
-        get_sub_url = "https://api.stripe.com/v1/customers/#{canceled_pending_student.stripe_customer_id}/subscriptions/#{canceled_pending_subscription.stripe_guid}"
-        subscription = {      "id": canceled_pending_subscription.stripe_guid, "object": "subscription",
-                              "billing": "charge_automatically",
-                              "billing_cycle_anchor": 1540455078, "cancel_at_period_end": false,
-                              "created": 1539850278, "current_period_end": 1540455078, "current_period_start": 1539850278,
-                              "customer": canceled_pending_student.stripe_customer_id}
-
-        stub_subscription_get_request(get_sub_url, subscription)
-
-
-        post_url = "https://api.stripe.com/v1/subscriptions/#{canceled_pending_subscription.stripe_guid}"
-        post_request_body = {"plan"=>subscription_plan_gbp_m.stripe_guid}
-
-        post_response_body = {"id": canceled_pending_subscription.stripe_guid, "object": "subscription", "livemode": false,
-                              "cancel_at_period_end": false, "canceled_at": nil,
-                              "current_period_end": 1540455078, "plan": {"id": "test-mubaohLn5BuRVQ8rOE4M",
-                                                                         "object": "plan", "active": true,
-                                                                         "amount": 999, "livemode": false },
-                              "status": "active"
-        }
-        stub_subscription_post_request(post_url, post_request_body, post_response_body)
-
-
-        post :un_cancel_subscription, params: { subscription_management_id: canceled_pending_subscription.id }
-        expect(flash[:success]).to eq(I18n.t('controllers.subscription_management.un_cancel_subscription.flash.success'))
+    describe "GET 'cancellation'" do
+      it 'should see cancellation page' do
+        get :cancellation, params: { subscription_management_id: valid_subscription.id, invoice_id: invoice.id }
+        expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to subscription_management_url(canceled_pending_subscription)
+        expect(response.status).to eq(200)
+        expect(response).to render_template('subscription_management/admin_new')
+      end
+    end
 
-        expect(a_request(:get, get_url).with(body: nil)).to have_been_made.once
-        expect(a_request(:get, get_sub_url).with(body: nil)).to have_been_made.at_most_times(3)
-        expect(a_request(:post, post_url).with(body: post_request_body)).to have_been_made.once
+    describe "POST 'cancel_subscription'" do
+      context 'successful cancellation' do
+        it 'Cancel a subscription' do
+          expect_any_instance_of(SubscriptionService).to receive(:cancel_subscription).and_return(true)
+          post :cancel_subscription, params: { subscription_management_id: valid_subscription.id, subscription: cancellation_params, type: :standard }
 
+          expect(response).to be_redirect
+          expect(response).to have_http_status(:redirect)
+          expect(response).to redirect_to(subscription_management_path(valid_subscription))
+          expect(flash[:success]).to eq(I18n.t('controllers.subscription_management.cancel.flash.success'))
+          expect(flash[:error]).to be_nil
+        end
+
+        it 'Immediate Cancel a subscription' do
+          expect_any_instance_of(SubscriptionService).to receive(:cancel_subscription_immediately).and_return(true)
+          post :cancel_subscription, params: { subscription_management_id: valid_subscription.id, subscription: cancellation_params, type: :immediate }
+
+          expect(response).to be_redirect
+          expect(response).to have_http_status(:redirect)
+          expect(response).to redirect_to(subscription_management_path(valid_subscription))
+          expect(flash[:success]).to eq(I18n.t('controllers.subscription_management.cancel.flash.success'))
+          expect(flash[:error]).to be_nil
+        end
       end
 
+      context 'unsuccessful cancellation' do
+        it 'Error in cancel a subscription' do
+          post :cancel_subscription, params: { subscription_management_id: valid_subscription.id, subscription: cancellation_params }
+
+          expect(response).to be_redirect
+          expect(response).to have_http_status(:redirect)
+          expect(response).to redirect_to(subscription_management_path(valid_subscription))
+          expect(flash[:success]).to be_nil
+          expect(flash[:error]).to eq(I18n.t('controllers.subscription_management.cancel.flash.error'))
+        end
+
+        it 'Error raised in cancel a subscription' do
+          expect_any_instance_of(Subscription).to(receive(:update).and_raise(Learnsignal::SubscriptionError.new('error')))
+          post :cancel_subscription, params: { subscription_management_id: valid_subscription.id, subscription: cancellation_params }
+
+          expect(response).to be_redirect
+          expect(response).to have_http_status(:redirect)
+          expect(response).to redirect_to(subscription_management_path(valid_subscription))
+          expect(flash[:success]).to be_nil
+          expect(flash[:error]).to eq(I18n.t('controllers.subscription_management.cancel.flash.error'))
+        end
+      end
     end
 
-    describe "Post 'cancel'" do
-      xit 'should see valid invoice' do
-        sources = {"id": "guid_222", "object": "source", "client_secret": "src_client_secret_Do8sRLByihYpru4LuNCGYP8L",
-                   "created": 1539850277, "currency": "eur", "flow": "receiver", "livemode": false, "status": "pending"
-        }
-        subscriptions = {      "id": "sub_Do8snl73Oh0FRL", "object": "subscription", "billing": "charge_automatically",
-                               "billing_cycle_anchor": 1540455078, "cancel_at_period_end": false,
-                               "created": 1539850278, "current_period_end": 1540455078, "current_period_start": 1539850278,
-                               "customer": "cus_5oHUt1ZBHOcfUT"
-        }
+    describe "POST 'un_cancel_subscription'" do
+      context 'successful uncancel' do
+        it 'Uncancel a subscription' do
+          expect_any_instance_of(Subscription).to receive(:un_cancel).and_return(true)
+          post :un_cancel_subscription, params: { subscription_management_id: canceled_pending_subscription.id }
 
-        get_url = "https://api.stripe.com/v1/customers/#{valid_subscription.stripe_customer_id}"
-        get_response_body = {"id": valid_subscription.stripe_customer_id, "object": "customer", "account_balance": 0,
-                             "invoice_prefix": "1C44D6D", "livemode": false,"default_source": "src_Do8swBcNDszFmc",
-                             "sources": {"object": "list", "data": [sources], "has_more": false, "total_count": 0,
-                                         "url": "/v1/customers/cus_Do8skFvJFlWtvy/sources"},
-                             "subscriptions": {
-                                 "object": "list",
-                                 "data": [subscriptions],
-                                 "has_more": false,
-                                 "total_count": 0,
-                                 "url": "/v1/customers/#{valid_subscription.stripe_customer_id}/subscriptions"
-                             }
-        }
-        stub_customer_get_request(get_url, get_response_body)
-
-        get_sub_url = "https://api.stripe.com/v1/customers/#{valid_subscription.stripe_customer_id}/subscriptions/#{valid_subscription.stripe_guid}"
-        subscription = {      "id": valid_subscription.stripe_guid, "object": "subscription",
-                              "billing": "charge_automatically",
-                              "billing_cycle_anchor": 1540455078, "cancel_at_period_end": false,
-                              "created": 1539850278, "current_period_end": 1540455078, "current_period_start": 1539850278,
-                              "customer": valid_subscription.stripe_customer_id}
-
-        stub_subscription_get_request(get_sub_url, subscription)
-
-
-        url = "https://api.stripe.com/v1/subscriptions/#{valid_subscription.stripe_guid}?at_period_end=true"
-        subscription = {      "id": valid_subscription.stripe_guid, "object": "subscription",
-                              "billing": "charge_automatically", "status": "active",
-                              "billing_cycle_anchor": 1540455078, "cancel_at_period_end": true,
-                              "created": 1539850278, "current_period_end": 1540455078, "current_period_start": 1539850278,
-                              "customer": valid_subscription.stripe_customer_id}
-
-        stub_subscription_delete_request(url, subscription)
-
-        put :cancel, params: { subscription_management_id: valid_subscription.id }
-        valid_subscription.reload
-        expect(valid_subscription.stripe_status).to eq('canceled-pending')
-        expect(flash[:success]).to eq(I18n.t('controllers.subscription_management.cancel.flash.success'))
-        expect(flash[:error]).to be_nil
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to subscription_management_url(valid_subscription)
+          expect(response).to be_redirect
+          expect(response).to have_http_status(:redirect)
+          expect(response).to redirect_to(subscription_management_path(canceled_pending_subscription))
+          expect(flash[:success]).to eq(I18n.t('controllers.subscription_management.un_cancel_subscription.flash.success'))
+          expect(flash[:error]).to be_nil
+        end
       end
 
-    end
+      context 'unsuccessful uncancel' do
+        it 'Error in uncancel a subscription' do
+          expect_any_instance_of(Subscription).to receive(:un_cancel).and_return(false)
+          post :un_cancel_subscription, params: { subscription_management_id: canceled_pending_subscription.id }
 
-    describe "Post 'immediate_cancel'" do
-      xit 'should see valid invoice' do
-        sources = {"id": "guid_222", "object": "source", "client_secret": "src_client_secret_Do8sRLByihYpru4LuNCGYP8L",
-                   "created": 1539850277, "currency": "eur", "flow": "receiver", "livemode": false, "status": "pending"
-        }
-        subscriptions = {      "id": "sub_Do8snl73Oh0FRL", "object": "subscription", "billing": "charge_automatically",
-                               "billing_cycle_anchor": 1540455078, "cancel_at_period_end": false,
-                               "created": 1539850278, "current_period_end": 1540455078, "current_period_start": 1539850278,
-                               "customer": "cus_5oHUt1ZBHOcfUT"
-        }
-
-        get_url = "https://api.stripe.com/v1/customers/#{valid_subscription.stripe_customer_id}"
-        get_response_body = {"id": valid_subscription.stripe_customer_id, "object": "customer", "account_balance": 0,
-                             "invoice_prefix": "1C44D6D", "livemode": false,"default_source": "src_Do8swBcNDszFmc",
-                             "sources": {"object": "list", "data": [sources], "has_more": false, "total_count": 0,
-                                         "url": "/v1/customers/cus_Do8skFvJFlWtvy/sources"},
-                             "subscriptions": {
-                                 "object": "list",
-                                 "data": [subscriptions],
-                                 "has_more": false,
-                                 "total_count": 0,
-                                 "url": "/v1/customers/#{valid_subscription.stripe_customer_id}/subscriptions"
-                             }
-        }
-        stub_customer_get_request(get_url, get_response_body)
-        get_sub_url = "https://api.stripe.com/v1/customers/#{valid_subscription.stripe_customer_id}/subscriptions/#{valid_subscription.stripe_guid}"
-        subscription = {      "id": valid_subscription.stripe_guid, "object": "subscription",
-                              "billing": "charge_automatically",
-                              "billing_cycle_anchor": 1540455078, "cancel_at_period_end": false,
-                              "created": 1539850278, "current_period_end": 1540455078, "current_period_start": 1539850278,
-                              "customer": valid_subscription.stripe_customer_id}
-
-        stub_subscription_get_request(get_sub_url, subscription)
-
-        url = "https://api.stripe.com/v1/subscriptions/#{valid_subscription.stripe_guid}?at_period_end=false"
-        subscription = {      "id": valid_subscription.stripe_guid, "object": "subscription",
-                              "billing": "charge_automatically", "status": "canceled",
-                              "billing_cycle_anchor": 1540455078, "cancel_at_period_end": true,
-                              "created": 1539850278, "current_period_end": 1540455078, "current_period_start": 1539850278,
-                              "customer": valid_subscription.stripe_customer_id}
-
-        stub_subscription_delete_request(url, subscription)
-
-        post :immediate_cancel, params: { subscription_management_id: valid_subscription.id }
-        expect(flash[:success]).to eq(I18n.t('controllers.subscription_management.immediately_cancel.flash.success'))
-        expect(flash[:error]).to be_nil
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to subscription_management_url(valid_subscription)
+          expect(response).to be_redirect
+          expect(response).to have_http_status(:redirect)
+          expect(response).to redirect_to(subscription_management_path(canceled_pending_subscription))
+          expect(flash[:success]).to be_nil
+          expect(flash[:error]).to eq(I18n.t('controllers.subscription_management.un_cancel_subscription.flash.error'))
+        end
       end
 
+      context 'unsuccessful uncancel' do
+        it 'Error in uncancel a subscription - status reason' do
+          post :un_cancel_subscription, params: { subscription_management_id: valid_subscription.id }
+
+          expect(response).to be_redirect
+          expect(response).to have_http_status(:redirect)
+          expect(response).to redirect_to(subscription_management_path(valid_subscription))
+          expect(flash[:success]).to be_nil
+          expect(flash[:error]).to eq(I18n.t('controllers.subscription_management.un_cancel_subscription.flash.not_pending_sub'))
+        end
+      end
     end
 
-    describe "Post 'reactivate_subscription'" do
-      xit 'should see valid invoice' do
+    describe "POST 'reactivate_subscription'" do
+      context 'successful reactivate a subscription' do
+        it 'reactivate a subscription' do
+          expect_any_instance_of(Subscription).to receive(:reactivate_canceled).and_return(true)
+          post :reactivate_subscription, params: { subscription_management_id: valid_subscription.id }
 
-        sources = {"id": "guid_222", "object": "source", "client_secret": "src_client_secret_Do8sRLByihYpru4LuNCGYP8L",
-                   "created": 1539850277, "currency": "eur", "flow": "receiver", "livemode": false, "status": "pending"
-        }
-        subscriptions = {      "id": "sub_Do8snl73Oh0FRL", "object": "subscription", "billing": "charge_automatically",
-                               "billing_cycle_anchor": 1540455078, "cancel_at_period_end": false,
-                               "created": 1539850278, "current_period_end": 1540455078, "current_period_start": 1539850278,
-                               "customer": "cus_5oHUt1ZBHOcfUT"
-        }
-
-        get_url = "https://api.stripe.com/v1/customers/#{canceled_subscription.stripe_customer_id}"
-        get_response_body = {"id": canceled_subscription.stripe_customer_id, "object": "customer", "account_balance": 0,
-                             "invoice_prefix": "1C44D6D", "livemode": false,"default_source": "src_Do8swBcNDszFmc",
-                             "sources": {"object": "list", "data": [sources], "has_more": false, "total_count": 0,
-                                         "url": "/v1/customers/cus_Do8skFvJFlWtvy/sources"},
-                             "subscriptions": {
-                                 "object": "list",
-                                 "data": [],
-                                 "has_more": false,
-                                 "total_count": 0,
-                                 "url": "/v1/customers/#{canceled_subscription.stripe_customer_id}/subscriptions"
-                             }
-        }
-        stub_customer_get_request(get_url, get_response_body)
-
-        post_url = 'https://api.stripe.com/v1/subscriptions'
-        post_request_body = {"customer"=>canceled_subscription.stripe_customer_id, "plan"=>"stripe_plan_guid_m", "trial_end"=>"now"}
-
-        post_response_body = {"id": "sub_Do8snl73Oh0FRL", "object": "subscription", "livemode": false,
-                              "current_period_end": 1540455078, "plan": {"id": "test-mubaohLn5BuRVQ8rOE4M",
-                                                                         "object": "plan", "active": true,
-                                                                         "amount": 999, "livemode": false },
-                              "status": "active"
-        }
-        stub_subscription_post_request(post_url, post_request_body, post_response_body)
-
-        post :reactivate_subscription, params: { subscription_management_id: canceled_subscription.id }
-        expect(flash[:success]).to eq(I18n.t('controllers.subscription_management.reactivate_canceled.flash.success'))
-        expect(flash[:error]).to be_nil
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to subscription_management_url(canceled_subscription)
+          expect(response).to be_redirect
+          expect(response).to have_http_status(:redirect)
+          expect(response).to redirect_to(subscription_management_path(valid_subscription))
+          expect(flash[:success]).to eq(I18n.t('controllers.subscription_management.reactivate_canceled.flash.success'))
+          expect(flash[:error]).to be_nil
+        end
       end
 
-    end
+      context 'unsuccessful cancellation' do
+        it 'Error in uncancel a subscription' do
+          expect_any_instance_of(Subscription).to receive(:reactivate_canceled).and_return(false)
+          post :reactivate_subscription, params: { subscription_management_id: valid_subscription.id }
 
+          expect(response).to be_redirect
+          expect(response).to have_http_status(:redirect)
+          expect(response).to redirect_to(subscription_management_path(valid_subscription))
+          expect(flash[:success]).to be_nil
+          expect(flash[:error]).to eq(I18n.t('controllers.subscription_management.reactivate_canceled.flash.error') << '[]')
+        end
+      end
+    end
   end
-
 end
