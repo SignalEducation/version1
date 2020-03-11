@@ -352,9 +352,9 @@ class CoursesController < ApplicationController
     @course_module_element = @course_module.course_module_elements.all_active.find_by(name_url: params[:course_module_element_name_url]) if @course_module
     @subject_course_user_log = current_user.subject_course_user_logs.for_subject_course(@course.id).all_in_order.last
     @valid_subscription = current_user.active_subscriptions_for_exam_body(@group.exam_body_id).all_valid.first
-    permission = @course_module_element.available_to_user(current_user, @valid_subscription, @subject_course_user_log)
+    permission = @course_module_element&.available_to_user(current_user, @valid_subscription, @subject_course_user_log)
 
-    return if @course_module_element && permission[:view]
+    return if @course_module_element && permission && permission[:view]
 
     if permission[:reason]
       redirect_to library_course_url(@group.name_url, @course.name_url, anchor: permission[:reason])
