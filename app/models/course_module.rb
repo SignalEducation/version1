@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: course_modules
@@ -30,11 +32,8 @@
 #
 
 class CourseModule < ApplicationRecord
-
   include LearnSignalModelExtras
   include Archivable
-
-  # Constants
 
   # relationships
   belongs_to :subject_course
@@ -52,11 +51,11 @@ class CourseModule < ApplicationRecord
   validates :course_section, presence: true
   validates :name, presence: true, uniqueness: {
     scope: :course_section_id,
-    message: "must be unique within the course section"
+    message: 'must be unique within the course section'
   }
   validates :name_url, presence: true, uniqueness: {
     scope: :course_section_id,
-    message: "must be unique within the course section"
+    message: 'must be unique within the course section'
   }
 
   validates :sorting_order, presence: true
@@ -69,75 +68,66 @@ class CourseModule < ApplicationRecord
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order, :course_section_id) }
-  scope :all_active, -> { where(active: true, destroyed_at: nil) }
-  scope :all_valid, -> { where(active: true).includes(:course_module_elements).where(course_module_elements: {active: true}) }
+  scope :all_active,   -> { where(active: true, destroyed_at: nil) }
+  scope :all_valid,    -> { where(active: true).includes(:course_module_elements).where(course_module_elements: { active: true }) }
   scope :all_inactive, -> { where(active: false) }
-  scope :with_url, lambda { |the_url| where(name_url: the_url) }
-
-  # class methods
-
-  # instance methods
+  scope :with_url,     ->(the_url) { where(name_url: the_url) }
 
   ## Parent & Child associations ##
   def parent
-    self.course_section
+    course_section
   end
 
   def children
-    self.course_module_elements.all
+    course_module_elements.all
   end
 
   def active_children
-    self.children.all_active.all_in_order
+    children.all_active.all_in_order
   end
 
   def first_active_cme
-    self.active_children.first
+    active_children.first
   end
 
   def children_available_count
-    self.active_children.count
+    active_children.count
   end
 
   #######################################################################
 
   ## Methods allow for navigation from one CM to the next ##
 
-  #TODO - these do not work when latest course modules are made inactive
+  # TODO, these do not work when latest course modules are made inactive
   # Needs a fallback
 
   def array_of_sibling_ids
-    self.parent.course_modules.all_active.all_in_order.map(&:id)
+    parent.course_modules.all_active.all_in_order.map(&:id)
   end
 
   def my_position_among_siblings
-    self.array_of_sibling_ids.index(self.id)
+    array_of_sibling_ids.index(id)
   end
 
   def next_module
-    CourseModule.find_by_id(self.next_module_id) || nil
+    CourseModule.find(next_module_id) || nil
   end
 
   def next_module_id
-    if self.my_position_among_siblings && self.my_position_among_siblings < (self.array_of_sibling_ids.length - 1)
-      self.array_of_sibling_ids[self.my_position_among_siblings + 1]
-    else
-      nil
-    end
+    return unless my_position_among_siblings && my_position_among_siblings < (array_of_sibling_ids.length - 1)
+
+    array_of_sibling_ids[my_position_among_siblings + 1]
   end
 
   def previous_module
-    CourseModule.find_by_id(self.previous_module_id) || nil
+    CourseModule.find(previous_module_id) || nil
   end
 
   def previous_module_id
-    if self.my_position_among_siblings > 0
-      self.array_of_sibling_ids[self.my_position_among_siblings - 1]
-    else
-      nil
-    end
-  end
+    return unless my_position_among_siblings > 0
 
+    array_of_sibling_ids[my_position_among_siblings - 1]
+  end
 
   #######################################################################
 
@@ -152,10 +142,9 @@ class CourseModule < ApplicationRecord
     # - self.course_module_element_user_logs
     # - self.student_exam_tracks.empty?
     the_list = []
-    the_list += self.course_module_elements.to_a
+    the_list += course_module_elements.to_a
     the_list
   end
-
 
   #######################################################################
 
@@ -163,39 +152,39 @@ class CourseModule < ApplicationRecord
 
   ### Triggered by child CME after_save callback ###
   def update_video_and_quiz_counts
-    quiz_count = self.active_children.all_active.all_quizzes.count
-    video_count = self.active_children.all_active.all_videos.count
-    cr_count = self.active_children.all_active.all_constructed_response.count
+    quiz_count  = active_children.all_active.all_quizzes.count
+    video_count = active_children.all_active.all_videos.count
+    cr_count    = active_children.all_active.all_constructed_response.count
 
-    self.update_attributes(quiz_count: quiz_count, video_count: video_count,
-                           constructed_response_count: cr_count,
-                           cme_count: quiz_count + video_count + cr_count)
+    update_attributes(quiz_count: quiz_count, video_count: video_count,
+                      constructed_response_count: cr_count,
+                      cme_count: quiz_count + video_count + cr_count)
   end
-
 
   ########################################################################
 
   ## User Course Tracking ##
 
   def completed_by_user(user_id)
-    self.percentage_complete_by_user(user_id) >= 100
+    percentage_complete_by_user(user_id) >= 100
   end
 
   def percentage_complete_by_user(user_id)
-    set = self.student_exam_tracks.where(user_id: user_id).last
+    set = student_exam_tracks.where(user_id: user_id).last
     set.try(:percentage_complete) || 0
   end
 
   def completed_for_scul(scul_id)
-    self.percentage_complete_for_scul(scul_id) >= 100
+    percentage_complete_for_scul(scul_id) >= 100
   end
 
   def percentage_complete_for_scul(scul_id)
-    scul = SubjectCourseUserLog.where(id: scul_id).first
+    scul = SubjectCourseUserLog.find(id: scul_id)
+
     if scul
-      #TODO - investigate why two SET records exist
+      # TODO, investigate why two SET records exist
       # Created At - [Thu, 11 Oct 2018 18:07:25 IST +01:00, Thu, 11 Oct 2018 18:05:52 IST +01:00]
-      set = scul.student_exam_tracks.where(course_module_id: self.id).all_in_order.first
+      set = scul.student_exam_tracks.where(course_module_id: id).all_in_order.first
       set.try(:percentage_complete) || 0.0
     else
       0.0
@@ -208,18 +197,16 @@ class CourseModule < ApplicationRecord
 
   ########################################################################
 
-
   protected
 
   def set_count_fields
-    self.quiz_count = self.active_children.all_quizzes.count
-    self.video_count = self.active_children.all_videos.count
-    self.constructed_response_count = self.active_children.all_constructed_response.count
-    self.cme_count = children_available_count
+    self.quiz_count                 = active_children.all_quizzes.count
+    self.video_count                = active_children.all_videos.count
+    self.cme_count                  = children_available_count
+    self.constructed_response_count = active_children.all_constructed_response.count
   end
 
   def update_parent
-    self.parent.try(:recalculate_fields)
+    parent.try(:recalculate_fields)
   end
-
 end

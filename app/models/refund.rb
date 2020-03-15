@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: refunds
@@ -18,7 +20,6 @@
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
 #
-# fronzen_string_literal: true
 
 class Refund < ApplicationRecord
   # Constants
