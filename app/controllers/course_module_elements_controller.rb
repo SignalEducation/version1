@@ -4,7 +4,7 @@ class CourseModuleElementsController < ApplicationController
   before_action :logged_in_required
   before_action { ensure_user_has_access_rights(%w[content_management_access]) }
   before_action :management_layout
-  before_action :get_variables
+  before_action :get_variables, except: :clone
 
   def show
     # Previewing a Quiz as Content Manager or Admin
@@ -150,6 +150,26 @@ class CourseModuleElementsController < ApplicationController
   # Reordering of Questions if CMEQ selection_strategy is not random #
   def quiz_questions_order
     @quiz_questions = @course_module_element.course_module_element_quiz.quiz_questions
+  end
+
+  def clone
+    cme = CourseModuleElement.find(params[:course_module_element_id])
+
+    case cme.type_name
+    when 'Constructed Response'
+      cme.constructed_response.duplicate
+      flash[:success] = 'Constructed Response successfully duplicaded'
+    when 'Quiz'
+      cme.course_module_element_quiz.duplicate
+      flash[:success] = 'Quiz successfully duplicaded'
+    when 'Video'
+      cme.course_module_element_video.duplicate
+      flash[:success] = 'Video successfully duplicaded'
+    else
+      flash[:error] = 'Course Element was not successfully duplicaded'
+    end
+
+    redirect_to course_module_element_path(cme.id)
   end
 
   protected

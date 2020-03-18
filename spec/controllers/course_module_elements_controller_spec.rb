@@ -31,32 +31,25 @@ require 'support/vimeo_web_mock_helpers'
 
 describe CourseModuleElementsController, type: :controller do
 
-  let(:content_management_user_group) { FactoryBot.create(:content_management_user_group) }
-  let(:content_management_user) { FactoryBot.create(:content_management_user,
-                                                    user_group: content_management_user_group) }
-  let!(:exam_body_1) { FactoryBot.create(:exam_body) }
-  let!(:group_1) { FactoryBot.create(:group, exam_body_id: exam_body_1.id) }
-  let!(:subject_course_1)  { FactoryBot.create(:active_subject_course,
-                                               group_id: group_1.id,
-                                               exam_body_id: exam_body_1.id) }
-  let!(:subject_course_2)  { FactoryBot.create(:active_subject_course,
-                                               group_id: group_1.id,
-                                               computer_based: true,
-                                               exam_body_id: exam_body_1.id) }
+  let(:content_management_user_group) { create(:content_management_user_group) }
+  let(:content_management_user)       { create(:content_management_user, user_group: content_management_user_group) }
+  let!(:exam_body_1)                  { create(:exam_body) }
+  let!(:group_1)                      { create(:group, exam_body_id: exam_body_1.id) }
+  let!(:subject_course_1)             { create(:active_subject_course, group_id: group_1.id, exam_body_id: exam_body_1.id) }
+  let!(:subject_course_2)             { create(:active_subject_course, group_id: group_1.id, computer_based: true, exam_body_id: exam_body_1.id) }
 
   include_context 'course_content'
 
-  let!(:valid_params) { FactoryBot.attributes_for(:course_module_element_video, name: 'ABCDE', name_url: 'adcbw', vimeo_guid: '123abc123') }
+  let!(:valid_params)                       { attributes_for(:course_module_element_video, name: 'ABCDE', name_url: 'adcbw', vimeo_guid: '123abc123') }
 
-  let!(:cme_video_params) { FactoryBot.attributes_for(:course_module_element_video, :vimeo, dacast_id: 1234) }
-  let!(:cme_quiz_params) { course_module_element_1.attributes.merge({name: 'Quiz 01', name_url: 'qz_01'}) }
-  let!(:valid_video_params) { course_module_element_3.attributes.merge({name: 'Video 01', name_url: 'video_01', course_module_element_video_attributes: cme_video_params}) }
-  let!(:constructed_response_params) { course_module_element_4.attributes.merge({name: 'CR 01', name_url: 'cr_01'}) }
+  let!(:cme_video_params)                   { attributes_for(:course_module_element_video, :vimeo, dacast_id: 1234) }
+  let!(:cme_quiz_params)                    { course_module_element_1.attributes.merge({name: 'Quiz 01', name_url: 'qz_01'}) }
+  let!(:valid_video_params)                 { course_module_element_3.attributes.merge({name: 'Video 01', name_url: 'video_01', course_module_element_video_attributes: cme_video_params}) }
+  let!(:constructed_response_params)        { course_module_element_4.attributes.merge({name: 'CR 01', name_url: 'cr_01'}) }
   let!(:update_constructed_response_params) { course_module_element_4.attributes.merge({name: 'CR 01 - Edited', name_url: 'cr_01'}) }
 
 
   context 'Logged in as a content_management_user: ' do
-
     before(:each) do
       activate_authlogic
       UserSession.create!(content_management_user)
@@ -165,6 +158,71 @@ describe CourseModuleElementsController, type: :controller do
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:quiz_questions_order)
+      end
+    end
+
+    describe '#clone' do
+      context 'ContructResponse' do
+        it 'should duplicate constructed response' do
+          post :clone, params: { course_module_element_id: course_module_element_4.id }
+
+          expect(response.status).to eq(302)
+          expect(response).to redirect_to(course_module_element_path(course_module_element_4.id))
+          expect(flash[:success]).to be_present
+          expect(flash[:success]).to eq('Constructed Response successfully duplicaded')
+        end
+
+        it 'should not duplicate constructed response' do
+          expect_any_instance_of(CourseModuleElement).to receive(:type_name).and_return('')
+          post :clone, params: { course_module_element_id: course_module_element_4.id }
+
+          expect(response.status).to eq(302)
+          expect(response).to redirect_to(course_module_element_path(course_module_element_4.id))
+          expect(flash[:error]).to be_present
+          expect(flash[:error]).to eq('Course Element was not successfully duplicaded')
+        end
+      end
+
+      context 'Quiz' do
+        it 'should duplicate quiz' do
+          post :clone, params: { course_module_element_id: course_module_element_1.id }
+
+          expect(response.status).to eq(302)
+          expect(response).to redirect_to(course_module_element_path(course_module_element_1.id))
+          expect(flash[:success]).to be_present
+          expect(flash[:success]).to eq('Quiz successfully duplicaded')
+        end
+
+        it 'should not duplicate quiz' do
+          expect_any_instance_of(CourseModuleElement).to receive(:type_name).and_return('')
+          post :clone, params: { course_module_element_id: course_module_element_1.id }
+
+          expect(response.status).to eq(302)
+          expect(response).to redirect_to(course_module_element_path(course_module_element_1.id))
+          expect(flash[:error]).to be_present
+          expect(flash[:error]).to eq('Course Element was not successfully duplicaded')
+        end
+      end
+
+      context 'Video' do
+        it 'should duplicate video' do
+          post :clone, params: { course_module_element_id: course_module_element_3.id }
+
+          expect(response.status).to eq(302)
+          expect(response).to redirect_to(course_module_element_path(course_module_element_3.id))
+          expect(flash[:success]).to be_present
+          expect(flash[:success]).to eq('Video successfully duplicaded')
+        end
+
+        it 'should not duplicate video' do
+          expect_any_instance_of(CourseModuleElement).to receive(:type_name).and_return('')
+          post :clone, params: { course_module_element_id: course_module_element_3.id }
+
+          expect(response.status).to eq(302)
+          expect(response).to redirect_to(course_module_element_path(course_module_element_3.id))
+          expect(flash[:error]).to be_present
+          expect(flash[:error]).to eq('Course Element was not successfully duplicaded')
+        end
       end
     end
   end

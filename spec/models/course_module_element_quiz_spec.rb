@@ -15,7 +15,6 @@ require 'rails_helper'
 require 'concerns/archivable_spec.rb'
 
 describe CourseModuleElementQuiz do
-
   describe 'constants' do
     it { expect(CourseModuleElementQuiz.const_defined?(:STRATEGIES)).to eq(true) }
   end
@@ -48,6 +47,7 @@ describe CourseModuleElementQuiz do
     it { should respond_to(:all_ids_ordered) }
     it { should respond_to(:destroyable?) }
     it { should respond_to(:destroyable_children) }
+    it { should respond_to(:duplicate) }
   end
 
   describe 'Concern' do

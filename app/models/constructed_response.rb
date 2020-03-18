@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: constructed_responses
@@ -15,13 +17,13 @@ class ConstructedResponse < ApplicationRecord
 
   # relationships
   belongs_to :course_module_element
-  has_one :scenario
+  has_one :scenario, dependent: :restrict_with_error
 
-  accepts_nested_attributes_for :scenario, reject_if: lambda { |attributes| constructed_response_nested_scenario_text_is_blank?(attributes) }
+  accepts_nested_attributes_for :scenario, reject_if: ->(attributes) { constructed_response_nested_scenario_text_is_blank?(attributes) }
 
   # validation
   validates :course_module_element_id, presence: true, on: :update,
-            numericality: {only_integer: true, greater_than: 0}
+                                       numericality: { only_integer: true, greater_than: 0 }
 
   # callbacks
   before_destroy :check_dependencies
@@ -40,18 +42,32 @@ class ConstructedResponse < ApplicationRecord
   end
 
   def add_an_empty_scenario
-    self.build_scenario
-    self.scenario.constructed_response_id = self.id
-    self.scenario.add_an_empty_scenario_question
+    build_scenario
+    scenario.constructed_response_id = id
+    scenario.add_an_empty_scenario_question
+  end
+
+  def duplicate
+    new_constructed_response =
+      deep_clone include: [
+        :course_module_element,
+        scenario: {
+          scenario_questions: :scenario_answer_templates
+        }
+      ], validate: false
+
+    new_constructed_response.
+      course_module_element.update(name: "#{course_module_element.name} COPY",
+                                   name_url: "#{course_module_element.name_url}_copy",
+                                   active: false)
   end
 
   protected
 
   def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
-  end
+    return if destroyable?
 
+    errors.add(:base, I18n.t('models.general.dependencies_exist'))
+    false
+  end
 end

@@ -128,7 +128,5 @@ describe CourseModulesController, type: :controller do
         expect_archive_success_with_model('course_module', course_module_2.id, subject_course_url(course_module_2.subject_course))
       end
     end
-
   end
-
 end
