@@ -42,6 +42,7 @@ describe CourseModuleElementVideo do
   describe 'instance methods' do
     it { should respond_to(:parent) }
     it { should respond_to(:destroyable?) }
+    it { should respond_to(:duplicate) }
   end
 
   describe 'Methods' do

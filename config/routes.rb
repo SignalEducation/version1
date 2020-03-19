@@ -211,6 +211,7 @@ Rails.application.routes.draw do
     resources :course_modules, concerns: :supports_reordering
     resources :course_module_elements, except: [:index], concerns: :supports_reordering do
       resources :course_module_element_resources, except: [:show], concerns: :supports_reordering
+      post :clone, to: 'course_module_elements#clone'
     end
     get 'course_module_elements/:id/quiz_questions_order', to: 'course_module_elements#quiz_questions_order', as: :quiz_questions_order
 

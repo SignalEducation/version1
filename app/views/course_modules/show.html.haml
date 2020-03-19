@@ -32,9 +32,7 @@
                       %th Name
                       %th Active
                       %th Trial
-                      %th
-                      %th
-                      %th
+                      %th{colspan: 5}
                   %tbody
                     -@course_module.course_module_elements.all_in_order.each do |cme|
                       %tr{id: cme.id, data: {parent: @course_module.id, destination: course_module_elements_url}}
@@ -53,6 +51,8 @@
                             =link_to 'Activate', new_content_activation_url(type: cme.class, id: cme.id), class: 'btn btn-green btn-xs'
                           -if cme.destroyable?
                             =link_to t('views.general.delete'), cme, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-secondary btn-xs'
+                        %td
+                          =link_to t('views.general.clone'), course_module_element_clone_path(course_module_element_id: cme.id), data: {confirm: t('views.general.clone_confirmation')}, method: :post, class: 'dropdown-item', style: 'color: #fd7e14;'
                         %td
                           %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
 
