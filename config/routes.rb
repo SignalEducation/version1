@@ -13,13 +13,12 @@ Rails.application.routes.draw do
 
   get '404' => redirect('404-page')
 
-  post 'cron_tasks/:id', to: 'cron_tasks#create'
-
   # API
   namespace :api do
     post 'stripe_webhooks', to: 'stripe_webhooks#create'
     post 'stripe_v02',      to: 'stripe_webhooks#create'
     post 'paypal_webhooks', to: 'paypal_webhooks#create'
+    post 'cron_tasks/:id',  to: 'cron_tasks#create'
 
     namespace :v1, constraints: ApiConstraint.new(version: 1) do
       resources :subject_courses, only: :index

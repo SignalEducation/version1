@@ -47,6 +47,12 @@ FactoryBot.define do
       stripe_customer_id     { 'cus_1235455' }
     end
 
+    factory :paypal_subscription do
+      sequence(:paypal_subscription_guid) { |n| "sub_DUMMY-#{n}" }
+      paypal_token                        { 'tok_1235455' }
+      paypal_status                       { 'Active' }
+    end
+
     factory :valid_subscription do
       stripe_status        { 'active' }
       active               { true }
