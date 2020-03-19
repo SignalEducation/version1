@@ -1,7 +1,7 @@
 .card.card-collapse.mb-4
   - # TODO add hover text colour change
   %a.btn.btn-text.btn-collapse.w-100.text-left.course-module-panel{data: { toggle: "collapse",panel_name: course_module.name, course_name: @course.name }, href: "#collapse_#{course_module.name_url}_#{counter}", role: "button", 'aria-expanded': "#{!count == 1}", 'aria-controls': "collapse_#{course_module.name_url}_#{counter}",id: course_module.id}
-    .lesson-item.w-100{class: @completed_student_exam_tracks && @completed_course_module_ids.include?(course_module.id) ? 'completed' : ''}
+    .lesson-item.w-100{class: course_module_status(course_module, @completed_student_exam_tracks, @completed_course_module_ids) }
       %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
         - if current_user && course_module.all_content_restricted? && !current_user.can_view_content?(@group.exam_body_id)
           lock_outline
@@ -35,11 +35,9 @@
 
               - if permission[:view]
 
-                -log = @cmeuls.latest_only.find_by(course_module_element_id: cme.id)
-                -log_status = course_element_user_log_status(log)
                 =link_to course_special_link(cme, @subject_course_user_log), class: 'btn btn-text py-3 w-100 text-left course-lesson', data: { lesson_name: cme.name, course_name: @course.name } do
-                  .lesson-item.lesson-item-inner.w-100{class:log_status }
-                    %i.material-icons.icon-bg-round{"aria-label" => log_status, :role => "img"}
+                  .lesson-item.lesson-item-inner.w-100{class: @cmeuls && @cmeuls_ids.include?(cme.id) ? (@completed_cmeuls_cme_ids.include?(cme.id) ? 'completed' : 'failed') : ''}
+                    %i.material-icons.icon-bg-round{"aria-label" => "failed", :role => "img"}
                       =cme.icon_label
 
                     .lesson-item-content.pl-3

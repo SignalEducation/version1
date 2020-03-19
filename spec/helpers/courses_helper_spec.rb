@@ -3,6 +3,22 @@
 require 'rails_helper'
 
 describe CoursesHelper do
+  describe '#course_module_status' do
+    let(:course_module) { create(:course_module) }
+
+    context 'completed' do
+      it 'completed class' do
+        expect(course_module_status(course_module, true, [course_module.id])).to eq('completed')
+      end
+    end
+
+    context 'incompleted' do
+      it 'empty class' do
+        expect(course_module_status(course_module, false, [course_module.id])).to eq('')
+      end
+    end
+  end
+
   describe '#course_element_user_log_status' do
     context 'Quiz' do
       let(:cmeul) { build(:course_module_element_user_log, is_quiz: true, is_video: nil) }

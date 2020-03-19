@@ -63,8 +63,9 @@ class SubjectCourse < ApplicationRecord
   has_many :course_section_user_logs
   has_many :course_modules
   has_many :student_exam_tracks
-  has_many :course_module_element_quizzes, through: :course_module_elements
   has_many :course_module_elements, through: :course_modules
+  has_many :course_module_element_quizzes, through: :course_module_elements
+  has_many :related_course_module_element, through: :course_module_elements
   has_many :course_module_element_user_logs
   has_attached_file :background_image, default_url: "images/home_explore2.jpg"
 
