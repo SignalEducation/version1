@@ -174,6 +174,82 @@ class Subscription < ApplicationRecord
   end
 
   # CLASS METHODS ==============================================================
+  def self.to_csv(options = {})
+
+    attributes = %w{ sub_id user_email user_created sub_created sub_status
+                     sub_exam_body sub_type invoice_type payment_provider plan_interval
+                     plan_amount last_invoice_created sub_currency last_invoice_amount  }
+
+    CSV.generate(options) do |csv|
+      csv << attributes
+
+      all.each do |sub|
+        csv << attributes.map{ |attr| sub.send(attr) }
+      end
+    end
+  end
+
+  def sub_id
+    id
+  end
+
+  def user_email
+    user.email
+  end
+
+  def user_created
+    user.created_at.strftime("%Y-%m-%d")
+  end
+
+  def sub_created
+    created_at.strftime("%Y-%m-%d")
+  end
+
+  def sub_status
+    state
+  end
+
+  def sub_exam_body
+    subscription_plan&.exam_body&.name
+  end
+
+  def sub_type
+    kind
+  end
+
+  def payment_provider
+    subscription_type
+  end
+
+  def plan_interval
+    subscription_plan.interval_name
+  end
+
+  def plan_amount
+    subscription_plan.amount
+  end
+
+  def last_invoice
+    invoices.order(created_at: :desc).first
+  end
+
+  def invoice_type
+    last_invoice.invoice_type if last_invoice
+  end
+
+  def last_invoice_created
+    last_invoice.created_at.strftime("%Y-%m-%d") if last_invoice
+  end
+
+  def sub_currency
+    subscription_plan.currency.iso_code
+  end
+
+  def last_invoice_amount
+    last_invoice.total if last_invoice
+  end
+
+
 
   # INSTANCE METHODS ===========================================================
 

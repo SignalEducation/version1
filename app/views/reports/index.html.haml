@@ -7,23 +7,26 @@
     .col-sm.pt-4
       .row
         .col-sm-6
-          = link_to 'Courses List', export_courses_path(format: :xls), class: 'btn btn-secondary'
+          = link_to export_sales_report_path(format: :xls) do
+            %button.btn.btn-primary{id: 'salesBtn', type: "button", disabled: false, onclick: 'disableBtn();'}
+              Daily Sales Report
+              %span.spinner-border.spinner-border-sm.d-none{role: 'status', 'aria-hidden': 'true'}
+              %span.sr-only
+                Loading...
 
-    .col-sm.pt-4
-      .row
         .col-sm-6
-          =link_to 'Monthly Users', export_users_monthly_path(format: :xls), class: 'btn btn-primary '
+          = link_to 'Monthly Users', export_users_monthly_path(format: :xls), class: 'btn btn-primary '
 
+      .row.pt-4
         .col-sm-6
-          =link_to 'Users with Enrolments', export_users_with_enrollments_path(format: :xls), class: 'btn btn-secondary'
-
-    .col-sm.pt-4
-      .row
+          = link_to 'Courses List', export_courses_path(format: :xls), class: 'btn btn-primary'
         .col-sm-6
-          =link_to 'Users with UTM data', export_visits_path(format: :xls), class: 'btn btn-secondary'
-        .col-sm-6
-          -#=link_to 'Enrolments', export_enrollments_path(format: :xls), class: 'btn btn-cyan btn-wide'
+          = link_to 'Users with Enrolments', export_users_with_enrollments_path(format: :xls), class: 'btn btn-primary'
 
 
+:javascript
 
-
+  function disableBtn(){
+    $('#salesBtn > span').removeClass('d-none');
+    $('#salesBtn').prop('disabled', true);
+  }

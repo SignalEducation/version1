@@ -7,7 +7,7 @@ class VisitsController < ApplicationController
   before_action :set_seo, :get_user
 
   def index
-    @visits = @user.ahoy_visits.all.paginate(per_page: 50, page: params[:page])
+    @visits = @user.ahoy_visits.all_in_order.paginate(per_page: 50, page: params[:page])
   end
 
   def show

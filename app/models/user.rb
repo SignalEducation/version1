@@ -265,7 +265,9 @@ class User < ApplicationRecord
   end
 
   def self.to_csv_with_visits(options = {})
-    attributes = %w{email id visit_campaigns visit_sources visit_landing_pages}
+    attributes = %w{ email first_visit_date first_visit_source first_visit_medium
+                     first_visit_utm_campaign first_visit_referring_domain first_visit_search_keyword
+                     first_visit_country first_visit_landing_page first_visit_referrer}
     CSV.generate(options) do |csv|
       csv << attributes
 
@@ -273,6 +275,46 @@ class User < ApplicationRecord
         csv << attributes.map { |attr| user.send(attr) }
       end
     end
+  end
+
+  def first_visit
+    ahoy_visits.order(:started_at)&.first
+  end
+
+  def first_visit_date
+    first_visit ? first_visit.started_at.strftime("%Y-%m-%d") : ''
+  end
+
+  def first_visit_source
+    first_visit.utm_source.present? ? first_visit.utm_source : '' if first_visit
+  end
+
+  def first_visit_medium
+    first_visit ? first_visit.utm_medium : ''
+  end
+
+  def first_visit_utm_campaign
+    first_visit ? first_visit.utm_campaign : ''
+  end
+
+  def first_visit_referring_domain
+    first_visit ? first_visit.referring_domain : ''
+  end
+
+  def first_visit_search_keyword
+    first_visit ? first_visit.search_keyword : ''
+  end
+
+  def first_visit_country
+    first_visit ? first_visit.country : ''
+  end
+
+  def first_visit_landing_page
+    first_visit ? first_visit.landing_page : ''
+  end
+
+  def first_visit_referrer
+    first_visit ? first_visit.referrer : ''
   end
 
   def self.parse_csv(csv_content)

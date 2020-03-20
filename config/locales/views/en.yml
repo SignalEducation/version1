@@ -980,6 +980,7 @@ en:
         line_total_inc_vat: Total
         status: 'Status'
         issued_at: "Issued at"
+        id: ID
         date: Date
         course: Course
         mock_exam: Mock Exam
