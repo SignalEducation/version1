@@ -167,9 +167,11 @@ describe CourseModuleElementsController, type: :controller do
           post :clone, params: { course_module_element_id: course_module_element_4.id }
 
           expect(response.status).to eq(302)
-          expect(response).to redirect_to(course_module_element_path(course_module_element_4.id))
           expect(flash[:success]).to be_present
           expect(flash[:success]).to eq('Constructed Response successfully duplicaded')
+          expect(response).to redirect_to(show_course_module_path(course_module_element_4.course_module.subject_course_id,
+                                                                  course_module_element_4.course_module.course_section.id,
+                                                                  course_module_element_4.course_module.id))
         end
 
         it 'should not duplicate constructed response' do
@@ -177,9 +179,11 @@ describe CourseModuleElementsController, type: :controller do
           post :clone, params: { course_module_element_id: course_module_element_4.id }
 
           expect(response.status).to eq(302)
-          expect(response).to redirect_to(course_module_element_path(course_module_element_4.id))
           expect(flash[:error]).to be_present
           expect(flash[:error]).to eq('Course Element was not successfully duplicaded')
+          expect(response).to redirect_to(show_course_module_path(course_module_element_4.course_module.subject_course_id,
+                                                                  course_module_element_4.course_module.course_section.id,
+                                                                  course_module_element_4.course_module.id))
         end
       end
 
@@ -188,9 +192,11 @@ describe CourseModuleElementsController, type: :controller do
           post :clone, params: { course_module_element_id: course_module_element_1.id }
 
           expect(response.status).to eq(302)
-          expect(response).to redirect_to(course_module_element_path(course_module_element_1.id))
           expect(flash[:success]).to be_present
           expect(flash[:success]).to eq('Quiz successfully duplicaded')
+          expect(response).to redirect_to(show_course_module_path(course_module_element_1.course_module.subject_course_id,
+                                                                  course_module_element_1.course_module.course_section.id,
+                                                                  course_module_element_1.course_module.id))
         end
 
         it 'should not duplicate quiz' do
@@ -198,9 +204,11 @@ describe CourseModuleElementsController, type: :controller do
           post :clone, params: { course_module_element_id: course_module_element_1.id }
 
           expect(response.status).to eq(302)
-          expect(response).to redirect_to(course_module_element_path(course_module_element_1.id))
           expect(flash[:error]).to be_present
           expect(flash[:error]).to eq('Course Element was not successfully duplicaded')
+          expect(response).to redirect_to(show_course_module_path(course_module_element_1.course_module.subject_course_id,
+                                                                  course_module_element_1.course_module.course_section.id,
+                                                                  course_module_element_1.course_module.id))
         end
       end
 
@@ -209,9 +217,11 @@ describe CourseModuleElementsController, type: :controller do
           post :clone, params: { course_module_element_id: course_module_element_3.id }
 
           expect(response.status).to eq(302)
-          expect(response).to redirect_to(course_module_element_path(course_module_element_3.id))
           expect(flash[:success]).to be_present
           expect(flash[:success]).to eq('Video successfully duplicaded')
+          expect(response).to redirect_to(show_course_module_path(course_module_element_3.course_module.subject_course_id,
+                                                                  course_module_element_3.course_module.course_section.id,
+                                                                  course_module_element_3.course_module.id))
         end
 
         it 'should not duplicate video' do
@@ -219,9 +229,11 @@ describe CourseModuleElementsController, type: :controller do
           post :clone, params: { course_module_element_id: course_module_element_3.id }
 
           expect(response.status).to eq(302)
-          expect(response).to redirect_to(course_module_element_path(course_module_element_3.id))
           expect(flash[:error]).to be_present
           expect(flash[:error]).to eq('Course Element was not successfully duplicaded')
+          expect(response).to redirect_to(show_course_module_path(course_module_element_3.course_module.subject_course_id,
+                                                                  course_module_element_3.course_module.course_section.id,
+                                                                  course_module_element_3.course_module.id))
         end
       end
     end
