@@ -2,6 +2,8 @@
   %thead
     %tr
       %th
+        =t('views.invoices.form.id')
+      %th
         =t('views.invoices.form.date')
       %th
         =t('views.invoices.form.line_total_inc_vat')
@@ -11,6 +13,8 @@
   %tbody
     -@invoices.each do |invoice|
       %tr
+        %td
+          =invoice.id
         %td
           -if invoice.issued_at
             =humanize_datetime(invoice.issued_at)

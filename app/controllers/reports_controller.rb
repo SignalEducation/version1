@@ -5,8 +5,19 @@ class ReportsController < ApplicationController
   before_action do
     ensure_user_has_access_rights(%w[system_requirements_access user_management_access])
   end
+  before_action :management_layout
 
   def index; end
+
+  def export_sales_report
+    @invoices = Invoice.from_yesterday.where(paid: true).where.not(subscription_id: nil).order(:created_at)
+
+    respond_to do |format|
+      format.html
+      format.csv { send_data @invoices.to_csv() }
+      format.xls { send_data @invoices.to_csv(col_sep: "\t", headers: true), filename: "#{Date.yesterday.strftime("%F")}-Sales-Report.xls" }
+    end
+  end
 
   def export_enrollments
     @exam_sitting = ExamSitting.find(params[:exam_sitting_id])

@@ -36,6 +36,10 @@
                         .form-group
                           =f.label :email, t('views.users.form.email')
                           =f.email_field :email, class: 'form-control', placeholder: 'Enter your email', id: 'user_email', required: true
+                      .col-sm-6
+                        .form-group
+                          =label_tag :email_confirmation, t('views.users.form.email_confirmation')
+                          =password_field_tag :email_confirmation, nil,  placeholder: t('views.users.form.email_confirmation'), class: 'form-control', required: true
 
                       .col-sm-6
                         .form-group

@@ -79,6 +79,7 @@ class Invoice < ApplicationRecord
   scope :all_in_order,  -> { order(user_id: :asc, id: :desc) }
   scope :subscriptions, -> { where.not(subscription_id: nil) }
   scope :orders,        -> { where.not(order_id: nil) }
+  scope :from_yesterday,     -> { where("DATE(created_at) = ?", Date.today - 1) }
 
   # class methods
 
@@ -171,6 +172,163 @@ class Invoice < ApplicationRecord
     end
 
     inv
+  end
+
+  def self.to_csv(options = {})
+
+    attributes = %w{ invoice_id invoice_created subscription_id sub_created user_email user_created
+                     payment_provider sub_stripe_guid sub_paypal_guid sub_exam_body sub_status sub_type
+                     invoice_type payment_interval plan_name currency_symbol plan_price sub_total total
+                     card_country user_country hubspot_source hubspot_source_1 hubspot_source_2 first_visit_source
+                     first_visit_utm_campaign first_visit_medium first_visit_date first_visit_referring_domain
+                     first_visit_landing_page first_visit_referrer }
+
+    CSV.generate(options) do |csv|
+      csv << attributes
+
+      all.each do |scul|
+        csv << attributes.map{ |attr| scul.send(attr) }
+      end
+    end
+  end
+
+  ################
+  def invoice_id
+    id
+  end
+
+  def user_email
+    user.email
+  end
+
+  def invoice_created
+    created_at.strftime("%Y-%m-%d")
+  end
+
+  def user_created
+    user.created_at.strftime("%Y-%m-%d")
+  end
+
+  def sub_created
+    subscription&.created_at.strftime("%Y-%m-%d")
+  end
+
+  ################
+  def sub_exam_body
+    subscription&.subscription_plan&.exam_body&.name
+  end
+
+  def sub_status
+    subscription&.state
+  end
+
+  def sub_type
+    subscription&.kind
+  end
+
+  def payment_provider
+    subscription&.subscription_type
+  end
+
+  def invoice_type
+    (created_at.strftime("%Y-%m-%d") > subscription.created_at.strftime("%Y-%m-%d")) ? 'Recurring' : 'New'
+  end
+
+  def sub_stripe_guid
+    subscription&.stripe_guid
+  end
+
+  def sub_paypal_guid
+    subscription&.paypal_subscription_guid
+  end
+
+  def payment_interval
+    subscription.subscription_plan.payment_frequency_in_months
+  end
+
+  def plan_name
+    subscription.subscription_plan.name
+  end
+
+  def currency_symbol
+    subscription.subscription_plan.currency.iso_code
+  end
+
+  def plan_price
+    subscription.subscription_plan.price
+  end
+
+  def card_country
+    user&.subscription_payment_cards.all_default_cards&.first&.account_country
+  end
+
+  def user_country
+    user&.country&.iso_code
+  end
+
+  ################
+  def first_visit
+    user.ahoy_visits.order(:started_at)&.first
+  end
+
+  def first_visit_date
+    first_visit ? first_visit.started_at.strftime("%Y-%m-%d") : ''
+  end
+
+  def first_visit_landing_page
+    first_visit ? first_visit.landing_page : ''
+  end
+
+  def first_visit_referrer
+    first_visit ? first_visit.referrer : ''
+  end
+
+  def first_visit_referring_domain
+    first_visit ? first_visit.referring_domain : ''
+  end
+
+  def first_visit_source
+    first_visit.utm_source.present? ? first_visit.utm_source : '' if first_visit
+  end
+
+  def first_visit_medium
+    first_visit ? first_visit.utm_medium : ''
+  end
+
+  def first_visit_search_keyword
+    first_visit ? first_visit.search_keyword : ''
+  end
+
+  def first_visit_country
+    first_visit ? first_visit.country : ''
+  end
+
+  def first_visit_utm_campaign
+    first_visit ? first_visit.utm_campaign : ''
+  end
+
+  def hubspot_get_contact
+    url             = "/contacts/v1/contact/email/#{user_email}/profile"
+    build_uri = URI::HTTP.build(host: 'api.hubapi.com',
+                                path: url,
+                                query: { hapikey: '40bf2074-c6bf-4b0f-896e-9c312ae18551', propertyMode: 'value_only', showListMemberships: 'false' }.to_query)
+    headers  = { 'Content-Type': 'application/json' }
+    http     = Net::HTTP.new(build_uri.host)
+
+    response = http.send('get', build_uri.request_uri, headers)
+    JSON.parse(response.body)
+  end
+
+  def hubspot_source
+    hubspot_get_contact['properties']['hs_analytics_source']['value']
+  end
+
+  def hubspot_source_1
+    hubspot_get_contact['properties']['hs_analytics_source_data_1']['value']
+  end
+
+  def hubspot_source_2
+    hubspot_get_contact['properties']['hs_analytics_source_data_2']['value'] if hubspot_get_contact['properties']['hs_analytics_source_data_2']
   end
 
   def mark_payment_action_required
