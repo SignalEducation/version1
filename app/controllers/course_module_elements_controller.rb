@@ -169,7 +169,8 @@ class CourseModuleElementsController < ApplicationController
       flash[:error] = 'Course Element was not successfully duplicaded'
     end
 
-    redirect_to course_module_element_path(cme.id)
+    redirect_to show_course_module_path(cme.course_module.subject_course_id,
+                                        cme.course_module.course_section.id, cme.course_module.id)
   end
 
   protected
