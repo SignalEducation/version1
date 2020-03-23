@@ -6,7 +6,7 @@
 #  name                                    :string
 #  name_url                                :string
 #  sorting_order                           :integer
-#  active                                  :boolean          default(FALSE), not null
+#  active                                  :boolean          default("false"), not null
 #  cme_count                               :integer
 #  video_count                             :integer
 #  quiz_count                              :integer
@@ -21,18 +21,23 @@
 #  quiz_pass_rate                          :integer
 #  background_image_file_name              :string
 #  background_image_content_type           :string
-#  background_image_file_size              :bigint(8)
+#  background_image_file_size              :integer
 #  background_image_updated_at             :datetime
-#  preview                                 :boolean          default(FALSE)
-#  computer_based                          :boolean          default(FALSE)
+#  preview                                 :boolean          default("false")
+#  computer_based                          :boolean          default("false")
 #  highlight_colour                        :string           default("#ef475d")
 #  category_label                          :string
 #  icon_label                              :string
-#  constructed_response_count              :integer          default(0)
+#  constructed_response_count              :integer          default("0")
 #  completion_cme_count                    :integer
 #  release_date                            :date
 #  seo_title                               :string
 #  seo_description                         :string
+#  has_correction_packs                    :boolean          default("false")
+#  short_description                       :text
+#  on_welcome_page                         :boolean          default("false")
+#  unit_label                              :string
+#  level_id                                :integer
 #
 
 FactoryBot.define do

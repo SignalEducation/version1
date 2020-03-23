@@ -5,7 +5,7 @@
 #  id                          :integer          not null, primary key
 #  course_module_element_id    :integer
 #  number_of_questions         :integer
-#  question_selection_strategy :string
+#  question_selection_strategy :string(255)
 #  created_at                  :datetime
 #  updated_at                  :datetime
 #  destroyed_at                :datetime
@@ -39,6 +39,22 @@ class CourseModuleElementQuiz < ApplicationRecord
   # class methods
 
   # instance methods
+  def duplicate
+    new_cme_quiz =
+      deep_clone include: [
+        :course_module_element,
+        quiz_questions: [
+          :quiz_solutions,
+          :quiz_contents,
+          quiz_answers: :quiz_contents
+        ]
+      ], validate: false
+
+    new_cme_quiz.
+      course_module_element.update(name: "#{course_module_element.name} COPY",
+                                   name_url: "#{course_module_element.name_url}_copy",
+                                   active: false)
+  end
 
   ## Checks for num. of Questions created is more than the num. to be asked ##
 

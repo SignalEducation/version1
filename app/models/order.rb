@@ -10,18 +10,21 @@
 #  user_id                   :integer
 #  stripe_guid               :string
 #  stripe_customer_id        :string
-#  live_mode                 :boolean          default(FALSE)
+#  live_mode                 :boolean          default("false")
 #  stripe_status             :string
 #  coupon_code               :string
 #  created_at                :datetime         not null
 #  updated_at                :datetime         not null
 #  stripe_order_payment_data :text
 #  mock_exam_id              :integer
-#  terms_and_conditions      :boolean          default(FALSE)
+#  terms_and_conditions      :boolean          default("false")
 #  reference_guid            :string
 #  paypal_guid               :string
 #  paypal_status             :string
 #  state                     :string
+#  stripe_payment_method_id  :string
+#  stripe_payment_intent_id  :string
+#  ahoy_visit_id             :uuid
 #
 
 class Order < ApplicationRecord

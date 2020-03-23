@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe ProductsHelper do
+describe ProductsHelper, type: :helper do
   let(:cbe)                     { create(:cbe) }
   let(:cbe_product)             { create(:product, cbe: cbe, product_type: 'cbe') }
   let(:correction_pack_product) { create(:product, cbe: cbe, product_type: 'correction_pack', correction_pack_count: 3) }

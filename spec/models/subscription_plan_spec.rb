@@ -3,26 +3,26 @@
 # Table name: subscription_plans
 #
 #  id                            :integer          not null, primary key
-#  payment_frequency_in_months   :integer          default(1)
+#  payment_frequency_in_months   :integer          default("1")
 #  currency_id                   :integer
 #  price                         :decimal(, )
 #  available_from                :date
 #  available_to                  :date
-#  stripe_guid                   :string
+#  stripe_guid                   :string(255)
 #  created_at                    :datetime
 #  updated_at                    :datetime
-#  name                          :string
+#  name                          :string(255)
 #  subscription_plan_category_id :integer
-#  livemode                      :boolean          default(FALSE)
+#  livemode                      :boolean          default("false")
 #  paypal_guid                   :string
 #  paypal_state                  :string
 #  monthly_percentage_off        :integer
 #  previous_plan_price           :float
-#  exam_body_id                  :bigint(8)
+#  exam_body_id                  :bigint
 #  guid                          :string
 #  bullet_points_list            :string
 #  sub_heading_text              :string
-#  most_popular                  :boolean          default(FALSE), not null
+#  most_popular                  :boolean          default("false"), not null
 #  registration_form_heading     :string
 #  login_form_heading            :string
 #
@@ -86,13 +86,14 @@ describe SubscriptionPlan, type: :model do
 
     describe '.get_related_plans' do
       let(:user) { build_stubbed(:user) }
+      let!(:plan) { create(:subscription_plan, currency: user.currency) }
       let(:exam_body) { build_stubbed(:exam_body) }
       let(:plan_guid) { 'plan_ls_12345' }
 
       it 'calls .get_individual_related_plan' do
         expect(SubscriptionPlan).to(
           receive(:get_individual_related_plan)
-        ).with(plan_guid, user.currency)
+        ).with(plan_guid, user.currency, exam_body.id)
 
         SubscriptionPlan.get_related_plans(user, user.currency, exam_body.id, plan_guid)
       end
@@ -102,12 +103,12 @@ describe SubscriptionPlan, type: :model do
           receive(:scope_exam_body_plans)
         ).with(user, exam_body.id, any_args)
 
-        SubscriptionPlan.get_related_plans(user, user.currency, exam_body.id, plan_guid)
+        SubscriptionPlan.get_related_plans(user, user.currency, exam_body.id, plan.guid)
       end
 
       it 'returns plans' do
         return_value = SubscriptionPlan.get_related_plans(
-          user, user.currency, exam_body.id, plan_guid
+          user, user.currency, exam_body.id, plan.guid
         )
 
         expect(return_value).to be_an ActiveRecord::Relation
@@ -150,25 +151,19 @@ describe SubscriptionPlan, type: :model do
     end
 
     describe '.get_individual_related_plan' do
-      let(:plan) { create(:subscription_plan) }
-      let(:currency) { build_stubbed(:currency) }
-
-      it 'finds the subscription_plan' do
-        expect(SubscriptionPlan).to receive(:find_by).
-          with({guid: plan.guid})
-
-        SubscriptionPlan.get_individual_related_plan(plan.guid, currency)
-      end
+      let(:plan)      { create(:subscription_plan) }
+      let(:currency)  { build_stubbed(:currency) }
+      let(:exam_body) { build_stubbed(:exam_body) }
 
       it 'raises an error if there is a currency miss-match' do
-        expect { SubscriptionPlan.get_individual_related_plan(plan.guid, currency) }.to(
+        expect { SubscriptionPlan.get_individual_related_plan(plan.guid, currency, exam_body.id) }.to(
           raise_error(Learnsignal::SubscriptionError, 'The specified plan is not available! Please choose another.')
         )
       end
 
       it 'raises an error if the plan is not active' do
         plan.update_column(:available_to, 1.days.ago)
-        expect { SubscriptionPlan.get_individual_related_plan(plan.guid, currency) }.to(
+        expect { SubscriptionPlan.get_individual_related_plan(plan.guid, currency, exam_body.id) }.to(
           raise_error(Learnsignal::SubscriptionError, 'The specified plan is not available! Please choose another.')
         )
       end

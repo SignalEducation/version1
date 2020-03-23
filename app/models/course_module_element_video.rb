@@ -33,25 +33,25 @@ class CourseModuleElementVideo < ApplicationRecord
               course_module_element&.active && course_module_element&.is_video
             }
 
-  # callbacks
 
   # scopes
   scope :all_in_order, -> { order(:course_module_element_id).where(destroyed_at: nil) }
 
-  # class methods
-
-  # instance methods
-
-  ## Parent & Child associations ##
   def parent
     course_module_element
   end
 
-  #######################################################################
-
-  ## Archivable ability ##
 
   def destroyable?
     true
+  end
+
+  def duplicate
+    new_cme_video = deep_clone include: :course_module_element, validate: false
+
+    new_cme_video.
+      course_module_element.update(name: "#{course_module_element.name} COPY",
+                                   name_url: "#{course_module_element.name_url}_copy",
+                                   active: false)
   end
 end

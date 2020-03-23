@@ -32,9 +32,7 @@
                       %th Name
                       %th Active
                       %th Trial
-                      %th
-                      %th
-                      %th
+                      %th{colspan: 5}
                   %tbody
                     -@course_module.course_module_elements.all_in_order.each do |cme|
                       %tr{id: cme.id, data: {parent: @course_module.id, destination: course_module_elements_url}}
@@ -48,11 +46,13 @@
                           =cme.type_name
                         %td
                           =link_to t('views.general.edit'), edit_course_module_element_url(cme.id), class: 'btn btn-xs btn-primary'
-                          =link_to t('views.course_module_elements.show.preview'), course_url(cme.course_module.subject_course.name_url, cme.course_module.name_url, cme.name_url, ), class: 'btn btn-xs btn-orange', target: '_blank'
+                          =link_to t('views.course_module_elements.show.preview'), show_course_url(cme.course_module.subject_course.name_url, cme.course_module.name_url, cme.name_url, ), class: 'btn btn-xs btn-orange', target: '_blank'
                           -unless cme.active
                             =link_to 'Activate', new_content_activation_url(type: cme.class, id: cme.id), class: 'btn btn-green btn-xs'
                           -if cme.destroyable?
                             =link_to t('views.general.delete'), cme, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-secondary btn-xs'
+                        %td
+                          =link_to t('views.general.clone'), course_module_element_clone_path(course_module_element_id: cme.id), data: {confirm: t('views.general.clone_confirmation')}, method: :post, class: 'dropdown-item', style: 'color: #fd7e14;'
                         %td
                           %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
 
@@ -65,4 +65,3 @@
                 .col-sm-6
                   =link_to t('views.course_modules.edit.h1'), edit_course_module_url(@subject_course.id, @course_module.course_section.id, @course_module.id), class: 'btn btn-secondary'
                   =link_to I18n.t('views.course_modules.index.delete'), @course_module, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-secondary-reverse'
-

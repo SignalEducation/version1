@@ -6,19 +6,24 @@
 #
 #  id                    :integer          not null, primary key
 #  name                  :string
+#  subject_course_id     :integer
 #  mock_exam_id          :integer
 #  stripe_guid           :string
-#  live_mode             :boolean          default(FALSE)
+#  live_mode             :boolean          default("false")
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
-#  active                :boolean          default(FALSE)
+#  active                :boolean          default("false")
 #  currency_id           :integer
 #  price                 :decimal(, )
 #  stripe_sku_guid       :string
-#  subject_course_id     :integer
 #  sorting_order         :integer
-#  product_type          :integer          default("mock_exam")
+#  product_type          :integer          default("0")
 #  correction_pack_count :integer
+#  cbe_id                :bigint
+#  group_id              :integer
+#  payment_heading       :string
+#  payment_subheading    :string
+#  payment_description   :text
 #
 
 class Product < ApplicationRecord
@@ -58,7 +63,7 @@ class Product < ApplicationRecord
 
   # scopes
   scope :all_in_order,  -> { order(:sorting_order, :name) }
-  scope :all_active,    -> { where(active: true).includes(mock_exam: :subject_course) }
+  scope :all_active,    -> { where(active: true) }
   scope :in_currency,   ->(ccy_id) { where(currency_id: ccy_id) }
   scope :cbes,          -> { where.not(cbe_id: nil) }
   scope :mock_exams,    -> { where.not(mock_exam_id: nil) }

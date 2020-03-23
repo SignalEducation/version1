@@ -8,15 +8,15 @@
 #  subject_course_user_log_id :integer
 #  created_at                 :datetime         not null
 #  updated_at                 :datetime         not null
-#  active                     :boolean          default(FALSE)
+#  active                     :boolean          default("false")
 #  exam_body_id               :integer
 #  exam_date                  :date
-#  expired                    :boolean          default(FALSE)
-#  paused                     :boolean          default(FALSE)
-#  notifications              :boolean          default(TRUE)
+#  expired                    :boolean          default("false")
+#  paused                     :boolean          default("false")
+#  notifications              :boolean          default("true")
 #  exam_sitting_id            :integer
-#  computer_based_exam        :boolean          default(FALSE)
-#  percentage_complete        :integer          default(0)
+#  computer_based_exam        :boolean          default("false")
+#  percentage_complete        :integer          default("0")
 #
 
 class Enrollment < ApplicationRecord

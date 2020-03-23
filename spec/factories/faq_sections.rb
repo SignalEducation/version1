@@ -6,7 +6,7 @@
 #  name          :string
 #  name_url      :string
 #  description   :text
-#  active        :boolean          default(TRUE)
+#  active        :boolean          default("true")
 #  sorting_order :integer
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null

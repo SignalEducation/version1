@@ -23,14 +23,14 @@ class LibraryController < ApplicationController
       seo_title_maker(@group.seo_title, @group.seo_description, nil)
       tag_manager_data_layer(@group.try(:name))
 
-      ip_country = IpAddress.get_country(request.remote_ip)
-      country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
+      ip_country   = IpAddress.get_country(request.remote_ip)
+      country      = ip_country || Country.find_by(name: 'United Kingdom')
       @currency_id = current_user ? current_user.get_currency(country).id : country.try(:currency_id)
 
       if country && @currency_id
         @subscription_plans =
           SubscriptionPlan.where(subscription_plan_category_id: nil, exam_body_id: @group.exam_body_id).
-                           includes(:currency).in_currency(@currency_id).all_active.all_in_display_order.limit(3)
+            includes(:currency).in_currency(@currency_id).all_active.all_in_display_order.limit(3)
       end
     else
       redirect_to root_url
@@ -46,22 +46,21 @@ class LibraryController < ApplicationController
 
     if @course && @exam_body.active && !@course.preview
       if current_user
-        @valid_subscription = current_user.active_subscriptions_for_exam_body(@exam_body.id).all_valid.first
+        @valid_subscription      = current_user.active_subscriptions_for_exam_body(@exam_body.id).all_valid.first
+        @subject_course_user_log = current_user.subject_course_user_logs.for_subject_course(@course.id).all_in_order.last
 
-        if current_user.subject_course_user_logs.for_subject_course(@course.id).any?
-          # Find the latest SCUL record for this user/course
-          @subject_course_user_log = current_user.subject_course_user_logs.for_subject_course(@course.id).all_in_order.last
+        if @subject_course_user_log.present?
           @completed_student_exam_tracks = @subject_course_user_log.student_exam_tracks.all_complete
-          @completed_course_module_ids = @completed_student_exam_tracks.map(&:course_module_id)
-          @cmeuls = @subject_course_user_log.course_module_element_user_logs
-          @cmeuls_ids = @cmeuls.map(&:course_module_element_id)
-          @completed_cmeuls = @cmeuls.all_completed
-          @completed_cmeuls_cme_ids = @completed_cmeuls.map(&:course_module_element_id)
+          @completed_course_module_ids   = @completed_student_exam_tracks.map(&:course_module_id)
+          @cmeuls                        = @subject_course_user_log.course_module_element_user_logs
+          @cmeuls_ids                    = @cmeuls.map(&:course_module_element_id)
+          @completed_cmeuls              = @cmeuls.all_completed
+          @completed_cmeuls_cme_ids      = @completed_cmeuls.map(&:course_module_element_id)
 
           if @exam_body.has_sittings
             @exam_body_user_details = get_exam_body_user_details
             @enrollment = @subject_course_user_log.enrollments.for_course_and_user(@course.id, current_user.id).all_in_order.last
-            if (@enrollment&.expired) || !@enrollment
+            if @enrollment&.expired || !@enrollment
               get_enrollment_form_variables(@course, @subject_course_user_log)
             end
           end
@@ -70,9 +69,7 @@ class LibraryController < ApplicationController
           @exam_body_user_details = get_exam_body_user_details
           get_enrollment_form_variables(@course, nil) if @exam_body.has_sittings
         end
-
       end
-
     else
       render 'course_preview'
     end
@@ -80,9 +77,9 @@ class LibraryController < ApplicationController
 
   def user_contact_form
     Zendesk::RequestWorker.perform_async(params[:full_name],
-                                        params[:email_address],
-                                        params[:type],
-                                        params[:question])
+                                         params[:email_address],
+                                         params[:type],
+                                         params[:question])
 
     flash[:success] = 'Thank you! Your submission was successful. We will contact you shortly.'
     redirect_to request.referer || root_url
@@ -91,7 +88,9 @@ class LibraryController < ApplicationController
   protected
 
   def check_course_available
-    @course = SubjectCourse.find_by(name_url: params[:subject_course_name_url])
+    @course = SubjectCourse.includes(course_modules: { course_module_elements: :related_course_module_element }).
+                find_by(name_url: params[:subject_course_name_url])
+
     if @course&.active
       @group = @course.group
       @exam_body = @group.exam_body
@@ -119,7 +118,7 @@ class LibraryController < ApplicationController
     @currency_id = @country ? @country.currency_id : Currency.all_active.all_in_order.first
     @correction_pack_products = []
 
-    valid_products = Product.includes(mock_exam: :subject_course).for_group(@group.id).
+    valid_products = Product.includes(:cbe).for_group(@group.id).
                        in_currency(@currency_id).all_active.all_in_order
 
     if @course.has_correction_packs

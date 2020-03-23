@@ -3,10 +3,10 @@
 # Table name: subscription_plan_categories
 #
 #  id               :integer          not null, primary key
-#  name             :string
+#  name             :string(255)
 #  available_from   :datetime
 #  available_to     :datetime
-#  guid             :string
+#  guid             :string(255)
 #  created_at       :datetime
 #  updated_at       :datetime
 #  sub_heading_text :string

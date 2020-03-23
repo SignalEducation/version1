@@ -11,10 +11,10 @@
 #  h1_text         :string
 #  h1_subtext      :string
 #  nav_type        :string
-#  footer_link     :boolean          default(FALSE)
+#  footer_link     :boolean          default("false")
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
-#  active          :boolean          default(FALSE)
+#  active          :boolean          default("false")
 #
 
 require 'rails_helper'

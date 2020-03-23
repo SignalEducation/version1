@@ -5,7 +5,7 @@
 #  id              :integer          not null, primary key
 #  name            :string
 #  name_url        :string
-#  active          :boolean          default(TRUE)
+#  active          :boolean          default("true")
 #  sorting_order   :integer
 #  faq_section_id  :integer
 #  question_text   :text

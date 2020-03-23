@@ -11,25 +11,24 @@ class SubscriptionPaymentCardsController < ApplicationController
     @subscription_payment_card = SubscriptionPaymentCard.new(create_params)
 
     if @subscription_payment_card.save
-      flash[:success] = I18n.t('controllers.subscription_payment_cards.create.flash.success')
+      flash[:success] = t('controllers.subscription_payment_cards.create.flash.success')
       redirect_to account_url(anchor: 'payment-details')
     else
       flash[:error] =
         if @subscription_payment_card.errors.any?
           @subscription_payment_card.errors.first[1]
         else
-          I18n.t('controllers.subscription_payment_cards.create.flash.error')
+          t('controllers.subscription_payment_cards.create.flash.error')
         end
-
       redirect_to account_url(anchor: 'add-card-modal')
     end
   end
 
   def update
     if @subscription_payment_card.update_as_the_default_card
-      flash[:success] = I18n.t('controllers.subscription_payment_cards.update.flash.success')
+      flash[:success] = t('controllers.subscription_payment_cards.update.flash.success')
     else
-      flash[:error] = I18n.t('controllers.subscription_payment_cards.update.flash.error')
+      flash[:error] = t('controllers.subscription_payment_cards.update.flash.error')
     end
 
     redirect_to account_url(anchor: 'payment-details')
@@ -37,9 +36,9 @@ class SubscriptionPaymentCardsController < ApplicationController
 
   def destroy
     if @subscription_payment_card.destroy
-      flash[:success] = I18n.t('controllers.subscription_payment_cards.delete.flash.success')
+      flash[:success] = t('controllers.subscription_payment_cards.delete.flash.success')
     else
-      flash[:error] = I18n.t('controllers.subscription_payment_cards.delete.flash.error')
+      flash[:error] = t('controllers.subscription_payment_cards.delete.flash.error')
     end
 
     redirect_to account_url(anchor: 'payment-details')
@@ -53,9 +52,5 @@ class SubscriptionPaymentCardsController < ApplicationController
 
   def set_subscription_payment_card
     @subscription_payment_card = SubscriptionPaymentCard.find_by(id: params[:id])
-  end
-
-  def update_params
-    params.require(:subscription_payment_card).permit(:make_default_card)
   end
 end

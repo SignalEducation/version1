@@ -88,7 +88,7 @@
                 %thead
                   %tr
                     %th Element
-                    %th Completed
+                    %th Status
                     %th Type
                     %th Latest Attempt
                     %th Score
@@ -100,9 +100,8 @@
                       %td
                         =log.course_module_element.try(:name)
                       %td
-                        =tick_or_cross(log.element_completed)
+                        =course_element_user_log_status(log)
                       %td
-                        =#log.is_video ? 'Video' : 'Quiz'
                         =log.type
                       %td
                         =tick_or_cross(log.latest_attempt)
@@ -112,5 +111,3 @@
                         =log.seconds_watched
                       %td
                         =humanize_datetime(log.created_at)
-
-

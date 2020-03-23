@@ -1,5 +1,16 @@
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: cbe_scenarios
+#
+#  id             :bigint           not null, primary key
+#  content        :string
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  cbe_section_id :bigint
+#  name           :string
+#
 class Cbe
   class Scenario < ApplicationRecord
     # concerns

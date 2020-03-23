@@ -34,9 +34,6 @@ class ExercisesController < ApplicationController
 
   def set_exercise
     @exercise = Exercise.find(params[:id])
-
-    return if @exercise.user_id == current_user.id
-
-    redirect_to user_exercises_path(current_user)
+    redirect_to user_exercises_path(current_user) if @exercise.user_id != current_user.id
   end
 end

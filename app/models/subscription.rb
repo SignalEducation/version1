@@ -5,17 +5,16 @@
 #  id                       :integer          not null, primary key
 #  user_id                  :integer
 #  subscription_plan_id     :integer
-#  stripe_guid              :string
+#  stripe_guid              :string(255)
 #  next_renewal_date        :date
-#  complimentary            :boolean          default(FALSE), not null
-#  stripe_status            :string
+#  complimentary            :boolean          default("false"), not null
+#  stripe_status            :string(255)
 #  created_at               :datetime
 #  updated_at               :datetime
-#  stripe_customer_id       :string
-#  stripe_customer_data     :text
-#  livemode                 :boolean          default(FALSE)
-#  active                   :boolean          default(FALSE)
-#  terms_and_conditions     :boolean          default(FALSE)
+#  stripe_customer_id       :string(255)
+#  livemode                 :boolean          default("false")
+#  active                   :boolean          default("false")
+#  terms_and_conditions     :boolean          default("false")
 #  coupon_id                :integer
 #  paypal_subscription_guid :string
 #  paypal_token             :string
@@ -24,7 +23,11 @@
 #  cancelled_at             :datetime
 #  cancellation_reason      :string
 #  cancellation_note        :text
-#  changed_from_id          :bigint(8)
+#  changed_from_id          :bigint
+#  completion_guid          :string
+#  ahoy_visit_id            :uuid
+#  cancelled_by_id          :bigint
+#  kind                     :integer
 #
 
 class Subscription < ApplicationRecord

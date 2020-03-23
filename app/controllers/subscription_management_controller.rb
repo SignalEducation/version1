@@ -19,14 +19,11 @@ class SubscriptionManagementController < ApplicationController
 
   def pdf_invoice
     if @invoice
-      @invoice_date = @invoice.issued_at
-      description   = t("views.general.subscription_in_months.a#{@invoice.subscription.subscription_plan.payment_frequency_in_months}")
-      vat_rate      = @invoice.vat_rate ? @invoice.vat_rate.percentage_rate.to_s + '%' : '0%'
+      pdf = InvoiceDocument.new(@invoice)
 
       respond_to do |format|
         format.html
         format.pdf do
-          pdf = InvoiceDocument.new(@invoice, view_context, description, vat_rate, @invoice_date)
           send_data pdf.render, filename: "invoice_#{@invoice.created_at.strftime('%d/%m/%Y')}.pdf", type: 'application/pdf', disposition: 'inline'
         end
       end
@@ -52,10 +49,10 @@ class SubscriptionManagementController < ApplicationController
 
   def cancel_subscription
     if subscription_cancelled?(@subscription)
-      flash[:success] = I18n.t('controllers.subscription_management.cancel.flash.success')
+      flash[:success] = t('controllers.subscription_management.cancel.flash.success')
     else
       Rails.logger.warn "WARN: SubscriptionManagement#cancel failed to cancel a subscription. Errors:#{@subscription.errors.inspect}"
-      flash[:error] = I18n.t('controllers.subscription_management.cancel.flash.error')
+      flash[:error] = t('controllers.subscription_management.cancel.flash.error')
     end
 
     redirect_to subscription_management_url(@subscription)
@@ -63,16 +60,14 @@ class SubscriptionManagementController < ApplicationController
 
   def un_cancel_subscription
     if @subscription&.stripe_status == 'canceled-pending'
-      @subscription.un_cancel
-
-      if @subscription&.errors&.count&.zero?
-        flash[:success] = I18n.t('controllers.subscription_management.un_cancel_subscription.flash.success')
+      if @subscription.un_cancel
+        flash[:success] = t('controllers.subscription_management.un_cancel_subscription.flash.success')
       else
         Rails.logger.error "ERROR: SubscriptionManagement#un_cancel_subscription - something went wrong. Errors:#{@subscription.errors.inspect}"
-        flash[:error] = I18n.t('controllers.subscription_management.un_cancel_subscription.flash.error')
+        flash[:error] = t('controllers.subscription_management.un_cancel_subscription.flash.error')
       end
     else
-      flash[:error] = I18n.t('controllers.subscription_management.un_cancel_subscription.flash.not_pending_sub')
+      flash[:error] = t('controllers.subscription_management.un_cancel_subscription.flash.not_pending_sub')
     end
 
     redirect_to subscription_management_url(@subscription)
@@ -80,10 +75,10 @@ class SubscriptionManagementController < ApplicationController
 
   def reactivate_subscription
     if @subscription.reactivate_canceled
-      flash[:success] = I18n.t('controllers.subscription_management.reactivate_canceled.flash.success')
+      flash[:success] = t('controllers.subscription_management.reactivate_canceled.flash.success')
     else
       Rails.logger.warn "WARN: SubscriptionManagement#reactivate_canceled failed to reactivate a subscription. Errors:#{@subscription.errors.inspect}"
-      flash[:error] = I18n.t('controllers.subscription_management.reactivate_canceled.flash.error') << @subscription.errors[:base].to_s
+      flash[:error] = t('controllers.subscription_management.reactivate_canceled.flash.error') << @subscription.errors[:base].to_s
     end
 
     redirect_to subscription_management_url(@subscription)
@@ -114,8 +109,8 @@ class SubscriptionManagementController < ApplicationController
       stripe_cancellation(subscription)
     end
   rescue Learnsignal::SubscriptionError => e
-    flash[:error] = e.message
-    redirect_to subscription_management_url(@subscription)
+    Airbrake::AirbrakeLogger.new(logger).error e.message
+    false
   end
 
   def stripe_cancellation(subscription)

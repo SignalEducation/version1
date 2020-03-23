@@ -83,9 +83,10 @@ gem 'zendesk_api'
 # Environment-specific gems
 
 group :development do
-  gem 'annotate' # adds the list of fields in each table to the models and test files
+  gem 'annotate', '~> 3.1.0' # adds the list of fields in each table to the models and test files
   gem 'better_errors' # gives more useful error report in the browser
   gem 'bullet' # Warnings about n+1 and other query problems
+  gem 'lol_dba'
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
   gem 'web-console', '>= 3.3.0'
   gem 'listen', '>= 3.0.5', '< 3.2'
@@ -103,7 +104,7 @@ group :development, :test do
   gem 'factory_bot_rails' #A library for setting up Ruby objects as test data
   gem 'rspec-rails' # our core testing environment
   gem 'rubocop', '~> 0.80.1', require: false
-  gem 'rubocop-performance', require: false # rubocop lint
+  gem 'rubocop-performance', '~> 1.5.2', require: false # rubocop lint
   gem 'rubocop-rails', require: false # rubocop lint
   gem 'rubocop-rspec', require: false
   gem 'ultrahook' # allows incoming webhooks from stripe

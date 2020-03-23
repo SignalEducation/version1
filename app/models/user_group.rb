@@ -3,23 +3,23 @@
 # Table name: user_groups
 #
 #  id                           :integer          not null, primary key
-#  name                         :string
+#  name                         :string(255)
 #  description                  :text
-#  tutor                        :boolean          default(FALSE), not null
-#  site_admin                   :boolean          default(FALSE), not null
+#  tutor                        :boolean          default("false"), not null
+#  site_admin                   :boolean          default("false"), not null
 #  created_at                   :datetime
 #  updated_at                   :datetime
-#  system_requirements_access   :boolean          default(FALSE)
-#  content_management_access    :boolean          default(FALSE)
-#  stripe_management_access     :boolean          default(FALSE)
-#  user_management_access       :boolean          default(FALSE)
-#  developer_access             :boolean          default(FALSE)
-#  user_group_management_access :boolean          default(FALSE)
-#  student_user                 :boolean          default(FALSE)
-#  trial_or_sub_required        :boolean          default(FALSE)
-#  blocked_user                 :boolean          default(FALSE)
-#  marketing_resources_access   :boolean          default(FALSE)
-#  exercise_corrections_access  :boolean          default(FALSE)
+#  system_requirements_access   :boolean          default("false")
+#  content_management_access    :boolean          default("false")
+#  stripe_management_access     :boolean          default("false")
+#  user_management_access       :boolean          default("false")
+#  developer_access             :boolean          default("false")
+#  user_group_management_access :boolean          default("false")
+#  student_user                 :boolean          default("false")
+#  trial_or_sub_required        :boolean          default("false")
+#  blocked_user                 :boolean          default("false")
+#  marketing_resources_access   :boolean          default("false")
+#  exercise_corrections_access  :boolean          default("false")
 #
 
 class UserGroup < ApplicationRecord

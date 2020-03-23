@@ -13,6 +13,8 @@
 require 'rails_helper'
 
 describe ConstructedResponse do
+  let!(:course_module_element) { create(:course_module_element) }
+  let!(:constructed_response)  { create(:constructed_response, course_module_element: course_module_element) }
 
   describe 'relationships' do
     it { should belong_to(:course_module_element) }
@@ -39,6 +41,6 @@ describe ConstructedResponse do
   describe 'instance methods' do
     it { should respond_to(:destroyable?) }
     it { should respond_to(:add_an_empty_scenario) }
+    it { should respond_to(:duplicate) }
   end
-
 end

@@ -7,7 +7,7 @@
 #  user_id                            :integer
 #  scenario_question_id               :integer
 #  status                             :string
-#  flagged_for_review                 :boolean          default(FALSE)
+#  flagged_for_review                 :boolean          default("false")
 #  original_scenario_question_text    :text
 #  user_edited_scenario_question_text :text
 #  created_at                         :datetime         not null
