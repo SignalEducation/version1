@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_05_095226) do
+ActiveRecord::Schema.define(version: 2020_03_23_161559) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -435,9 +435,9 @@ ActiveRecord::Schema.define(version: 2020_03_05_095226) do
     t.boolean "is_video", default: false, null: false
     t.boolean "is_quiz", default: false, null: false
     t.boolean "active", default: true, null: false
-    t.datetime "destroyed_at"
-    t.string "seo_description"
+    t.string "seo_description", limit: 255
     t.boolean "seo_no_index", default: false
+    t.datetime "destroyed_at"
     t.integer "number_of_questions", default: 0
     t.float "duration", default: 0.0
     t.string "temporary_label"
@@ -458,9 +458,9 @@ ActiveRecord::Schema.define(version: 2020_03_05_095226) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer "cme_count", default: 0
-    t.datetime "destroyed_at"
-    t.string "seo_description"
+    t.string "seo_description", limit: 255
     t.boolean "seo_no_index", default: false
+    t.datetime "destroyed_at"
     t.integer "number_of_questions", default: 0
     t.integer "subject_course_id"
     t.float "video_duration", default: 0.0
@@ -839,7 +839,6 @@ ActiveRecord::Schema.define(version: 2020_03_05_095226) do
     t.integer "alert_level"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.datetime "rechecked_on"
     t.index ["country_id"], name: "index_ip_addresses_on_country_id"
   end
 
