@@ -23,13 +23,13 @@ namespace :ip_address do
     Rails.logger.info 'Running command to assign the correct countries to user records...'
 
     total_time = Benchmark.measure do
-      User.first(100) do |user_records|
+      User.where(country_id: [78,105]).find_in_batches(batch_size: 1000) do |user_records|
         User.transaction do
           Rails.logger.info "======= #{user_records.count} USERS ========="
           bench_time = Benchmark.measure do
             user_records.each do |user|
               visit = user.ahoy_visits.order(started_at: :desc).first
-              next if visit.country == user.country.iso_code
+              next if !visit || visit.country == user.country.iso_code
 
               country_id = country_hash[visit.country] || Country.find_by(iso_code: visit.country)&.id
               Rails.logger.error "USER #{user.id} was not updated" unless user.update(country_id: country_id)
