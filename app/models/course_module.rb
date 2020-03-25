@@ -110,7 +110,7 @@ class CourseModule < ApplicationRecord
   end
 
   def next_module
-    CourseModule.find(next_module_id) || nil
+    CourseModule.find_by_id(next_module_id) || nil
   end
 
   def next_module_id
