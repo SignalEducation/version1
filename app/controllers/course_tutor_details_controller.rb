@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class CourseTutorDetailsController < ApplicationController
+class TutorDetailsController < ApplicationController
   before_action :logged_in_required
   before_action do
     ensure_user_has_access_rights(%w[system_requirements_access content_management_access user_management_access])
@@ -9,30 +9,30 @@ class CourseTutorDetailsController < ApplicationController
   before_action :get_variables
 
   def index
-    @course_tutor_details = @subject_course.course_tutor_details.all_in_order
+    @tutor_details = @course.tutor_details.all_in_order
   end
 
   def new
-    @course_tutor_detail = CourseTutorDetail.new(subject_course_id: @subject_course.id, sorting_order: 1)
+    @tutor_detail = CourseTutorDetail.new(course_id: @course.id, sorting_order: 1)
   end
 
   def edit; end
 
   def create
-    @course_tutor_detail = CourseTutorDetail.new(allowed_params)
+    @tutor_detail = CourseTutorDetail.new(allowed_params)
 
-    if @course_tutor_detail.save
-      flash[:success] = I18n.t('controllers.course_tutor_details.create.flash.success')
-      redirect_to subject_course_course_tutor_details_url(@subject_course)
+    if @tutor_detail.save
+      flash[:success] = I18n.t('controllers.tutor_details.create.flash.success')
+      redirect_to tutor_details_url(@course)
     else
       render action: :new
     end
   end
 
   def update
-    if @course_tutor_detail.update_attributes(allowed_params)
-      flash[:success] = I18n.t('controllers.course_tutor_details.update.flash.success')
-      redirect_to subject_course_course_tutor_details_url(@subject_course)
+    if @tutor_detail.update_attributes(allowed_params)
+      flash[:success] = I18n.t('controllers.tutor_details.update.flash.success')
+      redirect_to tutor_details_url(@course)
     else
       render action: :edit
     end
@@ -48,24 +48,24 @@ class CourseTutorDetailsController < ApplicationController
   end
 
   def destroy
-    if @course_tutor_detail.destroy
-      flash[:success] = I18n.t('controllers.course_tutor_details.destroy.flash.success')
+    if @tutor_detail.destroy
+      flash[:success] = I18n.t('controllers.tutor_details.destroy.flash.success')
     else
-      flash[:error] = I18n.t('controllers.course_tutor_details.destroy.flash.error')
+      flash[:error] = I18n.t('controllers.tutor_details.destroy.flash.error')
     end
 
-    redirect_to subject_course_course_tutor_details_url(@subject_course)
+    redirect_to tutor_details_url(@course)
   end
 
   protected
 
   def get_variables
-    @course_tutor_detail = CourseTutorDetail.where(id: params[:id]).first if params[:id].to_i > 0
-    @subject_course      = SubjectCourse.where(id: params[:subject_course_id]).first if params[:subject_course_id].to_i > 0
-    @tutor_users         = User.all_tutors.all_in_order
+    @tutor_detail = TutorDetail.where(id: params[:id]).first if params[:id].to_i > 0
+    @course       = Course.where(id: params[:course_id]).first if params[:course_id].to_i > 0
+    @tutor_users  = User.all_tutors.all_in_order
   end
 
   def allowed_params
-    params.require(:course_tutor_detail).permit(:subject_course_id, :user_id, :sorting_order, :title)
+    params.require(:tutor_detail).permit(:course_id, :user_id, :sorting_order, :title)
   end
 end

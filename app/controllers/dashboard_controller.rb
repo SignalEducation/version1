@@ -7,13 +7,13 @@ class DashboardController < ApplicationController
   def show
     @default_group = current_user&.preferred_exam_body&.group || Group.all_active.all_active.first
     @enrollments = current_user.valid_enrollments_in_sitting_order
-    @sculs = current_user.subject_course_user_logs.includes(:enrollments).where(enrollments: { id: nil })
+    @sculs = current_user.course_logs.includes(:enrollments).where(enrollments: { id: nil })
   end
 
   protected
 
   def get_variables
-    @courses = SubjectCourse.all_active.all_in_order
+    @courses = Course.all_active.all_in_order
     seo_title_maker('Dashboard', 'Progress through all your courses will be recorded here.', false)
   end
 end

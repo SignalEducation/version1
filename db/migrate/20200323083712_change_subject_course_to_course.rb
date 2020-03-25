@@ -6,8 +6,7 @@ class ChangeSubjectCourseToCourse < ActiveRecord::Migration[5.2]
     rename_table :course_section_user_logs, :section_logs
     rename_table :course_module_element_user_logs, :module_logs
     rename_table :subject_course_resources, :course_resources
-
-
+    rename_table :course_tutor_details, :tutor_details
 
     rename_column :cbes, :subject_course_id, :course_id
     rename_column :content_page_sections, :subject_course_id, :course_id
@@ -16,7 +15,7 @@ class ChangeSubjectCourseToCourse < ActiveRecord::Migration[5.2]
     rename_column :course_modules, :subject_course_id, :course_id
     rename_column :section_logs, :subject_course_id, :course_id
     rename_column :course_sections, :subject_course_id, :course_id
-    rename_column :course_tutor_details, :subject_course_id, :course_id
+    rename_column :tutor_details, :subject_course_id, :course_id
     rename_column :enrollments, :subject_course_id, :course_id
     rename_column :enrollments, :subject_course_user_log_id, :course_log_id
     rename_column :exam_sittings, :subject_course_id, :course_id
@@ -31,7 +30,6 @@ class ChangeSubjectCourseToCourse < ActiveRecord::Migration[5.2]
     rename_column :course_resources, :subject_course_id, :course_id
     rename_column :course_logs, :subject_course_id, :course_id
     rename_column :section_logs, :subject_course_user_log_id, :course_log_id
-
 
 
     rename_index :module_logs, 'index_cme_user_logs_on_subject_course_id', 'index_module_logs_on_course_id'

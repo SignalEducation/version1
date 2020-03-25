@@ -7,9 +7,9 @@ class CoursesController < ApplicationController
 
   def show
     @vimeo_as_main = vimeo_as_main?
-    @subject_course_user_log = current_user.subject_course_user_logs.for_subject_course(@course.id).last if current_user.subject_course_user_logs.any?
-    @course_section_user_log = @subject_course_user_log.course_section_user_logs.where(course_section_id: @course_section.id).last if @subject_course_user_log
-    @student_exam_track = @course_section_user_log.student_exam_tracks.where(course_module_id: @course_module.id).last if @course_section_user_log
+    @course_logs = current_user.course_logs.for_course(@course.id).last if current_user.course_logs.any?
+    @section_log = @course_logs.section_logs.where(course_section_id: @course_section.id).last if @course_log
+    @student_exam_track = @section_log.student_exam_tracks.where(course_module_id: @course_module.id).last if @section_log
     @group = @course.group
 
     if @course_module_element.is_quiz
@@ -20,20 +20,20 @@ class CoursesController < ApplicationController
   end
 
   def update
-    @course_module_element_user_log =
+    @module_log =
       CourseModuleElementUserLog.
         includes(quiz_attempts: { quiz_question: %i[quiz_contents quiz_solutions]}).
-        find(params[:course_module_element_user_log][:id])
+        find(params[:module_log][:id])
 
-    set_up_course_module_element_user_log
+    set_up_module_log
 
-    if @course_module_element_user_log.save
-      pass_rate = @course_module_element.course_module.subject_course.quiz_pass_rate ? @course_module_element.course_module.subject_course.quiz_pass_rate : 65
-      percentage_score = @course_module_element_user_log.quiz_score_actual || 0
+    if @module_log.save
+      pass_rate = @course_module_element.course_module.course.quiz_pass_rate || 65
+      percentage_score = @module_log.quiz_score_actual || 0
 
       @pass = percentage_score >= pass_rate ? 'Pass' : 'Fail'
 
-      if @course_module && @course_module_element && @course_module_element_user_log
+      if @course_module && @course_module_element && @module_log
         render :show
       else
         redirect_to library_url
@@ -42,7 +42,7 @@ class CoursesController < ApplicationController
 
     else
       # it did not save
-      Rails.logger.error "ERROR: CoursesController#update: Failed to save. CME-UserLog.inspect #{@course_module_element_user_log.errors.inspect}."
+      Rails.logger.error "ERROR: CoursesController#update: Failed to save. CME-UserLog.inspect #{@module_log.errors.inspect}."
       flash[:error] = I18n.t('controllers.courses.create.flash.error')
       redirect_to library_special_link(@course_module.parent)
     end
@@ -78,9 +78,9 @@ class CoursesController < ApplicationController
       is_quiz: false,
       course_module_id: course_module_element.course_module_id,
       course_section_id: course_module_element.course_module.course_section_id,
-      subject_course_id: course_module_element.course_module.course_section.subject_course_id,
-      subject_course_user_log_id: params[:course][:scul_id].presence,
-      course_section_user_log_id: params[:course][:csul_id].presence,
+      course_id: course_module_element.course_module.course_section.course_id,
+      course_log_id: params[:course][:scul_id].presence,
+      section_log_id: params[:course][:csul_id].presence,
       student_exam_track_id: params[:course][:set_id].presence
     )
 
@@ -105,7 +105,7 @@ class CoursesController < ApplicationController
       seo_title_maker("#{@course_module.name} - #{@course.name}", @course_module_element.try(:description), @course_module_element.try(:seo_no_index))
 
       if @course_module_element.is_constructed_response
-        if params[:course_module_element_user_log_id]
+        if params[:module_log_id]
           set_up_previous_constructed_response
         else
           set_up_new_constructed_response
@@ -122,44 +122,44 @@ class CoursesController < ApplicationController
   end
 
   def update_constructed_response_user_log
-    @course_module_element_user_log = CourseModuleElementUserLog.find(params[:course_module_element_user_log][:id])
+    @module_log = CourseModuleElementUserLog.find(params[:module_log][:id])
     respond_to do |format|
       # update_columns ?? to stop callback chain will be called on final submit
-      if @course_module_element_user_log.update_attributes(constructed_response_allowed_params)
-        format.json { render json: @course_module_element_user_log, status: :created }
+      if @module_log.update_attributes(constructed_response_allowed_params)
+        format.json { render json: @module_log, status: :created }
       else
-        format.json { render json: @course_module_element_user_log.errors, status: :unprocessable_entity }
+        format.json { render json: @module_log.errors, status: :unprocessable_entity }
       end
     end
   end
 
   def submit_constructed_response_user_log
-    @course_module_element_user_log = CourseModuleElementUserLog.find(params[:cmeul_id])
-    @subject_course_user_log = @course_module_element_user_log.subject_course_user_log
+    @module_log = CourseModuleElementUserLog.find(params[:cmeul_id])
+    @course_log = @module_log.course_log
 
-    @constructed_response_attempt = @course_module_element_user_log.constructed_response_attempt
+    @constructed_response_attempt = @module_log.constructed_response_attempt
     @constructed_response_attempt.update_attributes(status: 'Completed')
 
-    @course_module_element_user_log.update_attributes(element_completed: true)
+    @module_log.update_attributes(element_completed: true)
 
-    redirect_to course_special_link(@course_module_element_user_log.course_module_element, @subject_course_user_log)
+    redirect_to course_special_link(@module_log.course_module_element, @course_log)
   end
 
   def update_quiz_attempts
-    @course_module_element_user_log = CourseModuleElementUserLog.find(params[:cmeul_id])
-    @course_module_element_user_log.quiz_attempts.create(user_id: current_user.try(:id), quiz_question_id: params[:question_id], quiz_answer_id: params[:answer_id], answer_array: params[:answer_array])
+    @module_log = CourseModuleElementUserLog.find(params[:cmeul_id])
+    @module_log.quiz_attempts.create(user_id: current_user.try(:id), quiz_question_id: params[:question_id], quiz_answer_id: params[:answer_id], answer_array: params[:answer_array])
   end
 
   private
 
   def allowed_params
-    params.require(:course_module_element_user_log).permit(
+    params.require(:module_log).permit(
       :preview_mode,
-      :subject_course_id,
+      :course_id,
       :student_exam_track_id,
-      :subject_course_user_log_id,
+      :course_log_id,
       :course_section_id,
-      :course_section_user_log_id,
+      :section_log_id,
       :course_module_id,
       :course_module_element_id,
       :user_id,
@@ -175,7 +175,7 @@ class CoursesController < ApplicationController
   end
 
   def constructed_response_allowed_params
-    params.require(:course_module_element_user_log).permit(
+    params.require(:module_log).permit(
       constructed_response_attempt_attributes: [
         :id,
         :constructed_response_id,
@@ -209,14 +209,14 @@ class CoursesController < ApplicationController
   end
 
   def set_up_quiz
-    @course_module_element_user_log = CourseModuleElementUserLog.create(
+    @module_log = CourseModuleElementUserLog.create(
       session_guid: current_session_guid,
       course_module_element_id: @course_module_element.id,
       course_module_id: @course_module_element.course_module_id,
       course_section_id: @course_module_element.course_module.course_section_id,
-      subject_course_id: @course_module_element.course_module.subject_course_id,
-      subject_course_user_log_id: @subject_course_user_log.try(:id),
-      course_section_user_log_id: @course_section_user_log.try(:id),
+      course_id: @course_module_element.course_module.course_id,
+      course_log_id: @course_log.try(:id),
+      section_log_id: @section_log.try(:id),
       student_exam_track_id: @student_exam_track.try(:id),
       quiz_result: 'started',
       is_quiz: true,
@@ -238,7 +238,7 @@ class CoursesController < ApplicationController
 
   def set_up_constructed_response_start_screen
     # Order by most recently updated_at
-    @course_module_element_user_logs = @subject_course_user_log.course_module_element_user_logs.for_course_module_element(@course_module_element.id).reverse[0...8] if @subject_course_user_log
+    @module_logs = @course_log.module_logs.for_course_module_element(@course_module_element.id).reverse[0...8] if @course_log
   end
 
   def set_up_new_constructed_response
@@ -247,19 +247,19 @@ class CoursesController < ApplicationController
     @constructed_response = @course_module_element.constructed_response
     @all_questions = @constructed_response.scenario.scenario_questions.all_in_order
     @all_question_ids = @constructed_response.scenario.scenario_questions.all_in_order.map(&:id)
-    @subject_course_user_log = current_user.subject_course_user_logs.for_subject_course(@course.id).last if current_user.subject_course_user_logs.any?
-    @course_section_user_log = @subject_course_user_log.course_section_user_logs.where(course_section_id: @course_section.id).last if @subject_course_user_log
-    @student_exam_track = @course_section_user_log.student_exam_tracks.where(course_module_id: @course_module.id).last if @course_section_user_log
+    @course_log = current_user.course_logs.for_course(@course.id).last if current_user.course_logs.any?
+    @section_log = @course_log.section_logs.where(course_section_id: @course_section.id).last if @course_log
+    @student_exam_track = @section_log.student_exam_tracks.where(course_module_id: @course_module.id).last if @section_log
 
     # Creates CONSTRUCTED_RESPONSE log when page renders
-    @course_module_element_user_log = CourseModuleElementUserLog.create!(
+    @module_log = CourseModuleElementUserLog.create!(
       preview_mode: @preview_mode,
       session_guid: current_session_guid,
       course_module_id: @course_module_element.course_module_id,
       course_section_id: @course_module_element.course_module.course_section_id,
-      subject_course_id: @course_module_element.course_module.course_section.subject_course_id,
-      subject_course_user_log_id: @preview_mode ? nil : @subject_course_user_log.try(:id),
-      course_section_user_log_id: @preview_mode ? nil : @course_section_user_log.try(:id),
+      course_id: @course_module_element.course_module.course_section.course_id,
+      course_log_id: @preview_mode ? nil : @course_log.try(:id),
+      section_log_id: @preview_mode ? nil : @section_log.try(:id),
       student_exam_track_id: @preview_mode ? nil : @student_exam_track.try(:id),
       course_module_element_id: @course_module_element.id,
       time_taken_in_seconds: @course_module_element.estimated_time_in_seconds,
@@ -272,7 +272,7 @@ class CoursesController < ApplicationController
       constructed_response_id: @constructed_response.id,
       scenario_id: @constructed_response.scenario.id,
       course_module_element_id: @constructed_response.course_module_element_id,
-      course_module_element_user_log_id: @course_module_element_user_log.id,
+      module_log_id: @module_log.id,
       user_id: current_user.id,
       status: 'Incomplete',
       original_scenario_text_content: @constructed_response.scenario.text_content,
@@ -316,43 +316,43 @@ class CoursesController < ApplicationController
     @time_allowed = @constructed_response.time_allowed
     @all_question_ids = @constructed_response.scenario.scenario_questions.all_in_order.map(&:id)
 
-    @subject_course_user_log = current_user.subject_course_user_logs.for_subject_course(@course.id).last if current_user.subject_course_user_logs.any?
-    @course_section_user_log = @subject_course_user_log.course_section_user_logs.where(course_section_id: @course_section.id).last if @subject_course_user_log
-    @student_exam_track = @course_section_user_log.student_exam_tracks.where(course_module_id: @course_module.id).last if @course_section_user_log
+    @course_log = current_user.course_logs.for_course(@course.id).last if current_user.course_logs.any?
+    @section_log = @course_log.section_logs.where(course_section_id: @course_section.id).last if @course_log
+    @student_exam_track = @section_log.student_exam_tracks.where(course_module_id: @course_module.id).last if @section_log
 
-    @course_module_element_user_log = CourseModuleElementUserLog.find(params[:course_module_element_user_log_id])
-    @constructed_response_attempt = @course_module_element_user_log.constructed_response_attempt
+    @module_log = CourseModuleElementUserLog.find(params[:module_log_id])
+    @constructed_response_attempt = @module_log.constructed_response_attempt
 
     @all_scenario_question_attempt = @constructed_response_attempt.scenario_question_attempts.all_in_order
     @all_scenario_question_attempt_ids = @constructed_response_attempt.scenario_question_attempts.all_in_order.map(&:id)
   end
 
-  def set_up_course_module_element_user_log
-    @course_module_element_user_log.calculate_score
-    @course_module_element_user_log.update(allowed_params)
-    @course_module_element_user_log.session_guid = current_session_guid
+  def set_up_module_log
+    @module_log.calculate_score
+    @module_log.update(allowed_params)
+    @module_log.session_guid = current_session_guid
 
-    @course_module_element = @course_module_element_user_log.course_module_element
-    @course_module         = @course_module_element_user_log.course_module
-    @course                = @course_module.subject_course
+    @course_module_element = @module_log.course_module_element
+    @course_module         = @module_log.course_module
+    @course                = @course_module.course
     @group                 = @course.group
     @valid_subscription    = current_user.active_subscriptions_for_exam_body(@group.exam_body_id).
                                all_valid.first
-    @course_module_element_user_log.subject_course_id = @course.id
+    @module_log.course_id = @course.id
     @results = true
   end
 
   protected
 
   def check_permission
-    @course = SubjectCourse.find_by(name_url: params[:subject_course_name_url])
+    @course = Course.find_by(name_url: params[:course_name_url])
     @group = @course.group
     @course_section = @course.course_sections.all_active.find_by(name_url: params[:course_section_name_url]) if @course
     @course_module = @course_section.course_modules.all_active.find_by(name_url: params[:course_module_name_url]) if @course_section
     @course_module_element = @course_module.course_module_elements.all_active.find_by(name_url: params[:course_module_element_name_url]) if @course_module
-    @subject_course_user_log = current_user.subject_course_user_logs.for_subject_course(@course.id).all_in_order.last
+    @course_log = current_user.course_logs.for_course(@course.id).all_in_order.last
     @valid_subscription = current_user.active_subscriptions_for_exam_body(@group.exam_body_id).all_valid.first
-    permission = @course_module_element&.available_to_user(current_user, @valid_subscription, @subject_course_user_log)
+    permission = @course_module_element&.available_to_user(current_user, @valid_subscription, @course_log)
 
     return if @course_module_element && permission && permission[:view]
 

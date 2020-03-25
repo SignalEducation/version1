@@ -9,13 +9,13 @@ class CourseModulesController < ApplicationController
   def show; end
 
   def new
-    @course_sections = @subject_course.course_sections.all_in_order
-    if @subject_course && @course_section && @course_section.course_modules.count > 0
+    @course_sections = @course.course_sections.all_in_order
+    if @course && @course_section && @course_section.course_modules.count > 0
       @course_module = CourseModule.new(sorting_order: @course_section.course_modules.all_in_order.last.sorting_order + 1,
-                                        subject_course_id: @subject_course.id,
+                                        course_id: @course.id,
                                         course_section_id: @course_section.id)
-    elsif @subject_course
-      @course_module = CourseModule.new(sorting_order: 1, subject_course_id: @subject_course.id,
+    elsif @course
+      @course_module = CourseModule.new(sorting_order: 1, course_id: @course.id,
                                         course_section_id: @course_section.id)
     else
       redirect_to root_url
@@ -27,14 +27,14 @@ class CourseModulesController < ApplicationController
 
     if @course_module.save
       flash[:success] = I18n.t('controllers.course_modules.create.flash.success')
-      redirect_to subject_course_url(@course_module.subject_course_id)
+      redirect_to course_url(@course_module.course_id)
     else
       render action: :new
     end
   end
 
   def edit
-    @course_sections = @subject_course.course_sections.all_in_order
+    @course_sections = @course.course_sections.all_in_order
   end
 
   def update
@@ -42,7 +42,7 @@ class CourseModulesController < ApplicationController
 
     if @course_module.update_attributes(allowed_params)
       flash[:success] = I18n.t('controllers.course_modules.update.flash.success')
-      redirect_to subject_course_url(@course_module.subject_course_id)
+      redirect_to course_url(@course_module.course_id)
     else
       render action: :edit
     end
@@ -70,17 +70,17 @@ class CourseModulesController < ApplicationController
   protected
 
   def get_variables
-    @subject_course = SubjectCourse.where(id: params[:id]).first if params[:id].to_i > 0
+    @course = Course.where(id: params[:id]).first if params[:id].to_i > 0
     @course_section = CourseSection.where(id: params[:course_section_id]).first if params[:course_section_id].to_i > 0
     @course_module = CourseModule.where(id: params[:course_module_id]).first if params[:course_module_id].to_i > 0
-    @subject_courses = SubjectCourse.all_in_order
+    @courses = Course.all_in_order
     @tutors = User.all_tutors.all_in_order
   end
 
   def allowed_params
     params.require(:course_module).permit(:name, :name_url, :description, :sorting_order,
                                           :estimated_time_in_seconds, :active, :seo_description,
-                                          :seo_no_index, :number_of_questions, :subject_course_id,
+                                          :seo_no_index, :number_of_questions, :course_id,
                                           :highlight_colour, :tuition, :test, :revision, :course_section_id,
                                           :temporary_label)
   end

@@ -76,14 +76,14 @@ class ExamSittingsController < ApplicationController
   def get_variables
     @exam_sitting    = ExamSitting.where(id: params[:id]).first if params[:id].to_i > 0
     @exam_bodies     = ExamBody.all_in_order
-    @subject_courses = SubjectCourse.all_active.all_in_order
+    @courses         = Course.all_active.all_in_order
   end
 
   def allowed_params
-    params.require(:exam_sitting).permit(:name, :subject_course_id, :date, :exam_body_id, :active, :computer_based)
+    params.require(:exam_sitting).permit(:name, :course_id, :date, :exam_body_id, :active, :computer_based)
   end
 
   def update_params
-    params.require(:exam_sitting).permit(:name, :subject_course_id, :exam_body_id, :active)
+    params.require(:exam_sitting).permit(:name, :course_id, :exam_body_id, :active)
   end
 end

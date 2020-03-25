@@ -7,33 +7,33 @@ class SubjectCoursesController < ApplicationController
   before_action :get_variables
 
   def index
-    @subject_courses =
+    @courses =
       if params[:group_id]
-        SubjectCourse.where(group_id: params[:group_id]).all_in_order
+        Course.where(group_id: params[:group_id]).all_in_order
       else
-        SubjectCourse.all_in_order
+        Course.all_in_order
       end
 
-    @subject_courses =
+    @courses =
       if params[:search].to_s.blank?
-        @subject_courses.all_in_order
+        @courses.all_in_order
       else
-        @subject_courses.search(params[:search])
+        @courses.search(params[:search])
       end
   end
 
   def show; end
 
   def new
-    @subject_course = SubjectCourse.new(sorting_order: 1)
+    @course = Course.new(sorting_order: 1)
   end
 
   def create
-    @subject_course = SubjectCourse.new(allowed_params)
+    @course = Course.new(allowed_params)
 
-    if @subject_course.save
-      flash[:success] = I18n.t('controllers.subject_courses.create.flash.success')
-      redirect_to subject_courses_url
+    if @course.save
+      flash[:success] = I18n.t('controllers.courses.create.flash.success')
+      redirect_to courses_url
     else
       render action: :new
     end
@@ -42,9 +42,9 @@ class SubjectCoursesController < ApplicationController
   def edit; end
 
   def update
-    if @subject_course.update_attributes(allowed_params)
-      flash[:success] = I18n.t('controllers.subject_courses.update.flash.success')
-      redirect_to subject_courses_url
+    if @course.update_attributes(allowed_params)
+      flash[:success] = I18n.t('controllers.courses.update.flash.success')
+      redirect_to courses_url
     else
       render action: :edit
     end
@@ -53,84 +53,84 @@ class SubjectCoursesController < ApplicationController
   def reorder
     array_of_ids = params[:array_of_ids]
     array_of_ids.each_with_index do |id, counter|
-      SubjectCourse.find_by(id: id).update_attributes(sorting_order: (counter + 1))
+      Course.find_by(id: id).update_attributes(sorting_order: (counter + 1))
     end
 
     render json: {}, status: :ok
   end
 
   def destroy
-    if @subject_course.destroy
-      flash[:success] = I18n.t('controllers.subject_courses.destroy.flash.success')
+    if @course.destroy
+      flash[:success] = I18n.t('controllers.courses.destroy.flash.success')
     else
-      flash[:error] = I18n.t('controllers.subject_courses.destroy.flash.error')
+      flash[:error] = I18n.t('controllers.courses.destroy.flash.error')
     end
 
-    redirect_to subject_courses_url
+    redirect_to courses_url
   end
 
   def clone
-    if @subject_course.duplicate
+    if @course.duplicate
       flash[:success] = 'Course successfully duplicaded'
     else
       flash[:error] = 'Course not successfully duplicaded'
     end
 
-    redirect_to subject_courses_url
+    redirect_to courses_url
   end
 
   # Non-standard Actions #
   ## Index, New & Create Actions for SubjectCourseResources that belong_to this SubjectCourse ##
-  def subject_course_resources
-    @subject_course = SubjectCourse.find(params[:id])
-    @subject_course_resources = @subject_course.subject_course_resources.all_in_order
+  def course_resources
+    @course = Course.find(params[:id])
+    @course_resources = @course.course_resources.all_in_order
   end
 
-  def new_subject_course_resources
-    @subject_course = SubjectCourse.find(params[:id])
-    @subject_course_resource = SubjectCourseResource.new(subject_course_id: @subject_course.id)
+  def new_course_resources
+    @course = Course.find(params[:id])
+    @course_resource = SubjectCourseResource.new(course_id: @course.id)
   end
 
-  def create_subject_course_resources
-    @subject_course = SubjectCourse.find(params[:id])
-    @subject_course_resource = SubjectCourseResource.new(resource_allowed_params)
-    @subject_course_resource.subject_course_id = @subject_course.id
-    if @subject_course_resource.save
-      flash[:success] = I18n.t('controllers.subject_course_resources.create.flash.success')
-      redirect_to subject_course_url(@subject_course)
+  def create_course_resources
+    @course = Course.find(params[:id])
+    @course_resource = SubjectCourseResource.new(resource_allowed_params)
+    @course_resource.course_id = @course.id
+    if @course_resource.save
+      flash[:success] = I18n.t('controllers.course_resources.create.flash.success')
+      redirect_to course_url(@course)
     else
-      render action: :new_subject_course_resources
+      render action: :new_course_resources
     end
   end
 
   ## Misc Actions ##
   ### Creates list of the Course's CourseModules for Drag&Drop reordering (posted to CourseModules#reorder) ###
   def course_modules_order
-    @course_modules = @subject_course.children
+    @course_modules = @course.children
   end
 
   ### Triggered by a Update Student Logs Button ###
   def update_student_exam_tracks
-    subject_course = SubjectCourse.where(id: params[:id]).first
-    subject_course.update_all_course_logs
+    course = Course.where(id: params[:id]).first
+    course.update_all_course_logs
 
-    redirect_to subject_course_url(subject_course)
+    redirect_to course_url(course)
   end
 
   def trial_content; end
 
   def update_trial_content
-    if @subject_course.update_attributes(nested_trial_params)
-      flash[:success] = I18n.t('controllers.subject_courses.update.flash.success')
-      redirect_to subject_course_url(@subject_course)
+    if @course.update_attributes(nested_trial_params)
+      flash[:success] = I18n.t('controllers.courses.update.flash.success')
+      redirect_to course_url(@course)
     else
       render action: :trial_content
     end
   end
 
-  def export_course_user_logs
-    @course = SubjectCourse.find(params[:id])
-    @sculs = @course.subject_course_user_logs
+  def export_course_logs
+    @course = Course.find(params[:id])
+    @sculs = @course.course_logs
 
     respond_to do |format|
       format.html
@@ -142,7 +142,7 @@ class SubjectCoursesController < ApplicationController
   protected
 
   def get_variables
-    @subject_course = SubjectCourse.find_by(id: params[:id]) if params[:id].to_i > 0
+    @course = Course.find_by(id: params[:id]) if params[:id].to_i > 0
     @groups = Group.all_in_order
     @levels = Level.all
     @tutors = User.all_tutors.all_in_order
@@ -150,7 +150,7 @@ class SubjectCoursesController < ApplicationController
   end
 
   def allowed_params
-    params.require(:subject_course).permit(
+    params.require(:course).permit(
       :name, :name_url, :sorting_order, :active, :description, :release_date,
       :short_description, :exam_body_id, :default_number_of_possible_exam_answers,
       :background_image, :survey_url, :quiz_pass_rate, :group_id, :preview,
@@ -168,8 +168,8 @@ class SubjectCoursesController < ApplicationController
   end
 
   def nested_trial_params
-    params.require(:subject_course).permit(
-      subject_course_resources_attributes: [:id, :available_on_trial],
+    params.require(:course).permit(
+      course_resources_attributes: [:id, :available_on_trial],
       course_sections_attributes: [
         :id,
         course_modules_attributes: [
@@ -182,7 +182,7 @@ class SubjectCoursesController < ApplicationController
   end
 
   def resource_allowed_params
-    params.require(:subject_course_resource).permit(:name, :subject_course_id,
+    params.require(:course_resource).permit(:name, :course_id,
                                                     :description, :file_upload,
                                                     :external_url, :active,
                                                     :available_on_trial)

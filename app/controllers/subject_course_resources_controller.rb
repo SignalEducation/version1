@@ -7,32 +7,32 @@ class SubjectCourseResourcesController < ApplicationController
   before_action :get_variables
 
   def index
-    @subject_course_resources = SubjectCourseResource.paginate(per_page: 50, page: params[:page]).all_in_order
+    @course_resources = SubjectCourseResource.paginate(per_page: 50, page: params[:page]).all_in_order
   end
 
   def show; end
 
   def new
-    @subject_course_resource = SubjectCourseResource.new
+    @course_resource = SubjectCourseResource.new
   end
 
   def edit; end
 
   def create
-    @subject_course_resource = SubjectCourseResource.new(allowed_params)
+    @course_resource = SubjectCourseResource.new(allowed_params)
 
-    if @subject_course_resource.save
-      flash[:success] = I18n.t('controllers.subject_course_resources.create.flash.success')
-      redirect_to course_resources_url(@subject_course_resource.subject_course)
+    if @course_resource.save
+      flash[:success] = I18n.t('controllers.course_resources.create.flash.success')
+      redirect_to course_resources_url(@course_resource.course)
     else
       render action: :new
     end
   end
 
   def update
-    if @subject_course_resource.update_attributes(allowed_params)
-      flash[:success] = I18n.t('controllers.subject_course_resources.update.flash.success')
-      redirect_to course_resources_url(@subject_course_resource.subject_course)
+    if @course_resource.update_attributes(allowed_params)
+      flash[:success] = I18n.t('controllers.course_resources.update.flash.success')
+      redirect_to course_resources_url(@course_resource.course)
     else
       render action: :edit
     end
@@ -47,24 +47,24 @@ class SubjectCourseResourcesController < ApplicationController
   end
 
   def destroy
-    if @subject_course_resource.destroy
-      flash[:success] = I18n.t('controllers.subject_course_resources.destroy.flash.success')
+    if @course_resource.destroy
+      flash[:success] = I18n.t('controllers.course_resources.destroy.flash.success')
     else
-      flash[:error] = I18n.t('controllers.subject_course_resources.destroy.flash.error')
+      flash[:error] = I18n.t('controllers.course_resources.destroy.flash.error')
     end
 
-    redirect_to subject_course_resources_url
+    redirect_to course_resources_url
   end
 
   protected
 
   def get_variables
-    @subject_course_resource = SubjectCourseResource.find_by(id: params[:id]) if params[:id].to_i > 0
-    @subject_courses = SubjectCourse.all_in_order
+    @course_resource = SubjectCourseResource.find_by(id: params[:id]) if params[:id].to_i > 0
+    @courses = Course.all_in_order
   end
 
   def allowed_params
-    params.require(:subject_course_resource).permit(:name, :subject_course_id, :description,
+    params.require(:course_resource).permit(:name, :course_id, :description,
                                                     :file_upload, :external_url, :active,
                                                     :sorting_order, :available_on_trial)
   end

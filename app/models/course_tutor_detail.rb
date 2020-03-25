@@ -11,7 +11,7 @@
 #  updated_at        :datetime         not null
 #
 
-class CourseTutorDetail < ApplicationRecord
+class TutorDetail < ApplicationRecord
 
   # Constants
 

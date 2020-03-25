@@ -36,7 +36,7 @@ class ContentPagesController < ApplicationController
         text = "<h3>#{course.name}</h3><p style="">TODAY'S TOPIC IS <b>Professional and Ethical Considerations</b>&nbsp;- CLICK HERE TO GO TO YOUR COURSE PAGE AND ATTEMPT&nbsp;the <b>yes</b>&nbsp;</b><span>question</span>. remember TO MARK YOURSELF AGAINST THE TUTOR SOLUTION PROVIDED.<br></p>"
 
         @content_page.content_page_sections.build(text_content: text,
-                                                  subject_course_id: course.id,
+                                                  course_id: course.id,
                                                   sorting_order: index + 1,
                                                   panel_colour: course.highlight_colour)
       end
@@ -92,6 +92,6 @@ class ContentPagesController < ApplicationController
                                          content_page_sections_attributes: [:id, :text_content,
                                                                             :panel_colour,
                                                                             :sorting_order,
-                                                                            :subject_course_id, :_destroy])
+                                                                            :course_id, :_destroy])
   end
 end

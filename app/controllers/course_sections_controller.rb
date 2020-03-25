@@ -7,14 +7,14 @@ class CourseSectionsController < ApplicationController
   before_action :get_variables
 
   def new
-    @subject_course = SubjectCourse.where(id: params[:id]).first
+    @course = Course.where(id: params[:id]).first
 
-    if @subject_course && @subject_course.course_sections.count > 0
-      @course_section = CourseSection.new(sorting_order: ((@subject_course.course_sections.any? && @subject_course.course_sections.all_in_order.last.sorting_order) ? @subject_course.course_sections.all_in_order.last.sorting_order + 1 : 1), subject_course_id: @subject_course.id)
-    elsif @subject_course
-      @course_section = CourseSection.new(sorting_order: 1, subject_course_id: @subject_course.id)
+    if @course && @course.course_sections.count > 0
+      @course_section = CourseSection.new(sorting_order: ((@course.course_sections.any? && @course.course_sections.all_in_order.last.sorting_order) ? @course.course_sections.all_in_order.last.sorting_order + 1 : 1), course_id: @course.id)
+    elsif @course
+      @course_section = CourseSection.new(sorting_order: 1, course_id: @course.id)
     else
-      redirect_to subject_course_url
+      redirect_to course_url
     end
   end
 
@@ -41,7 +41,7 @@ class CourseSectionsController < ApplicationController
   end
 
   def reorder_list
-    @subject_course = SubjectCourse.where(id: params[:course_id]).first
+    @course = Course.where(id: params[:course_id]).first
   end
 
   def reorder
@@ -67,12 +67,12 @@ class CourseSectionsController < ApplicationController
 
   def get_variables
     @course_section  = CourseSection.where(id: params[:id]).first if params[:id].to_i > 0
-    @subject_courses = SubjectCourse.all_in_order
+    @courses         = Course.all_in_order
     @tutors          = User.all_tutors.all_in_order
   end
 
   def allowed_params
-    params.require(:course_section).permit(:name, :name_url, :sorting_order, :active, :subject_course_id,
+    params.require(:course_section).permit(:name, :name_url, :sorting_order, :active, :course_id,
                                            :counts_towards_completion, :assumed_knowledge)
   end
 end

@@ -68,7 +68,7 @@ class OrdersController < ApplicationController
 
   def order_params
     params.require(:order).permit(
-      :subject_course_id, :product_id, :user_id, :stripe_payment_method_id,
+      :course_id, :product_id, :user_id, :stripe_payment_method_id,
       :use_paypal, :paypal_approval_url, :stripe_payment_intent_id
     )
   end

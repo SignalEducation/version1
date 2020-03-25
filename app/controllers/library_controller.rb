@@ -42,26 +42,26 @@ class LibraryController < ApplicationController
     tag_manager_data_layer(@course.name)
     seo_title_maker((@course.seo_title.presence || @course.name), @course.seo_description, nil)
     @form_type = "Course Tutor Question. Course: #{@course.name}"
-    @course_tutor_details = @course.course_tutor_details.all_in_order
+    @tutor_details = @course.tutor_details.all_in_order
 
     if @course && @exam_body.active && !@course.preview
       if current_user
-        @valid_subscription      = current_user.active_subscriptions_for_exam_body(@exam_body.id).all_valid.first
-        @subject_course_user_log = current_user.subject_course_user_logs.for_subject_course(@course.id).all_in_order.last
+        @course_log         = current_user.course_logs.for_course(@course.id).all_in_order.last
+        @valid_subscription = current_user.active_subscriptions_for_exam_body(@exam_body.id).all_valid.first
 
-        if @subject_course_user_log.present?
-          @completed_student_exam_tracks = @subject_course_user_log.student_exam_tracks.all_complete
+        if @course_log.present?
+          @completed_student_exam_tracks = @course_log.student_exam_tracks.all_complete
           @completed_course_module_ids   = @completed_student_exam_tracks.map(&:course_module_id)
-          @cmeuls                        = @subject_course_user_log.course_module_element_user_logs
+          @cmeuls                        = @course_log.module_logs
           @cmeuls_ids                    = @cmeuls.map(&:course_module_element_id)
           @completed_cmeuls              = @cmeuls.all_completed
           @completed_cmeuls_cme_ids      = @completed_cmeuls.map(&:course_module_element_id)
 
           if @exam_body.has_sittings
             @exam_body_user_details = get_exam_body_user_details
-            @enrollment = @subject_course_user_log.enrollments.for_course_and_user(@course.id, current_user.id).all_in_order.last
+            @enrollment = @course_log.enrollments.for_course_and_user(@course.id, current_user.id).all_in_order.last
             if @enrollment&.expired || !@enrollment
-              get_enrollment_form_variables(@course, @subject_course_user_log)
+              get_enrollment_form_variables(@course, @course_log)
             end
           end
 
@@ -88,8 +88,8 @@ class LibraryController < ApplicationController
   protected
 
   def check_course_available
-    @course = SubjectCourse.includes(course_modules: { course_module_elements: :related_course_module_element }).
-                find_by(name_url: params[:subject_course_name_url])
+    @course = Course.includes(course_modules: { course_module_elements: :related_course_module_element }).
+                find_by(name_url: params[:course_name_url])
 
     if @course&.active
       @group = @course.group
@@ -134,7 +134,7 @@ class LibraryController < ApplicationController
 
     @products = @mock_exam_products + @correction_pack_products
 
-    @subject_course_resources = @course.subject_course_resources.all_active.all_in_order
+    @course_resources = @course.course_resources.all_active.all_in_order
 
     return unless @country && @currency_id
 
@@ -149,15 +149,15 @@ class LibraryController < ApplicationController
     if course.computer_based
       @computer_exam_sitting = ExamSitting.where(active: true, computer_based: true,
                                                  exam_body_id: course.exam_body_id,
-                                                 subject_course_id: course.id).all_in_order.first # Should only be one
+                                                 course_id: course.id).all_in_order.first # Should only be one
     else
       @exam_sittings = ExamSitting.where(active: true, computer_based: false,
-                                         subject_course_id: course.id,
+                                         course_id: course.id,
                                          exam_body_id: course.exam_body_id).all_in_order
     end
 
-    @new_enrollment = Enrollment.new(subject_course_user_log_id: scul.try(:id),
-                                     subject_course_id: course.id, notifications: false,
+    @new_enrollment = Enrollment.new(course_log_id: scul.try(:id),
+                                     course_id: course.id, notifications: false,
                                      exam_body_id: course.exam_body_id)
   end
 end

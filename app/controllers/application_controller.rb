@@ -227,15 +227,15 @@ class ApplicationController < ActionController::Base
     # used for tutor-facing links
     case the_thing
     when CourseModule, CourseSection
-      subject_course_url(the_thing.subject_course)
-    when SubjectCourse
-      new_course_modules_for_subject_course_and_name_url(the_thing.name_url)
+      course_url(the_thing.course)
+    when Course
+      new_modules_for_course_and_name_url(the_thing.name_url)
     when ContentPage
       content_pages_url
     when CourseModuleElement
-      the_thing.id.present? ? edit_course_module_element_url(the_thing.id) : subject_course_url
+      the_thing.id.present? ? edit_course_module_element_url(the_thing.id) : course_url
     else
-      subject_course_url
+      course_url
     end
   end
 
@@ -244,15 +244,15 @@ class ApplicationController < ActionController::Base
   def content_activation_special_link(the_thing)
     case the_thing
     when CourseModuleElement, CourseModule
-      subject_course_url(the_thing.course_module.subject_course)
-    when SubjectCourse
-      subject_course_url
+      course_url(the_thing.course_module.course)
+    when Course
+      course_url
     when ContentPage
       content_pages_url
-    when SubjectCourseResource
-      course_resources_url(the_thing.subject_course)
+    when CourseResource
+      course_resources_url(the_thing.course)
     else
-      subject_course_url
+      course_url
     end
   end
 
@@ -263,7 +263,7 @@ class ApplicationController < ActionController::Base
     case the_thing
     when Group
       library_group_url(the_thing.name_url)
-    when SubjectCourse
+    when Course
       the_thing.parent ? library_course_url(the_thing.parent.name_url, the_thing.name_url) : library_url
     when CourseModule
       library_course_url(the_thing.parent.parent.name_url, the_thing.parent.name_url)
@@ -276,11 +276,11 @@ class ApplicationController < ActionController::Base
 
   # Enrollment Navigation Links
   def course_enrollment_special_link(course_id)
-    subject_course = SubjectCourse.where(id: course_id).first
+    course = Course.where(id: course_id).first
 
-    if subject_course&.active
-      library_course_url(subject_course.parent.name_url,
-                         subject_course.name_url,
+    if course&.active
+      library_course_url(course.parent.name_url,
+                         course.name_url,
                          anchor: :bootcamp)
     else
       student_dashboard_url
@@ -291,8 +291,8 @@ class ApplicationController < ActionController::Base
 
   # Library Navigation Links
   def navigation_special_link(the_thing)
-    library_course_url(the_thing.course_module.course_section.subject_course.group.name_url,
-                       the_thing.course_module.course_section.subject_course.name_url,
+    library_course_url(the_thing.course_module.course_section.course.group.name_url,
+                       the_thing.course_module.course_section.course.name_url,
                        anchor: the_thing.course_module.course_section.name_url,
                        cm: the_thing.course_module.id)
   end
@@ -301,15 +301,15 @@ class ApplicationController < ActionController::Base
 
   def course_special_link(the_thing, scul = nil)
     case the_thing
-    when SubjectCourse
+    when Course
       library_course_url(the_thing.parent.name_url, the_thing.name_url)
     when CourseSection
-      library_course_url(the_thing.subject_course.group.name_url,
-                         the_thing.subject_course.name_url,
+      library_course_url(the_thing.course.group.name_url,
+                         the_thing.course.name_url,
                          anchor: the_thing.name_url)
     when CourseModule
-      library_course_url(the_thing.course_section.subject_course.group.name_url,
-                         the_thing.course_section.subject_course.name_url,
+      library_course_url(the_thing.course_section.course.group.name_url,
+                         the_thing.course_section.course.name_url,
                          the_thing.course_section.name_url,
                          anchor: the_thing.name_url)
     when CourseModuleElement
@@ -325,15 +325,15 @@ class ApplicationController < ActionController::Base
     return new_student_url unless current_user
 
     if current_user.non_verified_user? # current_user.non_verified_user?
-      library_course_url(the_thing.course_module.course_section.subject_course.group.name_url,
-                         the_thing.course_module.course_section.subject_course.name_url,
+      library_course_url(the_thing.course_module.course_section.course.group.name_url,
+                         the_thing.course_module.course_section.course.name_url,
                          anchor: 'verification-required')
     elsif the_thing.related_course_module_element_id && the_thing.previous_cme_restriction(scul)
-      library_course_url(the_thing.course_module.course_section.subject_course.group.name_url,
-                         the_thing.course_module.course_section.subject_course.name_url,
+      library_course_url(the_thing.course_module.course_section.course.group.name_url,
+                         the_thing.course_module.course_section.course.name_url,
                          anchor: 'related-lesson-restriction')
     else
-      show_course_url(the_thing.course_module.course_section.subject_course.name_url,
+      show_course_url(the_thing.course_module.course_section.course.name_url,
                       the_thing.course_module.course_section.name_url,
                       the_thing.course_module.name_url,
                       the_thing.name_url)

@@ -49,7 +49,7 @@ class UserVerificationsController < ApplicationController
     seo_title_maker("Welcome to learnsignal #{@group.name}", @group.seo_description, nil)
 
     @levels = @group.levels.all_active
-    @courses = @group.subject_courses.all_active.where(on_welcome_page: true)
+    @courses = @group.courses.all_active.where(on_welcome_page: true)
 
     ip_country = IpAddress.get_country(request.remote_ip)
     country = ip_country ? ip_country : Country.find_by(name: 'United Kingdom')
@@ -84,7 +84,7 @@ class UserVerificationsController < ApplicationController
 
   def get_variables
     @subscription_plan_categories = SubscriptionPlanCategory.all_in_order
-    @subject_courses = SubjectCourse.all_active.all_in_order
+    @courses = Course.all_active.all_in_order
     @groups = Group.all_active.all_in_order
   end
 end

@@ -10,7 +10,7 @@ class CourseModuleElementsController < ApplicationController
     # Previewing a Quiz as Content Manager or Admin
     @course_module_element = CourseModuleElement.find(params[:id])
     if @course_module_element.is_quiz
-      @course_module_element_user_log = CourseModuleElementUserLog.new(
+      @module_log = CourseModuleElementUserLog.new(
               course_module_id: @course_module_element.course_module_id,
               course_module_element_id: @course_module_element.id,
               user_id: current_user.try(:id),
@@ -18,7 +18,7 @@ class CourseModuleElementsController < ApplicationController
       )
       @number_of_questions = @course_module_element.course_module_element_quiz.number_of_questions
       @number_of_questions.times do
-        @course_module_element_user_log.quiz_attempts.build(user_id: current_user.try(:id))
+        @module_log.quiz_attempts.build(user_id: current_user.try(:id))
       end
       all_ids_random = @course_module_element.course_module_element_quiz.all_ids_random
       all_ids_ordered = @course_module_element.course_module_element_quiz.all_ids_ordered
@@ -75,7 +75,7 @@ class CourseModuleElementsController < ApplicationController
       @course_modules = cm.parent.active_children
       set_related_cmes
     else
-      redirect_to subject_course_url(@course_module_element.parent.parent)
+      redirect_to course_url(@course_module_element.parent.parent)
     end
   end
 
@@ -96,7 +96,7 @@ class CourseModuleElementsController < ApplicationController
       elsif params[:commit] == I18n.t('views.course_module_element_quizzes.form.preview_button')
         redirect_to @course_module_element.course_module_element_quiz.quiz_questions.last
       else
-        redirect_to show_course_module_url(@course_module_element.course_module.subject_course_id, @course_module_element.course_module.course_section.id, @course_module_element.course_module.id)
+        redirect_to show_course_module_url(@course_module_element.course_module.course_id, @course_module_element.course_module.course_section.id, @course_module_element.course_module.id)
       end
     else
       if params[:commit] == I18n.t('views.course_module_element_quizzes.form.advanced_setup_link')
@@ -169,7 +169,7 @@ class CourseModuleElementsController < ApplicationController
       flash[:error] = 'Course Element was not successfully duplicaded'
     end
 
-    redirect_to show_course_module_path(cme.course_module.subject_course_id,
+    redirect_to show_course_module_path(cme.course_module.course_id,
                                         cme.course_module.course_section.id, cme.course_module.id)
   end
 
