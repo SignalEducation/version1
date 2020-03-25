@@ -76,12 +76,16 @@ class LibraryController < ApplicationController
   end
 
   def user_contact_form
-    Zendesk::RequestWorker.perform_async(params[:full_name],
-                                         params[:email_address],
-                                         params[:type],
-                                         params[:question])
+    if verify_recaptcha
+      Zendesk::RequestWorker.perform_async(params[:full_name],
+                                           params[:email_address],
+                                           params[:type],
+                                           params[:question])
 
-    flash[:success] = 'Thank you! Your submission was successful. We will contact you shortly.'
+      flash[:success] = 'Thank you! Your submission was successful. We will contact you shortly.'
+    else
+      flash[:error] = 'Your submission was not successful. Please try again.'
+    end
     redirect_to request.referer || root_url
   end
 
