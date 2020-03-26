@@ -261,11 +261,11 @@ class Invoice < ApplicationRecord
   def set_vat_rate
     country = user.country
 
-    if country&.vat_codes.any?
-      vat_code = country.vat_codes.first
-      vat_rate_id = VatRate.find_by(vat_code_id: vat_code.id).try(:id)
-      update_attribute(:vat_rate_id, vat_rate_id) if vat_rate_id
-    end
+    return unless country&.vat_codes&.any?
+
+    vat_code = country.vat_codes.first
+    vat_rate_id = VatRate.find_by(vat_code_id: vat_code.id).try(:id)
+    update_attribute(:vat_rate_id, vat_rate_id) if vat_rate_id
   end
 
   def set_issued_at
