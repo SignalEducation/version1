@@ -125,6 +125,7 @@ class StudentExamTrack < ApplicationRecord
 
   # After Save
   def update_course_section_user_log
+    course_section_user_log.latest_course_module_element_id = latest_course_module_element_id
     course_section_user_log.recalculate_csul_completeness # Includes a save!
   end
 
