@@ -20,10 +20,9 @@ class CoursesController < ApplicationController
   end
 
   def update
-    @module_log =
-      CourseModuleElementUserLog.
-        includes(quiz_attempts: { quiz_question: %i[quiz_contents quiz_solutions]}).
-        find(params[:module_log][:id])
+    @module_log = ModuleLog.
+                    includes(quiz_attempts: { quiz_question: %i[quiz_contents quiz_solutions] }).
+                    find(params[:module_log][:id])
 
     set_up_module_log
 
@@ -50,7 +49,7 @@ class CoursesController < ApplicationController
 
   def video_watched_data
     cme                = CourseModuleElement.find(params[:cme_id])
-    video_cme_user_log = CourseModuleElementUserLog.find(params[:video_log_id])
+    video_cme_user_log = ModuleLog.find(params[:video_log_id])
     update_params      = { element_completed: true, time_taken_in_seconds: cme&.duration&.to_i }
 
     respond_to do |format|
@@ -68,7 +67,7 @@ class CoursesController < ApplicationController
 
   def create_video_user_log
     course_module_element = CourseModuleElement.find(params[:course][:cmeId])
-    video_cme_user_log    = CourseModuleElementUserLog.new(
+    video_cme_user_log    = ModuleLog.new(
       course_module_element_id: course_module_element.id,
       user_id: current_user.try(:id),
       session_guid: current_session_guid,
@@ -122,7 +121,7 @@ class CoursesController < ApplicationController
   end
 
   def update_constructed_response_user_log
-    @module_log = CourseModuleElementUserLog.find(params[:module_log][:id])
+    @module_log = ModuleLog.find(params[:module_log][:id])
     respond_to do |format|
       # update_columns ?? to stop callback chain will be called on final submit
       if @module_log.update_attributes(constructed_response_allowed_params)
@@ -134,7 +133,7 @@ class CoursesController < ApplicationController
   end
 
   def submit_constructed_response_user_log
-    @module_log = CourseModuleElementUserLog.find(params[:cmeul_id])
+    @module_log = ModuleLog.find(params[:cmeul_id])
     @course_log = @module_log.course_log
 
     @constructed_response_attempt = @module_log.constructed_response_attempt
@@ -146,7 +145,7 @@ class CoursesController < ApplicationController
   end
 
   def update_quiz_attempts
-    @module_log = CourseModuleElementUserLog.find(params[:cmeul_id])
+    @module_log = ModuleLog.find(params[:cmeul_id])
     @module_log.quiz_attempts.create(user_id: current_user.try(:id), quiz_question_id: params[:question_id], quiz_answer_id: params[:answer_id], answer_array: params[:answer_array])
   end
 
@@ -209,7 +208,7 @@ class CoursesController < ApplicationController
   end
 
   def set_up_quiz
-    @module_log = CourseModuleElementUserLog.create(
+    @module_log = ModuleLog.create(
       session_guid: current_session_guid,
       course_module_element_id: @course_module_element.id,
       course_module_id: @course_module_element.course_module_id,
@@ -252,7 +251,7 @@ class CoursesController < ApplicationController
     @student_exam_track = @section_log.student_exam_tracks.where(course_module_id: @course_module.id).last if @section_log
 
     # Creates CONSTRUCTED_RESPONSE log when page renders
-    @module_log = CourseModuleElementUserLog.create!(
+    @module_log = ModuleLog.create!(
       preview_mode: @preview_mode,
       session_guid: current_session_guid,
       course_module_id: @course_module_element.course_module_id,
@@ -320,7 +319,7 @@ class CoursesController < ApplicationController
     @section_log = @course_log.section_logs.where(course_section_id: @course_section.id).last if @course_log
     @student_exam_track = @section_log.student_exam_tracks.where(course_module_id: @course_module.id).last if @section_log
 
-    @module_log = CourseModuleElementUserLog.find(params[:module_log_id])
+    @module_log = ModuleLog.find(params[:module_log_id])
     @constructed_response_attempt = @module_log.constructed_response_attempt
 
     @all_scenario_question_attempt = @constructed_response_attempt.scenario_question_attempts.all_in_order

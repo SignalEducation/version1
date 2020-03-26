@@ -1,11 +1,11 @@
 class ChangeSubjectCourseToCourse < ActiveRecord::Migration[5.2]
   def change
     rename_table :subject_courses, :courses
-    rename_table :groups_subject_courses, :groups_courses
     rename_table :subject_course_user_logs, :course_logs
-    rename_table :course_section_user_logs, :section_logs
-    rename_table :course_module_element_user_logs, :module_logs
     rename_table :subject_course_resources, :course_resources
+    rename_table :groups_subject_courses, :groups_courses
+    rename_table :course_module_element_user_logs, :module_logs
+    rename_table :course_section_user_logs, :section_logs
     rename_table :course_tutor_details, :tutor_details
 
     rename_column :cbes, :subject_course_id, :course_id

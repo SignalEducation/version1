@@ -10,7 +10,7 @@ class CourseModuleElementsController < ApplicationController
     # Previewing a Quiz as Content Manager or Admin
     @course_module_element = CourseModuleElement.find(params[:id])
     if @course_module_element.is_quiz
-      @module_log = CourseModuleElementUserLog.new(
+      @module_log = ModuleLog.new(
               course_module_id: @course_module_element.course_module_id,
               course_module_element_id: @course_module_element.id,
               user_id: current_user.try(:id),

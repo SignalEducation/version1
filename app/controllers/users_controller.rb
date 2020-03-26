@@ -127,7 +127,7 @@ class UsersController < ApplicationController
   end
 
   def course_log_details
-    @scul         = SubjectCourseUserLog.find(params[:scul_id])
+    @scul         = CourseLog.find(params[:scul_id])
     @latest_cmeul = @scul.module_logs.includes(:course_module_element).order(:created_at).first
   end
 

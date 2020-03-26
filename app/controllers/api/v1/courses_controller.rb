@@ -2,7 +2,7 @@
 
 module Api
   module V1
-    class SubjectCoursesController < Api::V1::ApplicationController
+    class CoursesController < Api::V1::ApplicationController
       def index
         @courses = Course.all_active.all_in_order
         render 'courses/index.json'

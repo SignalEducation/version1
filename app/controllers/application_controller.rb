@@ -341,7 +341,7 @@ class ApplicationController < ActionController::Base
   end
 
   def course_resource_special_link(the_thing)
-    if the_thing.class == SubjectCourseResource
+    if the_thing.class == CourseResource
       the_thing.external_url.presence || the_thing.file_upload.url
     else
       library_special_link(the_thing)

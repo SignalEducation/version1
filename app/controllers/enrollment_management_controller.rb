@@ -74,6 +74,6 @@ class EnrollmentManagementController < ApplicationController
   end
 
   def create_course_log(course_id, user_id)
-    SubjectCourseUserLog.create!(user_id: user_id, course_id: course_id)
+    CourseLog.create!(user_id: user_id, course_id: course_id)
   end
 end

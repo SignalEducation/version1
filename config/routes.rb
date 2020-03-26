@@ -63,6 +63,12 @@ Rails.application.routes.draw do
     end
 
     post 'search_exercises', to: 'exercises#index', as: :search_exercises
+
+    # Courses
+    resources :courses, concerns: :supports_reordering do
+      resources :tutor_details, concerns: :supports_reordering
+    end
+    resources :course_resources, concerns: :supports_reordering
   end
 
   # all standard, user-facing "resources" go inside this scope
@@ -201,11 +207,9 @@ Rails.application.routes.draw do
     get 'courses/:id/new_course_resources',                                                   to: 'courses#new_course_resources',       as: :new_course_resources
     post 'courses/:id/create_course_resources',                                               to: 'courses#create_course_resources',    as: :create_course_resources
     post 'courses/:id/clone',                                                                 to: 'courses#clone',                      as: :course_clone
-    resources :courses, concerns: :supports_reordering do
-      resources :course_tutor_details, concerns: :supports_reordering
-    end
 
-    resources :course_resources, concerns: :supports_reordering
+
+
     resources :course_sections, concerns: :supports_reordering
     resources :course_modules, concerns: :supports_reordering
     resources :course_module_elements, except: [:index], concerns: :supports_reordering do
