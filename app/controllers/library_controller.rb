@@ -88,7 +88,7 @@ class LibraryController < ApplicationController
   protected
 
   def check_course_available
-    @course = Course.includes(course_modules: { course_module_elements: :related_course_module_element }).
+    @course = Course.includes(lessons: { course_module_elements: :related_course_module_element }).
                 find_by(name_url: params[:course_name_url])
 
     if @course&.active

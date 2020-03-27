@@ -187,26 +187,26 @@ Rails.application.routes.draw do
       get ':course_name_url', to: redirect('/%{locale}/library/%{course_name_url}'), on: :collection
     end
 
-    get 'courses/:course_name_url/:course_section_name_url/:course_module_name_url(/:course_module_element_name_url)', to: 'courses#show', as: 'show_course'
+    get 'courses/:course_name_url/:course_section_name_url/:lesson_name_url(/:course_module_element_name_url)', to: 'courses#show', as: 'show_course'
 
     get 'submit_constructed_response_user_log/:cmeul_id', to: 'courses#submit_constructed_response_user_log', as: :submit_constructed_response_user_log
-    get 'courses_constructed_response/:course_name_url/:course_section_name_url/:course_module_name_url/:course_module_element_name_url(/:course_module_element_user_log_id)', to: 'courses#show_constructed_response', as: :courses_constructed_response
+    get 'courses_constructed_response/:course_name_url/:course_section_name_url/:lesson_name_url/:course_module_element_name_url(/:course_module_element_user_log_id)', to: 'courses#show_constructed_response', as: :courses_constructed_response
 
-    get '/export_course_log_data/:id',                                                        to: 'courses#export_course_user_logs',    as: :export_course_log_data
-    get 'course_modules/:course_name_url',                                                    to: 'course_modules#new',                 as: :new_course_modules_for_course_and_name
-    get 'courses/:id/new_course_section',                                                     to: 'course_sections#new',                as: :new_course_section
-    get 'courses/:id/course_section/:course_section_id/new_course_module',                    to: 'course_modules#new',                 as: :new_course_module
-    get 'courses/:id/course_section/:course_section_id/edit_course_module/:course_module_id', to: 'course_modules#edit',                as: :edit_course_module
-    get 'courses/:id/course_section/:course_section_id/course_module/:course_module_id',      to: 'course_modules#show',                as: :show_course_module
-    get 'courses/:course_id/reorder_course_sections',                                         to: 'course_sections#reorder_list',       as: :reorder_course_sections
-    get 'courses/:id/course_modules_order',                                                   to: 'courses#course_modules_order',       as: :course_modules_order
-    post 'courses/:id/update_user_logs',                                                      to: 'courses#update_student_exam_tracks', as: :course_update_user_logs
-    get 'courses/:id/trial_content',                                                          to: 'courses#trial_content',              as: :course_trial_content
-    patch 'courses/:id/trial_content',                                                        to: 'courses#update_trial_content',       as: :course_update_trial_content
-    get 'courses/:id/resources',                                                              to: 'courses#course_resources',           as: :course_resources
-    get 'courses/:id/new_course_resources',                                                   to: 'courses#new_course_resources',       as: :new_course_resources
-    post 'courses/:id/create_course_resources',                                               to: 'courses#create_course_resources',    as: :create_course_resources
-    post 'courses/:id/clone',                                                                 to: 'courses#clone',                      as: :course_clone
+    get '/export_course_log_data/:id',                                          to: 'courses#export_course_user_logs',    as: :export_course_log_data
+    get 'lessons/:course_name_url',                                             to: 'lessons#new',                        as: :new_lessons_for_course_and_name
+    get 'courses/:id/new_course_section',                                       to: 'course_sections#new',                as: :new_course_section
+    get 'courses/:id/course_section/:course_section_id/new_lesson',             to: 'lessons#new',                        as: :new_lesson
+    get 'courses/:id/course_section/:course_section_id/edit_lesson/:lesson_id', to: 'lessons#edit',                       as: :edit_lesson
+    get 'courses/:id/course_section/:course_section_id/lesson/:lesson_id',      to: 'lessons#show',                       as: :show_lesson
+    get 'courses/:course_id/reorder_course_sections',                           to: 'course_sections#reorder_list',       as: :reorder_course_sections
+    get 'courses/:id/lessons_order',                                            to: 'courses#lessons_order',              as: :lessons_order
+    post 'courses/:id/update_user_logs',                                        to: 'courses#update_student_exam_tracks', as: :course_update_user_logs
+    get 'courses/:id/trial_content',                                            to: 'courses#trial_content',              as: :course_trial_content
+    patch 'courses/:id/trial_content',                                          to: 'courses#update_trial_content',       as: :course_update_trial_content
+    get 'courses/:id/resources',                                                to: 'courses#course_resources',           as: :course_resources
+    get 'courses/:id/new_course_resources',                                     to: 'courses#new_course_resources',       as: :new_course_resources
+    post 'courses/:id/create_course_resources',                                 to: 'courses#create_course_resources',    as: :create_course_resources
+    post 'courses/:id/clone',                                                   to: 'courses#clone',                      as: :course_clone
 
 
 

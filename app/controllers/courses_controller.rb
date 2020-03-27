@@ -347,7 +347,7 @@ class CoursesController < ApplicationController
     @course = Course.find_by(name_url: params[:course_name_url])
     @group = @course.group
     @course_section = @course.course_sections.all_active.find_by(name_url: params[:course_section_name_url]) if @course
-    @course_module = @course_section.course_modules.all_active.find_by(name_url: params[:course_module_name_url]) if @course_section
+    @course_module = @course_section.lessons.all_active.find_by(name_url: params[:course_module_name_url]) if @course_section
     @course_module_element = @course_module.course_module_elements.all_active.find_by(name_url: params[:course_module_element_name_url]) if @course_module
     @course_log = current_user.course_logs.for_course(@course.id).all_in_order.last
     @valid_subscription = current_user.active_subscriptions_for_exam_body(@group.exam_body_id).all_valid.first

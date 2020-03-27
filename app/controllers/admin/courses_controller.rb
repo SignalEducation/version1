@@ -106,8 +106,8 @@ module Admin
 
     ## Misc Actions ##
     ### Creates list of the Course's CourseModules for Drag&Drop reordering (posted to CourseModules#reorder) ###
-    def course_modules_order
-      @course_modules = @course.children
+    def lessons_order
+      @lessons = @course.children
     end
 
     ### Triggered by a Update Student Logs Button ###
@@ -159,7 +159,7 @@ module Admin
         :seo_title, :seo_description, :has_correction_packs, :short_description,
         :on_welcome_page, :unit_label, :level_id,
         course_sections_attributes: [
-          course_modules_attributes: [
+          lessons_attributes: [
             course_module_elements_attributes: [
               :available_on_trial
             ]
@@ -173,7 +173,7 @@ module Admin
         course_resources_attributes: [:id, :available_on_trial],
         course_sections_attributes: [
           :id,
-          course_modules_attributes: [
+          lessons_attributes: [
             :id,
             course_module_elements_attributes: [:id, :available_on_trial]
           ]

@@ -10,8 +10,8 @@ class CourseModulesController < ApplicationController
 
   def new
     @course_sections = @course.course_sections.all_in_order
-    if @course && @course_section && @course_section.course_modules.count > 0
-      @course_module = CourseModule.new(sorting_order: @course_section.course_modules.all_in_order.last.sorting_order + 1,
+    if @course && @course_section && @course_section.lessons.count > 0
+      @course_module = CourseModule.new(sorting_order: @course_section.lessons.all_in_order.last.sorting_order + 1,
                                         course_id: @course.id,
                                         course_section_id: @course_section.id)
     elsif @course
@@ -26,7 +26,7 @@ class CourseModulesController < ApplicationController
     @course_module = CourseModule.new(allowed_params)
 
     if @course_module.save
-      flash[:success] = I18n.t('controllers.course_modules.create.flash.success')
+      flash[:success] = I18n.t('controllers.lessons.create.flash.success')
       redirect_to course_url(@course_module.course_id)
     else
       render action: :new
@@ -41,7 +41,7 @@ class CourseModulesController < ApplicationController
     @course_module = CourseModule.where(id: params[:id]).first
 
     if @course_module.update_attributes(allowed_params)
-      flash[:success] = I18n.t('controllers.course_modules.update.flash.success')
+      flash[:success] = I18n.t('controllers.lessons.update.flash.success')
       redirect_to course_url(@course_module.course_id)
     else
       render action: :edit
@@ -60,9 +60,9 @@ class CourseModulesController < ApplicationController
     @course_module = CourseModule.find(params[:id])
 
     if @course_module.destroy
-      flash[:success] = I18n.t('controllers.course_modules.destroy.flash.success')
+      flash[:success] = I18n.t('controllers.lessons.destroy.flash.success')
     else
-      flash[:error] = I18n.t('controllers.course_modules.destroy.flash.error')
+      flash[:error] = I18n.t('controllers.lessons.destroy.flash.error')
     end
     redirect_to course_module_special_link(@course_module)
   end

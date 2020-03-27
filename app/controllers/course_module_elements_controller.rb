@@ -38,7 +38,7 @@ class CourseModuleElementsController < ApplicationController
 
   def new
     cm = CourseModule.find params[:cm_id].to_i
-    @course_modules = cm.parent.children
+    @lessons = cm.parent.children
     @related_cmes = cm.course_module_elements.all_active
     @course_module_element = CourseModuleElement.new(
         sorting_order: (CourseModuleElement.all.maximum(:sorting_order).to_i + 1),
@@ -72,7 +72,7 @@ class CourseModuleElementsController < ApplicationController
       elsif @course_module_element.is_constructed_response
         @course_module_element.constructed_response.scenario.add_an_empty_scenario_question
       end
-      @course_modules = cm.parent.active_children
+      @lessons = cm.parent.active_children
       set_related_cmes
     else
       redirect_to course_url(@course_module_element.parent.parent)
@@ -85,7 +85,7 @@ class CourseModuleElementsController < ApplicationController
     end
     @course_module_element = CourseModuleElement.new(allowed_params)
     set_related_cmes
-    @course_modules = @course_module_element.try(:course_module).try(:parent).try(:active_children)
+    @lessons = @course_module_element.try(:course_module).try(:parent).try(:active_children)
 
     if @course_module_element.save
       flash[:success] = I18n.t('controllers.course_module_elements.create.flash.success')
@@ -111,7 +111,7 @@ class CourseModuleElementsController < ApplicationController
     set_related_cmes
     @course_module_element.assign_attributes(allowed_params)
     cm = @course_module_element.parent
-    @course_modules = cm.parent.active_children
+    @lessons = cm.parent.active_children
 
     if @course_module_element.save
       flash[:success] = I18n.t('controllers.course_module_elements.update.flash.success')
