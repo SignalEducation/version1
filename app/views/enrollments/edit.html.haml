@@ -10,7 +10,7 @@
         =form_for(@enrollment, html: {class: 'form-horizontal', role: 'form'}) do |f|
           .col-sm-6.col-sm-offset-3.l-margin-bottom
             .row
-              -if @enrollment.computer_based_exam && @subject_course.computer_based
+              -if @enrollment.computer_based_exam && @course.computer_based
                 .col-sm-12
                   #custom_exam_date
                     =f.label :exam_date, t('views.enrollments.form.computer_based_exam_date'), class: 'control-label'
@@ -32,7 +32,7 @@
                 =link_to t('views.general.cancel'), account_url, anchor: :enrollments, class: 'btn btn-secondary'
 
 
--if @enrollment.computer_based_exam && @subject_course.computer_based
+-if @enrollment.computer_based_exam && @course.computer_based
   :javascript
     $('#exam_date_timepicker').focusout(function(){
       if ($('#exam_date_timepicker').val().length !=0) {
@@ -68,5 +68,3 @@
     $('#exam_date_timepicker').datetimepicker();
       format: 'DD/MM/YYYY'
   });
-
-

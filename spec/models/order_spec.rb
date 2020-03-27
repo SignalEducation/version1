@@ -4,7 +4,7 @@
 #
 #  id                        :integer          not null, primary key
 #  product_id                :integer
-#  subject_course_id         :integer
+#  course_id         :integer
 #  user_id                   :integer
 #  stripe_guid               :string
 #  stripe_customer_id        :string
@@ -30,7 +30,7 @@ require 'rails_helper'
 describe Order do
   # relationships
   it { should belong_to(:product) }
-  it { should belong_to(:subject_course) }
+  it { should belong_to(:course) }
   it { should belong_to(:mock_exam) }
   it { should belong_to(:user) }
   it { should have_one(:order_transaction) }
@@ -125,7 +125,7 @@ describe Order do
   end
 
   it { should_not validate_presence_of(:coupon_code) }
-  it { should_not validate_presence_of(:subject_course_id) }
+  it { should_not validate_presence_of(:course_id) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }

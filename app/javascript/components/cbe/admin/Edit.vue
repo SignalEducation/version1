@@ -47,7 +47,7 @@
           <Details
             :id="edit_cbe_data.id"
             :initial-name="edit_cbe_data.name"
-            :initial-course-id="edit_cbe_data.subject_course_id"
+            :initial-course-id="edit_cbe_data.course_id"
             :initial-agreement-content="edit_cbe_data.agreement_content"
             :initial-active="edit_cbe_data.active"
           />

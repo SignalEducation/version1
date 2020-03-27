@@ -1,0 +1,113 @@
+.container
+  %header.management-console-section
+    %h1
+      ="Course Log ID:#{@scul.id}"
+    %p.p-hero.px-lg-8
+      =@scul.user.email
+
+  %section.pb-7
+    .row
+      .col-md-12
+        .box-item.table-box
+          .row
+            .col-sm-12
+              .row
+                .col-sm-4
+                  .h3
+                    Course
+                  .h6
+                    =@scul.course.name
+
+                .col-sm-4
+                  .h3
+                    Created
+                  .h6
+                    =humanize_datetime(@scul.created_at)
+
+                .col-sm-4
+                  .h3
+                    Last Active
+
+                  -if @latest_cmeul
+                    .h6
+                      =humanize_datetime(@latest_cmeul.course_step.created_at)
+                      ='Never'
+                    .h6
+                      =@latest_cmeul.course_step.name
+                  -else
+                    ='Never'
+
+              -if @scul.active_enrollment
+                .row
+                  .col-sm-4
+                    .h3
+                      Exam Sitting
+                    .h6
+                      =@scul.active_enrollment&.exam_sitting&.name
+
+                  .col-sm-4
+                    .h3
+                      Status
+                    .h6
+                      =@scul.active_enrollment.expired ? 'Expired' : 'Valid'
+
+                  .col-sm-4
+                    .h3
+                      Enrollment
+                    .h6
+                      =@scul.active_enrollment.expired ? 'Expired' : 'Valid'
+
+
+          .row.pt-3
+            .col-sm-10
+              -total_lessons = @scul.course.completion_cme_count
+              -completed_lessons = @scul.try(:count_of_cmes_completed) || 0
+              -complete_percent = @scul.try(:percentage_complete)
+
+              %h4.sr-only Course Progress
+              .pt-3
+                %small.text-gray2.mb-3
+                  %span.current-step-indicator=completed_lessons
+                  out of
+                  %span.total-steps-indicator=total_lessons
+                  steps completed
+                .progress
+                  .progress-bar{role: "progressbar", 'aria-valuenow': complete_percent, 'aria-valuemin': "0",
+                   'aria-valuemax': '100', style: "width: #{complete_percent}%"}
+
+
+
+    .row
+      -@scul.course_lesson_logs.each do |set|
+        .col-md-12
+          .box-item.table-box
+            %h4
+              =set.course_lesson.name
+            .table-responsive
+              %table.table.sorted_table
+                %thead
+                  %tr
+                    %th Element
+                    %th Status
+                    %th Type
+                    %th Latest Attempt
+                    %th Score
+                    %th Seconds
+                    %th Date
+                %tbody
+                  -set.course_step_logs.each do |log|
+                    %tr
+                      %td
+                        =log.course_step.try(:name)
+                      %td
+                        =course_element_user_log_status(log)
+                      %td
+                        =log.type
+                      %td
+                        =tick_or_cross(log.latest_attempt)
+                      %td
+                        =log.quiz_score_actual
+                      %td
+                        =log.seconds_watched
+                      %td
+                        =humanize_datetime(log.created_at)

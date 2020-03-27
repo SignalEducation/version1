@@ -1,5 +1,5 @@
 =form_for @quiz_question, html: { class: 'form-horizontal', role: 'form', multipart: true } do |f|
-  =f.hidden_field :course_module_element_quiz_id
+  =f.hidden_field :course_quiz_id
   .row
     .box-item
       =render partial: 'layouts/error_messages', locals: {thing: @quiz_question, message: nil}
@@ -27,9 +27,9 @@
       %p
         =f.submit t('views.general.save'), class: 'btn btn-red'
         -if @quiz_question.id.nil?
-          =link_to t('views.general.cancel'), course_modules_url, class: 'btn btn-cyan'
+          =link_to t('views.general.cancel'), course_lessons_url, class: 'btn btn-cyan'
         -else
-          =link_to t('views.general.cancel'), edit_course_module_element_url(@quiz_question.course_module_element_quiz.course_module_element_id), class: 'btn btn-cyan'
+          =link_to t('views.general.cancel'), edit_admin_course_step_url(@quiz_question.course_quiz.course_step_id), class: 'btn btn-cyan'
 
 :javascript
 

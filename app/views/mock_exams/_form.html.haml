@@ -10,9 +10,9 @@
               =f.text_field :name, placeholder: t('views.mock_exams.form.name_placeholder'), class: 'form-control'
 
           .form-group
-            =f.label :subject_course_id, t('views.mock_exams.form.subject_course_id')
+            =f.label :course_id, t('views.mock_exams.form.course_id')
             .input-group.input-group-lg
-              =f.collection_select :subject_course_id, @subject_courses, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
+              =f.collection_select :course_id, @courses, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
 
         .col-sm-6
           -if f.object.present?

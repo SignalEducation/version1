@@ -4,7 +4,7 @@
 #
 #  id                :integer          not null, primary key
 #  name              :string
-#  subject_course_id :integer
+#  course_id :integer
 #  date              :date
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
@@ -20,13 +20,13 @@ class ExamSitting < ApplicationRecord
 
   # relationships
   belongs_to :exam_body
-  belongs_to :subject_course
+  belongs_to :course
   has_many :enrollments
 
   # validation
   validates :exam_body_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :subject_course_id, presence: true,
+  validates :course_id, presence: true,
             numericality: {only_integer: true, greater_than: 0},
             unless: :computer_based?
   validates :name, presence: true

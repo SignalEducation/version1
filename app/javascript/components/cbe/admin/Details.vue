@@ -226,7 +226,7 @@ export default {
   methods: {
     getSubjects() {
       axios
-        .get('/api/v1/subject_courses/')
+        .get('/api/v1/courses/')
         .then(response => {
           this.subjectCourses = response.data;
         })
@@ -241,7 +241,7 @@ export default {
         this.cbeDetails = {};
         this.cbeDetails.name = this.name;
         this.cbeDetails.agreement_content = this.agreementContent;
-        this.cbeDetails.subject_course_id = this.subjectCourseId;
+        this.cbeDetails.course_id = this.subjectCourseId;
         axios
           .post('/api/v1/cbes/', { cbe: this.cbeDetails })
           .then(response => {
@@ -270,7 +270,7 @@ export default {
         this.cbeDetails.name = this.name;
         this.cbeDetails.agreement_content = this.agreementContent;
         this.cbeDetails.active = this.active;
-        this.cbeDetails.subject_course_id = this.subjectCourseId;
+        this.cbeDetails.course_id = this.subjectCourseId;
         axios
           .patch(`/api/v1/cbes/${cbeId}`, {
             cbe: this.cbeDetails,

@@ -33,7 +33,7 @@ class ExamBody < ApplicationRecord
   has_many :coupons
   has_many :enrollments
   has_many :exam_sittings
-  has_many :subject_courses
+  has_many :courses
   has_many :exam_body_user_details
   has_many :subscription_plans
   has_many :products
@@ -50,7 +50,7 @@ class ExamBody < ApplicationRecord
 
   # instance methods
   def destroyable?
-    exam_sittings.empty? && enrollments.empty? && subject_courses.empty?
+    exam_sittings.empty? && enrollments.empty? && courses.empty?
   end
 
   def to_s

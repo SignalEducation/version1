@@ -21,10 +21,10 @@
           .row.pt-3
             -@content_page.content_page_sections.all_in_order.each do |section|
               .col-sm-12
-                =link_to library_special_link(section.subject_course), target: '_blank', class: 'card card-horizontal flex-row card-mint' do
+                =link_to library_special_link(section.course), target: '_blank', class: 'card card-horizontal flex-row card-mint' do
 
                   .card-header.d-flex.justify-content-center.align-items-center
-                    %i{"aria-label" => section.subject_course.icon_label, :role => "img", class: section.subject_course.icon_label ? section.subject_course.icon_label : 'budicon-office-bag-c', style: "color: #{section.subject_course.highlight_colour};"}
+                    %i{"aria-label" => section.course.icon_label, :role => "img", class: section.course.icon_label ? section.course.icon_label : 'budicon-office-bag-c', style: "color: #{section.course.highlight_colour};"}
 
                   .card-body.d-flex.flex-column.justify-content-center
                     %p

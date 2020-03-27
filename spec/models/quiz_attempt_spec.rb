@@ -7,7 +7,7 @@
 #  quiz_question_id                  :integer
 #  quiz_answer_id                    :integer
 #  correct                           :boolean          default("false"), not null
-#  course_module_element_user_log_id :integer
+#  course_step_log_id :integer
 #  created_at                        :datetime
 #  updated_at                        :datetime
 #  score                             :integer          default("0")
@@ -19,7 +19,7 @@ require 'rails_helper'
 describe QuizAttempt do
 
   # relationships
-  it { should belong_to(:course_module_element_user_log) }
+  it { should belong_to(:course_step_log) }
   it { should belong_to(:quiz_answer) }
   it { should belong_to(:quiz_question) }
   it { should belong_to(:user) }
@@ -29,7 +29,7 @@ describe QuizAttempt do
 
   it { should validate_presence_of(:quiz_answer_id) }
 
-  it { should validate_presence_of(:course_module_element_user_log_id).on(:update) }
+  it { should validate_presence_of(:course_step_log_id).on(:update) }
 
   it { should validate_presence_of(:answer_array).on(:update) }
 

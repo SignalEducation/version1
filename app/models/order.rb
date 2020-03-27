@@ -6,7 +6,7 @@
 #
 #  id                        :integer          not null, primary key
 #  product_id                :integer
-#  subject_course_id         :integer
+#  course_id         :integer
 #  user_id                   :integer
 #  stripe_guid               :string
 #  stripe_customer_id        :string
@@ -36,7 +36,7 @@ class Order < ApplicationRecord
 
   # relationships
   belongs_to :product
-  belongs_to :subject_course, optional: true
+  belongs_to :course, optional: true
   belongs_to :mock_exam, optional: true
   belongs_to :user
   visitable :ahoy_visit
@@ -61,7 +61,7 @@ class Order < ApplicationRecord
   # scopes
   scope :all_in_order,    -> { order(:product_id) }
   scope :all_stripe,      -> { where.not(stripe_guid: nil).where(paypal_guid: nil) }
-  scope :all_for_course,  ->(course_id)  { where(subject_course_id: course_id) }
+  scope :all_for_course,  ->(course_id)  { where(course_id: course_id) }
   scope :all_for_product, ->(product_id) { where(product_id: product_id) }
   scope :all_for_user,    ->(user_id)    { where(user_id: user_id) }
 
@@ -163,7 +163,7 @@ class Order < ApplicationRecord
   end
 
   def exam_body_name
-    return product.cbe.subject_course.exam_body.name if product.cbe?
+    return product.cbe.course.exam_body.name if product.cbe?
 
     product.group.exam_body.name
   end

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module CoursesHelper
-  def course_module_status(course_module, exam_tracks, completed_ids)
-    exam_tracks && completed_ids.include?(course_module.id) ? 'completed' : ''
+  def course_lesson_status(course_lesson, exam_tracks, completed_ids)
+    exam_tracks && completed_ids.include?(course_lesson.id) ? 'completed' : ''
   end
 
   def course_element_user_log_status(log)

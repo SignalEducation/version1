@@ -1,0 +1,3 @@
+=f.fields_for :course_quiz do |cme_quiz|
+  =cme_quiz.fields_for :quiz_questions do |question|
+    =render partial: 'course_quizzes/fields_for_standard_question', locals: {f: f, question: question, parent: cme_quiz, mode: 'full'}

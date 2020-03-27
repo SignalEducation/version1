@@ -59,7 +59,7 @@ describe ExamBody do
 
   it { should have_many(:enrollments) }
   it { should have_many(:exam_sittings) }
-  it { should have_many(:subject_courses) }
+  it { should have_many(:courses) }
   it { should have_many(:exam_body_user_details) }
   it { should have_many(:subscription_plans) }
 

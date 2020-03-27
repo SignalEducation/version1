@@ -191,7 +191,7 @@ en:
     orders:
       index:
         h1: Orders
-        subject_course_id: Course
+        course_id: Course
         mock_exam_id: Mock
         product_id: Product
         order: Order
@@ -202,7 +202,7 @@ en:
       show:
         h1: Order
         product_id: Product
-        subject_course_id: Course
+        course_id: Course
         user_id: User
         stripe_guid: Stripe Id
         stripe_customer_id: Stripe Customer Id
@@ -416,8 +416,8 @@ en:
 
     course_sections:
       form:
-        course_module_elements: Course Module Elements
-        subject_course_id: Course
+        course_steps: Course Module Elements
+        course_id: Course
         name: Name
         name_placeholder: Course Section (tab) Name
         name_url: Name URL
@@ -441,10 +441,10 @@ en:
       show:
         h1: Course Section
 
-    course_modules:
+    course_lessons:
       form:
-        course_module_elements: Course Module Elements
-        subject_course_id: Course
+        course_steps: Course Module Elements
+        course_id: Course
         course_section_id: Course Section (tab)
         name: Name
         name_placeholder: Course Module Name
@@ -487,7 +487,7 @@ en:
         add_more_questions: More questions needed
 
 
-    course_module_elements:
+    course_steps:
       form:
         name: Name
         name_placeholder: Give a title that users will see
@@ -501,10 +501,10 @@ en:
         estimated_time_in_seconds: Estimated time in seconds
         estimated_time_in_seconds_tag: (If blank this will be auto-populated with 60 seconds per question)
         estimated_time_in_seconds_placeholder: 180
-        course_module_id: Course module
-        course_module_element_video_id: Course module element video id
-        course_module_element_quiz_id: Course module element quiz id
-        related_course_module_element_id: Related Course Module Element
+        course_lesson_id: Course module
+        course_video_id: Course module element video id
+        course_quiz_id: Course module element quiz id
+        related_course_step_id: Related Course Module Element
         sorting_order: Sorting order
         forum_topic_id: Forum topic
         created_at: Created at
@@ -557,7 +557,7 @@ en:
           resources: Resources
           transcript: Transcript
 
-    course_module_element_quizzes:
+    course_quizzes:
       form:
         number_of_questions: No. of Questions Asked
         number_of_questions_placeholder: 10
@@ -585,9 +585,9 @@ en:
         scenario_answer_template:
           text_content: Answer Template Text
 
-    course_module_element_resources:
+    course_notes:
       form:
-        course_module_element_id: Course module element
+        course_step_id: Course module element
         name: File Name
         name_placeholder: Name that users will see
         description: Description
@@ -615,7 +615,7 @@ en:
 
       show:
 
-    course_module_element_videos:
+    course_videos:
       form:
         video_file: Video File
         duration: Video Duration in seconds
@@ -627,9 +627,9 @@ en:
         dacast_id: Dacast video ID
         dacast_id_placeholder: Dacast video ID (in the URL on Dacast)
 
-    course_tutor_details:
+    course_tutors:
       form:
-        subject_course_id: Course
+        course_id: Course
         user_id: Tutor User
         title: Title
         title_placeholder: Course Tutor Title
@@ -690,9 +690,9 @@ en:
 
       tutor:
         title: Dashboard
-        total_course_module_elements: Total Course Modules Elements
-        course_module_element_videos: Number of Videos
-        course_module_element_quizzes: Number of Quizzes
+        total_course_steps: Total Course Modules Elements
+        course_videos: Number of Videos
+        course_quizzes: Number of Quizzes
         total_time_watched: Total Time Watched
 
       admin:
@@ -767,7 +767,7 @@ en:
     exam_sittings:
       form:
         name: Name
-        subject_course_id: Course
+        course_id: Course
         exam_body_id: Exam Body
         active: Active
         computer_based: Computer Based
@@ -946,7 +946,7 @@ en:
         subscription_plan_category_id: Subscription Plan Category
         monthly_percentage_off: Optional percentage saving
         group_id: Related Group
-        subject_course_id: Related Course
+        course_id: Related Course
         public_url: Public URL
         public_url_placeholder: Public URL Placeholder
         custom_file_name: View File Name
@@ -1011,7 +1011,7 @@ en:
         status: 'Status'
         issued_at: "Issued at"
         date: Date
-        subject_course: Course
+        course: Course
         mock_exam: Mock Exam
         stripe_guid: "Stripe GUID"
         sub_total: "Sub- total"
@@ -1094,8 +1094,8 @@ en:
         video: Video
         number_of_videos: Videos
         videos: of Video
-        course_module: Course Module
-        course_module_element: Step
+        course_lesson: Course Module
+        course_step: Step
         table_of_contents: Table of contents
         description: Description
 
@@ -1107,7 +1107,7 @@ en:
       form:
         name: Name
         name_placeholder: Mock Exam Name
-        subject_course_id: Course
+        course_id: Course
         product_id: Product
         file: Upload a PDF of your solution
         file_replacement: Upload a replacement solution
@@ -1138,7 +1138,7 @@ en:
         cbe: CBE
         product_type: Product Type
         correction_pack_count: Number of Corrections
-        subject_course: Course
+        course: Course
         type: Type
         group_id: Group
         payment_heading: Payment Page Heading
@@ -1244,7 +1244,7 @@ en:
       modal:
         h4: New Card Details
 
-    subject_courses:
+    courses:
       form:
         name: Name
         name_placeholder: Course name
@@ -1294,16 +1294,16 @@ en:
 
       show:
         h1: Course
-        add_course_module: Please create a Course module to begin
+        add_course_lesson: Please create a Course module to begin
         description: Description
         info: Course Info
         update_student_logs: Update Student Logs
-        course_tutor_details: Tutors Details
+        course_tutors: Tutors Details
 
       edit:
         h1: Edit Course
 
-      course_modules_order:
+      course_lessons_order:
         return: Return
 
       reorder: Reorder Course Modules
@@ -1311,14 +1311,14 @@ en:
       new:
         h1: New Course
 
-    subject_course_resources:
+    course_resources:
       form:
         name: Name
         name_placeholder: Link/Button Name
         description: Description
         description_placeholder: Description
-        subject_course_id: Course
-        subject_course_id_placeholder: Course
+        course_id: Course
+        course_id_placeholder: Course
         external_url: External URL
         external_url_placeholder: External Web URL
 
@@ -1332,7 +1332,7 @@ en:
         h2: Course Resources
         description: Description
         name: Name
-        subject_course_id: Course
+        course_id: Course
 
       edit:
         h1: Edit Course Resource
@@ -1340,7 +1340,7 @@ en:
       new:
         h1: New Course Resource
 
-    subject_course_user_log:
+    course_log:
       show:
         course: Course
         completed_at: Completed At

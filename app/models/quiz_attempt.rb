@@ -9,7 +9,7 @@
 #  quiz_question_id                  :integer
 #  quiz_answer_id                    :integer
 #  correct                           :boolean          default("false"), not null
-#  course_module_element_user_log_id :integer
+#  course_step_log_id :integer
 #  created_at                        :datetime
 #  updated_at                        :datetime
 #  score                             :integer          default("0")
@@ -24,7 +24,7 @@ class QuizAttempt < ApplicationRecord
   # Constants
 
   # relationships
-  belongs_to :course_module_element_user_log, inverse_of: :quiz_attempts
+  belongs_to :course_step_log, inverse_of: :quiz_attempts
   belongs_to :quiz_question
   belongs_to :quiz_answer
   belongs_to :user
@@ -32,7 +32,7 @@ class QuizAttempt < ApplicationRecord
   # validation
   validates :quiz_question_id, presence: true
   validates :quiz_answer_id, presence: true
-  validates :course_module_element_user_log_id, presence: true, on: :update
+  validates :course_step_log_id, presence: true, on: :update
   validates :answer_array, presence: true, on: :update
 
   # callbacks

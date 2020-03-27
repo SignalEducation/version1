@@ -40,7 +40,7 @@
           .row.row-lg
             .col-xl-8
               .mb-5.mb-xl-0
-                - course_section.course_modules.all_active.all_in_order.each_with_index do |course_module, counter|
+                - course_section.course_lessons.all_active.all_in_order.each_with_index do |course_lesson, counter|
                   .card.card-collapse.mb-4
 
                     %a.btn.btn-text.btn-collapse.w-100.text-left{data: {target: '#course-preview', toggle: 'modal', href: '#'}}
@@ -50,7 +50,7 @@
                         .lesson-item-content.pl-3
                           .d-flex.flex-column.flex-sm-row.align-items-start.align-items-sm-center
                             %p.lesson-item-text.text-truncate.w-100
-                              =course_module.name
+                              =course_lesson.name
                             %small.lesson-item-tag.ml-sm-auto.text-sm-right
                               %span
                                 Coming Soon

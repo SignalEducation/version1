@@ -1,0 +1,52 @@
+.container
+  %header.management-console-section
+    %h1
+      =@course.name
+      =t('views.course_resources.index.h1')
+
+  %section.pb-7
+    .row
+      .col-sm-12
+        =link_to 'New Course Resource', admin_new_course_resources_url(@course), class: 'btn btn-primary'
+
+    .row
+      .col-sm-12
+        .box-item.table-box
+          .table-responsive
+            %table.table.sorted_table{style: 'font-size: 18px;', data: {destination: admin_course_resources_url}}
+              %thead
+                %tr
+                  %th=t('views.course_resources.form.name')
+                  %th=t('views.course_resources.form.course_id')
+                  %th='Active'
+                  %th
+                  %th
+                  %th
+                  %th
+              %tbody
+                -@course_resources.each do |course_resource|
+                  %tr{id: course_resource.id}
+                    %td=course_resource.name
+                    %td=course_resource.course.name
+                    %td=tick_or_cross(course_resource.active)
+                    -unless course_resource.active
+                      %td
+                        =link_to 'Activate', new_content_activation_url(type: course_resource.class, id: course_resource.id), class: 'btn btn-green btn-xs'
+
+                    %td
+                      =link_to t('views.general.edit'), edit_course_resource_url(course_resource), class: 'btn btn-primary btn-xs'
+                    %td
+                      -if course_resource.external_url.blank?
+                        =link_to t('views.general.show'), course_resource.file_upload.url, target: '_blank', class: 'btn btn-secondary btn-xs'
+                      -else
+                        =link_to t('views.general.show'), course_resource.external_url, target: '_blank', class: 'btn btn-secondary btn-xs'
+                    %td
+                      -if course_resource.destroyable?
+                        =link_to t('views.general.delete'), course_resource, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-secondary-reverse btn-xs'
+                    %td
+                      %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
+
+
+      .row
+        .col-sm-12
+          =link_to 'Return', course_url(@course), class: 'btn btn-secondary', title: t('views.general.new_tooltip')

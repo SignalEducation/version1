@@ -20,12 +20,12 @@ describe ProductsHelper, type: :helper do
 
     context 'returns product link to a not logged user' do
       it 'cbe product' do
-        exam_body_id = cbe_product.cbe.subject_course.exam_body.id
+        exam_body_id = cbe_product.cbe.course.exam_body.id
         expect(product_link(cbe_product, false)).to include("register_or_login?exam_body_id=#{exam_body_id}&product_id=#{cbe_product.id}")
       end
 
       it 'not cbe product' do
-        exam_body_id = correction_pack_product.mock_exam.subject_course.group.exam_body.id
+        exam_body_id = correction_pack_product.mock_exam.course.group.exam_body.id
         expect(product_link(correction_pack_product, false)).to include("register_or_login?exam_body_id=#{exam_body_id}&product_id=#{correction_pack_product.id}")
       end
     end

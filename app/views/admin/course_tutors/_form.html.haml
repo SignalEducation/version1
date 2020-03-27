@@ -1,0 +1,24 @@
+=form_for([@course, @course_tutor], html: {class: 'form-horizontal', role: 'form'}) do |f|
+  .box-item
+    .row
+      .col-sm-12
+        =render partial: '/layouts/error_messages', locals: {thing: @course_tutor, message: nil}
+        =f.hidden_field :course_id
+        =f.hidden_field :sorting_order
+
+        .col-sm-6
+          .form-group
+            =f.label :user_id, t('views.course_tutors.form.user_id')
+            .input-group.input-group-lg
+              =f.collection_select :user_id, @tutor_users, :id, :full_name, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
+
+        .col-sm-6
+          .form-group
+            =f.label :title, t('views.course_tutors.form.title')
+            .input-group.input-group-lg
+              =f.text_field :title, placeholder: t('views.course_tutors.form.title_placeholder'), class: 'form-control'
+
+  .row.pt-3
+    .col-sm-12
+      =f.submit t('views.general.save'), class: 'btn btn-primary'
+      =link_to t('views.general.cancel'), admin_course_course_tutors_url(course_id: @course), class: 'btn btn-secondary'

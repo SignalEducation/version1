@@ -92,7 +92,7 @@
           =@group.description
 
       .row.row-lg
-        -@group.subject_courses.all_active.all_in_order.each do |course|
+        -@group.courses.all_active.all_in_order.each do |course|
           .col-sm
             =link_to library_special_link(course), class: 'card card-horizontal flex-row card-mint', data: { toggle: 'tooltip', placement: 'right', animation: 'true', delay: { "show": 300, "hide": 100 }}, title: "#{course.short_description}" do
               .card-header.d-flex.justify-content-center.align-items-center

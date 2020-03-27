@@ -1,0 +1,14 @@
+.container
+  %header.management-console-section
+    %h1
+      -if @course_step.is_video
+        =t('views.course_steps.new.video')
+      -elsif @course_step.is_quiz
+        =t('views.course_steps.new.quiz')
+      -elsif @course_step.is_constructed_response
+        =t('views.course_steps.new.constructed_response')
+      -else
+        =t('views.course_steps.new.h1')
+
+  %section.pb-7
+    =render partial: 'form'

@@ -1,0 +1,64 @@
+.container
+  %header.management-console-section
+    %h1
+      =@course.name
+    %p.p-hero.px-lg-8
+      ="Select the trial content available"
+
+  %section.pb-7
+    =form_for(@course, url: admin_course_update_trial_content_url) do |f|
+      =render partial: '/layouts/error_messages', locals: {thing: @course, message: nil}
+      .row
+        .col-sm-12
+          =f.fields_for :course_sections, f.object.course_sections.all_in_order do |cs|
+            .box-item
+              %h3=cs.object.try(:name)
+              =cs.fields_for :course_lessons, cs.object.course_lessons.all_in_order do |cm|
+                .table-box
+                  .table-responsive
+                    .col-md-9.l-margin-bottom
+                      %h4=cm.object.try(:name)
+                    .col-md-3
+                      .pull-right
+                        =tick_or_cross(cm.object.active)
+
+                    %table.table.sorted_table
+                      %thead
+                        %tr
+                          %th Name
+                          %th Type
+                          %th Time (Sec)
+                          %th Trial
+
+                      %tbody
+                        =cm.fields_for :course_steps, cm.object.course_steps.all_in_order do |cme|
+                          %tr
+                            %td=cme.object.name
+                            %td=cme.object.type_name
+                            %td=cme.object.estimated_time_in_seconds
+                            %td=cme.check_box :available_on_trial
+
+          .box-item
+            .table-box
+              .table-responsive
+                %h3{style: 'color: #54a4ee;'}
+                  ='Course Resources'
+                %table.table.sorted_table
+                  %thead
+                    %tr
+                      %th Name
+                      %th Trial
+                      %th
+                  %tbody
+                    =f.fields_for :course_resources, f.object.course_resources.all_in_order do |resource|
+                      %tr
+                        %td
+                          =resource.object.name
+                        %td
+                          =resource.check_box :available_on_trial
+
+
+        .row
+          .col-sm-12
+            =f.submit t('views.general.save'), class: 'btn btn-primary'
+            =link_to 'Cancel', course_url(@course), class: 'btn btn-secondary'

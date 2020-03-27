@@ -43,7 +43,7 @@ module Api
                                     :exam_time,
                                     :agreement_content,
                                     :active,
-                                    :subject_course_id)
+                                    :course_id)
       end
     end
   end

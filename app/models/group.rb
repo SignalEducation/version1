@@ -37,7 +37,7 @@ class Group < ApplicationRecord
 
   # relationships
   belongs_to :exam_body
-  has_many :subject_courses
+  has_many :courses
   has_many :home_pages
   has_many :levels
   has_attached_file :image, default_url: 'courses-AAT.jpg'
@@ -74,7 +74,7 @@ class Group < ApplicationRecord
   end
 
   def children
-    self.try(:subject_courses)
+    self.try(:courses)
   end
 
 
@@ -88,7 +88,7 @@ class Group < ApplicationRecord
 
   def destroyable_children
     the_list = []
-    the_list += self.subject_courses.to_a
+    the_list += self.courses.to_a
     the_list
   end
 

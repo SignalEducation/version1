@@ -8,7 +8,7 @@
 #  panel_colour      :string
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
-#  subject_course_id :integer
+#  course_id :integer
 #  sorting_order     :integer
 #
 
@@ -18,7 +18,7 @@ describe ContentPageSection do
 
   describe 'relationships' do
     it { should belong_to(:content_page) }
-    it { should belong_to(:subject_course) }
+    it { should belong_to(:course) }
   end
 
   describe 'validations' do

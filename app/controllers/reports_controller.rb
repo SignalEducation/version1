@@ -30,7 +30,7 @@ class ReportsController < ApplicationController
   end
 
   def export_courses
-    @courses = SubjectCourse.all_active.all_in_order
+    @courses = Course.all_active.all_in_order
 
     respond_to do |format|
       format.html

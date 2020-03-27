@@ -72,7 +72,7 @@ en:
         flash:
           error: "Sorry, your quiz attempt could not be saved."
 
-    course_modules:
+    course_lessons:
       show:
         cant_find: Sorry, that could not be found
       create:
@@ -100,7 +100,7 @@ en:
           success: Course Section has been deleted
           error: Course Section was not deleted
 
-    course_module_elements:
+    course_steps:
       create:
         flash:
           success: Course Module Element has been created successfully
@@ -112,7 +112,7 @@ en:
           success: Course Module Element has been deleted
           error: Course Module Element was not deleted
 
-    course_module_element_resources:
+    course_notes:
       create:
         flash:
           success: Course Module Element Resource has been created successfully
@@ -125,7 +125,7 @@ en:
           success: Course Module Element Resource has been deleted
           error: Course Module Element Resource was not deleted
 
-    course_tutor_details:
+    course_tutors:
       create:
         flash:
           success: Course Tutor Details have been created successfully
@@ -374,7 +374,7 @@ en:
           success: Refund has been deleted
           error: Refund was not deleted
 
-    subject_courses:
+    courses:
       create:
         flash:
           success: Subject Course has been created successfully
@@ -393,7 +393,7 @@ en:
         flash:
           success: Course Tutor Info have been successfully created
 
-    subject_course_resources:
+    course_resources:
       create:
         flash:
           success: Course Resource has been created successfully
@@ -585,4 +585,3 @@ en:
         flash:
           success: White Paper has been deleted
           error: White Paper was not deleted
-

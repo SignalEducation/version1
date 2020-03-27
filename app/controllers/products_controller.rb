@@ -73,7 +73,7 @@ class ProductsController < ApplicationController
     @currencies      = Currency.all_in_order
     @mock_exams      = MockExam.all_in_order
     @cbes            = Cbe.all
-    @subject_courses = SubjectCourse.all_active.all_in_order
+    @courses = Course.all_active.all_in_order
     @groups          = Group.all_in_order
   end
 

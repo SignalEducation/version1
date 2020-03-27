@@ -4,10 +4,10 @@
       %p.mb-4
         =@course.description.to_s.html_safe
   .col-xl-4
-    -if @course.course_tutor_details.any?
+    -if @course.course_tutors.any?
       %aside.pb-5.pb-xl-3
         %h4.text-gray2 Course Tutors
-        -@course_tutor_details.each do |course_tutor|
+        -@course_tutors.each do |course_tutor|
           %div
             =link_to profile_url(course_tutor.user.name_url), class: 'profile-item link-alt d-inline-flex align-items-center mb-3' do
               .mr-3
@@ -17,4 +17,3 @@
                   =course_tutor.user.full_name.to_s
                 %small.text-gray2
                   =course_tutor.title
-

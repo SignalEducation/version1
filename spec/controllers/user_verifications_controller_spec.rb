@@ -12,7 +12,7 @@ RSpec.describe UserVerificationsController, :type => :controller do
   let!(:exam_body_1) { FactoryBot.create(:exam_body) }
   let!(:exam_body_2) { FactoryBot.create(:exam_body, name: 'CPD') }
   let!(:group_1) { FactoryBot.create(:group, exam_body_id: exam_body_2.id, name: 'CPD') }
-  let!(:subject_course_1) { FactoryBot.create(:active_subject_course, group_id: group_1.id, exam_body_id: exam_body_1.id) }
+  let!(:course_1) { FactoryBot.create(:active_course, group_id: group_1.id, exam_body_id: exam_body_1.id) }
 
 
   context 'Non-verified user' do

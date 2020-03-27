@@ -19,7 +19,7 @@
             =@course.name
 
       %section.course-progress
-        - if @subject_course_user_log
+        - if @course_log
           =render partial: 'progress'
         - else
           =render partial: 'course_info'
@@ -32,7 +32,7 @@
               %a{class: "nav-link #{counter == 0 ? 'active' : ''}", id: "#{course_section.name_url}-tab", data: {toggle: 'tab'}, href: "##{course_section.name_url}", aria: {controls: "#{course_section.name_url}", selected: 'false'}, role: 'tab'}
                 =course_section.name
 
-          -if @subject_course_resources.any?
+          -if @course_resources.any?
             %li.nav-item{data: {tab_name: 'Resources', course_name: @course.name}}
               %a{href: "#resources", role: 'tab', class: 'nav-link', data: {toggle: 'tab'}, aria: {controls: "resources", selected: 'false'}}
                 ='Resources'
@@ -54,8 +54,8 @@
           .row.row-lg
             .col-xl-8
               .mb-5.mb-xl-0
-                - course_section.course_modules.all_valid.all_in_order.each_with_index do |course_module, counter|
-                  =render partial: 'course_module', locals: { course_module: course_module, counter: counter, count: course_section.course_modules.all_valid.count }
+                - course_section.course_lessons.all_valid.all_in_order.each_with_index do |course_lesson, counter|
+                  =render partial: 'course_lesson', locals: { course_lesson: course_lesson, counter: counter, count: course_section.course_lessons.all_valid.count }
 
             .col-xl-4.mb-5
               =render partial: 'register_upgrade_links', locals: { user: current_user }
@@ -63,12 +63,12 @@
               %aside
                 .btn.btn-secondary.btn-sm.mb-5{'data-target' => '#contact-form-modal', 'data-toggle' => 'modal', :href => '#'}
                   =@exam_body&.help_text
-      -if @subject_course_resources.any?
+      -if @course_resources.any?
         .tab-pane.tab-resources{id: 'resources', role: 'tabpanel', 'aria-labelledby': 'resources-tab'}
           %section.mb-5
             %h3.text-gray1.mb-4.mb-sm-5 Course Resources
             .row.row-lg
-              - @subject_course_resources.each do |resource|
+              - @course_resources.each do |resource|
                 .col-sm-6
                   - if current_user
                     - if @valid_subscription
@@ -178,7 +178,7 @@
 
 
 -if current_user && current_user.active_subscription_for_exam_body?(@group.exam_body_id)
-  -if @new_enrollment && @subject_course_user_log && @subject_course_user_log.count_of_cmes_completed >= 3
+  -if @new_enrollment && @course_log && @course_log.count_of_cmes_completed >= 3
     :javascript
       $(document).ready(function() {
         setTimeout(function() {

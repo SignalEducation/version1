@@ -7,7 +7,7 @@
 #  quiz_question_id                  :integer
 #  quiz_answer_id                    :integer
 #  correct                           :boolean          default("false"), not null
-#  course_module_element_user_log_id :integer
+#  course_step_log_id :integer
 #  created_at                        :datetime
 #  updated_at                        :datetime
 #  score                             :integer          default("0")
@@ -20,7 +20,7 @@ FactoryBot.define do
     quiz_question_id { 1 }
     quiz_answer_id { 1 }
     correct { false }
-    course_module_element_user_log_id { 1 }
+    course_step_log_id { 1 }
   end
 
 end

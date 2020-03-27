@@ -7,26 +7,26 @@ class EnrollmentsController < ApplicationController
   def create
     @enrollment = Enrollment.new(allowed_params)
 
-    @enrollment.computer_based_exam = true if @enrollment.exam_date && @enrollment&.subject_course&.computer_based
+    @enrollment.computer_based_exam = true if @enrollment.exam_date && @enrollment&.course&.computer_based
     @enrollment.user_id = current_user.id
     @enrollment.active = true
 
     if @enrollment.save
-      ahoy.track 'Course Enrol', course: @enrollment.subject_course.name, sitting: @enrollment.exam_sitting.name, exam_date: @enrollment.enrollment_date
-      flash[:success] = "Thank you. You have successfully enrolled in #{@enrollment&.subject_course&.name}"
+      ahoy.track 'Course Enrol', course: @enrollment.course.name, sitting: @enrollment.exam_sitting.name, exam_date: @enrollment.enrollment_date
+      flash[:success] = "Thank you. You have successfully enrolled in #{@enrollment&.course&.name}"
     else
       flash[:error] = t('controllers.enrollments.create.flash.error')
-      redirect_to library_special_link(@enrollment.subject_course)
+      redirect_to library_special_link(@enrollment.course)
     end
   end
 
   def edit
     @enrollment = Enrollment.find(params[:id])
-    @subject_course = @enrollment.subject_course
-    @exam_body = @subject_course.exam_body if @subject_course
+    @course = @enrollment.course
+    @exam_body = @course.exam_body if @course
 
-    @exam_sittings = ExamSitting.where(active: true, computer_based: false, subject_course_id: @subject_course.id,
-                                       exam_body_id: @subject_course.exam_body_id).all_in_order
+    @exam_sittings = ExamSitting.where(active: true, computer_based: false, course_id: @course.id,
+                                       exam_body_id: @course.exam_body_id).all_in_order
   end
 
   def update
@@ -56,7 +56,7 @@ class EnrollmentsController < ApplicationController
   end
 
   def allowed_params
-    params.require(:enrollment).permit(:subject_course_id, :exam_date, :subject_course_user_log_id,
+    params.require(:enrollment).permit(:course_id, :exam_date, :course_log_id,
                                        :exam_sitting_id, :percentage_complete, :exam_body_id, :notifications)
   end
 

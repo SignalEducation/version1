@@ -1,0 +1,151 @@
+.box-item.form-box
+  .col-sm-12
+    =form_for(@course, url: admin_courses_path, html: {class: 'form-horizontal', role: 'form'}) do |f|
+      =render partial: '/layouts/error_messages', locals: {thing: @course, message: nil}
+      .row
+        .col-sm-6
+          =f.hidden_field :default_number_of_possible_exam_answers, value: 4
+
+          .form-group
+            =f.label :group_id, t('views.courses.form.group_id')
+            .input-group.input-group-lg
+              =f.collection_select :group_id, @groups, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
+
+
+          .form-group
+            =f.label :name, t('views.courses.form.name')
+            .input-group.input-group-lg
+              =f.text_field :name, placeholder: t('views.courses.form.name_placeholder'), class: 'form-control update-my-url'
+
+          .form-group
+            =f.label :name_url, t('views.courses.form.name_url')
+            .input-group.input-group-lg
+              =f.text_field :name_url, placeholder: t('views.courses.form.name_url_placeholder'), class: 'form-control'
+
+
+          .form-group
+            =f.label :level_id, t('views.courses.form.level')
+            .input-group.input-group-lg
+              =f.collection_select :level_id, @levels, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
+          .form-group
+            =f.label :category_label, t('views.courses.form.category_label')
+            .input-group.input-group-lg
+              =f.text_field :category_label, placeholder: t('views.courses.form.category_label_placeholder'), class: 'form-control'
+          .form-group
+            =f.label :icon_label, t('views.courses.form.icon_label')
+            .input-group.input-group-lg
+              =f.text_field :icon_label, placeholder: t('views.courses.form.icon_label_placeholder'), class: 'form-control'
+          .form-group
+            =f.label :unit_label, t('views.courses.form.unit_label')
+            .input-group.input-group-lg
+              =f.text_field :unit_label, placeholder: t('views.courses.form.unit_label_placeholder'), class: 'form-control'
+
+        .col-sm-6
+          .form-group
+            =f.label :quiz_pass_rate, t('views.courses.form.quiz_pass_rate')
+            .input-group.input-group-lg
+              =f.text_field :quiz_pass_rate, placeholder: t('views.courses.form.quiz_pass_rate_placeholder'), class: 'form-control'
+          .form-group
+            =f.label :exam_body_id, t('views.courses.form.exam_body_id')
+            .input-group.input-group-lg
+              =f.collection_select :exam_body_id, @exam_bodies, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
+          .form-group
+            =f.label :survey_url, t('views.courses.form.survey_url')
+            .input-group.input-group-lg
+              =f.text_field :survey_url, placeholder: t('views.courses.form.survey_url_placeholder'), class: 'form-control'
+          .form-group
+            =f.label :release_date, t('views.courses.form.release_date')
+            .form-row.align-items-center.justify-content-xl-between
+              %span.custom-date-select.input-group.input-group-lg
+                =f.date_select :release_date, {order: [:month, :day, :year], prompt: { day: 'Day', month: 'Month', year: 'Year' },
+                 start_year: Date.today.year, end_year: Date.today.year + 2}, class: 'form-control custom-select'
+
+          .form-group
+            %label
+              Background Image
+
+            -if @course.background_image.present?
+              =image_tag @course.background_image.try(:url), class: 'md-image'
+            .input-group.input-group-lg
+              =f.file_field :background_image, class: 'form-control'
+
+
+          .form-group
+            =f.label :highlight_colour, t('views.courses.form.highlight_colour')
+            .input-group.input-group-lg
+              =f.select :highlight_colour, options_for_select([%w[Red #fd5c63], %w[Blue #30aabc], %w[Yellow #f0ca28],
+               %w[Purple #775ead], %w[Green #00b67b]],
+                selected: f.object.highlight_colour),
+                 {include_blank: t('views.general.select')}, class: 'form-control custom-select'
+
+
+      .row
+        .col-sm-6
+          .row.pt-2
+            .col-sm
+              .checkbox
+                %label
+                  =f.check_box :active
+                  =t('views.courses.form.active')
+
+            .col-sm
+              .checkbox
+                %label
+                  =f.check_box :preview
+                  =t('views.courses.form.preview')
+
+            .col-sm
+              .checkbox
+                %label
+                  =f.check_box :computer_based
+                  =t('views.courses.form.computer_based')
+          .row.pt-2
+            .col-sm
+              .checkbox
+                %label
+                  =f.check_box :has_correction_packs
+                  =t('views.courses.form.has_correction_packs')
+
+            .col-sm
+              .checkbox
+                %label
+                  =f.check_box :on_welcome_page
+                  =t('views.courses.form.on_welcome_page')
+
+
+      .row.pt-5
+        .col-sm-12
+          =f.label :description, t('views.courses.form.description')
+          .input-group.input-group-lg
+            =f.text_area :description, as: :summernote, placeholder: t('views.courses.form.description_placeholder'), rows: 5, class: 'form-control', id: 'editor'
+
+      .row.pt-3
+        .col-sm-6
+          .form-group
+            =f.label :seo_title, t('views.courses.form.seo_title')
+            .input-group.input-group-lg
+              =f.text_field :seo_title, placeholder: t('views.courses.form.seo_title_placeholder'), class: 'form-control'
+
+          .form-group
+            =f.label :seo_description, t('views.courses.form.seo_description')
+            .input-group.input-group-lg
+              =f.text_field :seo_description, placeholder: t('views.courses.form.seo_description_placeholder'), class: 'form-control'
+
+        .col-sm-6
+          .form-group
+            =f.label :short_description, t('views.courses.form.short_description')
+            .input-group.input-group-lg
+              =f.text_area :short_description, placeholder: t('views.courses.form.short_description_placeholder'), class: 'form-control'
+
+      .row.pt-4
+        .col-md-12
+          =f.submit t('views.general.save'), class: 'btn btn-primary'
+          =link_to t('views.general.cancel'), admin_courses_path, class: 'btn btn-secondary l-margin-right-big l-padding-side-3x'
+
+
+:javascript
+
+  $('#editor').summernote({
+    disableDragAndDrop: true,
+    height: 150
+  });

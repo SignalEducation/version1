@@ -4,7 +4,7 @@
 #
 #  id                :integer          not null, primary key
 #  name              :string
-#  subject_course_id :integer
+#  course_id :integer
 #  date              :date
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
@@ -19,15 +19,15 @@ describe ExamSitting do
 
   # relationships
   it { should belong_to(:exam_body) }
-  it { should belong_to(:subject_course) }
+  it { should belong_to(:course) }
   it { should have_many(:enrollments) }
 
   # validation
   it { should validate_presence_of(:exam_body_id) }
   it { should validate_numericality_of(:exam_body_id) }
 
-  it { should validate_presence_of(:subject_course_id) }
-  it { should validate_numericality_of(:subject_course_id) }
+  it { should validate_presence_of(:course_id) }
+  it { should validate_numericality_of(:course_id) }
 
   it { should validate_presence_of(:name) }
 

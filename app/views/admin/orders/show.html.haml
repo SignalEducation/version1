@@ -20,9 +20,9 @@
                       %br
                       =link_to "Change product",admin_order_update_product_path(@order)
                 %tr
-                  %td.col-sm-4=t('views.orders.show.subject_course_id')
-                  -if @order.subject_course
-                    %td.col-sm-8=@order.subject_course.name
+                  %td.col-sm-4=t('views.orders.show.course_id')
+                  -if @order.course
+                    %td.col-sm-8=@order.course.name
                 %tr
                   %td.col-sm-4=t('views.orders.show.user_id')
                   %td.col-sm-8=@order.user.full_name

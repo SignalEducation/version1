@@ -20,7 +20,7 @@
 class Level < ApplicationRecord
   # relationships
   belongs_to :group
-  has_many :subject_courses
+  has_many :courses
 
   # validations
   validates :group_id, :name, :name_url, :onboarding_course_heading, presence: true

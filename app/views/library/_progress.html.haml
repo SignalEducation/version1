@@ -1,6 +1,6 @@
--total_lessons = @subject_course_user_log.subject_course.completion_cme_count
--completed_lessons = @subject_course_user_log.try(:count_of_cmes_completed) || 0
--complete_percent = @subject_course_user_log.try(:percentage_complete)
+-total_lessons = @course_log.course.completion_cme_count
+-completed_lessons = @course_log.try(:count_of_cmes_completed) || 0
+-complete_percent = @course_log.try(:percentage_complete)
 
 .row
   .col-xs-12.col-lg-8
@@ -16,5 +16,5 @@
 
   .col-xs-12.col-lg-2
     .ml-lg-4.pt-1.pb-4
-      -if !@subject_course_user_log.completed && @subject_course_user_log&.latest_course_module_element&.next_element
-        =link_to 'Resume', course_special_link(@subject_course_user_log.latest_course_module_element.next_element, @subject_course_user_log), class: 'btn btn-primary full-width'
+      -if !@course_log.completed && @course_log&.latest_course_step&.next_element
+        =link_to 'Resume', course_special_link(@course_log.latest_course_step.next_element, @course_log), class: 'btn btn-primary full-width'
