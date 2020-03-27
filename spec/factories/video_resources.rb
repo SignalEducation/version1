@@ -3,7 +3,7 @@
 # Table name: video_resources
 #
 #  id                       :integer          not null, primary key
-#  course_module_element_id :integer
+#  course_step_id :integer
 #  question                 :text
 #  answer                   :text
 #  notes                    :text

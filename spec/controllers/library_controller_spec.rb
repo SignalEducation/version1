@@ -8,19 +8,19 @@ RSpec.describe LibraryController, type: :controller do
   let!(:exam_body_1)       { create(:exam_body) }
   let!(:group_1)           { create(:group, exam_body_id: exam_body_1.id) }
   let!(:group_2)           { create(:group, exam_body_id: exam_body_1.id) }
-  let!(:subject_course_1)  { create(:active_subject_course,
+  let!(:course_1)          { create(:active_course,
                                     group_id: group_1.id,
                                     exam_body_id: exam_body_1.id) }
-  let!(:subject_course_2)  { create(:active_subject_course,
+  let!(:course_2)          { create(:active_course,
                                     group_id: group_1.id,
                                     computer_based: true,
                                     exam_body_id: exam_body_1.id) }
 
-  let!(:mock_exam_1)       { create(:mock_exam, subject_course_id: subject_course_1.id) }
+  let!(:mock_exam_1)       { create(:mock_exam, course_id: course_1.id) }
   let!(:product_1)         { create(:product, mock_exam_id: mock_exam_1.id, currency_id: gbp.id, group_id: group_1.id) }
 
   let!(:user)              { create(:user) }
-  let!(:course_log)        { create(:subject_course_user_log, subject_course_id: subject_course_1.id, user_id: user.id) }
+  let!(:course_log)        { create(:course_log, course_id: course_1.id, user_id: user.id) }
 
   describe 'GET index' do
     it 'renders the index view as 2 groups are active' do
@@ -53,7 +53,7 @@ RSpec.describe LibraryController, type: :controller do
         expect(response.status).to eq(200)
         expect(response).to render_template(:group_show)
         expect(Group.all_active.count).to eq(2)
-        expect(SubjectCourse.count).to eq(2)
+        expect(Course.count).to eq(2)
       end
     end
 
@@ -72,42 +72,42 @@ RSpec.describe LibraryController, type: :controller do
         allow(controller).to receive(:current_user).and_return(user)
         allow_any_instance_of(ExamBody).to receive(:has_sittings).and_return(true)
 
-        get :course_show, params: { subject_course_name_url: subject_course_1.name_url, group_name_url: group_1.name_url }
+        get :course_show, params: { course_name_url: course_1.name_url, group_name_url: group_1.name_url }
         expect(response).to have_http_status(:success)
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:course_show)
         expect(Group.all_active.count).to eq(2)
-        expect(SubjectCourse.count).to eq(2)
+        expect(Course.count).to eq(2)
       end
 
       it 'has_sittings ausent' do
         allow(controller).to receive(:current_user).and_return(build(:user))
 
-        get :course_show, params: { subject_course_name_url: subject_course_1.name_url, group_name_url: group_1.name_url }
+        get :course_show, params: { course_name_url: course_1.name_url, group_name_url: group_1.name_url }
         expect(response).to have_http_status(:success)
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:course_show)
         expect(Group.all_active.count).to eq(2)
-        expect(SubjectCourse.count).to eq(2)
+        expect(Course.count).to eq(2)
       end
     end
 
     context 'not logged user' do
       it 'returns course_preview' do
-        allow_any_instance_of(SubjectCourse).to receive(:preview).and_return(true)
+        allow_any_instance_of(Course).to receive(:preview).and_return(true)
 
-        get :course_show, params: { subject_course_name_url: subject_course_1.name_url, group_name_url: group_1.name_url }
+        get :course_show, params: { course_name_url: course_1.name_url, group_name_url: group_1.name_url }
         expect(response).to have_http_status(:success)
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:course_preview)
         expect(Group.all_active.count).to eq(2)
-        expect(SubjectCourse.count).to eq(2)
+        expect(Course.count).to eq(2)
       end
     end
   end

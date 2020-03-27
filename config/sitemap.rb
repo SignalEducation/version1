@@ -21,7 +21,7 @@ sitemap :site do
   groups.each do |group|
     url library_group_url(group_name_url: group.name_url), last_mod: group.updated_at, change_freq: 'monthly', priority: 1.0
     group.active_children.all_in_order.each do |course|
-      url library_course_url(group_name_url: group.name_url, subject_course_name_url: course.name_url), last_mod: course.updated_at, change_freq: 'monthly', priority: 1.0
+      url library_course_url(group_name_url: group.name_url, course_name_url: course.name_url), last_mod: course.updated_at, change_freq: 'monthly', priority: 1.0
     end
   end
 
@@ -38,7 +38,7 @@ sitemap :site do
 
 
   #Tutor Profile pages
-  User.all_tutors.with_course_tutor_details.where.not(profile_image_file_name: nil).each do |tutor|
+  User.all_tutors.with_course_tutors.where.not(profile_image_file_name: nil).each do |tutor|
     url profile_url(tutor, locale: 'en'), last_mod: tutor.updated_at, change_freq: 'monthly', priority: 1.0
   end
 
@@ -69,15 +69,15 @@ end
 
 # If you want to generate multiple sitemaps in different folders (for example if you have
 # more than one domain, you can specify a folder before the sitemap definitions:
-# 
+#
 #   Site.all.each do |site|
 #     folder "sitemaps/#{site.domain}"
 #     host site.domain
-#     
+#
 #     sitemap :site do
 #       url root_url
 #     end
-# 
+#
 #     sitemap_for site.products.scoped
 #   end
 

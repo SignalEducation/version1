@@ -3,7 +3,7 @@
 namespace :courses do
   desc 'Update quiz_result to old CME Users Log'
   task quiz_result: :environment do
-    logs               = CourseModuleElementUserLog.quizzes.where(quiz_result: nil)
+    logs               = CourseStepLog.quizzes.where(quiz_result: nil)
     logs_not_processed = []
 
     Rails.logger = Logger.new(Rails.root.join('log', 'tasks.log'))

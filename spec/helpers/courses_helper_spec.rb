@@ -3,25 +3,25 @@
 require 'rails_helper'
 
 describe CoursesHelper do
-  describe '#course_module_status' do
-    let(:course_module) { create(:course_module) }
+  describe '#course_lesson_status' do
+    let(:course_lesson) { create(:course_lesson) }
 
     context 'completed' do
       it 'completed class' do
-        expect(course_module_status(course_module, true, [course_module.id])).to eq('completed')
+        expect(course_lesson_status(course_lesson, true, [course_lesson.id])).to eq('completed')
       end
     end
 
     context 'incompleted' do
       it 'empty class' do
-        expect(course_module_status(course_module, false, [course_module.id])).to eq('')
+        expect(course_lesson_status(course_lesson, false, [course_lesson.id])).to eq('')
       end
     end
   end
 
   describe '#course_element_user_log_status' do
     context 'Quiz' do
-      let(:cmeul) { build(:course_module_element_user_log, is_quiz: true, is_video: nil) }
+      let(:cmeul) { build(:course_step_log, is_quiz: true, is_video: nil) }
 
       it 'started status' do
         cmeul.quiz_result = 'started'
@@ -43,7 +43,7 @@ describe CoursesHelper do
     end
 
     context 'Other Course Module Element Types' do
-      let(:cmeul) { build(:course_module_element_user_log, is_quiz: false, is_video: true) }
+      let(:cmeul) { build(:course_step_log, is_quiz: false, is_video: true) }
 
       it 'started status' do
         cmeul.element_completed = false

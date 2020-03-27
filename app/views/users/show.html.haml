@@ -51,8 +51,8 @@
                   .stats-box
                     .stats-box-inner
                       .p
-                        -if @user.course_module_element_user_logs.any?
-                          =humanize_datetime(@user.course_module_element_user_logs.last.created_at)
+                        -if @user.course_step_logs.any?
+                          =humanize_datetime(@user.course_step_logs.last.created_at)
                         -else
                           ='Never'
                       .h3

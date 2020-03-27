@@ -62,10 +62,10 @@ class MockExamsController < ApplicationController
     @mock_exam       = MockExam.find_by(id: params[:id]) if params[:id].to_i > 0
     @products        = Product.all_in_order
     @currencies      = Currency.all_in_order
-    @subject_courses = SubjectCourse.all_active.all_in_order
+    @courses = Course.all_active.all_in_order
   end
 
   def allowed_params
-    params.require(:mock_exam).permit(:subject_course_id, :name, :sorting_order, :file, :cover_image)
+    params.require(:mock_exam).permit(:course_id, :name, :sorting_order, :file, :cover_image)
   end
 end

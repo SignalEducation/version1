@@ -69,10 +69,10 @@ describe User do
 
   # relationships
   it { should belong_to(:country) }
-  it { should have_many(:course_module_element_user_logs) }
-  it { should have_many(:completed_course_module_element_user_logs) }
-  it { should have_many(:incomplete_course_module_element_user_logs) }
-  it { should have_many(:course_tutor_details) }
+  it { should have_many(:course_step_logs) }
+  it { should have_many(:completed_course_step_logs) }
+  it { should have_many(:incomplete_course_step_logs) }
+  it { should have_many(:course_tutors) }
   it { should have_many(:exam_body_user_details) }
   it { should have_many(:enrollments) }
   it { should have_many(:invoices) }
@@ -81,9 +81,9 @@ describe User do
   it { should have_many(:subscriptions) }
   it { should have_many(:subscription_payment_cards) }
   it { should have_many(:subscription_transactions) }
-  it { should have_many(:student_exam_tracks) }
-  it { should have_many(:course_section_user_logs) }
-  it { should have_many(:subject_course_user_logs) }
+  it { should have_many(:course_lesson_logs) }
+  it { should have_many(:course_section_logs) }
+  it { should have_many(:course_logs) }
   it { should belong_to(:user_group) }
   it { should have_many(:ahoy_visits) }
   it { should have_many(:charges) }
@@ -151,7 +151,7 @@ describe User do
   it { expect(User).to respond_to(:this_month) }
   it { expect(User).to respond_to(:this_week) }
   it { expect(User).to respond_to(:active_this_week) }
-  it { expect(User).to respond_to(:with_course_tutor_details) }
+  it { expect(User).to respond_to(:with_course_tutors) }
 
   # class methods
   it { expect(User).to respond_to(:search) }
@@ -201,7 +201,7 @@ describe User do
   it { should respond_to(:destroyable?) }
   it { should respond_to(:full_name) }
   it { should respond_to(:this_hour) }
-  it { should respond_to(:subject_course_user_log_course_ids) }
+  it { should respond_to(:course_log_course_ids) }
   it { should respond_to(:enrolled_courses) }
   it { should respond_to(:valid_enrolled_courses) }
   it { should respond_to(:visit_campaigns) }
@@ -217,8 +217,8 @@ describe User do
   it { should respond_to(:subscription_action_required?) }
   it { should respond_to(:actionable_invoice) }
 
-  it { should respond_to(:completed_course_module_element) }
-  it { should respond_to(:started_course_module_element) }
+  it { should respond_to(:completed_course_step) }
+  it { should respond_to(:started_course_step) }
   it { should respond_to(:last_subscription) }
 
   describe '.search' do

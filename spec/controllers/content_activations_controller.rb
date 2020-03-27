@@ -5,14 +5,14 @@ describe ContentActivationsController, type: :controller do
 
   let!(:group) { FactoryBot.create(:group) }
   let!(:exam_body) { FactoryBot.create(:exam_body) }
-  let!(:subject_course)  { FactoryBot.create(:active_subject_course, group_id: group.id, exam_body_id: exam_body.id) }
+  let!(:course)  { FactoryBot.create(:active_course, group_id: group.id, exam_body_id: exam_body.id) }
   let!(:course_section) { FactoryBot.create(:course_section,
-                                              subject_course: subject_course) }
-  let!(:course_module) { FactoryBot.create(:active_course_module,
+                                              course: course) }
+  let!(:course_lesson) { FactoryBot.create(:active_course_lesson,
                                              course_section: course_section,
-                                             subject_course: subject_course) }
-  let!(:course_module_element) { FactoryBot.create(:cme_video,
-                                                       course_module: course_module) }
+                                             course: course) }
+  let!(:course_step) { FactoryBot.create(:cme_video,
+                                                       course_lesson: course_lesson) }
 
   include_context 'users_and_groups_setup'
 
@@ -36,11 +36,11 @@ describe ContentActivationsController, type: :controller do
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
-        post :create, params: {id: course_module_element.id, type: 'CourseModuleElement', datetime: '24/10/2020 00:00:00'}
+        post :create, params: {id: course_step.id, type: 'CourseStep', datetime: '24/10/2020 00:00:00'}
         expect(flash[:error]).to be_nil
         expect(flash[:success]).to be_nil
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(subject_course_url(subject_course.id))
+        expect(response).to redirect_to(course_url(course.id))
       end
 
     end

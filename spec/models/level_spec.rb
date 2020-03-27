@@ -39,7 +39,7 @@ RSpec.describe Level, type: :model do
 
   # relationships
   it { should belong_to(:group) }
-  it { should have_many(:subject_courses) }
+  it { should have_many(:courses) }
 
   # validation
   it { should validate_presence_of(:name) }

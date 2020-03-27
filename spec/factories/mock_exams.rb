@@ -3,7 +3,7 @@
 # Table name: mock_exams
 #
 #  id                       :integer          not null, primary key
-#  subject_course_id        :integer
+#  course_id        :integer
 #  name                     :string
 #  sorting_order            :integer
 #  created_at               :datetime         not null
@@ -20,7 +20,7 @@
 
 FactoryBot.define do
   factory :mock_exam do
-    subject_course
+    course
     name { "MyString" }
     sorting_order { 1 }
   end

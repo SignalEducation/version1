@@ -5,8 +5,8 @@
 #  id                                :integer          not null, primary key
 #  constructed_response_id           :integer
 #  scenario_id                       :integer
-#  course_module_element_id          :integer
-#  course_module_element_user_log_id :integer
+#  course_step_id          :integer
+#  course_step_log_id :integer
 #  user_id                           :integer
 #  original_scenario_text_content    :text
 #  user_edited_scenario_text_content :text
@@ -31,8 +31,8 @@ describe ConstructedResponseAttempt do
   describe 'relationships' do
     it { should belong_to(:constructed_response) }
     it { should belong_to(:scenario) }
-    it { should belong_to(:course_module_element) }
-    it { should belong_to(:course_module_element_user_log) }
+    it { should belong_to(:course_step) }
+    it { should belong_to(:course_step_log) }
     it { should belong_to(:user) }
     it { should have_many(:scenario_question_attempts) }
   end
@@ -43,10 +43,10 @@ describe ConstructedResponseAttempt do
     it { should validate_presence_of(:scenario_id) }
     it { should validate_numericality_of(:scenario_id) }
     # TODO - Why does this validation not exist in model
-    xit { should validate_presence_of(:course_module_element_id) }
-    xit { should validate_numericality_of(:course_module_element_id) }
-    it { should validate_presence_of(:course_module_element_user_log_id).on(:update)  }
-    it { should validate_numericality_of(:course_module_element_user_log_id).on(:update)  }
+    xit { should validate_presence_of(:course_step_id) }
+    xit { should validate_numericality_of(:course_step_id) }
+    it { should validate_presence_of(:course_step_log_id).on(:update)  }
+    it { should validate_numericality_of(:course_step_log_id).on(:update)  }
     it { should validate_presence_of(:user_id) }
     it { should validate_numericality_of(:user_id) }
     it { should validate_presence_of(:original_scenario_text_content) }

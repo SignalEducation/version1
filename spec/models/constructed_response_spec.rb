@@ -3,7 +3,7 @@
 # Table name: constructed_responses
 #
 #  id                       :integer          not null, primary key
-#  course_module_element_id :integer
+#  course_step_id :integer
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
 #  time_allowed             :integer
@@ -13,17 +13,17 @@
 require 'rails_helper'
 
 describe ConstructedResponse do
-  let!(:course_module_element) { create(:course_module_element) }
-  let!(:constructed_response)  { create(:constructed_response, course_module_element: course_module_element) }
+  let!(:course_step) { create(:course_step) }
+  let!(:constructed_response)  { create(:constructed_response, course_step: course_step) }
 
   describe 'relationships' do
-    it { should belong_to(:course_module_element) }
+    it { should belong_to(:course_step) }
     it { should have_one(:scenario) }
   end
 
   describe 'validations' do
-    it { should validate_presence_of(:course_module_element_id).on(:update) }
-    it { should validate_numericality_of(:course_module_element_id).on(:update) }
+    it { should validate_presence_of(:course_step_id).on(:update) }
+    it { should validate_numericality_of(:course_step_id).on(:update) }
   end
 
   describe 'callbacks' do

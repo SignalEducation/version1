@@ -3,7 +3,7 @@
 # Table name: course_sections
 #
 #  id                         :integer          not null, primary key
-#  subject_course_id          :integer
+#  course_id          :integer
 #  name                       :string
 #  name_url                   :string
 #  sorting_order              :integer
@@ -25,17 +25,17 @@ class CourseSection < ApplicationRecord
   #include Archivable
 
   # relationships
-  belongs_to :subject_course
-  has_many :course_section_user_logs
-  has_many :course_modules
-  has_many :student_exam_tracks
-  has_many :course_module_element_user_logs
-  accepts_nested_attributes_for :course_modules
+  belongs_to :course
+  has_many :course_section_logs
+  has_many :course_lessons
+  has_many :course_lesson_logs
+  has_many :course_step_logs
+  accepts_nested_attributes_for :course_lessons
 
   # validation
-  validates :subject_course, presence: true
+  validates :course, presence: true
   validates :name, presence: true
-  validates :name_url, presence: true, uniqueness: { scope: :subject_course,
+  validates :name_url, presence: true, uniqueness: { scope: :course,
                                  message: "must be unique within a course" }
   #validates :sorting_order, presence: true
 
@@ -46,7 +46,7 @@ class CourseSection < ApplicationRecord
   after_update :update_parent
 
   # scopes
-  scope :all_in_order, -> { order(:sorting_order, :subject_course_id) }
+  scope :all_in_order, -> { order(:sorting_order, :course_id) }
   scope :all_active, -> { where(active: true) }
   scope :all_for_completion, -> { where(counts_towards_completion: true) }
 
@@ -56,23 +56,23 @@ class CourseSection < ApplicationRecord
 
   ## Parent & Child associations ##
   def parent
-    self.subject_course
+    self.course
   end
 
   def children
-    self.course_modules.all
+    self.course_lessons.all
   end
 
   def active_children
     self.children.all_active.all_in_order
   end
 
-  def first_active_course_module
+  def first_active_course_lesson
     self.active_children.first
   end
 
   def first_active_cme
-    self.first_active_course_module.first_active_cme
+    self.first_active_course_lesson.first_active_cme
   end
 
   def children_available_count
@@ -95,10 +95,10 @@ class CourseSection < ApplicationRecord
 
   def destroyable_children
     # not destroyable:
-    # - self.course_module_element_user_logs
-    # - self.student_exam_tracks.empty?
+    # - self.course_step_logs
+    # - self.course_lesson_logs.empty?
     the_list = []
-    the_list += self.course_modules.to_a
+    the_list += self.course_lessons.to_a
     the_list
   end
 

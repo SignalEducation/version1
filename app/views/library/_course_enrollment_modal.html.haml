@@ -23,10 +23,10 @@
 
               .form-details#enrollment_form
                 =form_for(@new_enrollment, html: {class: 'form py-2 enrollment_modal_form', role: 'form', name: 'enrollment_modal_form'}, remote: true) do |f|
-                  =f.hidden_field :subject_course_id, value: @course.id
+                  =f.hidden_field :course_id, value: @course.id
                   =f.hidden_field :exam_body_id, value: @course.exam_body_id
                   =f.hidden_field :notifications, value: false, id: 'hidden_notifications'
-                  =f.hidden_field :subject_course_user_log_id, value: @subject_course_user_log.try(:id), id: 'scul_id'
+                  =f.hidden_field :course_log_id, value: @course_log.try(:id), id: 'scul_id'
 
                   .row
                     .col-sm-6
@@ -56,7 +56,7 @@
                           %label{class: "custom-control-label", for: "notifications"}
                             ='Bootcamp Notifications'
 
-                        -if @subject_course_user_log
+                        -if @course_log
                           %legend.sr-only Reset Progress Checkbox
                           .custom-control.custom-checkbox.mb-4
                             %input{type: "checkbox", class: "custom-control-input", id: "use_new_scul"}
@@ -133,11 +133,11 @@
   });
 
 
--if @subject_course_user_log
+-if @course_log
 
   :javascript
     // Set the SCUL hidden id field to nil if checkbox is selected
-    let scul_id = #{@subject_course_user_log.id};
+    let scul_id = #{@course_log.id};
     $('input[type="checkbox"]').on('change', function() {
       if($('#use_new_scul').prop('checked') == true) {
         $("#scul_id").val('');
@@ -182,4 +182,3 @@
     let course = "#{@course.name}";
     dataLayer.push({'event':'courseEnrol', 'course_name':course, 'exam_sitting':values["enrollment[exam_sitting_id]"], 'bootcamp_notifications':values["enrollment[notifications]"]});
   });
-

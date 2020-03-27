@@ -3,10 +3,10 @@
 :javascript
   let log_id         = ''
   let video_cme_id   = "#{cme.id}"
-  let course_log_id  = "#{@subject_course_user_log.try(:id) || ''}";
-  let section_log_id = "#{@course_section_user_log.try(:id) || ''}";
-  let exam_track_id  = "#{@student_exam_track.try(:id) || ''}";
-  let video_id       = "#{ENV['DACAST_PLAYER_KEY']}#{cme.course_module_element_video.dacast_id}"
+  let course_log_id  = "#{@course_log.try(:id) || ''}";
+  let section_log_id = "#{@course_section_log.try(:id) || ''}";
+  let exam_track_id  = "#{@course_lesson_log.try(:id) || ''}";
+  let video_id       = "#{ENV['DACAST_PLAYER_KEY']}#{cme.course_video.dacast_id}"
   let myPlayer       = dacast(video_id, 'video-player-window');
 
   // Create a log when video start

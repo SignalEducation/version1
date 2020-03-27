@@ -3,7 +3,7 @@
 # Table name: course_sections
 #
 #  id                         :integer          not null, primary key
-#  subject_course_id          :integer
+#  course_id          :integer
 #  name                       :string
 #  name_url                   :string
 #  sorting_order              :integer
@@ -23,18 +23,18 @@ require 'rails_helper'
 
 describe CourseSection do
   describe 'relationships' do
-    it { should belong_to(:subject_course) }
-    it { should have_many(:course_modules) }
-    it { should have_many(:course_section_user_logs) }
-    it { should have_many(:student_exam_tracks) }
-    it { should have_many(:course_module_element_user_logs) }
+    it { should belong_to(:course) }
+    it { should have_many(:course_lessons) }
+    it { should have_many(:course_section_logs) }
+    it { should have_many(:course_lesson_logs) }
+    it { should have_many(:course_step_logs) }
   end
 
   describe 'validations' do
-    it { should validate_presence_of(:subject_course) }
+    it { should validate_presence_of(:course) }
     it { should validate_presence_of(:name) }
     it { should validate_presence_of(:name_url) }
-    xit { should validate_uniqueness_of(:name_url).scoped_to(:subject_course) }
+    xit { should validate_uniqueness_of(:name_url).scoped_to(:course) }
     xit { should validate_presence_of(:sorting_order) }
   end
 
@@ -52,7 +52,7 @@ describe CourseSection do
     it { should respond_to(:parent) }
     it { should respond_to(:children) }
     it { should respond_to(:active_children) }
-    it { should respond_to(:first_active_course_module) }
+    it { should respond_to(:first_active_course_lesson) }
     it { should respond_to(:first_active_cme) }
     it { should respond_to(:children_available_count) }
     it { should respond_to(:all_content_restricted?) }

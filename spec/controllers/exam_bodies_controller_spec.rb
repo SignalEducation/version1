@@ -21,9 +21,9 @@ describe ExamBodiesController, type: :controller do
   let!(:exam_body_1) { FactoryBot.create(:exam_body) }
   let!(:exam_body_2) { FactoryBot.create(:exam_body) }
   let!(:group) { FactoryBot.create(:group) }
-  let!(:subject_course)  { FactoryBot.create(:active_subject_course, group_id: group.id, exam_body_id: exam_body_1.id) }
-  let!(:exam_sitting_1) {FactoryBot.create(:exam_sitting, exam_body_id: exam_body_1.id, subject_course: subject_course)}
-  let!(:exam_sitting_2) {FactoryBot.create(:exam_sitting, exam_body_id: exam_body_1.id, subject_course: subject_course)}
+  let!(:course)  { FactoryBot.create(:active_course, group_id: group.id, exam_body_id: exam_body_1.id) }
+  let!(:exam_sitting_1) {FactoryBot.create(:exam_sitting, exam_body_id: exam_body_1.id, course: course)}
+  let!(:exam_sitting_2) {FactoryBot.create(:exam_sitting, exam_body_id: exam_body_1.id, course: course)}
   let!(:valid_params) { FactoryBot.attributes_for(:exam_body) }
 
 

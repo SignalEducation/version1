@@ -5,7 +5,7 @@ FactoryBot.define do
     content           { Faker::Lorem.paragraph(sentence_count: 10) }
     agreement_content { Faker::Lorem.paragraph }
     score             { Faker::Number.decimal(l_digits: 1, r_digits: 2) }
-    association :subject_course
+    association :course
 
     trait :active do
       active { true }

@@ -13,7 +13,7 @@
 #  currency_id       :integer
 #  price             :decimal(, )
 #  stripe_sku_guid   :string
-#  subject_course_id :integer
+#  course_id :integer
 #  sorting_order     :integer
 #  product_type      :integer          default(0)
 #

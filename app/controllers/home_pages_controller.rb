@@ -61,14 +61,14 @@ class HomePagesController < ApplicationController
   def get_variables
     @home_page = HomePage.where(id: params[:id]).first if params[:id].to_i > 0
     @subscription_plan_categories = SubscriptionPlanCategory.all_in_order
-    @subject_courses = SubjectCourse.all_active.all_in_order
+    @courses = Course.all_active.all_in_order
     @groups = Group.all_active.all_in_order
   end
 
   def allowed_params
     params.require(:home_page).permit(:seo_title, :seo_description,
                                       :subscription_plan_category_id, :public_url,
-                                      :subject_course_id, :custom_file_name,
+                                      :course_id, :custom_file_name,
                                       :name, :home, :group_id, :background_image,
                                       :mailchimp_list_guid, :logo_image,
                                       :registration_form, :pricing_section,

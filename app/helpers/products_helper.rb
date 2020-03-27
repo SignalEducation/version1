@@ -4,7 +4,7 @@ module ProductsHelper
   def product_link(product, current_user)
     return new_product_order_url(product.id) if current_user
 
-    id = product.cbe? ? product.cbe.subject_course.exam_body.id : product.mock_exam.subject_course.group.exam_body.id
+    id = product.cbe? ? product.cbe.course.exam_body.id : product.mock_exam.course.group.exam_body.id
     sign_in_or_register_url(exam_body_id: id, product_id: product.id)
   end
 

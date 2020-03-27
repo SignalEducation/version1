@@ -2,7 +2,7 @@
   .col-xl-12.mb-5
     .start-screen-box-nav.start-screen-box-nav-header
       .cr-resources
-        =@course_module_element.try(:name).try(:html_safe)
+        =@course_step.try(:name).try(:html_safe)
 
     .start-screen-box
       .row
@@ -26,21 +26,21 @@
               %li='You can make as many attempts as you like but only your most recent 8 attempts will be available to view'
 
 
-          -if @course_module_element.course_module_element_resources && @course_module_element.course_module_element_resources.any?
-            %h6.pb-3.pt-3
-              ='Help/Formulae Sheets'
-            .row
-              -@course_module_element.course_module_element_resources.each do |resource|
-                .col-sm-6.pb-2
-                  =link_to resource.upload.url, target: '_blank' do
-                    .btn.btn-secondary
-                      =resource.name
+          -# -if @course_step.course_notes && @course_step.course_notes.any?
+          -#   %h6.pb-3.pt-3
+          -#     ='Help/Formulae Sheets'
+          -#   .row
+          -#     -@course_step.course_notes.each do |resource|
+          -#       .col-sm-6.pb-2
+          -#         =link_to resource.upload.url, target: '_blank' do
+          -#           .btn.btn-secondary
+          -#             =resource.name
 
         .col-sm.text-center
-          =link_to courses_constructed_response_url(subject_course_name_url: @course_module_element.course_module.course_section.subject_course.name_url,
-           course_section_name_url: @course_module_element.course_module.course_section.name_url,
-            course_module_name_url: @course_module_element.course_module.name_url,
-             course_module_element_name_url: @course_module_element.name_url), id: 'newConstructedResponseButton' do
+          =link_to courses_constructed_response_url(course_name_url: @course_step.course_lesson.course_section.course.name_url,
+           course_section_name_url: @course_step.course_lesson.course_section.name_url,
+            course_lesson_name_url: @course_step.course_lesson.name_url,
+             course_step_name_url: @course_step.name_url), id: 'newConstructedResponseButton' do
             .btn.btn-primary.mt-3
               ='New Constructed Response'
 
@@ -60,7 +60,7 @@
 
 
 
-          -if @course_module_element_user_logs && @course_module_element_user_logs.any?
+          -if @course_step_logs && @course_step_logs.any?
             .table-responsive.pt-3
               %table.table
                 %thead
@@ -71,10 +71,10 @@
                     %th='Status'
 
                 %tbody
-                  -@course_module_element_user_logs.each do |cmeul|
+                  -@course_step_logs.each do |cmeul|
                     %tr
                       %td
-                        =link_to "Response-##{cmeul.constructed_response_attempt.try(:guid)}", courses_constructed_response_url(@course_module_element.course_module.subject_course.name_url, @course_module_element.course_module.course_section.name_url, @course_module_element.course_module.name_url, @course_module_element.name_url, cmeul.id)
+                        =link_to "Response-##{cmeul.constructed_response_attempt.try(:guid)}", courses_constructed_response_url(@course_step.course_lesson.course.name_url, @course_step.course_lesson.course_section.name_url, @course_step.course_lesson.name_url, @course_step.name_url, cmeul.id)
                       %td
                         =humanize_datetime(cmeul.created_at)
                       %td

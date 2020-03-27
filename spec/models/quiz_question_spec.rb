@@ -3,13 +3,13 @@
 # Table name: quiz_questions
 #
 #  id                            :integer          not null, primary key
-#  course_module_element_quiz_id :integer
-#  course_module_element_id      :integer
+#  course_quiz_id :integer
+#  course_step_id      :integer
 #  difficulty_level              :string(255)
 #  created_at                    :datetime
 #  updated_at                    :datetime
 #  destroyed_at                  :datetime
-#  subject_course_id             :integer
+#  course_id             :integer
 #  sorting_order                 :integer
 #  custom_styles                 :boolean          default("false")
 #
@@ -19,9 +19,9 @@ require 'concerns/archivable_spec.rb'
 
 describe QuizQuestion do
   describe 'relationships' do
-    it { should belong_to(:subject_course) }
-    it { should belong_to(:course_module_element) }
-    it { should belong_to(:course_module_element_quiz) }
+    it { should belong_to(:course) }
+    it { should belong_to(:course_step) }
+    it { should belong_to(:course_quiz) }
     it { should have_many(:quiz_attempts) }
     it { should have_many(:quiz_answers) }
     it { should have_many(:quiz_contents) }
@@ -29,12 +29,12 @@ describe QuizQuestion do
   end
 
   describe 'validations' do
-   it { should validate_presence_of(:course_module_element_id).on(:update) }
+   it { should validate_presence_of(:course_step_id).on(:update) }
   end
 
   describe 'callbacks' do
     it { should callback(:check_dependencies).before(:destroy) }
-    it { should callback(:set_course_module_element).before(:validation) }
+    it { should callback(:set_course_step).before(:validation) }
   end
   describe 'scopes' do
     it { expect(QuizQuestion).to respond_to(:all_in_order) }

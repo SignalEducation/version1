@@ -1,0 +1,37 @@
+=form_for([@course_step, @course_note], url: { action: @action }, html: {class: 'form-horizontal', role: 'form'}, multipart: true) do |f|
+  =f.hidden_field :course_step_id
+  .form-box
+    .row
+      =render partial: '/layouts/error_messages', locals: {thing: @course_note, message: nil}
+
+      .col-md-6
+        =f.label :name, t('views.course_notes.form.name')
+        .input-group.input-group-lg.full-width
+          =f.text_field :name, placeholder: t('views.course_notes.form.name_placeholder'), class: 'form-control'
+
+      .col-md-6
+        =f.label :upload, t('views.course_notes.form.upload')
+
+        -if f.object.present?
+          .form-control-static
+            =image_tag(f.object.upload.url)
+            %br/
+
+          Upload a replacement file
+          .input-group.input-group-lg
+            =f.file_field :upload
+
+        -else
+          .input-group.input-group-lg
+            =f.file_field :upload, class: 'form-control'
+      .col-sm-6
+        .form-group
+          .checkbox
+            %label
+              =f.check_box :download_available
+              ='Allow Download'
+
+    .row
+      .col-sm-12.l-margin-top
+        =f.submit t('views.general.save'), class: 'btn btn-primary'
+        =link_to t('views.general.cancel'), edit_admin_course_step_url(@course_step.id), class: 'btn btn-secondary'

@@ -2,21 +2,21 @@
   .col-sm-12
     .l-margin-bottom
       .tab-content
-        -if @course_module_element.try(:video_resource)
+        -if @course_step.try(:video_resource)
           .tab-pane.fade.in.active#description{role: 'tabpanel'}
             .col-md-12
               .content-box.content-box-outer.l-margin-bottom-huge
                 .content-box-inner
                   %p.big
-                    -if @course_module_element.try(:description)
-                      =@course_module_element.description.html_safe
+                    -if @course_step.try(:description)
+                      =@course_step.description.html_safe
 
           .tab-pane.fade#question{role: 'tabpanel'}
             .col-md-12
               .content-box.content-box-outer.l-margin-bottom-huge
                 .content-box-inner
                   %p.big
-                    =@course_module_element.video_resource.try(:question).try(:html_safe)
+                    =@course_step.video_resource.try(:question).try(:html_safe)
 
 
           .tab-pane.fade#answer{role: 'tabpanel'}
@@ -24,31 +24,30 @@
               .content-box.content-box-outer.l-margin-bottom-huge
                 .content-box-inner
                   %p.big
-                    =@course_module_element.video_resource.try(:answer).try(:html_safe)
+                    =@course_step.video_resource.try(:answer).try(:html_safe)
 
           .tab-pane.fade#transcript{role: 'tabpanel'}
             .col-md-12
               .content-box.content-box-outer.l-margin-bottom-huge
                 .content-box-inner
                   %p.big
-                    =@course_module_element.video_resource.try(:transcript).try(:html_safe)
+                    =@course_step.video_resource.try(:transcript).try(:html_safe)
 
           .tab-pane.fade#notes{role: 'tabpanel'}
             .col-md-12
               .content-box.content-box-outer.l-margin-bottom-huge
                 .content-box-inner
                   %p.big
-                    =@course_module_element.video_resource.try(:notes).try(:html_safe)
+                    =@course_step.video_resource.try(:notes).try(:html_safe)
 
 
 
         -else
-          -if @course_module_element.description
+          -if @course_step.description
             .tab-pane.fade.in.active#description{role: 'tabpanel'}
               .col-md-12
                 .content-box.content-box-outer.l-margin-bottom-huge
                   .content-box-inner
                     %p.big
-                      -if @course_module_element.try(:description)
-                        =@course_module_element.description.html_safe
-
+                      -if @course_step.try(:description)
+                        =@course_step.description.html_safe

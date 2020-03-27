@@ -61,7 +61,7 @@ describe Group do
   end
 
   # relationships
-  it { should have_many(:subject_courses) }
+  it { should have_many(:courses) }
   it { should have_many(:home_pages) }
 
   # validation

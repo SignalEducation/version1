@@ -1,0 +1,40 @@
+%h3.l-margin-top-big
+  =t('views.course_notes.index.h1')
+
+
+=f.fields_for :course_notes do |cme_resource|
+  .box-item
+    -if cme_resource.object.present?
+      %h4
+        Edit Upload
+    -else
+      %h4
+        New Upload
+
+    .row
+
+      .col-sm-6
+        =cme_resource.label :name, t('views.course_notes.form.name'), class: 'control-label'
+        .input-group.input-group-lg
+          =cme_resource.text_field :name, placeholder: t('views.course_notes.form.name_placeholder'), class: 'form-control'
+
+      .col-sm-6
+        =cme_resource.label :upload, t('views.course_notes.form.upload'), class: 'control-label'
+
+        -if cme_resource.object.upload.present?
+          .form-control-static
+            =link_to cme_resource.object.upload_file_name, cme_resource.object.upload.try(:url), target: '_blank'
+
+          Upload a replacement file or delete the file
+          .input-group.input-group-lg
+            =cme_resource.file_field :upload, class: 'form-control'
+
+          %p{style: 'margin: 10px 0;'}
+            OR
+          .checkbox
+            %label
+              =cme_resource.check_box :_destroy
+              =t('views.course_steps.form.delete')
+        -else
+          .input-group.input-group-lg
+            =cme_resource.file_field :upload, class: 'form-control'
