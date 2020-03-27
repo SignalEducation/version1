@@ -1,0 +1,20 @@
+-total_lessons = @subject_course_user_log.subject_course.completion_cme_count
+-completed_lessons = @subject_course_user_log.try(:count_of_cmes_completed) || 0
+-complete_percent = @subject_course_user_log.try(:percentage_complete)
+
+.row
+  .col-xs-12.col-lg-8
+    %h4.sr-only Course Progress
+    .pt-3.pb-4.pb-sm-3
+      %small.text-gray2.mb-3
+        %span.current-step-indicator=completed_lessons
+        out of
+        %span.total-steps-indicator=total_lessons
+        steps completed
+      .progress
+        .progress-bar{role: "progressbar", 'aria-valuenow': complete_percent, 'aria-valuemin': "0", 'aria-valuemax': '100', style: "width: #{complete_percent}%"}
+
+  .col-xs-12.col-lg-2
+    .ml-lg-4.pt-1.pb-4
+      -if !@subject_course_user_log.completed && @subject_course_user_log&.latest_course_module_element&.next_element
+        =link_to 'Resume', course_special_link(@subject_course_user_log.latest_course_module_element.next_element, @subject_course_user_log), class: 'btn btn-primary full-width'
