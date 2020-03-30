@@ -20,20 +20,7 @@
 
       %section.course-progress
         - if @subject_course_user_log
-          -total_lessons = @subject_course_user_log.subject_course.completion_cme_count
-          -completed_lessons = @subject_course_user_log.try(:count_of_cmes_completed) || 0
-          -complete_percent = @subject_course_user_log.try(:percentage_complete)
-
-          %h4.sr-only Course Progress
-          .pt-3.pb-4.pb-sm-6
-            %small.text-gray2.mb-3
-              %span.current-step-indicator=completed_lessons
-              out of
-              %span.total-steps-indicator=total_lessons
-              steps completed
-            .progress
-              .progress-bar{role: "progressbar", 'aria-valuenow': complete_percent, 'aria-valuemin': "0",
-               'aria-valuemax': '100', style: "width: #{complete_percent}%"}
+          =render partial: 'progress'
         - else
           =render partial: 'course_info'
 

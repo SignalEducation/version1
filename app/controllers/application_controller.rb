@@ -13,6 +13,7 @@ class ApplicationController < ActionController::Base
   before_action :set_session_stuff # not for Api::
   before_action :set_layout_variables
   before_action :authorize_rack_profiler
+  rescue_from ActionController::InvalidAuthenticityToken, with: :log_out_user
 
   helper_method :current_user_session, :current_user
 
@@ -26,15 +27,16 @@ class ApplicationController < ActionController::Base
   ### User access control and authentication
 
   def current_user_session
-    return @current_user_session if defined?(@current_user_session)
-
-    @current_user_session = UserSession.find
+    @current_user_session ||= UserSession.find
   end
 
   def current_user
-    return @current_user if defined?(@current_user)
+    @current_user ||= current_user_session&.record
+  end
 
-    @current_user = current_user_session&.record
+  def log_out_user
+    current_user_session&.destroy
+    redirect_to sign_in_path
   end
 
   def set_current_visit(session_user = nil)

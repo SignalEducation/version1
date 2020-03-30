@@ -90,6 +90,7 @@ class CourseSectionUserLog < ApplicationRecord
 
   # After Save
   def update_subject_course_user_log
+    subject_course_user_log.latest_course_module_element_id = latest_course_module_element_id
     subject_course_user_log.recalculate_scul_completeness # Includes a save!
   end
 

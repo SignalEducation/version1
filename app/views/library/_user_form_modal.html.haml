@@ -27,5 +27,9 @@
               .form-group
                 =label_tag :question, 'Question'
                 =text_area_tag :question, nil, rows: 3, class: 'form-control', placeholder: 'Please outline your question', required: true
+
+          %p.pt-1
+            =recaptcha_tags
+
           .pt-2
             =submit_tag 'Submit', class: 'btn btn-primary btn-sm'
