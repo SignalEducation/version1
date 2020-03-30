@@ -382,4 +382,10 @@ class ApplicationController < ActionController::Base
     @tag_manager_course = course
   end
   helper_method :tag_manager_data_layer
+
+  private
+
+  def handle_unverified_request
+    log_out_user
+  end
 end
