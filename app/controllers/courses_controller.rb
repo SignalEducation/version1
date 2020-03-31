@@ -67,8 +67,8 @@ class CoursesController < ApplicationController
   end
 
   def create_video_user_log
-    course_step = CourseStep.find(params[:course][:cmeId])
-    video_cme_user_log    = CourseStepLog.new(
+    course_step = CourseStep.find(params[:cmeId])
+    video_cme_user_log = CourseStepLog.new(
       course_step_id: course_step.id,
       user_id: current_user.try(:id),
       session_guid: current_session_guid,
@@ -79,9 +79,9 @@ class CoursesController < ApplicationController
       course_lesson_id: course_step.course_lesson_id,
       course_section_id: course_step.course_lesson.course_section_id,
       course_id: course_step.course_lesson.course_section.course_id,
-      course_log_id: params[:course][:scul_id].presence,
-      course_section_log_id: params[:course][:csul_id].presence,
-      course_lesson_log_id: params[:course][:set_id].presence
+      course_log_id: params[:scul_id].presence,
+      course_section_log_id: params[:csul_id].presence,
+      course_lesson_log_id: params[:set_id].presence
     )
 
     respond_to do |format|

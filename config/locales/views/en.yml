@@ -379,41 +379,6 @@ en:
       new:
         h1: New Coupon
 
-
-    courses:
-      show:
-        h1: Courses
-        done: Done
-        coming_soon: "We don't have any content for this course module right now."
-
-      content_denied:
-          subscription: Upgrade to a Subscription
-          subscription_required: A valid subscription is required to view this content. Upgrade to access this course.
-          product: Purchase this Course
-          product_required: You must first purchase this course to access it's content.
-
-      show_results:
-        result: 'Result:'
-        score: 'Score:'
-        summary: Summary
-        q: Q
-        answers: Possible Answers
-        correct_answer: "Correct Answer: "
-        your_answer: "Your Answer: "
-        solution: "Solution"
-        check_out: "Review the video: "
-        attempts_table:
-          question: 'Question'
-          result: Result
-          score: Score
-          level: Level
-          video: Video
-          total: Total
-        scoring_system: Scoring system
-        previous_attempts: Previous Attempts
-        no_previous_attempts: "This is your first attempt at this quiz. If you re-attempt this quiz in the future, your most recent previous attempts will be shown here."
-
-
     course_sections:
       form:
         course_steps: Course Module Elements
@@ -1291,14 +1256,43 @@ en:
         edit_content: Edit Content
         edit_tutors: Tutors
 
+      content_denied:
+          subscription: Upgrade to a Subscription
+          subscription_required: A valid subscription is required to view this content. Upgrade to access this course.
+          product: Purchase this Course
+          product_required: You must first purchase this course to access it's content.
+
+      show_results:
+        result: 'Result:'
+        score: 'Score:'
+        summary: Summary
+        q: Q
+        answers: Possible Answers
+        correct_answer: "Correct Answer: "
+        your_answer: "Your Answer: "
+        solution: "Solution"
+        check_out: "Review the video: "
+        attempts_table:
+          question: 'Question'
+          result: Result
+          score: Score
+          level: Level
+          video: Video
+          total: Total
+        scoring_system: Scoring system
+        previous_attempts: Previous Attempts
+        no_previous_attempts: "This is your first attempt at this quiz. If you re-attempt this quiz in the future, your most recent previous attempts will be shown here."
+
 
       show:
-        h1: Course
         add_course_lesson: Please create a Course module to begin
         description: Description
         info: Course Info
         update_student_logs: Update Student Logs
         course_tutors: Tutors Details
+        h1: Courses
+        done: Done
+        coming_soon: "We don't have any content for this course module right now."
 
       edit:
         h1: Edit Course
