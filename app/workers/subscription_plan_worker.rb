@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 class SubscriptionPlanWorker
   include Sidekiq::Worker
 
   sidekiq_options queue: 'high'
 
-  def perform(subscription_plan_id, action, stripe_guid=nil, paypal_guid=nil)
+  def perform(subscription_plan_id, action, stripe_guid = nil, paypal_guid = nil)
     if action == 'delete'
       StripePlanService.new.delete_plan(stripe_guid)
       PaypalPlansService.new.delete_plan(paypal_guid)
