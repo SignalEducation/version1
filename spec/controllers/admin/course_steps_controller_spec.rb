@@ -114,19 +114,19 @@ describe Admin::CourseStepsController, type: :controller do
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for course_step_1_1' do
         put :update, params: { id: course_step_1.id, course_step: valid_params }
-        expect_update_success_with_model('course_step', subject.course_lesson_special_link(course_lesson_1))
+        expect_update_success_with_model('course_step', admin_show_course_lesson_url(course_lesson_1.course_id, course_lesson_1.course_section_id, course_lesson_1))
       end
 
       # optional
       it 'should respond OK to valid params for course_step_1_2' do
         put :update, params: { id: course_step_2.id, course_step: valid_params }
-        expect_update_success_with_model('course_step', subject.course_lesson_special_link(course_lesson_1))
+        expect_update_success_with_model('course_step', admin_show_course_lesson_url(course_lesson_1.course_id, course_lesson_1.course_section_id, course_lesson_1))
         expect(assigns(:course_step).id).to eq(course_step_2.id)
       end
 
       it 'should report OK for constructed_response_params' do
         post :update, params: { id: course_step_4.id, course_step: update_constructed_response_params }
-        expect_update_success_with_model('course_step', subject.course_lesson_special_link(course_lesson_1))
+        expect_update_success_with_model('course_step', admin_show_course_lesson_url(course_lesson_1.course_id, course_lesson_1.course_section_id, course_lesson_1))
         expect(assigns(:course_step).id).to eq(course_step_4.id)
       end
 

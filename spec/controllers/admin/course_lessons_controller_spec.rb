@@ -76,7 +76,7 @@ describe Admin::CourseLessonsController, type: :controller do
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, params: { course_lesson: valid_params }
-        expect_create_success_with_model('course_lesson', subject.course_lesson_special_link(assigns(:course_lesson)))
+        expect_create_success_with_model('course_lesson', admin_course_url(valid_params[:course_id]))
       end
 
       it 'should report error for invalid params' do
@@ -91,7 +91,7 @@ describe Admin::CourseLessonsController, type: :controller do
         expect(flash[:success]).to eq(I18n.t('controllers.course_lessons.update.flash.success'))
         expect(flash[:error]).to eq(nil)
         expect(assigns(:course_lesson).class).to eq(CourseLesson)
-        expect(response).to redirect_to(course_url(course_lesson_1.course))
+        expect(response).to redirect_to(admin_course_url(course_lesson_1.course))
       end
 
       # optional
@@ -100,7 +100,7 @@ describe Admin::CourseLessonsController, type: :controller do
         expect(flash[:success]).to eq(I18n.t('controllers.course_lessons.update.flash.success'))
         expect(flash[:error]).to eq(nil)
         expect(assigns(:course_lesson).class).to eq(CourseLesson)
-        expect(response).to redirect_to(course_url(course_lesson_2.course))
+        expect(response).to redirect_to(admin_course_url(course_lesson_2.course))
       end
 
       it 'should reject invalid params' do
@@ -120,12 +120,12 @@ describe Admin::CourseLessonsController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be OK even though dependencies exist' do
         delete :destroy, params: { id: course_lesson_1.id }
-        expect_archive_success_with_model('course_lesson', course_lesson_1.id, course_url(course_lesson_1.course))
+        expect_archive_success_with_model('course_lesson', course_lesson_1.id, admin_course_url(course_lesson_1.course))
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, params: { id: course_lesson_2.id }
-        expect_archive_success_with_model('course_lesson', course_lesson_2.id, course_url(course_lesson_2.course))
+        expect_archive_success_with_model('course_lesson', course_lesson_2.id, admin_course_url(course_lesson_2.course))
       end
     end
   end

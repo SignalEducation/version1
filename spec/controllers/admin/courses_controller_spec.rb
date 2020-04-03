@@ -107,7 +107,7 @@ describe Admin::CoursesController, type: :controller do
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, params: { course: valid_params.merge(group_id: group_1.id, exam_body_id: exam_body.id) }
-        expect_create_success_with_model('course', admin_courses_url)
+        expect_create_success_with_model('course', admin_course_url(Course.last))
       end
 
       it 'should report error for invalid params' do
@@ -119,13 +119,13 @@ describe Admin::CoursesController, type: :controller do
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for course_1' do
         put :update, params: { id: course_1.id, course: valid_params }
-        expect_update_success_with_model('course', admin_courses_url)
+        expect_update_success_with_model('course', admin_course_url(course_1))
       end
 
       # optional
       it 'should respond OK to valid params for course_2' do
         put :update, params: { id: course_2.id, course: valid_params }
-        expect_update_success_with_model('course', admin_courses_url)
+        expect_update_success_with_model('course', admin_course_url(course_2))
         expect(assigns(:course).id).to eq(course_2.id)
       end
 
