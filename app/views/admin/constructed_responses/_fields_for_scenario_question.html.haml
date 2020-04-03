@@ -20,10 +20,10 @@
       =scenario_answer_template.hidden_field :editor_type
       -if scenario_answer_template.object.text_editor?
         .row.l-margin-top
-          =render partial: 'constructed_responses/fields_for_texteditor_answer_template', locals: {f: f, constructed_response: constructed_response, scenario: scenario, scenario_question: scenario_question, texteditor_scenario_answer_template: scenario_answer_template}
+          =render partial: 'admin/constructed_responses/fields_for_texteditor_answer_template', locals: {f: f, constructed_response: constructed_response, scenario: scenario, scenario_question: scenario_question, texteditor_scenario_answer_template: scenario_answer_template}
       -elsif scenario_answer_template.object.spreadsheet_editor?
         .row.l-margin-top
-          =render partial: 'constructed_responses/fields_for_spreadsheet_answer_template', locals: {f: f, constructed_response: constructed_response, scenario: scenario, scenario_question: scenario_question, spreadsheet_scenario_answer_template: scenario_answer_template}
+          =render partial: 'admin/constructed_responses/fields_for_spreadsheet_answer_template', locals: {f: f, constructed_response: constructed_response, scenario: scenario, scenario_question: scenario_question, spreadsheet_scenario_answer_template: scenario_answer_template}
 
 
 

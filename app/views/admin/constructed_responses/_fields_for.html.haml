@@ -2,4 +2,4 @@
   .col-sm-12
 
     =constructed_response.fields_for :scenario do |scenario|
-      =render partial: 'constructed_responses/fields_for_scenario', locals: {f: f, constructed_response: constructed_response, scenario: scenario}
+      =render partial: 'admin/constructed_responses/fields_for_scenario', locals: {f: f, constructed_response: constructed_response, scenario: scenario}

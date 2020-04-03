@@ -10,7 +10,7 @@
       .col-sm-12
         .box-item.table-box
           .table-responsive
-            %table.table.sorted_table{style: 'font-size: 18px;', data: {destination: course_sections_url}}
+            %table.table.sorted_table{style: 'font-size: 18px;', data: {destination: admin_course_sections_path}}
               %thead
                 %tr
                   %th='Course Section'
@@ -27,4 +27,4 @@
 
     .row.pt-4
       .col-md-12
-        =link_to 'Return', course_url(@course), class: 'btn btn-secondary'
+        =link_to 'Return', admin_course_url(@course), class: 'btn btn-secondary'

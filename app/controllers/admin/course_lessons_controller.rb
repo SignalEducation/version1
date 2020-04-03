@@ -28,7 +28,7 @@ module Admin
 
       if @course_lesson.save
         flash[:success] = I18n.t('controllers.course_lessons.create.flash.success')
-        redirect_to course_url(@course_lesson.course_id)
+        redirect_to admin_course_url(@course_lesson.course_id)
       else
         render action: :new
       end
@@ -43,7 +43,7 @@ module Admin
 
       if @course_lesson.update_attributes(allowed_params)
         flash[:success] = I18n.t('controllers.course_lessons.update.flash.success')
-        redirect_to course_url(@course_lesson.course_id)
+        redirect_to admin_course_url(@course_lesson.course_id)
       else
         render action: :edit
       end
@@ -65,17 +65,17 @@ module Admin
       else
         flash[:error] = I18n.t('controllers.course_lessons.destroy.flash.error')
       end
-      redirect_to course_lesson_special_link(@course_lesson)
+      redirect_to admin_course_url(@course_lesson.course_id)
     end
 
     protected
 
     def get_variables
-      @course = Course.where(id: params[:id]).first if params[:id].to_i > 0
+      @course         = Course.where(id: params[:id]).first if params[:id].to_i > 0
       @course_section = CourseSection.where(id: params[:course_section_id]).first if params[:course_section_id].to_i > 0
-      @course_lesson = CourseLesson.where(id: params[:course_lesson_id]).first if params[:course_lesson_id].to_i > 0
-      @courses = Course.all_in_order
-      @tutors = User.all_tutors.all_in_order
+      @course_lesson  = CourseLesson.where(id: params[:course_lesson_id]).first if params[:id].to_i > 0
+      @courses        = Course.all_in_order
+      @tutors         = User.all_tutors.all_in_order
     end
 
     def allowed_params

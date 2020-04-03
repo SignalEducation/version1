@@ -9,8 +9,8 @@
 
       .row.l-margin-bottom
         .col-md-12
-          =link_to t('views.course_lessons.new.h1'), admin_course_lessons_url(@course), class: 'btn btn-cyan'
-          =link_to t('views.courses.reorder'), admin_course_lessons_order_url(@course), class: 'btn btn-cyan'
+          =link_to t('views.course_lessons.new.h1'), admin_course_section_lessons_path(@course_section.course, @course_section), class: 'btn btn-cyan'
+          =link_to t('views.courses.reorder'), reorder_admin_course_section_lessons_path(@course_section.course, @course_section), class: 'btn btn-cyan'
 
       .row.l-margin-top.l-margin-bottom
         .col-md-12.l-margin-top

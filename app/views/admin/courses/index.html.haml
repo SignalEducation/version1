@@ -37,6 +37,7 @@
                     %td=course.name
                     %td=tick_or_cross(course.active)
                     %td=tick_or_cross(course.preview)
+                    %td=link_to t('views.general.show'), admin_course_url(course), class: 'btn btn-xs btn-secondary'
                     %td
                       %button.btn.btn-primary.btn-xs.dropdown-toggle{type:'button', 'data-toggle':'dropdown', 'aria-haspopup':'true', 'aria-expanded': 'false'}
                         Edit
@@ -52,5 +53,4 @@
     $("#search").on('blur', function() {
       $(this).parents('form').submit();
     });
-
   });

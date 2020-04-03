@@ -34,7 +34,7 @@ module Admin
 
       if @course.save
         flash[:success] = I18n.t('controllers.courses.create.flash.success')
-        redirect_to admin_courses_url
+        redirect_to admin_course_path(@course)
       else
         render action: :new
       end
@@ -45,7 +45,7 @@ module Admin
     def update
       if @course.update_attributes(allowed_params)
         flash[:success] = I18n.t('controllers.courses.update.flash.success')
-        redirect_to admin_courses_url
+        redirect_to admin_course_path(@course)
       else
         render action: :edit
       end
@@ -98,7 +98,7 @@ module Admin
       @course_resource.course_id = @course.id
       if @course_resource.save
         flash[:success] = I18n.t('controllers.course_resources.create.flash.success')
-        redirect_to course_url(@course)
+        redirect_to admin_course_url(@course)
       else
         render action: :new_course_resources
       end
@@ -115,7 +115,7 @@ module Admin
       course = Course.where(id: params[:id]).first
       course.update_all_course_logs
 
-      redirect_to course_url(course)
+      redirect_to admin_course_url(course)
     end
 
     def trial_content; end
@@ -123,7 +123,7 @@ module Admin
     def update_trial_content
       if @course.update_attributes(nested_trial_params)
         flash[:success] = I18n.t('controllers.courses.update.flash.success')
-        redirect_to course_url(@course)
+        redirect_to admin_course_url(@course)
       else
         render action: :trial_content
       end

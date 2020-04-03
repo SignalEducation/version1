@@ -273,7 +273,7 @@ class Course < ApplicationRecord
   end
 
   def update_all_course_logs
-    CourseLogWorker.perform_async(self.id)
+    CourseLessonLogsWorker.perform_async(self.id)
   end
 
   ########################################################################

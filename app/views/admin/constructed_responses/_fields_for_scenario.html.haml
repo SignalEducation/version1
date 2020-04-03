@@ -9,7 +9,7 @@
     %br/
 
     =scenario.fields_for :scenario_questions do |scenario_question|
-      =render partial: 'constructed_responses/fields_for_scenario_question', locals: {f: f, constructed_response: constructed_response, scenario: scenario, scenario_question: scenario_question}
+      =render partial: 'admin/constructed_responses/fields_for_scenario_question', locals: {f: f, constructed_response: constructed_response, scenario: scenario, scenario_question: scenario_question}
 
 
 

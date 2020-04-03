@@ -27,7 +27,7 @@
       %p
         =f.submit t('views.general.save'), class: 'btn btn-red'
         -if @quiz_question.id.nil?
-          =link_to t('views.general.cancel'), course_lessons_url, class: 'btn btn-cyan'
+          =link_to t('views.general.cancel'), admin_course_lessons_url, class: 'btn btn-cyan'
         -else
           =link_to t('views.general.cancel'), edit_admin_course_step_url(@quiz_question.course_quiz.course_step_id), class: 'btn btn-cyan'
 

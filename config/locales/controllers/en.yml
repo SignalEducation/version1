@@ -77,14 +77,14 @@ en:
         cant_find: Sorry, that could not be found
       create:
         flash:
-          success: Course Module has been created successfully
+          success: Course Lesson has been created successfully
       update:
         flash:
-          success: Course Module details have been updated successfully
+          success: Course Lesson details have been updated successfully
       destroy:
         flash:
-          success: Course Module has been deleted
-          error: Course Module was not deleted
+          success: Course Lesson has been deleted
+          error: Course Lesson was not deleted
 
     course_sections:
       show:
@@ -103,27 +103,27 @@ en:
     course_steps:
       create:
         flash:
-          success: Course Module Element has been created successfully
+          success: Course Lesson Element has been created successfully
       update:
         flash:
-          success: Course Module Element details have been updated successfully
+          success: Course Lesson Element details have been updated successfully
       destroy:
         flash:
-          success: Course Module Element has been deleted
-          error: Course Module Element was not deleted
+          success: Course Lesson Element has been deleted
+          error: Course Lesson Element was not deleted
 
     course_notes:
       create:
         flash:
-          success: Course Module Element Resource has been created successfully
-          error: Course Module Element Resource has Not been created
+          success: Course Lesson Element Resource has been created successfully
+          error: Course Lesson Element Resource has Not been created
       update:
         flash:
-          success: Course Module Element Resource details have been updated successfully
+          success: Course Lesson Element Resource details have been updated successfully
       destroy:
         flash:
-          success: Course Module Element Resource has been deleted
-          error: Course Module Element Resource was not deleted
+          success: Course Lesson Element Resource has been deleted
+          error: Course Lesson Element Resource was not deleted
 
     course_tutors:
       create:

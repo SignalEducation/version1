@@ -1,4 +1,4 @@
-=form_for(@course_step, url: admin_course_steps_path, html: {class: 'form-horizontal', role: 'form', id: 'course_step_form'}, multipart: true) do |f|
+=form_for([:admin, @course_step], html: {class: 'form-horizontal', role: 'form', id: 'course_step_form'}, multipart: true) do |f|
   .box-item
     .row
       .col-sm-12
@@ -71,7 +71,7 @@
             -if @course_step.is_quiz? && !@course_step.new_record?
               %br/
               %br/
-              =link_to 'Reorder Quiz Questions', quiz_questions_order_url(@course_step), class: 'btn btn-secondary'
+              =link_to 'Reorder Quiz Questions', admin_quiz_questions_order_url(@course_step), class: 'btn btn-secondary'
 
 
 

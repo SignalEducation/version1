@@ -20,14 +20,14 @@
                     %td=course_tutor.user.full_name
                     %td=course_tutor.title
                     %td
-                      =link_to t('views.general.edit'), edit_course_course_tutor_url(course_id: @course.id, id: course_tutor.id), class: 'btn btn-primary btn-xs'
+                      =link_to t('views.general.edit'), edit_admin_course_course_tutor_url(course_id: @course.id, id: course_tutor.id), class: 'btn btn-primary btn-xs'
 
                       -if course_tutor.destroyable?
-                        =link_to t('views.general.delete'), course_course_tutor_url(course_id: @course.id, id: course_tutor), method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-secondary btn-xs'
+                        =link_to t('views.general.delete'), admin_course_course_tutor_url(course_id: @course.id, id: course_tutor), method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-secondary btn-xs'
                     %td
                       %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
 
     .row.pt-4
       .col-sm-12
-        =link_to t('views.general.new'), new_course_course_tutor_url(course_id: @course.id), class: 'btn btn-primary'
-        =link_to t('views.general.return'), course_url(@course), class: 'btn btn-secondary'
+        =link_to t('views.general.new'), new_admin_course_course_tutor_url(course_id: @course.id), class: 'btn btn-primary'
+        =link_to t('views.general.return'), admin_course_url(@course), class: 'btn btn-secondary'

@@ -15,7 +15,7 @@ module Admin
       elsif @course
         @course_section = CourseSection.new(sorting_order: 1, course_id: @course.id)
       else
-        redirect_to course_url
+        redirect_to admin_courses_url
       end
     end
 
@@ -24,7 +24,7 @@ module Admin
 
       if @course_section.save
         flash[:success] = I18n.t('controllers.course_sections.create.flash.success')
-        redirect_to course_lesson_special_link(@course_section)
+        redirect_to admin_course_url(@course_section.course)
       else
         render action: :new
       end
@@ -35,7 +35,7 @@ module Admin
     def update
       if @course_section.update_attributes(allowed_params)
         flash[:success] = I18n.t('controllers.course_sections.update.flash.success')
-        redirect_to course_lesson_special_link(@course_section)
+        redirect_to admin_course_url(@course_section.course)
       else
         render action: :edit
       end
@@ -61,20 +61,20 @@ module Admin
         flash[:error] = I18n.t('controllers.course_sections.destroy.flash.error')
       end
 
-      redirect_to course_lesson_special_link(@course_section)
+      redirect_to admin_course_url(@course_section.course)
     end
 
     protected
 
     def get_variables
-      @course_section  = CourseSection.where(id: params[:id]).first if params[:id].to_i > 0
-      @courses = Course.all_in_order
-      @tutors          = User.all_tutors.all_in_order
+      @courses        = Course.all_in_order
+      @tutors         = User.all_tutors.all_in_order
+      @course_section = CourseSection.where(id: params[:id]).first if params[:id].to_i > 0
     end
 
     def allowed_params
       params.require(:course_section).permit(:name, :name_url, :sorting_order, :active, :course_id,
-                                            :counts_towards_completion, :assumed_knowledge)
+                                             :counts_towards_completion, :assumed_knowledge)
     end
   end
 end

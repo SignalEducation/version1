@@ -12,6 +12,7 @@ module Admin
     end
 
     def new
+      @action = :create
       @course_note = CourseNote.new(course_step_id: params[:course_step_id].to_i)
     end
 
@@ -27,7 +28,9 @@ module Admin
       end
     end
 
-    def edit; end
+    def edit
+      @action = :update
+    end
 
     def update
       if @course_note.update_attributes(allowed_params)

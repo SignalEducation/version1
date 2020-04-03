@@ -14,10 +14,13 @@ module Admin
     def show; end
 
     def new
+      @action = :create
       @course_resource = CourseResource.new
     end
 
-    def edit; end
+    def edit
+      @action = :update
+    end
 
     def create
       @course_resource = CourseResource.new(allowed_params)

@@ -76,7 +76,7 @@ module Admin
         @course_lessons = cm.parent.active_children
         set_related_cmes
       else
-        redirect_to course_url(@course_step.parent.parent)
+        redirect_to admin_course_url(@course_step.parent.parent)
       end
     end
 
@@ -121,7 +121,7 @@ module Admin
         elsif params[:commit] == I18n.t('views.course_quizzes.form.preview_button')
           redirect_to @course_step.course_quiz.quiz_questions.last
         else
-          redirect_to course_lesson_special_link(@course_step.course_lesson)
+          redirect_to admin_show_course_lesson_url(@course_step.course_lesson.course_id, @course_step.course_lesson.course_section.id, @course_step.course_lesson.id)
         end
 
         old_cm.update_video_and_quiz_counts unless old_cm.id == cm.id

@@ -40,61 +40,62 @@ Rails.application.routes.draw do
     end
   end
 
-  namespace :admin do
-    resources :exercises, only: %i[index show new create edit update] do
-      get 'generate_daily_summary', on: :collection
-      get 'correct_cbe', to: 'exercises#correct_cbe', as: :correct_cbe, on: :member
-      post 'return_cbe', to: 'exercises#return_cbe', as: :return_cbe, on: :member
-      post 'cbe_user_question_update/answer/:question_id', to: 'exercises#cbe_user_question_update', as: :cbe_user_question_update, on: :member
-      post 'cbe_user_educator_comment/:cbe_user_log_id', to: 'exercises#cbe_user_educator_comment', as: :cbe_user_log_update, on: :member
-    end
-
-    resources :user do
-      resources :exercises, only: %i[index new create]
-    end
-
-    resources :cbes, only: %i[index new show update] do
-      post :clone, to: 'cbes#clone', as: :cbe_clone, on: :member
-    end
-
-    resources :system_settings, only: %i[index update]
-    resources :orders, only: %i[index show update] do
-      get :update_product
-    end
-
-    post 'search_exercises', to: 'exercises#index', as: :search_exercises
-
-    get 'courses/:id/new_course_section',                                                     to: 'course_sections#new',               as: :new_course_section
-    get 'courses/:id/course_section/:course_section_id/new_course_lesson',                    to: 'course_lessons#new',                as: :new_course_lesson
-    get 'courses/:id/course_section/:course_section_id/edit_course_lesson/:course_lesson_id', to: 'course_lessons#edit',               as: :edit_course_lesson
-    get 'courses/:id/course_section/:course_section_id/course_lesson/:course_lesson_id',      to: 'course_lessons#show',               as: :show_course_lesson
-    get 'courses/:course_id/reorder_course_sections',                                         to: 'course_sections#reorder_list',      as: :reorder_course_sections
-    get 'courses/:id/course_lessons_order',                                                   to: 'courses#course_lessons_order',      as: :course_lessons_order
-    get 'courses/:id/trial_content',                                                          to: 'courses#trial_content',             as: :course_trial_content
-    get 'courses/:id/resources',                                                              to: 'courses#course_resources',          as: :course_resources
-    get 'courses/:id/new_course_resources',                                                   to: 'courses#new_course_resources',      as: :new_course_resources
-    post 'courses/:id/update_user_logs',                                                      to: 'courses#update_course_lesson_logs', as: :course_update_user_logs
-    post 'courses/:id/create_course_resources',                                               to: 'courses#create_course_resources',   as: :create_course_resources
-    post 'courses/:id/clone',                                                                 to: 'courses#clone',                     as: :course_clone
-    patch 'courses/:id/trial_content',                                                        to: 'courses#update_trial_content',      as: :course_update_trial_content
-
-    resources :courses, concerns: :supports_reordering do
-      resources :course_tutors, concerns: :supports_reordering
-    end
-
-    resources :course_resources, concerns: :supports_reordering
-    resources :course_sections, concerns: :supports_reordering
-    resources :course_lessons, concerns: :supports_reordering
-    resources :course_steps, except: [:index], concerns: :supports_reordering do
-      resources :course_notes, except: [:show], concerns: :supports_reordering
-      post :clone, to: 'course_steps#clone'
-    end
-    get 'course_steps/:id/quiz_questions_order', to: 'course_steps#quiz_questions_order', as: :quiz_questions_order
-  end
-
   # all standard, user-facing "resources" go inside this scope
   scope '(:locale)', locale: /en/ do # /en\nl\pl/
     get '404' => redirect('404-page')
+
+    namespace :admin do
+      resources :exercises, only: %i[index show new create edit update] do
+        get 'generate_daily_summary', on: :collection
+        get 'correct_cbe', to: 'exercises#correct_cbe', as: :correct_cbe, on: :member
+        post 'return_cbe', to: 'exercises#return_cbe', as: :return_cbe, on: :member
+        post 'cbe_user_question_update/answer/:question_id', to: 'exercises#cbe_user_question_update', as: :cbe_user_question_update, on: :member
+        post 'cbe_user_educator_comment/:cbe_user_log_id', to: 'exercises#cbe_user_educator_comment', as: :cbe_user_log_update, on: :member
+      end
+
+      resources :user do
+        resources :exercises, only: %i[index new create]
+      end
+
+      resources :cbes, only: %i[index new show update] do
+        post :clone, to: 'cbes#clone', as: :cbe_clone, on: :member
+      end
+
+      resources :system_settings, only: %i[index update]
+      resources :orders, only: %i[index show update] do
+        get :update_product
+      end
+
+      post 'search_exercises', to: 'exercises#index', as: :search_exercises
+
+      get 'courses/:id/new_course_section',                                                     to: 'course_sections#new',               as: :new_course_section
+      get 'courses/:id/course_section/:course_section_id/new_course_lesson',                    to: 'course_lessons#new',                as: :new_course_lesson
+      get 'courses/:id/course_section/:course_section_id/edit_course_lesson/:course_lesson_id', to: 'course_lessons#edit',               as: :edit_course_lesson
+      get 'courses/:id/course_section/:course_section_id/course_lesson/:course_lesson_id',      to: 'course_lessons#show',               as: :show_course_lesson
+      get 'courses/:course_id/reorder_course_sections',                                         to: 'course_sections#reorder_list',      as: :reorder_course_sections
+      get 'courses/:id/course_lessons_order',                                                   to: 'courses#course_lessons_order',      as: :course_lessons_order
+      get 'courses/:id/trial_content',                                                          to: 'courses#trial_content',             as: :course_trial_content
+      get 'courses/:id/resources',                                                              to: 'courses#course_resources',          as: :course_resources
+      get 'courses/:id/new_course_resources',                                                   to: 'courses#new_course_resources',      as: :new_course_resources
+      post 'courses/:id/update_user_logs',                                                      to: 'courses#update_course_lesson_logs', as: :course_update_user_logs
+      post 'courses/:id/create_course_resources',                                               to: 'courses#create_course_resources',   as: :create_course_resources
+      post 'courses/:id/clone',                                                                 to: 'courses#clone',                     as: :course_clone
+      patch 'courses/:id/trial_content',                                                        to: 'courses#update_trial_content',      as: :course_update_trial_content
+
+      resources :courses, concerns: :supports_reordering do
+        resources :course_tutors, concerns: :supports_reordering
+      end
+
+      resources :course_resources, concerns: :supports_reordering
+      resources :course_sections, concerns: :supports_reordering
+      resources :course_lessons, concerns: :supports_reordering
+      resources :course_steps, except: [:index], concerns: :supports_reordering do
+        resources :course_notes, except: [:show], concerns: :supports_reordering
+        post :clone, to: 'course_steps#clone'
+      end
+      get 'course_steps/:id/quiz_questions_order', to: 'course_steps#quiz_questions_order', as: :quiz_questions_order
+    end
+
 
     # Subscriptions
     resources :subscriptions, only: %i[show new create update destroy] do

@@ -381,7 +381,7 @@ en:
 
     course_sections:
       form:
-        course_steps: Course Module Elements
+        course_steps: Course Lessons
         course_id: Course
         name: Name
         name_placeholder: Course Section (tab) Name
@@ -408,15 +408,15 @@ en:
 
     course_lessons:
       form:
-        course_steps: Course Module Elements
+        course_steps: Course Lessons
         course_id: Course
         course_section_id: Course Section (tab)
         name: Name
-        name_placeholder: Course Module Name
+        name_placeholder: Course Lesson Name
         name_url: Name URL
-        name_url_placeholder: course-module-name
+        name_url_placeholder: course-lesson-name
         description: Description
-        description_placeholder: Describe the course module here
+        description_placeholder: Describe the course Lesson here
         sorting_order: Sorting order
         sorting_order_placeholder: 100
         estimated_time_in_seconds: "Time (in seconds)"
@@ -436,18 +436,18 @@ en:
         temporary_label_placeholder: Temp Label
 
       edit:
-        h1: Edit Course Module
+        h1: Edit Course Lesson
 
       index:
-        h1: Course Modules
-        delete: Delete Course Module
+        h1: Course Lessons
+        delete: Delete Course Lesson
 
       new:
-        h1: New Course Module
+        h1: New Course Lesson
 
       show:
-        h1: Course Module
-        click_a_module: Click on a Course Module to view its details or click on "New" to create a new Course Module.
+        h1: Course Lesson
+        click_a_module: Click on a Course Lesson to view its details or click on "New" to create a new Course Lesson.
         link_to_student_ui: "View in the student-facing UI"
         add_more_questions: More questions needed
 
@@ -466,10 +466,10 @@ en:
         estimated_time_in_seconds: Estimated time in seconds
         estimated_time_in_seconds_tag: (If blank this will be auto-populated with 60 seconds per question)
         estimated_time_in_seconds_placeholder: 180
-        course_lesson_id: Course module
-        course_video_id: Course module element video id
-        course_quiz_id: Course module element quiz id
-        related_course_step_id: Related Course Module Element
+        course_lesson_id: Course Lesson
+        course_video_id: Course Lesson video id
+        course_quiz_id: Course Lesson quiz id
+        related_course_step_id: Related Course Lesson
         sorting_order: Sorting order
         forum_topic_id: Forum topic
         created_at: Created at
@@ -485,21 +485,21 @@ en:
         seo_no_index: "SEO no-index flag"
 
       edit:
-        h1: Edit Course Module Element
+        h1: Edit Course Lesson
         video: Edit Video
         quiz: Edit Quiz
 
       index:
-        h1: Course Module Elements
+        h1: Course Lessons
 
       new:
-        h1: New Course Module Element
+        h1: New Course Lesson
         video: New Video
         quiz: New Quiz
         constructed_response: New Constructed Response
 
       show:
-        h1: Course Module Element
+        h1: Course Lesson
         quiz_preview: Quiz Preview
         video_preview: Video Preview
         constructed_response_preview: Constructed Response Preview
@@ -552,7 +552,7 @@ en:
 
     course_notes:
       form:
-        course_step_id: Course module element
+        course_step_id: Course Lesson
         name: File Name
         name_placeholder: Name that users will see
         description: Description
@@ -572,7 +572,7 @@ en:
 
       index:
         h1: File Uploads - (PDF's, Excel Files, etc)
-        index_h1: Course Module Element Resources
+        index_h1: Course Lesson Resources
 
       new:
         h1: New Resource
@@ -647,15 +647,15 @@ en:
       individual_student:
         in-progress: In-progress
         completed: Completed
-        none_in_progress: "Remember, you can study multiple modules at the same time."
-        none_completed: "This panel will show you the modules that you have completed. Keep going!"
+        none_in_progress: "Remember, you can study multiple lessons at the same time."
+        none_completed: "This panel will show you the lessons that you have completed. Keep going!"
         no_content_right_now_h1: Your Learn Signal Dashboard
         no_content_right_now_h5: Your progress through all courses will be recorded here.
         overview: Overview
 
       tutor:
         title: Dashboard
-        total_course_steps: Total Course Modules Elements
+        total_course_steps: Total Course Steps
         course_videos: Number of Videos
         course_quizzes: Number of Quizzes
         total_time_watched: Total Time Watched
@@ -1059,7 +1059,7 @@ en:
         video: Video
         number_of_videos: Videos
         videos: of Video
-        course_lesson: Course Module
+        course_lesson: Course Lesson
         course_step: Step
         table_of_contents: Table of contents
         description: Description
@@ -1285,14 +1285,14 @@ en:
 
 
       show:
-        add_course_lesson: Please create a Course module to begin
+        add_course_lesson: Please create a Course Lesson to begin
         description: Description
         info: Course Info
         update_student_logs: Update Student Logs
         course_tutors: Tutors Details
         h1: Courses
         done: Done
-        coming_soon: "We don't have any content for this course module right now."
+        coming_soon: "We don't have any content for this course Lesson right now."
 
       edit:
         h1: Edit Course
@@ -1300,7 +1300,7 @@ en:
       course_lessons_order:
         return: Return
 
-      reorder: Reorder Course Modules
+      reorder: Reorder Course Lessons
 
       new:
         h1: New Course

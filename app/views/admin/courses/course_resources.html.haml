@@ -34,7 +34,7 @@
                         =link_to 'Activate', new_content_activation_url(type: course_resource.class, id: course_resource.id), class: 'btn btn-green btn-xs'
 
                     %td
-                      =link_to t('views.general.edit'), edit_course_resource_url(course_resource), class: 'btn btn-primary btn-xs'
+                      =link_to t('views.general.edit'), edit_admin_course_resource_url(course_resource), class: 'btn btn-primary btn-xs'
                     %td
                       -if course_resource.external_url.blank?
                         =link_to t('views.general.show'), course_resource.file_upload.url, target: '_blank', class: 'btn btn-secondary btn-xs'
@@ -42,11 +42,11 @@
                         =link_to t('views.general.show'), course_resource.external_url, target: '_blank', class: 'btn btn-secondary btn-xs'
                     %td
                       -if course_resource.destroyable?
-                        =link_to t('views.general.delete'), course_resource, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-secondary-reverse btn-xs'
+                        =link_to t('views.general.delete'), admin_course_resource_path(course_resource), method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-secondary-reverse btn-xs'
                     %td
                       %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
 
 
       .row
         .col-sm-12
-          =link_to 'Return', course_url(@course), class: 'btn btn-secondary', title: t('views.general.new_tooltip')
+          =link_to 'Return', admin_course_url(@course), class: 'btn btn-secondary', title: t('views.general.new_tooltip')
