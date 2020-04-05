@@ -729,7 +729,7 @@ class User < ApplicationRecord
   end
 
   def last_subscription_per_exam
-    ids = subscriptions.joins(:exam_body).group('exam_bodies.name').maximum(:id).values
+    ids = subscriptions.where.not(state: :pending).joins(:exam_body).group('exam_bodies.name').maximum(:id).values
     subscriptions.includes(subscription_plan: :exam_body).where(id: ids)
   end
 end
