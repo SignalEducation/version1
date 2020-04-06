@@ -35,6 +35,13 @@
           =f.label :date_of_birth, t('views.users.form.date_of_birth')
           .input-group.input-group-lg
             =f.text_field :date_of_birth, placeholder: t('views.users.form.date_of_birth_placeholder'), class: 'form-control', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}, id: 'datetimepicker'
+    
+    .row
+      .col-sm-6
+        .form-group
+          =f.label :currency
+          .input-group.input-group-lg
+            =f.collection_select :currency_id, Currency.all, :id, :name, {}, {class: 'form-control custom-select', disabled: @user.currency_locked? }
 
 
     #tutor-info.pt-4

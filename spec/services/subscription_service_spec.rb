@@ -32,7 +32,43 @@ describe SubscriptionService, type: :service do
   end
 
   describe '#check_for_valid_coupon?' do
-    it 'does stuff'
+    it 'returns NIL if the coupon code is blank' do
+      expect(sub_service.check_for_valid_coupon?('')).to be nil
+    end
+
+    it 'raises an error if no coupon matches the code' do
+      allow(Coupon).to receive(:get_and_verify).and_return(nil)
+
+      expect { sub_service.check_for_valid_coupon?('code') }.to raise_error
+    end
+
+    it 'returns NIL if a valid coupon is present' do
+      allow(Coupon).to receive(:get_and_verify).and_return(true)
+
+      expect(sub_service.check_for_valid_coupon?('code')).to be nil
+    end
+  end
+
+  describe '#check_valid_subscription?' do
+    it 'returns TRUE if the #valid_paypal_subscription? is true' do
+      allow(sub_service).to receive(:valid_paypal_subscription?).and_return(true)
+
+      expect(sub_service.check_valid_subscription?({})).to be_truthy
+    end
+
+    it 'returns TRUE if the #valid_stripe_subscription? is true' do
+      allow(sub_service).to receive(:valid_paypal_subscription?).and_return(false)
+      allow(sub_service).to receive(:valid_stripe_subscription?).and_return(true)
+
+      expect(sub_service.check_valid_subscription?({})).to be_truthy
+    end
+
+    it 'raises an error if neither #valid_paypal_subscription? or #valid_stripe_subscription? return true' do
+      allow(sub_service).to receive(:valid_paypal_subscription?).and_return(false)
+      allow(sub_service).to receive(:valid_stripe_subscription?).and_return(false)
+
+      expect { sub_service.check_valid_subscription?({}) }.to raise_error
+    end
   end
 
   describe '#un_cancel' do

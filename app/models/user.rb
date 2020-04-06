@@ -337,6 +337,11 @@ class User < ApplicationRecord
     UserCountryWorker.perform_async(self.id, ip_address)
   end
 
+  def currency_locked?
+    subscriptions.where.not(stripe_guid: nil).any? ||
+      orders.where.not(stripe_customer_id: nil).any?
+  end
+
   ## UserGroup Access methods
   def student_user?
     user_group&.student_user
