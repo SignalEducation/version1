@@ -20,4 +20,12 @@ describe CronService, type: :service do
       subject.initiate_task('paypal_sync')
     end
   end
+
+  describe '#slack_exercises' do
+    it 'calls .send_daily_orders_update on the Order class' do
+      expect(Order).to receive(:send_daily_orders_update)
+
+      subject.initiate_task('slack_exercises')
+    end
+  end
 end
