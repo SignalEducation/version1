@@ -22,7 +22,7 @@ class SubscriptionService
     @coupon = Coupon.get_and_verify(coupon_code, @subscription.subscription_plan_id)
     return if @coupon
 
-    raise Learnsignal::SubscriptionError.new('Sorry! That is not a valid coupon code.')
+    raise Learnsignal::SubscriptionError, 'Sorry! That is not a valid coupon code.'
   end
 
   def un_cancel
@@ -62,7 +62,7 @@ class SubscriptionService
   def check_valid_subscription?(params)
     return true if valid_paypal_subscription?(params) || valid_stripe_subscription?(params)
 
-    raise Learnsignal::SubscriptionError.new('Sorry! The data entered is not valid. Please contact us for assistance.')
+    raise Learnsignal::SubscriptionError, 'Sorry! The data entered is not valid. Please contact us for assistance.'
   end
 
   def validate_referral

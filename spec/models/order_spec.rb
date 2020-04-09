@@ -180,7 +180,7 @@ describe Order do
 
     it 'doesn not call slack when there are no relevant orders' do
       create_list(:order, 3, state: 'completed', product: mock_product,
-                  created_at: 2.days.ago)
+                             created_at: 2.days.ago)
 
       expect_any_instance_of(SlackService).not_to receive(:notify_channel)
 
