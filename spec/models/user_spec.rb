@@ -386,5 +386,29 @@ describe User do
         expect(data_users[rand_count].split(',').third).to eq(data_parsed[rand_count].last_name)
       end
     end
+
+    describe '#currency_locked?' do
+      let(:user) { create(:user) }
+
+      before :each do
+        allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
+      end
+
+      it 'returns FALSE if there are no Stripe subscriptions or orders for a user' do
+        expect(user.currency_locked?).to be_falsy
+      end
+
+      it 'returns TRUE if there are any Stripe subscriptions' do
+        create(:stripe_subscription, user: user)
+
+        expect(user.currency_locked?).to be_truthy
+      end
+
+      it 'returns TRUE if there are any Stripe orders' do
+        create(:order, :for_stripe, user: user)
+
+        expect(user.currency_locked?).to be_truthy
+      end
+    end
   end
 end

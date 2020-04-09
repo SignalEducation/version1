@@ -337,6 +337,11 @@ class User < ApplicationRecord
     UserCountryWorker.perform_async(self.id, ip_address)
   end
 
+  def currency_locked?
+    subscriptions.where.not(stripe_guid: nil).any? ||
+      orders.where.not(stripe_customer_id: nil).any?
+  end
+
   ## UserGroup Access methods
   def student_user?
     user_group&.student_user
@@ -729,7 +734,7 @@ class User < ApplicationRecord
   end
 
   def last_subscription_per_exam
-    ids = subscriptions.joins(:exam_body).group('exam_bodies.name').maximum(:id).values
+    ids = subscriptions.where.not(state: :pending).joins(:exam_body).group('exam_bodies.name').maximum(:id).values
     subscriptions.includes(subscription_plan: :exam_body).where(id: ids)
   end
 end

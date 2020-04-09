@@ -28,7 +28,7 @@ class PaypalWebhook < ApplicationRecord
     if (invoice = Invoice.build_from_paypal_data(payload)) && invoice.valid?
       invoice.update!(paid: true, payment_closed: true)
       PaypalSubscriptionsService.new(invoice.subscription).update_next_billing_date
-      update!(processed_at: Time.now)
+      update!(processed_at: Time.zone.now)
       invoice.subscription.update!(paypal_status: 'Active') unless invoice.subscription.paypal_status == 'Active'
     else
       update!(verified: false)

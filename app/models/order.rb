@@ -107,6 +107,7 @@ class Order < ApplicationRecord
 
   def self.send_daily_orders_update
     return if (orders = orders_completed_in_time(24.hours.ago)) && orders.empty?
+
     slack = SlackService.new
     slack.notify_channel('corrections', slack.order_summary_attachment(orders),
                          icon_emoji: ':chart_with_upwards_trend:')
