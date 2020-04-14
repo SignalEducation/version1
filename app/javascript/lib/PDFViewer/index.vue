@@ -83,8 +83,8 @@ export default {
   },
   data() {
     return {
-      scale: undefined,
-      optimalScale: undefined,
+      scale: 1.5,
+      optimalScale: 1.5,
       fit: undefined,
       currentPage: 1,
       pageCount: undefined,
@@ -95,9 +95,6 @@ export default {
     url() {
       this.currentPage = undefined;
     },
-  },
-  mounted() {
-    document.body.classList.add('overflow-hidden');
   },
   methods: {
     onDocumentRendered() {

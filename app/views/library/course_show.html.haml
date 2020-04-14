@@ -64,47 +64,50 @@
                 .btn.btn-secondary.btn-sm.mb-5{'data-target' => '#contact-form-modal', 'data-toggle' => 'modal', :href => '#'}
                   =@exam_body&.help_text
       -if @course_resources.any?
+        =# VueJS include
+        =javascript_pack_tag 'pdf_viewer'
+
         .tab-pane.tab-resources{id: 'resources', role: 'tabpanel', 'aria-labelledby': 'resources-tab'}
           %section.mb-5
             %h3.text-gray1.mb-4.mb-sm-5 Course Resources
             .row.row-lg
               - @course_resources.each do |resource|
-                .col-sm-6
-                  - if current_user
-                    - if @valid_subscription
-                      =link_to course_resource_special_link(resource), class: 'card card-horizontal card-horizontal-sm flex-row resource-card', data: {resource_name: resource.name, course_name: @course.name, resource_type: resource.type, allowed: 'true'}, target: '_blank' do
-                        .card-header.bg-white.d-flex.align-items-center.justify-content-center
-                          %i.budicon-files-download{"aria-label" => "", :role => "img"}
-                        .card-body.d-flex.align-items-center.pl-1
-                          %h5.m-0.text-truncate.text-gray2
-                            =resource.name
+                =pdf_viewer(resource)
+                -# - if current_user
+                -#   - if @valid_subscription
+                -#     =link_to course_resource_special_link(resource), class: 'card card-horizontal card-horizontal-sm flex-row resource-card', data: {resource_name: resource.name, course_name: @course.name, resource_type: resource.type, allowed: 'true'}, target: '_blank' do
+                -#       .card-header.bg-white.d-flex.align-items-center.justify-content-center
+                -#         %i.budicon-files-download{"aria-label" => "", :role => "img"}
+                -#       .card-body.d-flex.align-items-center.pl-1
+                -#         %h5.m-0.text-truncate.text-gray2
+                -#           =resource.name
 
 
-                    - else
-                      - permission = resource.available_to_user(current_user, @valid_subscription)
-                      - if  permission[:view]
-                        =link_to course_resource_special_link(resource), class: 'card card-horizontal card-horizontal-sm flex-row resource-card', data: {resource_name: resource.name, course_name: @course.name, resource_type: resource.type, allowed: 'true'}, target: '_blank' do
-                          .card-header.bg-white.d-flex.align-items-center.justify-content-center
-                            %i.budicon-files-download{"aria-label" => "", :role => "img"}
-                          .card-body.d-flex.align-items-center.pl-1
-                            %h5.m-0.text-truncate.text-gray2
-                              =resource.name
+                -#   - else
+                -#     - permission = resource.available_to_user(current_user, @valid_subscription)
+                -#     - if  permission[:view]
+                -#       =link_to course_resource_special_link(resource), class: 'card card-horizontal card-horizontal-sm flex-row resource-card', data: {resource_name: resource.name, course_name: @course.name, resource_type: resource.type, allowed: 'true'}, target: '_blank' do
+                -#         .card-header.bg-white.d-flex.align-items-center.justify-content-center
+                -#           %i.budicon-files-download{"aria-label" => "", :role => "img"}
+                -#         .card-body.d-flex.align-items-center.pl-1
+                -#           %h5.m-0.text-truncate.text-gray2
+                -#             =resource.name
 
-                      - else
-                        %a.card.card-horizontal.card-horizontal-sm.flex-row.resource-card{data: {target: "##{permission[:reason]}", toggle: 'modal', resource_name: resource.name, course_name: @course.name, resource_type: resource.type, allowed: 'false'}, href: '#'}
-                          .card-header.bg-white.d-flex.align-items-center.justify-content-center
-                            %i.budicon-files-download{"aria-label" => "", :role => "img"}
-                          .card-body.d-flex.align-items-center.pl-1
-                            %h5.m-0.text-truncate.text-gray2
-                              =resource.name
+                -#     - else
+                -#       %a.card.card-horizontal.card-horizontal-sm.flex-row.resource-card{data: {target: "##{permission[:reason]}", toggle: 'modal', resource_name: resource.name, course_name: @course.name, resource_type: resource.type, allowed: 'false'}, href: '#'}
+                -#         .card-header.bg-white.d-flex.align-items-center.justify-content-center
+                -#           %i.budicon-files-download{"aria-label" => "", :role => "img"}
+                -#         .card-body.d-flex.align-items-center.pl-1
+                -#           %h5.m-0.text-truncate.text-gray2
+                -#             =resource.name
 
-                  - else
-                    %a.card.card-horizontal.card-horizontal-sm.flex-row.resource-card{data: {target: '#account-required', toggle: 'modal', href: '#', resource_name: resource.name, course_name: @course.name, resource_type: resource.type, allowed: 'false'}}
-                      .card-header.bg-white.d-flex.align-items-center.justify-content-center
-                        %i.budicon-files-download{"aria-label" => "", :role => "img"}
-                      .card-body.d-flex.align-items-center.pl-1
-                        %h5.m-0.text-truncate.text-gray2
-                          =resource.name
+                -# - else
+                -#   %a.card.card-horizontal.card-horizontal-sm.flex-row.resource-card{data: {target: '#account-required', toggle: 'modal', href: '#', resource_name: resource.name, course_name: @course.name, resource_type: resource.type, allowed: 'false'}}
+                -#     .card-header.bg-white.d-flex.align-items-center.justify-content-center
+                -#       %i.budicon-files-download{"aria-label" => "", :role => "img"}
+                -#     .card-body.d-flex.align-items-center.pl-1
+                -#       %h5.m-0.text-truncate.text-gray2
+                -#         =resource.name
 
 
       -if @products && @products.any?
