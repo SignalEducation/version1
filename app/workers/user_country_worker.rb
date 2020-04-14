@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UserCountryWorker
   include Sidekiq::Worker
 
@@ -6,8 +8,8 @@ class UserCountryWorker
   def perform(user_id, ip_address)
     user = User.find(user_id)
     user_country = IpAddress.get_country(ip_address)
-    if user_country && user.country_id != user_country.id
-      user.update!(country_id: user_country.id)
-    end
+    return unless user_country && user.country_id != user_country.id
+
+    user.update!(country_id: user_country.id)
   end
 end
