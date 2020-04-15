@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 describe StripeSubscriptionService, type: :service do
-  let(:subscription) { build_stubbed(:stripe_subscription) }
+  let(:subscription) { create(:stripe_subscription) }
   subject { StripeSubscriptionService.new(subscription) }
 
   before :each do
@@ -23,10 +23,30 @@ describe StripeSubscriptionService, type: :service do
     let(:new_sub) { create(:subscription, subscription_plan_id: sub_plan.id) }
     let(:stripe_sub) {
       double(
-        latest_invoice: { payment_intent: { client_secret: 'cs_123456' }},
+        latest_invoice: { payment_intent: { client_secret: 'cs_123456' } },
         status: 'active'
       )
     }
+
+    describe 'for previously attempted plan updates' do
+      before :each do
+        new_sub.update(state: 'pending_3d_secure', changed_from: subscription)
+      end
+
+      it 'calls #get_updated_stripe_subscription' do
+        expect(subject).to receive(:get_updated_stripe_subscription).and_return(stripe_sub)
+
+        subject.change_plan('', sub_plan.id)
+      end
+
+      it 'sets the client_secret on the Strip subscription' do
+        allow(subject).to receive(:get_updated_stripe_subscription).and_return(stripe_sub)
+
+        newer_sub, = subject.change_plan('', sub_plan.id)
+
+        expect(newer_sub.client_secret).to equal('cs_123456')
+      end
+    end
 
     it 'calls #create_subscription' do
       allow(subject).to receive(:update_old_subscription)
@@ -62,16 +82,16 @@ describe StripeSubscriptionService, type: :service do
     end
 
     describe 'for payments failing 3DS' do
-      let(:stripe_sub_3ds) {
+      let(:stripe_sub_3ds) do
         double(
           latest_invoice: { payment_intent: { client_secret: 'cs_123456' }},
           status: 'past_due'
         )
-      }
+      end
 
       it 'calls #mark_payment_action_required on the subscription' do
         allow(subject).to receive(:create_subscription).
-                          and_return([new_sub, stripe_sub_3ds])
+                            and_return([new_sub, stripe_sub_3ds])
         allow(subject).to receive(:update_old_subscription)
         expect_any_instance_of(Subscription).to receive(:mark_payment_action_required)
 
@@ -274,7 +294,7 @@ describe StripeSubscriptionService, type: :service do
       )
     }
 
-    subject{ StripeSubscriptionService.new(test_sub) }
+    subject { StripeSubscriptionService.new(test_sub) }
 
     before :each do
       create(:subscription_payment_card, user: user)
