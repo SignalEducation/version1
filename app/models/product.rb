@@ -6,7 +6,7 @@
 #
 #  id                    :integer          not null, primary key
 #  name                  :string
-#  course_id     :integer
+#  course_id             :integer
 #  mock_exam_id          :integer
 #  stripe_guid           :string
 #  live_mode             :boolean          default("false")

@@ -79,6 +79,7 @@ class User < ApplicationRecord
   has_one :referral_code
   has_one :student_access
   has_one :referred_signup
+  has_one :onboarding_process
 
   has_many :course_step_logs
   has_many :completed_course_step_logs, -> {
@@ -103,6 +104,7 @@ class User < ApplicationRecord
   has_many :ahoy_visits, :class_name => 'Ahoy::Visit'
   has_many :charges
   has_many :refunds
+  has_many :messages
   has_many :ahoy_events, :class_name => 'Ahoy::Event'
   has_many :exercises, inverse_of: :user
   has_many :corrections, foreign_key: :corrector_id, class_name: 'Exercise'
@@ -178,11 +180,13 @@ class User < ApplicationRecord
     if user&.email_verified && !user.password_change_required?
       user.update_attributes(password_reset_requested_at: proc { Time.zone.now }.call, password_reset_token: ApplicationController.generate_random_code(20))
       # Send reset password email from Mandrill
-      MandrillWorker.perform_async(user.id, 'password_reset_email', "#{root_url}/reset_password/#{user.password_reset_token}") unless Rails.env.test?
+      Message.create(process_at: Time.zone.now, user_id: user&.id, kind: :account, template: 'password_reset_email',
+                     template_params: { url: UrlHelper.instance.reset_password_url(id: user.password_reset_token, host: LEARNSIGNAL_HOST) })
     elsif user&.email_verified && user&.password_change_required?
       # This is for users that received invite verification emails, clicked on the link which verified their account but they did not enter a PW. Now they are trying to access their account by trying to reset their PW so we send them a link for the set pw form instead of the reset pw form.
       user.update_attribute(:password_reset_token, ApplicationController.generate_random_code(20))
-      MandrillWorker.perform_async(user.id, 'send_set_password_email', "#{root_url}/set_password/#{user.password_reset_token}") unless Rails.env.test?
+      Message.create(process_at: Time.zone.now, user_id: user&.id, kind: :account, template: 'send_set_password_email',
+                     template_params: { url: UrlHelper.instance.set_password_url(id: user.password_reset_token, host: LEARNSIGNAL_HOST) })
     end
   end
 
@@ -192,7 +196,7 @@ class User < ApplicationRecord
 
     if user.active && user.email_verified && user.password_reset_requested_at &&
        user.password_reset_token && !user.password_change_required?
-      MandrillWorker.perform_async(user.id, 'password_reset_email', "#{root_url}/reset_password/#{user.password_reset_token}")
+      Message.create(process_at: Time.zone.now, user_id: user&.id, kind: :account, template: 'password_reset_email', template_params: { url: UrlHelper.instance.reset_password_url(id: user.password_reset_token) })
     end
 
     user
@@ -318,7 +322,7 @@ class User < ApplicationRecord
     if user.valid? && user.save
       stripe_customer = Stripe::Customer.create(email: user.email)
       user.update_column(:stripe_customer_id, stripe_customer.id)
-      MandrillWorker.perform_async(user.id, 'csv_webinar_invite', "#{root_url}/user_verification/#{user.email_verification_code}")
+      Message.create(process_at: Time.zone.now, user_id: user&.id, kind: :account, template: 'csv_webinar_invite', template_params: { url: UrlHelper.instance.user_verification_url(id: user.email_verification_code) })
     end
   end
 
@@ -527,7 +531,7 @@ class User < ApplicationRecord
   def send_verification_email(url)
     return if Rails.env.test?
 
-    MandrillWorker.perform_async(id, 'send_verification_email', url)
+    Message.create(process_at: Time.zone.now, user_id: id, kind: :account, template: 'send_verification_email', template_params: { url: url })
   end
 
   def create_stripe_customer

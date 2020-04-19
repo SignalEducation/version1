@@ -2,16 +2,16 @@
 
 class UsersController < ApplicationController
   before_action :logged_in_required
-  before_action(except: :udpate_hubspot) { ensure_user_has_access_rights(%w[user_management_access]) }
+  before_action(except: :update_hubspot) { ensure_user_has_access_rights(%w[user_management_access]) }
   before_action :management_layout
   before_action :get_variables, except: %i[user_personal_details user_subscription_status
                                            user_activity_details user_purchases_details
                                            user_courses_status user_referral_details
-                                           preview_csv_upload]
+                                           preview_csv_upload user_messages_details]
   before_action :get_user_variables, only: %i[user_personal_details user_subscription_status
                                               user_activity_details user_purchases_details
-                                              user_courses_status user_referral_details]
-  skip_before_action :verify_authenticity_token, only: :udpate_hubspot
+                                              user_courses_status user_referral_details user_messages_details]
+  skip_before_action :verify_authenticity_token, only: :update_hubspot
 
   def index
     @users = User.includes(:preferred_exam_body).
@@ -52,7 +52,15 @@ class UsersController < ApplicationController
       @user.create_stripe_customer
       @user.activate_user
 
-      MandrillWorker.perform_async(@user.id, 'admin_invite', user_verification_url(email_verification_code: @user.email_verification_code)) unless Rails.env.test?
+      Message.create(
+        process_at: Time.zone.now,
+        user_id: @user.id,
+        kind: :account,
+        template: 'admin_invite',
+        template_params: {
+          url: user_verification_url(email_verification_code: @user.email_verification_code)
+        }
+      )
       flash[:success] = I18n.t('controllers.users.create.flash.success')
       redirect_to users_url
     else
@@ -140,6 +148,10 @@ class UsersController < ApplicationController
     @referral_code = @user.referral_code
   end
 
+  def user_messages_details
+    @messages = @user.messages
+  end
+
   def user_courses_status
     # This is for seeing a tutors courses
     @courses = Course.all_active.all_in_order
@@ -156,7 +168,7 @@ class UsersController < ApplicationController
     redirect_to users_url
   end
 
-  def udpate_hubspot
+  def update_hubspot
     response =
       HubSpot::Contacts.new.batch_create(
         Array(params[:user_id]),

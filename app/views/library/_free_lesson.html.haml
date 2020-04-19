@@ -1,0 +1,39 @@
+.card.card-collapse.mb-4
+  %a.btn.btn-text.btn-collapse.w-100.text-left.course-module-panel{data: { toggle: "collapse", panel_name: 'Free Lesson', course_name: @course.name }, href: '#collapse_free_lesson', role: 'button', 'aria-expanded': 'true', 'aria-controls': "collapse_free_lesson", id: 'free_lesson_panel'}
+    .lesson-item.w-100{class: '' }
+      %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
+        check
+      .lesson-item-content.pl-3
+        .d-flex.flex-column.flex-sm-row.align-items-start.align-items-sm-center
+          %p.lesson-item-text.text-truncate.w-100
+            ='Free Lesson'
+          %small.lesson-item-tag.ml-sm-auto.text-sm-right
+            %span
+              =@free_course_steps.count.to_s + ' ' + t('views.library.show.lessons')
+  .collapse{id: "collapse_free_lesson", class: 'show'}
+    .card-body
+      %ul.list-unstyled
+        -@free_course_steps.all_in_order.each do |step|
+          %li.py-2.border-top
+            =link_to course_special_link(step, @course_log), class: 'btn btn-text py-3 w-100 text-left course-lesson', data: { lesson_name: step.name, course_name: @course.name } do
+              .lesson-item.lesson-item-inner.w-100{class: @cmeuls && @cmeuls_ids.include?(step.id) ? (@completed_cmeuls_cme_ids.include?(step.id) ? 'completed' : 'failed') : ''}
+                %i.material-icons.icon-bg-round{"aria-label" => "failed", :role => "img"}
+                  =step.icon_label
+
+                .lesson-item-content.pl-3
+                  .d-flex.flex-column.flex-sm-row.align-items-start
+                    %p.lesson-item-text
+                      =step.name
+                    %small.lesson-item-tag.ml-sm-auto.text-sm-right
+                      -if step.temporary_label && !step.temporary_label.empty?
+                        %span{style: 'color: #fd7e14;'}
+                          =step.temporary_label
+                      -else
+                        %span
+                          -if step.is_video && step.estimated_time_in_seconds
+                            =humanize_time(step.estimated_time_in_seconds)
+                          -elsif step.is_quiz
+                            -if step.number_of_questions.to_i > 1
+                              =step.number_of_questions.to_s + ' ' +  t('views.library.show.questions')
+                            -else
+                              =step.number_of_questions.to_s + ' ' +  'Question'

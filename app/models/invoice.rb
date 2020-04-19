@@ -224,9 +224,15 @@ class Invoice < ApplicationRecord
     invoice_url = UrlHelper.instance.subscription_invoices_url(
       id, locale: 'en', format: 'pdf', host: LEARNSIGNAL_HOST
     )
-    MandrillWorker.perform_async(
-      user_id, 'send_successful_payment_email', account_url,
-      invoice_url
+    Message.create(
+      process_at: Time.zone.now,
+      user_id: user_id,
+      kind: :account,
+      template: 'send_successful_payment_email',
+      template_params: {
+        url: account_url,
+        invoice_url: invoice_url
+      }
     )
   end
 
@@ -236,7 +242,15 @@ class Invoice < ApplicationRecord
     invoice_url = UrlHelper.instance.show_invoice_url(sca_verification_guid,
                                                       locale: 'en',
                                                       host: LEARNSIGNAL_HOST)
-    MandrillWorker.perform_async(user_id, 'send_sca_confirmation_email', invoice_url)
+    Message.create(
+      process_at: Time.zone.now,
+      user_id: user_id,
+      kind: :account,
+      template: 'send_sca_confirmation_email',
+      template_params: {
+        url: invoice_url
+      }
+    )
   end
 
   ## Used in the views to show state of the invoice ##

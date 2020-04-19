@@ -19,6 +19,7 @@ Rails.application.routes.draw do
     post 'stripe_v02',      to: 'stripe_webhooks#create'
     post 'paypal_webhooks', to: 'paypal_webhooks#create'
     post 'cron_tasks/:id',  to: 'cron_tasks#create'
+    post 'messages',        to: 'messages#update'
 
     namespace :v1, constraints: ApiConstraint.new(version: 1) do
       resources :courses, only: :index do
@@ -148,10 +149,11 @@ Rails.application.routes.draw do
       get  '/subscription',                             action: :user_subscription_status,        as: :subscription
       get  '/courses',                                  action: :user_courses_status,             as: :courses
       get  '/enrollments',                              action: :user_activity_details,           as: :activity
-      get  '/course_log_details/:scul_id', action: :course_log_details, as: :scul_activity
+      get  '/course_log_details/:scul_id',              action: :course_log_details, as: :scul_activity
       get  '/orders',                                   action: :user_purchases_details,          as: :orders
-      get  '/referrals',                                action: :user_referral_details,           as: :referrals
-      post '/udpate_hubspot',                           action: :udpate_hubspot,                  as: :udpate_hubspot
+      get  '/messages',                                 action: :user_referral_details,           as: :referrals
+      get  '/referrals',                                action: :user_messages_details,           as: :messages
+      post '/update_hubspot',                           action: :update_hubspot,                  as: :update_hubspot
       patch '/update_courses',                          action: :update_courses,                  as: :update_courses
       get 'search', on: :collection
       resources :invoices,  only: :index, shallow: true

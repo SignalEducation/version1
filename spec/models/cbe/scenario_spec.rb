@@ -8,6 +8,8 @@
 #  updated_at     :datetime         not null
 #  cbe_section_id :bigint
 #  name           :string
+#  destroyed_at   :datetime
+#  active         :boolean          default("true")
 #
 require 'rails_helper'
 require 'concerns/cbe_support_spec.rb'

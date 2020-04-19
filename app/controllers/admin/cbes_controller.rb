@@ -3,7 +3,7 @@
 module Admin
   class CbesController < ApplicationController
     before_action :logged_in_required
-    before_action { ensure_user_has_access_rights(%w[system_requirements_access]) }
+    before_action { ensure_user_has_access_rights(%w[content_management_access]) }
     before_action :management_layout
     before_action :set_cbe, only: %i[show clone]
 
@@ -19,9 +19,9 @@ module Admin
 
     def clone
       if @cbe.duplicate
-        flash[:success] = 'Cbe successfully duplicaded'
+        flash[:success] = 'Cbe successfully duplicated'
       else
-        flash[:error] = 'Cbe not successfully duplicaded'
+        flash[:error] = 'Cbe not successfully duplicated'
       end
 
       redirect_to admin_cbes_path

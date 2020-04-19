@@ -7,10 +7,10 @@
 #  id                                   :integer          not null, primary key
 #  user_id                              :integer
 #  session_guid                         :string
-#  course_id                    :integer
+#  course_id                            :integer
 #  percentage_complete                  :integer          default("0")
 #  count_of_cmes_completed              :integer          default("0")
-#  latest_course_step_id      :integer
+#  latest_course_step_id                :integer
 #  completed                            :boolean          default("false")
 #  created_at                           :datetime         not null
 #  updated_at                           :datetime         not null
@@ -20,6 +20,7 @@
 #  count_of_quizzes_taken               :integer
 #  completed_at                         :datetime
 #  count_of_constructed_responses_taken :integer
+#  count_of_notes_completed             :integer
 #
 
 class CourseLog < ApplicationRecord
@@ -43,6 +44,7 @@ class CourseLog < ApplicationRecord
   before_destroy :check_dependencies
   after_save :update_enrollment
   after_save :emit_certificate, if: :saved_change_to_completed?
+  after_create :create_onboarding_process
 
   # scopes
   scope :all_in_order, -> { order(:user_id, :created_at) }
@@ -141,5 +143,11 @@ class CourseLog < ApplicationRecord
     return unless course.emit_certificate? && completed
 
     CourseLogsWorker.perform_async(user_name, user_email, course.accredible_group_id)
+  end
+
+  def create_onboarding_process
+    return unless course.exam_body.has_sittings || !Rails.env.test?
+
+    OnboardingProcess.create(user_id: user_id, course_log_id: id)
   end
 end

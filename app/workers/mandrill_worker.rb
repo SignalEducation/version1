@@ -6,12 +6,17 @@ class MandrillWorker
 
   sidekiq_options queue: 'high'
 
-  def perform(user_id, method_name, *template_args)
-    user = User.find(user_id)
+  def perform(message_id)
+    message        = Message.find(message_id)
+    method_name    = message.template
+    template_args  = message.template_params.values
 
-    return unless user&.email
+    return unless message&.user&.email
 
-    client = MandrillClient.new(user)
-    client.send(method_name, *template_args)
+    client    = MandrillClient.new(message.user)
+    response  = client.send(method_name, *template_args)
+    state     = response.first.fetch('status')
+
+    message.update(mandrill_id: response.first.fetch('_id'), state: state)
   end
 end

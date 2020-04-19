@@ -1,4 +1,27 @@
 # frozen_string_literal: true
+
+# == Schema Information
+#
+# Table name: course_logs
+#
+#  id                                   :integer          not null, primary key
+#  user_id                              :integer
+#  session_guid                         :string
+#  course_id                            :integer
+#  percentage_complete                  :integer          default("0")
+#  count_of_cmes_completed              :integer          default("0")
+#  latest_course_step_id                :integer
+#  completed                            :boolean          default("false")
+#  created_at                           :datetime         not null
+#  updated_at                           :datetime         not null
+#  count_of_questions_correct           :integer
+#  count_of_questions_taken             :integer
+#  count_of_videos_taken                :integer
+#  count_of_quizzes_taken               :integer
+#  completed_at                         :datetime
+#  count_of_constructed_responses_taken :integer
+#  count_of_notes_completed             :integer
+#
 require 'rails_helper'
 
 describe CourseLog do

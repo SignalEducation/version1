@@ -46,11 +46,12 @@ class LibraryController < ApplicationController
 
     if @course && @exam_body.active && !@course.preview
       if current_user
-        @valid_subscription      = current_user.active_subscriptions_for_exam_body(@exam_body.id).all_valid.first
-        @course_log = current_user.course_logs.for_course(@course.id).all_in_order.last
+        @free_course_steps   = @course.free_course_steps
+        @valid_subscription   = current_user.active_subscriptions_for_exam_body(@exam_body.id).all_valid.first
+        @course_log           = current_user.course_logs.for_course(@course.id).all_in_order.last
 
         if @course_log.present?
-          @completed_course_lesson_logs = @course_log.course_lesson_logs.all_complete
+          @completed_course_lesson_logs  = @course_log.course_lesson_logs.all_complete
           @completed_course_lesson_ids   = @completed_course_lesson_logs.map(&:course_lesson_id)
           @cmeuls                        = @course_log.course_step_logs
           @cmeuls_ids                    = @cmeuls.map(&:course_step_id)

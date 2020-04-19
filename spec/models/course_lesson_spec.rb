@@ -16,7 +16,7 @@
 #  seo_no_index               :boolean          default("false")
 #  destroyed_at               :datetime
 #  number_of_questions        :integer          default("0")
-#  course_id          :integer
+#  course_id                  :integer
 #  video_duration             :float            default("0.0")
 #  video_count                :integer          default("0")
 #  quiz_count                 :integer          default("0")

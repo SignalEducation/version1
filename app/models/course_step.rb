@@ -4,27 +4,28 @@
 #
 # Table name: course_steps
 #
-#  id                               :integer          not null, primary key
-#  name                             :string(255)
-#  name_url                         :string(255)
-#  description                      :text
-#  estimated_time_in_seconds        :integer
-#  course_lesson_id                 :integer
-#  sorting_order                    :integer
-#  created_at                       :datetime
-#  updated_at                       :datetime
-#  is_video                         :boolean          default("false"), not null
-#  is_quiz                          :boolean          default("false"), not null
-#  active                           :boolean          default("true"), not null
-#  seo_description                  :string(255)
-#  seo_no_index                     :boolean          default("false")
-#  destroyed_at                     :datetime
-#  number_of_questions              :integer          default("0")
-#  duration                         :float            default("0.0")
-#  temporary_label                  :string
-#  is_constructed_response          :boolean          default("false"), not null
-#  available_on_trial               :boolean          default("false")
-#  related_course_step_id :integer
+#  id                        :integer          not null, primary key
+#  name                      :string(255)
+#  name_url                  :string(255)
+#  description               :text
+#  estimated_time_in_seconds :integer
+#  course_lesson_id          :integer
+#  sorting_order             :integer
+#  created_at                :datetime
+#  updated_at                :datetime
+#  is_video                  :boolean          default("false"), not null
+#  is_quiz                   :boolean          default("false"), not null
+#  active                    :boolean          default("true"), not null
+#  seo_description           :string(255)
+#  seo_no_index              :boolean          default("false")
+#  destroyed_at              :datetime
+#  number_of_questions       :integer          default("0")
+#  duration                  :float            default("0.0")
+#  temporary_label           :string
+#  is_constructed_response   :boolean          default("false"), not null
+#  available_on_trial        :boolean          default("false")
+#  related_course_step_id    :integer
+#  is_note                   :boolean          default("false")
 #
 
 class CourseStep < ApplicationRecord
@@ -71,6 +72,7 @@ class CourseStep < ApplicationRecord
   scope :all_videos,               -> { where(is_video: true) }
   scope :all_quizzes,              -> { where(is_quiz: true) }
   scope :all_constructed_response, -> { where(is_constructed_response: true) }
+  scope :all_free,                 -> { where(available_on_trial: true) }
 
   # class methods
 
@@ -121,6 +123,25 @@ class CourseStep < ApplicationRecord
     else
       prev_id = course_lesson.previous_module.try(:course_steps).try(:all_active).try(:all_in_order).try(:last).try(:id)
       CourseStep.find(prev_id) if prev_id
+    end
+  end
+
+  def free_step_ids
+    course_lesson.course.free_course_steps.all_in_order.map(&:id)
+  end
+
+  def position_among_free_steps
+    free_step_ids.index(id)
+  end
+
+  def next_free_step
+    return unless active && with_active_parents? && available_on_trial && position_among_free_steps
+
+    if position_among_free_steps < (free_step_ids.length - 1)
+      CourseStep.find(free_step_ids[position_among_free_steps + 1])
+    else
+      # In case the first video isn't completed
+      CourseStep.find(free_step_ids.first)
     end
   end
 

@@ -9,7 +9,7 @@
 #  public_url                    :string
 #  created_at                    :datetime         not null
 #  updated_at                    :datetime         not null
-#  course_id             :integer
+#  course_id                     :integer
 #  custom_file_name              :string
 #  group_id                      :integer
 #  name                          :string

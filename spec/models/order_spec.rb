@@ -4,7 +4,7 @@
 #
 #  id                        :integer          not null, primary key
 #  product_id                :integer
-#  course_id         :integer
+#  course_id                 :integer
 #  user_id                   :integer
 #  stripe_guid               :string
 #  stripe_customer_id        :string

@@ -52,7 +52,16 @@ class EnrollmentsController < ApplicationController
   protected
 
   def send_welcome_email(user_id, course_name)
-    MandrillWorker.perform_at(5.minutes.from_now, user_id, 'send_enrollment_welcome_email', course_name, account_url)
+    Message.create(
+      process_at: 5.minutes.from_now,
+      user_id: user_id,
+      kind: :account,
+      template: 'send_enrollment_welcome_email',
+      template_params: {
+        url: account_url,
+        course: course_name
+      }
+    )
   end
 
   def allowed_params

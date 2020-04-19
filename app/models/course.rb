@@ -40,6 +40,7 @@
 #  on_welcome_page                         :boolean          default("false")
 #  unit_label                              :string
 #  level_id                                :integer
+#  accredible_group_id                     :integer
 #
 
 class Course < ApplicationRecord
@@ -263,6 +264,11 @@ class Course < ApplicationRecord
 
   def update_all_course_logs
     CourseLessonLogsWorker.perform_async(id)
+  end
+
+  def free_course_steps
+    section_lesson_ids = course_sections.all_in_order.first.course_lessons.all_in_order.map(&:id)
+    course_steps.where(course_lesson_id: section_lesson_ids, active: true, available_on_trial: true).includes(:course_lesson).order("course_lessons.sorting_order asc")
   end
 
   ########################################################################

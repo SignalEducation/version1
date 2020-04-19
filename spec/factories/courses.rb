@@ -38,6 +38,7 @@
 #  on_welcome_page                         :boolean          default("false")
 #  unit_label                              :string
 #  level_id                                :integer
+#  accredible_group_id                     :integer
 #
 
 FactoryBot.define do

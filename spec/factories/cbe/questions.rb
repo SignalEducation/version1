@@ -12,6 +12,8 @@
 #  sorting_order   :integer
 #  cbe_scenario_id :bigint
 #  solution        :text
+#  destroyed_at    :datetime
+#  active          :boolean          default("true")
 #
 FactoryBot.define do
   factory :cbe_question, class: Cbe::Question do

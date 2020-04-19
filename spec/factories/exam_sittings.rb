@@ -2,15 +2,15 @@
 #
 # Table name: exam_sittings
 #
-#  id                :integer          not null, primary key
-#  name              :string
-#  course_id :integer
-#  date              :date
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
-#  exam_body_id      :integer
-#  active            :boolean          default("true")
-#  computer_based    :boolean          default("false")
+#  id             :integer          not null, primary key
+#  name           :string
+#  course_id      :integer
+#  date           :date
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  exam_body_id   :integer
+#  active         :boolean          default("true")
+#  computer_based :boolean          default("false")
 #
 
 FactoryBot.define do
