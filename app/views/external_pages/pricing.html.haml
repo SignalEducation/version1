@@ -1,0 +1,21 @@
+=render partial: 'layouts/external_navbar'
+%main
+  .container-bg.bg-gray5
+    .container#plans
+      %article.py-6
+        %header.text-center.pb-5.pb-md-6
+          -if @group
+            %h2.h1-mega
+              ="#{@group.name} Payment Plans"
+            %p.p-hero.px-lg-8
+              =@group&.exam_body&.subscription_page_subheading_text
+          -else
+            %h2.h1-mega
+              ="Payment Plans"
+            %p.p-hero.px-lg-8
+              ='Achieve your learning goals with a learnsignal subscription plan and enjoy professional courses delivered online so that you can study on a schedule that suits you.'
+
+        -unless @group
+          =render partial: 'pricing_tabs'
+        -else
+          =render partial: 'pricing_section', locals: {plans: @subscription_plans}

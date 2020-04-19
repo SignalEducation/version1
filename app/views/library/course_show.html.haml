@@ -28,7 +28,6 @@
         %ul.nav.nav-tabs{id: 'coursesTabs', role: 'tablist'}
           - @course.course_sections.all_active.all_in_order.each_with_index do |course_section, counter|
             %li.nav-item{data: {tab_name: course_section.name, course_name: @course.name}}
-              -# TODO add active to first li
               %a{class: "nav-link #{counter == 0 ? 'active' : ''}", id: "#{course_section.name_url}-tab", data: {toggle: 'tab'}, href: "##{course_section.name_url}", aria: {controls: "#{course_section.name_url}", selected: 'false'}, role: 'tab'}
                 =course_section.name
 

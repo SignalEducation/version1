@@ -293,11 +293,12 @@ Rails.application.routes.draw do
 
     get 'prep_products/:group_name_url', to: 'footer_pages#media_library', as: :exam_products
 
-    # HomePages Structure
-    get 'home', to: 'routes#root', as: :home
-    get 'course/:name_url', to: 'student_sign_ups#group', as: :group_landing
+    # External Pages
+    get 'about-us',                         to: 'external_pages#about', as: :about
+    get 'pricing/(:name_url)',              to: 'external_pages#pricing', as: :pricing
+    get 'courses/:group_name_url',          to: 'external_pages#group', as: :group_info
 
-    root 'student_sign_ups#home'
+    root 'external_pages#home'
 
     # Catch-all
     get '404', to: 'footer_pages#missing_page', first_element: '404-page', as: :missing_page

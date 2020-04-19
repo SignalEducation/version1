@@ -1,0 +1,72 @@
+=render partial: 'layouts/external_navbar'
+
+%main
+  .container-bg.home-hero-alt-bg.bg-about
+    .container-md
+      %article.home-hero
+        %header.home-hero-header
+          .row
+            .col-xl-12.text-center
+              %h1.h1-mega.text-white.pb-4
+                We make learning smarter and easier
+              %p.p-hero.px-lg-6.text-white
+                What makes learnsignal different is that we’re a digital-first education company. Our vision is to help as many people as possible pass their ACCA and CIMA exams or update their CPD skills to improve every aspect of their lives.
+              %p.p-hero.px-lg-6.text-white
+                Our mission is to turn professional education on its head by providing professionals with an easy and affordable way to study in an environment that offers 24/7 access. For us, online learning is the perfect way to do that.
+              %p.p-hero.px-lg-6.text-white
+                Ultimately, students and their learning experience are at the heart of everything we do.
+
+
+  =render partial: 'student_sign_ups/usage_numbers_section'
+
+  .container-bg.bg-gray5
+    .container
+
+      %article.py-5
+        %header.pb-sm-4.pb-md-5
+          .row.row-lg
+            .col-12.col-lg-6
+              .ml-lg-3.mr-lg-3.py-6
+                %p.text-gray2.text-center
+                  Learnsignal’s origins came from personal experience of studying for the ACCA exams using a traditional provider. During that process, it became clear that the approach was ineffective, expensive and time-consuming. So, we looked at creating a modern and simpler way to support people while they studied and the best way to achieve that was online.
+
+            .col-12.col-lg-6
+              -if @home_page&.video_guid.present?
+                .video-iframe-wrap
+                  %iframe{src: "https://player.vimeo.com/video/#{@home_page.video_guid}", frameborder: '0', allowfullscreen: true, mozallowfullscreen: true, webkitallowfullscreen: true}
+              -else
+                =image_tag('testimonial-img.png', class: 'mb-5 mb-lg-0', alt: 'Girl at the laptop')
+
+
+
+  .container-bg
+    .container
+      %article.py-5
+        %header.pb-sm-4.pb-md-5
+          .row.row-lg
+            .col-12.col-lg-6
+              .text-center
+                =image_tag('learning-partner-badge.png', alt: 'Logo')
+            .col-12.col-lg-6
+              .py-6
+                %h2.h1-mega.text-center
+                  A gold approved ACCA partner
+                %p.text-gray2.pt-5.text-center
+                  Learnsignal became a gold approved ACCA partner in April 2017. Since then, we have continued to challenge the traditional way of learning and grown our student base across 130 countries to over 100,000.
+
+  =render partial: 'library/user_form_modal', locals: { ticket_type: 'Contact Us', form_id: 'contact-form-modal' }
+  .container-bg.bg-gray5
+    .container
+      %article.text-center.py-6.py-lg-7
+        %header
+          %h2.h1.mb-4.px-4
+            Find out more about us!
+          .container-md
+            %p.px-4.px-sm-0
+              If you have any questions of concerns about enrolling in our online learning programme then we're here for you and we'd love to help
+        .py-4.d-flex.justify-content-center
+          - %w(Conor_CHD_5350.jpg Alan_CHD_5507.jpg Philip_CHD_5494.jpg Kate_CHD_5387.jpg).sample(3).each do |image|
+            =image_tag(image, class: 'img-thumbnail img-thumbnail-sm m-1 m-sm-2', alt: 'Contact person profile image')
+        .py-3
+          .btn.btn-primary.btn-lg{'data-target' => '#contact-form-modal', 'data-toggle' => 'modal', :href => '#'}
+            Get in touch

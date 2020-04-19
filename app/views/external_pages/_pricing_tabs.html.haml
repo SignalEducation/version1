@@ -1,0 +1,19 @@
+
+%nav.courses-nav
+  %ul.nav.nav-tabs{id: 'pricingTabs', role: 'tablist'}
+    -@groups.each_with_index do |group, counter|
+      %li.nav-item
+        %a{class: "nav-link #{counter == 0 ? 'active' : ''}", id: "#{group.name_url}-tab", data: {toggle: 'tab'}, href: "##{group.name_url}", aria: {controls: "#{group.name_url}", selected: 'false'}, :role => "tab"}
+          =group.name
+
+
+.bg-gray5
+  .container.py-5.py-sm-6
+    #pricingTabsContent.tab-content
+
+      -@groups.each_with_index do |group, counter|
+        .tab-pane{id: group.name_url, class: "tab-#{group.name_url} #{counter == 0 ? 'active show' : ''} ", "aria-labelledby" => "#{group.name_url}-tab", :role => "tabpanel"}
+          %section.mb-5
+
+            =render partial: 'pricing_section', locals: {plans: @subscription_plans.for_exam_body(group.exam_body_id)}
+

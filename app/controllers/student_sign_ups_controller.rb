@@ -90,20 +90,6 @@ class StudentSignUpsController < ApplicationController
     @exam_body = @group.exam_body
     seo_title_maker(@group.seo_title, @group.seo_description, nil)
 
-    @currency_id =
-      if current_user
-        current_user.country_id
-      else
-        ip_country = IpAddress.get_country(request.remote_ip)
-        country = ip_country || Country.find_by(name: 'United Kingdom')
-        country.currency_id
-      end
-
-    if @currency_id
-      @subscription_plans = SubscriptionPlan.where(
-          subscription_plan_category_id: nil, exam_body_id: @group.exam_body_id
-      ).includes(:currency).in_currency(@currency_id).all_active.all_in_order.limit(3)
-    end
 
     @navbar = false
     @top_margin = false

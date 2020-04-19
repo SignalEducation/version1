@@ -1,0 +1,116 @@
+.row.row-lg.justify-content-center
+  -plans.each do |plan|
+    .col-lg-4
+      %article.card.card-primary.card-primary-alt.medium-gap
+        -if plan.most_popular
+          .card-banner.bg-mint
+            %large.text-white
+              Most popular payment plan
+        .card-body.text-center.py-4.py-sm-5
+          %h2.card-title
+            =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
+
+          %ul.list-centered
+            -if plan.bullet_points_list && !plan.bullet_points_list.empty?
+              - plan.bullet_points_list.split(/, ?/).each do |bullet|
+                %li=bullet
+            -else
+              %li="Access all courses"
+              %li="Topic-by-topic lectures"
+              %li="24/7 tutor support"
+
+            -unless plan.exam_body.name == "CPD"
+              %li{style: 'font-style: italic;'}
+                Cancel anytime
+
+          %p.h2.mb-0
+            =plan.currency.format_number(plan.price)
+
+          -if plan.monthly_percentage_off
+            %p.h5.text-gray2
+              Save over
+              =plan.monthly_percentage_off
+              ='%'
+          -else
+            -if plan&.previous_plan_price.present?
+              %p.h5.text-gray2
+                was
+                %span.strikethrough-diagonal
+                  %span{style: 'color:#647786'}
+                    =plan.currency.format_number(plan.previous_plan_price)
+
+          .mt-auto
+            =link_to subscription_checkout_special_link(plan.exam_body_id, plan.guid), class: 'btn btn-secondary btn-sm', onclick: "addToCart('#{plan.currency.iso_code}', '#{plan.name}', '#{plan.id}', '#{plan.price}', '#{plan.exam_body.name}');" do
+              Choose this plan
+
+
+
+
+
+:javascript
+  let currencyIso = "#{@preferred_plan.currency.iso_code}";
+  let name = "#{@preferred_plan.name}";
+  let id = "#{@preferred_plan.id}";
+  let price = "#{@preferred_plan.price}";
+  let body = "#{@preferred_plan.exam_body.name}";
+  let type = "#{'Subscription'}";
+
+
+
+  function addToCart(currencyIso, name, id, price, body) {
+    dataLayer.push({
+      'event': 'addToCart',
+      'ecommerce': {
+        'currencyCode': currencyIso,
+        'add': {
+          'products': [{
+            'name': name,
+            'id': id,
+            'price': price,
+            'brand': body,
+            'category': 'Subscription',
+            'quantity': 1
+            }]
+        }
+      }
+    });
+  }
+
+  $(document).ready(function(){
+    addToCart(currencyIso, name, id, price, body);
+  });
+
+  function selectTab(tab, currencyIso, name, id, price, body, type) {
+    dataLayer.push({ 'event': 'checkout',
+      'ecommerce': {
+        'currencyCode': currencyIso,
+        'checkout': {
+          'actionField': {'step': 1, 'option':tab},
+          'products': [{
+            'name': name,
+            'id': id,
+            'price': price,
+            'brand': body,
+            'category': type,
+            'quantity': 1
+          }]
+        }
+      }
+    });
+  }
+
+  $(document).ready(function(){
+
+    if ($("#registration-login")[0]) {
+      selectTab(document.querySelector("#register-tab").innerText, currencyIso, name, id, price, body, type);
+      $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        selectTab(e.target.innerText, currencyIso, name, id, price, body, type);
+      })
+    } else if ($("#registration-option")[0]) {
+        selectTab('Register', currencyIso, name, id, price, body, type);
+    } else if ($("#login-option")[0]) {
+        selectTab('Login', currencyIso, name, id, price, body, type);
+    }
+
+  });
+

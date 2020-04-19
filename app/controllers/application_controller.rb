@@ -54,8 +54,6 @@ class ApplicationController < ActionController::Base
     @groups = Group.includes(:exam_body).all_active.with_active_body.all_in_order
     @footer_content_pages = ContentPage.all_active.for_footer
     @footer_landing_pages = HomePage.for_footer
-    navbar_links = %w[about-us testimonials resources]
-    @navbar_landing_pages = HomePage.where(public_url: navbar_links)
 
     return unless current_user&.preferred_exam_body && current_user&.standard_student_user?
 

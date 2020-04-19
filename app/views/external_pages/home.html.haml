@@ -1,0 +1,124 @@
+=javascript_include_tag 'video_players/vimeo'
+=render partial: 'layouts/external_navbar'
+%main
+  .container.home-hero-container
+    %article.home-hero
+      .row.no-gutters
+        .col-xl-4
+          %header.home-hero-header.pb-2
+            <h1 class="h1-hero">the smarter<br>way to study<span class="text-mint">.</span></h1>
+            %p.p-hero
+              -if @home_page&.header_paragraph.present?
+                =@home_page.header_paragraph
+              -else
+                Get everything you need to pass your ACCA exam in one place! See why over 100,000 students have saved money and time by switching to studying online with learnsignal.
+        .col-xl-8
+          %aside.home-hero-aside.py-2.py-sm-0
+            .home-hero-img-wrap
+              .circle-top-wrap
+                %svg{:fill => "none", :viewbox => "0 0 237 237", :xmlns => "http://www.w3.org/2000/svg"}
+                  %path.turquoise-oval{:d => "M118.5 237C183.946 237 237 183.946 237 118.5C237 53.0543 183.946 0 118.5 0C53.0543 0 0 53.0543 0 118.5C0 183.946 53.0543 237 118.5 237Z", :fill => "#30AABC", :opacity => "0.1"}
+              .circle-bottom-wrap
+                %svg{:fill => "none", :viewbox => "0 0 312 312", :xmlns => "http://www.w3.org/2000/svg"}
+                  %path.yellow-oval{:d => "M156 312C242.156 312 312 242.156 312 156C312 69.8436 242.156 1.52588e-05 156 1.52588e-05C69.8436 1.52588e-05 0 69.8436 0 156C0 242.156 69.8436 312 156 312Z", :fill => "#F0CA28", :opacity => "0.1"}
+
+              -if @home_page&.video_guid.present? && @vimeo_as_main
+                #laptop-wrapper.laptop-wrapper
+                  -# %iframe{width: '560', height: '315', src: "https://player.vimeo.com/video/#{@home_page.video_guid}", frameborder: '0', allowfullscreen: true}
+              -else
+                =image_tag('laptop-with-lms-2.png', class: 'px-md-5 px-xl-0', alt: 'Laptop with Learn Signal page open')
+
+
+      .home-hero-cta-section.pt-4.pt-sm-5.py-xl-0
+        .pb-3
+          =link_to new_student_url, class: 'btn btn-primary btn-lg' do
+            -if @home_page&.header_h3.present?
+              =@home_page.header_h3
+            -else
+              Join for
+              %span.text-uppercase free
+              today!
+
+        %small No credit card required. Set-up takes one minute
+
+  =render partial: 'student_sign_ups/usage_numbers_section'
+
+  .container-bg.bg-gray5
+    .container
+      %article.py-5
+        %header.text-center.pb-sm-4.pb-md-5
+          %h2.h1-mega Explore our courses
+          %p.p-hero.px-lg-6
+            Make learning simple and affordable by studying online in a way that suits your professional and personal life.
+        .row.row-lg
+          -@groups.each do |group|
+            .col-lg
+              %article.card.card-primary.card-pink
+                =image_tag(group.image.url, class: 'card-img-top', alt: 'People in front of the blackboard', style: "border-bottom-color: #{group.background_colour};")
+                .card-body.text-center
+                  %h2.h1.card-title
+                    =group.name
+                  %p
+                    =group.description
+                  .mt-auto
+                    =link_to 'Browse Courses', group_info_url(group.name_url), class: 'btn btn-secondary btn-sm'
+
+  =render partial: 'student_sign_ups/usp_section'
+
+  .container-bg.bg-gray5
+    .container
+      %article.py-5
+        %header.pb-sm-4.pb-md-5
+          .row.row-lg
+            .col-12.col-lg-6
+              .text-center
+                =image_tag('learning-partner-badge.png', alt: 'Logo')
+            .col-12.col-lg-6
+              .py-6
+                %h2.h1-mega.text-center
+                  A gold approved ACCA partner
+                %p.text-gray2.pt-5.text-center
+                  Learnsignal became a gold approved ACCA partner in April 2017. Since then, we have continued to challenge the traditional way of learning and grown our student base across 130 countries to over 100,000.
+
+
+  -if @home_page.student_testimonials.any?
+    =render partial: 'student_sign_ups/student_testimonials', locals: {home_page: @home_page}
+  -else
+    .container
+      %article.py-3.py-6.text-center.text-lg-left
+        %header.sr-only
+          %h2 Testimonial
+        .row.row-lg
+          .col-lg-5
+            =image_tag('testimonial-img.png', class: 'mb-5 mb-lg-0', alt: 'Girl at the laptop')
+          .col-lg-7
+            .d-flex.h-100.align-items-center
+              %blockquote.mb-0.ml-lg-6.mr-lg-6
+                %p.text-gray2
+                  "The good thing about learnsignal was the way the lecturers went through question papers. It helped me so much with the technique that I had lacked in my previous paper."
+                %footer
+                  %cite.font-weight-semi-bold.text-gray2
+                    Rebecca Nagujja, Ireland
+
+  -if @home_page.blog_posts.any?
+    =render partial: 'student_sign_ups/blog_posts_section', locals: {home_page: @home_page}
+
+  =render partial: 'student_sign_ups/customer_support_section'
+
+:javascript
+
+  $('.carousel').carousel({
+    interval: 2500
+  })
+
+  // Video
+  let options = {
+    id: "#{@home_page.video_guid}",
+    frameborder: 0,
+    webkitAllowFullScreen: true,
+    mozallowfullscreen: true,
+    allowFullScreen: true
+  };
+
+  const player = new Vimeo.Player('laptop-wrapper', options);
+  player.ready();
