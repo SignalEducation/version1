@@ -1,0 +1,49 @@
+.container
+  %header.management-console-section
+    %h1
+      =t('views.dashboard.admin.preview_csv.h1')
+    %p.p-hero.px-lg-8
+      Please check that the data below is correct and then click Submit
+
+  %section.pb-3
+    .row
+      .col-md-12
+        =form_for(:upload, url: upload_admin_exercises_csvs_path, authenticity_token: true, html: { class: 'form-horizontal' },
+         role: 'form') do |f|
+
+          .box-item.table-box.pt-3
+            =label(:product_id, t('views.users.form.user_group_id'))
+            =f.collection_select :product_id, Product.includes(:currency).all_active.all_in_order, :id, Proc.new {|prod| "#{prod.name} - #{prod.currency.iso_code}"}, include_blank: true, html_options: { class: 'form-control custom-select filter mr-3' }
+
+            .table-responsive.pt-4
+              %table.table
+                %thead
+                  %tr
+                    %th
+                      Email
+                    %th
+                      First Name
+                    %th
+                      Last Name
+                    %th
+                      Errors
+                %tbody
+                  -@users.each_with_index do |user, idx|
+                    =f.fields_for :csvdata do |csv_f|
+                      =csv_f.hidden_field :user_id, multiple: true, value: user.id
+                      =csv_f.hidden_field :email, multiple: true, value: user.email
+
+                      %tr{id: "csvdata-#{idx}"}
+                        %td
+                          =user.email
+                        %td
+                          =user.first_name
+                        %td
+                          =user.last_name
+                        %td
+                          =user.errors&.map { |e| "<p style= 'color: #dc3545;'>#{e}</p>" }.join("\n").html_safe
+
+            .row
+              .col-sm-12
+                =submit_tag 'Submit', class: 'btn btn-primary' unless @has_errors
+                =link_to t('views.general.cancel'), users_url, class: 'btn btn-secondary'

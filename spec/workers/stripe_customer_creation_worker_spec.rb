@@ -8,6 +8,8 @@ RSpec.describe StripeCustomerCreationWorker do
   before do
     Sidekiq::Testing.fake!
     Sidekiq::Worker.clear_all
+    customer_double = double(id: 'cus_12345')
+    allow(Stripe::Customer).to receive(:create).and_return(customer_double)
   end
 
   after do
@@ -17,14 +19,12 @@ RSpec.describe StripeCustomerCreationWorker do
   subject { StripeCustomerCreationWorker }
 
   it 'Event Importer job is processed in importers queue.' do
-    allow_any_instance_of(StripeService).to receive(:create_customer!).with(user)
-
     expect { subject.perform_async(user.id) }.to change(subject.jobs, :size).by(1)
   end
 
-  it 'calls the #create_customer! action on the StripeService' do
+  it 'calls #create_customer on an instance of StripeService' do
     expect_any_instance_of(StripeService).to receive(:create_customer!).with(user)
 
-    expect { subject.perform_async(user.id) }.to change(subject.jobs, :size).by(1)
+    subject.perform_async(user.id)
   end
 end

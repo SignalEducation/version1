@@ -87,3 +87,9 @@ en:
       import_csv: Imported Users
       dont_reload: 'Do Not Reload This Page!'
       sidekiq_explanation: "Users are created as background jobs so as not to cause heavy cpu strain on the servers. If you want to check their progress click the 'Sidekiq' link below."
+    
+    exercises:
+      preview_csv: Preview Exercise Allocations
+      import_csv: Bulk Exercise Assignments
+      dont_reload: 'Do Not Reload This Page!'
+      sidekiq_explanation: "Exercises are assigned as background jobs so as not to cause heavy CPU strain on the servers. If you want to check their progress click the 'Sidekiq' link below."
