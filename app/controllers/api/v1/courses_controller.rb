@@ -9,7 +9,6 @@ module Api
       end
 
       def read_note_log
-        binding.pry
         step_log = CourseStepLog.find(params[:step_log_id])
 
         if step_log.update(element_completed: true)
