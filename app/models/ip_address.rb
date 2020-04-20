@@ -30,7 +30,7 @@ class IpAddress < ApplicationRecord
   belongs_to :country
 
   # validation
-  validates :ip_address, presence: true, uniqueness: true, length: { maximum: 255 }
+  validates :ip_address, presence: true, uniqueness: true, length: { maximum: 255 }, case_sensitive: false
   validates :latitude, presence: true
   validates :longitude, presence: true
   validates :country_id, presence: true
