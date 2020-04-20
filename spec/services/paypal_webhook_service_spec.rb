@@ -8,7 +8,7 @@ describe PaypalWebhookService, type: :service do
 
   describe '#record_webhook' do
     it 'creates a PaypalWebhook record' do
-      expect { 
+      expect {
         hook_service.record_webhook(paypal_sale_completed)
       }.to change { PaypalWebhook.count }.from(0).to(1)
     end
@@ -23,7 +23,28 @@ describe PaypalWebhookService, type: :service do
   end
 
   describe '#reprocess_webhook' do
+    let(:hook) { create(:paypal_webhook, guid: 'webhook_guid') }
+
     it 'reprocesses the PayPal webhook'
+    it 'calls get on the PayPal WebhookEvent object' do
+      expect(PayPal::SDK::REST::WebhookEvent).to receive(:get).with('webhook_guid').and_return(paypal_sale_completed)
+
+      hook_service.reprocess_webhook(hook)
+    end
+
+    it 'calls #trigger_payment_actions' do
+      allow(PayPal::SDK::REST::WebhookEvent).to receive(:get).with('webhook_guid').and_return(paypal_sale_completed)
+      expect(hook_service).to receive(:trigger_payment_actions)
+
+      hook_service.reprocess_webhook(hook)
+    end
+
+    it 'rescues PayPal::SDK::Core::Exceptions::ResourceNotFound exceptions' do
+      allow(PayPal::SDK::REST::WebhookEvent).to receive(:get).with('webhook_guid').and_raise(PayPal::SDK::Core::Exceptions::ResourceNotFound.new('paypal error'))
+      expect(Rails.logger).to receive(:info).with("Webhook information no longer available for PaypalWebhook #{hook.id}")
+
+      hook_service.reprocess_webhook(hook)
+    end
   end
 
   # PRIVATE METHODS ############################################################

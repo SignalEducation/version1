@@ -1,5 +1,6 @@
-class SlackService
+# frozen_string_literal: true
 
+class SlackService
   def notify_channel(channel, attachments, **options)
     message = {
       channel: "##{channel}",
@@ -40,7 +41,7 @@ class SlackService
   end
 
   def slack_client
-    @client ||= Slack::Web::Client.new
+    @slack_client ||= Slack::Web::Client.new
   end
 
   def send_notification(message)

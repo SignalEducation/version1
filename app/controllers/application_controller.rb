@@ -27,11 +27,15 @@ class ApplicationController < ActionController::Base
   ### User access control and authentication
 
   def current_user_session
-    @current_user_session ||= UserSession.find
+    return @current_user_session if defined?(@current_user_session)
+
+    @current_user_session = UserSession.find
   end
 
   def current_user
-    @current_user ||= current_user_session&.record
+    return @current_user if defined?(@current_user)
+
+    @current_user = current_user_session&.record
   end
 
   def log_out_user

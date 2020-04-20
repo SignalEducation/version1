@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'paypal-sdk-rest'
 
 class PaypalWebhookService
@@ -8,8 +10,8 @@ class PaypalWebhookService
 
   def record_webhook(paypal_body)
     @webhook = PaypalWebhook.find_or_create_by(
-      guid: paypal_body['id'], 
-      event_type: paypal_body['event_type'], 
+      guid: paypal_body['id'],
+      event_type: paypal_body['event_type'],
       payload: paypal_body
     )
     if @webhook.id

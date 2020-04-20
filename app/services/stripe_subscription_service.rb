@@ -11,7 +11,7 @@ class StripeSubscriptionService < StripeService
 
   def change_plan(coupon, plan_id)
     if (new_sub = @subscription.changed_to) && new_sub.pending_3d_secure?
-      stripe_sub = retrieve_subscription(id: new_sub.stripe_guid, expand: ['latest_invoice.payment_intent'])
+      stripe_sub = get_updated_stripe_subscription(coupon, SubscriptionPlan.find(plan_id))
       new_sub.client_secret = stripe_sub.latest_invoice[:payment_intent][:client_secret]
     else
       new_sub, stripe_sub = create_subscription(coupon, SubscriptionPlan.find(plan_id))
