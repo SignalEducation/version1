@@ -1,0 +1,17 @@
+=f.fields_for :course_note do |note|
+  .form-group
+    =note.label :estimated_time_in_seconds, t('views.course_notes.form.name')
+    .input-group.input-group-lg
+      =note.text_field :name, placeholder: t('views.course_notes.form.name_placeholder'), class: 'form-control'
+
+  .form-group
+    =note.label :upload, t('views.course_notes.form.upload'), class: 'control-label'
+    .input-group.input-group-lg
+      -if note.object.upload.present?
+        .form-control-static
+          =link_to note.object.upload_file_name, note.object.upload.try(:url), target: '_blank'
+
+        Upload a replacement note file or delete the note file.
+
+      .input-group.input-group-lg
+        =note.file_field :upload, class: 'form-control'

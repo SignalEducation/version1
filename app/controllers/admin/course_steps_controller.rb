@@ -38,22 +38,21 @@ module Admin
     end
 
     def new
-      cm = CourseLesson.find params[:cm_id].to_i
-      @course_lessons = cm.parent.children
-      @related_cmes = cm.course_steps.all_active
-      @course_step = CourseStep.new(
-          sorting_order: (CourseStep.all.maximum(:sorting_order).to_i + 1),
-          course_lesson_id: cm.id, active: true)
+      lesson = CourseLesson.find params[:cm_id].to_i
+      @course_lessons = lesson.parent.children
+      @related_cmes = lesson.course_steps.all_active
+      @course_step = CourseStep.new(sorting_order: (CourseStep.all.maximum(:sorting_order).to_i + 1),
+                                    course_lesson_id: lesson.id, active: true)
 
       if params[:type] == 'video'
-
         @course_step.is_video = true
         @course_step.build_course_video
         @course_step.build_video_resource
-        @course_step.course_notes.build
-
       elsif params[:type] == 'quiz'
         spawn_quiz_children
+      elsif params[:type] == 'note'
+        @course_step.is_note = true
+        @course_step.build_course_note
       elsif params[:type] == 'constructed_response'
         spawn_constructed_response_children
       end
@@ -66,10 +65,7 @@ module Admin
         if @course_step.is_quiz
           @course_step.course_quiz.add_an_empty_question
         elsif @course_step.is_video
-          @course_step.course_notes.build
-          unless @course_step.video_resource
-            @course_step.build_video_resource
-          end
+          @course_step.build_video_resource unless @course_step.video_resource
         elsif @course_step.is_constructed_response
           @course_step.constructed_response.scenario.add_an_empty_scenario_question
         end
@@ -145,7 +141,8 @@ module Admin
       else
         flash[:error] = I18n.t('controllers.course_steps.destroy.flash.error')
       end
-      redirect_to course_lesson_special_link(@course_step.course_lesson)
+
+      redirect_to admin_show_course_lesson_url(@course_step.course_lesson.course_id, @course_step.course_lesson.course_section.id, @course_step.course_lesson.id)
     end
 
     # Reordering of Questions if CMEQ selection_strategy is not random #
@@ -163,6 +160,9 @@ module Admin
       when 'Quiz'
         cme.course_quiz.duplicate
         flash[:success] = 'Quiz successfully duplicaded'
+      when 'Notes'
+        cme.course_note.duplicate
+        flash[:success] = 'Video successfully duplicaded'
       when 'Video'
         cme.course_video.duplicate
         flash[:success] = 'Video successfully duplicaded'
@@ -216,6 +216,7 @@ module Admin
         :sorting_order,
         :active,
         :is_video,
+        :is_note,
         :is_quiz,
         :is_constructed_response,
         :seo_description,
@@ -231,6 +232,12 @@ module Admin
           :vimeo_guid,
           :dacast_id,
           :video_id
+        ],
+        course_note_attributes: [
+          :course_step_id,
+          :id,
+          :name,
+          :upload,
         ],
         course_quiz_attributes: [
           :id,

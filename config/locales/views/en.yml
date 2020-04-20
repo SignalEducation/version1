@@ -476,6 +476,7 @@ en:
         updated_at: Updated_at
         new_video: New video
         new_quiz: New quiz
+        new_note: New note
         new_constructed_response: New CR
         questions: Questions
         save_and_add_another: Save and add another Question
@@ -488,6 +489,7 @@ en:
         h1: Edit Course Lesson
         video: Edit Video
         quiz: Edit Quiz
+        note: Edit Note
 
       index:
         h1: Course Lessons
@@ -496,12 +498,14 @@ en:
         h1: New Course Lesson
         video: New Video
         quiz: New Quiz
+        note: New Note
         constructed_response: New Constructed Response
 
       show:
         h1: Course Lesson
         quiz_preview: Quiz Preview
         video_preview: Video Preview
+        note_preview: Note Preview
         constructed_response_preview: Constructed Response Preview
         next: Next
         next_step: Next Step

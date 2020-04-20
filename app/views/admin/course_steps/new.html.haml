@@ -5,6 +5,8 @@
         =t('views.course_steps.new.video')
       -elsif @course_step.is_quiz
         =t('views.course_steps.new.quiz')
+      -elsif @course_step.is_note
+        =t('views.course_steps.new.note')
       -elsif @course_step.is_constructed_response
         =t('views.course_steps.new.constructed_response')
       -else

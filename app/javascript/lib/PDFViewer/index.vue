@@ -116,6 +116,10 @@ export default {
     },
     updateCurrentPage(pageNumber) {
       this.currentPage = pageNumber;
+      this.updateNotesPages(pageNumber, this.pageCount);
+    },
+    updateNotesPages(page, total){
+      this.$emit('update-pages', { currentPage: this.currentPage, totalPages: this.pageCount });
     },
     togglePreview() {
       this.isPreviewEnabled = !this.isPreviewEnabled;

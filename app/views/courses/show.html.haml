@@ -16,7 +16,6 @@
             %h1.h3
               =@course_step.name
 
-
       %section.course-content
         -if defined?(@results)
           =render partial: 'courses/show_results', locals: {cme: @course_step}
@@ -25,15 +24,13 @@
             =render partial: 'courses/show_video', locals: {cme: @course_step}
           -elsif @course_step.try(:is_quiz)
             =render partial: 'courses/show_quiz'
+          -elsif @course_step.try(:is_note)
+            =render partial: 'courses/show_notes', locals: { notes: @course_step.course_note, log: @course_step_log }
           -elsif @course_step.try(:is_constructed_response)
             =render partial: 'courses/constructed_response_start'
           -else
             %h2 Course module element - type unknown
             -Rails.logger.error "views/courses/show - unknown CME type. CME: #{@course_step.inspect}."
-
-
-
-
 
 - if current_user
   =render partial: 'library/subscription_restriction_modal'

@@ -39,10 +39,10 @@ class CourseStep < ApplicationRecord
              foreign_key: :related_course_step_id, optional: true
   has_one :course_quiz
   has_one :course_video
+  has_one :course_note
   has_one :constructed_response
   has_one :video_resource, inverse_of: :course_step
   has_many :quiz_questions
-  has_many :course_notes
   has_many :course_step_logs
   has_many :course_lesson_logs, class_name: 'CourseLessonLog',
            foreign_key: :latest_course_step_id
@@ -52,7 +52,7 @@ class CourseStep < ApplicationRecord
   accepts_nested_attributes_for :constructed_response
   accepts_nested_attributes_for :video_resource,
                                 reject_if: ->(attributes) { nested_video_resource_is_blank?(attributes) }
-  accepts_nested_attributes_for :course_notes,
+  accepts_nested_attributes_for :course_note,
                                 reject_if: ->(attributes) { nested_resource_is_blank?(attributes) }, allow_destroy: true
 
   # validation
@@ -138,8 +138,8 @@ class CourseStep < ApplicationRecord
     the_list = []
     the_list << course_video if course_video
     the_list << course_quiz if course_quiz
+    the_list << course_note if course_note
     the_list << constructed_response if constructed_response
-    the_list += course_notes.to_a
     the_list += quiz_questions.to_a
     the_list
   end
@@ -224,6 +224,8 @@ class CourseStep < ApplicationRecord
       'Quiz'
     elsif is_video
       'Video'
+    elsif is_note
+      'Notes'
     elsif constructed_response
       'Constructed Response'
     else
@@ -236,6 +238,8 @@ class CourseStep < ApplicationRecord
       'ondemand_video'
     elsif is_quiz
       'playlist_add_check'
+    elsif is_note
+      'insert_drive_file'
     elsif is_constructed_response
       'grid_on'
     else

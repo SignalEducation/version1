@@ -61,6 +61,7 @@
                 .col-sm-6
                   =link_to t('views.course_steps.form.new_video'), new_admin_course_step_path(type: 'video', cm_id: @course_lesson.id), class: 'btn btn-primary'
                   =link_to t('views.course_steps.form.new_quiz'), new_admin_course_step_path(type: 'quiz', cm_id: @course_lesson.id), class: 'btn btn-primary'
+                  =link_to t('views.course_steps.form.new_note'), new_admin_course_step_path(type: 'note', cm_id: @course_lesson.id), class: 'btn btn-primary'
                   =link_to t('views.course_steps.form.new_constructed_response'), new_admin_course_step_path(type: 'constructed_response', cm_id: @course_lesson.id), class: 'btn btn-primary'
                 .col-sm-6
                   =link_to t('views.course_lessons.edit.h1'), admin_edit_course_lesson_url(@course.id, @course_lesson.course_section.id, @course_lesson.id), class: 'btn btn-secondary'

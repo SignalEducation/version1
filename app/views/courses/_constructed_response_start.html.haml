@@ -26,15 +26,15 @@
               %li='You can make as many attempts as you like but only your most recent 8 attempts will be available to view'
 
 
-          -if @course_step.course_notes && @course_step.course_notes.any?
-            %h6.pb-3.pt-3
-              ='Help/Formulae Sheets'
-            .row
-              -@course_step.course_notes.each do |resource|
-                .col-sm-6.pb-2
-                  =link_to resource.upload.url, target: '_blank' do
-                    .btn.btn-secondary
-                      =resource.name
+          -# -if @course_step.course_notes && @course_step.course_notes.any?
+          -#   %h6.pb-3.pt-3
+          -#     ='Help/Formulae Sheets'
+          -#   .row
+          -#     -@course_step.course_notes.each do |resource|
+          -#       .col-sm-6.pb-2
+          -#         =link_to resource.upload.url, target: '_blank' do
+          -#           .btn.btn-secondary
+          -#             =resource.name
 
         .col-sm.text-center
           =link_to courses_constructed_response_url(course_name_url: @course_step.course_lesson.course_section.course.name_url,

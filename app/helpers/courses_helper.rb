@@ -12,7 +12,7 @@ module CoursesHelper
   end
 
   def pdf_viewer(resource)
-    if resource.file_upload_updated_at.present? && resource.file_upload_content_type == "application/pdf"
+    if resource.file_upload_updated_at.present? && resource.file_upload_content_type == 'application/pdf'
       internal_pdf_link(resource)
     else
       external_pdf_link(resource)
@@ -40,12 +40,12 @@ module CoursesHelper
       content_tag(:div, class: 'card card-horizontal card-horizontal-sm flex-row resource-card', data: { resource_name: resource.name, course_name: resource.course.name, resource_type: resource.type, allowed: 'true' }) do
         content_tag(:div, class: 'card-header bg-white d-flex align-items-center justify-content-center') do
           content_tag(:i, '', class: 'budicon-files-download')
-        end +
-
+        end
+        +
         link_to(course_resource_special_link(resource), target: :blank, class: 'card-body d-flex align-items-center pl-1') do
           content_tag(:h5, class: 'm-0 text-truncate text-gray2') do
-              resource.name
-            end
+            resource.name
+          end
         end
       end
     end

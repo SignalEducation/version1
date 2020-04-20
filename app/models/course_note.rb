@@ -16,7 +16,6 @@
 #
 
 class CourseNote < ApplicationRecord
-
   include LearnSignalModelExtras
   include Archivable
 
@@ -28,9 +27,9 @@ class CourseNote < ApplicationRecord
 
   # validation
   validates :course_step_id, presence: true, on: :update
-  validates :name, presence: true, length: {maximum: 255}
+  validates :name, presence: true, length: { maximum: 255 }
   validates_attachment_content_type :upload,
-            content_type: %w(image/jpg image/jpeg image/png image/gif application/pdf application/xlsx application/xls application/doc application/docx application/vnd.openxmlformats-officedocument.wordprocessingml.document text/csv application/octet-stream application/vnd.openxmlformats-officedocument.spreadsheetml.sheet application/vnd.ms-excel.sheet.macroenabled.12 application/vnd.openxmlformats-officedocument.presentationml.presentation text/css)
+                                    content_type: %w[image/jpg image/jpeg image/png image/gif application/pdf application/xlsx application/xls application/doc application/docx application/vnd.openxmlformats-officedocument.wordprocessingml.document text/csv application/octet-stream application/vnd.openxmlformats-officedocument.spreadsheetml.sheet application/vnd.ms-excel.sheet.macroenabled.12 application/vnd.openxmlformats-officedocument.presentationml.presentation text/css]
 
   # callbacks
   before_validation { squish_fields(:name) }
@@ -47,9 +46,15 @@ class CourseNote < ApplicationRecord
   end
 
   def type
-    self.web_url ? 'External Link' : 'File Upload'
+    web_url ? 'External Link' : 'File Upload'
   end
 
-  protected
+  def duplicate
+    new_cme_note = deep_clone include: :course_step, validate: false
 
+    new_cme_note.
+      course_step.update(name: "#{course_step.name} COPY",
+                                   name_url: "#{course_step.name_url}_copy",
+                                   active: false)
+  end
 end

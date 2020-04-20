@@ -14,6 +14,8 @@ class CoursesController < ApplicationController
 
     if @course_step.is_quiz
       set_up_quiz
+    elsif @course_step.is_note
+      set_up_notes
     elsif @course_step.is_constructed_response
       set_up_constructed_response_start_screen
     end
@@ -233,7 +235,23 @@ class CoursesController < ApplicationController
       else
         @course_step.course_quiz.quiz_questions.includes(:quiz_contents).take(@number_of_questions)
       end
+  end
 
+  def set_up_notes
+    @course_step_log = CourseStepLog.create(
+      session_guid: current_session_guid,
+      course_step_id: @course_step.id,
+      course_lesson_id: @course_step.course_lesson_id,
+      course_section_id: @course_step.course_lesson.course_section_id,
+      course_id: @course_step.course_lesson.course_id,
+      course_log_id: @course_log.try(:id),
+      course_section_log_id: @course_section_log.try(:id),
+      course_lesson_log_id: @course_lesson_log.try(:id),
+      is_quiz: false,
+      is_video: false,
+      is_note: true,
+      user_id: current_user.try(:id)
+    )
   end
 
   def set_up_constructed_response_start_screen

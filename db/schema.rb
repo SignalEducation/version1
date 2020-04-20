@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_27_083946) do
+ActiveRecord::Schema.define(version: 2020_04_15_110552) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -535,6 +535,7 @@ ActiveRecord::Schema.define(version: 2020_03_27_083946) do
     t.integer "course_section_id"
     t.integer "course_section_log_id"
     t.integer "quiz_result"
+    t.boolean "is_note", default: false
     t.index ["course_id"], name: "index_course_step_logs_on_course_id"
     t.index ["course_lesson_id"], name: "index_course_step_logs_on_course_lesson_id"
     t.index ["course_lesson_log_id"], name: "index_course_step_logs_on_course_lesson_log_id"
@@ -566,6 +567,7 @@ ActiveRecord::Schema.define(version: 2020_03_27_083946) do
     t.boolean "is_constructed_response", default: false, null: false
     t.boolean "available_on_trial", default: false
     t.integer "related_course_step_id"
+    t.boolean "is_note", default: false
     t.index ["course_lesson_id"], name: "index_course_steps_on_course_lesson_id"
     t.index ["related_course_step_id"], name: "index_course_steps_on_related_course_step_id"
   end

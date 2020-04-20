@@ -81,6 +81,8 @@ class CourseStepLog < ApplicationRecord
       'Quiz'
     elsif is_video?
       'Video'
+    elsif is_note?
+      'Notes'
     elsif is_constructed_response?
       'Constructed Response'
     else
@@ -140,6 +142,8 @@ class CourseStepLog < ApplicationRecord
       self.is_quiz = true
     elsif course_step.is_video
       self.is_video = true
+     elsif course_step.is_note
+      self.is_note = true
     elsif course_step.is_constructed_response
       self.is_constructed_response = true
     else

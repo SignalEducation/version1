@@ -48,7 +48,7 @@ export default {
     return {
       pdfFileName: this.$parent.fileName,
       pdfFileUrl: this.$parent.fileUrl,
-      modalIsOpen: false
+      modalIsOpen: true
     };
   }
 };

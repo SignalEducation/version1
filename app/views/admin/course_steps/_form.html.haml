@@ -7,6 +7,7 @@
         =f.hidden_field :course_lesson_id
         =f.hidden_field :is_quiz
         =f.hidden_field :is_video
+        =f.hidden_field :is_note
         =f.hidden_field :is_constructed_response
 
 
@@ -17,6 +18,8 @@
               =render partial: 'admin/course_videos/fields_for', locals: {f: f}
             -elsif @course_step.course_quiz
               =render partial: 'admin/course_quizzes/fields_for', locals: {f: f}
+            -elsif @course_step.course_note
+              =render partial: 'admin/course_notes/fields_for', locals: {f: f}
             -elsif @course_step.constructed_response
               =render partial: 'admin/constructed_responses/basic_fields_for', locals: {f: f}
 
@@ -95,8 +98,8 @@
         .col-sm-12
           =render partial: 'course_videos/fields_for_video_resources', locals: {f: f}
 
-    -if @course_step.course_notes.any?
-      =render partial: 'admin/course_videos/fields_for_course_notes', locals: {f: f}
+    -# -if @course_step.course_notes.any?
+    -#   =render partial: 'admin/course_videos/fields_for_course_notes', locals: {f: f}
 
   -elsif @course_step.constructed_response
     %br/
