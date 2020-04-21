@@ -147,7 +147,9 @@ describe Admin::CourseStepsController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be OK as no dependencies exist' do
         delete :destroy, params: { id: course_step_3.id }
-        expect_delete_success_with_model('course_step', subject.course_lesson_special_link(course_step_3.course_lesson))
+
+        expect_delete_success_with_model('course_step',
+                                         admin_show_course_lesson_url(course_step_3.course_lesson.course_id, course_step_3.course_lesson.course_section.id, course_step_3.course_lesson.id))
       end
     end
 

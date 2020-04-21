@@ -48,7 +48,9 @@ describe Admin::CourseNotesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index, params: { course_step_id: course_step.id }
-        expect_index_success_with_model('course_notes', 2)
+
+
+        expect_index_success_with_model('course_notes', 1)
       end
     end
 

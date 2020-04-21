@@ -125,6 +125,7 @@ class CourseLessonLog < ApplicationRecord
 
   # After Save
   def update_course_section_log
+    course_section_log.latest_course_step_id = latest_course_step_id
     course_section_log.recalculate_csul_completeness # Includes a save!
   end
 

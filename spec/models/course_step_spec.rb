@@ -34,10 +34,10 @@ describe CourseStep do
     it { should belong_to(:related_course_step) }
     it { should have_one(:course_quiz) }
     it { should have_one(:course_video) }
+    it { should have_one(:course_note) }
     it { should have_one(:constructed_response) }
     it { should have_one(:video_resource) }
     it { should have_many(:quiz_questions) }
-    it { should have_many(:course_notes)}
     it { should have_many(:course_step_logs) }
     it { should have_many(:course_lesson_logs) }
   end

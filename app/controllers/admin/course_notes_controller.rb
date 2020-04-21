@@ -8,7 +8,7 @@ module Admin
     before_action :get_variables
 
     def index
-      @course_notes = @course_step.course_notes
+      @course_notes = [@course_step.course_note]
     end
 
     def new
