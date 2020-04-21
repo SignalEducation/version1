@@ -90,7 +90,7 @@ class CourseSectionLog < ApplicationRecord
 
   # After Save
   def update_course_log
-    course_log.latest_course_step_id = latest_course_module_element_id
+    course_log.latest_course_step_id = latest_course_step_id
     course_log.recalculate_scul_completeness # Includes a save!
   end
 
