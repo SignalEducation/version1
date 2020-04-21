@@ -1,25 +1,26 @@
--if @course_step.next_element.class.name == 'CourseStep'
-  - permission = @course_step.next_element.available_to_user(current_user, @valid_subscription, @course_log)
-  - if permission[:view]
-    =link_to show_course_url(@course.name_url, @course_step.next_element.course_lesson.course_section.name_url, @course_step.next_element.course_lesson.name_url, @course_step.next_element.name_url) do
-      .btn.btn-primary.btn-sm.btn-sm-arrow-right
-        =t('views.course_steps.show.next_step')
-  - else
-    #next-lesson-link.d-none
-      - if permission[:reason] == 'invalid-subscription'
-        =link_to '#', data: {target: "#invalid-subscription", toggle: 'modal', related: @course_step.next_element.related_course_step&.name} do
-          .btn.btn-primary.btn-sm.btn-sm-arrow-right
-            =t('views.course_steps.show.next_step')
-      -else
-        =link_to show_course_url(@course.name_url, @course_step.next_element.course_lesson.course_section.name_url, @course_step.next_element.course_lesson.name_url, @course_step.next_element.name_url) do
-          .btn.btn-primary.btn-sm.btn-sm-arrow-right
-            =t('views.course_steps.show.next_step')
-    #next-lesson-modal
-      =link_to '#', data: {target: "##{permission[:reason]}", toggle: 'modal', related: @course_step.next_element.related_course_step&.name} do
+#notes_next_lesson_navigation.hidden
+  -if @course_step.next_element.class.name == 'CourseStep'
+    - permission = @course_step.next_element.available_to_user(current_user, @valid_subscription, @course_log)
+    - if permission[:view]
+      =link_to show_course_url(@course.name_url, @course_step.next_element.course_lesson.course_section.name_url, @course_step.next_element.course_lesson.name_url, @course_step.next_element.name_url) do
         .btn.btn-primary.btn-sm.btn-sm-arrow-right
           =t('views.course_steps.show.next_step')
+    - else
+      #next-lesson-link.d-none
+        - if permission[:reason] == 'invalid-subscription'
+          =link_to '#', data: {target: "#invalid-subscription", toggle: 'modal', related: @course_step.next_element.related_course_step&.name} do
+            .btn.btn-primary.btn-sm.btn-sm-arrow-right
+              =t('views.course_steps.show.next_step')
+        -else
+          =link_to show_course_url(@course.name_url, @course_step.next_element.course_lesson.course_section.name_url, @course_step.next_element.course_lesson.name_url, @course_step.next_element.name_url) do
+            .btn.btn-primary.btn-sm.btn-sm-arrow-right
+              =t('views.course_steps.show.next_step')
+      #next-lesson-modal
+        =link_to '#', data: {target: "##{permission[:reason]}", toggle: 'modal', related: @course_step.next_element.related_course_step&.name} do
+          .btn.btn-primary.btn-sm.btn-sm-arrow-right
+            =t('views.course_steps.show.next_step')
 
--else
-  =link_to course_special_link(@course_step.next_element) do
-    .btn.btn-primary.btn-sm.btn-sm-arrow-right
-      =t('views.course_steps.show.completed_section')
+  -else
+    =link_to course_special_link(@course_step.next_element) do
+      .btn.btn-primary.btn-sm.btn-sm-arrow-right
+        =t('views.course_steps.show.completed_section')

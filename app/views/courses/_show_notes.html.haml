@@ -1,5 +1,7 @@
 .row.row-lg
-  .col-xl-8
+  .col-xl-12
+    %h1.h3
+      =notes.try(:name)
     =# VueJS include
     =javascript_pack_tag 'pdf_viewer'
     #course-notes-reader{ 'data-course-id': notes.id,
@@ -7,10 +9,33 @@
                           'data-file-name': notes.name,
                           'data-file-url': notes.upload.url }
 
-    #notes_next_lesson_navigation.hidden
-      .cme-nav.box-item.question-box
-        .cme-nav
-          .d-flex.flex-wrap.flex-sm-nowrap.justify-content-between
-            .mw-0
-            .mw-0
-              =render partial: 'next_lesson_navigation'
+    .cme-nav.box-item.question-box
+      .cme-nav
+        .d-flex.flex-wrap.flex-sm-nowrap.justify-content-between
+          .mw-0
+          .mw-0
+            =render partial: 'next_lesson_navigation'
+
+:css
+  .course-notes-reader header {
+    background-color: rgba(71, 71, 71, 1);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.15), inset 0 -1px 0 rgba(255, 255, 255, 0.05), 0 1px 0 rgba(0, 0, 0, 0.15), 0 1px 1px rgba(0, 0, 0, 0.1);
+  }
+
+  .course-notes-reader .pdf-viewer {
+    display: block;
+    min-height: 665px;
+    background-color: rgba(51, 51, 51, 1);
+    box-shadow: inset 1px 0 0 rgba(255, 255, 255, 0.05);
+  }
+
+  .course-notes-reader .pdf-viewer .pdf-viewer__document,
+  .course-notes-reader .pdf-viewer .pdf-viewer__preview {
+    top: 80px;
+  }
+
+  .course-notes-reader .pdf-viewer .pdf-viewer .pdf-preview-toggle a{
+    border: 1px #333 solid;
+    background: #474747;
+    color: #333;
+  }

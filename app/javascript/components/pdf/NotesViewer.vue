@@ -1,5 +1,7 @@
 <template>
-  <PDFViewer :file-url="pdfFileUrl" @update-pages="updateNotesPages" />
+  <div class="course-notes-reader">
+    <PDFViewer :file-url="pdfFileUrl" @update-pages="updateNotesPages" />
+  </div>
 </template>
 
 <script>

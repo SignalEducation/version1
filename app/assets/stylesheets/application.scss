@@ -5254,7 +5254,6 @@ a.list-group-item {
   }
 }
 
-
 // Video Classes
 .video-player-window {
   position: relative;
@@ -5285,13 +5284,17 @@ a.list-group-item {
   height: 100%;
 }
 
-// Video Classes
-#course-notes-reader {
+// Notes Classes
+.course-notes-reader {
   position: relative;
   padding-bottom: 56.25%;
   height: 0;
   overflow: hidden;
   max-width: 100%;
+}
+
+#notes_next_lesson_navigation {
+  position: relative;
 }
 
 // Paperclip File Rendering
