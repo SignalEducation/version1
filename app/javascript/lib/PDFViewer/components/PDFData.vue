@@ -22,7 +22,7 @@ function getPages(pdf, first, last) {
   const allPages = range(first, last+1).map(number => pdf.getPage(number));
   return Promise.all(allPages);
 }
-const BUFFER_LENGTH = 10;
+const BUFFER_LENGTH = 18;
 function getDefaults() {
   return {
     pages: [],

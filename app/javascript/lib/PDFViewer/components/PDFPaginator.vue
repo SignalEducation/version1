@@ -22,7 +22,7 @@ export default {
   },
   methods: {
     input(event) {
-      this.$emit('input', parseInt(event.target.value, 10));
+      this.$emit('input', parseInt(event.target.value, 20));
     },
   },
   watch: {
