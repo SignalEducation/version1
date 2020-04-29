@@ -331,10 +331,10 @@
         document.getElementById('upgrade-form').submit();
       } else {
         stripe.createToken(cardElement).then(function(result) {
-          if (result.error) {
-            resetForm(result.error.message);
-          } else {
+          if (result.token) {
             createSubscription(result.token);
+          } else {
+            resetForm(result.error.message);
           }
         });
       }
