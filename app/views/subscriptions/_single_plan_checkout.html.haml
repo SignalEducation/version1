@@ -45,7 +45,7 @@
             / custom checkbox
 
 #info-text
-  - yearly_plan = @plans.yearly.first
+  - yearly_plan = plans.yearly.first
   - if yearly_plan&.previous_plan_price&.present? && yearly_plan.previous_plan_price > 0
     %p.mb-2.price
       -#%span
