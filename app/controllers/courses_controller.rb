@@ -362,5 +362,8 @@ class CoursesController < ApplicationController
       flash[:warning] = 'Sorry, you are not permitted to access that content.'
       redirect_to library_special_link(@course)
     end
+  rescue NoMethodError => _e
+    flash[:warning] = 'Sorry, that content doesn\'t exist or was inactivated.'
+    redirect_to library_special_link(@course)
   end
 end
