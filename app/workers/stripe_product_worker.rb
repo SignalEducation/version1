@@ -2,7 +2,6 @@
 
 class StripeProductWorker
   include Sidekiq::Worker
-
   sidekiq_options queue: 'medium'
 
   def perform(product_id, action)

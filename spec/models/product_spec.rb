@@ -70,10 +70,6 @@ describe Product do
   it { should validate_presence_of(:stripe_guid).on(:update) }
   it { should validate_presence_of(:stripe_sku_guid).on(:update) }
 
-  # callbacks
-  it { should callback(:create_on_stripe).after(:create) }
-  it { should callback(:update_on_stripe).after(:update) }
-
   # scopes
   it { expect(Product).to respond_to(:all_in_order) }
   it { expect(Product).to respond_to(:all_active) }
@@ -84,6 +80,21 @@ describe Product do
   # class methods
   it { expect(Product).to respond_to(:search) }
   it { expect(Product).to respond_to(:filter_by_state) }
+
+  describe 'callbacks' do
+    it 'calls create_on_stripe after a record is created' do
+      expect_any_instance_of(Product).to receive(:create_on_stripe)
+
+      create(:product)
+    end
+
+    it 'calls update_on_stripe after a record is updated' do
+      product = create(:product)
+      expect_any_instance_of(Product).to receive(:update_on_stripe)
+
+      product.update(name: 'New Name')
+    end
+  end
 
   describe 'Methods' do
     before do

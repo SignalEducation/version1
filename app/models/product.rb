@@ -58,8 +58,8 @@ class Product < ApplicationRecord
                                                     greater_than: 0 }, if: :correction_pack?
 
   # callbacks
-  after_create :create_on_stripe
-  after_update :update_on_stripe
+  after_commit :create_on_stripe, on: :create
+  after_commit :update_on_stripe, on: :update
 
   # scopes
   scope :all_in_order,  -> { order(:sorting_order, :name) }
