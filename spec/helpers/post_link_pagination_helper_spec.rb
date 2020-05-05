@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 describe PostLinkPaginationHelper::LinkRenderer, type: :helper do
-  let (:link_renderer) { described_class.new }
+  let(:link_renderer) { described_class.new }
 
   before do
     link_renderer.instance_variable_set(:@options, { action: nil, post_params: { first_param: 'first_value' } })
@@ -21,7 +21,6 @@ describe PostLinkPaginationHelper::LinkRenderer, type: :helper do
       end
     end
 
-
     context 'with page as param' do
       it 'cbe product' do
         allow_any_instance_of(described_class).to receive(:post_params).and_return({})
@@ -34,7 +33,6 @@ describe PostLinkPaginationHelper::LinkRenderer, type: :helper do
     end
 
     context 'with post_params' do
-
       it 'cbe product' do
         link = link_renderer.link('Cbe Product', 1)
 
