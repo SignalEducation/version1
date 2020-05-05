@@ -2,7 +2,7 @@
 
 module Api
   module V1
-    class ApplicationController < ActionController::API
+    class ApplicationController < ActionController::Base
     end
   end
 end
