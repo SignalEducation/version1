@@ -75,7 +75,7 @@ class SubscriptionsController < ApplicationController
   end
 
   def un_cancel
-    if @subscription.pending_cancellation? && @subscription.un_cancel
+    if @subscription.pending_cancellation? && SubscriptionService.new(@subscription).un_cancel
       flash[:success] = I18n.t('controllers.subscriptions.un_cancel.flash.success')
     else
       flash[:error] = I18n.t('controllers.subscriptions.un_cancel.flash.error')
