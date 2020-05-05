@@ -113,7 +113,7 @@ class CourseModuleElement < ApplicationRecord
         course_module.course_section
       end
     else
-      course_module.course_section.subject_course
+      course_module&.course_section&.subject_course
     end
   end
 
