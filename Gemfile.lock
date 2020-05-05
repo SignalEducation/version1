@@ -312,7 +312,7 @@ GEM
       pry (>= 0.9.11)
     public_suffix (3.0.3)
     puma (3.12.4)
-    rack (2.2.2)
+    rack (2.0.8)
     rack-attack (5.4.2)
       rack (>= 1.0, < 3)
     rack-cors (1.0.5)
@@ -635,6 +635,7 @@ DEPENDENCIES
   pry-byebug
   pry-stack_explorer
   puma (~> 3.12.4)
+  rack (= 2.0.8)
   rack-attack
   rack-cors
   rack-mini-profiler
