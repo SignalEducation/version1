@@ -136,7 +136,7 @@ class ApplicationController < ActionController::Base
   helper_method :ensure_user_has_access_rights
 
   def authenticate_if_staging
-    return unless Rails.env.staging? && %w[stripe_webhooks paypal_webhooks].exclude?(controller_name)
+    return unless Rails.env.staging? && %w[stripe_webhooks paypal_webhooks cron_tasks].exclude?(controller_name)
 
     authenticate_or_request_with_http_basic 'Staging' do |name, password|
       name == 'signal' && password == '27(South!)'
