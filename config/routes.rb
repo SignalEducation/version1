@@ -163,7 +163,7 @@ Rails.application.routes.draw do
     resource :preferred_exam_body, only: %i[edit update]
 
     resources :invoices, only: %i[show update] do
-      get 'pdf', action: :pdf, on: :member
+      get :pdf, on: :member, defaults: { format: 'pdf' }
     end
 
     # Internal Landing Pages - post sign-up or upgrade or purchase
