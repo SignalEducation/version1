@@ -166,13 +166,9 @@ class User < ApplicationRecord
   end
 
   def self.get_and_verify(email_verification_code, country_id)
-    time_now = proc { Time.zone.now }.call
-    user = User.find_by(email_verification_code: email_verification_code, email_verified_at: nil)
-    return unless user
+    return unless (user = User.find_by(email_verification_code: email_verification_code))
 
-    user.update_attributes(account_activated_at: time_now, account_activation_code: nil, active: true) unless user.active
-    user.update_attributes(email_verified_at: time_now, email_verification_code: nil, email_verified: true, country_id: country_id)
-    user
+    user.verify(country_id)
   end
 
   def self.start_password_reset_process(the_email_address, root_url)
@@ -327,6 +323,13 @@ class User < ApplicationRecord
   end
 
   ### INSTANCE METHODS =========================================================
+
+  def verify(country_id)
+    time_now = proc { Time.zone.now }.call
+    activate_user(time_now) unless active?
+    update(email_verified_at: time_now, email_verified: true, country_id: country_id) unless email_verified
+    self
+  end
 
   def can_view_content?(exam_body_id)
     valid_subscription_for_exam_body?(exam_body_id) || user_group.site_admin ||
@@ -547,8 +550,9 @@ class User < ApplicationRecord
     end
   end
 
-  def activate_user
-    update(active: true, account_activated_at: proc { Time.zone.now }.call, account_activation_code: nil)
+  def activate_user(time_now = nil)
+    update(active: true, account_activated_at: (time_now || proc { Time.zone.now }.call),
+           account_activation_code: nil)
   end
 
   def validate_user

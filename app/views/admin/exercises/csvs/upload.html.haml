@@ -1,0 +1,31 @@
+.container
+  %header.management-console-section
+    %h1
+      =t('models.exercises.import_csv')
+    %p.p-hero.px-lg-8
+      =t('models.exercises.sidekiq_explanation')
+    %h6.l-margin-top{style: 'color: #EF5153;'}
+      =t('models.exercises.dont_reload')
+
+  %section.pb-3
+    .row
+      .col-md-12
+        .row.l-margin-top.l-margin-bottom
+          .col-md-12.l-margin-top-big
+            .table-box
+              .table-responsive
+                %table.table
+                  %thead
+                    %tr
+                      %th='User Email'
+                      %th='Assignment Status'
+                  %tbody
+                    -@exercises.each do |exercise|
+                      %tr
+                        %td=exercise[:email]
+                        %td='Processing'
+
+        .row.l-margin-top.l-margin-bottom
+          .col-md-12.l-margin-top-big
+            =link_to 'Return', admin_exercises_url, class: 'btn btn-primary'
+            =link_to 'Sidekiq', sidekiq_web_path, target: '_blank', class: 'btn btn-default'

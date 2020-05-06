@@ -158,7 +158,6 @@ describe User do
   it { expect(User).to respond_to(:all_students) }
   it { expect(User).to respond_to(:all_trial_or_sub_students) }
   it { expect(User).to respond_to(:all_tutors) }
-  it { expect(User).to respond_to(:get_and_verify) }
   it { expect(User).to respond_to(:start_password_reset_process) }
   it { expect(User).to respond_to(:resend_pw_reset_email) }
   it { expect(User).to respond_to(:finish_password_reset_process) }
@@ -235,8 +234,28 @@ describe User do
     end
   end
 
+  describe '.get_and_verify' do
+    it 'returns NIL unless a matching user can be found' do
+      expect(User.get_and_verify('test_code', 1)).to be_nil
+    end
+
+    describe 'with a matching user' do
+      let!(:test_user) { create(:user, active: false, country: nil) }
+
+      it 'returns the matching user object' do
+        expect(User.get_and_verify(test_user.email_verification_code, 1).id).to equal test_user.id
+      end
+
+      it 'calls #verify on the user object' do
+        expect_any_instance_of(User).to receive(:verify)
+
+        User.get_and_verify(test_user.email_verification_code, 1)
+      end
+    end
+  end
+
   describe 'Methods' do
-    describe '.viewable_subscriptions' do
+    describe '#viewable_subscriptions' do
       before :each do
         allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
       end
@@ -408,6 +427,46 @@ describe User do
         create(:order, :for_stripe, user: user)
 
         expect(user.currency_locked?).to be_truthy
+      end
+    end
+
+    describe '#verify' do
+      let!(:user) { create(:user, active: false, country: nil) }
+
+      it 'updates the relevant activation attributes' do
+        expect(user.active).to be false
+        expect(user.account_activated_at).to be nil
+        expect(user.account_activation_code).not_to be nil
+
+        user.verify(1)
+
+        user.reload
+        expect(user.active).to be true
+        expect(user.account_activated_at).to be > 1.minute.ago
+        expect(user.account_activation_code).to be nil
+      end
+
+      it 'skips account activation updates if they are already completed' do
+        user.update(active: true)
+        expect { user.verify(1) }.not_to change { user.account_activated_at }
+      end
+
+      it 'updates the email verification attributes' do
+        expect(user.email_verified).to be false
+        expect(user.email_verified_at).to be nil
+        expect(user.country_id).to be nil
+
+        user.verify(1)
+
+        user.reload
+        expect(user.email_verified).to be true
+        expect(user.email_verified_at).to be > 1.minute.ago
+        expect(user.country_id).to be 1
+      end
+
+      it 'skips email verification updates if they are already completed' do
+        user.update(email_verified: true)
+        expect { user.verify(1) }.not_to change { user.email_verified_at }
       end
     end
   end
