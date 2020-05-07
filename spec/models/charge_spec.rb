@@ -30,7 +30,12 @@
 
 require 'rails_helper'
 
-describe Charge do
+RSpec.describe Charge, type: :model do
+  let(:user)         { create(:student_user) }
+  let(:charge)       { build(:charge) }
+  let(:invoice)      { create(:invoice) }
+  let(:invoice)      { create(:invoice) }
+  let(:payment_card) { create(:subscription_payment_card) }
 
   describe 'relationships' do
     it { should belong_to(:subscription) }
@@ -67,20 +72,58 @@ describe Charge do
     it { should callback(:check_dependencies).before(:destroy) }
   end
 
-
   describe 'scopes' do
     it { expect(Charge).to respond_to(:all_in_order) }
   end
 
+  describe 'methods' do
+    before do
+      allow_any_instance_of(StripeApiEvent).to receive(:get_data_from_stripe).and_return(true)
+      allow_any_instance_of(StripePlanService).to receive(:create_plan).and_return(true)
+      allow_any_instance_of(PaypalPlansService).to receive(:create_plan).and_return(true)
+    end
 
-  describe 'class methods' do
-    it { expect(Charge).to respond_to(:create_from_stripe_data) }
-    it { expect(Charge).to respond_to(:update_refund_data) }
+    context 'create charge' do
+      it '#create_from_stripe_data' do
+        allow(Charge).to receive(:create!).and_return(true)
+
+        event = { invoice: invoice.stripe_guid,
+                  customer: user.stripe_customer_id,
+                  payment_method: payment_card.stripe_card_guid }
+
+        expect(Charge.create_from_stripe_data(event)).to be(true)
+      end
+    end
+
+    context 'error in create charge' do
+      it '#create_from_stripe_data' do
+        event = { invoice: invoice.stripe_guid,
+                  customer: user.stripe_customer_id,
+                  payment_method: payment_card.stripe_card_guid }
+
+        expect(Charge.create_from_stripe_data(event)).to be(false)
+      end
+    end
+
+    it '#update_refund_data' do
+      allow(Charge).to receive(:find_by).and_return(charge)
+      allow(Charge).to receive(:update).and_return(true)
+
+      event = { invoice: invoice.stripe_guid,
+                customer: user.stripe_customer_id,
+                payment_method: payment_card.stripe_card_guid,
+                refunds: {},
+                id: charge.stripe_guid }
+
+      expect(Charge.update_refund_data(event)).to be(charge)
+    end
+
+    it '.destroyable?' do
+      expect(charge.destroyable?).to be(false)
+    end
+
+    it '.refundable?' do
+      expect(charge.refundable?).to be(false)
+    end
   end
-
-  describe 'instance methods' do
-    it { should respond_to(:destroyable?) }
-    it { should respond_to(:refundable?) }
-  end
-
 end

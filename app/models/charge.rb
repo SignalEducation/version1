@@ -42,21 +42,16 @@ class Charge < ApplicationRecord
   has_many :refunds
 
   # validation
-  validates :subscription_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :invoice_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :user_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :subscription_payment_card_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :currency_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :coupon_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
+  validates :subscription_id, presence: true, numericality: { only_integer: true, greater_than: 0 }
+  validates :invoice_id, presence: true, numericality: { only_integer: true, greater_than: 0 }
+  validates :user_id, presence: true, numericality: { only_integer: true, greater_than: 0 }
+  validates :subscription_payment_card_id, presence: true, numericality: { only_integer: true, greater_than: 0 }
+  validates :currency_id, presence: true, numericality: { only_integer: true, greater_than: 0 }
+  validates :coupon_id, allow_nil: true, numericality: { only_integer: true, greater_than: 0 }
   validates :stripe_guid, presence: true
   validates :amount, presence: true
   validates :status, presence: true
+
   #These should attributes should be stripe_customer_guid & stripe_invoice_id - don't validate numericality
   validates :stripe_customer_id, presence: true
   validates :stripe_invoice_id, presence: true
@@ -67,16 +62,13 @@ class Charge < ApplicationRecord
   # scopes
   scope :all_in_order, -> { order(:subscription_id) }
 
-  # class methods
-
   # instance methods
 
   def self.create_from_stripe_data(event)
-
-    invoice = Invoice.where(stripe_guid: event[:invoice]).first
+    invoice      = Invoice.where(stripe_guid: event[:invoice]).first
     subscription = invoice.subscription
-    user = User.where(stripe_customer_id: event[:customer]).first
-    card = SubscriptionPaymentCard.find_by(stripe_card_guid: event[:payment_method])
+    user         = User.where(stripe_customer_id: event[:customer]).first
+    card         = SubscriptionPaymentCard.find_by(stripe_card_guid: event[:payment_method])
 
     Charge.create!(
       subscription_id: subscription.id,
@@ -85,7 +77,6 @@ class Charge < ApplicationRecord
       subscription_payment_card_id: card.id,
       currency_id: subscription.subscription_plan.currency_id,
       coupon_id: subscription.try(:coupon_id),
-      #stripe_api_event_id: event_id,
       stripe_guid: event[:id],
       amount: event[:amount],
       amount_refunded: event[:amount_refunded],
@@ -103,7 +94,7 @@ class Charge < ApplicationRecord
     )
   rescue => e
     Rails.logger.error "ERROR: Charge#create_from_stripe_data failed to save. Error:#{e.inspect}"
-    return false
+    false
   end
 
   def self.update_refund_data(event)
@@ -125,16 +116,15 @@ class Charge < ApplicationRecord
   end
 
   def refundable?
-    self.amount > self.amount_refunded
+    amount > amount_refunded
   end
 
   protected
 
   def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
-  end
+    return if destroyable?
 
+    errors.add(:base, I18n.t('models.general.dependencies_exist'))
+    false
+  end
 end
