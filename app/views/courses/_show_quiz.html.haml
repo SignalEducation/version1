@@ -71,7 +71,7 @@
         data: JSON.stringify({'cmeul_id': logId,
                               'question_id': questionId,
                               'answer_id': answerId,
-                              'answer_array': answerArray.toString() }),
+                              'answer_array': answerArray.toString()}),
         success: function(data,status,xhr){
           if (currentQuestion < numberOfQuestions) {
             currentQuestion++;
