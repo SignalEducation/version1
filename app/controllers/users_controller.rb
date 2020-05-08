@@ -123,12 +123,12 @@ class UsersController < ApplicationController
   end
 
   def user_activity_details
-    @sculs = @user.subject_course_user_logs
+    @sculs = @user.course_logs
   end
 
-  def subject_course_user_log_details
-    @scul         = SubjectCourseUserLog.find(params[:scul_id])
-    @latest_cmeul = @scul.course_module_element_user_logs.includes(:course_module_element).order(:created_at).first
+  def course_log_details
+    @scul         = CourseLog.find(params[:scul_id])
+    @latest_cmeul = @scul.course_step_logs.includes(:course_step).order(:created_at).first
   end
 
   def user_purchases_details
@@ -142,15 +142,15 @@ class UsersController < ApplicationController
 
   def user_courses_status
     # This is for seeing a tutors courses
-    @subject_courses = SubjectCourse.all_active.all_in_order
-    all_courses      = @subject_courses.each_slice((@subject_courses.size / 2.0).round).to_a
+    @courses = Course.all_active.all_in_order
+    all_courses      = @courses.each_slice((@courses.size / 2.0).round).to_a
     @first_courses   = all_courses.first
     @second_courses  = all_courses.last
   end
 
   def update_courses
     @user = User.find(params[:user_id]) rescue nil
-    @user.subject_course_ids = params[:user] ? params[:user][:subject_course_ids] : []
+    @user.course_ids = params[:user] ? params[:user][:course_ids] : []
 
     flash[:success] = I18n.t('controllers.users.update_subjects.flash.success')
     redirect_to users_url

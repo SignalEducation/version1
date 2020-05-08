@@ -4,7 +4,7 @@
 #
 #  id                    :integer          not null, primary key
 #  name                  :string
-#  subject_course_id     :integer
+#  course_id     :integer
 #  mock_exam_id          :integer
 #  stripe_guid           :string
 #  live_mode             :boolean          default("false")
@@ -45,7 +45,7 @@ describe Product do
     it { should respond_to(:currency_id) }
     it { should respond_to(:price) }
     it { should respond_to(:stripe_sku_guid) }
-    it { should respond_to(:subject_course_id) }
+    it { should respond_to(:course_id) }
     it { should respond_to(:sorting_order) }
     it { should respond_to(:product_type) }
     it { should respond_to(:correction_pack_count) }

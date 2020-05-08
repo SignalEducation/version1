@@ -1,0 +1,28 @@
+.container
+  %header.management-console-section
+    %h1
+      ="Reorder Questions for #{@course_step.name}"
+
+  %section.pb-3
+    .row
+      .col-sm
+        =link_to t('views.courses.course_lessons_order.return'), edit_admin_course_step_url(@course_step), class: 'btn btn-secondary'
+
+      .col-sm-12
+        .box-item.table-box
+          .table-responsive
+            %table.table.sorted_table{data: {destination: quiz_questions_url}, id: @course_step, style: 'font-size: 18px;'}
+              %thead
+                %tr
+                  %th Question ID
+                  %th Question Text
+                  %th
+              %tbody
+                -@quiz_questions.all_in_order.each do |qq|
+                  %tr{id: qq.id, data: {parent: @course_step.id, destination: quiz_questions_url}}
+                    %td
+                      =qq.id
+                    %td
+                      =qq.quiz_contents.first.text_content.truncate(30)
+                    %td
+                      %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}

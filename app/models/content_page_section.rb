@@ -8,7 +8,7 @@
 #  panel_colour      :string
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
-#  subject_course_id :integer
+#  course_id :integer
 #  sorting_order     :integer
 #
 
@@ -17,7 +17,7 @@ class ContentPageSection < ApplicationRecord
 
   # relationships
   belongs_to :content_page
-  belongs_to :subject_course
+  belongs_to :course
 
   # validation
   validates :content_page_id, presence: true, on: :update
@@ -28,7 +28,7 @@ class ContentPageSection < ApplicationRecord
   before_destroy :check_dependencies
 
   # scopes
-  scope :all_in_order, -> { order(:sorting_order, :subject_course_id) }
+  scope :all_in_order, -> { order(:sorting_order, :course_id) }
 
   # class methods
 

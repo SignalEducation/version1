@@ -5,7 +5,7 @@
 # Table name: constructed_responses
 #
 #  id                       :integer          not null, primary key
-#  course_module_element_id :integer
+#  course_step_id :integer
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
 #  time_allowed             :integer
@@ -16,20 +16,20 @@ class ConstructedResponse < ApplicationRecord
   # Constants
 
   # relationships
-  belongs_to :course_module_element
+  belongs_to :course_step
   has_one :scenario, dependent: :restrict_with_error
 
   accepts_nested_attributes_for :scenario, reject_if: ->(attributes) { constructed_response_nested_scenario_text_is_blank?(attributes) }
 
   # validation
-  validates :course_module_element_id, presence: true, on: :update,
+  validates :course_step_id, presence: true, on: :update,
                                        numericality: { only_integer: true, greater_than: 0 }
 
   # callbacks
   before_destroy :check_dependencies
 
   # scopes
-  scope :all_in_order, -> { order(:course_module_element_id) }
+  scope :all_in_order, -> { order(:course_step_id) }
 
   # class methods
   def self.constructed_response_nested_scenario_text_is_blank?(attributes)
@@ -50,15 +50,15 @@ class ConstructedResponse < ApplicationRecord
   def duplicate
     new_constructed_response =
       deep_clone include: [
-        :course_module_element,
+        :course_step,
         scenario: {
           scenario_questions: :scenario_answer_templates
         }
       ], validate: false
 
     new_constructed_response.
-      course_module_element.update(name: "#{course_module_element.name} COPY",
-                                   name_url: "#{course_module_element.name_url}_copy",
+      course_step.update(name: "#{course_step.name} COPY",
+                                   name_url: "#{course_step.name_url}_copy",
                                    active: false)
   end
 

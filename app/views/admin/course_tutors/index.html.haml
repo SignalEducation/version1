@@ -1,0 +1,33 @@
+.container
+  %header.management-console-section
+    %h1
+      =t('views.course_tutors.index.h1')
+  %section.pb-7
+    .row
+      .col-sm-12
+        .box-item.table-box
+          .table-responsive
+            %table.table.sorted_table{data: {destination: admin_course_course_tutors_url(course_id: @course.id)}}
+              %thead
+                %tr
+                  %th=t('views.course_tutors.form.user_id')
+                  %th=t('views.course_tutors.form.title')
+                  %th
+                  %th
+              %tbody
+                -@course_tutors.each do |course_tutor|
+                  %tr{id: course_tutor.id}
+                    %td=course_tutor.user.full_name
+                    %td=course_tutor.title
+                    %td
+                      =link_to t('views.general.edit'), edit_admin_course_course_tutor_url(course_id: @course.id, id: course_tutor.id), class: 'btn btn-primary btn-xs'
+
+                      -if course_tutor.destroyable?
+                        =link_to t('views.general.delete'), admin_course_course_tutor_url(course_id: @course.id, id: course_tutor), method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-secondary btn-xs'
+                    %td
+                      %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
+
+    .row.pt-4
+      .col-sm-12
+        =link_to t('views.general.new'), new_admin_course_course_tutor_url(course_id: @course.id), class: 'btn btn-primary'
+        =link_to t('views.general.return'), admin_course_url(@course), class: 'btn btn-secondary'

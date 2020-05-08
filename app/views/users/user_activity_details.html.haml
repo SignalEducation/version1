@@ -34,8 +34,8 @@
                     -@sculs.each do |scul|
                       %tr
                         %td
-                          -if scul.subject_course
-                            =scul.subject_course.name
+                          -if scul.course
+                            =scul.course.name
                         %td
                           =humanize_datetime(scul.created_at)
                         %td

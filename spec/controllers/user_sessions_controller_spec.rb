@@ -16,7 +16,7 @@ RSpec.describe UserSessionsController, type: :controller do
 
   describe 'POST create' do
     let(:user)           { create(:user) }
-    let(:subject_course) { create(:subject_course) }
+    let(:course) { create(:course) }
 
     subject do
       post :create, params: { user_session: { email: user.email, password: user.password } }
@@ -61,7 +61,7 @@ RSpec.describe UserSessionsController, type: :controller do
         allow_any_instance_of(UserSessionsController).to receive(:course_enrollment_special_link).and_return('')
         allow_any_instance_of(UserSessionsController).to receive(:handle_course_enrollment).and_return(true)
 
-        post :create, params: { user_session: { email: user.email, password: user.password }, subject_course_id: subject_course.id }
+        post :create, params: { user_session: { email: user.email, password: user.password }, course_id: course.id }
 
         expect(response).to be_redirect
         expect(response).to have_http_status(:redirect)
@@ -116,13 +116,13 @@ RSpec.describe UserSessionsController, type: :controller do
 
   describe 'methods' do
     let(:user)           { create(:user) }
-    let(:subject_course) { create(:subject_course) }
+    let(:course) { create(:course) }
 
     it '.handle_course_enrollment' do
       user_session = UserSessionsController.new
-      response = user_session.send(:handle_course_enrollment, user, subject_course.id)
+      response = user_session.send(:handle_course_enrollment, user, course.id)
 
-      expect(response).to include(nil, "Sorry! Bootcamp is not currently available for #{subject_course.name}")
+      expect(response).to include(nil, "Sorry! Bootcamp is not currently available for #{course.name}")
     end
   end
 end

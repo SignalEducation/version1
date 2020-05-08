@@ -3,7 +3,7 @@
 # Table name: mock_exams
 #
 #  id                       :integer          not null, primary key
-#  subject_course_id        :integer
+#  course_id        :integer
 #  product_id               :integer
 #  name                     :string
 #  sorting_order            :integer
@@ -26,16 +26,16 @@ describe MockExamsController, type: :controller do
   let(:content_management_user)       { FactoryBot.create(:content_management_user, user_group_id: content_management_user_group.id) }
   let!(:exam_body)                    { FactoryBot.create(:exam_body) }
   let!(:group)                        { FactoryBot.create(:group) }
-  let!(:subject_course)               { FactoryBot.create(:active_subject_course,
+  let!(:course)               { FactoryBot.create(:active_course,
                                                           group_id: group.id,
                                                           exam_body_id: exam_body.id) }
 
   let(:currency)                      { FactoryBot.create(:currency) }
-  let!(:mock_exam_1)                  { FactoryBot.create(:mock_exam, name: 'Mock ABC', subject_course: subject_course) }
-  let!(:mock_exam_2)                  { FactoryBot.create(:mock_exam, subject_course: subject_course) }
+  let!(:mock_exam_1)                  { FactoryBot.create(:mock_exam, name: 'Mock ABC', course: course) }
+  let!(:mock_exam_2)                  { FactoryBot.create(:mock_exam, course: course) }
 
   let!(:order_1)                      { FactoryBot.create(:order, mock_exam_id: mock_exam_1.id, stripe_order_payment_data: { currency: currency.iso_code} ) }
-  let!(:valid_params)                 { FactoryBot.attributes_for(:mock_exam, subject_course_id: subject_course.id) }
+  let!(:valid_params)                 { FactoryBot.attributes_for(:mock_exam, course_id: course.id) }
 
   context 'Logged in as a content_management_user: ' do
     before(:each) do

@@ -3,7 +3,7 @@
 # Table name: mock_exams
 #
 #  id                       :integer          not null, primary key
-#  subject_course_id        :integer
+#  course_id        :integer
 #  name                     :string
 #  sorting_order            :integer
 #  created_at               :datetime         not null
@@ -22,13 +22,13 @@ require 'rails_helper'
 
 describe MockExam do
   # relationships
-  it { should belong_to(:subject_course) }
+  it { should belong_to(:course) }
   it { should have_many(:products) }
   it { should have_many(:orders) }
 
   # validation
-  it 'is valid without a subject_course' do
-    expect(build_stubbed(:mock_exam, subject_course: nil)).to be_valid
+  it 'is valid without a course' do
+    expect(build_stubbed(:mock_exam, course: nil)).to be_valid
   end
 
   it { should validate_presence_of(:name) }

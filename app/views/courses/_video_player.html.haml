@@ -1,7 +1,7 @@
 -if @vimeo_as_main
-  -if cme.course_module_element_video.vimeo_guid && current_user.country&.iso_code != 'CN'
+  -if cme.course_video.vimeo_guid && current_user.country&.iso_code != 'CN'
     =render partial: 'courses/players/vimeo', locals: { cme: cme }
-  -elsif cme.course_module_element_video.dacast_id
+  -elsif cme.course_video.dacast_id
     =render partial: 'courses/players/dacast', locals: { cme: cme }
   -else
     %h2 Sorry Unknown Content Requested

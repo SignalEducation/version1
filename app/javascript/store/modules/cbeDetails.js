@@ -5,7 +5,7 @@ export default {
   state: {
     cbeName: null,
     cbeAgreementContent: null,
-    cbeSubjectCourseId: null,
+    cbeCourseId: null,
     cbeActive: null,
     currentCbe: '',
   },
@@ -24,8 +24,8 @@ export default {
     setCbeExamTime(state, value) {
       state.cbeExamTime = value;
     },
-    setCbeSubjectCourseId(state, value) {
-      state.cbeSubjectCourseId = value;
+    setCbeCourseId(state, value) {
+      state.cbeCourseId = value;
     },
     setCbeActive(state, value) {
       state.cbeActive = value;

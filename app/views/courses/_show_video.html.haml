@@ -1,26 +1,6 @@
 .row.row-lg
   .col-xl-8
-    #video-player-window.video-player-window{data: {lesson_name: @course_module_element.name, course_name: @course.name}}
-      =render partial: 'courses/video_player', locals: { cme: @course_module_element }
+    #video-player-window.video-player-window{data: {lesson_name: @course_step.name, course_name: @course.name}}
+      =render partial: 'courses/video_player', locals: { cme: @course_step }
 
     .pt-5.pb-5
-  .col-xl-4
-    -if @course_module_element.course_module_element_resources.any?
-      %h4.text-gray1.mb-2.mb-sm-3.mt-sm-4.mt-md-0
-        ='Additional Resources'
-      -@course_module_element.course_module_element_resources.each do |resource|
-
-        -if resource.web_url && resource.web_url.length > 0
-          =link_to resource.web_url, class: 'card card-horizontal card-horizontal-sm flex-row resource-card', data: {resource_name: resource.name, course_name: @course.name, resource_type: resource.type}, target: '_blank' do
-            .card-header.bg-white.d-flex.align-items-center.justify-content-center
-              %i.budicon-internal-link{"aria-label" => "", :role => "img"}
-            .card-body.d-flex.align-items-center.pl-1
-              %h5.m-0.text-truncate.text-gray2
-                =resource.name
-        -else
-          =link_to resource.upload.url, class: 'card card-horizontal card-horizontal-sm flex-row resource-card', data: {resource_name: resource.name, course_name: @course.name, resource_type: resource.type}, target: '_blank' do
-            .card-header.bg-white.d-flex.align-items-center.justify-content-center
-              %i.budicon-files-download{"aria-label" => "", :role => "img"}
-            .card-body.d-flex.align-items-center.pl-1
-              %h5.m-0.text-truncate.text-gray2
-                =resource.name

@@ -7,7 +7,7 @@ json.content                  cbe.content
 json.agreement_content        cbe.agreement_content
 json.active                   cbe.active
 json.score                    cbe.score
-json.subject_course_id        cbe.subject_course.id
+json.course_id        cbe.course.id
 
 json.introduction_pages cbe.introduction_pages.order(:sorting_order) do |page|
   json.id            page.id
@@ -34,11 +34,11 @@ json.questions cbe.questions.order(:sorting_order) do |question|
   json.partial! 'api/v1/cbes/questions/question', locals: { question: question }
 end
 
-json.subject_course do
-  json.name cbe.subject_course.name
-  json.id cbe.subject_course.id
+json.course do
+  json.name cbe.course.name
+  json.id cbe.course.id
 end
 
 json.exam_body do
-  json.name cbe.subject_course.exam_body.name
+  json.name cbe.course.exam_body.name
 end

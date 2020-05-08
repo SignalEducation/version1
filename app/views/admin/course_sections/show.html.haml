@@ -1,0 +1,69 @@
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =@course_section.name
+
+
+      .row.l-margin-bottom
+        .col-md-12
+          =link_to t('views.course_lessons.new.h1'), admin_course_section_lessons_path(@course_section.course, @course_section), class: 'btn btn-cyan'
+          =link_to t('views.courses.reorder'), reorder_admin_course_section_lessons_path(@course_section.course, @course_section), class: 'btn btn-cyan'
+
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12.l-margin-top
+          .ol.sortable-area
+            -@course_section.course_lessons.all_in_order.each do |course_lesson|
+              .li.l-margin-bottom-big
+                .table-box
+                  .table-responsive
+                    .col-md-9.l-margin-bottom
+                      %h2=course_lesson.name.to_s.truncate(50)
+                    .col-md-3
+                      .pull-right
+                        =course_lesson.category
+                        &#160;
+                        &#160;
+                        =tick_or_cross(course_lesson.active)
+                    %table.table.sorted_table{data: {destination: course_steps_url}, id: course_lesson.id, style: 'font-size: 18px;'}
+                      %thead
+                        %tr
+                          %th Name
+                          %th Active
+                          %th Trial
+                          %th Type
+                          %th
+                          %th
+                          %th
+                      %tbody
+                        -course_lesson.children.all_in_order.each do |cme|
+                          %tr{id: cme.id, data: {parent: course_lesson.id, destination: course_steps_url}}
+                            %td
+                              =cme.name.to_s
+                            %td
+                              =tick_or_cross(cme.active)
+                            %td
+                              =tick_or_cross(cme.available_on_trial)
+                            %td
+                              =cme.type_name
+                            %td
+                              =link_to t('views.general.edit'), edit_admin_course_step_url(cme.id), class: 'btn btn-small btn-purple'
+                              =link_to t('views.course_steps.show.preview'), show_course_url(cme.course_lesson.course.name_url, cme.course_lesson.name_url, cme.name_url, ), class: 'btn btn-small btn-orange', target: '_blank'
+                              -unless cme.active
+                                =link_to 'Activate', new_content_activation_url(type: cme.class, id: cme.id), class: 'btn btn-green btn-small'
+                              -if cme.destroyable?
+                                =link_to t('views.general.delete'), cme, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'
+                            %td
+                              %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
+
+
+                    .col-md-6
+                      =link_to t('views.course_steps.form.new_video'), new_course_step_url(type: 'video', cm_id: course_lesson.id), class: 'btn btn-purple'
+                      =link_to t('views.course_steps.form.new_quiz'), new_course_step_url(type: 'quiz', cm_id: course_lesson.id), class: 'btn btn-purple'
+                      =link_to t('views.course_steps.form.new_constructed_response'), new_course_step_url(type: 'constructed_response', cm_id: course_lesson.id), class: 'btn btn-purple'
+                    .col-md-6
+                      .pull-right
+                        =link_to t('views.course_lessons.edit.h1'), admin_edit_course_lesson_url(course_lesson), class: 'btn btn-purple'
+                        =link_to I18n.t('views.course_lessons.index.delete'), course_lesson, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red'

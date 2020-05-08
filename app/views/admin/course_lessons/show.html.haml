@@ -1,0 +1,68 @@
+.container
+  %header.management-console-section
+    %h1
+      =@course.name
+    %p.p-hero.px-lg-8
+      =@course_lesson.course_section.name
+
+  %section.pb-7
+    .row
+      .col-sm-12
+        .ol.sortable-area
+          .li
+            .box-item.table-box
+              .table-responsive
+                .row
+                  .col-sm-4
+                    %p.h5
+                      =@course_lesson.name
+                  .col-sm-4
+                    Quizzes
+                    =@course_lesson.quiz_count
+                    Videos
+                    =@course_lesson.video_count
+                    CRs
+                    =@course_lesson.constructed_response_count
+                    Total Count
+                    =@course_lesson.cme_count
+
+                %table.table.sorted_table{data: {destination: admin_course_steps_url}, id: @course_lesson.id}
+                  %thead
+                    %tr
+                      %th Name
+                      %th Active
+                      %th Trial
+                      %th{colspan: 5}
+                  %tbody
+                    -@course_lesson.course_steps.all_in_order.each do |step|
+                      %tr{id: step.id, data: {parent: @course_lesson.id, destination: admin_course_steps_url}}
+                        %td
+                          =step.name.to_s
+                        %td
+                          =tick_or_cross(step.active)
+                        %td
+                          =tick_or_cross(step.available_on_trial)
+                        %td
+                          =step.type_name
+                        %td
+                          =link_to t('views.general.edit'), edit_admin_course_step_path(step.id), class: 'btn btn-xs btn-primary'
+                          =link_to t('views.course_steps.show.preview'), show_course_url(step.course_lesson.course.name_url, step.course_lesson.name_url, step.name_url, ), class: 'btn btn-xs btn-orange', target: '_blank'
+                          -unless step.active
+                            =link_to 'Activate', new_content_activation_url(type: step.class, id: step.id), class: 'btn btn-green btn-xs'
+                          -if step.destroyable?
+                            =link_to t('views.general.delete'), admin_course_step_path(step.id), method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-secondary btn-xs'
+                        %td
+                          =link_to t('views.general.clone'), admin_course_step_clone_path(course_step_id: step.id), data: {confirm: t('views.general.clone_confirmation')}, method: :post, class: 'dropdown-item', style: 'color: #fd7e14;'
+                        %td
+                          %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
+
+
+              .row.pt-4
+                .col-sm-6
+                  =link_to t('views.course_steps.form.new_video'), new_admin_course_step_path(type: 'video', cm_id: @course_lesson.id), class: 'btn btn-primary'
+                  =link_to t('views.course_steps.form.new_quiz'), new_admin_course_step_path(type: 'quiz', cm_id: @course_lesson.id), class: 'btn btn-primary'
+                  =link_to t('views.course_steps.form.new_note'), new_admin_course_step_path(type: 'note', cm_id: @course_lesson.id), class: 'btn btn-primary'
+                  =link_to t('views.course_steps.form.new_constructed_response'), new_admin_course_step_path(type: 'constructed_response', cm_id: @course_lesson.id), class: 'btn btn-primary'
+                .col-sm-6
+                  =link_to t('views.course_lessons.edit.h1'), admin_edit_course_lesson_url(@course.id, @course_lesson.course_section.id, @course_lesson.id), class: 'btn btn-secondary'
+                  =link_to I18n.t('views.course_lessons.index.delete'), admin_course_lesson_path(@course_lesson), method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-secondary-reverse'

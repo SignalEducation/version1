@@ -4,7 +4,7 @@
 # Table name: mock_exams
 #
 #  id                       :integer          not null, primary key
-#  subject_course_id        :integer
+#  course_id        :integer
 #  name                     :string
 #  sorting_order            :integer
 #  created_at               :datetime         not null
@@ -25,7 +25,7 @@ class MockExam < ApplicationRecord
   # Constants
 
   # relationships
-  belongs_to :subject_course, optional: true
+  belongs_to :course, optional: true
   has_many :products
   has_many :orders
 
@@ -39,7 +39,7 @@ class MockExam < ApplicationRecord
   before_destroy :check_dependencies
 
   # scopes
-  scope :all_in_order, -> { order(:sorting_order, :subject_course_id) }
+  scope :all_in_order, -> { order(:sorting_order, :course_id) }
 
   # class methods
 

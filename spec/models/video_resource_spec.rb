@@ -3,7 +3,7 @@
 # Table name: video_resources
 #
 #  id                       :integer          not null, primary key
-#  course_module_element_id :integer
+#  course_step_id :integer
 #  question                 :text
 #  answer                   :text
 #  notes                    :text
@@ -19,10 +19,10 @@ require 'concerns/archivable_spec.rb'
 describe VideoResource do
   let(:video) { build(:video_resource) }
   # relationships
-  it { should belong_to :course_module_element }
+  it { should belong_to :course_step }
 
   # validation
-  it { should validate_presence_of(:course_module_element_id).on(:update) }
+  it { should validate_presence_of(:course_step_id).on(:update) }
 
   it { should_not validate_presence_of(:question) }
 

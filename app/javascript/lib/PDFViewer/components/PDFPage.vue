@@ -129,7 +129,7 @@ export default {
   },
 };
 </script>
-<style>
+<style scoped>
 .pdf-page {
   display: block;
   margin: 0 auto;

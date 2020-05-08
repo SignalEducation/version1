@@ -10,11 +10,11 @@ RSpec.describe StudentSignUpsController, type: :controller do
   let!(:exam_body_1) { FactoryBot.create(:exam_body) }
   let!(:group_1) { FactoryBot.create(:group) }
   let!(:group_2) { FactoryBot.create(:group) }
-  let!(:subject_course_1) { FactoryBot.create(:active_subject_course, group_id: group_1.id, exam_body_id: exam_body_1.id) }
+  let!(:course_1) { FactoryBot.create(:active_course, group_id: group_1.id, exam_body_id: exam_body_1.id) }
 
   let!(:home) { FactoryBot.create(:home, group_id: group_1.id) }
   let!(:landing_page_1) { FactoryBot.create(:landing_page_1, group_id: group_1.id) }
-  let!(:landing_page_2) { FactoryBot.create(:landing_page_2, subject_course_id: subject_course_1.id, group_id: nil) }
+  let!(:landing_page_2) { FactoryBot.create(:landing_page_2, course_id: course_1.id, group_id: nil) }
 
   let(:student_user) { FactoryBot.create(:student_user) }
   let!(:student_access) { FactoryBot.create(:valid_free_trial_student_access, user_id: student_user.id) }

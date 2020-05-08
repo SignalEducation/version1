@@ -1,0 +1,17 @@
+=f.fields_for :course_video do |cme_video|
+
+  .form-group
+    =cme_video.label :vimeo_guid, t('views.course_videos.form.vimeo_guid')
+    .input-group.input-group-lg
+      =cme_video.text_field :vimeo_guid, placeholder: t('views.course_videos.form.vimeo_guid_placeholder'), class: 'form-control'
+
+  .form-group
+    =cme_video.label :dacast_id, t('views.course_videos.form.dacast_id')
+    .input-group.input-group-lg
+      =cme_video.text_field :dacast_id, placeholder: t('views.course_videos.form.dacast_id_placeholder'), class: 'form-control'
+
+
+  .form-group
+    =cme_video.label :duration, t('views.course_videos.form.duration')
+    .input-group.input-group-lg
+      =cme_video.text_field :duration, placeholder: t('views.course_videos.form.duration_placeholder'), class: 'form-control'

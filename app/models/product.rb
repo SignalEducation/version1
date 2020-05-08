@@ -6,7 +6,7 @@
 #
 #  id                    :integer          not null, primary key
 #  name                  :string
-#  subject_course_id     :integer
+#  course_id     :integer
 #  mock_exam_id          :integer
 #  stripe_guid           :string
 #  live_mode             :boolean          default("false")
@@ -37,7 +37,7 @@ class Product < ApplicationRecord
   belongs_to :currency
   belongs_to :group
   belongs_to :mock_exam, optional: true
-  belongs_to :subject_course, optional: true
+  belongs_to :course, optional: true
   belongs_to :cbe, optional: true
   has_many :orders, dependent: :restrict_with_error
   has_many :exercises, dependent: :restrict_with_error

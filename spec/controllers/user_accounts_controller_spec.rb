@@ -10,9 +10,9 @@ describe UserAccountsController, type: :controller do
 
   let!(:exam_body_1) { FactoryBot.create(:exam_body) }
   let!(:group_1) { FactoryBot.create(:group, exam_body_id: exam_body_1.id) }
-  let!(:subject_course_1)  { FactoryBot.create(:active_subject_course, group_id: group_1.id, exam_body_id: exam_body_1.id) }
-  let!(:scul_1) { FactoryBot.create(:subject_course_user_log, user_id: basic_student.id, subject_course_id: subject_course_1.id, percentage_complete: 1) }
-  let!(:enrollment_1) { FactoryBot.create(:enrollment, user_id: basic_student.id, subject_course_id: subject_course_1.id, exam_body_id: exam_body_1.id, subject_course_user_log_id: scul_1.id) }
+  let!(:course_1)  { FactoryBot.create(:active_course, group_id: group_1.id, exam_body_id: exam_body_1.id) }
+  let!(:scul_1) { FactoryBot.create(:course_log, user_id: basic_student.id, course_id: course_1.id, percentage_complete: 1) }
+  let!(:enrollment_1) { FactoryBot.create(:enrollment, user_id: basic_student.id, course_id: course_1.id, exam_body_id: exam_body_1.id, course_log_id: scul_1.id) }
 
   let!(:gbp) { create(:gbp) }
   let!(:uk) { create(:uk, currency: gbp) }
@@ -116,7 +116,7 @@ describe UserAccountsController, type: :controller do
           expect(response).to render_template(:show_invoice)
         end
       end
-      
+
       describe '#sca_successful' do
         it 'should return a 200 response' do
           invoice.update(:requires_3d_secure => true)

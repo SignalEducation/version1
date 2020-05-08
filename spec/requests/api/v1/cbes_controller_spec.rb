@@ -27,12 +27,12 @@ RSpec.describe 'Api::V1::CbesController', type: :request do
                                                             agreement_content
                                                             active
                                                             score
-                                                            subject_course_id
+                                                            course_id
                                                             introduction_pages
                                                             resources
                                                             sections
                                                             questions
-                                                            subject_course
+                                                            course
                                                             exam_body])
       end
     end
@@ -74,12 +74,12 @@ RSpec.describe 'Api::V1::CbesController', type: :request do
                                                   agreement_content
                                                   active
                                                   score
-                                                  subject_course_id
+                                                  course_id
                                                   introduction_pages
                                                   resources
                                                   sections
                                                   questions
-                                                  subject_course
+                                                  course
                                                   exam_body])
       end
     end
@@ -111,18 +111,18 @@ RSpec.describe 'Api::V1::CbesController', type: :request do
                                                   agreement_content
                                                   active
                                                   score
-                                                  subject_course_id
+                                                  course_id
                                                   introduction_pages
                                                   resources
                                                   sections
                                                   questions
-                                                  subject_course
+                                                  course
                                                   exam_body])
       end
     end
 
     context 'try to create a invalid cbe' do
-      let(:cbe) { build(:cbe, subject_course: nil) }
+      let(:cbe) { build(:cbe, course: nil) }
 
       before do
         post '/api/v1/cbes', params: { cbe: cbe.attributes }
@@ -135,7 +135,7 @@ RSpec.describe 'Api::V1::CbesController', type: :request do
       it 'returns empty data' do
         body = JSON.parse(response.body)
 
-        expect(body['errors']).to eq('subject_course' => ['must exist'], 'subject_course_id' => ['can\'t be blank'])
+        expect(body['errors']).to eq('course' => ['must exist'], 'course_id' => ['can\'t be blank'])
       end
     end
   end
@@ -166,19 +166,19 @@ RSpec.describe 'Api::V1::CbesController', type: :request do
                                                   agreement_content
                                                   active
                                                   score
-                                                  subject_course_id
+                                                  course_id
                                                   introduction_pages
                                                   resources
                                                   sections
                                                   questions
-                                                  subject_course
+                                                  course
                                                   exam_body])
       end
     end
 
     context 'try to update a cbe with invalid details' do
       let!(:cbe) { create(:cbe) }
-      let!(:update_params) { FactoryBot.attributes_for(:cbe, subject_course_id: nil) }
+      let!(:update_params) { FactoryBot.attributes_for(:cbe, course_id: nil) }
 
       before do
         patch "/api/v1/cbes/#{cbe.id}", params: { cbe: update_params }
@@ -191,7 +191,7 @@ RSpec.describe 'Api::V1::CbesController', type: :request do
       it 'returns empty data' do
         body = JSON.parse(response.body)
 
-        expect(body['errors']).to eq('subject_course' => ['must exist'], 'subject_course_id' => ['can\'t be blank'])
+        expect(body['errors']).to eq('course' => ['must exist'], 'course_id' => ['can\'t be blank'])
       end
     end
   end

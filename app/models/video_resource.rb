@@ -3,7 +3,7 @@
 # Table name: video_resources
 #
 #  id                       :integer          not null, primary key
-#  course_module_element_id :integer
+#  course_step_id :integer
 #  question                 :text
 #  answer                   :text
 #  notes                    :text
@@ -20,10 +20,10 @@ class VideoResource < ApplicationRecord
   # Constants
 
   # relationships
-  belongs_to :course_module_element, inverse_of: :video_resource, optional: true
+  belongs_to :course_step, inverse_of: :video_resource, optional: true
 
   # validation
-  validates :course_module_element_id, presence: true, on: :update
+  validates :course_step_id, presence: true, on: :update
   validate  :one_field_set
 
   # callbacks
