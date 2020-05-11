@@ -31,7 +31,7 @@ describe QuizQuestionsController, type: :controller do
   let!(:course_lesson_1) { FactoryBot.create(:active_course_lesson,
                                              course_id: course_1.id,
                                              course_section: course_section_1) }
-  let!(:course_step_2_1) { FactoryBot.create(:course_step, :cme_quiz,
+  let!(:course_step_2_1) { FactoryBot.create(:course_step, :quiz_step,
                                                        course_lesson: course_lesson_1) }
   let!(:course_quiz_1_1) { FactoryBot.create(:course_quiz,
                                                               course_step: course_step_2_1) }
@@ -78,7 +78,7 @@ describe QuizQuestionsController, type: :controller do
 
     describe "GET 'new'" do
       it 'should respond OK' do
-        get :new, params: { cme_quiz_id: course_quiz_1_1.id }
+        get :new, params: { quiz_step_id: course_quiz_1_1.id }
         expect_new_success_with_model('quiz_question')
       end
     end

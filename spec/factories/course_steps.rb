@@ -38,19 +38,28 @@ FactoryBot.define do
     seo_no_index                { false }
     is_constructed_response     { false }
 
-    trait :cme_video do
+    trait :video_step do
       is_video { true }
       is_quiz  { false }
+      is_note  { false }
     end
 
-    trait :cme_quiz do
+    trait :quiz_step do
       is_quiz  { true }
       is_video { false }
+      is_note  { false }
     end
 
-    trait :cme_constructed_response do
+    trait :notes_step do
+      is_quiz  { false }
+      is_video { false }
+      is_note  { true }
+    end
+
+    trait :constructed_response_step do
       is_quiz                 { false }
       is_video                { false }
+      is_note                 { false }
       is_constructed_response { true }
     end
 

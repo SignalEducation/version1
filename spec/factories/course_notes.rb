@@ -17,9 +17,8 @@
 
 FactoryBot.define do
   factory :course_note do
-    course_step_id { 1 }
-    sequence(:name)           { |n| "Resource #{n}" }
-    web_url { 'https://linkedin.com' }
+    course_step_id  { 1 }
+    sequence(:name) { |n| "Resource #{n}" }
+    web_url         { 'https://linkedin.com' }
   end
-
 end

@@ -28,7 +28,6 @@ class CoursesController < ApplicationController
         find(params[:course_step_log][:id])
 
     set_up_course_step_log
-
     if @course_step_log.save
       pass_rate = @course_step.course_lesson.course.quiz_pass_rate ? @course_step.course_lesson.course.quiz_pass_rate : 65
       percentage_score = @course_step_log.quiz_score_actual || 0

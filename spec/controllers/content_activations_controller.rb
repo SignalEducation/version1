@@ -11,7 +11,7 @@ describe ContentActivationsController, type: :controller do
   let!(:course_lesson) { FactoryBot.create(:active_course_lesson,
                                              course_section: course_section,
                                              course: course) }
-  let!(:course_step) { FactoryBot.create(:cme_video,
+  let!(:course_step) { FactoryBot.create(:video_step,
                                                        course_lesson: course_lesson) }
 
   include_context 'users_and_groups_setup'
