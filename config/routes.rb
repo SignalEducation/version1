@@ -95,6 +95,7 @@ Rails.application.routes.draw do
       post 'courses/:id/update_user_logs',                                                      to: 'courses#update_course_lesson_logs', as: :course_update_user_logs
       post 'courses/:id/create_course_resources',                                               to: 'courses#create_course_resources',   as: :create_course_resources
       post 'courses/:id/clone',                                                                 to: 'courses#clone',                     as: :course_clone
+      post 'courses/check_accredible_group',                                                    to: 'courses#check_accredible_group',    as: :check_accredible_group
       patch 'courses/:id/trial_content',                                                        to: 'courses#update_trial_content',      as: :course_update_trial_content
 
       resources :courses, concerns: :supports_reordering do

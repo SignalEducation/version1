@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_27_125502) do
+ActiveRecord::Schema.define(version: 2020_05_15_100346) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -370,6 +370,7 @@ ActiveRecord::Schema.define(version: 2020_04_27_125502) do
     t.integer "count_of_constructed_responses_taken"
     t.integer "course_section_id"
     t.integer "course_section_log_id"
+    t.integer "count_of_notes_taken"
     t.index ["course_id"], name: "index_course_lesson_logs_on_course_id"
     t.index ["course_lesson_id"], name: "index_course_lesson_logs_on_course_lesson_id"
     t.index ["course_log_id"], name: "index_course_lesson_logs_on_course_log_id"
@@ -424,6 +425,7 @@ ActiveRecord::Schema.define(version: 2020_04_27_125502) do
     t.integer "count_of_quizzes_taken"
     t.datetime "completed_at"
     t.integer "count_of_constructed_responses_taken"
+    t.integer "count_of_notes_completed"
     t.index ["course_id"], name: "index_course_logs_on_course_id"
     t.index ["latest_course_step_id"], name: "index_scu_logs_on_latest_course_step_id"
     t.index ["session_guid"], name: "index_course_logs_on_session_guid"
@@ -487,6 +489,7 @@ ActiveRecord::Schema.define(version: 2020_04_27_125502) do
     t.datetime "updated_at", null: false
     t.integer "course_id"
     t.integer "count_of_constructed_responses_taken"
+    t.integer "count_of_notes_taken"
     t.index ["course_id"], name: "index_course_section_logs_on_course_id"
     t.index ["course_log_id"], name: "index_course_section_logs_on_course_log_id"
     t.index ["course_section_id"], name: "index_course_section_logs_on_course_section_id"
@@ -633,6 +636,7 @@ ActiveRecord::Schema.define(version: 2020_04_27_125502) do
     t.boolean "on_welcome_page", default: false
     t.string "unit_label"
     t.integer "level_id"
+    t.integer "accredible_group_id"
     t.index ["exam_body_id"], name: "index_courses_on_exam_body_id"
     t.index ["group_id"], name: "index_courses_on_group_id"
     t.index ["level_id"], name: "index_courses_on_level_id"
@@ -693,6 +697,7 @@ ActiveRecord::Schema.define(version: 2020_04_27_125502) do
     t.text "products_subheading"
     t.string "products_seo_title"
     t.string "products_seo_description"
+    t.boolean "emit_certificate", default: false
     t.index ["name"], name: "index_exam_bodies_on_name"
   end
 

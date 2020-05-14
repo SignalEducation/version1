@@ -18,8 +18,6 @@
 #
 
 class CourseSectionLog < ApplicationRecord
-
-
   include LearnSignalModelExtras
 
   # Constants
@@ -41,7 +39,6 @@ class CourseSectionLog < ApplicationRecord
   # callbacks
   before_validation :create_course_log, unless: :course_log_id
   after_update :update_course_log
-
 
   # scopes
   scope :all_in_order, -> { order(:user_id) }
@@ -72,12 +69,12 @@ class CourseSectionLog < ApplicationRecord
   end
 
   def recalculate_csul_completeness
-    #Called only from the CourseLessonLog after_save
-    self.count_of_videos_taken = self.course_lesson_logs.with_valid_course_lesson.sum(:count_of_videos_taken)
-    self.count_of_quizzes_taken = self.course_lesson_logs.with_valid_course_lesson.sum(:count_of_quizzes_taken)
-    self.count_of_constructed_responses_taken = self.course_lesson_logs.with_valid_course_lesson.sum(:count_of_constructed_responses_taken)
-    self.count_of_cmes_completed = self.course_lesson_logs.with_valid_course_lesson.sum(:count_of_cmes_completed)
-    self.percentage_complete = (self.count_of_cmes_completed.to_f / self.elements_total.to_f) * 100.0
+    self.count_of_videos_taken                = course_lesson_logs.with_valid_course_lesson.sum(:count_of_videos_taken)
+    self.count_of_quizzes_taken               = course_lesson_logs.with_valid_course_lesson.sum(:count_of_quizzes_taken)
+    self.count_of_notes_taken                 = course_lesson_logs.with_valid_course_lesson.sum(:count_of_notes_taken)
+    self.count_of_constructed_responses_taken = course_lesson_logs.with_valid_course_lesson.sum(:count_of_constructed_responses_taken)
+    self.count_of_cmes_completed              = course_lesson_logs.with_valid_course_lesson.sum(:count_of_cmes_completed)
+    self.percentage_complete                  = (count_of_cmes_completed / elements_total.to_f) * 100.0
     self.save!
   end
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: course_lesson_logs
@@ -22,9 +24,7 @@
 #  course_section_log_id           :integer
 #
 
-#This should have been called CourseLessonUserLog
 class CourseLessonLog < ApplicationRecord
-
   include LearnSignalModelExtras
 
   # Constants
@@ -36,8 +36,7 @@ class CourseLessonLog < ApplicationRecord
   belongs_to :course_section, optional: true
   belongs_to :course_section_log, optional: true
   belongs_to :course_lesson, optional: true
-  belongs_to :latest_course_step, class_name: 'CourseStep',
-             foreign_key: :latest_course_step_id, optional: true
+  belongs_to :latest_course_step, class_name: 'CourseStep', foreign_key: :latest_course_step_id, optional: true
   has_many :course_step_logs
 
   # validation
@@ -66,51 +65,53 @@ class CourseLessonLog < ApplicationRecord
 
   # instance methods
 
-  def cme_user_logs
-    self.course_step_logs.with_elements_active
+  def step_logs
+    course_step_logs.with_elements_active
   end
 
-  def completed_cme_user_logs
-    cme_user_logs.all_completed
+  def completed_course_step_logs
+    step_logs.all_completed
   end
 
   def destroyable?
-    self.course_step_logs.empty?
+    step_logs.empty?
   end
 
   def elements_total
-    self.course_lesson.cme_count
+    course_lesson.cme_count
   end
 
   def elements_complete
-    self.latest_cme_user_logs.all_completed.with_elements_active.count
+    latest_course_step_logs.all_completed.with_elements_active.count
   end
 
-  def latest_cme_user_logs
-    self.course_step_logs.latest_only
+  def latest_course_step_logs
+    step_logs.latest_only
   end
 
   def unique_logs
-    self.course_step_logs.all_completed.with_elements_active.map(&:course_step_id).uniq
+    step_logs.all_completed.with_elements_active.map(&:course_step_id).uniq
   end
 
   def enrollment
-    self.course_log.active_enrollment
+    course_log.active_enrollment
   end
 
   def recalculate_set_completeness
     #Called from the CourseStepLog after_save or the CourseLogWorker
-    unique_video_ids = completed_cme_user_logs.where(is_video: true).map(&:course_step_id).uniq
-    unique_quiz_ids = completed_cme_user_logs.where(is_quiz: true).map(&:course_step_id).uniq
-    unique_constructed_response_ids = completed_cme_user_logs.where(is_constructed_response: true).map(&:course_step_id).uniq
-    self.count_of_videos_taken = unique_video_ids.count
-    self.count_of_quizzes_taken = unique_quiz_ids.count
-    self.count_of_constructed_responses_taken = unique_constructed_response_ids.count
-    self.count_of_cmes_completed = (unique_video_ids.count + unique_quiz_ids.count + unique_constructed_response_ids.count)
-    self.percentage_complete = (self.count_of_cmes_completed.to_f / self.elements_total.to_f) * 100.0
-    self.save!
-  end
+    unique_video_ids                = completed_course_step_logs.videos.pluck(:course_step_id).uniq
+    unique_quiz_ids                 = completed_course_step_logs.quizzes.pluck(:course_step_id).uniq
+    unique_notes_ids                = completed_course_step_logs.notes.pluck(:course_step_id).uniq
+    unique_constructed_response_ids = completed_course_step_logs.constructed_responses.pluck(:course_step_id).uniq
 
+    self.count_of_videos_taken                = unique_video_ids.count
+    self.count_of_quizzes_taken               = unique_quiz_ids.count
+    self.count_of_notes_taken                 = unique_notes_ids.count
+    self.count_of_constructed_responses_taken = unique_constructed_response_ids.count
+    self.count_of_cmes_completed = (count_of_videos_taken + count_of_quizzes_taken + count_of_notes_taken + count_of_constructed_responses_taken)
+    self.percentage_complete = (count_of_cmes_completed / elements_total.to_f) * 100.0
+    save!
+  end
 
   protected
 
@@ -128,5 +129,4 @@ class CourseLessonLog < ApplicationRecord
     course_section_log.latest_course_step_id = latest_course_step_id
     course_section_log.recalculate_csul_completeness # Includes a save!
   end
-
 end

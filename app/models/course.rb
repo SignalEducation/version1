@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: courses
@@ -67,7 +69,7 @@ class Course < ApplicationRecord
   has_many :course_quizzes, through: :course_steps
   has_many :related_course_step, through: :course_steps
   has_many :course_step_logs
-  has_attached_file :background_image, default_url: "images/home_explore2.jpg"
+  has_attached_file :background_image, default_url: 'images/home_explore2.jpg'
 
   accepts_nested_attributes_for :course_resources
   accepts_nested_attributes_for :course_sections
@@ -81,19 +83,18 @@ class Course < ApplicationRecord
   validates :group_id, presence: true
   validates :quiz_pass_rate, presence: true
   validates :survey_url, presence: true, length: { maximum: 255 }
+  validates :accredible_group_id, presence: true, numericality: { only_integer: true }, if: :emit_certificate?
   validates_attachment_content_type :background_image, content_type: /\Aimage\/.*\Z/
-
 
   # callbacks
   before_validation { squish_fields(:name, :name_url) }
   before_save :sanitize_name_url, :set_count_fields
   before_destroy :check_dependencies
-  #after_create :update_sitemap
 
   # scopes
-  scope :all_live, -> { where(active: true, preview: false).includes(:course_lessons).where(course_lessons: {active: true}) }
+  scope :all_live, -> { where(active: true, preview: false).includes(:course_lessons).where(course_lessons: { active: true }) }
   scope :all_active, -> { where(active: true) }
-  scope :with_active_children, -> { where(active: true).includes(:course_lessons).where(course_lessons: {active: true}) }
+  scope :with_active_children, -> { where(active: true).includes(:course_lessons).where(course_lessons: { active: true }) }
   scope :all_preview, -> { where(preview: true) }
   scope :all_computer_based, -> { where(computer_based: true) }
   scope :all_standard, -> { where(computer_based: false) }
@@ -121,7 +122,7 @@ class Course < ApplicationRecord
       csv << attributes
 
       all.each do |course|
-        csv << attributes.map{ |attr| course.send(attr) }
+        csv << attributes.map { |attr| course.send(attr) }
       end
     end
   end
@@ -159,29 +160,28 @@ class Course < ApplicationRecord
 
   ## Parent & Child associations ##
   def parent
-    self.group
+    group
   end
 
   def children
-    self.course_sections.all
+    course_sections.all
   end
 
   def active_children
-    self.children.all_active.all_in_order
+    children.all_active.all_in_order
   end
 
   def valid_children
-    self.children.all_active.all_in_order
+    children.all_active.all_in_order
   end
 
   def first_active_child
-    self.active_children.first
+    active_children.first
   end
 
   def first_active_cme
-    self.active_children.first.try(:first_active_cme)
+    active_children.first.try(:first_active_cme)
   end
-
 
   #######################################################################
 
@@ -196,111 +196,100 @@ class Course < ApplicationRecord
     the_list
   end
 
-  ########################################################################
-
-
   ## Keeping Model Count Attributes Up-to-date ##
-
   ### Triggered by Child Model ###
+  # Count of all CMEs in the course
+  # Count CMEs which count towards completion of the Course
   def recalculate_fields
-    #Count of all CMEs in the course
-    cme_count = valid_children.sum(:cme_count)
-    #Count CMEs which count towards completion of the Course
+    cme_count            = valid_children.sum(:cme_count)
     completion_cme_count = valid_children.all_for_completion.sum(:cme_count)
+    quiz_count           = valid_children.sum(:quiz_count)
+    video_count          = valid_children.sum(:video_count)
+    cr_count             = valid_children.sum(:constructed_response_count)
 
-    quiz_count = valid_children.sum(:quiz_count)
-    video_count = valid_children.sum(:video_count)
-    cr_count = valid_children.sum(:constructed_response_count)
-
-    self.update_attributes(cme_count: cme_count, completion_cme_count: completion_cme_count,
-                           video_count: video_count, quiz_count: quiz_count,
-                           constructed_response_count: cr_count)
+    update_attributes(cme_count: cme_count, completion_cme_count: completion_cme_count,
+                      video_count: video_count, quiz_count: quiz_count,
+                      constructed_response_count: cr_count)
   end
 
   ### Callback before_save ###
+  # Count of all CMEs in the course
+  # Count CMEs which count towards completion of the Course
   def set_count_fields
-    #Count of all CMEs in the course
-    self.cme_count = valid_children.sum(:cme_count)
-    #Count CMEs which count towards completion of the Course
-    self.completion_cme_count = valid_children.all_for_completion.sum(:cme_count)
-
-    self.quiz_count = valid_children.sum(:quiz_count)
-    self.video_count = valid_children.sum(:video_count)
+    self.cme_count                  = valid_children.sum(:cme_count)
+    self.completion_cme_count       = valid_children.all_for_completion.sum(:cme_count)
+    self.quiz_count                 = valid_children.sum(:quiz_count)
+    self.video_count                = valid_children.sum(:video_count)
     self.constructed_response_count = valid_children.sum(:constructed_response_count)
   end
 
-
   ########################################################################
-
 
   ## User Course Tracking ##
   def enrolled_user_ids
-    self.enrollments.map(&:user_id)
+    enrollments.map(&:user_id)
   end
 
   def active_enrollment_user_ids
-    self.enrollments.all_active.map(&:user_id)
+    enrollments.all_active.map(&:user_id)
   end
 
   def valid_enrollment_user_ids
-    self.enrollments.all_valid.map(&:user_id)
+    enrollments.all_valid.map(&:user_id)
   end
 
   def started_by_user(user_id)
-    self.course_logs.for_user(user_id).first
+    course_logs.for_user(user_id).first
   end
 
   def completed_by_user(user_id)
-    self.percentage_complete_by_user(user_id) >= 100
+    percentage_complete_by_user(user_id) >= 100
   end
 
   def percentage_complete_by_user(user_id)
     if cme_count.nil?
       0
+    elsif cme_count.positive?
+      (number_complete_by_user(user_id) / cme_count.to_f * 100).to_i
     else
-      if self.cme_count > 0
-        (self.number_complete_by_user(user_id).to_f / self.cme_count.to_f * 100).to_i
-      else
-        0
-      end
-
+      0
     end
   end
 
   def number_complete_by_user(user_id)
-    log = self.course_logs.for_user(user_id).first
+    log = course_logs.for_user(user_id).first
     log.try(:count_of_cmes_completed)
   end
 
   def update_all_course_logs
-    CourseLessonLogsWorker.perform_async(self.id)
+    CourseLessonLogsWorker.perform_async(id)
   end
 
   ########################################################################
 
   ## Used by self.to_csv above ##
   def new_enrollments
-    self.enrollments.this_week.count
+    enrollments.this_week.count
   end
 
   def active_enrollments
-    self.enrollments.all_active.count
+    enrollments.all_active.count
   end
 
   def expired_enrollments
-    self.enrollments.all_expired.count
+    enrollments.all_expired.count
   end
 
   def non_expired_enrollments
-    self.enrollments.all_not_expired.count
+    enrollments.all_not_expired.count
   end
 
   def completed_enrollments
-    self.enrollments.all_completed.count
+    enrollments.all_completed.count
   end
 
   def total_enrollments
-    self.enrollments.count
+    enrollments.count
   end
 
   ########################################################################
@@ -308,18 +297,19 @@ class Course < ApplicationRecord
   ## Misc. ##
 
   def home_page
-    self.home_pages.all_in_order.first
+    home_pages.all_in_order.first
   end
 
+  def emit_certificate?
+    exam_body&.emit_certificate
+  end
 
   protected
 
   def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
+    return if destroyable?
+
+    errors.add(:base, I18n.t('models.general.dependencies_exist'))
+    false
   end
-
-
 end
