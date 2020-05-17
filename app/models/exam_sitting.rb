@@ -54,7 +54,7 @@ class ExamSitting < ApplicationRecord
   end
 
   def formatted_date
-    self.computer_based ? 'Computer Based Exam' : date.strftime("%B %Y")
+    computer_based ? 'Computer Based Exam' : date.strftime("%B %Y")
   end
 
   protected
@@ -68,7 +68,9 @@ class ExamSitting < ApplicationRecord
   end
 
   def create_expiration_worker
-    ExamSittingExpirationWorker.perform_at(self.date.to_datetime + 23.hours, self.id) unless Rails.env.test?
+    return if Rails.env.test?
+
+    ExamSittingExpirationWorker.perform_at(date.to_datetime + 23.hours, id)
   end
 
 end
