@@ -55,6 +55,7 @@ class ApplicationController < ActionController::Base
     @navbar = 'standard'
     @top_margin = true
     @footer = 'standard'
+    @chat   = true
     @groups = Group.includes(:exam_body).all_active.with_active_body.all_in_order
     @footer_content_pages = ContentPage.all_active.for_footer
     @footer_landing_pages = HomePage.for_footer

@@ -115,6 +115,7 @@ class CoursesController < ApplicationController
 
       end
       @footer = false
+      @chat   = false
     else
       ## The URL params are wrong ##
       flash[:warning] = t('controllers.courses.show.warning')
