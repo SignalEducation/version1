@@ -42,9 +42,9 @@ describe Admin::CourseStepsController, type: :controller do
 
   let!(:valid_params)                       { attributes_for(:course_video, name: 'ABCDE', name_url: 'adcbw', vimeo_guid: '123abc123') }
 
-  let!(:cme_video_params)                   { attributes_for(:course_video, :vimeo, dacast_id: 1234) }
-  let!(:cme_quiz_params)                    { course_step_1.attributes.merge({name: 'Quiz 01', name_url: 'qz_01'}) }
-  let!(:valid_video_params)                 { course_step_3.attributes.merge({name: 'Video 01', name_url: 'video_01', course_video_attributes: cme_video_params}) }
+  let!(:video_step_params)                   { attributes_for(:course_video, :vimeo, dacast_id: 1234) }
+  let!(:quiz_step_params)                    { course_step_1.attributes.merge({name: 'Quiz 01', name_url: 'qz_01'}) }
+  let!(:valid_video_params)                 { course_step_3.attributes.merge({name: 'Video 01', name_url: 'video_01', course_video_attributes: video_step_params}) }
   let!(:constructed_response_params)        { course_step_4.attributes.merge({name: 'CR 01', name_url: 'cr_01'}) }
   let!(:update_constructed_response_params) { course_step_4.attributes.merge({name: 'CR 01 - Edited', name_url: 'cr_01'}) }
 
@@ -90,7 +90,7 @@ describe Admin::CourseStepsController, type: :controller do
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
-        post :create, params: { course_step: cme_quiz_params }
+        post :create, params: { course_step: quiz_step_params }
         expect_create_success_with_model('course_step', admin_show_course_lesson_url(course_lesson_1.course_id, course_lesson_1.course_section.id, course_lesson_1.id))
       end
 

@@ -89,7 +89,7 @@ module Admin
         if params[:commit] == I18n.t('views.course_steps.form.save_and_add_another')
           redirect_to edit_admin_course_step_url(@course_step.id)
         elsif params[:commit] == I18n.t('views.course_quizzes.form.advanced_setup_link')
-          redirect_to new_quiz_question_url(cme_quiz_id: @course_step.course_quiz.id)
+          redirect_to new_quiz_question_url(quiz_step_id: @course_step.course_quiz.id)
         elsif params[:commit] == I18n.t('views.course_quizzes.form.preview_button')
           redirect_to @course_step.course_quiz.quiz_questions.last
         else

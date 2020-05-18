@@ -7,8 +7,8 @@ RSpec.describe 'rendering locals in a partial' do
   let(:cn_country)    { double(Country, iso_code: 'CN') }
   let(:gb_user)       { double(User, country: gb_country) }
   let(:cn_user)       { double(User, country: cn_country) }
-  let(:vimeo_module)  { build_stubbed(:course_step, :cme_video, :vimeo) }
-  let(:dacast_module) { build_stubbed(:course_step, :cme_video, :dacast) }
+  let(:vimeo_module)  { build_stubbed(:course_step, :video_step, :vimeo) }
+  let(:dacast_module) { build_stubbed(:course_step, :video_step, :dacast) }
 
   context 'Vimeo player partial' do
     it 'shows as default players' do

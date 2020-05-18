@@ -31,7 +31,7 @@ describe Admin::CourseNotesController, type: :controller do
   let!(:course_lesson) { FactoryBot.create(:active_course_lesson,
                                            course_section: course_section,
                                            course: course) }
-  let!(:course_step) { FactoryBot.create(:course_step, :cme_video,
+  let!(:course_step) { FactoryBot.create(:course_step, :video_step,
                                                    course_lesson: course_lesson) }
   let!(:course_note_1) { FactoryBot.create(:course_note, course_step_id: course_step.id) }
   let!(:course_note_2) { FactoryBot.create(:course_note, course_step_id: course_step.id) }

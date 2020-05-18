@@ -63,11 +63,11 @@ class QuizQuestionsController < ApplicationController
   def get_variables
     @mathjax_required = true
     @quiz_question =
-      if params[:id].to_i > 0
+      if params[:id].to_i.positive?
         ## Finds the qq record ##
         QuizQuestion.find(params[:id])
-      elsif params[:cme_quiz_id].to_i > 0
-        QuizQuestion.new(course_quiz_id: params[:cme_quiz_id])
+      elsif params[:quiz_step_id].to_i.positive?
+        QuizQuestion.new(course_quiz_id: params[:quiz_step_id])
       else
         QuizQuestion.new(allowed_params)
       end
