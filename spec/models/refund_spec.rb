@@ -78,7 +78,56 @@ describe Refund, type: :model do
     it { expect(Refund).to respond_to(:all_in_order) }
   end
 
-  describe 'instance methods' do
-    it { should respond_to(:destroyable?) }
+  describe 'Instance Methods' do
+    before :each do
+      allow_any_instance_of(SubscriptionPlanService).to receive(:async_action)
+      allow(Stripe::Event).to receive(:retrieve).and_return({ "payload": { "key": 1 } })
+    end
+    describe '#destroyable?' do
+      it 'returns FALSE' do
+        expect(refund.destroyable?).to eq false
+      end
+    end
+
+    describe '#check_dependencies' do
+      it 'returns FALSE' do
+        expect(refund.send(:check_dependencies)).to eq false
+      end
+
+      it 'returns NIL if the record is NOT destroyable' do
+        allow(refund).to receive(:destroyable?).and_return(true)
+
+        expect(refund.send(:check_dependencies)).to be_nil
+      end
+    end
+
+    describe '#create_on_stripe' do
+      let(:stripe_refund) {
+        JSON.parse(
+          File.read(
+            Rails.root.join('spec/fixtures/stripe/refund.json')
+          )
+        ).transform_keys(&:to_sym)
+      }
+      let!(:refund) { build(:refund, stripe_guid: nil) }
+
+      it 'creates a refund on Stripe' do
+        expect(Stripe::Refund).to receive(:create).and_return(stripe_refund)
+
+        refund.save
+      end
+
+      it 'updates the refund record with Stripe data' do
+        allow(Stripe::Refund).to receive(:create).and_return(stripe_refund)
+
+        expect { refund.save }.to change { refund.stripe_guid }
+      end
+
+      it 'rescues from Stripe::InvalidRequestError' do
+        Stripe::Refund.stub(:create) { raise Stripe::InvalidRequestError }
+
+        expect { refund.save }.to(raise_error { Learnsignal::PaymentError })
+      end
+    end
   end
 end

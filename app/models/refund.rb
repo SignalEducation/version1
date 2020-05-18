@@ -30,7 +30,7 @@ class Refund < ApplicationRecord
   belongs_to :invoice
   belongs_to :subscription
   belongs_to :user
-  belongs_to :manager, class_name: 'User', foreign_key: :manager_id
+  belongs_to :manager, class_name: 'User', foreign_key: :manager_id, inverse_of: :refunds
 
   # validation
   validates :stripe_guid, uniqueness: true
