@@ -45,6 +45,7 @@ class CourseStepLog < ApplicationRecord
   scope :latest_only, -> { where(latest_attempt: true) }
   scope :quizzes, -> { where(is_quiz: true) }
   scope :videos, -> { where(is_video: true) }
+  scope :notes, -> { where(is_note: true) }
   scope :constructed_responses, -> { where(is_constructed_response: true) }
   scope :with_elements_active, -> { includes(:course_step).where('course_steps.active = ?', true).references(:course_steps) }
   scope :this_week, -> { where(created_at: Time.zone.now.beginning_of_week..Time.zone.now.end_of_week) }

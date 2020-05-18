@@ -10,7 +10,7 @@
           Upload CSV File
 
       .modal-body
-        =form_for(:upload, url: preview_admin_exercises_csvs_path, authenticity_token: true, html: { id: 'csv_upload_modal_form', class: 'form-horizontal' },
+        =form_for(:upload, url: preview_exercises_csvs_path, authenticity_token: true, html: { id: 'csv_upload_modal_form', class: 'form-horizontal' },
          role: 'form', multipart: true, data: { type: 'csv' }) do |f|
           .row
             .col-sm-12
@@ -18,7 +18,7 @@
                 %li
                   The file must be in CSV format (.csv). It must have two columns in each row.
                 %li
-                  The first column is for the user's Email. 
+                  The first column is for the user's Email.
                 %li
                   The second column is for First Name.
                 %p
@@ -41,7 +41,6 @@
 :javascript
   $(document).ready(function(){
     $('#exercise_csv_upload').click(function() {
-      console.log("hello")
       $('#csv_upload_modal_form').submit();
     });
   });

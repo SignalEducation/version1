@@ -84,16 +84,14 @@ describe CourseLessonLog do
   end
 
   describe 'instance methods' do
-    it { should respond_to(:cme_user_logs) }
-    it { should respond_to(:completed_cme_user_logs) }
+    it { should respond_to(:latest_course_step_logs) }
+    it { should respond_to(:completed_course_step_logs) }
     it { should respond_to(:destroyable?) }
     it { should respond_to(:elements_total) }
     it { should respond_to(:elements_complete) }
-    it { should respond_to(:latest_cme_user_logs) }
+    it { should respond_to(:latest_course_step_logs) }
     it { should respond_to(:unique_logs) }
     it { should respond_to(:enrollment) }
     it { should respond_to(:recalculate_set_completeness) }
   end
-
-
 end

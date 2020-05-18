@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: courses
@@ -75,6 +77,16 @@ describe Course do
     it { should validate_presence_of(:quiz_pass_rate) }
     it { should validate_presence_of(:survey_url) }
     it { should validate_presence_of(:group_id) }
+
+    context 'emit certificate' do
+      before { allow(subject).to receive(:emit_certificate?).and_return(true) }
+      it { is_expected.to validate_presence_of(:accredible_group_id) }
+    end
+
+    context 'not emit certificate' do
+      before { allow(subject).to receive(:emit_certificate?).and_return(false) }
+      it { is_expected.not_to validate_presence_of(:accredible_group_id) }
+    end
   end
 
   describe 'callbacks' do
@@ -125,6 +137,7 @@ describe Course do
     it { should respond_to(:total_enrollments) }
     it { should respond_to(:home_page) }
     it { should respond_to(:duplicate) }
+    it { should respond_to(:emit_certificate?) }
   end
 
   describe 'Concern' do

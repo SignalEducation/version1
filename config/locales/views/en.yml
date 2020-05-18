@@ -1235,6 +1235,8 @@ en:
         default_number_of_possible_exam_answers: Default No. of Questions
         default_number_of_possible_exam_answers_placeholder: No. of Questions
         group_id: Group
+        accredible_group_id: Group ID (Accredible)
+        accredible_group_id_placeholder: Group ID
         quiz_pass_rate: Quiz Pass Rate
         quiz_pass_rate_placeholder: Custom Pass Rate for Quizzes
         icon_label: Icon Label

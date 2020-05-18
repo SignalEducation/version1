@@ -140,6 +140,12 @@ module Admin
       end
     end
 
+    def check_accredible_group
+      response = Accredible::Groups.new.details(params[:group_id])
+
+      render json: { response: response }, status: response[:status]
+    end
+
     protected
 
     def get_variables
@@ -154,7 +160,7 @@ module Admin
       params.require(:course).permit(
         :name, :name_url, :sorting_order, :active, :description, :release_date,
         :short_description, :exam_body_id, :default_number_of_possible_exam_answers,
-        :background_image, :survey_url, :quiz_pass_rate, :group_id, :preview,
+        :background_image, :survey_url, :quiz_pass_rate, :group_id, :accredible_group_id, :preview,
         :computer_based, :highlight_colour, :category_label, :icon_label,
         :seo_title, :seo_description, :has_correction_packs, :short_description,
         :on_welcome_page, :unit_label, :level_id,

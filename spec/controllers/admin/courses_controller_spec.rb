@@ -42,23 +42,17 @@
 require 'rails_helper'
 
 describe Admin::CoursesController, type: :controller do
-
-  let(:content_management_user_group) { FactoryBot.create(:content_management_user_group) }
-  let(:content_management_user) { FactoryBot.create(:content_management_user, user_group_id: content_management_user_group.id) }
-  let!(:content_management_user_student_access) { FactoryBot.create(:complimentary_student_access, user_id: content_management_user.id) }
-  let!(:group_1) { FactoryBot.create(:group) }
-  let!(:course_1)  { FactoryBot.create(:active_course,
-                                               group: group_1) }
-  let!(:course_2)  { FactoryBot.create(:active_course,
-                                               group: group_1,
-                                               computer_based: true) }
-  let(:exam_body) { create(:exam_body) }
-
-  let!(:course_5) { FactoryBot.create(:inactive_course) }
-  let!(:valid_params) { FactoryBot.attributes_for(:course) }
+  let(:content_management_user_group)           { create(:content_management_user_group) }
+  let(:content_management_user)                 { create(:content_management_user, user_group_id: content_management_user_group.id) }
+  let!(:content_management_user_student_access) { create(:complimentary_student_access, user_id: content_management_user.id) }
+  let!(:group_1)                                { create(:group) }
+  let!(:course_1)                               { create(:active_course, group: group_1) }
+  let!(:course_2)                               { create(:active_course, group: group_1, computer_based: true) }
+  let(:exam_body)                               { create(:exam_body) }
+  let!(:course_5)                               { create(:inactive_course) }
+  let!(:valid_params)                           { attributes_for(:course) }
 
   context 'Logged in as a content_management_user: ' do
-
     before(:each) do
       activate_authlogic
       UserSession.create!(content_management_user)
@@ -168,13 +162,31 @@ describe Admin::CoursesController, type: :controller do
 
         it 'should not duplicate subject course' do
           course_dup = course_1.dup
-          course_dup.update(name:  "#{course_1.name} copy", name_url:  "#{course_1.name}_copy")
+          course_dup.update(name: "#{course_1.name} copy", name_url: "#{course_1.name}_copy")
           post :clone, params: { id: course_1.id }
 
           expect(response.status).to eq(302)
           expect(response).to redirect_to(admin_courses_url)
           expect(flash[:error]).to be_present
           expect(flash[:error]).to eq('Course not successfully duplicaded')
+        end
+      end
+    end
+
+    describe '#check_accredible_group' do
+      context 'check if the course has a accredible group' do
+        it 'should return a valid response' do
+          allow_any_instance_of(Accredible::Groups).to receive(:details).and_return(status: :ok)
+          post :check_accredible_group, params: { group_id: '1234' }
+
+          expect(response.status).to eq(200)
+        end
+
+        it 'should return a not valid response' do
+          allow_any_instance_of(Accredible::Groups).to receive(:details).and_return(status: :error)
+          post :check_accredible_group, params: { group_id: '1234' }
+
+          expect(response.status).to eq(500)
         end
       end
     end
