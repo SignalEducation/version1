@@ -50,10 +50,8 @@ class CourseStep < ApplicationRecord
   accepts_nested_attributes_for :course_quiz
   accepts_nested_attributes_for :course_video
   accepts_nested_attributes_for :constructed_response
-  accepts_nested_attributes_for :video_resource,
-                                reject_if: ->(attributes) { nested_video_resource_is_blank?(attributes) }
-  accepts_nested_attributes_for :course_note,
-                                reject_if: ->(attributes) { nested_resource_is_blank?(attributes) }, allow_destroy: true
+  accepts_nested_attributes_for :video_resource, reject_if: ->(attributes) { nested_video_resource_is_blank?(attributes) }
+  accepts_nested_attributes_for :course_note, reject_if: ->(attributes) { nested_resource_is_blank?(attributes) }, allow_destroy: true
 
   # validation
   validates :course_lesson, presence: true
@@ -226,7 +224,7 @@ class CourseStep < ApplicationRecord
       'Video'
     elsif is_note
       'Notes'
-    elsif constructed_response
+    elsif is_constructed_response
       'Constructed Response'
     else
       'Unknown'
