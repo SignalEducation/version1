@@ -58,7 +58,7 @@ class SubscriptionPlan < ApplicationRecord
   # callbacks
   before_validation :generate_guid, on: :create
   after_create :create_remote_plans
-  after_update :update_remote_plans, if: :name_changed?
+  after_update :update_remote_plans, if: :name_previously_changed?
   after_destroy :delete_remote_plans
 
   # scopes
