@@ -55,10 +55,6 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :user do
-      resources :exercises, only: %i[index new create]
-    end
-
     namespace :admin do
       resources :exercises, only: %i[index show new create edit update] do
         get 'generate_daily_summary', on: :collection
