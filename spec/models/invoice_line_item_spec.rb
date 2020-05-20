@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: invoice_line_items
@@ -18,7 +20,14 @@
 
 require 'rails_helper'
 
-describe InvoiceLineItem do
+describe InvoiceLineItem, type: :model do
+  let(:currency)               { create(:currency) }
+  let(:invoice)                { create(:invoice, currency: currency) }
+  let(:invoice_line_item)      { build(:invoice_line_item) }
+  let(:subscription_plan)      { build(:subscription_plan) }
+  let(:invoice_line_item_data) {
+    JSON.parse(file_fixture('stripe/invoice_line_item.json').read).with_indifferent_access
+  }
 
   # relationships
   it { should belong_to(:invoice) }
@@ -41,8 +50,43 @@ describe InvoiceLineItem do
   # scopes
   it { expect(InvoiceLineItem).to respond_to(:all_in_order) }
 
-  # class methods
+  describe '#methods' do
+    context '.build_from_stripe_data' do
+      it 'save invoice line item' do
+        allow(Currency).to receive(:find_by).and_return(currency)
+        allow(SubscriptionPlan).to receive(:find_by).and_return(subscription_plan)
 
-  # instance methods
-  it { should respond_to(:destroyable?) }
+        expect(InvoiceLineItem.build_from_stripe_data(1, invoice_line_item_data, 1)).to be(true)
+      end
+    end
+
+    context '.build_from_paypal_data' do
+      it 'save invoice line item' do
+        allow_any_instance_of(StripePlanService).to receive(:create_plan).and_return(true)
+        allow_any_instance_of(PaypalPlansService).to receive(:create_plan).and_return(true)
+
+        expect(InvoiceLineItem.build_from_paypal_data(invoice)).to be_kind_of(InvoiceLineItem)
+      end
+    end
+
+    context '#destroyable?' do
+      it 'always return true' do
+        allow_any_instance_of(StripePlanService).to receive(:create_plan).and_return(true)
+        allow_any_instance_of(PaypalPlansService).to receive(:create_plan).and_return(true)
+
+        expect(invoice_line_item).to be_destroyable
+      end
+    end
+
+    context '#check_dependencies' do
+      it 'stubb destroyable to tru to cover method' do
+        allow_any_instance_of(InvoiceLineItem).to receive(:destroyable?).and_return(false)
+        allow_any_instance_of(StripePlanService).to receive(:create_plan).and_return(true)
+        allow_any_instance_of(PaypalPlansService).to receive(:create_plan).and_return(true)
+        invoice_line_item.destroy
+
+        expect(invoice_line_item.errors).not_to be_empty
+      end
+    end
+  end
 end

@@ -1,3 +1,6 @@
+
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: invoice_line_items
@@ -43,21 +46,22 @@ class InvoiceLineItem < ApplicationRecord
     li = InvoiceLineItem.new(
       invoice_id: invoice_id,
       amount: stripe_hash[:amount] / 100.0,
-      currency_id: Currency.find_by_iso_code(stripe_hash[:currency].upcase).id,
+      currency_id: Currency.find_by(iso_code: stripe_hash[:currency].upcase).id,
       prorated: stripe_hash[:proration],
-      period_start_at: Time.at(stripe_hash[:period][:start]),
-      period_end_at: Time.at(stripe_hash[:period][:end]),
+      period_start_at: Time.zone.at(stripe_hash[:period][:start]),
+      period_end_at: Time.zone.at(stripe_hash[:period][:end]),
       subscription_id: subscription_id,
-      subscription_plan_id: SubscriptionPlan.find_by_stripe_guid(stripe_hash[:plan][:id]).id,
+      subscription_plan_id: SubscriptionPlan.find_by(stripe_guid: stripe_hash[:plan][:id]).id,
       original_stripe_data: stripe_hash.to_hash
     )
-    unless li.save
-      Rails.logger.error "ERROR: InvoiceLineItems#build_from_stripe_data failed to create. Errors: #{li.errors.inspect}. Original Data: #{stripe_hash}."
-    end
+    return if li.save
+
+    Rails.logger.error "ERROR: InvoiceLineItems#build_from_stripe_data failed to create. Errors: #{li.errors.inspect}. Original Data: #{stripe_hash}."
   end
 
   def self.build_from_paypal_data(invoice)
     return false if invoice.invoice_line_items.any?
+
     invoice.invoice_line_items.create!(
       amount: invoice.total,
       currency_id: invoice.currency_id,
@@ -68,17 +72,16 @@ class InvoiceLineItem < ApplicationRecord
 
   # instance methods
   def destroyable?
-    #!Rails.env.production?
     true
   end
 
   protected
 
   def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
+    return if destroyable?
+
+    errors.add(:base, I18n.t('models.general.dependencies_exist'))
+    false
   end
 
   def subscription_invoice?
