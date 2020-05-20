@@ -697,6 +697,7 @@ en:
         active: Active
         has_sittings: Has Sittings?
         has_products: Has Products?
+        emit_certificate: Emit Certificate?
         preferred_payment_frequency: Preferred Payment Interval (optional)
         subscription_page_subheading_text: Subscription Payment Subheading
         subscription_page_subheading_text_placeholder: Subscription Payment Subheading
