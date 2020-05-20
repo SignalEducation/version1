@@ -75,17 +75,4 @@
     .row.pt-4
       .col-sm-12
         =f.submit t('views.general.save'), class: 'btn btn-primary'
-        -# PLEASE CHECK IT BEFORE MERGE
-        -# PLEASE CHECK IT BEFORE MERGE
-        -# PLEASE CHECK IT BEFORE MERGE
-        -# PLEASE CHECK IT BEFORE MERGE
-        -# PLEASE CHECK IT BEFORE MERGE
-        -if controller_name == 'course_resources'
-          =link_to t('views.general.cancel'), admin_course_resources_path, class: 'btn btn-secondary'
-        -else
-          =link_to t('views.general.cancel'), admin_course_resource_url(@course_resource.course), class: 'btn btn-secondary'
-        -# PLEASE CHECK IT BEFORE MERGE
-        -# PLEASE CHECK IT BEFORE MERGE
-        -# PLEASE CHECK IT BEFORE MERGE
-        -# PLEASE CHECK IT BEFORE MERGE
-        -# PLEASE CHECK IT BEFORE MERGE
+        =link_to t('views.general.cancel'), admin_course_resources_url(@course_resource.course), class: 'btn btn-secondary'
