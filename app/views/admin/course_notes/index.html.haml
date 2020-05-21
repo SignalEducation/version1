@@ -1,0 +1,34 @@
+.container
+  %header.management-console-section
+    %h1
+      =t('views.course_notes.index.index_h1')
+
+  %section.pb-7
+    .row
+      .col-md-12
+        =link_to 'Return', edit_admin_course_step_url(@course_step.id), class: 'btn btn-primary'
+        =link_to t('views.course_notes.new.new_button'), new_course_step_course_note_url, class: 'btn btn-secondary'
+
+    .row.pt-4
+      .col-md-12
+        .box-item
+          .table-responsive
+            %table.table.sorted_table{data: {destination: ''}}
+              %thead
+                %tr
+                  %th=t('views.course_notes.form.name')
+                  %th=t('views.course_notes.form.type')
+                  %th
+                  %th
+              %tbody
+                -@course_notes.each do |resource|
+                  %tr{id: resource.id}
+                    %td=resource.name
+                    %td=resource.type
+                    %td
+                      =link_to t('views.general.show'), resource.upload.url, target: '_blank', class: 'btn btn-primary btn-xs'
+                      =link_to t('views.general.edit'), edit_course_step_course_note_url(resource.course_step_id, resource.id), class: 'btn btn-secondary btn-xs'
+                      -if resource.destroyable?
+                        =link_to t('views.general.delete'), course_step_course_note_path(resource.course_step_id, resource.id), method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'
+                    %td
+                      %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}

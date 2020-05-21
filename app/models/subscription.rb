@@ -522,7 +522,7 @@ class Subscription < ApplicationRecord
   end
 
   def plan_change_currencies
-    return if changed_from.subscription_plan.currency_id == subscription_plan.currency_id
+    return if changed_from.subscription_plan&.currency_id == subscription_plan.currency_id
 
     errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.currencies_mismatch'))
   end

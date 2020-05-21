@@ -76,7 +76,7 @@
               %article.py-4
                 %header.pb-sm-4.pb-md-5
                   .row.row-lg
-                    -level.subject_courses.all_active.all_in_order.each do |course|
+                    -level.courses.all_active.all_in_order.each do |course|
                       .col-12.col-md-6
                         =link_to course_special_link(course.first_active_cme), class: 'card card-horizontal flex-row card-mint onboarding-select course-link', data: { exam_body: @group.name, type: 'Course Select', name: course.name } do
                           .card-header.d-flex.justify-content-center.align-items-center
@@ -102,7 +102,7 @@
           %article.py-4
             %header.pb-sm-4.pb-md-5
               .row.row-lg
-                -@group.subject_courses.all_active.all_in_order.each do |course|
+                -@group.courses.all_active.all_in_order.each do |course|
                   .col-12.col-md-6
                     =link_to course_special_link(course.first_active_cme), class: 'card card-horizontal flex-row card-mint onboarding-select course-link', data: { exam_body: @group.name, type: 'Course Select', name: course.name } do
                       .card-header.d-flex.justify-content-center.align-items-center

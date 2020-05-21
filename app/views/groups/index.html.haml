@@ -28,7 +28,7 @@
                   %tr{id: group.id}
                     %td=group.name
                     %td=tick_or_cross(group.active)
-                    %td=group.subject_courses.count
+                    %td=group.courses.count
                     %td=link_to t('views.general.edit'), edit_group_url(group), class: 'btn btn-primary btn-xs'
                     %td=link_to t('views.general.show'), group, class: 'btn btn-secondary btn-xs'
                     %td
@@ -37,4 +37,3 @@
 
                     %td
                       %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
-

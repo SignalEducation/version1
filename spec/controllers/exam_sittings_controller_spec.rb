@@ -4,7 +4,7 @@
 #
 #  id                :integer          not null, primary key
 #  name              :string
-#  subject_course_id :integer
+#  course_id :integer
 #  date              :date
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
@@ -23,12 +23,12 @@ describe ExamSittingsController, type: :controller do
 
   let!(:exam_body_1) { FactoryBot.create(:exam_body) }
   let!(:group_1) { FactoryBot.create(:group) }
-  let!(:subject_course_1)  { FactoryBot.create(:active_subject_course,
+  let!(:course_1)  { FactoryBot.create(:active_course,
                                                group_id: group_1.id,
                                                exam_body_id: exam_body_1.id) }
-  let!(:exam_sitting_1) { FactoryBot.create(:exam_sitting, exam_body_id: exam_body_1.id, subject_course_id: subject_course_1.id) }
-  let!(:exam_sitting_2) { FactoryBot.create(:exam_sitting, exam_body_id: exam_body_1.id, subject_course_id: subject_course_1.id) }
-  let!(:valid_params) { FactoryBot.attributes_for(:exam_sitting, exam_body_id: exam_body_1.id, subject_course_id: subject_course_1.id) }
+  let!(:exam_sitting_1) { FactoryBot.create(:exam_sitting, exam_body_id: exam_body_1.id, course_id: course_1.id) }
+  let!(:exam_sitting_2) { FactoryBot.create(:exam_sitting, exam_body_id: exam_body_1.id, course_id: course_1.id) }
+  let!(:valid_params) { FactoryBot.attributes_for(:exam_sitting, exam_body_id: exam_body_1.id, course_id: course_1.id) }
 
   context 'Logged in as a system_requirements_user: ' do
 

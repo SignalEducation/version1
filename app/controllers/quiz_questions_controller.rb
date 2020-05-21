@@ -11,7 +11,7 @@ class QuizQuestionsController < ApplicationController
   def new
     @quiz_question.quiz_contents.build
     @quiz_question.quiz_solutions.build
-    @quiz_question.course_module_element_quiz.course_module_element.course_module.subject_course.default_number_of_possible_exam_answers.times do
+    @quiz_question.course_quiz.course_step.course_lesson.course.default_number_of_possible_exam_answers.times do
       @quiz_question.quiz_answers.build
       @quiz_question.quiz_answers.last.quiz_contents.build
     end
@@ -24,7 +24,7 @@ class QuizQuestionsController < ApplicationController
   def create
     if @quiz_question.save
       flash[:success] = I18n.t('controllers.quiz_questions.create.flash.success')
-      redirect_to edit_course_module_element_url(@quiz_question.course_module_element_id)
+      redirect_to edit_admin_course_step_url(@quiz_question.course_step_id)
     else
       render action: :new
     end
@@ -33,7 +33,7 @@ class QuizQuestionsController < ApplicationController
   def update
     if @quiz_question.update_attributes(allowed_params)
       flash[:success] = I18n.t('controllers.quiz_questions.update.flash.success')
-      redirect_to edit_course_module_element_url(@quiz_question.course_module_element_id)
+      redirect_to edit_admin_course_step_url(@quiz_question.course_step_id)
     else
       render action: :edit
     end
@@ -55,7 +55,7 @@ class QuizQuestionsController < ApplicationController
       flash[:error] = I18n.t('controllers.quiz_questions.destroy.flash.error')
     end
 
-    redirect_to edit_course_module_element_url(@quiz_question.course_module_element_id)
+    redirect_to edit_admin_course_step_url(@quiz_question.course_step_id)
   end
 
   protected
@@ -63,11 +63,11 @@ class QuizQuestionsController < ApplicationController
   def get_variables
     @mathjax_required = true
     @quiz_question =
-      if params[:id].to_i > 0
+      if params[:id].to_i.positive?
         ## Finds the qq record ##
         QuizQuestion.find(params[:id])
-      elsif params[:cme_quiz_id].to_i > 0
-        QuizQuestion.new(course_module_element_quiz_id: params[:cme_quiz_id])
+      elsif params[:quiz_step_id].to_i.positive?
+        QuizQuestion.new(course_quiz_id: params[:quiz_step_id])
       else
         QuizQuestion.new(allowed_params)
       end
@@ -78,7 +78,7 @@ class QuizQuestionsController < ApplicationController
 
   def allowed_params
     params.require(:quiz_question).permit(
-      :course_module_element_quiz_id,
+      :course_quiz_id,
       :difficulty_level,
       :sorting_order,
       quiz_solutions_attributes: [

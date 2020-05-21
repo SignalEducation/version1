@@ -1,0 +1,19 @@
+=f.fields_for :constructed_response do |constructed_response|
+  -#=constructed_response.label :time_allowed, t('views.constructed_responses.form.time_allowed'), class: 'control-label'
+  -#.input-group.input-group-lg.full-width
+    =constructed_response.text_field :time_allowed, placeholder: t('views.constructed_responses.form.time_allowed_placeholder'), class: 'form-control', style: 'border-radius: 6px;', autofocus: true
+
+
+  .form-group
+    =f.label :estimated_time_in_seconds, t('views.course_steps.form.estimated_time_in_seconds')
+    .input-group.input-group-lg
+      =f.text_field :estimated_time_in_seconds, placeholder: t('views.course_steps.form.estimated_time_in_seconds_placeholder'), class: 'form-control'
+    %p{style: 'margin-bottom: 1px;'}
+      =t('views.course_steps.form.estimated_time_in_seconds_tag')
+    %p
+      ='(This counts towards the students trial limit)'
+
+
+  -unless constructed_response.object.new_record?
+    .pt-2.pb-2
+      =link_to 'Additional Resources', admin_course_step_course_notes_url(f.object.id), class: 'btn btn-secondary'

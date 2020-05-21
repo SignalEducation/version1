@@ -3,11 +3,11 @@
     .container-fluid
       .row.l-margin-bottom
         .col-sm-4
-          %h1=@quiz_question.course_module_element.try(:name).try(:html_safe)
+          %h1=@quiz_question.course_step.try(:name).try(:html_safe)
         .col-sm-4
           %h2.h1.preview-mode=t('views.quiz_questions.show.preview_mode')
         .col-sm-4
-          =link_to edit_course_module_element_url(@quiz_question.course_module_element_quiz.course_module_element_id) do
+          =link_to edit_admin_course_step_url(@quiz_question.course_quiz.course_step_id) do
             .btn.btn-red.btn-secondary.full-width
               &#60;
               =t('views.general.return')
@@ -30,4 +30,3 @@
             =render partial: 'quiz_contents/index', locals: {contents: @quiz_question.quiz_solutions}
           -else
             %p=render partial: 'quiz_contents/index', locals: {contents: @quiz_question.quiz_solutions}
-

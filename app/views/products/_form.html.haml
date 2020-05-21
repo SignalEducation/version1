@@ -69,8 +69,14 @@
 
 :javascript
   $(function(){
+    switch_product_list($('#product_product_type').val());
+
     $('#product_product_type').change(function() {
-      switch( $(this).val() ) {
+      switch_product_list($(this).val());
+    });
+
+    function switch_product_list(product_type){
+      switch( product_type ) {
         case 'cbe':
           $('.mock_exam_form_group').hide();
           $('.cbe_form_group').show();
@@ -92,5 +98,5 @@
           $('#product_correction_pack_count').val('');
           $('#product_correction_pack_count').prop('disabled', false);
       }
-    });
+    }
   });

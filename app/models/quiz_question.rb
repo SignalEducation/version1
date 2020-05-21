@@ -3,13 +3,13 @@
 # Table name: quiz_questions
 #
 #  id                            :integer          not null, primary key
-#  course_module_element_quiz_id :integer
-#  course_module_element_id      :integer
+#  course_quiz_id :integer
+#  course_step_id      :integer
 #  difficulty_level              :string(255)
 #  created_at                    :datetime
 #  updated_at                    :datetime
 #  destroyed_at                  :datetime
-#  subject_course_id             :integer
+#  course_id             :integer
 #  sorting_order                 :integer
 #  custom_styles                 :boolean          default("false")
 #
@@ -22,9 +22,9 @@ class QuizQuestion < ApplicationRecord
   # Constants
 
   # relationships
-  belongs_to :subject_course, optional: true
-  belongs_to :course_module_element, optional: true
-  belongs_to :course_module_element_quiz
+  belongs_to :course, optional: true
+  belongs_to :course_step, optional: true
+  belongs_to :course_quiz
   has_many :quiz_attempts
   has_many :quiz_answers, dependent: :destroy
   has_many :quiz_contents, -> { order(:sorting_order) }, dependent: :destroy
@@ -36,11 +36,11 @@ class QuizQuestion < ApplicationRecord
   accepts_nested_attributes_for :quiz_solutions, allow_destroy: true
 
   # validation
-  validates :course_module_element_id, presence: true, on: :update
+  validates :course_step_id, presence: true, on: :update
   validate :at_least_one_answer_is_correct
 
   # callbacks
-  before_validation :set_course_module_element
+  before_validation :set_course_step
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order) }
@@ -71,8 +71,8 @@ class QuizQuestion < ApplicationRecord
     end
   end
 
-  def set_course_module_element
-    self.course_module_element_id = self.course_module_element_quiz.try(:course_module_element_id)
+  def set_course_step
+    self.course_step_id = self.course_quiz.try(:course_step_id)
     true
   end
 

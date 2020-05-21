@@ -9,7 +9,7 @@
 #  public_url                    :string
 #  created_at                    :datetime         not null
 #  updated_at                    :datetime         not null
-#  subject_course_id             :integer
+#  course_id             :integer
 #  custom_file_name              :string
 #  group_id                      :integer
 #  name                          :string
@@ -40,7 +40,7 @@ FactoryBot.define do
     sequence(:seo_title)           { |n| "title-#{n}" }
     seo_description                { 'Seo Description' }
     group_id                       { 1 }
-    subject_course_id              { nil }
+    course_id              { nil }
     sequence(:public_url)          { |n| "abc#{n}" }
 
     factory :home do

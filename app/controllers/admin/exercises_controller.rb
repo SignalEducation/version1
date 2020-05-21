@@ -10,10 +10,9 @@ module Admin
 
     def index
       @filters = { state: 'submitted', product: '', corrector: '', search: '' }
+      @exercises = @user ? @user.exercises : Exercise.where(nil)
 
       if request.post?
-        @exercises = Exercise.where(nil)
-
         filtering_params(params).each do |key, value|
           @exercises = @exercises.public_send(key, value) if value.present?
           @filters[key] = value
@@ -25,12 +24,10 @@ module Admin
         else
           @exercises = @exercises.order(created_at: :asc)
         end
-        @exercises = @exercises.paginate(per_page: 50, page: params[:page])
       else
-        @exercises = Exercise.with_state(:submitted).
-                       order(created_at: :asc).
-                       paginate(per_page: 50, page: params[:page])
+        @exercises = @exercises.with_state(:submitted).order(created_at: :asc)
       end
+      @exercises = @exercises.paginate(per_page: 50, page: params[:page])
     end
 
     def show; end

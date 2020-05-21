@@ -4,8 +4,8 @@ class ContentActivationWorker
   sidekiq_options queue: 'medium'
 
   # type could be any of this classes
-  # CourseModuleElement
-  # SubjectCourseResource
+  # CourseStep
+  # CourseResource
   # ContentPage
   # HomePage
   def perform(type, id)

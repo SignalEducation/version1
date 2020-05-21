@@ -4,7 +4,7 @@
 #
 #  id                        :integer          not null, primary key
 #  product_id                :integer
-#  subject_course_id         :integer
+#  course_id         :integer
 #  user_id                   :integer
 #  stripe_guid               :string
 #  stripe_customer_id        :string
@@ -28,7 +28,7 @@
 FactoryBot.define do
   factory :order do
     product
-    subject_course
+    course
     user
     live_mode { false }
     terms_and_conditions { true }

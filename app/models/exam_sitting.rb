@@ -4,7 +4,7 @@
 #
 #  id                :integer          not null, primary key
 #  name              :string
-#  subject_course_id :integer
+#  course_id :integer
 #  date              :date
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
@@ -20,13 +20,13 @@ class ExamSitting < ApplicationRecord
 
   # relationships
   belongs_to :exam_body
-  belongs_to :subject_course
+  belongs_to :course
   has_many :enrollments
 
   # validation
   validates :exam_body_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :subject_course_id, presence: true,
+  validates :course_id, presence: true,
             numericality: {only_integer: true, greater_than: 0},
             unless: :computer_based?
   validates :name, presence: true
@@ -54,7 +54,7 @@ class ExamSitting < ApplicationRecord
   end
 
   def formatted_date
-    self.computer_based ? 'Computer Based Exam' : date.strftime("%B %Y")
+    computer_based ? 'Computer Based Exam' : date.strftime("%B %Y")
   end
 
   protected
@@ -68,7 +68,9 @@ class ExamSitting < ApplicationRecord
   end
 
   def create_expiration_worker
-    ExamSittingExpirationWorker.perform_at(self.date.to_datetime + 23.hours, self.id) unless Rails.env.test?
+    return if Rails.env.test?
+
+    ExamSittingExpirationWorker.perform_at(date.to_datetime + 23.hours, id)
   end
 
 end

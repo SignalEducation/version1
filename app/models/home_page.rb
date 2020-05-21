@@ -9,7 +9,7 @@
 #  public_url                    :string
 #  created_at                    :datetime         not null
 #  updated_at                    :datetime         not null
-#  subject_course_id             :integer
+#  course_id             :integer
 #  custom_file_name              :string
 #  group_id                      :integer
 #  name                          :string
@@ -47,7 +47,7 @@ class HomePage < ApplicationRecord
   # relationships
   belongs_to :subscription_plan_category, optional: true
   belongs_to :group, optional: true
-  belongs_to :subject_course, optional: true
+  belongs_to :course, optional: true
   has_many :blog_posts
   has_many :external_banners
   has_many :student_testimonials
@@ -71,7 +71,7 @@ class HomePage < ApplicationRecord
 
   # scopes
   scope :all_in_order, -> { order(:seo_title) }
-  scope :for_courses, -> { where.not(subject_course_id: nil) }
+  scope :for_courses, -> { where.not(course_id: nil) }
   scope :for_groups, -> { where.not(group_id: nil) }
   scope :for_footer, -> { where(footer_link: true) }
 
@@ -83,11 +83,11 @@ class HomePage < ApplicationRecord
   end
 
   def default_home_page
-    HomePage.where(subject_course: nil).where(home: true).where(subscription_plan_category_id: nil).first
+    HomePage.where(course: nil).where(home: true).where(subscription_plan_category_id: nil).first
   end
 
   def course
-    self.subject_course
+    self.course
   end
 
   protected
@@ -120,7 +120,7 @@ class HomePage < ApplicationRecord
   end
 
   def group_xor_course
-    unless group_id.blank? ^ subject_course_id.blank?
+    unless group_id.blank? ^ course_id.blank?
       errors.add(:base, 'Select a Group or a Course, not both')
     end
   end

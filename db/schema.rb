@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_23_161559) do
+ActiveRecord::Schema.define(version: 2020_05_15_100346) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -207,11 +207,11 @@ ActiveRecord::Schema.define(version: 2020_03_23_161559) do
     t.text "content"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "subject_course_id"
+    t.bigint "course_id"
     t.text "agreement_content"
     t.boolean "active", default: true, null: false
     t.float "score"
-    t.index ["subject_course_id"], name: "index_cbes_on_subject_course_id"
+    t.index ["course_id"], name: "index_cbes_on_course_id"
   end
 
   create_table "charges", id: :serial, force: :cascade do |t|
@@ -253,8 +253,8 @@ ActiveRecord::Schema.define(version: 2020_03_23_161559) do
   create_table "constructed_response_attempts", id: :serial, force: :cascade do |t|
     t.integer "constructed_response_id"
     t.integer "scenario_id"
-    t.integer "course_module_element_id"
-    t.integer "course_module_element_user_log_id"
+    t.integer "course_step_id"
+    t.integer "course_step_log_id"
     t.integer "user_id"
     t.text "original_scenario_text_content"
     t.text "user_edited_scenario_text_content"
@@ -266,20 +266,20 @@ ActiveRecord::Schema.define(version: 2020_03_23_161559) do
     t.string "guid"
     t.text "scratch_pad_text"
     t.index ["constructed_response_id"], name: "index_constructed_response_attempts_on_constructed_response_id"
-    t.index ["course_module_element_id"], name: "index_constructed_response_attempts_on_course_module_element_id"
-    t.index ["course_module_element_user_log_id"], name: "index_attempts_on_course_module_element_user_log_id"
+    t.index ["course_step_id"], name: "index_constructed_response_attempts_on_course_step_id"
+    t.index ["course_step_log_id"], name: "index_attempts_on_course_step_log_id"
     t.index ["flagged_for_review"], name: "index_constructed_response_attempts_on_flagged_for_review"
     t.index ["scenario_id"], name: "index_constructed_response_attempts_on_scenario_id"
     t.index ["user_id"], name: "index_constructed_response_attempts_on_user_id"
   end
 
   create_table "constructed_responses", id: :serial, force: :cascade do |t|
-    t.integer "course_module_element_id"
+    t.integer "course_step_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "time_allowed"
     t.datetime "destroyed_at"
-    t.index ["course_module_element_id"], name: "index_constructed_responses_on_course_module_element_id"
+    t.index ["course_step_id"], name: "index_constructed_responses_on_course_step_id"
   end
 
   create_table "content_page_sections", id: :serial, force: :cascade do |t|
@@ -288,10 +288,10 @@ ActiveRecord::Schema.define(version: 2020_03_23_161559) do
     t.string "panel_colour"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "subject_course_id"
+    t.integer "course_id"
     t.integer "sorting_order"
     t.index ["content_page_id"], name: "index_content_page_sections_on_content_page_id"
-    t.index ["subject_course_id"], name: "index_content_page_sections_on_subject_course_id"
+    t.index ["course_id"], name: "index_content_page_sections_on_course_id"
   end
 
   create_table "content_pages", id: :serial, force: :cascade do |t|
@@ -352,18 +352,88 @@ ActiveRecord::Schema.define(version: 2020_03_23_161559) do
     t.index ["name"], name: "index_coupons_on_name"
   end
 
-  create_table "course_module_element_quizzes", id: :serial, force: :cascade do |t|
-    t.integer "course_module_element_id"
-    t.integer "number_of_questions"
-    t.string "question_selection_strategy", limit: 255
+  create_table "course_lesson_logs", id: :serial, force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "latest_course_step_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.datetime "destroyed_at"
-    t.index ["course_module_element_id"], name: "index_course_module_element_quizzes_on_course_module_element_id"
+    t.string "session_guid", limit: 255
+    t.integer "course_lesson_id"
+    t.float "percentage_complete", default: 0.0
+    t.integer "count_of_cmes_completed", default: 0
+    t.integer "course_id"
+    t.integer "count_of_questions_taken"
+    t.integer "count_of_questions_correct"
+    t.integer "count_of_quizzes_taken"
+    t.integer "count_of_videos_taken"
+    t.integer "course_log_id"
+    t.integer "count_of_constructed_responses_taken"
+    t.integer "course_section_id"
+    t.integer "course_section_log_id"
+    t.integer "count_of_notes_taken"
+    t.index ["course_id"], name: "index_course_lesson_logs_on_course_id"
+    t.index ["course_lesson_id"], name: "index_course_lesson_logs_on_course_lesson_id"
+    t.index ["course_log_id"], name: "index_course_lesson_logs_on_course_log_id"
+    t.index ["course_section_id"], name: "index_course_lesson_logs_on_course_section_id"
+    t.index ["course_section_log_id"], name: "index_course_lesson_logs_on_course_section_log_id"
+    t.index ["latest_course_step_id"], name: "index_course_lesson_logs_on_latest_course_step_id"
+    t.index ["user_id"], name: "index_course_lesson_logs_on_user_id"
   end
 
-  create_table "course_module_element_resources", id: :serial, force: :cascade do |t|
-    t.integer "course_module_element_id"
+  create_table "course_lessons", id: :serial, force: :cascade do |t|
+    t.string "name", limit: 255
+    t.string "name_url", limit: 255
+    t.text "description"
+    t.integer "sorting_order"
+    t.integer "estimated_time_in_seconds"
+    t.boolean "active", default: false, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer "cme_count", default: 0
+    t.string "seo_description", limit: 255
+    t.boolean "seo_no_index", default: false
+    t.datetime "destroyed_at"
+    t.integer "number_of_questions", default: 0
+    t.integer "course_id"
+    t.float "video_duration", default: 0.0
+    t.integer "video_count", default: 0
+    t.integer "quiz_count", default: 0
+    t.string "highlight_colour"
+    t.boolean "tuition", default: false
+    t.boolean "test", default: false
+    t.boolean "revision", default: false
+    t.integer "course_section_id"
+    t.integer "constructed_response_count", default: 0
+    t.string "temporary_label"
+    t.index ["course_id"], name: "index_course_lessons_on_course_id"
+    t.index ["course_section_id"], name: "index_course_lessons_on_course_section_id"
+  end
+
+  create_table "course_logs", id: :serial, force: :cascade do |t|
+    t.integer "user_id"
+    t.string "session_guid"
+    t.integer "course_id"
+    t.integer "percentage_complete", default: 0
+    t.integer "count_of_cmes_completed", default: 0
+    t.integer "latest_course_step_id"
+    t.boolean "completed", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "count_of_questions_correct"
+    t.integer "count_of_questions_taken"
+    t.integer "count_of_videos_taken"
+    t.integer "count_of_quizzes_taken"
+    t.datetime "completed_at"
+    t.integer "count_of_constructed_responses_taken"
+    t.integer "count_of_notes_completed"
+    t.index ["course_id"], name: "index_course_logs_on_course_id"
+    t.index ["latest_course_step_id"], name: "index_scu_logs_on_latest_course_step_id"
+    t.index ["session_guid"], name: "index_course_logs_on_session_guid"
+    t.index ["user_id"], name: "index_course_logs_on_user_id"
+  end
+
+  create_table "course_notes", id: :serial, force: :cascade do |t|
+    t.integer "course_step_id"
     t.string "name", limit: 255
     t.string "web_url", limit: 255
     t.datetime "created_at"
@@ -373,11 +443,80 @@ ActiveRecord::Schema.define(version: 2020_03_23_161559) do
     t.integer "upload_file_size"
     t.datetime "upload_updated_at"
     t.datetime "destroyed_at"
-    t.index ["course_module_element_id"], name: "index_cme_resources_on_course_module_element_id"
+    t.boolean "download_available", default: false
+    t.index ["course_step_id"], name: "index_course_notes_on_course_step_id"
   end
 
-  create_table "course_module_element_user_logs", id: :serial, force: :cascade do |t|
-    t.integer "course_module_element_id"
+  create_table "course_quizzes", id: :serial, force: :cascade do |t|
+    t.integer "course_step_id"
+    t.integer "number_of_questions"
+    t.string "question_selection_strategy", limit: 255
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.datetime "destroyed_at"
+    t.index ["course_step_id"], name: "index_course_quizzes_on_course_step_id"
+  end
+
+  create_table "course_resources", id: :serial, force: :cascade do |t|
+    t.string "name"
+    t.integer "course_id"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "file_upload_file_name"
+    t.string "file_upload_content_type"
+    t.integer "file_upload_file_size"
+    t.datetime "file_upload_updated_at"
+    t.string "external_url"
+    t.boolean "active", default: false
+    t.integer "sorting_order"
+    t.boolean "available_on_trial", default: false
+    t.boolean "download_available", default: false
+    t.index ["course_id"], name: "index_course_resources_on_course_id"
+    t.index ["name"], name: "index_course_resources_on_name"
+  end
+
+  create_table "course_section_logs", id: :serial, force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "course_section_id"
+    t.integer "course_log_id"
+    t.integer "latest_course_step_id"
+    t.float "percentage_complete"
+    t.integer "count_of_cmes_completed"
+    t.integer "count_of_quizzes_taken"
+    t.integer "count_of_videos_taken"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "course_id"
+    t.integer "count_of_constructed_responses_taken"
+    t.integer "count_of_notes_taken"
+    t.index ["course_id"], name: "index_course_section_logs_on_course_id"
+    t.index ["course_log_id"], name: "index_course_section_logs_on_course_log_id"
+    t.index ["course_section_id"], name: "index_course_section_logs_on_course_section_id"
+    t.index ["user_id"], name: "index_course_section_logs_on_user_id"
+  end
+
+  create_table "course_sections", id: :serial, force: :cascade do |t|
+    t.integer "course_id"
+    t.string "name"
+    t.string "name_url"
+    t.integer "sorting_order"
+    t.boolean "active", default: false
+    t.boolean "counts_towards_completion", default: false
+    t.boolean "assumed_knowledge", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "cme_count", default: 0
+    t.integer "video_count", default: 0
+    t.integer "quiz_count", default: 0
+    t.datetime "destroyed_at"
+    t.integer "constructed_response_count", default: 0
+    t.index ["course_id"], name: "index_course_sections_on_course_id"
+    t.index ["name"], name: "index_course_sections_on_name"
+  end
+
+  create_table "course_step_logs", id: :serial, force: :cascade do |t|
+    t.integer "course_step_id"
     t.integer "user_id"
     t.string "session_guid", limit: 255
     t.boolean "element_completed", default: false, null: false
@@ -386,49 +525,38 @@ ActiveRecord::Schema.define(version: 2020_03_23_161559) do
     t.integer "quiz_score_potential"
     t.boolean "is_video", default: false, null: false
     t.boolean "is_quiz", default: false, null: false
-    t.integer "course_module_id"
+    t.integer "course_lesson_id"
     t.boolean "latest_attempt", default: true, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer "seconds_watched", default: 0
     t.integer "count_of_questions_taken"
     t.integer "count_of_questions_correct"
-    t.integer "subject_course_id"
-    t.integer "student_exam_track_id"
-    t.integer "subject_course_user_log_id"
+    t.integer "course_id"
+    t.integer "course_lesson_log_id"
+    t.integer "course_log_id"
     t.boolean "is_constructed_response", default: false
     t.boolean "preview_mode", default: false
     t.integer "course_section_id"
-    t.integer "course_section_user_log_id"
+    t.integer "course_section_log_id"
     t.integer "quiz_result"
-    t.index ["course_module_element_id"], name: "index_cme_logs_on_course_module_element_id"
-    t.index ["course_module_id"], name: "index_cme_user_logs_on_course_module_id"
-    t.index ["course_section_id"], name: "index_cme_user_logs_on_course_section_id"
-    t.index ["course_section_user_log_id"], name: "index_cme_user_logs_on_course_section_user_log_id"
-    t.index ["student_exam_track_id"], name: "index_cme_user_logs_on_student_exam_track_id"
-    t.index ["subject_course_id"], name: "index_cme_user_logs_on_subject_course_id"
-    t.index ["subject_course_user_log_id"], name: "index_cme_user_logs_on_subject_course_user_log_id"
+    t.boolean "is_note", default: false
+    t.index ["course_id"], name: "index_course_step_logs_on_course_id"
+    t.index ["course_lesson_id"], name: "index_course_step_logs_on_course_lesson_id"
+    t.index ["course_lesson_log_id"], name: "index_course_step_logs_on_course_lesson_log_id"
+    t.index ["course_log_id"], name: "index_course_step_logs_on_course_log_id"
+    t.index ["course_section_id"], name: "index_course_step_logs_on_course_section_id"
+    t.index ["course_section_log_id"], name: "index_course_step_logs_on_course_section_log_id"
+    t.index ["course_step_id"], name: "index_course_step_logs_on_course_step_id"
     t.index ["user_id"], name: "index_cme_user_logs_on_user_id"
   end
 
-  create_table "course_module_element_videos", id: :serial, force: :cascade do |t|
-    t.integer "course_module_element_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.datetime "destroyed_at"
-    t.string "video_id"
-    t.float "duration"
-    t.string "vimeo_guid"
-    t.string "dacast_id"
-    t.index ["course_module_element_id"], name: "index_cme_videos_on_course_module_element_id"
-  end
-
-  create_table "course_module_elements", id: :serial, force: :cascade do |t|
+  create_table "course_steps", id: :serial, force: :cascade do |t|
     t.string "name", limit: 255
     t.string "name_url", limit: 255
     t.text "description"
     t.integer "estimated_time_in_seconds"
-    t.integer "course_module_id"
+    t.integer "course_lesson_id"
     t.integer "sorting_order"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -443,87 +571,76 @@ ActiveRecord::Schema.define(version: 2020_03_23_161559) do
     t.string "temporary_label"
     t.boolean "is_constructed_response", default: false, null: false
     t.boolean "available_on_trial", default: false
-    t.integer "related_course_module_element_id"
-    t.index ["course_module_id"], name: "index_course_module_elements_on_course_module_id"
-    t.index ["related_course_module_element_id"], name: "index_cme_on_course_module_element_id"
+    t.integer "related_course_step_id"
+    t.boolean "is_note", default: false
+    t.index ["course_lesson_id"], name: "index_course_steps_on_course_lesson_id"
+    t.index ["related_course_step_id"], name: "index_course_steps_on_related_course_step_id"
   end
 
-  create_table "course_modules", id: :serial, force: :cascade do |t|
-    t.string "name", limit: 255
-    t.string "name_url", limit: 255
-    t.text "description"
-    t.integer "sorting_order"
-    t.integer "estimated_time_in_seconds"
-    t.boolean "active", default: false, null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer "cme_count", default: 0
-    t.string "seo_description", limit: 255
-    t.boolean "seo_no_index", default: false
-    t.datetime "destroyed_at"
-    t.integer "number_of_questions", default: 0
-    t.integer "subject_course_id"
-    t.float "video_duration", default: 0.0
-    t.integer "video_count", default: 0
-    t.integer "quiz_count", default: 0
-    t.string "highlight_colour"
-    t.boolean "tuition", default: false
-    t.boolean "test", default: false
-    t.boolean "revision", default: false
-    t.integer "course_section_id"
-    t.integer "constructed_response_count", default: 0
-    t.string "temporary_label"
-    t.index ["course_section_id"], name: "index_course_modules_on_course_section_id"
-    t.index ["subject_course_id"], name: "index_course_modules_on_subject_course_id"
-  end
-
-  create_table "course_section_user_logs", id: :serial, force: :cascade do |t|
-    t.integer "user_id"
-    t.integer "course_section_id"
-    t.integer "subject_course_user_log_id"
-    t.integer "latest_course_module_element_id"
-    t.float "percentage_complete"
-    t.integer "count_of_cmes_completed"
-    t.integer "count_of_quizzes_taken"
-    t.integer "count_of_videos_taken"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "subject_course_id"
-    t.integer "count_of_constructed_responses_taken"
-    t.index ["course_section_id"], name: "index_course_section_user_logs_on_course_section_id"
-    t.index ["subject_course_id"], name: "index_course_section_user_logs_on_subject_course_id"
-    t.index ["subject_course_user_log_id"], name: "index_course_section_user_logs_on_subject_course_user_log_id"
-    t.index ["user_id"], name: "index_course_section_user_logs_on_user_id"
-  end
-
-  create_table "course_sections", id: :serial, force: :cascade do |t|
-    t.integer "subject_course_id"
-    t.string "name"
-    t.string "name_url"
-    t.integer "sorting_order"
-    t.boolean "active", default: false
-    t.boolean "counts_towards_completion", default: false
-    t.boolean "assumed_knowledge", default: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "cme_count", default: 0
-    t.integer "video_count", default: 0
-    t.integer "quiz_count", default: 0
-    t.datetime "destroyed_at"
-    t.integer "constructed_response_count", default: 0
-    t.index ["name"], name: "index_course_sections_on_name"
-    t.index ["subject_course_id"], name: "index_course_sections_on_subject_course_id"
-  end
-
-  create_table "course_tutor_details", id: :serial, force: :cascade do |t|
-    t.integer "subject_course_id"
+  create_table "course_tutors", id: :serial, force: :cascade do |t|
+    t.integer "course_id"
     t.integer "user_id"
     t.integer "sorting_order"
     t.string "title"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["subject_course_id"], name: "index_course_tutor_details_on_subject_course_id"
-    t.index ["user_id"], name: "index_course_tutor_details_on_user_id"
+    t.index ["course_id"], name: "index_course_tutors_on_course_id"
+    t.index ["user_id"], name: "index_course_tutors_on_user_id"
+  end
+
+  create_table "course_videos", id: :serial, force: :cascade do |t|
+    t.integer "course_step_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.datetime "destroyed_at"
+    t.string "video_id"
+    t.float "duration"
+    t.string "vimeo_guid"
+    t.string "dacast_id"
+    t.index ["course_step_id"], name: "index_course_videos_on_course_step_id"
+  end
+
+  create_table "courses", id: :serial, force: :cascade do |t|
+    t.string "name"
+    t.string "name_url"
+    t.integer "sorting_order"
+    t.boolean "active", default: false, null: false
+    t.integer "cme_count"
+    t.integer "video_count"
+    t.integer "quiz_count"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "default_number_of_possible_exam_answers"
+    t.datetime "destroyed_at"
+    t.integer "exam_body_id"
+    t.string "survey_url"
+    t.integer "group_id"
+    t.integer "quiz_pass_rate"
+    t.string "background_image_file_name"
+    t.string "background_image_content_type"
+    t.integer "background_image_file_size"
+    t.datetime "background_image_updated_at"
+    t.boolean "preview", default: false
+    t.boolean "computer_based", default: false
+    t.string "highlight_colour", default: "#ef475d"
+    t.string "category_label"
+    t.string "icon_label"
+    t.integer "constructed_response_count", default: 0
+    t.integer "completion_cme_count"
+    t.date "release_date"
+    t.string "seo_title"
+    t.string "seo_description"
+    t.boolean "has_correction_packs", default: false
+    t.text "short_description"
+    t.boolean "on_welcome_page", default: false
+    t.string "unit_label"
+    t.integer "level_id"
+    t.integer "accredible_group_id"
+    t.index ["exam_body_id"], name: "index_courses_on_exam_body_id"
+    t.index ["group_id"], name: "index_courses_on_group_id"
+    t.index ["level_id"], name: "index_courses_on_level_id"
+    t.index ["name"], name: "index_courses_on_name"
   end
 
   create_table "currencies", id: :serial, force: :cascade do |t|
@@ -539,8 +656,8 @@ ActiveRecord::Schema.define(version: 2020_03_23_161559) do
 
   create_table "enrollments", id: :serial, force: :cascade do |t|
     t.integer "user_id"
-    t.integer "subject_course_id"
-    t.integer "subject_course_user_log_id"
+    t.integer "course_id"
+    t.integer "course_log_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "active", default: false
@@ -552,10 +669,10 @@ ActiveRecord::Schema.define(version: 2020_03_23_161559) do
     t.integer "exam_sitting_id"
     t.boolean "computer_based_exam", default: false
     t.integer "percentage_complete", default: 0
+    t.index ["course_id"], name: "index_enrollments_on_course_id"
+    t.index ["course_log_id"], name: "index_enrollments_on_course_log_id"
     t.index ["exam_body_id"], name: "index_enrollments_on_exam_body_id"
     t.index ["exam_sitting_id"], name: "index_enrollments_on_exam_sitting_id"
-    t.index ["subject_course_id"], name: "index_enrollments_on_subject_course_id"
-    t.index ["subject_course_user_log_id"], name: "index_enrollments_on_subject_course_user_log_id"
     t.index ["user_id"], name: "index_enrollments_on_user_id"
   end
 
@@ -580,6 +697,7 @@ ActiveRecord::Schema.define(version: 2020_03_23_161559) do
     t.text "products_subheading"
     t.string "products_seo_title"
     t.string "products_seo_description"
+    t.boolean "emit_certificate", default: false
     t.index ["name"], name: "index_exam_bodies_on_name"
   end
 
@@ -595,17 +713,17 @@ ActiveRecord::Schema.define(version: 2020_03_23_161559) do
 
   create_table "exam_sittings", id: :serial, force: :cascade do |t|
     t.string "name"
-    t.integer "subject_course_id"
+    t.integer "course_id"
     t.date "date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "exam_body_id"
     t.boolean "active", default: true
     t.boolean "computer_based", default: false
+    t.index ["course_id"], name: "index_exam_sittings_on_course_id"
     t.index ["date"], name: "index_exam_sittings_on_date"
     t.index ["exam_body_id"], name: "index_exam_sittings_on_exam_body_id"
     t.index ["name"], name: "index_exam_sittings_on_name"
-    t.index ["subject_course_id"], name: "index_exam_sittings_on_subject_course_id"
   end
 
   create_table "exercises", force: :cascade do |t|
@@ -717,11 +835,11 @@ ActiveRecord::Schema.define(version: 2020_03_23_161559) do
     t.index ["name"], name: "index_groups_on_name"
   end
 
-  create_table "groups_subject_courses", id: false, force: :cascade do |t|
+  create_table "groups_courses", id: false, force: :cascade do |t|
     t.integer "group_id", null: false
-    t.integer "subject_course_id", null: false
-    t.index ["group_id"], name: "index_groups_subject_courses_on_group_id"
-    t.index ["subject_course_id"], name: "index_groups_subject_courses_on_subject_course_id"
+    t.integer "course_id", null: false
+    t.index ["course_id"], name: "index_groups_courses_on_course_id"
+    t.index ["group_id"], name: "index_groups_courses_on_group_id"
   end
 
   create_table "home_pages", id: :serial, force: :cascade do |t|
@@ -731,7 +849,7 @@ ActiveRecord::Schema.define(version: 2020_03_23_161559) do
     t.string "public_url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "subject_course_id"
+    t.integer "course_id"
     t.string "custom_file_name"
     t.integer "group_id"
     t.string "name"
@@ -754,9 +872,9 @@ ActiveRecord::Schema.define(version: 2020_03_23_161559) do
     t.string "background_image"
     t.boolean "usp_section", default: true
     t.text "stats_content"
+    t.index ["course_id"], name: "index_home_pages_on_course_id"
     t.index ["group_id"], name: "index_home_pages_on_group_id"
     t.index ["public_url"], name: "index_home_pages_on_public_url"
-    t.index ["subject_course_id"], name: "index_home_pages_on_subject_course_id"
     t.index ["subscription_plan_category_id"], name: "index_home_pages_on_subscription_plan_category_id"
   end
 
@@ -858,7 +976,7 @@ ActiveRecord::Schema.define(version: 2020_03_23_161559) do
   end
 
   create_table "mock_exams", id: :serial, force: :cascade do |t|
-    t.integer "subject_course_id"
+    t.integer "course_id"
     t.string "name"
     t.integer "sorting_order"
     t.datetime "created_at", null: false
@@ -871,8 +989,8 @@ ActiveRecord::Schema.define(version: 2020_03_23_161559) do
     t.string "cover_image_content_type"
     t.integer "cover_image_file_size"
     t.datetime "cover_image_updated_at"
+    t.index ["course_id"], name: "index_mock_exams_on_course_id"
     t.index ["name"], name: "index_mock_exams_on_name"
-    t.index ["subject_course_id"], name: "index_mock_exams_on_subject_course_id"
   end
 
   create_table "order_transactions", id: :serial, force: :cascade do |t|
@@ -893,7 +1011,7 @@ ActiveRecord::Schema.define(version: 2020_03_23_161559) do
 
   create_table "orders", id: :serial, force: :cascade do |t|
     t.integer "product_id"
-    t.integer "subject_course_id"
+    t.integer "course_id"
     t.integer "user_id"
     t.string "stripe_guid"
     t.string "stripe_customer_id"
@@ -913,11 +1031,11 @@ ActiveRecord::Schema.define(version: 2020_03_23_161559) do
     t.string "stripe_payment_intent_id"
     t.uuid "ahoy_visit_id"
     t.index ["ahoy_visit_id"], name: "index_orders_on_ahoy_visit_id"
+    t.index ["course_id"], name: "index_orders_on_course_id"
     t.index ["mock_exam_id"], name: "index_orders_on_mock_exam_id"
     t.index ["product_id"], name: "index_orders_on_product_id"
     t.index ["stripe_customer_id"], name: "index_orders_on_stripe_customer_id"
     t.index ["stripe_guid"], name: "index_orders_on_stripe_guid"
-    t.index ["subject_course_id"], name: "index_orders_on_subject_course_id"
     t.index ["user_id"], name: "index_orders_on_user_id"
   end
 
@@ -939,7 +1057,7 @@ ActiveRecord::Schema.define(version: 2020_03_23_161559) do
 
   create_table "products", id: :serial, force: :cascade do |t|
     t.string "name"
-    t.integer "subject_course_id"
+    t.integer "course_id"
     t.integer "mock_exam_id"
     t.string "stripe_guid"
     t.boolean "live_mode", default: false
@@ -958,12 +1076,12 @@ ActiveRecord::Schema.define(version: 2020_03_23_161559) do
     t.string "payment_subheading"
     t.text "payment_description"
     t.index ["cbe_id"], name: "index_products_on_cbe_id"
+    t.index ["course_id"], name: "index_products_on_course_id"
     t.index ["currency_id"], name: "index_products_on_currency_id"
     t.index ["group_id"], name: "index_products_on_group_id"
     t.index ["mock_exam_id"], name: "index_products_on_mock_exam_id"
     t.index ["name"], name: "index_products_on_name"
     t.index ["stripe_guid"], name: "index_products_on_stripe_guid"
-    t.index ["subject_course_id"], name: "index_products_on_subject_course_id"
   end
 
   create_table "quiz_answers", id: :serial, force: :cascade do |t|
@@ -981,12 +1099,12 @@ ActiveRecord::Schema.define(version: 2020_03_23_161559) do
     t.integer "quiz_question_id"
     t.integer "quiz_answer_id"
     t.boolean "correct", default: false, null: false
-    t.integer "course_module_element_user_log_id"
+    t.integer "course_step_log_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer "score", default: 0
     t.string "answer_array", limit: 255
-    t.index ["course_module_element_user_log_id"], name: "index_quiz_attempts_on_course_module_element_user_log_id"
+    t.index ["course_step_log_id"], name: "index_quiz_attempts_on_course_step_log_id"
     t.index ["quiz_answer_id"], name: "index_quiz_attempts_on_quiz_answer_id"
     t.index ["quiz_question_id"], name: "index_quiz_attempts_on_quiz_question_id"
     t.index ["user_id"], name: "index_quiz_attempts_on_user_id"
@@ -1011,18 +1129,18 @@ ActiveRecord::Schema.define(version: 2020_03_23_161559) do
   end
 
   create_table "quiz_questions", id: :serial, force: :cascade do |t|
-    t.integer "course_module_element_quiz_id"
-    t.integer "course_module_element_id"
+    t.integer "course_quiz_id"
+    t.integer "course_step_id"
     t.string "difficulty_level", limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "destroyed_at"
-    t.integer "subject_course_id"
+    t.integer "course_id"
     t.integer "sorting_order"
     t.boolean "custom_styles", default: false
-    t.index ["course_module_element_id"], name: "index_quiz_questions_on_course_module_element_id"
-    t.index ["course_module_element_quiz_id"], name: "index_quiz_questions_on_course_module_element_quiz_id"
-    t.index ["subject_course_id"], name: "index_quiz_questions_on_subject_course_id"
+    t.index ["course_id"], name: "index_quiz_questions_on_course_id"
+    t.index ["course_quiz_id"], name: "index_quiz_questions_on_course_quiz_id"
+    t.index ["course_step_id"], name: "index_quiz_questions_on_course_step_id"
   end
 
   create_table "referral_codes", id: :serial, force: :cascade do |t|
@@ -1168,33 +1286,6 @@ ActiveRecord::Schema.define(version: 2020_03_23_161559) do
     t.index ["user_id"], name: "index_student_accesses_on_user_id"
   end
 
-  create_table "student_exam_tracks", id: :serial, force: :cascade do |t|
-    t.integer "user_id"
-    t.integer "latest_course_module_element_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string "session_guid", limit: 255
-    t.integer "course_module_id"
-    t.float "percentage_complete", default: 0.0
-    t.integer "count_of_cmes_completed", default: 0
-    t.integer "subject_course_id"
-    t.integer "count_of_questions_taken"
-    t.integer "count_of_questions_correct"
-    t.integer "count_of_quizzes_taken"
-    t.integer "count_of_videos_taken"
-    t.integer "subject_course_user_log_id"
-    t.integer "count_of_constructed_responses_taken"
-    t.integer "course_section_id"
-    t.integer "course_section_user_log_id"
-    t.index ["course_module_id"], name: "index_student_exam_tracks_on_course_module_id"
-    t.index ["course_section_id"], name: "index_student_exam_tracks_on_course_section_id"
-    t.index ["course_section_user_log_id"], name: "index_student_exam_tracks_on_course_section_user_log_id"
-    t.index ["latest_course_module_element_id"], name: "index_student_exam_tracks_on_latest_course_module_element_id"
-    t.index ["subject_course_id"], name: "index_student_exam_tracks_on_subject_course_id"
-    t.index ["subject_course_user_log_id"], name: "index_student_exam_tracks_on_subject_course_user_log_id"
-    t.index ["user_id"], name: "index_student_exam_tracks_on_user_id"
-  end
-
   create_table "student_testimonials", force: :cascade do |t|
     t.integer "home_page_id"
     t.integer "sorting_order"
@@ -1207,88 +1298,6 @@ ActiveRecord::Schema.define(version: 2020_03_23_161559) do
     t.bigint "image_file_size"
     t.datetime "image_updated_at"
     t.index ["home_page_id"], name: "index_student_testimonials_on_home_page_id"
-  end
-
-  create_table "subject_course_resources", id: :serial, force: :cascade do |t|
-    t.string "name"
-    t.integer "subject_course_id"
-    t.text "description"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "file_upload_file_name"
-    t.string "file_upload_content_type"
-    t.integer "file_upload_file_size"
-    t.datetime "file_upload_updated_at"
-    t.string "external_url"
-    t.boolean "active", default: false
-    t.integer "sorting_order"
-    t.boolean "available_on_trial", default: false
-    t.index ["name"], name: "index_subject_course_resources_on_name"
-    t.index ["subject_course_id"], name: "index_subject_course_resources_on_subject_course_id"
-  end
-
-  create_table "subject_course_user_logs", id: :serial, force: :cascade do |t|
-    t.integer "user_id"
-    t.string "session_guid"
-    t.integer "subject_course_id"
-    t.integer "percentage_complete", default: 0
-    t.integer "count_of_cmes_completed", default: 0
-    t.integer "latest_course_module_element_id"
-    t.boolean "completed", default: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "count_of_questions_correct"
-    t.integer "count_of_questions_taken"
-    t.integer "count_of_videos_taken"
-    t.integer "count_of_quizzes_taken"
-    t.datetime "completed_at"
-    t.integer "count_of_constructed_responses_taken"
-    t.index ["latest_course_module_element_id"], name: "index_scu_logs_on_latest_course_module_element_id"
-    t.index ["session_guid"], name: "index_subject_course_user_logs_on_session_guid"
-    t.index ["subject_course_id"], name: "index_subject_course_user_logs_on_subject_course_id"
-    t.index ["user_id"], name: "index_subject_course_user_logs_on_user_id"
-  end
-
-  create_table "subject_courses", id: :serial, force: :cascade do |t|
-    t.string "name"
-    t.string "name_url"
-    t.integer "sorting_order"
-    t.boolean "active", default: false, null: false
-    t.integer "cme_count"
-    t.integer "video_count"
-    t.integer "quiz_count"
-    t.text "description"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "default_number_of_possible_exam_answers"
-    t.datetime "destroyed_at"
-    t.integer "exam_body_id"
-    t.string "survey_url"
-    t.integer "group_id"
-    t.integer "quiz_pass_rate"
-    t.string "background_image_file_name"
-    t.string "background_image_content_type"
-    t.integer "background_image_file_size"
-    t.datetime "background_image_updated_at"
-    t.boolean "preview", default: false
-    t.boolean "computer_based", default: false
-    t.string "highlight_colour", default: "#ef475d"
-    t.string "category_label"
-    t.string "icon_label"
-    t.integer "constructed_response_count", default: 0
-    t.integer "completion_cme_count"
-    t.date "release_date"
-    t.string "seo_title"
-    t.string "seo_description"
-    t.boolean "has_correction_packs", default: false
-    t.text "short_description"
-    t.boolean "on_welcome_page", default: false
-    t.string "unit_label"
-    t.integer "level_id"
-    t.index ["exam_body_id"], name: "index_subject_courses_on_exam_body_id"
-    t.index ["group_id"], name: "index_subject_courses_on_group_id"
-    t.index ["level_id"], name: "index_subject_courses_on_level_id"
-    t.index ["name"], name: "index_subject_courses_on_name"
   end
 
   create_table "subscription_payment_cards", id: :serial, force: :cascade do |t|
@@ -1521,7 +1530,7 @@ ActiveRecord::Schema.define(version: 2020_03_23_161559) do
   end
 
   create_table "video_resources", id: :serial, force: :cascade do |t|
-    t.integer "course_module_element_id"
+    t.integer "course_step_id"
     t.text "question"
     t.text "answer"
     t.text "notes"
@@ -1529,7 +1538,7 @@ ActiveRecord::Schema.define(version: 2020_03_23_161559) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "transcript"
-    t.index ["course_module_element_id"], name: "index_video_resources_on_course_module_element_id"
+    t.index ["course_step_id"], name: "index_video_resources_on_course_step_id"
   end
 
   create_table "visits", id: :uuid, default: nil, force: :cascade do |t|
@@ -1562,7 +1571,7 @@ ActiveRecord::Schema.define(version: 2020_03_23_161559) do
   end
 
   add_foreign_key "cbe_sections", "cbes"
-  add_foreign_key "cbes", "subject_courses"
+  add_foreign_key "cbes", "courses"
   add_foreign_key "exercises", "products"
   add_foreign_key "exercises", "users"
   add_foreign_key "exercises", "users", column: "corrector_id"

@@ -1,0 +1,46 @@
+.modal.fade{ id: 'csv-upload-modal', tabindex: '-1', role: 'dialog', 'aria-labelledby': 'csvUploadModal', 'aria-hidden': 'true' }
+  .modal-dialog.modal-lg{role: 'document'}
+    .modal-content
+      %button.btn.btn-text.modal-close.p-0{ 'data-dismiss' => 'modal' }
+        %span.sr-only Close Modal
+        %i.material-icons{ 'aria-hidden' => 'true' } close
+
+      .modal-header
+        %h3.mb-3{id: 'csvUploadModal'}
+          Upload CSV File
+
+      .modal-body
+        =form_for(:upload, url: preview_exercises_csvs_path, authenticity_token: true, html: { id: 'csv_upload_modal_form', class: 'form-horizontal' },
+         role: 'form', multipart: true, data: { type: 'csv' }) do |f|
+          .row
+            .col-sm-12
+              %ul
+                %li
+                  The file must be in CSV format (.csv). It must have two columns in each row.
+                %li
+                  The first column is for the user's Email.
+                %li
+                  The second column is for First Name.
+                %p
+                  Note that the user must already exist in the system before you can assign an exercise to them.
+
+          .row.pt-3
+            .col-sm-12
+              %label.control-label{for: :file}
+                =t('views.dashboard.admin.csv_upload_modal.file')
+              .input-group.input-group-lg.pb-4
+                =f.file_field :file, class: 'form-control'
+
+        .modal-footer
+          %button{ type: 'button', class: 'btn btn-primary', id: 'exercise_csv_upload'}
+            =t('views.general.upload')
+          %button{ type: 'button', class: 'btn btn-secondary', data: { dismiss: 'modal' } }
+            =t('views.general.cancel')
+
+
+:javascript
+  $(document).ready(function(){
+    $('#exercise_csv_upload').click(function() {
+      $('#csv_upload_modal_form').submit();
+    });
+  });

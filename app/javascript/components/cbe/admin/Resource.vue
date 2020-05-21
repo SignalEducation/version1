@@ -206,7 +206,9 @@ export default {
           method: 'post',
           url: `/api/v1/cbes/${this.$store.state.cbeId}/resources`,
           data: formData,
-          config: { headers: { 'Content-Type': 'multipart/form-data' } },
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
         })
           .then(response => {
             this.resourceDetails = response.data;
@@ -243,7 +245,10 @@ export default {
           method: 'patch',
           url: `/api/v1/cbes/${this.$store.state.cbeId}/resources/${this.id}`,
           data: formData,
-          config: { headers: { 'Content-Type': 'multipart/form-data' } },
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'X-CSRF-Token': document.getElementsByTagName('meta')['csrf-token'].getAttribute('content')
+          },
         })
           .then(response => {
             this.updateStatus = 'OK';
@@ -269,17 +274,18 @@ export default {
         } else {
           this.deleteStatus = 'PENDING';
           const resourceId = this.id;
-          axios
-            .delete(`/api/v1/cbes/${this.$store.state.cbeId}/resources/${resourceId}`)
-            .then(response => {
-              this.$emit('rm-resource', resourceId);
-              this.updateStatus = 'OK';
-              this.$v.$reset();
-            })
-            .catch(error => {
-              this.updateStatus = 'ERROR';
-              console.log(error);
-            });
+          axios({
+            method: 'delete',
+            url: `/api/v1/cbes/${this.$store.state.cbeId}/resources/${resourceId}`,
+          }).then(response => {
+            this.$emit('rm-resource', resourceId);
+            this.updateStatus = 'OK';
+            this.$v.$reset();
+          })
+          .catch(error => {
+            this.updateStatus = 'ERROR';
+            console.log(error);
+          });
         }
       }
     },

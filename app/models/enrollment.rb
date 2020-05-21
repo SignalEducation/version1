@@ -4,8 +4,8 @@
 #
 #  id                         :integer          not null, primary key
 #  user_id                    :integer
-#  subject_course_id          :integer
-#  subject_course_user_log_id :integer
+#  course_id          :integer
+#  course_log_id :integer
 #  created_at                 :datetime         not null
 #  updated_at                 :datetime         not null
 #  active                     :boolean          default("false")
@@ -26,13 +26,13 @@ class Enrollment < ApplicationRecord
   belongs_to :exam_body, optional: true
   belongs_to :exam_sitting, optional: true
   belongs_to :user, optional: true
-  belongs_to :subject_course, optional: true
-  belongs_to :subject_course_user_log, optional: true
+  belongs_to :course, optional: true
+  belongs_to :course_log, optional: true
 
   # validation
   validates :user_id, presence: true
-  validates :subject_course_id, presence: true
-  validates :subject_course_user_log_id, presence: true
+  validates :course_id, presence: true
+  validates :course_log_id, presence: true
   validates :exam_body_id, presence: true
   validates :exam_date, allow_nil: true, inclusion:
       { in: Date.today..Date.today + 2.years, message: '%{value} is not a valid date' }
@@ -40,39 +40,39 @@ class Enrollment < ApplicationRecord
 
   # callbacks
   before_destroy :check_dependencies
-  before_validation :create_subject_course_user_log, unless: :subject_course_user_log_id
-  before_create :set_percentage_complete, if: :subject_course_user_log_id
+  before_validation :create_course_log, unless: :course_log_id
+  before_create :set_percentage_complete, if: :course_log_id
   after_create :create_expiration_worker, :deactivate_siblings
   after_update :create_expiration_worker, if: :exam_date_changed?
 
   # scopes
   scope :all_in_order,              -> { order(:active, :created_at) }
-  scope :all_in_admin_order,        -> { order(:subject_course_id, :created_at) }
+  scope :all_in_admin_order,        -> { order(:course_id, :created_at) }
   scope :all_in_exam_sitting_order, -> { order(:exam_sitting_id) }
   scope :all_reverse_order,         -> { order(created_at: :desc) }
   scope :all_in_exam_order,         -> { order(:exam_sitting_id) }
   scope :all_in_recent_order,       -> { order(updated_at: :desc) }
-  scope :all_active,                -> { includes(:subject_course).where(active: true) }
-  scope :all_not_active,            -> { includes(:subject_course).where(active: false) }
+  scope :all_active,                -> { includes(:course).where(active: true) }
+  scope :all_not_active,            -> { includes(:course).where(active: false) }
   scope :all_expired,               -> { where(expired: true) }
   scope :all_valid,                 -> { where(active: true, expired: false) }
   scope :all_not_expired,           -> { where(expired: false) }
-  scope :for_subject_course,        ->(course_id) { where(subject_course_id: course_id) }
+  scope :for_course,        ->(course_id) { where(course_id: course_id) }
   scope :for_user,                  ->(user_id) { where(user_id: user_id) }
-  scope :for_course_and_user,       ->(course_id, user_id) { where(subject_course_id: course_id, user_id: user_id) }
+  scope :for_course_and_user,       ->(course_id, user_id) { where(course_id: course_id, user_id: user_id) }
   scope :by_sitting_date,           -> { includes(:exam_sitting).order('exam_sittings.date desc') }
   scope :this_week,                 -> { where(created_at: Time.now.beginning_of_week..Time.now.end_of_week) }
 
   scope :all_completed, lambda {
-    joins(:subject_course_user_log).
-      where('subject_course_user_logs.percentage_complete > 99')
+    joins(:course_log).
+      where('course_logs.percentage_complete > 99')
   }
 
   scope :for_active_course, lambda {
-    includes(:subject_course).
+    includes(:course).
       where(active: true, expired: false).
-      references(:subject_courses).
-      where('subject_courses.active = ?', true)
+      references(:courses).
+      where('courses.active = ?', true)
   }
 
   # class methods
@@ -88,22 +88,22 @@ class Enrollment < ApplicationRecord
     end
   end
 
-  def self.create_on_register_login(user, subject_course_id)
-    subject_course = SubjectCourse.where(id: subject_course_id).first
-    exam_sitting = subject_course.exam_sittings.all_active.all_in_order.first
-    if subject_course&.active && exam_sitting
+  def self.create_on_register_login(user, course_id)
+    course = Course.where(id: course_id).first
+    exam_sitting = course.exam_sittings.all_active.all_in_order.first
+    if course&.active && exam_sitting
       existing_enrollment = user.enrollments.where(exam_sitting_id: exam_sitting).all_active.all_not_expired.last
       if existing_enrollment
         enrollment = existing_enrollment.update_attribute(:notifications, true)
-        message = "Thank you. You have successfully registered for the #{existing_enrollment&.subject_course&.name} Bootcamp"
+        message = "Thank you. You have successfully registered for the #{existing_enrollment&.course&.name} Bootcamp"
       else
-        enrollment = Enrollment.create!(user_id: user.id, active: true, subject_course_id: subject_course.id,
+        enrollment = Enrollment.create!(user_id: user.id, active: true, course_id: course.id,
                            exam_sitting_id: exam_sitting.id,
-                           exam_body_id: subject_course.exam_body_id, notifications: true)
-        message = "Thank you. You have successfully enrolled in #{enrollment&.subject_course&.name} and opted into Bootcamp"
+                           exam_body_id: course.exam_body_id, notifications: true)
+        message = "Thank you. You have successfully enrolled in #{enrollment&.course&.name} and opted into Bootcamp"
       end
     else
-      message = "Sorry! Bootcamp is not currently available #{'for ' + subject_course&.name}"
+      message = "Sorry! Bootcamp is not currently available #{'for ' + course&.name}"
     end
     return enrollment, message
   end
@@ -129,16 +129,16 @@ class Enrollment < ApplicationRecord
   end
 
   def student_number
-    self.user.exam_body_user_details.for_exam_body(self.subject_course.exam_body_id).first.try(:student_number)
+    self.user.exam_body_user_details.for_exam_body(self.course.exam_body_id).first.try(:student_number)
   end
 
   def alternate_exam_sittings
-    ExamSitting.where(active: true, computer_based: false, subject_course_id: subject_course.id,
-                                       exam_body_id: subject_course.exam_body_id).all_in_order
+    ExamSitting.where(active: true, computer_based: false, course_id: course.id,
+                                       exam_body_id: course.exam_body_id).all_in_order
   end
 
   def sibling_enrollments
-    self.subject_course.enrollments.where(user_id: self.user_id).where.not(id: self.id)
+    self.course.enrollments.where(user_id: self.user_id).where.not(id: self.id)
   end
 
   def display_percentage_complete
@@ -184,15 +184,15 @@ class Enrollment < ApplicationRecord
     end
   end
 
-  def create_subject_course_user_log
-    subject_course_user_log = SubjectCourseUserLog.create!(user_id: self.user_id,
+  def create_course_log
+    course_log = CourseLog.create!(user_id: self.user_id,
                                                            session_guid: self.user.try(:session_guid),
-                                                           subject_course_id: self.subject_course_id)
-    self.subject_course_user_log_id = subject_course_user_log.id
+                                                           course_id: self.course_id)
+    self.course_log_id = course_log.id
   end
 
   def set_percentage_complete
-    self.percentage_complete = subject_course_user_log.percentage_complete
+    self.percentage_complete = course_log.percentage_complete
   end
 
   def create_expiration_worker

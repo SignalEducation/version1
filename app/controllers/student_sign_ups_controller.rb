@@ -135,7 +135,7 @@ class StudentSignUpsController < ApplicationController
 
     if verify_recaptcha(model: @user) && @user.valid? && @user.save
       handle_post_user_creation(@user)
-      handle_course_enrollment(@user, params[:subject_course_id]) if params[:subject_course_id]
+      handle_course_enrollment(@user, params[:course_id]) if params[:course_id]
 
       # TODO: Refactor this to not use the flash
       if flash[:plan_guid]
@@ -249,8 +249,8 @@ class StudentSignUpsController < ApplicationController
     cookies.delete(:referral_data)
   end
 
-  def handle_course_enrollment(user, subject_course_id)
-    Enrollment.create_on_register_login(user, subject_course_id)
+  def handle_course_enrollment(user, course_id)
+    Enrollment.create_on_register_login(user, course_id)
   end
 
   def set_session_errors(user)

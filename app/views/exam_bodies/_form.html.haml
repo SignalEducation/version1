@@ -26,6 +26,11 @@
                   %label
                     =f.check_box :has_products
                     =t('views.exam_bodies.form.has_products')
+              .col-sm-6.my-3
+                .checkbox
+                  %label
+                    =f.check_box :emit_certificate
+                    =t('views.exam_bodies.form.emit_certificate')
           .col-sm-6
             .form-group
               =f.label :landing_page_h1, t('views.exam_bodies.form.landing_page_h1')
@@ -119,4 +124,3 @@
     disableDragAndDrop: true,
     height: 150
   });
-

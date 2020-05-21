@@ -80,14 +80,14 @@ class User < ApplicationRecord
   has_one :student_access
   has_one :referred_signup
 
-  has_many :course_module_element_user_logs
-  has_many :completed_course_module_element_user_logs, -> {
+  has_many :course_step_logs
+  has_many :completed_course_step_logs, -> {
     where(element_completed: true)
-  }, class_name: 'CourseModuleElementUserLog'
-  has_many :incomplete_course_module_element_user_logs, -> {
+  }, class_name: 'CourseStepLog'
+  has_many :incomplete_course_step_logs, -> {
     where(element_completed: false)
-  }, class_name: 'CourseModuleElementUserLog'
-  has_many :course_tutor_details
+  }, class_name: 'CourseStepLog'
+  has_many :course_tutors
   has_many :exam_body_user_details
   has_many :enrollments
   has_many :invoices
@@ -97,9 +97,9 @@ class User < ApplicationRecord
   has_many :subscription_payment_cards
   has_many :subscription_transactions
   has_many :subscriptions_cancelled, class_name: 'Subscription', foreign_key: 'cancelled_by_id', inverse_of: :cancelled_by
-  has_many :student_exam_tracks
-  has_many :course_section_user_logs
-  has_many :subject_course_user_logs
+  has_many :course_lesson_logs
+  has_many :course_section_logs
+  has_many :course_logs
   has_many :ahoy_visits, :class_name => 'Ahoy::Visit'
   has_many :charges
   has_many :refunds
@@ -142,7 +142,7 @@ class User < ApplicationRecord
   scope :this_month, -> { where(created_at: Time.now.beginning_of_month..Time.now.end_of_month) }
   scope :this_week, -> { where(created_at: Time.now.beginning_of_week..Time.now.end_of_week) }
   scope :active_this_week, -> { where(last_request_at: Time.now.beginning_of_week..Time.now.end_of_week) }
-  scope :with_course_tutor_details, -> { joins(:course_tutor_details) }
+  scope :with_course_tutors, -> { joins(:course_tutors) }
 
   ### class methods
   def self.search(term)
@@ -166,13 +166,9 @@ class User < ApplicationRecord
   end
 
   def self.get_and_verify(email_verification_code, country_id)
-    time_now = proc { Time.zone.now }.call
-    user = User.find_by(email_verification_code: email_verification_code, email_verified_at: nil)
-    return unless user
+    return unless (user = User.find_by(email_verification_code: email_verification_code))
 
-    user.update_attributes(account_activated_at: time_now, account_activation_code: nil, active: true) unless user.active
-    user.update_attributes(email_verified_at: time_now, email_verification_code: nil, email_verified: true, country_id: country_id)
-    user
+    user.verify(country_id)
   end
 
   def self.start_password_reset_process(the_email_address, root_url)
@@ -328,6 +324,13 @@ class User < ApplicationRecord
 
   ### INSTANCE METHODS =========================================================
 
+  def verify(country_id)
+    time_now = proc { Time.zone.now }.call
+    activate_user(time_now) unless active?
+    update(email_verified_at: time_now, email_verified: true, country_id: country_id) unless email_verified
+    self
+  end
+
   def can_view_content?(exam_body_id)
     valid_subscription_for_exam_body?(exam_body_id) || user_group.site_admin ||
       complimentary_user?
@@ -462,13 +465,13 @@ class User < ApplicationRecord
   def enrolled_course?(course_id)
     # Returns true if an active enrollment exists for this user/course
 
-    enrollments.all_active.map(&:subject_course_id).include?(course_id)
+    enrollments.all_active.map(&:course_id).include?(course_id)
   end
 
   def enrolled_in_course?(course_id)
     # Returns true if a non-expired active enrollment exists for this user/course
 
-    enrollments.all_valid.map(&:subject_course_id).include?(course_id)
+    enrollments.all_valid.map(&:course_id).include?(course_id)
   end
 
   def referred_user?
@@ -547,8 +550,9 @@ class User < ApplicationRecord
     end
   end
 
-  def activate_user
-    update(active: true, account_activated_at: proc { Time.zone.now }.call, account_activation_code: nil)
+  def activate_user(time_now = nil)
+    update(active: true, account_activated_at: (time_now || proc { Time.zone.now }.call),
+           account_activation_code: nil)
   end
 
   def validate_user
@@ -571,10 +575,10 @@ class User < ApplicationRecord
   end
 
   def destroyable?
-    course_module_element_user_logs.empty? &&
+    course_step_logs.empty? &&
       invoices.empty? &&
       quiz_attempts.empty? &&
-      student_exam_tracks.empty? &&
+      course_lesson_logs.empty? &&
       subscriptions.empty? &&
       subscription_payment_cards.empty? &&
       subscription_transactions.empty? &&
@@ -601,14 +605,14 @@ class User < ApplicationRecord
     created_at > Time.now.beginning_of_hour
   end
 
-  def subject_course_user_log_course_ids
-    subject_course_user_logs.map(&:subject_course_id)
+  def course_log_course_ids
+    course_logs.map(&:course_id)
   end
 
   def enrolled_courses
     course_names = []
     enrollments.each do |enrollment|
-      course_names << enrollment.subject_course.name if enrollment.subject_course
+      course_names << enrollment.course.name if enrollment.course
     end
     course_names
   end
@@ -616,7 +620,7 @@ class User < ApplicationRecord
   def valid_enrolled_courses
     course_names = []
     enrollments.all_valid.each do |enrollment|
-      course_names << enrollment.subject_course.name if enrollment.subject_course
+      course_names << enrollment.course.name if enrollment.course
     end
     course_names
   end
@@ -646,7 +650,7 @@ class User < ApplicationRecord
   end
 
   def enrolled_course_ids
-    enrollments.map(&:subject_course_id)
+    enrollments.map(&:course_id)
   end
 
   def valid_enrollments_in_sitting_order
@@ -669,13 +673,13 @@ class User < ApplicationRecord
     next_enrollment.days_until_exam
   end
 
-  def completed_course_module_element(cme_id)
-    cmeuls = completed_course_module_element_user_logs.where(course_module_element_id: cme_id)
+  def completed_course_step(cme_id)
+    cmeuls = completed_course_step_logs.where(course_step_id: cme_id)
     cmeuls.any?
   end
 
-  def started_course_module_element(cme_id)
-    cmeuls = incomplete_course_module_element_user_logs.where(course_module_element_id: cme_id)
+  def started_course_step(cme_id)
+    cmeuls = incomplete_course_step_logs.where(course_step_id: cme_id)
     cmeuls.any?
   end
 

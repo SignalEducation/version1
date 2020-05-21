@@ -9,9 +9,8 @@ class UserVerificationsController < ApplicationController
     @user      = User.get_and_verify(params[:email_verification_code], country.id)
 
     if @user&.password_change_required?
-      @user.update_attributes(password_reset_requested_at: Time.now, password_reset_token: SecureRandom.hex(10))
-      set_password_url = set_password_url(id: @user.password_reset_token)
-      redirect_to set_password_url
+      @user.update(password_reset_requested_at: Time.zone.now, password_reset_token: SecureRandom.hex(10))
+      redirect_to set_password_url(id: @user.password_reset_token)
     elsif @user
       UserSession.create(@user)
       set_current_visit(@user)
@@ -41,7 +40,7 @@ class UserVerificationsController < ApplicationController
 
   def account_verified
     # This is the post email verification page
-    # redirect_to root_url unless current_user
+    redirect_to root_url unless current_user
 
     @group = Group.find_by(name_url: params[:group_url])
     redirect_to root_url and return unless @group&.active && @group&.exam_body&.active
@@ -49,7 +48,7 @@ class UserVerificationsController < ApplicationController
     seo_title_maker("Welcome to learnsignal #{@group.name}", @group.seo_description, nil)
 
     @levels = @group.levels.all_active
-    @courses = @group.subject_courses.all_active.where(on_welcome_page: true)
+    @courses = @group.courses.all_active.where(on_welcome_page: true)
 
     ip_country = IpAddress.get_country(request.remote_ip)
     country = ip_country ? ip_country : Country.find_by(name: 'United Kingdom')
@@ -84,7 +83,7 @@ class UserVerificationsController < ApplicationController
 
   def get_variables
     @subscription_plan_categories = SubscriptionPlanCategory.all_in_order
-    @subject_courses = SubjectCourse.all_active.all_in_order
+    @courses = Course.all_active.all_in_order
     @groups = Group.all_active.all_in_order
   end
 end

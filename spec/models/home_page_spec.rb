@@ -9,7 +9,7 @@
 #  public_url                    :string
 #  created_at                    :datetime         not null
 #  updated_at                    :datetime         not null
-#  subject_course_id             :integer
+#  course_id             :integer
 #  custom_file_name              :string
 #  group_id                      :integer
 #  name                          :string
@@ -45,7 +45,7 @@ describe HomePage do
   # relationships
   it { should belong_to(:subscription_plan_category) }
   it { should belong_to(:group) }
-  it { should belong_to(:subject_course) }
+  it { should belong_to(:course) }
   it { should have_many(:blog_posts) }
   it { should have_many(:external_banners) }
 

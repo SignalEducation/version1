@@ -14,8 +14,8 @@
               .table-responsive
                 %table.table.table-bordered.l-margin-top
                   %tr
-                    %td.col-sm-4=t('views.orders.show.subject_course_id')
-                    %td.col-sm-8=@mock_exam.subject_course.try(:name)
+                    %td.col-sm-4=t('views.orders.show.course_id')
+                    %td.col-sm-8=@mock_exam.course.try(:name)
 
                 =image_tag @mock_exam.try(:cover_image).try(:url), class: 'media-pic'
 

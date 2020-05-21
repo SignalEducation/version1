@@ -22,7 +22,7 @@ class UserSessionsController < ApplicationController
       @user_session.user.update_attribute(:analytics_guid, cookies[:_ga]) if cookies[:_ga]
       @user_session.user.update_attributes(password_reset_token: nil, password_reset_requested_at: nil) if @user_session.user.password_reset_token
       set_current_visit(@user_session.user)
-      enrollment, flash_message = handle_course_enrollment(@user_session.user, params[:subject_course_id]) if params[:subject_course_id] && !params[:subject_course_id].blank?
+      enrollment, flash_message = handle_course_enrollment(@user_session.user, params[:course_id]) if params[:course_id] && !params[:course_id].blank?
       flash[:error] = nil
 
       if flash[:plan_guid]
@@ -31,9 +31,9 @@ class UserSessionsController < ApplicationController
         redirect_to new_product_order_url(product_id: flash[:product_id], login: true)
       elsif session[:return_to]
         redirect_back_or_default(student_dashboard_url)
-      elsif params[:subject_course_id]
+      elsif params[:course_id]
         enrollment ? flash[:success] = flash_message : flash[:error] = flash_message
-        redirect_to course_enrollment_special_link(params[:subject_course_id])
+        redirect_to course_enrollment_special_link(params[:course_id])
       else
         redirect_to student_dashboard_url, flash: { just_signed_in: true }
       end
@@ -60,8 +60,8 @@ class UserSessionsController < ApplicationController
     params.require(:user_session).permit(:email, :password)
   end
 
-  def handle_course_enrollment(user, subject_course_id)
-    Enrollment.create_on_register_login(user, subject_course_id)
+  def handle_course_enrollment(user, course_id)
+    Enrollment.create_on_register_login(user, course_id)
   end
 
   def set_session_errors(user_session)

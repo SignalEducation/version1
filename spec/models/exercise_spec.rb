@@ -81,4 +81,35 @@ RSpec.describe Exercise, type: :model do
       )
     end
   end
+
+  describe 'class methods' do
+    describe '.parse_csv' do
+      let(:test_file) { fixture_file_upload('/exercises/test_bulk_csv.csv', 'text/csv') }
+
+      it 'parses a CSV file' do
+        expect(CSV).to receive(:new).with(kind_of(String), hash_including(headers: true)).and_return([])
+
+        Exercise.parse_csv(test_file.read)
+      end
+
+      it 'returns an array' do
+        expect(Exercise.parse_csv(test_file.read)).to be_kind_of Array
+      end
+    end
+
+    describe '.bulk_create' do
+      let(:user) { create(:user) }
+      let(:csv_data) { { 'user_id' => [user.id], 'email' => ['test@example.com'] } }
+
+      it 'returns an array' do
+        expect(Exercise.bulk_create(csv_data, 1)).to be_kind_of Array
+      end
+
+      it 'calls CsvBulkExerciseWorker' do
+        expect(CsvBulkExerciseWorker).to receive(:perform_async).with(user.id, 1)
+
+        Exercise.bulk_create(csv_data, 1)
+      end
+    end
+  end
 end

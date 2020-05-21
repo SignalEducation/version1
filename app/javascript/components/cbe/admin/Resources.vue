@@ -8,7 +8,7 @@
         :initial-name="resource.name"
         :initial-file="resource.file"
         :initial-sorting-order="resource.sorting_order"
-        @rm-resource="$emit('rm-resource', resourceId)"
+        @rm-resource="(resourceId) => $emit('rm-resource', resourceId)"
       />
       <Resource
         :initial-sorting-order="sortingOrderValue(resources)"

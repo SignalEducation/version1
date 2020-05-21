@@ -8,7 +8,7 @@
 #  content           :text
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
-#  subject_course_id :bigint
+#  course_id :bigint
 #  agreement_content :text
 #  active            :boolean          default("true"), not null
 #  score             :float
@@ -22,7 +22,7 @@ RSpec.describe Cbe, type: :model do
     it { should respond_to(:name) }
     it { should respond_to(:title) }
     it { should respond_to(:content) }
-    it { should respond_to(:subject_course_id) }
+    it { should respond_to(:course_id) }
     it { should respond_to(:agreement_content) }
     it { should respond_to(:score) }
     it { should respond_to(:created_at) }
@@ -30,7 +30,7 @@ RSpec.describe Cbe, type: :model do
   end
 
   describe 'Associations' do
-    it { should belong_to(:subject_course) }
+    it { should belong_to(:course) }
     it { should have_many(:sections) }
     it { should have_many(:introduction_pages) }
     it { should have_many(:questions).through(:sections) }
@@ -39,7 +39,7 @@ RSpec.describe Cbe, type: :model do
   describe 'Validations' do
     it { should validate_presence_of(:name) }
     it { should validate_presence_of(:agreement_content) }
-    it { should validate_presence_of(:subject_course_id) }
+    it { should validate_presence_of(:course_id) }
   end
 
   describe 'scopes' do

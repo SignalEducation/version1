@@ -1,0 +1,56 @@
+.container
+  %header.management-console-section
+    %h1
+      Courses
+
+  %section.pb-7
+    =render partial: 'management_consoles/course_content_nav'
+    .row
+      .col-sm-12
+        .box-item.table-box
+          .row
+            .col-sm
+              =link_to t('views.courses.index.add_course'), new_admin_course_url, class: 'btn btn-primary btn-sm', title: t('views.general.new_tooltip')
+            .col-sm
+              =form_tag(admin_courses_url, method: :get, role: 'form', class: 'form-horizontal') do
+                =select_tag :group_id, options_for_select(Group.all.collect {|p| [ p.name, p.id ] }, params[:group_id]), {include_blank: 'All', class: 'custom-select', onchange: 'this.form.submit(); return false;'}
+
+            .col-sm
+              .search-container
+                =form_tag(admin_courses_url, method: :get, role: 'form', id: 'search-form', class: 'form-inline') do
+                  =text_field_tag :search, params[:search], class: 'form-control', placeholder: t('views.general.search')
+                  %button{type: "submit"}
+                    %i{:role => "img", class: 'budicon-search-list'}
+
+          .table-responsive.pt-4
+            %table.table.sorted_table
+              %thead
+                %tr
+                  %th Name
+                  %th Active
+                  %th Preview
+                  %th
+                  %th
+              %tbody
+                -@courses.each do |course|
+                  %tr
+                    %td=course.name
+                    %td=tick_or_cross(course.active)
+                    %td=tick_or_cross(course.preview)
+                    %td=link_to t('views.general.show'), admin_course_url(course), class: 'btn btn-xs btn-secondary'
+                    %td
+                      %button.btn.btn-primary.btn-xs.dropdown-toggle{type:'button', 'data-toggle':'dropdown', 'aria-haspopup':'true', 'aria-expanded': 'false'}
+                        Edit
+                      .dropdown-menu
+                        =link_to t('views.general.edit'), edit_admin_course_url(course), class: 'dropdown-item'
+                        =link_to 'CSV', export_course_log_data_path(id: course.id, format: :xls), class: 'dropdown-item'
+                        -if course.destroyable?
+                          =link_to t('views.general.delete'), course, method: :delete, data: {confirm: t('views.general.delete_confirmation')}, class: 'dropdown-item', style: 'color: #dc3545;'
+                        =link_to t('views.general.clone'), admin_course_clone_path(id: course.id), data: {confirm: t('views.general.clone_confirmation')}, method: :post, class: 'dropdown-item', style: 'color: #fd7e14;'
+
+:javascript
+  $(document).ready(function() {
+    $("#search").on('blur', function() {
+      $(this).parents('form').submit();
+    });
+  });

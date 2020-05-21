@@ -20,7 +20,7 @@
 
     -if current_user.content_management_access?
       %li
-        =link_to 'Course Content', subject_courses_url
+        =link_to 'Course Content', admin_courses_url
       %li
         =link_to 'Sittings + Enrolments', exam_sittings_url
 
@@ -46,4 +46,3 @@
 
     %li
       =link_to 'Return', root_url
-

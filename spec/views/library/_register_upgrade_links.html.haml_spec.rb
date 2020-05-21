@@ -7,7 +7,7 @@ RSpec.describe 'library/_register_upgrade_links' do
   describe 'visibility of Register Now link' do
     it 'shows the REGISTER NOW link' do
       assign(:group, build_stubbed(:group))
-      assign(:course, build_stubbed(:subject_course))
+      assign(:course, build_stubbed(:course))
 
       render partial: 'library/register_upgrade_links', locals: { user: nil }
 
@@ -26,7 +26,7 @@ RSpec.describe 'library/_register_upgrade_links' do
 
       it 'does not show the UPGRADE NOW link' do
         assign(:group, build_stubbed(:group))
-        assign(:course, build_stubbed(:subject_course))
+        assign(:course, build_stubbed(:course))
 
         render partial: 'library/register_upgrade_links', locals: { user: user }
 
@@ -44,7 +44,7 @@ RSpec.describe 'library/_register_upgrade_links' do
 
       it 'does not show the UPGRADE NOW link' do
         assign(:group, build_stubbed(:group))
-        assign(:course, build_stubbed(:subject_course))
+        assign(:course, build_stubbed(:course))
 
         render partial: 'library/register_upgrade_links', locals: { user: user }
 
@@ -62,7 +62,7 @@ RSpec.describe 'library/_register_upgrade_links' do
 
       it 'does not show the UPGRADE NOW link' do
         assign(:group, build_stubbed(:group))
-        assign(:course, build_stubbed(:subject_course))
+        assign(:course, build_stubbed(:course))
 
         render partial: 'library/register_upgrade_links', locals: { user: user }
 
@@ -76,7 +76,7 @@ RSpec.describe 'library/_register_upgrade_links' do
 
       it 'does not show the UPGRADE NOW link' do
         assign(:group, build_stubbed(:group))
-        assign(:course, build_stubbed(:subject_course))
+        assign(:course, build_stubbed(:course))
 
         render partial: 'library/register_upgrade_links', locals: { user: user }
 

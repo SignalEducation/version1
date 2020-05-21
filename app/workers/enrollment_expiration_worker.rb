@@ -6,7 +6,7 @@ class EnrollmentExpirationWorker
   def perform(enrollment_id)
     enrollment = Enrollment.find(enrollment_id)
     if enrollment && !enrollment.expired
-      course = enrollment.subject_course
+      course = enrollment.course
       if enrollment.computer_based_exam && enrollment.exam_date
         if Proc.new{Time.now.to_datetime}.call <= enrollment.exam_date.to_datetime
           #ComputerBased Enrollment triggered by after_create callback

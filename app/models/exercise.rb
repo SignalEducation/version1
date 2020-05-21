@@ -45,7 +45,7 @@ class Exercise < ApplicationRecord
   # SCOPES =====================================================================
 
   search_scope :state, lambda { |state|
-    state == 'all' ? where.not(state: 'pending') : where(state: state)
+    state == 'all' ? where.not(state: nil) : where(state: state)
   }
   search_scope :product, ->(product_id) { where product_id: product_id }
   search_scope :corrector, ->(corrector_id) { where(corrector_id: corrector_id) }
@@ -92,6 +92,34 @@ class Exercise < ApplicationRecord
   end
 
   # CLASS METHODS ==============================================================
+
+  def self.bulk_create(csv_data, product_id)
+    new_exercises = []
+    transaction do
+      csv_data['user_id'].each_with_index do |u_id, idx|
+        CsvBulkExerciseWorker.perform_async(u_id, product_id)
+        new_exercises << { email: csv_data['email'][idx] }
+      end
+    end
+
+    new_exercises
+  end
+
+  def self.parse_csv(csv_content)
+    users = []
+    has_errors = false
+
+    CSV.new(csv_content, headers: true).each do |row|
+      unless (user = User.find_by(email: row['email']))
+        user = OpenStruct.new({ email: row['email'], errors: ['do not exist'] })
+        has_errors = true
+      end
+
+      users << user
+    end
+
+    [users, has_errors]
+  end
 
   def self.search(term)
     joins(:user).where(

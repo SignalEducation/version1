@@ -1,6 +1,6 @@
 -if @sculs.any?
   -@sculs.each do |scul|
-    -if scul.subject_course && scul.subject_course.active
+    -if scul.course && scul.course.active
       .card.card-horizontal.flex-md-row{style: 'margin-bottom: 1.5rem;'}
         .card-header.justify-content-center.align-items-center.d-none.d-sm-block
           .pt-4.text-center
@@ -13,15 +13,15 @@
 
           %h5.card-title.mb-1
             %span.mr-1
-              =scul.subject_course.name
+              =scul.course.name
         .card-footer.d-flex.justify-content-center.align-items-center{style: 'background-color: #fff; border-top: none;'}
-          =link_to 'Resume Course', library_special_link(scul.subject_course), class: 'btn btn-primary'
+          =link_to 'Resume Course', library_special_link(scul.course), class: 'btn btn-primary'
 
 -else
   %h2.h2-hero.mb-2
     ="Get started with an #{@default_group.name} course"
   .row.row-lg
-    -@default_group.subject_courses.all_active.all_in_order.each do |course|
+    -@default_group.courses.all_active.all_in_order.each do |course|
       .col-sm
         =link_to library_special_link(course), class: 'card card-horizontal flex-row card-mint' do
           .card-header.d-flex.justify-content-center.align-items-center

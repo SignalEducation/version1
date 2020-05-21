@@ -73,11 +73,34 @@ describe SubscriptionPlan, type: :model do
   end
 
   describe 'callbacks' do
+    before :each do
+      allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
+    end
+
     it { should callback(:check_dependencies).before(:destroy) }
+
+    it 'calls #create_remote_plans after creation' do
+      expect_any_instance_of(SubscriptionPlan).to receive(:create_remote_plans)
+
+      create(:subscription_plan)
+    end
+
+    it 'calls #update_remote_plans after updating the name of the plan' do
+      plan = create(:subscription_plan)
+      expect(plan).to receive(:update_remote_plans)
+
+      plan.update(name: 'New Name')
+    end
+
+    it 'does not call #update_remote_plans if the name is not updated' do
+      plan = create(:subscription_plan)
+      expect(plan).not_to receive(:update_remote_plans)
+
+      plan.update(payment_frequency_in_months: 400)
+    end
   end
 
   describe 'class methods' do
-
     before :each do
       allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
     end

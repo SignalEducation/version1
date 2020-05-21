@@ -4,36 +4,33 @@
       %header
         .d-flex.flex-wrap.flex-sm-nowrap.justify-content-between.py-4.py-md-5
           .mw-0
-            =link_to navigation_special_link(@course_module_element), class: 'btn btn-secondary btn-sm btn-sm-arrow-left mb-3 mb-sm-0' do
-              =@course_module_element.course_module.course_section.subject_course.name
+            =link_to navigation_special_link(@course_step), class: 'btn btn-secondary btn-sm btn-sm-arrow-left mb-3 mb-sm-0' do
+              =@course_step.course_lesson.course_section.course.name
 
-          -if @course_module_element && (@course_module_element.is_video? || @course_module_element.is_constructed_response?)
-            .mw-0
+          -if @course_step && (@course_step.is_video? || @course_step.is_note?  || @course_step.is_constructed_response?)
+            .mw-0{ id: 'course_note_next_step' }
               =render partial: 'next_lesson_navigation'
 
-        -if @course_module_element.is_video?
+        -if @course_step.is_video?
           .pt-3
             %h1.h3
-              =@course_module_element.name
-
+              =@course_step.name
 
       %section.course-content
         -if defined?(@results)
-          =render partial: 'courses/show_results', locals: {cme: @course_module_element}
+          =render partial: 'courses/show_results', locals: {cme: @course_step}
         -else
-          -if @course_module_element.try(:is_video)
-            =render partial: 'courses/show_video', locals: {cme: @course_module_element}
-          -elsif @course_module_element.try(:is_quiz)
+          -if @course_step.try(:is_video)
+            =render partial: 'courses/show_video', locals: {cme: @course_step}
+          -elsif @course_step.try(:is_quiz)
             =render partial: 'courses/show_quiz'
-          -elsif @course_module_element.try(:is_constructed_response)
+          -elsif @course_step.try(:is_note)
+            =render partial: 'courses/show_notes', locals: { notes: @course_step.course_note, log: @course_step_log }
+          -elsif @course_step.try(:is_constructed_response)
             =render partial: 'courses/constructed_response_start'
           -else
             %h2 Course module element - type unknown
-            -Rails.logger.error "views/courses/show - unknown CME type. CME: #{@course_module_element.inspect}."
-
-
-
-
+            -Rails.logger.error "views/courses/show - unknown CME type. CME: #{@course_step.inspect}."
 
 - if current_user
   =render partial: 'library/subscription_restriction_modal'

@@ -1,0 +1,11 @@
+.row.row-lg
+  .col-xl-12
+    %h1.h3
+      =notes.try(:name)
+    =# VueJS include
+    =javascript_pack_tag 'pdf_viewer'
+    #course-notes-reader{ 'data-course-id': notes.id,
+                          'data-step-log-id': log.id,
+                          'data-file-name': notes.name,
+                          'data-file-download': notes.download_available.to_s,
+                          'data-file-url': notes.upload.url }

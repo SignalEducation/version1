@@ -6,10 +6,10 @@ en:
       dependencies_exist: Couldn't be deleted because dependencies exist
       live_mode_error: "Live-mode error: Please contact us for help"
 
-    course_module_element:
+    course_step:
       can_only_link_to_a_video_or_quiz_not_both: You may only link this course module element to a video OR a quiz, and not both
 
-    course_module_element_resources:
+    course_notes:
       web_url_or_upload_error: You must enter a web URL or upload a file
       must_link_with_an_upload_or_url: You must link this Resource to an upload or URL
 
@@ -87,3 +87,9 @@ en:
       import_csv: Imported Users
       dont_reload: 'Do Not Reload This Page!'
       sidekiq_explanation: "Users are created as background jobs so as not to cause heavy cpu strain on the servers. If you want to check their progress click the 'Sidekiq' link below."
+    
+    exercises:
+      preview_csv: Preview Exercise Allocations
+      import_csv: Bulk Exercise Assignments
+      dont_reload: 'Do Not Reload This Page!'
+      sidekiq_explanation: "Exercises are assigned as background jobs so as not to cause heavy CPU strain on the servers. If you want to check their progress click the 'Sidekiq' link below."

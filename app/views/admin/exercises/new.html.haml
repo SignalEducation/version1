@@ -13,8 +13,7 @@
               .col-sm-6
                 .form-group
                   =f.label :product, t('views.mock_exams.form.file'), class: 'control-label'
-                  .input-group.input-group-lg
-                    =f.collection_select :product_id, Product.all_active.all_in_order, :id, Proc.new {|prod| "#{prod.name} - #{prod.currency.iso_code}"}, class: 'form-control'
+                  =f.collection_select :product_id, Product.includes(:currency).all_active.all_in_order, :id, Proc.new {|prod| "#{prod.name} - #{prod.currency.iso_code}"}, { class: 'form-control custom-select filter mr-3' }
 
         .row
           .col-sm-12

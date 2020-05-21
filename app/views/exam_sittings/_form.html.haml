@@ -15,9 +15,9 @@
 
       .col-sm-6
         .form-group
-          =f.label :subject_course_id, t('views.exam_sittings.form.subject_course_id')
+          =f.label :course_id, t('views.exam_sittings.form.course_id')
           .input-group.input-group-lg
-            =f.collection_select :subject_course_id, @subject_courses, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
+            =f.collection_select :course_id, @courses, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
 
 
         -if @exam_sitting.new_record?
@@ -25,6 +25,11 @@
             =f.label :date, t('views.exam_sittings.form.date')
             .input-group.input-group-lg
               =f.text_field :date, placeholder: t('views.exam_sittings.form.date_placeholder'), class: 'form-control', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}, id: 'datetimepicker'
+        -else
+          .form-group
+            =f.label :date, t('views.exam_sittings.form.date')
+            .input-group.input-group-lg
+              =f.text_field :date, placeholder: t('views.exam_sittings.form.date_placeholder'), class: 'form-control', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}, id: 'datetimepicker', readonly: true
 
         .col-sm-12
           .col-sm-6

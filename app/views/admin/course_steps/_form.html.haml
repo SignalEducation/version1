@@ -1,0 +1,142 @@
+=form_for([:admin, @course_step], html: {class: 'form-horizontal', role: 'form', id: 'course_step_form'}, multipart: true) do |f|
+  .box-item
+    .row
+      .col-sm-12
+        =render partial: '/layouts/error_messages', locals: {thing: @course_step, message: nil}
+        =f.hidden_field :sorting_order
+        =f.hidden_field :course_lesson_id
+        =f.hidden_field :is_quiz
+        =f.hidden_field :is_video
+        =f.hidden_field :is_note
+        =f.hidden_field :is_constructed_response
+
+
+        .row
+          .col-sm-6
+            -# Extra CourseStep Fields unique for Videos or Quizzes
+            -if @course_step.course_video
+              =render partial: 'admin/course_videos/fields_for', locals: {f: f}
+            -elsif @course_step.course_quiz
+              =render partial: 'admin/course_quizzes/fields_for', locals: {f: f}
+            -elsif @course_step.course_note
+              =render partial: 'admin/course_notes/fields_for', locals: {f: f}
+            -elsif @course_step.constructed_response
+              =render partial: 'admin/constructed_responses/basic_fields_for', locals: {f: f}
+
+
+            -# Dropdown list of other CourseLessons in the Course
+            .form-group
+              =f.label :course_lesson_id, t('views.course_steps.form.course_lesson_id')
+              .input-group.input-group-lg
+                =f.collection_select :course_lesson_id, @course_lessons, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
+            .form-group
+              -# Dropdown list of other CMEs in current course module
+              =f.label :related_course_step_id, t('views.course_steps.form.related_course_step_id')
+              .input-group.input-group-lg.full-width
+                =f.collection_select :related_course_step_id, @related_cmes, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
+
+
+
+          .col-sm-6
+            .form-group
+              =f.label :name, t('views.course_steps.form.name')
+              .input-group.input-group-lg
+                =f.text_field :name, placeholder: t('views.course_steps.form.name_placeholder'), class: 'form-control update-my-url'
+
+            .form-group
+              =f.label :name_url, t('views.course_steps.form.name_url')
+              -#TODO onscreen validation stops the form submission but summernote blocks why
+              .input-group.input-group-lg
+                =f.text_field :name_url, placeholder: t('views.course_steps.form.name_url_placeholder'), class: 'form-control'
+
+            .form-group
+              =f.label :temporary_label, t('views.course_steps.form.temporary_label')
+              .input-group.input-group-lg
+                =f.text_field :temporary_label, placeholder: t('views.course_steps.form.temporary_label_placeholder'), class: 'form-control'
+
+
+            .col-md-6
+              .form-group
+                .col-sm-8.col-sm-offset-1
+                  .checkbox
+                    %label
+                      =f.check_box :active, default: true
+                      =t('views.course_lessons.form.active')
+
+            .col-md-6
+              .form-group
+                .col-sm-8.col-sm-offset-1
+                  .checkbox
+                    %label
+                      =f.check_box :available_on_trial
+                      Available on Trial
+
+            -if @course_step.is_quiz? && !@course_step.new_record?
+              %br/
+              %br/
+              =link_to 'Reorder Quiz Questions', admin_quiz_questions_order_url(@course_step), class: 'btn btn-secondary'
+
+
+
+  -if @course_step.course_quiz
+    -# CourseQuiz Partial
+    %hr/
+    %h2.h3=t('views.course_steps.form.questions')
+    =render partial: 'admin/course_quizzes/fields_for_question', locals: {f: f}
+
+  -elsif @course_step.course_video
+    -# CourseVideo Partial
+    .box-item
+      .row
+        .col-sm-12
+          =f.label :description, t('views.course_steps.form.description'), class: 'control-label'
+          .input-group.input-group-lg
+            =f.text_area :description, as: :summernote, class: 'form-control', id: 'description'
+
+    -#.box-item
+      .row
+        .col-sm-12
+          =render partial: 'course_videos/fields_for_video_resources', locals: {f: f}
+
+    -# -if @course_step.course_notes.any?
+    -#   =render partial: 'admin/course_videos/fields_for_course_notes', locals: {f: f}
+
+  -elsif @course_step.constructed_response
+    %br/
+    %hr/
+    %br/
+    =render partial: 'admin/constructed_responses/fields_for', locals: {f: f}
+
+  .row
+    .col-md-12
+      %br/
+      %br/
+      -if @course_step.course_video
+        =f.submit t('views.general.save'), class: 'btn btn-primary', disabled: false
+      -else
+        =f.submit t('views.general.save'), class: 'btn btn-primary clear-question', id: 'submit_button'
+      -if f.object.course_quiz || f.object.constructed_response
+        =f.submit t('views.course_steps.form.save_and_add_another'), class: 'btn btn-primary'
+
+      =link_to t('views.general.cancel'), admin_show_course_lesson_url(@course_step.course_lesson.course_id, @course_step.course_lesson.course_section.id, @course_step.course_lesson.id), class: 'btn btn-secondary'
+
+
+-if @course_step.is_video
+  =render partial: 'admin/course_videos/vimeo_video_form_modal'
+
+-if @course_step.is_quiz && !@course_step.new_record?
+  :javascript
+    $(document).on('ready', function() {
+      $('.clear-question').bind('click', function() {
+        if ($('#the_new_question').find('input[type=text],textarea,select').filter(':visible:first').val() == "") {
+          $('#the_new_question').remove();;
+        }
+      });
+    })
+
+:javascript
+
+  $('#description').summernote({
+    disableDragAndDrop: true,
+    placeholder: 'write description here...'
+  });

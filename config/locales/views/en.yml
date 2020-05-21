@@ -191,7 +191,7 @@ en:
     orders:
       index:
         h1: Orders
-        subject_course_id: Course
+        course_id: Course
         mock_exam_id: Mock
         product_id: Product
         order: Order
@@ -202,7 +202,7 @@ en:
       show:
         h1: Order
         product_id: Product
-        subject_course_id: Course
+        course_id: Course
         user_id: User
         stripe_guid: Stripe Id
         stripe_customer_id: Stripe Customer Id
@@ -379,45 +379,10 @@ en:
       new:
         h1: New Coupon
 
-
-    courses:
-      show:
-        h1: Courses
-        done: Done
-        coming_soon: "We don't have any content for this course module right now."
-
-      content_denied:
-          subscription: Upgrade to a Subscription
-          subscription_required: A valid subscription is required to view this content. Upgrade to access this course.
-          product: Purchase this Course
-          product_required: You must first purchase this course to access it's content.
-
-      show_results:
-        result: 'Result:'
-        score: 'Score:'
-        summary: Summary
-        q: Q
-        answers: Possible Answers
-        correct_answer: "Correct Answer: "
-        your_answer: "Your Answer: "
-        solution: "Solution"
-        check_out: "Review the video: "
-        attempts_table:
-          question: 'Question'
-          result: Result
-          score: Score
-          level: Level
-          video: Video
-          total: Total
-        scoring_system: Scoring system
-        previous_attempts: Previous Attempts
-        no_previous_attempts: "This is your first attempt at this quiz. If you re-attempt this quiz in the future, your most recent previous attempts will be shown here."
-
-
     course_sections:
       form:
-        course_module_elements: Course Module Elements
-        subject_course_id: Course
+        course_steps: Course Lessons
+        course_id: Course
         name: Name
         name_placeholder: Course Section (tab) Name
         name_url: Name URL
@@ -441,17 +406,17 @@ en:
       show:
         h1: Course Section
 
-    course_modules:
+    course_lessons:
       form:
-        course_module_elements: Course Module Elements
-        subject_course_id: Course
+        course_steps: Course Lessons
+        course_id: Course
         course_section_id: Course Section (tab)
         name: Name
-        name_placeholder: Course Module Name
+        name_placeholder: Course Lesson Name
         name_url: Name URL
-        name_url_placeholder: course-module-name
+        name_url_placeholder: course-lesson-name
         description: Description
-        description_placeholder: Describe the course module here
+        description_placeholder: Describe the course Lesson here
         sorting_order: Sorting order
         sorting_order_placeholder: 100
         estimated_time_in_seconds: "Time (in seconds)"
@@ -471,23 +436,23 @@ en:
         temporary_label_placeholder: Temp Label
 
       edit:
-        h1: Edit Course Module
+        h1: Edit Course Lesson
 
       index:
-        h1: Course Modules
-        delete: Delete Course Module
+        h1: Course Lessons
+        delete: Delete Course Lesson
 
       new:
-        h1: New Course Module
+        h1: New Course Lesson
 
       show:
-        h1: Course Module
-        click_a_module: Click on a Course Module to view its details or click on "New" to create a new Course Module.
+        h1: Course Lesson
+        click_a_module: Click on a Course Lesson to view its details or click on "New" to create a new Course Lesson.
         link_to_student_ui: "View in the student-facing UI"
         add_more_questions: More questions needed
 
 
-    course_module_elements:
+    course_steps:
       form:
         name: Name
         name_placeholder: Give a title that users will see
@@ -501,16 +466,17 @@ en:
         estimated_time_in_seconds: Estimated time in seconds
         estimated_time_in_seconds_tag: (If blank this will be auto-populated with 60 seconds per question)
         estimated_time_in_seconds_placeholder: 180
-        course_module_id: Course module
-        course_module_element_video_id: Course module element video id
-        course_module_element_quiz_id: Course module element quiz id
-        related_course_module_element_id: Related Course Module Element
+        course_lesson_id: Course Lesson
+        course_video_id: Course Lesson video id
+        course_quiz_id: Course Lesson quiz id
+        related_course_step_id: Related Course Lesson
         sorting_order: Sorting order
         forum_topic_id: Forum topic
         created_at: Created at
         updated_at: Updated_at
         new_video: New video
         new_quiz: New quiz
+        new_note: New note
         new_constructed_response: New CR
         questions: Questions
         save_and_add_another: Save and add another Question
@@ -520,23 +486,26 @@ en:
         seo_no_index: "SEO no-index flag"
 
       edit:
-        h1: Edit Course Module Element
+        h1: Edit Course Lesson
         video: Edit Video
         quiz: Edit Quiz
+        note: Edit Note
 
       index:
-        h1: Course Module Elements
+        h1: Course Lessons
 
       new:
-        h1: New Course Module Element
+        h1: New Course Lesson
         video: New Video
         quiz: New Quiz
+        note: New Note
         constructed_response: New Constructed Response
 
       show:
-        h1: Course Module Element
+        h1: Course Lesson
         quiz_preview: Quiz Preview
         video_preview: Video Preview
+        note_preview: Note Preview
         constructed_response_preview: Constructed Response Preview
         next: Next
         next_step: Next Step
@@ -557,7 +526,7 @@ en:
           resources: Resources
           transcript: Transcript
 
-    course_module_element_quizzes:
+    course_quizzes:
       form:
         number_of_questions: No. of Questions Asked
         number_of_questions_placeholder: 10
@@ -585,9 +554,9 @@ en:
         scenario_answer_template:
           text_content: Answer Template Text
 
-    course_module_element_resources:
+    course_notes:
       form:
-        course_module_element_id: Course module element
+        course_step_id: Course Lesson
         name: File Name
         name_placeholder: Name that users will see
         description: Description
@@ -607,7 +576,7 @@ en:
 
       index:
         h1: File Uploads - (PDF's, Excel Files, etc)
-        index_h1: Course Module Element Resources
+        index_h1: Course Lesson Resources
 
       new:
         h1: New Resource
@@ -615,7 +584,7 @@ en:
 
       show:
 
-    course_module_element_videos:
+    course_videos:
       form:
         video_file: Video File
         duration: Video Duration in seconds
@@ -627,9 +596,9 @@ en:
         dacast_id: Dacast video ID
         dacast_id_placeholder: Dacast video ID (in the URL on Dacast)
 
-    course_tutor_details:
+    course_tutors:
       form:
-        subject_course_id: Course
+        course_id: Course
         user_id: Tutor User
         title: Title
         title_placeholder: Course Tutor Title
@@ -682,17 +651,17 @@ en:
       individual_student:
         in-progress: In-progress
         completed: Completed
-        none_in_progress: "Remember, you can study multiple modules at the same time."
-        none_completed: "This panel will show you the modules that you have completed. Keep going!"
+        none_in_progress: "Remember, you can study multiple lessons at the same time."
+        none_completed: "This panel will show you the lessons that you have completed. Keep going!"
         no_content_right_now_h1: Your Learn Signal Dashboard
         no_content_right_now_h5: Your progress through all courses will be recorded here.
         overview: Overview
 
       tutor:
         title: Dashboard
-        total_course_module_elements: Total Course Modules Elements
-        course_module_element_videos: Number of Videos
-        course_module_element_quizzes: Number of Quizzes
+        total_course_steps: Total Course Steps
+        course_videos: Number of Videos
+        course_quizzes: Number of Quizzes
         total_time_watched: Total Time Watched
 
       admin:
@@ -728,6 +697,7 @@ en:
         active: Active
         has_sittings: Has Sittings?
         has_products: Has Products?
+        emit_certificate: Emit Certificate?
         preferred_payment_frequency: Preferred Payment Interval (optional)
         subscription_page_subheading_text: Subscription Payment Subheading
         subscription_page_subheading_text_placeholder: Subscription Payment Subheading
@@ -767,7 +737,7 @@ en:
     exam_sittings:
       form:
         name: Name
-        subject_course_id: Course
+        course_id: Course
         exam_body_id: Exam Body
         active: Active
         computer_based: Computer Based
@@ -946,7 +916,7 @@ en:
         subscription_plan_category_id: Subscription Plan Category
         monthly_percentage_off: Optional percentage saving
         group_id: Related Group
-        subject_course_id: Related Course
+        course_id: Related Course
         public_url: Public URL
         public_url_placeholder: Public URL Placeholder
         custom_file_name: View File Name
@@ -1011,7 +981,7 @@ en:
         status: 'Status'
         issued_at: "Issued at"
         date: Date
-        subject_course: Course
+        course: Course
         mock_exam: Mock Exam
         stripe_guid: "Stripe GUID"
         sub_total: "Sub- total"
@@ -1094,8 +1064,8 @@ en:
         video: Video
         number_of_videos: Videos
         videos: of Video
-        course_module: Course Module
-        course_module_element: Step
+        course_lesson: Course Lesson
+        course_step: Step
         table_of_contents: Table of contents
         description: Description
 
@@ -1107,7 +1077,7 @@ en:
       form:
         name: Name
         name_placeholder: Mock Exam Name
-        subject_course_id: Course
+        course_id: Course
         product_id: Product
         file: Upload a PDF of your solution
         file_replacement: Upload a replacement solution
@@ -1138,7 +1108,7 @@ en:
         cbe: CBE
         product_type: Product Type
         correction_pack_count: Number of Corrections
-        subject_course: Course
+        course: Course
         type: Type
         group_id: Group
         payment_heading: Payment Page Heading
@@ -1244,7 +1214,7 @@ en:
       modal:
         h4: New Card Details
 
-    subject_courses:
+    courses:
       form:
         name: Name
         name_placeholder: Course name
@@ -1266,6 +1236,8 @@ en:
         default_number_of_possible_exam_answers: Default No. of Questions
         default_number_of_possible_exam_answers_placeholder: No. of Questions
         group_id: Group
+        accredible_group_id: Group ID (Accredible)
+        accredible_group_id_placeholder: Group ID
         quiz_pass_rate: Quiz Pass Rate
         quiz_pass_rate_placeholder: Custom Pass Rate for Quizzes
         icon_label: Icon Label
@@ -1291,34 +1263,63 @@ en:
         edit_content: Edit Content
         edit_tutors: Tutors
 
+      content_denied:
+          subscription: Upgrade to a Subscription
+          subscription_required: A valid subscription is required to view this content. Upgrade to access this course.
+          product: Purchase this Course
+          product_required: You must first purchase this course to access it's content.
+
+      show_results:
+        result: 'Result:'
+        score: 'Score:'
+        summary: Summary
+        q: Q
+        answers: Possible Answers
+        correct_answer: "Correct Answer: "
+        your_answer: "Your Answer: "
+        solution: "Solution"
+        check_out: "Review the video: "
+        attempts_table:
+          question: 'Question'
+          result: Result
+          score: Score
+          level: Level
+          video: Video
+          total: Total
+        scoring_system: Scoring system
+        previous_attempts: Previous Attempts
+        no_previous_attempts: "This is your first attempt at this quiz. If you re-attempt this quiz in the future, your most recent previous attempts will be shown here."
+
 
       show:
-        h1: Course
-        add_course_module: Please create a Course module to begin
+        add_course_lesson: Please create a Course Lesson to begin
         description: Description
         info: Course Info
         update_student_logs: Update Student Logs
-        course_tutor_details: Tutors Details
+        course_tutors: Tutors Details
+        h1: Courses
+        done: Done
+        coming_soon: "We don't have any content for this course Lesson right now."
 
       edit:
         h1: Edit Course
 
-      course_modules_order:
+      course_lessons_order:
         return: Return
 
-      reorder: Reorder Course Modules
+      reorder: Reorder Course Lessons
 
       new:
         h1: New Course
 
-    subject_course_resources:
+    course_resources:
       form:
         name: Name
         name_placeholder: Link/Button Name
         description: Description
         description_placeholder: Description
-        subject_course_id: Course
-        subject_course_id_placeholder: Course
+        course_id: Course
+        course_id_placeholder: Course
         external_url: External URL
         external_url_placeholder: External Web URL
 
@@ -1332,7 +1333,7 @@ en:
         h2: Course Resources
         description: Description
         name: Name
-        subject_course_id: Course
+        course_id: Course
 
       edit:
         h1: Edit Course Resource
@@ -1340,7 +1341,7 @@ en:
       new:
         h1: New Course Resource
 
-    subject_course_user_log:
+    course_log:
       show:
         course: Course
         completed_at: Completed At

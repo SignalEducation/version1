@@ -89,6 +89,8 @@ class Coupon < ApplicationRecord
   # Called from Subscriptions#create action
   def self.get_and_verify(coupon_param, sub_plan_id)
     coupon = Coupon.find_by(code: coupon_param, active: true)
+    return coupon if coupon.nil?
+
     sub_plan = SubscriptionPlan.find(sub_plan_id)
 
     if coupon&.amount_off

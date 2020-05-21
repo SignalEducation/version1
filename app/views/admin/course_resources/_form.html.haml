@@ -1,0 +1,78 @@
+=form_for(@course_resource, url: (controller_name == 'course_resources' ? admin_course_resource_url : admin_create_course_resources_url), html: {class: 'form-horizontal', role: 'form'}) do |f|
+  .box-item
+    .row
+      .col-sm-12
+        =render partial: '/layouts/error_messages', locals: {thing: @course_resource, message: nil}
+        .row
+          .col-sm-6
+            .form-group
+              =f.label :name, t('views.course_resources.form.name')
+              .input-group.input-group-lg
+                =f.text_field :name, placeholder: t('views.course_resources.form.name_placeholder'), class: 'form-control', autofocus: true
+
+          .col-sm-6
+            .form-group
+              =f.label :description, t('views.course_resources.form.description')
+              .input-group.input-group-lg
+                =f.text_area :description, placeholder: t('views.course_resources.form.description_placeholder'), rows: 4, class: 'form-control'
+
+          -if controller_name == 'course_resources'
+            .col-sm-6
+              .form-group
+                =f.label :course_id, t('views.course_resources.form.course_id')
+                .input-group.input-group-lg
+                  =f.collection_select :course_id, @courses, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
+
+
+      .col-sm-12
+        .row
+          .col-sm-6
+            .form-group
+              =f.label :file_upload, t('views.course_notes.form.upload')
+              -if f.object.present?
+                .form-control-static
+                  =link_to f.object.file_upload_file_name, f.object.file_upload.url, target: '_blank'
+                  =number_to_human_size(f.object.file_upload_file_size)
+                  %br/
+                  %br/
+                =f.label :file_upload, t('views.course_notes.form.replace')
+                .input-group.input-group-lg
+                  =f.file_field :file_upload
+                  %p{style: 'margin: 10px 0;'}
+              -else
+                .input-group.input-group-lg
+                  =f.file_field :file_upload, class: 'form-control'
+
+          .col-sm-6
+            .form-group
+              =f.label :external_url, t('views.course_resources.form.external_url')
+              .input-group.input-group-lg
+                =f.text_field :external_url, placeholder: t('views.course_resources.form.external_url_placeholder'), class: 'form-control'
+
+
+        .col-md-12.pt-4
+          .row
+            .col-sm-4
+              .form-group
+                .checkbox
+                  %label
+                    =f.check_box :active
+                    ='Active'
+            .col-sm-4
+              .form-group
+                .checkbox
+                  %label
+                    =f.check_box :download_available
+                    ='Allow Download'
+
+            .col-sm-4
+              .form-group
+                .checkbox
+                  %label
+                    =f.check_box :available_on_trial
+                    ='Available on Trial'
+
+    .row.pt-4
+      .col-sm-12
+        =f.submit t('views.general.save'), class: 'btn btn-primary'
+        =link_to t('views.general.cancel'), admin_course_resources_url(@course_resource.course), class: 'btn btn-secondary'

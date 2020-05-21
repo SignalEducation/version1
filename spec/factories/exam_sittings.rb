@@ -4,7 +4,7 @@
 #
 #  id                :integer          not null, primary key
 #  name              :string
-#  subject_course_id :integer
+#  course_id :integer
 #  date              :date
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
@@ -17,7 +17,7 @@ FactoryBot.define do
   factory :exam_sitting do
     sequence(:name)           { |n| "Exam Sitting #{n}" }
     exam_body_id { 1 }
-    subject_course_id { 1 }
+    course_id { 1 }
     active { true }
     date { "2019-10-26" }
 

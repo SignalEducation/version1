@@ -10,14 +10,14 @@
 #  content           :text
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
-#  subject_course_id :bigint
+#  course_id :bigint
 #  agreement_content :text
 #  active            :boolean          default("true"), not null
 #  score             :float
 #
 class Cbe < ApplicationRecord
   # relationships
-  belongs_to :subject_course
+  belongs_to :course
   has_one :product, dependent: :destroy
 
   has_many :sections, dependent: :destroy, inverse_of: :cbe,
@@ -29,10 +29,10 @@ class Cbe < ApplicationRecord
                        dependent: :destroy
 
   # validations
-  validates :name, :agreement_content, :subject_course_id, presence: true
+  validates :name, :agreement_content, :course_id, presence: true
 
   # scopes
-  scope :all_in_order, -> { order(:sorting_order, :subject_course_id) }
+  scope :all_in_order, -> { order(:sorting_order, :course_id) }
 
   def duplicate
     new_cbe = deep_clone include: [

@@ -29,6 +29,7 @@ module HubSpot
          { property: 'date_of_birth',          value: user.date_of_birth },
          { property: 'currency',               value: user&.currency&.name },
          { property: 'country',                value: user&.country&.name },
+         { property: 'user_group',             value: user&.user_group&.name },
          { property: 'sub_close_date',         value: last_subscription&.created_at&.strftime('%d-%m-%Y') },
          { property: 'sub_payment_interval',   value: last_subscription&.subscription_plan&.interval_name },
          { property: 'sub_exam_body',          value: last_subscription&.subscription_plan&.exam_body&.name },
@@ -36,6 +37,7 @@ module HubSpot
          { property: 'sub_cancelation_date',   value: last_subscription&.cancelled_at&.strftime('%d-%m-%Y') },
          { property: 'sub_cancelation_reason', value: last_subscription&.cancellation_reason },
          { property: 'sub_cancelation_note',   value: last_subscription&.cancellation_note },
+         { property: 'next_renewal_date',      value: last_subscription&.next_renewal_date&.strftime('%d-%m-%Y') },
          { property: 'preferred_exam_body',    value: user&.preferred_exam_body&.name }] + subscriptions_statuses(user)
       end
 
