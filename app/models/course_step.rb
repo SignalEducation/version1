@@ -162,7 +162,7 @@ class CourseStep < ApplicationRecord
       if scul
         course_lesson_log = scul.course_lesson_logs.for_course_lesson(course_lesson_id).last
         if course_lesson_log
-          !course_lesson_log.completed_cme_user_logs.map(&:course_step_id).include?(related_course_step_id)
+          !course_lesson_log.completed_course_step_logs.map(&:course_step_id).include?(related_course_step_id)
         else
           true
         end
