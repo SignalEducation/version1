@@ -20,12 +20,14 @@ new Vue({
 
 document.addEventListener('DOMContentLoaded', () => {
   // Course Resources Modal Window
-  while (document.getElementsByClassName('pdf-files-elements').length !== 0) {
+  while (document.getElementsByClassName('pdf-files-elements').length != 0) {
     let element = document.getElementsByClassName('pdf-files-elements').item(0);
     (() => mountViewerElement(element, element.dataset, ModalViewer))()
   }
 
-  // Course Notes Viewer
+  // Course Notes Viewwer
   const courseNotesElement = document.getElementById('course-notes-reader');
-  (() => mountViewerElement(courseNotesElement, courseNotesElement.dataset, NotesViewer))()
+  if (courseNotesElement != null) {
+    (() => mountViewerElement(courseNotesElement, courseNotesElement.dataset, NotesViewer))()
+  }
 });
