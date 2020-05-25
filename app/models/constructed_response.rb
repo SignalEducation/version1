@@ -58,8 +58,8 @@ class ConstructedResponse < ApplicationRecord
 
     new_constructed_response.
       course_step.update(name: "#{course_step.name} COPY",
-                                   name_url: "#{course_step.name_url}_copy",
-                                   active: false)
+                         name_url: "#{course_step.name_url}_copy",
+                         active: false)
   end
 
   protected
