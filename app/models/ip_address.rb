@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: ip_addresses
@@ -17,14 +19,8 @@ class IpAddress < ApplicationRecord
   geocoded_by :ip_address
 
   reverse_geocoded_by :latitude, :longitude do |obj, results|
-    if (geo = results.first)
-      obj.country_id = Country.find_by(iso_code: geo.country_code)&.id || 78
-    else
-      obj.country_id = 78 # UK
-    end
+    obj.assign_country_from_geo(results.first)
   end
-
-  # Constants
 
   # relationships
   belongs_to :country
@@ -45,7 +41,7 @@ class IpAddress < ApplicationRecord
 
   # class methods
   def self.get_country(ip_address, country_required = false)
-    country = IpAddress.where(ip_address: ip_address).first_or_create.country
+    country = where(ip_address: ip_address).first_or_create.country
     if !country && country_required
       Country.find_by(name: 'United Kingdom')
     else
@@ -54,6 +50,14 @@ class IpAddress < ApplicationRecord
   end
 
   # instance methods
+  def assign_country_from_geo(result)
+    self.country_id = if result
+                        Country.find_by(iso_code: result.country_code)&.id || 78
+                      else
+                        78 # UK
+                      end
+  end
+
   def destroyable?
     true
   end
@@ -61,17 +65,17 @@ class IpAddress < ApplicationRecord
   private
 
   def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
+    return if destroyable?
+
+    errors.add(:base, I18n.t('models.general.dependencies_exist'))
+    false
   end
 
   def geo_locate
-    unless Rails.env.test?
-      self.geocode if self.ip_address
-      self.reverse_geocode if self.ip_address
-    end
     self.alert_level = 0
+    return if Rails.env.test? || !ip_address
+
+    geocode
+    reverse_geocode
   end
 end
