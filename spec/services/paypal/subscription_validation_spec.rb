@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe Paypal::SubscriptionValidation, type: :service do
-  let(:subscription) { create(:paypal_subscription, paypal_status: 'Active') }
+  let(:subscription) { create(:paypal_subscription, paypal_status: 'Active', state: 'active') }
   let(:good_instance) { Paypal::SubscriptionValidation.new(subscription) }
 
   before :each do
@@ -57,27 +57,65 @@ describe Paypal::SubscriptionValidation, type: :service do
 
   describe '#match_with_state' do
     describe 'for Active BillingAgreements' do
-      it 'calls #restart on the subscription' do
-        expect(subscription).to receive(:restart)
+      let(:sub) { create(:paypal_subscription, paypal_status: 'Suspended', state: 'paused') }
+      let(:target_instance) { Paypal::SubscriptionValidation.new(sub) }
 
-        good_instance.send(:match_with_state, double(state: 'Active'))
+      it 'updates the subscription paypal status' do
+        expect(sub).to receive(:update).with(paypal_status: 'Active')
+
+        target_instance.send(:match_with_state, double(state: 'Active'))
+      end
+
+      it 'calls #restart on the subscription' do
+        expect(sub).to receive(:restart!)
+
+        target_instance.send(:match_with_state, double(state: 'Active'))
       end
     end
 
     describe 'for Suspended BillingAgreements' do
-      it 'calls #pause on the subscription' do
-        expect(subscription).to receive(:pause)
+      let(:sub) { create(:paypal_subscription, paypal_status: 'Active', state: 'active') }
+      let(:target_instance) { Paypal::SubscriptionValidation.new(sub) }
 
-        good_instance.send(:match_with_state, double(state: 'Suspended'))
+      it 'updates the subscription paypal status' do
+        expect(sub).to receive(:update).with(paypal_status: 'Suspended')
+
+        target_instance.send(:match_with_state, double(state: 'Suspended'))
+      end
+
+      it 'calls #pause on the subscription' do
+        expect(sub).to receive(:pause!)
+
+        target_instance.send(:match_with_state, double(state: 'Suspended'))
       end
     end
 
     describe 'for Cancelled BillingAgreements' do
-      it 'calls #cancel on the subscription' do
-        expect(subscription).to receive(:cancel)
+      let(:sub) { create(:paypal_subscription, paypal_status: 'Active', state: 'active') }
+      let(:target_instance) { Paypal::SubscriptionValidation.new(sub) }
 
-        good_instance.send(:match_with_state, double(state: 'Cancelled'))
+      it 'updates the subscription paypal status' do
+        expect(target_instance).to receive(:update_paypal_status).with('Cancelled')
+
+        target_instance.send(:match_with_state, double(state: 'Cancelled'))
       end
+
+      it 'calls #cancel on the subscription' do
+        expect(sub).to receive(:cancel!)
+
+        target_instance.send(:match_with_state, double(state: 'Cancelled'))
+      end
+    end
+  end
+
+  describe '#update_paypal_status' do
+    let(:sub) { create(:paypal_subscription, paypal_status: 'Active', state: 'active') }
+    let(:target_instance) { Paypal::SubscriptionValidation.new(sub) }
+
+    it 'calls #update with the passed in state' do
+      expect(sub).to receive(:update).with(paypal_status: 'Cancelled')
+
+      target_instance.send(:update_paypal_status, 'Cancelled')
     end
   end
 
@@ -85,7 +123,7 @@ describe Paypal::SubscriptionValidation, type: :service do
     it 'calls #notify on Airbrake' do
       expect(Airbrake).to receive(:notify)
 
-      good_instance.send(:log_to_airbrake)
+      good_instance.send(:log_to_airbrake, 'test message')
     end
   end
 end

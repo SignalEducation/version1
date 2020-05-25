@@ -6,6 +6,7 @@ module Api
 
     def create
       CronService.new.initiate_task(params[:id])
+      head :no_content
     end
   end
 end
