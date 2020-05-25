@@ -64,6 +64,7 @@ module Admin
         cm = @course_step.parent
         if @course_step.is_quiz
           @course_step.course_quiz.add_an_empty_question
+          @quiz_questions = @course_step&.course_quiz&.quiz_questions&.all_in_order
         elsif @course_step.is_video
           @course_step.build_video_resource unless @course_step.video_resource
         elsif @course_step.is_constructed_response

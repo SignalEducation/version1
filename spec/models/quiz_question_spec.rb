@@ -35,6 +35,7 @@ describe QuizQuestion do
   describe 'callbacks' do
     it { should callback(:check_dependencies).before(:destroy) }
     it { should callback(:set_course_step).before(:validation) }
+    it { should callback(:set_sorting_order).before(:create) }
   end
   describe 'scopes' do
     it { expect(QuizQuestion).to respond_to(:all_in_order) }
@@ -43,6 +44,8 @@ describe QuizQuestion do
   end
 
   describe 'instance methods' do
+    it { should respond_to(:parent) }
+    it { should respond_to(:children) }
     it { should respond_to(:destroyable?) }
     it { should respond_to(:destroyable_children) }
   end

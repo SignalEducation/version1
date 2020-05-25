@@ -41,6 +41,8 @@ describe CourseQuiz do
   end
 
   describe 'instance methods' do
+    it { should respond_to(:parent) }
+    it { should respond_to(:children) }
     it { should respond_to(:enough_questions?) }
     it { should respond_to(:add_an_empty_question) }
     it { should respond_to(:all_ids_random) }
