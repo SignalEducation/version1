@@ -21,6 +21,7 @@ require 'spec_helper'
 require 'support/database_cleaner' # configuration of database_cleaner
 require 'support/dry_specs'       # our handy way of doing lots of repetitive tests
 require 'support/feature_specs'   # shortcuts for our feature tests
+require 'support/fixtures'
 require 'support/paper_clip'
 require 'support/stripe_mock_helpers'
 require 'webmock/rspec'
