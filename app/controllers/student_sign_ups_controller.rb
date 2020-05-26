@@ -121,7 +121,7 @@ class StudentSignUpsController < ApplicationController
     @navbar = false
     @footer = false
     user_country = IpAddress.get_country(request.remote_ip, true)
-    user_currency = user_country.currency || Currency.find_by(iso_code: 'GBP')
+    user_currency = user_country&.currency || Currency.find_by(iso_code: 'GBP')
 
     @user = User.new(
       student_allowed_params.merge(

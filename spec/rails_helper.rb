@@ -53,20 +53,12 @@ end
 
 # JS DRIVER ####################################################################
 
-Capybara.register_driver :selenium do |app|
-  client = Selenium::WebDriver::Remote::Http::Default.new
-  client.read_timeout = 90
-  Capybara::Selenium::Driver.new(app, browser: :chrome,
-                                      http_client: client,
-                                      desired_capabilities: {
-                                        'chromeOptions' => {
-                                          'args' => %w[window-size=1200,800]
-                                        }
-                                      })
+Capybara.register_driver :selenium_chrome do |app|
+  Capybara::Selenium::Driver.new(app, browser: :chrome)
 end
 
-Capybara.javascript_driver = :selenium
-Chromedriver.set_version '2.41'
+Capybara.javascript_driver = :selenium_chrome
+
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are

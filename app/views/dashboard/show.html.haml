@@ -11,7 +11,7 @@
             %h1.h1-hero.pt-5
               =t('views.dashboard.student.h1')
           .mw-0.pt-5
-            - if @default_group.name_url == 'cpd'
+            - if @default_group&.name_url == 'cpd'
               =link_to library_special_link(@default_group), class: 'btn btn-secondary btn-sm btn-sm-arrow-right mb-3 mb-sm-0' do
                 ='Explore More CPD Courses'
 

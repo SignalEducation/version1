@@ -30,9 +30,9 @@ def fill_in_sign_in_form(user)
   end
 end
 
-def sign_out
-  find('.dropdown.dropdown-normal').click
-  click_link(I18n.t('views.general.sign_out'))
+def log_out
+  find('#navbarDropdown').click
+  click_link(I18n.t('views.general.log_out'))
 end
 
 def visit_my_profile
