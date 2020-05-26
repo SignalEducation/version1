@@ -39,6 +39,14 @@ class CourseQuiz < ApplicationRecord
   # class methods
 
   # instance methods
+  def parent
+    course_step
+  end
+
+  def children
+    quiz_questions
+  end
+
   def duplicate
     new_cme_quiz =
       deep_clone include: [

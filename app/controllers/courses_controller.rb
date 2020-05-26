@@ -231,9 +231,9 @@ class CoursesController < ApplicationController
     @number_of_questions = @course_step.course_quiz.number_of_questions
     @quiz_questions      =
       if @strategy == 'random'
-        @course_step.course_quiz.quiz_questions.includes(:quiz_contents).shuffle.take(@number_of_questions)
+        @course_step.course_quiz.quiz_questions.all_in_order.includes(:quiz_contents).shuffle.take(@number_of_questions)
       else
-        @course_step.course_quiz.quiz_questions.includes(:quiz_contents).take(@number_of_questions)
+        @course_step.course_quiz.quiz_questions.all_in_order.includes(:quiz_contents).take(@number_of_questions)
       end
   end
 
