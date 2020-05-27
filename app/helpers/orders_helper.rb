@@ -2,7 +2,7 @@
 
 module OrdersHelper
   def order_link(order)
-    if order.product.cbe?
+    if order.product.cbe? && order.exercises.present?
       exercise = order.exercises.first
       link_to exercise_path_by_state(exercise), target: '_blank' do
         'View'
