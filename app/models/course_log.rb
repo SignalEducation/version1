@@ -42,7 +42,7 @@ class CourseLog < ApplicationRecord
   # callbacks
   before_destroy :check_dependencies
   after_save :update_enrollment
-  after_save :emit_certificate
+  after_save :emit_certificate, if: :saved_change_to_completed?
 
   # scopes
   scope :all_in_order, -> { order(:user_id, :created_at) }
