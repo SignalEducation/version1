@@ -29,5 +29,4 @@ class Level < ApplicationRecord
   # scopes
   scope :all_in_order, -> { order(:sorting_order, :group_id) }
   scope :all_active, -> { where(active: true) }
-
 end

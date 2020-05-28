@@ -38,5 +38,9 @@ FactoryBot.define do
     products_subheading                { 'Header P Text' }
     products_seo_title                 { 'Header H1' }
     products_seo_description           { 'Header P Text' }
+
+    trait :with_group do
+      association :group
+    end
   end
 end

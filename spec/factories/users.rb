@@ -239,5 +239,9 @@ FactoryBot.define do
       active                            { true }
       stripe_customer_id                { nil }
     end
+
+    trait :with_group do
+      association :preferred_exam_body, :with_group, factory: :exam_body
+    end
   end
 end

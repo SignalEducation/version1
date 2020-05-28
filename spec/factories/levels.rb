@@ -17,14 +17,17 @@
 #
 FactoryBot.define do
   factory :level do
-    group_id                       { 1 }
-    name                           { "MyString" }
-    name_url                       { "MyString" }
+    sequence(:name)                { |n| "#{Faker::Movies::LordOfTheRings.location} - #{n}" }
+    sequence(:name_url)            { |n| "#{Faker::Internet.slug}-#{n}" }
     active                         { false }
-    highlight_colour               { "MyString" }
+    highlight_colour               { 'MyString' }
     sorting_order                  { 1 }
     icon_label                     { 'MyString' }
     onboarding_course_heading      { 'Welcome Message' }
     onboarding_course_subheading   { 'Welcome Message' }
+
+    trait :active do
+      active { true }
+    end
   end
 end

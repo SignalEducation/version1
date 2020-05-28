@@ -2,8 +2,7 @@
   .container
     %article.text-center.py-5.py-sm-5
       .px-3.px-lg-0
-
-        -if @home_page.stats_content && !@home_page.stats_content.blank?
+        -if @home_page&.stats_content && !@home_page.stats_content.blank?
           .row
             -@home_page.stats_content.split('*').each do |stat|
               .col

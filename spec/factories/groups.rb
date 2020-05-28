@@ -31,7 +31,7 @@
 FactoryBot.define do
   factory :group do
     sequence(:name)              { |n| "#{Faker::Movies::LordOfTheRings.location} - #{n}" }
-    name_url                     { |n| "#{Faker::Internet.slug}-#{n}" }
+    sequence(:name_url)          { |n| "#{Faker::Internet.slug}-#{n}" }
     description                  { Faker::Lorem.sentence }
     active                       { true }
     sorting_order                { 1 }
@@ -41,5 +41,10 @@ FactoryBot.define do
     onboarding_level_subheading  { 'Welcome Message' }
     seo_title                    { |n| "#{Faker::Internet.domain_name} - #{n}" }
     exam_body
+
+    before(:create) do |group|
+      group.save(validate: false)
+      create_list(:level, 3, :active, group: group)
+    end
   end
 end
