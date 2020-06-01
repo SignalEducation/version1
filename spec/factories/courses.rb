@@ -43,7 +43,7 @@
 FactoryBot.define do
   factory :course do
     sequence(:name)                         { |n| "#{Faker::Lorem.word}-#{n}" }
-    sequence(:name_url)                         { |n| "#{Faker::Internet.slug}-#{n}" }
+    sequence(:name_url)                     { |n| "#{Faker::Internet.slug}-#{n}" }
     sorting_order                           { 1 }
     active                                  { false }
     cme_count                               { 1 }

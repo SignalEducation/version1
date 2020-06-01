@@ -21,13 +21,13 @@
 
 FactoryBot.define do
   factory :course_section do
-    course_id { 1 }
-    name { "MyString" }
-    sequence(:name_url)  { |x| "course-section-#{x}" }
-    sorting_order { 1 }
-    active { true }
+    course_id                 { 1 }
+    name                      { 'Course Section' }
+    sequence(:name_url)       { |x| "course-section-#{x}" }
+    sorting_order             { 1 }
+    active                    { true }
     counts_towards_completion { false }
-    assumed_knowledge { false }
+    assumed_knowledge         { false }
     course
   end
 end

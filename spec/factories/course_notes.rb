@@ -20,5 +20,14 @@ FactoryBot.define do
     course_step_id  { 1 }
     sequence(:name) { |n| "Resource #{n}" }
     web_url         { 'https://linkedin.com' }
+
+    trait :file_uploaded do
+      upload  { File.new(Rails.root.join('spec', 'support', 'fixtures', 'file.pdf')) }
+      web_url { nil }
+    end
+
+    trait :downloadable do
+      download_available { true }
+    end
   end
 end

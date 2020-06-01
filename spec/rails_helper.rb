@@ -13,6 +13,7 @@ require 'capybara/rspec'
 require 'database_cleaner'
 require 'factory_bot_rails'       # suggested by stack overflow
 require 'rspec/rails'
+require 'rspec/retry'
 require 'shoulda/matchers'
 require 'paperclip/matchers'
 require 'sidekiq/testing'
@@ -24,6 +25,7 @@ require 'support/feature_specs'   # shortcuts for our feature tests
 require 'support/fixtures'
 require 'support/paper_clip'
 require 'support/stripe_mock_helpers'
+require 'support/retry'
 require 'webmock/rspec'
 include Authlogic::TestCase       # required for Authlogic
 

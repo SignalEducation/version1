@@ -26,5 +26,10 @@ FactoryBot.define do
       vimeo_guid { 'not empty' }
       sequence(:dacast_id) { |n| "dacast-#{n}" }
     end
+
+    trait :real_video_ids do
+      vimeo_guid { 417525861 }
+      dacast_id  { 722491 }
+    end
   end
 end

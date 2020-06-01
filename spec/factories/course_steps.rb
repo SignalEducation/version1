@@ -27,8 +27,8 @@
 
 FactoryBot.define do
   factory :course_step do
-    sequence(:name)             { |n| "Course Module Element #{n}" }
-    sequence(:name_url)         { |n| "course-module-element-#{n}" }
+    sequence(:name)             { |n| "Course Step #{n}" }
+    sequence(:name_url)         { |n| "course-step-#{n}" }
     description                 { 'Lorem ipsum' }
     estimated_time_in_seconds   { 1 }
     course_lesson
