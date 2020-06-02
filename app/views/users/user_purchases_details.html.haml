@@ -10,7 +10,11 @@
 
     .row
       .col-sm-12
+        .box-item.table-box
+          =link_to "#{@user.first_name}'s Exercises", admin_user_exercises_path(@user), class: 'btn btn-primary'
 
+    .row
+      .col-sm-12
         .box-item.table-box
           %h3.h-dark
             Product Orders
