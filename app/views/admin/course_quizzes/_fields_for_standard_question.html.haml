@@ -24,7 +24,8 @@
 
           .col-sm-8
             -counter = 0
-            =question.fields_for :quiz_answers do |answer|
+            -answers = question.object&.quiz_answers.order(id: :asc)
+            =question.fields_for :quiz_answers, answers do |answer|
               .row.quiz_answer
                 .col-sm-8
                   .row

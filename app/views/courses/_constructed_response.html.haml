@@ -407,6 +407,11 @@
     $('.submission-pane-content').removeClass('hidden d-none');
     closeNavDialog();
     closeScratchPadDialog();
+
+    $('.answer_spreadsheet').each(function (index, value){
+      updateHiddenField($(this).attr('sq_attempt_id'), $(this).attr('sa_attempt_id'))
+    });
+
     submitForm();
   };
 

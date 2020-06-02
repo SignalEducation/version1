@@ -5,7 +5,7 @@ class DashboardController < ApplicationController
   before_action :get_variables
 
   def show
-    @default_group = current_user&.preferred_exam_body&.group || Group.all_active.all_active.first
+    @default_group = current_user&.preferred_exam_body&.group || Group.all_active.first
     @enrollments = current_user.valid_enrollments_in_sitting_order
     @sculs = current_user.course_logs.includes(:enrollments).where(enrollments: { id: nil })
   end

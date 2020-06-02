@@ -7,9 +7,9 @@ describe CronService, type: :service do
     end
 
     it 'calls the instance method of the task passed in' do
-      expect(subject).to receive(:ping)
+      expect(subject).to receive(:paypal_sync)
 
-      subject.initiate_task('ping')
+      subject.initiate_task('paypal_sync')
     end
   end
 

@@ -1,0 +1,33 @@
+{
+  "id": "li_dfsafadsfasfdfasf",
+  "object": "line_item",
+  "amount": 599,
+  "currency": "gbp",
+  "description": "null",
+  "discountable": true,
+  "livemode": true,
+  "metadata": {},
+  "period": {
+    "start": 1498824623,
+    "end": 1501503023
+  },
+  "plan": {
+    "id": "plan_dfsafadsfasfdfasf",
+    "object": "plan",
+    "amount": 999,
+    "created": 1496222010,
+    "currency": "gbp",
+    "interval": "month",
+    "interval_count": 1,
+    "livemode": false,
+    "metadata": {},
+    "name": "plan name",
+    "statement_descriptor": "null",
+    "trial_period_days": "null"
+  },
+  "proration": false,
+  "quantity": 1,
+  "subscription": "null",
+  "subscription_item": "si_1APVed2eZvKYlo2C387JnMRE",
+  "type": "subscription"
+}

@@ -41,6 +41,7 @@ class QuizQuestion < ApplicationRecord
 
   # callbacks
   before_validation :set_course_step
+  before_create :set_sorting_order
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order) }
@@ -49,6 +50,16 @@ class QuizQuestion < ApplicationRecord
   # class methods
 
   # instance methods
+
+  ## Parent & Child associations ##
+
+  def parent
+    course_quiz
+  end
+
+  def children
+    quiz_answers
+  end
 
   ## Archivable methods ##
   def destroyable?

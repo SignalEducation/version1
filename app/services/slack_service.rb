@@ -17,11 +17,9 @@ class SlackService
        title: 'Daily Orders Summary (Last 24hrs)',
        color: '#7CD197',
        fields: [
-         { title: 'Mock Exams', value: orders.product_type_count('mock_exam'),
-           short: true },
-         { title: 'General Corrections',
-           value: orders.product_type_count('correction_pack'),
-           short: true }
+         { title: 'Mock Exams', value: orders.product_type_count('mock_exam'), short: true },
+         { title: 'General Corrections', value: orders.product_type_count('correction_pack'), short: true },
+         { title: 'CBE', value: orders.product_type_count('cbe'), short: true }
        ] }]
   end
 

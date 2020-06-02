@@ -9,10 +9,6 @@ class CronService
     send(task_name)
   end
 
-  def ping
-    Rails.logger.info 'CRON: I just got a PING'
-  end
-
   def paypal_sync
     Rails.logger.info "CRON: Called the 'paypal_sync' task"
     Paypal::SubscriptionValidation.run_paypal_sync
