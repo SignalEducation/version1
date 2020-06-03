@@ -64,7 +64,7 @@ Rails.application.routes.draw do
         post 'cbe_user_educator_comment/:cbe_user_log_id', to: 'exercises#cbe_user_educator_comment', as: :cbe_user_log_update, on: :member
       end
 
-      resources :user do
+      resources :users do
         resources :exercises, only: %i[index new create]
       end
 
