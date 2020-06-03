@@ -117,11 +117,11 @@ class Course < ApplicationRecord
   ## Structures data in CSV format for Excel downloads ##
   def self.to_csv(options = {})
     #attributes are either model attributes or data generate in methods below
-    attributes = %w{name new_enrollments total_enrollments active_enrollments non_expired_enrollments expired_enrollments completed_enrollments}
+    attributes = %w[name new_enrollments total_enrollments active_enrollments non_expired_enrollments expired_enrollments completed_enrollments]
     CSV.generate(options) do |csv|
       csv << attributes
 
-      all.each do |course|
+      all.find_each do |course|
         csv << attributes.map { |attr| course.send(attr) }
       end
     end
