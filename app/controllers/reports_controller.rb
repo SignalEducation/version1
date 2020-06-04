@@ -10,12 +10,13 @@ class ReportsController < ApplicationController
   def index; end
 
   def export_sales_report
-    @invoices = Invoice.from_yesterday.where(paid: true).where.not(subscription_id: nil).order(:created_at)
+    @invoices = Invoice.where(created_at: Date.new(2020,05,01).to_time...Date.new(2020,06,01).to_time, paid: true).where.not(subscription_id: nil).order(:created_at)
+    #@invoices = Invoice.from_yesterday.where(paid: true).where.not(subscription_id: nil).order(:created_at)
 
     respond_to do |format|
       format.html
       format.csv { send_data @invoices.to_csv() }
-      format.xls { send_data @invoices.to_csv(col_sep: "\t", headers: true), filename: "#{Date.yesterday.strftime("%F")}-Sales-Report.xls" }
+      format.xls { send_data @invoices.to_csv(col_sep: "\t", headers: true), filename: "May-Sales-Report.xls" }
     end
   end
 
