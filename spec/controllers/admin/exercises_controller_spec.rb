@@ -178,7 +178,7 @@ describe Admin::ExercisesController, type: :controller do
         end
       end
 
-      describe 'POST /admin/exercises/:id/cbe_user_question_update/answer/:question_id', js: true do
+      describe 'POST /admin/exercises/:id/cbe_user_question_update/answer/:question_id' do
         it 'update cbe question data' do
           post :cbe_user_question_update,
                params: { id: exercise_cbe.id, question_id: cbe_user_question.id, format: :js }
@@ -188,7 +188,7 @@ describe Admin::ExercisesController, type: :controller do
         end
       end
 
-      describe 'POST /admin/exercises/:id/cbe_user_educator_comment/cbe_user_log/:cbe_user_log_id', js: true do
+      describe 'POST /admin/exercises/:id/cbe_user_educator_comment/cbe_user_log/:cbe_user_log_id' do
         it 'update cbe question data' do
           post :cbe_user_educator_comment,
                params: { id: exercise_cbe.id, cbe_user_log_id: cbe_user_log.id, format: :js }
@@ -198,7 +198,7 @@ describe Admin::ExercisesController, type: :controller do
         end
       end
 
-      describe 'POST/admin/exercises/:id/return_cbe', js: true do
+      describe 'POST/admin/exercises/:id/return_cbe' do
         it 'should return cbe correction to user' do
           post :return_cbe, params: { id: exercise_cbe_to_return.id }
 

@@ -16,6 +16,11 @@ RSpec.configure do |config|
     DatabaseCleaner.start
   end
 
+   # Force the driver to wait till the page finishes loading
+  config.after(:each, js: true) do
+    current_path.should == current_path
+  end
+
   config.after(:each) do
     DatabaseCleaner.clean
   rescue Exception => e

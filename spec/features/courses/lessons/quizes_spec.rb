@@ -25,7 +25,7 @@ describe 'Video Quiz Step', type: :feature do
       expect(page).to have_content('Sorry, you are not permitted to access that content.')
     end
 
-    scenario 'Loading quiz and answer correctly a question', js: true do
+    xscenario 'Loading quiz and answer correctly a question', js: true do
       allow_any_instance_of(CourseStep).to receive(:available_to_user).and_return(view: true, reason: nil)
 
       visit show_course_path(course_name_url: course_quiz.course_step.course_lesson.course.name_url,
@@ -46,7 +46,7 @@ describe 'Video Quiz Step', type: :feature do
       expect(page).to have_selector(:link_or_button, I18n.t('views.course_steps.show.next_step'))
     end
 
-    scenario 'Loading quiz and answer incorrectly a question', js: true do
+    xscenario 'Loading quiz and answer incorrectly a question', js: true do
       allow_any_instance_of(CourseStep).to receive(:available_to_user).and_return(view: true, reason: nil)
 
       visit show_course_path(course_name_url: course_quiz.course_step.course_lesson.course.name_url,

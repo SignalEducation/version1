@@ -113,6 +113,7 @@ group :development, :test do
 end
 
 group :test do
+  gem 'capybara-screenshot'
   gem 'database_cleaner' # tidies up the test database
   gem 'guard-rspec' # Guard watches for any changed file and reruns that files tests
   gem 'rspec_junit_formatter'

@@ -14,7 +14,6 @@ RSpec.describe UserVerificationsController, :type => :controller do
   let!(:group_1) { FactoryBot.create(:group, exam_body_id: exam_body_2.id, name: 'CPD') }
   let!(:course_1) { FactoryBot.create(:active_course, group_id: group_1.id, exam_body_id: exam_body_1.id) }
 
-
   context 'Non-verified user' do
     before :each do
       allow_any_instance_of(HubSpot::Contacts).to receive(:batch_create).and_return(:ok)
@@ -89,5 +88,4 @@ RSpec.describe UserVerificationsController, :type => :controller do
       end
     end
   end
-
 end
