@@ -33,8 +33,8 @@ FactoryBot.define do
   factory :course_lesson do
     association               :course
     association               :course_section
-    sequence(:name)           { |n| "Course Module #{n}" }
-    sequence(:name_url)       { |n| "course-module-#{n}" }
+    sequence(:name)           { |n| "Course Lesson #{n}" }
+    sequence(:name_url)       { |n| "course-lesson-#{n}" }
     description               { 'Lorem ipsum' }
     sequence(:sorting_order)  { |n| n * 100 }
     estimated_time_in_seconds { 0 }
