@@ -29,5 +29,4 @@ FactoryBot.define do
     latest_course_step_id { 1 }
     completed { false }
   end
-
 end
