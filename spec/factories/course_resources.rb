@@ -4,7 +4,7 @@
 #
 #  id                       :integer          not null, primary key
 #  name                     :string
-#  course_id        :integer
+#  course_id                :integer
 #  description              :text
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
@@ -16,6 +16,7 @@
 #  active                   :boolean          default("false")
 #  sorting_order            :integer
 #  available_on_trial       :boolean          default("false")
+#  download_available       :boolean          default("false")
 #
 
 FactoryBot.define do

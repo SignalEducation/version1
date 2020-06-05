@@ -4,7 +4,7 @@
 # Table name: mock_exams
 #
 #  id                       :integer          not null, primary key
-#  course_id        :integer
+#  course_id                :integer
 #  name                     :string
 #  sorting_order            :integer
 #  created_at               :datetime         not null

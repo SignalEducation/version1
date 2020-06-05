@@ -1,32 +1,74 @@
 .container
   %header.management-console-section
     %h1
-      Management Console
+      Wow! A Real Graph
 
   %section.pb-3
-    .box-item
-      %canvas#myChart{:height => "200", :width => "400"}
-
+  .box-item
+    %h4='Onboarding Email Statistics'
+    %canvas#barChart{:height => "200", :width => "400"}
 
 :javascript
-  var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  let MONTHS = ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Complete', 'Expired'];
+  let ctx = document.getElementById('barChart').getContext('2d');
+  let day1Sent = "#{@day1&.count}";
+  let day1Opens = "#{@day1_opens}";
+  let day1Clicks = "#{@day1_clicks}";
 
-  var ctx = document.getElementById('myChart').getContext('2d');
+  let day2Sent = "#{@day2&.count}";
+  let day2Opens = "#{@day2_opens}";
+  let day2Clicks = "#{@day2_clicks}";
 
-  var myChart = new Chart(ctx, {
-      type: 'line',
+  let day3Sent = "#{@day3&.count}";
+  let day3Opens = "#{@day3_opens}";
+  let day3Clicks = "#{@day3_clicks}";
+
+  let day4Sent = "#{@day4&.count}";
+  let day4Opens = "#{@day4_opens}";
+  let day4Clicks = "#{@day4_clicks}";
+
+  let day5Sent = "#{@day5&.count}";
+  let day5Opens = "#{@day5_opens}";
+  let day5Clicks = "#{@day5_clicks}";
+
+  let completeSent = "#{@complete&.count}";
+  let completeOpens = "#{@complete_opens}";
+  let completeClicks = "#{@complete_clicks}";
+
+  let expiredSent = "#{@expired&.count}";
+  let expiredOpens = "#{@expired_opens}";
+  let expiredClicks = "#{@expired_clicks}";
+
+  var barChart = new Chart(ctx, {
+      type: 'bar',
       data: {
           labels: MONTHS,
-          datasets: [{
-              label: 'First dataset',
-              borderColor: '#00b67b',
-              data: [12, 366, 5, 7, 344, 443, 222, 123, 74, 93, 135, 135]
+          datasets: [
+          {
+              label: 'Sent',
+              backgroundColor: '#f0ca28',
+              data: [day1Sent, day2Sent, day3Sent, day4Sent, day5Sent, completeSent, expiredSent]
           },
           {
-              label: 'Second dataset',
-              borderColor: '#000032',
-              data: [22, 44, 2, 66, 111, 55, 222, 123, 200, 234, 51, 44]
+              label: 'Opens',
+              backgroundColor: '#6610f2',
+              data: [day1Opens, day2Opens, day3Opens, day4Opens, day5Opens, completeOpens, expiredOpens]
           },
+          {
+              label: 'Clicks',
+              backgroundColor: '#fd5c63',
+              data: [day1Clicks, day2Clicks, day3Clicks, day4Clicks, day5Clicks, completeClicks, expiredClicks]
+          },
+          //{
+              //label: 'Studied',
+              //backgroundColor: '#fd7e14',
+              //data: [1, 2, 3, 4, 5, 6, 7]
+          //},
+          //{
+              //label: 'Payment',
+              //backgroundColor: '#20c997',
+              //data: [1, 2, 3, 4, 5, 6, 7]
+          //},
 
           ]
       },
@@ -40,3 +82,6 @@
           }
       }
   });
+
+
+

@@ -12,6 +12,8 @@
 #  sorting_order   :integer
 #  cbe_scenario_id :bigint
 #  solution        :text
+#  destroyed_at    :datetime
+#  active          :boolean          default("true")
 #
 require 'rails_helper'
 require 'concerns/cbe_support_spec.rb'

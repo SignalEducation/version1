@@ -5,16 +5,17 @@
 #  id                                   :integer          not null, primary key
 #  user_id                              :integer
 #  course_section_id                    :integer
-#  course_log_id           :integer
-#  latest_course_step_id      :integer
+#  course_log_id                        :integer
+#  latest_course_step_id                :integer
 #  percentage_complete                  :float
 #  count_of_cmes_completed              :integer
 #  count_of_quizzes_taken               :integer
 #  count_of_videos_taken                :integer
 #  created_at                           :datetime         not null
 #  updated_at                           :datetime         not null
-#  course_id                    :integer
+#  course_id                            :integer
 #  count_of_constructed_responses_taken :integer
+#  count_of_notes_taken                 :integer
 #
 
 require 'rails_helper'

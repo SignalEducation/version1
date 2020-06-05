@@ -13,6 +13,9 @@
 #  kind          :integer
 #  sorting_order :integer
 #  content       :text
+#  destroyed_at  :datetime
+#  active        :boolean          default("true")
+#  random        :boolean          default("false")
 #
 class Cbe
   class Section < ApplicationRecord

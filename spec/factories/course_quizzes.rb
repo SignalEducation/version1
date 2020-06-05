@@ -3,7 +3,7 @@
 # Table name: course_quizzes
 #
 #  id                          :integer          not null, primary key
-#  course_step_id    :integer
+#  course_step_id              :integer
 #  number_of_questions         :integer
 #  question_selection_strategy :string(255)
 #  created_at                  :datetime

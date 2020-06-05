@@ -8,6 +8,8 @@
 #  updated_at     :datetime         not null
 #  cbe_section_id :bigint
 #  name           :string
+#  destroyed_at   :datetime
+#  active         :boolean          default("true")
 #
 FactoryBot.define do
   factory :cbe_scenario, class: Cbe::Scenario do

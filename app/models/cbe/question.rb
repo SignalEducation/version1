@@ -14,6 +14,8 @@
 #  sorting_order   :integer
 #  cbe_scenario_id :bigint
 #  solution        :text
+#  destroyed_at    :datetime
+#  active          :boolean          default("true")
 #
 class Cbe
   class Question < ApplicationRecord

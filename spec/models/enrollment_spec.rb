@@ -2,21 +2,21 @@
 #
 # Table name: enrollments
 #
-#  id                         :integer          not null, primary key
-#  user_id                    :integer
-#  course_id          :integer
-#  course_log_id :integer
-#  created_at                 :datetime         not null
-#  updated_at                 :datetime         not null
-#  active                     :boolean          default("false")
-#  exam_body_id               :integer
-#  exam_date                  :date
-#  expired                    :boolean          default("false")
-#  paused                     :boolean          default("false")
-#  notifications              :boolean          default("true")
-#  exam_sitting_id            :integer
-#  computer_based_exam        :boolean          default("false")
-#  percentage_complete        :integer          default("0")
+#  id                  :integer          not null, primary key
+#  user_id             :integer
+#  course_id           :integer
+#  course_log_id       :integer
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  active              :boolean          default("false")
+#  exam_body_id        :integer
+#  exam_date           :date
+#  expired             :boolean          default("false")
+#  paused              :boolean          default("false")
+#  notifications       :boolean          default("true")
+#  exam_sitting_id     :integer
+#  computer_based_exam :boolean          default("false")
+#  percentage_complete :integer          default("0")
 #
 
 require 'rails_helper'

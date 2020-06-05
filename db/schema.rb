@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_15_100346) do
+ActiveRecord::Schema.define(version: 2020_05_30_071325) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -975,6 +975,23 @@ ActiveRecord::Schema.define(version: 2020_05_15_100346) do
     t.index ["group_id"], name: "index_levels_on_group_id"
   end
 
+  create_table "messages", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "opens"
+    t.integer "clicks"
+    t.integer "kind", default: 0, null: false
+    t.datetime "process_at"
+    t.string "template"
+    t.string "mandrill_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "state"
+    t.hstore "template_params", default: {}
+    t.index ["mandrill_id"], name: "index_messages_on_mandrill_id"
+    t.index ["process_at"], name: "index_messages_on_process_at"
+    t.index ["user_id"], name: "index_messages_on_user_id"
+  end
+
   create_table "mock_exams", id: :serial, force: :cascade do |t|
     t.integer "course_id"
     t.string "name"
@@ -991,6 +1008,16 @@ ActiveRecord::Schema.define(version: 2020_05_15_100346) do
     t.datetime "cover_image_updated_at"
     t.index ["course_id"], name: "index_mock_exams_on_course_id"
     t.index ["name"], name: "index_mock_exams_on_name"
+  end
+
+  create_table "onboarding_processes", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "course_log_id"
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["course_log_id"], name: "index_onboarding_processes_on_course_log_id"
+    t.index ["user_id"], name: "index_onboarding_processes_on_user_id"
   end
 
   create_table "order_transactions", id: :serial, force: :cascade do |t|

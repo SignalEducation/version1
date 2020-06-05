@@ -6,7 +6,7 @@
 #
 #  id                        :integer          not null, primary key
 #  product_id                :integer
-#  course_id         :integer
+#  course_id                 :integer
 #  user_id                   :integer
 #  stripe_guid               :string
 #  stripe_customer_id        :string
@@ -130,10 +130,17 @@ class Order < ApplicationRecord
   def execute_order_completion
     return if Rails.env.test? || product.cbe?
 
-    MandrillWorker.perform_async(user_id,
-                                 'send_mock_exam_email',
-                                 user_exercise_url,
-                                 product.name_by_type, reference_guid)
+    Message.create(
+      process_at: Time.zone.now,
+      user_id: user_id,
+      kind: :account,
+      template: 'send_mock_exam_email',
+      template_params: {
+        url: user_exercise_url,
+        product: product.name_by_type,
+        reference_guid: reference_guid
+      }
+    )
     invoice.update(paid: true, payment_closed: true)
   end
 

@@ -1,5 +1,25 @@
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: constructed_response_attempts
+#
+#  id                                :integer          not null, primary key
+#  constructed_response_id           :integer
+#  scenario_id                       :integer
+#  course_step_id                    :integer
+#  course_step_log_id                :integer
+#  user_id                           :integer
+#  original_scenario_text_content    :text
+#  user_edited_scenario_text_content :text
+#  status                            :string
+#  flagged_for_review                :boolean          default("false")
+#  time_in_seconds                   :integer
+#  created_at                        :datetime         not null
+#  updated_at                        :datetime         not null
+#  guid                              :string
+#  scratch_pad_text                  :text
+#
 class ConstructedResponseAttempt < ApplicationRecord
   # Constants
   STATUS = %w[Incomplete Completed]

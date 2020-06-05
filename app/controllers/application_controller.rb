@@ -346,6 +346,7 @@ class ApplicationController < ActionController::Base
                       the_thing.name_url)
     end
   end
+  helper_method :user_course_correct_url
 
   def course_resource_special_link(the_thing)
     if the_thing.class == CourseResource

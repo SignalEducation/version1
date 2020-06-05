@@ -117,7 +117,7 @@ describe Invoice do
       describe 'calls #send_3d_secure_email' do
         it 'calls the Mandrill worker with the receipt email' do
           allow(Rails.env).to receive(:test?).and_return(false)
-          expect(MandrillWorker).to receive(:perform_async)
+          expect(Message).to receive(:create)
 
           invoice.send_receipt('')
         end
@@ -140,7 +140,7 @@ describe Invoice do
 
         it 'calls the Mandrill worker with the receipt email' do
           allow(Rails.env).to receive(:test?).and_return(false)
-          expect(MandrillWorker).to receive(:perform_async)
+          expect(Message).to receive(:create)
 
           invoice.send_receipt('')
         end

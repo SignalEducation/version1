@@ -3,7 +3,7 @@
 # Table name: course_sections
 #
 #  id                         :integer          not null, primary key
-#  course_id          :integer
+#  course_id                  :integer
 #  name                       :string
 #  name_url                   :string
 #  sorting_order              :integer

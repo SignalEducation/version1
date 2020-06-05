@@ -577,7 +577,7 @@ PLATFORMS
 DEPENDENCIES
   ahoy_matey (>= 3.0.0)
   airbrake (~> 9.5)
-  annotate (~> 3.1.0)
+  annotate
   authlogic (~> 5.0.0)
   aws-sdk-s3 (~> 1)
   better_errors
