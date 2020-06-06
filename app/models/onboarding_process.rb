@@ -43,8 +43,11 @@ class OnboardingProcess < ApplicationRecord
       update(active: false)
       # TODO -Trigger HubSpot
     elsif next_step
-      Message.create(process_at: Time.zone.now, user_id: user&.id, kind: :onboarding, template: 'send_onboarding_content_email', template_params: { day: day, subject: "#{course_log.course&.group&.name} Exams: Welcome to Learnsignal! Pass Your #{course_log.course&.group&.name}  Exams First Time", course: course_log.course.group.name, next_step: next_step.name,
-                                                                                                                                          url: UrlHelper.instance.show_course_url(
+      Message.create(process_at: Time.zone.now, user_id: user&.id, kind: :onboarding, template: 'send_onboarding_content_email', template_params: { day: day,
+                                                                                                                                                    subject_line: "#{course_log.course&.group&.name} Exams: Welcome to Learnsignal! Pass Your #{course_log.course&.group&.name}  Exams First Time",
+                                                                                                                                                    course_name: course_log.course&.group&.name,
+                                                                                                                                                    next_step_name: next_step&.name,
+                                                                                                                                                    url: UrlHelper.instance.show_course_url(
                                                                                                                                                                                 course_name_url: next_step.course_lesson.course_section.course.name_url,
                                                                                                                                                                                 course_section_name_url: next_step.course_lesson.course_section.name_url,
                                                                                                                                                                                 course_lesson_name_url: next_step.course_lesson.name_url,

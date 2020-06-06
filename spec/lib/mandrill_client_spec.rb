@@ -90,13 +90,6 @@ describe MandrillClient do
       expect(response.last).to eq('corrections-returned-190510')
     end
 
-    it 'send_enrollment_welcome_email' do
-      response = @client.send_enrollment_welcome_email('course_name', 'url')
-
-      expect(response.first).to be_kind_of(MandrillClient)
-      expect(response.last).to eq('enrolment_welcome_170811')
-    end
-
     it 'send_onboarding_complete_email' do
       response = @client.send_onboarding_complete_email('subscription_url', 'course')
 
