@@ -10,6 +10,7 @@ class MandrillWorker
     message        = Message.find(message_id)
     method_name    = message.template
     template_args  = message.template_params.values
+    # The template_params are pulled out in different order than the order they were input to the hstore
 
     return unless message&.user&.email
 

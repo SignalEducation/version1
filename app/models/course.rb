@@ -267,6 +267,8 @@ class Course < ApplicationRecord
   end
 
   def free_course_steps
+    return unless course_sections.all_in_order.first
+
     section_lesson_ids = course_sections.all_in_order.first.course_lessons.all_in_order.map(&:id)
     course_steps.where(course_lesson_id: section_lesson_ids, active: true, available_on_trial: true).includes(:course_lesson).order("course_lessons.sorting_order asc")
   end

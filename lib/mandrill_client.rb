@@ -81,14 +81,6 @@ class MandrillClient
     send_template('corrections-returned-190510', msg)
   end
 
-  # Enrollments Emails (Unsubscribe possible)
-  def send_enrollment_welcome_email(course_name, url)
-    msg = message_stub.merge('subject' => "Welcome to #{course_name}")
-    msg['global_merge_vars'] << { 'name' => 'NAME', 'content' => course_name }
-    msg['global_merge_vars'] << { 'name' => 'LINK', 'content' => url }
-    send_template('enrolment_welcome_170811', msg)
-  end
-
   # Onboarding Emails
   def send_onboarding_complete_email(subscription_url, course)
     msg = message_stub.merge('subject' => "ACCA Exams: Congratulations #{user.first_name}, you’ve completed all the resources. What’s next?")
@@ -104,11 +96,11 @@ class MandrillClient
     send_template('onboarding-expired-030620', msg)
   end
 
-  def send_onboarding_content_email(day, subject_line, course, next_step, content_url)
+  def send_onboarding_content_email(day, url, course_name, subject_line, next_step_name)
     msg = message_stub.merge('subject' => subject_line)
-    msg['global_merge_vars'] << { 'name' => 'COURSENAME', 'content' => course }
-    msg['global_merge_vars'] << { 'name' => 'STEPNAME', 'content' => next_step }
-    msg['global_merge_vars'] << { 'name' => 'CONTENTURL', 'content' => content_url }
+    msg['global_merge_vars'] << { 'name' => 'COURSENAME', 'content' => course_name }
+    msg['global_merge_vars'] << { 'name' => 'STEPNAME', 'content' => next_step_name }
+    msg['global_merge_vars'] << { 'name' => 'CONTENTURL', 'content' => url }
     send_template("onboarding-day-#{day}-030620", msg)
   end
 

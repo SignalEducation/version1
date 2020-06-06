@@ -51,19 +51,6 @@ class EnrollmentsController < ApplicationController
 
   protected
 
-  def send_welcome_email(user_id, course_name)
-    Message.create(
-      process_at: 5.minutes.from_now,
-      user_id: user_id,
-      kind: :account,
-      template: 'send_enrollment_welcome_email',
-      template_params: {
-        url: account_url,
-        course: course_name
-      }
-    )
-  end
-
   def allowed_params
     params.require(:enrollment).permit(:course_id, :exam_date, :course_log_id,
                                        :exam_sitting_id, :percentage_complete, :exam_body_id, :notifications)
