@@ -220,6 +220,7 @@ describe User do
   it { should respond_to(:completed_course_step) }
   it { should respond_to(:started_course_step) }
   it { should respond_to(:last_subscription) }
+  it { should respond_to(:onboarding_state) }
 
   describe '.search' do
     let(:example_user) { create(:user) }

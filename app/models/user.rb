@@ -698,6 +698,16 @@ class User < ApplicationRecord
       first
   end
 
+  def onboarding_state
+    if onboarding_process&.active
+      'Active'
+    elsif !onboarding_process&.active
+      'Complete'
+    else
+      'Not Started'
+    end
+  end
+
   private
 
   def add_guid

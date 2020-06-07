@@ -38,6 +38,7 @@ module HubSpot
          { property: 'sub_cancelation_reason', value: last_subscription&.cancellation_reason },
          { property: 'sub_cancelation_note',   value: last_subscription&.cancellation_note },
          { property: 'next_renewal_date',      value: last_subscription&.next_renewal_date&.strftime('%d-%m-%Y') },
+         { property: 'onboarding_process',     value: user&.onboarding_state },
          { property: 'preferred_exam_body',    value: user&.preferred_exam_body&.name }] + subscriptions_statuses(user)
       end
 

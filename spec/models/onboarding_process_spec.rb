@@ -37,6 +37,7 @@ describe OnboardingProcess do
 
   describe 'callbacks' do
     it { should callback(:create_workers).after(:create) }
+    it { should callback(:update_hubspot).after(:save) }
   end
 
   describe 'instance methods' do
