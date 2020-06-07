@@ -146,7 +146,7 @@ class CourseLog < ApplicationRecord
   end
 
   def create_onboarding_process
-    return unless course.exam_body.has_sittings || !Rails.env.test?
+    return unless course.exam_body.has_sittings || user.standard_student_user? || !Rails.env.test?
 
     OnboardingProcess.create(user_id: user_id, course_log_id: id)
   end
