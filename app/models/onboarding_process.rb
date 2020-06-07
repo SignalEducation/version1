@@ -29,7 +29,28 @@ class OnboardingProcess < ApplicationRecord
   end
 
   def next_step
-    course_log&.latest_course_step&.next_free_step
+    if course_log.latest_course_step
+      course_log.latest_course_step.next_free_step
+    else
+      course_log.course_step_logs.where(latest_attempt: true, element_completed: false).order(:created_at)&.last&.course_step
+    end
+  end
+
+  def onboarding_subject(day)
+    case day
+    when 1
+      "Continue your #{course_log.course.group.name} study today. See what’s next!"
+    when 2
+      "Pass your #{course_log.course.group.name} Exams first time. Get Ahead Now!"
+    when 3
+      "#{course_log.course.group.name} Exams: Keep the momentum going & complete a #{next_step&.name} today!"
+    when 4
+      "What’s next?  Try this #{course_log.course.group.name} {Next step]!"
+    when 5
+      "#{course_log.course.group.name} Exams: Here’s what to study today!"
+    else
+      'Continue your study today. See what’s next!'
+    end
   end
 
   def send_email(day)
@@ -43,15 +64,10 @@ class OnboardingProcess < ApplicationRecord
       update(active: false)
     elsif next_step
       Message.create(process_at: Time.zone.now, user_id: user_id, kind: :onboarding, template: 'send_onboarding_content_email', template_params: { day: day,
-                                                                                                                                                    subject_line: "#{course_log.course&.group&.name} Exams: Welcome to Learnsignal! Pass Your #{course_log.course&.group&.name}  Exams First Time",
-                                                                                                                                                    course_name: course_log.course&.group&.name,
-                                                                                                                                                    next_step_name: next_step&.name,
-                                                                                                                                                    url: UrlHelper.instance.show_course_url(
-                                                                                                                                                                                course_name_url: next_step.course_lesson.course_section.course.name_url,
-                                                                                                                                                                                course_section_name_url: next_step.course_lesson.course_section.name_url,
-                                                                                                                                                                                course_lesson_name_url: next_step.course_lesson.name_url,
-                                                                                                                                                                                course_step_name_url: next_step.name_url, host: LEARNSIGNAL_HOST,
-                                                                                                                                                                                utm_campaign: 'OnboardingEmails', utm_content: 'send_onboarding_content_email')
+                                                                                                                                                   subject_line: onboarding_subject(day),
+                                                                                                                                                   course_name: course_log.course&.group&.name,
+                                                                                                                                                   next_step_name: next_step&.name,
+                                                                                                                                                   url: next_step_url
                                                                                                                                         })
     end
   end
@@ -60,6 +76,14 @@ class OnboardingProcess < ApplicationRecord
 
   def create_workers
     6.times { |i| OnboardingEmailWorker.perform_at((i + 1).day, id, i + 1) }
+  end
+
+  def next_step_url
+    if next_step
+      UrlHelper.instance.show_course_url(course_name_url: next_step.course_lesson.course_section.course.name_url, course_section_name_url: next_step.course_lesson.course_section.name_url, course_lesson_name_url: next_step.course_lesson.name_url, course_step_name_url: next_step.name_url, host: LEARNSIGNAL_HOST, utm_campaign: 'OnboardingEmails', utm_content: 'send_onboarding_content_email')
+    else
+      UrlHelper.instance.library_course_url(course_log.course.parent.name_url, course_log.course.name_url, host: LEARNSIGNAL_HOST, utm_campaign: 'OnboardingEmails', utm_content: 'send_onboarding_content_email')
+    end
   end
 
   def update_hubspot
