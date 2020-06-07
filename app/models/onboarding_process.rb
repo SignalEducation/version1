@@ -45,7 +45,7 @@ class OnboardingProcess < ApplicationRecord
     when 3
       "#{course_log.course.group.name} Exams: Keep the momentum going & complete a #{next_step&.name} today!"
     when 4
-      "What’s next?  Try this #{course_log.course.group.name} {Next step]!"
+      "What’s next?  Try this #{course_log.course.group.name} #{next_step&.name}!"
     when 5
       "#{course_log.course.group.name} Exams: Here’s what to study today!"
     else
