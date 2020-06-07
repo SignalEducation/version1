@@ -699,7 +699,9 @@ class User < ApplicationRecord
   end
 
   def onboarding_state
-    if onboarding_process&.active
+    if !onboarding_process
+      'Not Started'
+    elsif onboarding_process&.active
       'Active'
     elsif !onboarding_process&.active
       'Complete'
