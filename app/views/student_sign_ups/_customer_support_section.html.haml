@@ -5,7 +5,7 @@
         %h2.h1.mb-4.px-4 We're here to guide you through.
         %p.px-4.px-sm-0 If you have any questions of concerns about enrolling in our online learning programme then we're here for you and we'd love to help
       .py-4.d-flex.justify-content-center
-        - %w(Conor_CHD_5350.jpg Alan_CHD_5507.jpg Philip_CHD_5494.jpg Kate_CHD_5387.jpg).sample(3).each do |image|
+        - %w(Conor_CHD_5350.jpg Alan_CHD_5507.jpg Philip_CHD_5494.jpg).sample(3).each do |image|
           =image_tag(image, class: 'img-thumbnail img-thumbnail-sm m-1 m-sm-2', alt: "Contact person profile image")
       .py-3
         .btn.btn-primary.btn-lg{"data-target" => "#expert-form-modal", "data-toggle" => "modal", :href => "#"}
