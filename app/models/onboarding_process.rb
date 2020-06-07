@@ -19,6 +19,7 @@ class OnboardingProcess < ApplicationRecord
   validates :course_log_id, presence: true
 
   after_create :create_workers
+  after_save   :update_hubspot
 
   def content_remaining?
     free_step_ids           = course_log.course.free_course_steps.map(&:id).sort
@@ -33,17 +34,15 @@ class OnboardingProcess < ApplicationRecord
 
   def send_email(day)
     if day == 6
-      Message.create(process_at: Time.zone.now, user_id: user&.id, kind: :onboarding, template: 'send_onboarding_expired_email', template_params: { course: course_log.course.group.name,
+      Message.create(process_at: Time.zone.now, user_id: user_id, kind: :onboarding, template: 'send_onboarding_expired_email', template_params: { course: course_log.course.group.name,
                                                                                                                                                   url: UrlHelper.instance.new_subscription_url(exam_body_id: course_log.course.exam_body_id, host: LEARNSIGNAL_HOST, utm_campaign: 'OnboardingEmails', utm_content: 'send_onboarding_expired_email') })
       update(active: false)
-      # TODO -Trigger HubSpot
     elsif !content_remaining?
-      Message.create(process_at: Time.zone.now, user_id: user&.id, kind: :onboarding, template: 'send_onboarding_complete_email', template_params: { course: course_log.course.group.name,
+      Message.create(process_at: Time.zone.now, user_id: user_id, kind: :onboarding, template: 'send_onboarding_complete_email', template_params: { course: course_log.course.group.name,
                                                                                                                                            url: UrlHelper.instance.new_subscription_url(exam_body_id: course_log.course.exam_body_id, host: LEARNSIGNAL_HOST, utm_campaign: 'OnboardingEmails', utm_content: 'send_onboarding_complete_email') })
       update(active: false)
-      # TODO -Trigger HubSpot
     elsif next_step
-      Message.create(process_at: Time.zone.now, user_id: user&.id, kind: :onboarding, template: 'send_onboarding_content_email', template_params: { day: day,
+      Message.create(process_at: Time.zone.now, user_id: user_id, kind: :onboarding, template: 'send_onboarding_content_email', template_params: { day: day,
                                                                                                                                                     subject_line: "#{course_log.course&.group&.name} Exams: Welcome to Learnsignal! Pass Your #{course_log.course&.group&.name}  Exams First Time",
                                                                                                                                                     course_name: course_log.course&.group&.name,
                                                                                                                                                     next_step_name: next_step&.name,
@@ -64,7 +63,6 @@ class OnboardingProcess < ApplicationRecord
   end
 
   def update_hubspot
-    # Custom property values -> [Not Active - Active - Completed]
-    # Trigger HubSpot - set property to Active
+    HubSpotContactWorker.perform_async(user_id)
   end
 end

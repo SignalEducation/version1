@@ -24,25 +24,24 @@ class ManagementConsolesController < ApplicationController
   private
 
   def graph_date
-    @onboarding_messages = Message.where(kind: 1)
-    @content = @onboarding_messages.where(template: 'send_onboarding_content_email')
-    @day1 = @content.where(template_params: { day: 1 })
+    @onboarding_messages = Message.where(kind: :onboarding)
+    @day1 = @onboarding_messages.day_1
     @day1_opens = @day1.all.sum(:opens)
     @day1_clicks = @day1.all.sum(:clicks)
 
-    @day2 = @content.where(template_params: { day: 2 })
+    @day2 = @onboarding_messages.day_2
     @day2_opens = @day2.all.sum(:opens)
     @day2_clicks = @day2.all.sum(:clicks)
 
-    @day3 = @content.where(template_params: { day: 3 })
+    @day3 = @onboarding_messages.day_3
     @day3_opens = @day3.all.sum(:opens)
     @day3_clicks = @day3.all.sum(:clicks)
 
-    @day4 = @content.where(template_params: { day: 4 })
+    @day4 = @onboarding_messages.day_4
     @day4_opens = @day4.all.sum(:opens)
     @day4_clicks = @day4.all.sum(:clicks)
 
-    @day5 = @content.where(template_params: { day: 5 })
+    @day5 = @onboarding_messages.day_5
     @day5_opens = @day5.all.sum(:opens)
     @day5_clicks = @day5.all.sum(:clicks)
 
