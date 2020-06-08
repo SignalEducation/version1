@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: users
@@ -59,14 +61,15 @@
 
 class User < ApplicationRecord
   include LearnSignalModelExtras
+  include UserAccessable
 
   acts_as_authentic do |c|
     c.crypto_provider = Authlogic::CryptoProviders::SCrypt
   end
 
   # Constants
-  LOCALES = %w(en)
-  SORT_OPTIONS = %w(created user_group name email)
+  LOCALES = %w[en].freeze
+  SORT_OPTIONS = %w[created user_group name email].freeze
 
   belongs_to :country, optional: true
   belongs_to :currency, optional: true
@@ -74,15 +77,15 @@ class User < ApplicationRecord
   belongs_to :subscription_plan_category, optional: true
   belongs_to :user_group
 
-  has_one :referral_code
-  has_one :referred_signup
-  has_one :onboarding_process
+  has_one :referral_code, dependent: :destroy
+  has_one :referred_signup, dependent: :destroy
+  has_one :onboarding_process, dependent: :destroy
 
-  has_many :course_step_logs
-  has_many :completed_course_step_logs, -> {
+  has_many :course_step_logs, dependent: :destroy
+  has_many :completed_course_step_logs, lambda {
     where(element_completed: true)
   }, class_name: 'CourseStepLog'
-  has_many :incomplete_course_step_logs, -> {
+  has_many :incomplete_course_step_logs, lambda {
     where(element_completed: false)
   }, class_name: 'CourseStepLog'
   has_many :course_tutors
@@ -97,29 +100,29 @@ class User < ApplicationRecord
   has_many :course_lesson_logs
   has_many :course_section_logs
   has_many :course_logs
-  has_many :ahoy_visits, :class_name => 'Ahoy::Visit'
+  has_many :ahoy_visits, class_name: 'Ahoy::Visit'
   has_many :charges
   has_many :refunds
   has_many :messages
-  has_many :ahoy_events, :class_name => 'Ahoy::Event'
+  has_many :ahoy_events, class_name: 'Ahoy::Event'
   has_many :exercises, inverse_of: :user
   has_many :corrections, foreign_key: :corrector_id, class_name: 'Exercise'
 
   has_attached_file :profile_image, default_url: 'images/missing_image.jpg'
 
-  accepts_nested_attributes_for :exam_body_user_details, :reject_if => lambda { |c| c[:student_number].blank? }
+  accepts_nested_attributes_for :exam_body_user_details, reject_if: ->(c) { c[:student_number].blank? }
 
   # validation
   validates :email, presence: true, length: { within: 5..50 }, uniqueness: { case_sensitive: false }, format: { with: /\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i }
-  validates :first_name, presence: true, length: {minimum: 2, maximum: 20}
-  validates :last_name, presence: true, length: {minimum: 2, maximum: 30}
-  validates :password, presence: true, length: {minimum: 6, maximum: 255}, on: :create
+  validates :first_name, presence: true, length: { minimum: 2, maximum: 20 }
+  validates :last_name, presence: true, length: { minimum: 2, maximum: 30 }
+  validates :password, presence: true, length: { minimum: 6, maximum: 255 }, on: :create
   validates :user_group_id, presence: true
   validates :name_url, presence: true, uniqueness: { case_sensitive: false }, if: :tutor_user?
-  validates_confirmation_of :password, on: :create
-  validates_confirmation_of :password, unless: Proc.new { |u| u.password.blank? }
-  validates :locale, inclusion: {in: LOCALES}
-  validates_attachment_content_type :profile_image, content_type: /\Aimage\/.*\Z/
+  validates :password, confirmation: true, on: :create
+  validates :password, confirmation: true, unless: proc { |u| u.password.blank? }
+  validates :locale, inclusion: { in: LOCALES }
+  validates_attachment_content_type :profile_image, content_type: %r{\Aimage\/.*\Z}
 
   # callbacks
   before_validation { squish_fields(:email, :first_name, :last_name) }
@@ -136,9 +139,9 @@ class User < ApplicationRecord
   scope :sort_by_name, -> { order(:last_name, :first_name) }
   scope :sort_by_most_recent, -> { order(created_at: :desc) }
   scope :sort_by_recent_registration, -> { order(created_at: :desc) }
-  scope :this_month, -> { where(created_at: Time.now.beginning_of_month..Time.now.end_of_month) }
-  scope :this_week, -> { where(created_at: Time.now.beginning_of_week..Time.now.end_of_week) }
-  scope :active_this_week, -> { where(last_request_at: Time.now.beginning_of_week..Time.now.end_of_week) }
+  scope :this_month, -> { where(created_at: Time.zone.now.beginning_of_month..Time.zone.now.end_of_month) }
+  scope :this_week, -> { where(created_at: Time.zone.now.beginning_of_week..Time.zone.now.end_of_week) }
+  scope :active_this_week, -> { where(last_request_at: Time.zone.now.beginning_of_week..Time.zone.now.end_of_week) }
   scope :with_course_tutors, -> { joins(:course_tutors) }
 
   ### class methods
@@ -186,9 +189,8 @@ class User < ApplicationRecord
     end
   end
 
-  def self.resend_pw_reset_email(user_id, root_url)
-    user = User.find(user_id)
-    return if user.nil?
+  def self.resend_pw_reset_email(user_id, _)
+    return unless (user = User.find(user_id))
 
     if user.active && user.email_verified && user.password_reset_requested_at &&
        user.password_reset_token && !user.password_change_required?
@@ -221,24 +223,19 @@ class User < ApplicationRecord
   end
 
   def self.sort_by(choice)
-    if SORT_OPTIONS.include?(choice)
-      case choice
-      when 'name'
-        sort_by_name
-      when 'email'
-        sort_by_email
-      when 'created'
-        sort_by_recent_registration
-      else # also covers 'user_group'
-        all_in_order
-      end
-    else
+    return all_in_order unless SORT_OPTIONS.include?(choice)
+
+    case choice
+    when 'name', 'email'
+      send("sort_by_#{choice}")
+    when 'created'
+      sort_by_recent_registration
+    else # also covers 'user_group'
       all_in_order
     end
   end
 
-  def self.to_csv(options = {})
-    attributes = %w[first_name last_name email id student_number]
+  def self.to_csv(options = {}, attributes = %w[first_name last_name email id student_number])
     CSV.generate(options) do |csv|
       csv << attributes
 
@@ -249,25 +246,11 @@ class User < ApplicationRecord
   end
 
   def self.to_csv_with_enrollments(options = {})
-    attributes = %w{first_name last_name email student_number date_of_birth enrolled_courses valid_enrolled_courses}
-    CSV.generate(options) do |csv|
-      csv << attributes
-
-      all.each do |user|
-        csv << attributes.map{ |attr| user.send(attr) }
-      end
-    end
+    to_csv(options, %w[first_name last_name email student_number date_of_birth enrolled_courses valid_enrolled_courses])
   end
 
   def self.to_csv_with_visits(options = {})
-    attributes = %w{email id visit_campaigns visit_sources visit_landing_pages}
-    CSV.generate(options) do |csv|
-      csv << attributes
-
-      all.each do |user|
-        csv << attributes.map { |attr| user.send(attr) }
-      end
-    end
+    to_csv(options, %w[email id visit_campaigns visit_sources visit_landing_pages])
   end
 
   def self.parse_csv(csv_content)
@@ -339,78 +322,13 @@ class User < ApplicationRecord
   end
 
   def check_country(ip_address)
-    UserCountryWorker.perform_async(self.id, ip_address)
+    UserCountryWorker.perform_async(id, ip_address)
   end
 
   def currency_locked?
     subscriptions.where.not(stripe_guid: nil).any? ||
         orders.where.not(stripe_customer_id: nil).any? ||
         subscription_payment_cards.any?
-  end
-
-  ## UserGroup Access methods
-  def student_user?
-    user_group&.student_user
-  end
-
-  def non_student_user?
-    !user_group&.student_user
-  end
-
-  def standard_student_user?
-    student_user? && user_group&.trial_or_sub_required
-  end
-
-  def complimentary_user?
-    user_group&.student_user && !user_group&.trial_or_sub_required
-  end
-
-  def non_verified_user?
-    !email_verified && email_verification_code
-  end
-
-  def blocked_user?
-    user_group&.blocked_user
-  end
-
-  def system_requirements_access?
-    user_group&.system_requirements_access
-  end
-
-  def tutor_user?
-    user_group&.tutor
-  end
-
-  def content_management_access?
-    user_group&.content_management_access
-  end
-
-  def exercise_corrections_access?
-    user_group&.exercise_corrections_access
-  end
-
-  def stripe_management_access?
-    user_group&.stripe_management_access
-  end
-
-  def user_management_access?
-    user_group&.user_management_access
-  end
-
-  def developer_access?
-    user_group&.developer_access
-  end
-
-  def marketing_resources_access?
-    user_group&.marketing_resources_access
-  end
-
-  def user_group_management_access?
-    user_group&.user_group_management_access
-  end
-
-  def admin?
-    user_group_management_access? && developer_access? && system_requirements_access?
   end
 
   def name
@@ -449,7 +367,7 @@ class User < ApplicationRecord
     invoices.where(payment_attempted: true).where.not(next_payment_attempt_at: nil).last
   end
 
-  def analytics_exam_body_plan_data(user_plans = '', plans_type = '', plans_status = '')
+  def analytics_exam_body_plan_data(user_plans = +'', plans_type = +'', plans_status = +'')
     last_subscription_per_exam.each_with_index do |sub, counter|
       user_plans   << sub.subscription_plan.interval_name + (counter == 1 ? '' : ' - ')
       plans_type   << sub.subscription_plan.exam_body.name + (counter == 1 ? '' : ' - ')
@@ -469,10 +387,6 @@ class User < ApplicationRecord
     # Returns true if a non-expired active enrollment exists for this user/course
 
     enrollments.all_valid.map(&:course_id).include?(course_id)
-  end
-
-  def referred_user?
-    student_user? && referred_signup
   end
 
   # Orders/Products
@@ -560,13 +474,6 @@ class User < ApplicationRecord
     self.email_verification_code = ApplicationController.generate_random_code(20)
   end
 
-  def create_referral
-    return if referral_code
-
-    new_referral_code = ReferralCode.new
-    new_referral_code.generate_referral_code(id)
-  end
-
   def destroyable?
     course_step_logs.empty? &&
       invoices.empty? &&
@@ -582,23 +489,17 @@ class User < ApplicationRecord
   end
 
   def get_currency(country)
-    if currency_id.present?
-      currency
-    elsif existing_sub = subscriptions.all_stripe.not_pending.first
-      existing_sub.subscription_plan&.currency || country.currency
-    elsif existing_order = orders.all_stripe.first
-      existing_order.product&.currency || country.currency
-    else
-      country.currency
+    return currency if currency_id.present?
+
+    sub_or_order_currency || country.currency
+  end
+
+  def sub_or_order_currency
+    if (existing_sub = subscriptions.all_stripe.not_pending.first)
+      existing_sub.subscription_plan&.currency
+    elsif (existing_order = orders.all_stripe.first)
+      existing_order.product&.currency
     end
-  end
-
-  def this_hour
-    created_at > Time.now.beginning_of_hour
-  end
-
-  def course_log_course_ids
-    course_logs.map(&:course_id)
   end
 
   def enrolled_courses
@@ -617,32 +518,20 @@ class User < ApplicationRecord
     course_names
   end
 
+  def visit_elements(attr)
+    ahoy_visits.map { |visit| visit.send(attr) }
+  end
+
   def visit_campaigns
-    visits = []
-    self.visits.each do |visit|
-      visits << visit.utm_campaign
-    end
-    visits
+    visit_elements(:utm_campaign)
   end
 
   def visit_sources
-    visits = []
-    self.visits.each do |visit|
-      visits << visit.utm_source
-    end
-    visits
+    visit_elements(:utm_source)
   end
 
   def visit_landing_pages
-    visits = []
-    self.visits.each do |visit|
-      visits << visit.landing_page
-    end
-    visits
-  end
-
-  def enrolled_course_ids
-    enrollments.map(&:course_id)
+    visit_elements(:landing_page)
   end
 
   def valid_enrollments_in_sitting_order
@@ -714,14 +603,11 @@ class User < ApplicationRecord
   end
 
   def update_stripe_customer
-    return if Rails.env.test?
+    return if Rails.env.test? || !saved_change_to_email?
 
-    if saved_change_to_email?
-      Rails.logger.debug "DEBUG: Updating stripe customer object #{stripe_customer_id}"
-      stripe_customer = Stripe::Customer.retrieve(stripe_customer_id)
-      stripe_customer.email = email
-      stripe_customer.save
-    end
+    stripe_customer = Stripe::Customer.retrieve(stripe_customer_id)
+    stripe_customer.email = email
+    stripe_customer.save
   end
 
   def delete_stripe_customer
