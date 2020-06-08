@@ -39,10 +39,10 @@ class Message < ApplicationRecord
 
   # scopes
   scope :day_1, -> { where(template: 'send_onboarding_content_email').where("template_params -> 'day' = ?", '1') }
-  scope :day_2, -> { where(template: 'send_onboarding_content_email').where("template_params -> 'day' = ?", '1') }
-  scope :day_3, -> { where(template: 'send_onboarding_content_email').where("template_params -> 'day' = ?", '1') }
-  scope :day_4, -> { where(template: 'send_onboarding_content_email').where("template_params -> 'day' = ?", '1') }
-  scope :day_5, -> { where(template: 'send_onboarding_content_email').where("template_params -> 'day' = ?", '1') }
+  scope :day_2, -> { where(template: 'send_onboarding_content_email').where("template_params -> 'day' = ?", '2') }
+  scope :day_3, -> { where(template: 'send_onboarding_content_email').where("template_params -> 'day' = ?", '3') }
+  scope :day_4, -> { where(template: 'send_onboarding_content_email').where("template_params -> 'day' = ?", '4') }
+  scope :day_5, -> { where(template: 'send_onboarding_content_email').where("template_params -> 'day' = ?", '5') }
 
   def self.process_webhook_event(event)
     msg = Message.find_by(mandrill_id: event['_id'])
