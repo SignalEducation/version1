@@ -1,18 +1,10 @@
 # frozen_string_literal: true
 
 module Paypal
-  class SubscriptionValidation
-    include PayPal::SDK::REST
-
-    STATUSES = {
-      'Active' => 'active',
-      'Suspended' => 'paused',
-      'Cancelled' => 'cancelled'
-    }.freeze
-
+  class SubscriptionValidation < Paypal::Subscription
     class << self
       def run_paypal_sync
-        Subscription.all_paypal.all_active.each do |sub|
+        ::Subscription.all_paypal.all_active.each do |sub|
           next unless sub.paypal_subscription_guid
 
           new(sub).sync_with_paypal
@@ -20,18 +12,19 @@ module Paypal
       end
     end
 
-    def initialize(subscription)
-      @subscription = subscription
-    end
-
     def sync_with_paypal
-      agreement = Agreement.find(@subscription.paypal_subscription_guid)
-      return if consistent_states(agreement.state)
-
-      match_with_state(agreement)
+      match_with_state unless consistent_states(@agreement.state)
+      check_outstanding if @agreement.state == 'Active'
     end
 
     private
+
+    def check_outstanding
+      sub_recovery = Paypal::SubscriptionRecovery.new(subscription, agreement)
+      return unless sub_recovery.outstanding_balance?
+
+      sub_recovery.bill_outstanding
+    end
 
     def consistent_states(state)
       return false unless STATUSES.key?(state)
@@ -64,9 +57,9 @@ module Paypal
       STATUSES.key?(state) && !@subscription.send("#{STATUSES[state]}?")
     end
 
-    def match_with_state(agreement)
-      update_paypal_status(agreement.state)
-      update_subscription_state(agreement.state) if update_needed?(agreement.state)
+    def match_with_state
+      update_paypal_status(@agreement.state)
+      update_subscription_state(@agreement.state) if update_needed?(@agreement.state)
     rescue StateMachines::InvalidTransition => e
       log_to_airbrake(e.message)
     end

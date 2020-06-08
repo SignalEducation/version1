@@ -3,7 +3,7 @@
 # Table name: course_sections
 #
 #  id                         :integer          not null, primary key
-#  course_id          :integer
+#  course_id                  :integer
 #  name                       :string
 #  name_url                   :string
 #  sorting_order              :integer
@@ -56,36 +56,33 @@ class CourseSection < ApplicationRecord
 
   ## Parent & Child associations ##
   def parent
-    self.course
+    course
   end
 
   def children
-    self.course_lessons.all
+    course_lessons.all
   end
 
   def active_children
-    self.children.all_active.all_in_order
+    children.all_active.all_in_order
   end
 
   def first_active_course_lesson
-    self.active_children.first
+    active_children.first
   end
 
   def first_active_cme
-    self.first_active_course_lesson.first_active_cme
+    first_active_course_lesson.first_active_cme
   end
 
   def children_available_count
-    self.active_children.all_active.count
+    active_children.all_active.count
   end
 
   def all_content_restricted?
     child_array = active_children.map(&:all_content_restricted?)
     active_children.count == child_array.select { |child| child == true }.count
   end
-
-
-  #######################################################################
 
   ## Archivable ability ##
 

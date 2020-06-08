@@ -11,7 +11,7 @@
               %h1.h1-mega.text-white
                 Everything you need to pass in one place!
               %p.p-hero.text-white.py-4
-                Preparation is the difference between passing and failing your ACCA exams. Make sure you are exam-ready to guarantee career success.
+                Preparation is the difference between passing and failing your exams. Make sure you are exam-ready to guarantee career success.
           .col-sm-12.col-lg-8.col-xl-8.d-none.d-sm-block
             .resources-img-wrap
               =image_tag('floating-icons-bg.png', class: 'px-md-5 px-xl-0', alt: 'Laptop with Learn Signal page open')
@@ -28,7 +28,7 @@
                 %h2.h1-mega.text-center
                   Weekly Webinars
                 %p.text-gray2.pt-5.text-center
-                  Watch our weekly webinars to get access to tips and tricks that will help you prepare for and pass your ACCA exam.
+                  Watch our weekly webinars to get access to tips and tricks that will help you prepare for and pass your upcoming exam.
                 .pt-2.text-center
                   =link_to 'https://www.crowdcast.io/learnsignal', class: 'btn btn-primary btn-lg', target: '_blank' do
                     Learn More!
@@ -80,10 +80,13 @@
                 %h2.h1-mega.text-center
                   Mock Exams
                 %p.text-gray2.pt-5.text-center
-                  Complete your mock ACCA exam and submit it to receive personalized feedback and study recommendations in just 3 days.
-                .pt-2.text-center
-                  =link_to prep_products_url, class: 'btn btn-primary btn-lg' do
-                    Learn More!
+                  Complete your mock exam and submit it to receive personalized feedback and study recommendations in just 3 days.
+                .row
+                  -@groups.where('exam_bodies.has_sittings = ?', true).each do |group|
+                    .pt-2.col-sm-6
+                      .text-center
+                        =link_to exam_products_url(group.name_url), class: 'btn btn-primary btn-lg' do
+                          ="#{group.name} Mock Exams"
 
 
 
@@ -97,10 +100,13 @@
                 %h2.h1-mega.text-center
                   Correction Packs
                 %p.text-gray2.pt-5.text-center
-                  Select and complete any ACCA question from one of our resources. Then submit your work to receive corrections and feedback in just 3 days.
-                .pt-2.text-center
-                  =link_to prep_products_url, class: 'btn btn-primary btn-lg' do
-                    Learn More!
+                  Select and complete any question from one of our resources. Then submit your work to receive corrections and feedback in just 3 days.
+                .row
+                  -@groups.where('exam_bodies.has_sittings = ?', true).each do |group|
+                    .pt-2.col-sm-6
+                      .text-center
+                        =link_to exam_products_url(group.name_url, anchor: :questions), class: 'btn btn-primary btn-lg' do
+                          ="#{group.name} Mock Exams"
             .col-12.col-sm-6
               .pt-5
                 .webinar-img
@@ -117,7 +123,7 @@
             %header.text-center.pt-3.pb-4.pb-md-5
               %h2.h1-mega Explore our blog
               %p.p-hero.px-lg-6
-                ACCA, accounting and financial industry blog articles with top tips and insights to help you pass your ACCA exams and build a rewarding career in finance.
+                ACCA, CIMA, accounting and financial industry blog articles with top tips and insights to help you pass your upcoming exams and build a rewarding career in finance.
             .row.row-lg
               -@home_page.blog_posts.each do |blog_post|
                 .col-6.col-sm-4

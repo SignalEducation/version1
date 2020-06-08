@@ -40,12 +40,19 @@
 #  on_welcome_page                         :boolean          default("false")
 #  unit_label                              :string
 #  level_id                                :integer
+#  accredible_group_id                     :integer
 #
 
 require 'rails_helper'
 require 'concerns/archivable_spec.rb'
 
-describe Course do
+describe Course, type: :model do
+  let(:user)                     { create(:user) }
+  let!(:course)                  { create(:active_course) }
+  let!(:course_sections)         { create_list(:course_section, 3, course: course) }
+  let!(:inactive_course_section) { create(:course_section, course: course, active: false) }
+  let!(:course_lesson)           { create(:course_lesson, course_section: course_sections.first) }
+
   describe 'relationships' do
     it { should belong_to(:exam_body) }
     it { should belong_to(:group) }
@@ -142,5 +149,172 @@ describe Course do
 
   describe 'Concern' do
     it_behaves_like 'archivable'
+  end
+
+  describe 'Methods' do
+    describe '.get_by_name_url' do
+      context 'return course' do
+        it { expect(Course.get_by_name_url(course.name_url)).to eq(course) }
+      end
+    end
+
+    describe '.search' do
+      context 'return should find course by name' do
+        it { expect(Course.search(course.name.first(3))).to include(course) }
+        it { expect(Course.search(course.name.last(2))).to include(course) }
+      end
+
+      context 'return should find course by description' do
+        it { expect(Course.search(course.description.first(3))).to include(course) }
+        it { expect(Course.search(course.description.last(2))).to include(course) }
+      end
+
+      context 'return should find course without any search' do
+        it { expect(Course.search(nil)).to include(course) }
+      end
+    end
+
+    describe '.to_csv' do
+      context 'return course' do
+        it do
+          expect(Course.to_csv).to include('name',
+                                           'new_enrollments',
+                                           'total_enrollments',
+                                           'active_enrollments',
+                                           'non_expired_enrollments',
+                                           'expired_enrollments')
+        end
+      end
+    end
+
+    describe '#parent' do
+      context 'return group' do
+        it { expect(course.parent).to be_a(Group) }
+      end
+    end
+
+    describe '#parent' do
+      context 'return group' do
+        it { expect(course.parent).to be_a(Group) }
+      end
+    end
+
+    describe '#parent' do
+      context 'return group' do
+        it { expect(course.parent).to be_a(Group) }
+      end
+    end
+
+    describe '#children' do
+      context 'return course_sections' do
+        it { expect(course.children).to include(course_sections.sample) }
+        it { expect(course.children).to include(inactive_course_section) }
+      end
+    end
+
+    describe '#active_children' do
+      context 'return actives course_sections' do
+        it { expect(course.active_children).to include(course_sections.sample) }
+        it { expect(course.active_children).not_to include(inactive_course_section) }
+      end
+    end
+
+    describe '#valid_children' do
+      context 'return actives course_sections' do
+        it { expect(course.valid_children).to include(course_sections.sample) }
+        it { expect(course.valid_children).not_to include(inactive_course_section) }
+      end
+    end
+
+    describe '#first_active_child' do
+      context 'return actives course_sections' do
+        it { expect(course.first_active_child).to eq(course_sections.first) }
+      end
+    end
+
+    describe '#first_active_cme' do
+      it 'return actives course_sections' do
+        expect_any_instance_of(CourseSection).to receive(:first_active_cme).and_return(course_lesson)
+
+        expect(course.first_active_cme).to eq(course_lesson)
+      end
+    end
+
+    describe '#destroyable?' do
+      context 'always return true' do
+        it { expect(course).to be_destroyable }
+      end
+    end
+
+    describe 'Enrollments' do
+      before do
+        allow_any_instance_of(Enrollment).to receive(:set_percentage_complete).and_return(true)
+      end
+
+      let!(:enrollments) { create_list(:enrollment, 3, course: course) }
+
+      describe '#enrolled_user_ids' do
+        context 'return users id' do
+          it { expect(course.enrolled_user_ids).to include(1) }
+        end
+      end
+
+      describe '#enrolled_user_ids' do
+        context 'return actives users id' do
+          it { expect(course.active_enrollment_user_ids).to be_empty }
+        end
+      end
+
+      describe '#valid_enrollment_user_ids' do
+        context 'return valid users id' do
+          it { expect(course.valid_enrollment_user_ids).to be_empty }
+        end
+      end
+    end
+
+    describe '#started_by_user' do
+      let!(:course_logs) { create_list(:course_log, 3, course: course, user: user) }
+
+      context 'always return true' do
+        it { expect(course.started_by_user(user.id)).to eq(course_logs.first) }
+      end
+    end
+
+    describe '#completed_by_user' do
+      context 'return if completed' do
+        it { expect(course.completed_by_user(user.id)).to be(false) }
+      end
+    end
+
+    describe '#check_dependencies' do
+      it 'stubb destroyable to true to cover method' do
+        allow_any_instance_of(Course).to receive(:destroyable?).and_return(false)
+        course.destroy
+
+        expect(course.errors).to be_empty
+      end
+    end
+
+    describe '#update_all_course_logs' do
+      let(:worker) { CourseLessonLogsWorker }
+
+      before do
+        Sidekiq::Testing.fake!
+        Sidekiq::Worker.clear_all
+        allow_any_instance_of(CourseLessonLogsWorker).to receive(:perform).and_return(true)
+      end
+
+      it 'stubb destroyable to true to cover method' do
+        expect{ course.update_all_course_logs }.to change(worker.jobs, :size).by(1)
+      end
+    end
+
+    describe '#home_page' do
+      let!(:home_page) { create(:home_page, course: course) }
+
+      context 'return if completed' do
+        it { expect(course.home_page).to eq(home_page) }
+      end
+    end
   end
 end

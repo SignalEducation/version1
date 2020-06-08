@@ -81,19 +81,27 @@ class MandrillClient
     send_template('corrections-returned-190510', msg)
   end
 
-  # Enrollments Emails (Unsubscribe possible)
-  def send_enrollment_welcome_email(course_name, url)
-    msg = message_stub.merge('subject' => "Welcome to #{course_name}")
-    msg['global_merge_vars'] << { 'name' => 'NAME', 'content' => course_name }
-    msg['global_merge_vars'] << { 'name' => 'LINK', 'content' => url }
-    send_template('enrolment_welcome_170811', msg)
+  # Onboarding Emails
+  def send_onboarding_complete_email(subscription_url, course)
+    msg = message_stub.merge('subject' => "ACCA Exams: Congratulations #{user.first_name}, you’ve completed all the resources. What’s next?")
+    msg['global_merge_vars'] << { 'name' => 'COURSENAME', 'content' => course }
+    msg['global_merge_vars'] << { 'name' => 'SUBSCRIPTIONURL', 'content' => subscription_url }
+    send_template('onboarding-complete-030620', msg)
   end
 
-  # Free Trial Emails
-  def send_free_trial_over_email(new_subscription_url)
-    msg = message_stub.merge('subject' => 'Free Trial Expired')
-    msg['global_merge_vars'] << { 'name' => 'NEWSUBSCRIPTIONURL', 'content' => new_subscription_url }
-    send_template('free_trial_expired_170811', msg)
+  def send_onboarding_expired_email(subscription_url, course)
+    msg = message_stub.merge('subject' => "#{user.first_name}, keep going! There's still great ACCA content available to complete on your current plan")
+    msg['global_merge_vars'] << { 'name' => 'COURSENAME', 'content' => course }
+    msg['global_merge_vars'] << { 'name' => 'SUBSCRIPTIONURL', 'content' => subscription_url }
+    send_template('onboarding-expired-030620', msg)
+  end
+
+  def send_onboarding_content_email(day, url, course_name, subject_line, next_step_name)
+    msg = message_stub.merge('subject' => subject_line)
+    msg['global_merge_vars'] << { 'name' => 'COURSENAME', 'content' => course_name }
+    msg['global_merge_vars'] << { 'name' => 'STEPNAME', 'content' => next_step_name }
+    msg['global_merge_vars'] << { 'name' => 'CONTENTURL', 'content' => url }
+    send_template("onboarding-day-#{day}-030620", msg)
   end
 
   # Other Emails

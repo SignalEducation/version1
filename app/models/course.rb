@@ -40,6 +40,7 @@
 #  on_welcome_page                         :boolean          default("false")
 #  unit_label                              :string
 #  level_id                                :integer
+#  accredible_group_id                     :integer
 #
 
 class Course < ApplicationRecord
@@ -117,11 +118,11 @@ class Course < ApplicationRecord
   ## Structures data in CSV format for Excel downloads ##
   def self.to_csv(options = {})
     #attributes are either model attributes or data generate in methods below
-    attributes = %w{name new_enrollments total_enrollments active_enrollments non_expired_enrollments expired_enrollments completed_enrollments}
+    attributes = %w[name new_enrollments total_enrollments active_enrollments non_expired_enrollments expired_enrollments completed_enrollments]
     CSV.generate(options) do |csv|
       csv << attributes
 
-      all.each do |course|
+      all.find_each do |course|
         csv << attributes.map { |attr| course.send(attr) }
       end
     end
@@ -263,6 +264,13 @@ class Course < ApplicationRecord
 
   def update_all_course_logs
     CourseLessonLogsWorker.perform_async(id)
+  end
+
+  def free_course_steps
+    return unless course_sections.all_in_order.first
+
+    section_lesson_ids = course_sections.all_in_order.first.course_lessons.all_in_order.map(&:id)
+    course_steps.where(course_lesson_id: section_lesson_ids, active: true, available_on_trial: true).includes(:course_lesson).order("course_lessons.sorting_order asc")
   end
 
   ########################################################################

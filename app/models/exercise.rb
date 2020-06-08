@@ -133,13 +133,15 @@ class Exercise < ApplicationRecord
   end
 
   def correction_returned_email
-    MandrillWorker.perform_async(
-      user_id,
-      'send_correction_returned_email',
-      UrlHelper.instance.user_exercises_url(
-        user_id: user_id,
-        host: LEARNSIGNAL_HOST
-      ), product.name_by_type
+    Message.create(
+      process_at: Time.zone.now,
+      user_id: user_id,
+      kind: :account,
+      template: 'send_correction_returned_email',
+      template_params: {
+        url: UrlHelper.instance.user_exercises_url(user_id: user_id, host: LEARNSIGNAL_HOST),
+        product_name: product.name_by_type
+      }
     )
   end
 
@@ -165,15 +167,17 @@ class Exercise < ApplicationRecord
   end
 
   def send_submitted_email
-    MandrillWorker.perform_async(
-      user_id,
-      'send_exercise_submitted_email',
-      UrlHelper.instance.account_url(
-        host: LEARNSIGNAL_HOST
-      ),
-      product.mock_exam.name,
-      product.mock_exam.file,
-      reference_guid
+    Message.create(
+      process_at: Time.zone.now,
+      user_id: user_id,
+      kind: :account,
+      template: 'send_exercise_submitted_email',
+      template_params: {
+        url: UrlHelper.instance.account_url(host: LEARNSIGNAL_HOST),
+        product_name: product.mock_exam.name,
+        file: product.mock_exam.file,
+        reference_guid: reference_guid
+      }
     )
   end
 end

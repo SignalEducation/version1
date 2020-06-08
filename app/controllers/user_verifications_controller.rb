@@ -62,12 +62,19 @@ class UserVerificationsController < ApplicationController
     @user = User.find_by(email_verification_code: params[:email_verification_code])
 
     if @user && !@user.email_verified
-      MandrillWorker.perform_async(@user.id, 'send_verification_email', user_verification_url(email_verification_code: @user.email_verification_code)) unless Rails.env.test?
+      Message.create(
+        process_at: Time.zone.now,
+        user_id: @user.id,
+        kind: :account,
+        template: 'send_verification_email',
+        template_params: {
+          url: user_verification_url(email_verification_code: @user.email_verification_code)
+        }
+      )
       flash[:success] = "Verification Email sent to #{@user.email}"
     else
       flash[:error] = 'Verification Email was not sent.'
     end
-
     redirect_to request.referrer
   end
 

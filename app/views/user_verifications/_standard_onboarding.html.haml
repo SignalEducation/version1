@@ -137,7 +137,7 @@
 
   $('.course-link').click(function (event) {
     $.ajax({
-      url: "#{user_udpate_hubspot_path(current_user.id)}",
+      url: "#{user_update_hubspot_path(current_user.id)}",
       method: 'post',
       data: JSON.stringify({'custom_data': {'onboarding_course': this.dataset.name } } ),
       contentType: 'application/json',

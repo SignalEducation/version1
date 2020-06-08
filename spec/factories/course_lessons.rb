@@ -16,7 +16,7 @@
 #  seo_no_index               :boolean          default("false")
 #  destroyed_at               :datetime
 #  number_of_questions        :integer          default("0")
-#  course_id          :integer
+#  course_id                  :integer
 #  video_duration             :float            default("0.0")
 #  video_count                :integer          default("0")
 #  quiz_count                 :integer          default("0")
@@ -33,8 +33,8 @@ FactoryBot.define do
   factory :course_lesson do
     association               :course
     association               :course_section
-    sequence(:name)           { |n| "Course Module #{n}" }
-    sequence(:name_url)       { |n| "course-module-#{n}" }
+    sequence(:name)           { |n| "Course Lesson #{n}" }
+    sequence(:name_url)       { |n| "course-lesson-#{n}" }
     description               { 'Lorem ipsum' }
     sequence(:sorting_order)  { |n| n * 100 }
     estimated_time_in_seconds { 0 }

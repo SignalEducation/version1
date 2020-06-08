@@ -28,7 +28,7 @@
             .col-12.col-lg-6
               .ml-lg-3.mr-lg-3.py-6
                 %p.text-gray2.text-center
-                  Learnsignal’s origins came from personal experience of studying for the ACCA exams using a traditional provider. During that process, it became clear that the approach was ineffective, expensive and time-consuming. So, we looked at creating a modern and simpler way to support people while they studied and the best way to achieve that was online.
+                  Learnsignal’s origins came from personal experience of studying for exams using a traditional provider. During that process, it became clear that the approach was ineffective, expensive and time-consuming. So, we looked at creating a modern and simpler way to support people while they studied and the best way to achieve that was online.
 
             .col-12.col-lg-6
               -if @home_page&.video_guid.present?
@@ -44,15 +44,18 @@
       %article.py-5
         %header.pb-sm-4.pb-md-5
           .row.row-lg
-            .col-12.col-lg-6
+            .col-12.col-lg-4
               .text-center
-                =image_tag('learning-partner-badge.png', alt: 'Logo')
-            .col-12.col-lg-6
+                =image_tag('learning-partner-badge.png', alt: 'ACCA Logo')
+            .col-12.col-lg-4
+              .text-center.pt-7
+                =image_tag('CIMA_Registered_Tuition_Provider_RGB.png', alt: 'CIMA Logo')
+            .col-12.col-lg-4
               .py-6
                 %h2.h1-mega.text-center
-                  A gold approved ACCA partner
+                  Approved ACCA & CIMA Tuition Partners
                 %p.text-gray2.pt-5.text-center
-                  Learnsignal became a gold approved ACCA partner in April 2017. Since then, we have continued to challenge the traditional way of learning and grown our student base across 130 countries to over 100,000.
+                  Approved ACCA & CIMA Tuition Partners. Since becoming approved providers we have continued to challenge the traditional way of learning and grown our student base across 130 countries.
 
   =render partial: 'library/user_form_modal', locals: { ticket_type: 'Contact Us', form_id: 'contact-form-modal' }
   .container-bg.bg-gray5
@@ -65,7 +68,7 @@
             %p.px-4.px-sm-0
               If you have any questions of concerns about enrolling in our online learning programme then we're here for you and we'd love to help
         .py-4.d-flex.justify-content-center
-          - %w(Conor_CHD_5350.jpg Alan_CHD_5507.jpg Philip_CHD_5494.jpg Kate_CHD_5387.jpg).sample(3).each do |image|
+          - %w(Conor_CHD_5350.jpg Alan_CHD_5507.jpg Philip_CHD_5494.jpg).sample(3).each do |image|
             =image_tag(image, class: 'img-thumbnail img-thumbnail-sm m-1 m-sm-2', alt: 'Contact person profile image')
         .py-3
           .btn.btn-primary.btn-lg{'data-target' => '#contact-form-modal', 'data-toggle' => 'modal', :href => '#'}

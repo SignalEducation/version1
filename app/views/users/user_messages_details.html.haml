@@ -1,0 +1,43 @@
+.container
+  %header.management-console-section
+    %h1
+      =@user.full_name
+    %p.p-hero.px-lg-8
+      =@user.email
+
+  %section.pb-7
+    =render partial: 'user_tabs'
+
+    .row
+      .col-sm-12
+
+        .box-item.table-box
+          %h3.h-dark
+            Messages
+          %table.table
+            %thead
+              %tr
+                %th
+                  Type
+                %th
+                  Sent At
+                %th
+                  Status
+                %th
+                  Opens
+                %th
+                  Clicks
+            %tbody
+              -@messages.each do |msg|
+                %tr
+                  %td
+                    =msg.template
+                  %td
+                    =timer_datetime(msg.process_at)
+                  %td
+                    =msg.state
+                  %td
+                    =msg.opens
+                  %td
+                    =msg.clicks
+

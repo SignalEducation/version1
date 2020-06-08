@@ -51,10 +51,6 @@ class EnrollmentsController < ApplicationController
 
   protected
 
-  def send_welcome_email(user_id, course_name)
-    MandrillWorker.perform_at(5.minutes.from_now, user_id, 'send_enrollment_welcome_email', course_name, account_url)
-  end
-
   def allowed_params
     params.require(:enrollment).permit(:course_id, :exam_date, :course_log_id,
                                        :exam_sitting_id, :percentage_complete, :exam_body_id, :notifications)

@@ -84,7 +84,7 @@ gem 'zendesk_api'
 # Environment-specific gems
 
 group :development do
-  gem 'annotate', '~> 3.1.0' # adds the list of fields in each table to the models and test files
+  gem 'annotate' # adds the list of fields in each table to the models and test files
   gem 'better_errors' # gives more useful error report in the browser
   gem 'bullet' # Warnings about n+1 and other query problems
   gem 'lol_dba'
@@ -116,6 +116,7 @@ group :test do
   gem 'database_cleaner' # tidies up the test database
   gem 'guard-rspec' # Guard watches for any changed file and reruns that files tests
   gem 'rspec_junit_formatter'
+  gem 'rspec-retry'
   gem 'rails-controller-testing'
   gem 'shoulda-matchers' # adds more RSpec test types
   gem 'shoulda-callback-matchers' # adds more RSpec test types

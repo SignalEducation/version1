@@ -1,3 +1,34 @@
+# == Schema Information
+#
+# Table name: course_step_logs
+#
+#  id                         :integer          not null, primary key
+#  course_step_id             :integer
+#  user_id                    :integer
+#  session_guid               :string(255)
+#  element_completed          :boolean          default("false"), not null
+#  time_taken_in_seconds      :integer
+#  quiz_score_actual          :integer
+#  quiz_score_potential       :integer
+#  is_video                   :boolean          default("false"), not null
+#  is_quiz                    :boolean          default("false"), not null
+#  course_lesson_id           :integer
+#  latest_attempt             :boolean          default("true"), not null
+#  created_at                 :datetime
+#  updated_at                 :datetime
+#  seconds_watched            :integer          default("0")
+#  count_of_questions_taken   :integer
+#  count_of_questions_correct :integer
+#  course_id                  :integer
+#  course_lesson_log_id       :integer
+#  course_log_id              :integer
+#  is_constructed_response    :boolean          default("false")
+#  preview_mode               :boolean          default("false")
+#  course_section_id          :integer
+#  course_section_log_id      :integer
+#  quiz_result                :integer
+#  is_note                    :boolean          default("false")
+#
 FactoryBot.define do
   factory :course_step_log do
     course_step_id { 1 }

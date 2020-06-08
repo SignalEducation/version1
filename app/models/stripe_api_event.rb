@@ -183,7 +183,15 @@ class StripeApiEvent < ApplicationRecord
       return unless stripe_next_attempt
 
       # A NextPaymentAttempt Date value means that another payment attempt will be made
-      MandrillWorker.perform_async(user.id, 'send_card_payment_failed_email', self.account_url) unless Rails.env.test?
+      Message.create(
+        process_at: Time.zone.now,
+        user_id: user.id,
+        kind: :account,
+        template: 'send_card_payment_failed_email',
+        template_params: {
+          url: account_url
+        }
+      )
       subscription.mark_past_due
     else
       set_process_error "Error finding User-#{stripe_customer_guid}, Invoice-#{stripe_invoice_guid} OR Subscription- #{stripe_subscription_guid}. InvoicePaymentFailed Event"
@@ -218,7 +226,12 @@ class StripeApiEvent < ApplicationRecord
       # This is to ensure the Account Suspended email is only sent when
       # the subscription is canceled by Stripe due to failed payments
       unless cancel_at_period_end
-        MandrillWorker.perform_async(user.id, 'send_account_suspended_email') unless Rails.env.test?
+        Message.create(
+            process_at: Time.zone.now,
+            user_id: user.id,
+            kind: :account,
+            template: 'send_account_suspended_email'
+            )
       end
     else
       set_process_error("Error deleting subscription. Couldn't find User with stripe_customer_guid: #{stripe_customer_guid} OR Couldn't find Subscription with stripe_subscription_guid: #{stripe_subscription_guid}")

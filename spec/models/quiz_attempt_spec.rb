@@ -2,16 +2,16 @@
 #
 # Table name: quiz_attempts
 #
-#  id                                :integer          not null, primary key
-#  user_id                           :integer
-#  quiz_question_id                  :integer
-#  quiz_answer_id                    :integer
-#  correct                           :boolean          default("false"), not null
+#  id                 :integer          not null, primary key
+#  user_id            :integer
+#  quiz_question_id   :integer
+#  quiz_answer_id     :integer
+#  correct            :boolean          default("false"), not null
 #  course_step_log_id :integer
-#  created_at                        :datetime
-#  updated_at                        :datetime
-#  score                             :integer          default("0")
-#  answer_array                      :string(255)
+#  created_at         :datetime
+#  updated_at         :datetime
+#  score              :integer          default("0")
+#  answer_array       :string(255)
 #
 
 require 'rails_helper'

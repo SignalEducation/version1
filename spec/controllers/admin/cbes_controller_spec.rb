@@ -50,7 +50,7 @@ RSpec.describe Admin::CbesController, type: :controller do
         expect(response.status).to eq(302)
         expect(response).to redirect_to(admin_cbes_path)
         expect(flash[:success]).to be_present
-        expect(flash[:success]).to eq('Cbe successfully duplicaded')
+        expect(flash[:success]).to eq('Cbe successfully duplicated')
       end
 
       it 'should not duplicate cbe' do
@@ -61,7 +61,7 @@ RSpec.describe Admin::CbesController, type: :controller do
         expect(response.status).to eq(302)
         expect(response).to redirect_to(admin_cbes_path)
         expect(flash[:error]).to be_present
-        expect(flash[:error]).to eq('Cbe not successfully duplicaded')
+        expect(flash[:error]).to eq('Cbe not successfully duplicated')
       end
     end
   end

@@ -137,7 +137,7 @@ class ApplicationController < ActionController::Base
   helper_method :ensure_user_has_access_rights
 
   def authenticate_if_staging
-    return unless Rails.env.staging? && %w[stripe_webhooks paypal_webhooks cron_tasks].exclude?(controller_name)
+    return unless Rails.env.staging? && %w[stripe_webhooks paypal_webhooks cron_tasks messages].exclude?(controller_name)
 
     authenticate_or_request_with_http_basic 'Staging' do |name, password|
       name == 'signal' && password == '27(South!)'
@@ -346,6 +346,7 @@ class ApplicationController < ActionController::Base
                       the_thing.name_url)
     end
   end
+  helper_method :user_course_correct_url
 
   def course_resource_special_link(the_thing)
     if the_thing.class == CourseResource

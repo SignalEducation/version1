@@ -7,6 +7,7 @@ Group.where(id: 1).first_or_create!(
   short_description: 'Explore our ACCA Gold Approved courses offering high quality, affordable and flexible tuition designed to suit your needs.',
   description: 'Explore our ACCA Gold Approved courses offering high quality, affordable and flexible tuition designed to suit your needs.',
   name_url: 'acca',
+  onboarding_level_heading: 'acca',
   exam_body_id: 1,
   active: true
 ); print '.'
@@ -18,6 +19,7 @@ Group.where(id: 2).first_or_create!(
   short_description: 'Discover CPD courses designed by experts to help you maintain and develop the skills you need to be successful in your career.',
   description: 'Discover CPD courses designed by experts to help you maintain and develop the skills you need to be successful in your career.',
   name_url: 'cpd',
+  onboarding_level_heading: 'cpd',
   exam_body_id: 2,
   active: true
 ); print '.'
@@ -29,6 +31,7 @@ Group.where(id: 3).first_or_create!(
   short_description: 'CIMA',
   description: 'CIMA',
   name_url: 'cima',
+  onboarding_level_heading: 'cima',
   exam_body_id: 3,
   active: false
 ); print '.'

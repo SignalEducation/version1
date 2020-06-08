@@ -23,6 +23,7 @@
 #  products_subheading                :text
 #  products_seo_title                 :string
 #  products_seo_description           :string
+#  emit_certificate                   :boolean          default("false")
 #
 
 require 'rails_helper'

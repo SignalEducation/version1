@@ -1,4 +1,9 @@
--if @course_step.next_element.class.name == 'CourseStep'
+-if @course_step.available_on_trial && current_user&.onboarding_process&.active && !@valid_subscription
+  =link_to show_course_url(@course.name_url, @course_step.next_free_step.course_lesson.course_section.name_url, @course_step.next_free_step.course_lesson.name_url, @course_step.next_free_step.name_url) do
+    .btn.btn-primary.btn-sm.btn-sm-arrow-right
+      =t('views.course_steps.show.next_step')
+
+-elsif @course_step.next_element.class.name == 'CourseStep'
   - permission = @course_step.next_element.available_to_user(current_user, @valid_subscription, @course_log)
   - if permission[:view]
     =link_to show_course_url(@course.name_url, @course_step.next_element.course_lesson.course_section.name_url, @course_step.next_element.course_lesson.name_url, @course_step.next_element.name_url) do

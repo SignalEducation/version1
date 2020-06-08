@@ -11,6 +11,9 @@
 #  kind          :integer
 #  sorting_order :integer
 #  content       :text
+#  destroyed_at  :datetime
+#  active        :boolean          default("true")
+#  random        :boolean          default("false")
 #
 require 'rails_helper'
 require 'concerns/cbe_support_spec.rb'

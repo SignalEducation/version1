@@ -90,18 +90,25 @@ describe MandrillClient do
       expect(response.last).to eq('corrections-returned-190510')
     end
 
-    it 'send_enrollment_welcome_email' do
-      response = @client.send_enrollment_welcome_email('course_name', 'url')
+    it 'send_onboarding_complete_email' do
+      response = @client.send_onboarding_complete_email('subscription_url', 'course')
 
       expect(response.first).to be_kind_of(MandrillClient)
-      expect(response.last).to eq('enrolment_welcome_170811')
+      expect(response.last).to eq('onboarding-complete-030620')
     end
 
-    it 'send_free_trial_over_email' do
-      response = @client.send_free_trial_over_email('new_subscription_url')
+    it 'send_onboarding_expired_email' do
+      response = @client.send_onboarding_expired_email('subscription_url', 'course')
 
       expect(response.first).to be_kind_of(MandrillClient)
-      expect(response.last).to eq('free_trial_expired_170811')
+      expect(response.last).to eq('onboarding-expired-030620')
+    end
+
+    it 'send_onboarding_content_email' do
+      response = @client.send_onboarding_content_email('1', 'subject_line', 'course', 'next_step', 'content_url')
+
+      expect(response.first).to be_kind_of(MandrillClient)
+      expect(response.last).to eq('onboarding-day-1-030620')
     end
 
     it 'send_survey_email' do

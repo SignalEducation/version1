@@ -2,27 +2,28 @@
 #
 # Table name: course_steps
 #
-#  id                               :integer          not null, primary key
-#  name                             :string(255)
-#  name_url                         :string(255)
-#  description                      :text
-#  estimated_time_in_seconds        :integer
-#  course_lesson_id                 :integer
-#  sorting_order                    :integer
-#  created_at                       :datetime
-#  updated_at                       :datetime
-#  is_video                         :boolean          default("false"), not null
-#  is_quiz                          :boolean          default("false"), not null
-#  active                           :boolean          default("true"), not null
-#  seo_description                  :string(255)
-#  seo_no_index                     :boolean          default("false")
-#  destroyed_at                     :datetime
-#  number_of_questions              :integer          default("0")
-#  duration                         :float            default("0.0")
-#  temporary_label                  :string
-#  is_constructed_response          :boolean          default("false"), not null
-#  available_on_trial               :boolean          default("false")
-#  related_course_step_id :integer
+#  id                        :integer          not null, primary key
+#  name                      :string(255)
+#  name_url                  :string(255)
+#  description               :text
+#  estimated_time_in_seconds :integer
+#  course_lesson_id          :integer
+#  sorting_order             :integer
+#  created_at                :datetime
+#  updated_at                :datetime
+#  is_video                  :boolean          default("false"), not null
+#  is_quiz                   :boolean          default("false"), not null
+#  active                    :boolean          default("true"), not null
+#  seo_description           :string(255)
+#  seo_no_index              :boolean          default("false")
+#  destroyed_at              :datetime
+#  number_of_questions       :integer          default("0")
+#  duration                  :float            default("0.0")
+#  temporary_label           :string
+#  is_constructed_response   :boolean          default("false"), not null
+#  available_on_trial        :boolean          default("false")
+#  related_course_step_id    :integer
+#  is_note                   :boolean          default("false")
 #
 
 require 'rails_helper'

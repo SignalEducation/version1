@@ -3,7 +3,7 @@
 # Table name: course_step_logs
 #
 #  id                         :integer          not null, primary key
-#  course_step_id   :integer
+#  course_step_id             :integer
 #  user_id                    :integer
 #  session_guid               :string(255)
 #  element_completed          :boolean          default("false"), not null
@@ -19,14 +19,15 @@
 #  seconds_watched            :integer          default("0")
 #  count_of_questions_taken   :integer
 #  count_of_questions_correct :integer
-#  course_id          :integer
-#  course_lesson_log_id      :integer
-#  course_log_id :integer
+#  course_id                  :integer
+#  course_lesson_log_id       :integer
+#  course_log_id              :integer
 #  is_constructed_response    :boolean          default("false")
 #  preview_mode               :boolean          default("false")
 #  course_section_id          :integer
-#  course_section_log_id :integer
+#  course_section_log_id      :integer
 #  quiz_result                :integer
+#  is_note                    :boolean          default("false")
 #
 
 require 'rails_helper'

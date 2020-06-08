@@ -3,7 +3,7 @@
 # Table name: course_sections
 #
 #  id                         :integer          not null, primary key
-#  course_id          :integer
+#  course_id                  :integer
 #  name                       :string
 #  name_url                   :string
 #  sorting_order              :integer
@@ -21,13 +21,13 @@
 
 FactoryBot.define do
   factory :course_section do
-    course_id { 1 }
-    name { "MyString" }
-    sequence(:name_url)  { |x| "course-section-#{x}" }
-    sorting_order { 1 }
-    active { true }
+    course_id                 { 1 }
+    name                      { 'Course Section' }
+    sequence(:name_url)       { |x| "course-section-#{x}" }
+    sequence(:sorting_order)  { |n| n * 100 }
+    active                    { true }
     counts_towards_completion { false }
-    assumed_knowledge { false }
+    assumed_knowledge         { false }
     course
   end
 end
