@@ -1,11 +1,19 @@
 require 'rails_helper'
 
 describe Paypal::SubscriptionValidation, type: :service do
+  let(:agreement_dbl) {
+    double(
+      'Agreement',
+      id: 'I-ERW92H1T8T1ST',
+      state: 'Active'
+    )
+  }
   let(:subscription) { create(:paypal_subscription, paypal_status: 'Active', state: 'active') }
   let(:good_instance) { Paypal::SubscriptionValidation.new(subscription) }
 
   before :each do
     allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
+    allow(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(agreement_dbl)
   end
 
   describe 'class_methods' do
@@ -31,25 +39,24 @@ describe Paypal::SubscriptionValidation, type: :service do
   end
 
   describe '#sync_with_paypal' do
-    let(:agreement_dbl) {
-      double(
-        'Agreement',
-        id: 'I-ERW92H1T8T1ST',
-        state: 'Active'
-      )
-    }
     let(:other_sub) { create(:paypal_subscription, paypal_status: 'Cancelled') }
     let(:bad_instance) { Paypal::SubscriptionValidation.new(other_sub) }
 
     it 'returns NIL if the PayPal agreement has the same state as the subscription' do
-      allow(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(agreement_dbl)
-
+      allow(good_instance).to receive(:check_outstanding)
       expect(good_instance.sync_with_paypal).to be nil
     end
 
     it 'calls #match_with_state if the state does not match' do
-      allow(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(agreement_dbl)
-      expect(bad_instance).to receive(:match_with_state).with(agreement_dbl)
+      allow(bad_instance).to receive(:check_outstanding)
+      expect(bad_instance).to receive(:match_with_state)
+
+      bad_instance.sync_with_paypal
+    end
+
+    it 'calls #check_outstanding if the agreement is Active' do
+      expect(bad_instance).to receive(:check_outstanding)
+      allow(bad_instance).to receive(:match_with_state)
 
       bad_instance.sync_with_paypal
     end
@@ -63,48 +70,82 @@ describe Paypal::SubscriptionValidation, type: :service do
       it 'updates the subscription paypal status' do
         expect(sub).to receive(:update).with(paypal_status: 'Active')
 
-        target_instance.send(:match_with_state, double(state: 'Active'))
+        target_instance.send(:match_with_state)
       end
 
       it 'calls #restart on the subscription' do
         expect(sub).to receive(:restart!)
 
-        target_instance.send(:match_with_state, double(state: 'Active'))
+        target_instance.send(:match_with_state)
       end
     end
 
     describe 'for Suspended BillingAgreements' do
+      let(:target_dbl) { double(state: 'Suspended') }
       let(:sub) { create(:paypal_subscription, paypal_status: 'Active', state: 'active') }
       let(:target_instance) { Paypal::SubscriptionValidation.new(sub) }
+
+      before :each do
+        allow(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(target_dbl)
+      end
 
       it 'updates the subscription paypal status' do
         expect(sub).to receive(:update).with(paypal_status: 'Suspended')
 
-        target_instance.send(:match_with_state, double(state: 'Suspended'))
+        target_instance.send(:match_with_state)
       end
 
       it 'calls #pause on the subscription' do
         expect(sub).to receive(:pause!)
 
-        target_instance.send(:match_with_state, double(state: 'Suspended'))
+        target_instance.send(:match_with_state)
       end
     end
 
     describe 'for Cancelled BillingAgreements' do
+      let(:target_dbl) { double(state: 'Cancelled') }
       let(:sub) { create(:paypal_subscription, paypal_status: 'Active', state: 'active') }
       let(:target_instance) { Paypal::SubscriptionValidation.new(sub) }
+
+      before :each do
+        allow(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(target_dbl)
+      end
 
       it 'updates the subscription paypal status' do
         expect(target_instance).to receive(:update_paypal_status).with('Cancelled')
 
-        target_instance.send(:match_with_state, double(state: 'Cancelled'))
+        target_instance.send(:match_with_state)
       end
 
       it 'calls #cancel on the subscription' do
         expect(sub).to receive(:cancel!)
 
-        target_instance.send(:match_with_state, double(state: 'Cancelled'))
+        target_instance.send(:match_with_state)
       end
+    end
+  end
+
+  describe '#check_outstanding' do
+    let(:target_dbl) { double(state: 'Active') }
+    let(:sub) { create(:paypal_subscription, paypal_status: 'Active', state: 'active') }
+    let(:target_instance) { Paypal::SubscriptionValidation.new(sub) }
+
+    before :each do
+      allow(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(target_dbl)
+    end
+
+    it 'creates an instance of Paypal::SubscriptionRecovery' do
+      expect(Paypal::SubscriptionRecovery).to receive(:new).with(sub, target_dbl).and_return(double(outstanding_balance?: false))
+
+      target_instance.send(:check_outstanding)
+    end
+
+    it 'calls #bill_outstanding on the instance if there is an outstanding balance' do
+      recovery = double(outstanding_balance?: true)
+      allow(Paypal::SubscriptionRecovery).to receive(:new).with(sub, target_dbl).and_return(recovery)
+      expect(recovery).to receive(:bill_outstanding)
+
+      target_instance.send(:check_outstanding)
     end
   end
 

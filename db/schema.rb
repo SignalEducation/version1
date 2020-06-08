@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_30_071325) do
+ActiveRecord::Schema.define(version: 2020_06_02_173317) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -1442,6 +1442,7 @@ ActiveRecord::Schema.define(version: 2020_05_30_071325) do
     t.uuid "ahoy_visit_id"
     t.bigint "cancelled_by_id"
     t.integer "kind"
+    t.integer "paypal_retry_count", default: 0
     t.index ["ahoy_visit_id"], name: "index_subscriptions_on_ahoy_visit_id"
     t.index ["cancelled_by_id"], name: "index_subscriptions_on_cancelled_by_id"
     t.index ["changed_from_id"], name: "index_subscriptions_on_changed_from_id"
