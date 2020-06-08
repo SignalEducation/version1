@@ -705,8 +705,6 @@ class User < ApplicationRecord
       'Active'
     elsif !onboarding_process&.active
       'Complete'
-    else
-      'Not Started'
     end
   end
 

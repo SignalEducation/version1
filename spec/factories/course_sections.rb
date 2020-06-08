@@ -24,7 +24,7 @@ FactoryBot.define do
     course_id                 { 1 }
     name                      { 'Course Section' }
     sequence(:name_url)       { |x| "course-section-#{x}" }
-    sorting_order             { 1 }
+    sequence(:sorting_order)  { |n| n * 100 }
     active                    { true }
     counts_towards_completion { false }
     assumed_knowledge         { false }
