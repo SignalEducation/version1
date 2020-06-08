@@ -75,16 +75,16 @@ class CourseQuiz < ApplicationRecord
   ## Builds complex nested attributes ##
 
   def add_an_empty_question
-    self.quiz_questions.build
-    self.quiz_questions.last.course_quiz_id = self.id
-    self.quiz_questions.last.quiz_solutions.build
-    self.quiz_questions.last.quiz_contents.build(sorting_order: 1)
-    (self.course_step.try(:course_lesson).try(:course).try(:default_number_of_possible_exam_answers) || 4).times do |number|
-      self.quiz_questions.last.quiz_answers.build
-      self.quiz_questions.last.quiz_answers.last.quiz_contents.build(sorting_order: number + 1)
+    quiz_questions.build
+    quiz_questions.last.course_quiz_id = id
+    quiz_questions.last.quiz_solutions.build
+    quiz_questions.last.quiz_contents.build(sorting_order: 1)
+    quiz_questions.last.sorting_order = children.try(:maximum, :sorting_order).to_i + 1
+    (course_step.try(:course_lesson).try(:course).try(:default_number_of_possible_exam_answers) || 4).times do |number|
+      quiz_questions.last.quiz_answers.build
+      quiz_questions.last.quiz_answers.last.quiz_contents.build(sorting_order: number + 1)
     end
   end
-
 
   #######################################################################
 
