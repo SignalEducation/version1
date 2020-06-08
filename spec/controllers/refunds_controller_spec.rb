@@ -40,7 +40,7 @@ describe RefundsController, type: :controller do
     before(:each) do
       activate_authlogic
       UserSession.create!(stripe_management_user)
-      allow_any_instance_of(StripeApiEvent).to receive(:get_data_from_stripe).and_return(true)
+      allow_any_instance_of(StripeApiEvent).to receive(:sync_data_from_stripe).and_return(true)
       allow_any_instance_of(Refund).to receive(:create_on_stripe).and_return(true)
       allow(Refund).to receive(:find).and_return(refund)
     end

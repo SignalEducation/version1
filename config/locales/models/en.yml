@@ -62,7 +62,7 @@ en:
         Pay for LearnSignal online training service every 12 months.
 
     stripe_api_event:
-      guid_required_to_get_payload_from_stripe: "Event GUID is required before a Stripe Event can be downloaded"
+      missing_guid: "Event GUID is required before a Stripe Event can be downloaded"
 
     referred_signups:
       user_can_be_referred_only_once: "Can be referred only once"
