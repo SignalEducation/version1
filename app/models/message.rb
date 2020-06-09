@@ -49,9 +49,12 @@ class Message < ApplicationRecord
 
     return unless msg
 
+    opens = event['msg']['opens'].count if event['msg']['opens']
+    clicks = event['msg']['clicks'].count if event['msg']['clicks']
+
     msg.update(state: event['msg']['state'],
-               opens: event['msg']['opens'].count,
-               clicks: event['msg']['clicks'].count)
+               opens: opens,
+               clicks: clicks)
   end
 
   protected
