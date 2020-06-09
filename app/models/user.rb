@@ -170,6 +170,7 @@ class User < ApplicationRecord
   def self.get_and_verify(email_verification_code, country_id)
     return unless (user = User.find_by(email_verification_code: email_verification_code))
 
+    HubSpot::Contacts.new.batch_create(user.id, { property: 'onboarding_process', value: user.onboarding_state })
     user.verify(country_id)
   end
 
