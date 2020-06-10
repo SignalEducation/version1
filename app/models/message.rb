@@ -35,7 +35,7 @@ class Message < ApplicationRecord
   validates :mandrill_id, presence: true, on: :update
 
   # callbacks
-  after_create :send_message
+  after_create_commit :send_message
 
   # scopes
   scope :day_1, -> { where(template: 'send_onboarding_content_email').where("template_params -> 'day' = ?", '1') }

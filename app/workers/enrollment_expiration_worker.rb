@@ -26,7 +26,7 @@ class EnrollmentExpirationWorker
     enrollment = Enrollment.find(enrollment_id)
     enrollment.update(expired: true)
 
-    return if course&.survey_url.blank?
+    return if enrollment.course&.survey_url.blank?
 
     Message.create(
       process_at: Time.zone.now,

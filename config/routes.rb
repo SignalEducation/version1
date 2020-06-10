@@ -151,8 +151,8 @@ Rails.application.routes.draw do
       get  '/enrollments',                              action: :user_activity_details,           as: :activity
       get  '/course_log_details/:scul_id',              action: :course_log_details, as: :scul_activity
       get  '/orders',                                   action: :user_purchases_details,          as: :orders
-      get  '/messages',                                 action: :user_referral_details,           as: :referrals
-      get  '/referrals',                                action: :user_messages_details,           as: :messages
+      get  '/referrals',                                action: :user_referral_details,           as: :referrals
+      get  '/messages',                                 action: :user_messages_details,           as: :messages
       post '/update_hubspot',                           action: :update_hubspot,                  as: :update_hubspot
       patch '/update_courses',                          action: :update_courses,                  as: :update_courses
       get 'search', on: :collection

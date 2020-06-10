@@ -16,6 +16,10 @@ RSpec.describe UserVerificationsController, :type => :controller do
 
 
   context 'Non-verified user' do
+    before :each do
+      allow_any_instance_of(HubSpot::Contacts).to receive(:batch_create).and_return(:ok)
+    end
+
     describe "Get 'update'" do
       it 'returns success when given a valid code' do
         get :update, params: { email_verification_code: unverified_student_user.email_verification_code }
