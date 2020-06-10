@@ -5,6 +5,7 @@ require 'rails_helper'
 describe 'User Onboarding process', type: :feature do
   before :each do
     activate_authlogic
+    allow_any_instance_of(HubSpot::Contacts).to receive(:batch_create).and_return(:ok)
   end
 
   context 'User visits the onboarding page' do

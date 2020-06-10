@@ -241,6 +241,10 @@ describe User do
     end
 
     describe 'with a matching user' do
+      before :each do
+        allow_any_instance_of(HubSpot::Contacts).to receive(:batch_create).and_return(:ok)
+      end
+
       let!(:test_user) { create(:user, active: false, country: nil) }
 
       it 'returns the matching user object' do
