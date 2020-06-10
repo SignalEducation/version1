@@ -18,6 +18,8 @@
             %thead
               %tr
                 %th
+                  ID
+                %th
                   Type
                 %th
                   Sent At
@@ -30,6 +32,8 @@
             %tbody
               -@messages.each do |msg|
                 %tr
+                  %td
+                    =msg.id
                   %td
                     =msg.template
                   %td

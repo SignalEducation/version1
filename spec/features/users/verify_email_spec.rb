@@ -8,6 +8,7 @@ describe 'Verify Account process', type: :feature do
 
   before :each do
     activate_authlogic
+    allow_any_instance_of(HubSpot::Contacts).to receive(:batch_create).and_return(:ok)
     visit user_verification_path(email_verification_code: student.email_verification_code)
   end
 
