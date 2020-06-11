@@ -139,9 +139,6 @@ class CourseStep < ApplicationRecord
 
     if position_among_free_steps < (free_step_ids.length - 1)
       CourseStep.find(free_step_ids[position_among_free_steps + 1])
-    else
-      # In case the first video isn't completed
-      CourseStep.find(free_step_ids.first)
     end
   end
 
