@@ -239,11 +239,6 @@ class Subscription < ApplicationRecord
   end
 
   def reactivate_canceled
-    # make sure sub plan is active
-    unless subscription_plan.active?
-      errors.add(:base, I18n.t('models.subscriptions.reactivate_canceled.plan_is_inactive'))
-    end
-
     # ensure user is student user
     unless user.standard_student_user?
       errors.add(:base, I18n.t('models.subscriptions.reactivate_canceled.not_student_user'))
@@ -257,12 +252,6 @@ class Subscription < ApplicationRecord
     # Ensure this sub is canceled
     unless stripe_status == 'canceled'
       errors.add(:base, I18n.t('models.subscriptions.reactivate_canceled.sub_is_not_canceled'))
-    end
-
-    stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
-    # Ensure no active sub object on stripe
-    if stripe_customer.subscriptions.data.any?
-      errors.add(:base, I18n.t('models.subscriptions.reactivate_canceled.existing_sub_on_stripe'))
     end
 
     if errors.messages.count.zero?
