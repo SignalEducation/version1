@@ -1,4 +1,4 @@
--if @course_step.available_on_trial && current_user&.onboarding_process&.active && !@valid_subscription
+-if @course_step.available_on_trial && !@valid_subscription && @course_step.next_free_step.class.name == 'CourseStep'
   =link_to show_course_url(@course.name_url, @course_step.next_free_step.course_lesson.course_section.name_url, @course_step.next_free_step.course_lesson.name_url, @course_step.next_free_step.name_url) do
     .btn.btn-primary.btn-sm.btn-sm-arrow-right
       =t('views.course_steps.show.next_step')

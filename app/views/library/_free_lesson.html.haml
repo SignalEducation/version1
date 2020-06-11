@@ -1,6 +1,6 @@
 .card.card-collapse.mb-4
   %a.btn.btn-text.btn-collapse.w-100.text-left.course-module-panel{data: { toggle: "collapse", panel_name: 'Free Lesson', course_name: @course.name }, href: '#collapse_free_lesson', role: 'button', 'aria-expanded': 'true', 'aria-controls': "collapse_free_lesson", id: 'free_lesson_panel'}
-    .lesson-item.w-100{class: '' }
+    .lesson-item.w-100{class: free_lesson_status(@free_course_steps&.map(&:id), @cmeuls&.map(&:course_step_id)) }
       %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
         check
       .lesson-item-content.pl-3
