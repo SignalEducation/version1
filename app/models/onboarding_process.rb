@@ -58,18 +58,18 @@ class OnboardingProcess < ApplicationRecord
   def send_email(day)
     if day == 6
       Message.create(process_at: Time.zone.now, user_id: user_id, kind: :onboarding, template: 'send_onboarding_expired_email', template_params: { course: course_log.course.group.name,
-                                                                                                                                                  url: UrlHelper.instance.new_subscription_url(exam_body_id: course_log.course.exam_body_id, host: LEARNSIGNAL_HOST, utm_campaign: 'OnboardingEmails', utm_content: 'send_onboarding_expired_email') })
+                                                                                                                                                  url: UrlHelper.instance.new_subscription_url(exam_body_id: course_log.course.exam_body_id, host: LEARNSIGNAL_HOST, utm_medium: 'email', utm_campaign: 'OnboardingEmails', utm_content: 'send_onboarding_expired_email', utm_source: "Onboarding-#{id}", utm_term: "Day-#{day}") })
       update(active: false)
     elsif !content_remaining?
       Message.create(process_at: Time.zone.now, user_id: user_id, kind: :onboarding, template: 'send_onboarding_complete_email', template_params: { course: course_log.course.group.name,
-                                                                                                                                           url: UrlHelper.instance.new_subscription_url(exam_body_id: course_log.course.exam_body_id, host: LEARNSIGNAL_HOST, utm_campaign: 'OnboardingEmails', utm_content: 'send_onboarding_complete_email') })
+                                                                                                                                           url: UrlHelper.instance.new_subscription_url(exam_body_id: course_log.course.exam_body_id, host: LEARNSIGNAL_HOST, utm_medium: 'email', utm_campaign: 'OnboardingEmails', utm_content: 'send_onboarding_complete_email', utm_source: "Onboarding-#{id}", utm_term: "Day-#{day}") })
       update(active: false)
     elsif next_step
       Message.create(process_at: Time.zone.now, user_id: user_id, kind: :onboarding, template: 'send_onboarding_content_email', template_params: { day: day,
                                                                                                                                                    subject_line: onboarding_subject(day),
                                                                                                                                                    course_name: course_log.course&.group&.name,
                                                                                                                                                    next_step_name: next_step&.name,
-                                                                                                                                                   url: next_step_url
+                                                                                                                                                   url: next_step_url(day)
                                                                                                                                         })
     end
   end
@@ -80,11 +80,11 @@ class OnboardingProcess < ApplicationRecord
     6.times { |i| OnboardingEmailWorker.perform_at((i + 1).day, id, i + 1) }
   end
 
-  def next_step_url
+  def next_step_url(day)
     if next_step
-      UrlHelper.instance.show_course_url(course_name_url: next_step.course_lesson.course_section.course.name_url, course_section_name_url: next_step.course_lesson.course_section.name_url, course_lesson_name_url: next_step.course_lesson.name_url, course_step_name_url: next_step.name_url, host: LEARNSIGNAL_HOST, utm_campaign: 'OnboardingEmails', utm_content: 'send_onboarding_content_email')
+      UrlHelper.instance.show_course_url(course_name_url: next_step.course_lesson.course_section.course.name_url, course_section_name_url: next_step.course_lesson.course_section.name_url, course_lesson_name_url: next_step.course_lesson.name_url, course_step_name_url: next_step.name_url, host: LEARNSIGNAL_HOST, utm_campaign: 'OnboardingEmails', utm_content: 'send_onboarding_content_email', utm_source: "Onboarding-#{id}", utm_term: "Day-#{day}")
     else
-      UrlHelper.instance.library_course_url(course_log.course.parent.name_url, course_log.course.name_url, host: LEARNSIGNAL_HOST, utm_campaign: 'OnboardingEmails', utm_content: 'send_onboarding_content_email')
+      UrlHelper.instance.library_course_url(course_log.course.parent.name_url, course_log.course.name_url, host: LEARNSIGNAL_HOST, utm_medium: 'email', utm_campaign: 'OnboardingEmails', utm_content: 'send_onboarding_content_email', utm_source: "Onboarding-#{id}", utm_term: "Day-#{day}")
     end
   end
 

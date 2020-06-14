@@ -43,6 +43,9 @@ class Message < ApplicationRecord
   scope :day_3, -> { where(template: 'send_onboarding_content_email').where("template_params -> 'day' = ?", '3') }
   scope :day_4, -> { where(template: 'send_onboarding_content_email').where("template_params -> 'day' = ?", '4') }
   scope :day_5, -> { where(template: 'send_onboarding_content_email').where("template_params -> 'day' = ?", '5') }
+  scope :sent_last_week,  -> { where(process_at: 1.week.ago.beginning_of_week...1.week.ago.end_of_week) }
+  scope :sent_this_week,  -> { where(process_at: Time.zone.now.beginning_of_week..Time.zone.now.end_of_week) }
+  scope :sent_this_month, -> { where(process_at: Time.zone.now.beginning_of_month..Time.zone.now.end_of_month) }
 
   def self.process_webhook_event(event)
     msg = Message.find_by(mandrill_id: event['_id'])
