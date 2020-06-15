@@ -967,7 +967,6 @@ en:
     invoices:
       form:
         user_id: User
-        subscription_transaction_id: Subscription transaction
         subscription_id: Subscription
         number_of_users: No. of Users
         number_of_users_placeholder: 2

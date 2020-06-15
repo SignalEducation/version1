@@ -6,7 +6,6 @@ RSpec.describe SubscriptionPaymentCardsController, type: :controller do
   let(:country)            { create(:country) }
   let(:student_user_group) { create(:student_user_group) }
   let(:student_user)       { create(:student_user, user_group: student_user_group) }
-  let(:student_access)     { build(:valid_free_trial_student_access, user: student_user) }
   let(:invalid_params)     { attributes_for(:subscription_payment_card) }
   let(:valid_params)       { invalid_params.merge(account_country_id: country.id, user_id: student_user.id) }
   let(:payment_card)       { create(:subscription_payment_card, account_country_id: country.id, user_id: student_user.id) }

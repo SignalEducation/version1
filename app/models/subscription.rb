@@ -55,12 +55,10 @@ class Subscription < ApplicationRecord
   visitable :ahoy_visit
 
   has_one :changed_to, class_name: 'Subscription', foreign_key: 'changed_from_id', inverse_of: :changed_from
-  has_one :student_access
   has_one :exam_body, through: :subscription_plan
 
   has_many :invoices
   has_many :invoice_line_items
-  has_many :subscription_transactions
   has_many :charges
   has_many :refunds
 
@@ -282,9 +280,7 @@ class Subscription < ApplicationRecord
   end
 
   def destroyable?
-    invoices.empty? &&
-      invoice_line_items.empty? &&
-      subscription_transactions.empty?
+    invoices.empty? && invoice_line_items.empty?
   end
 
   def stripe_guid_present?

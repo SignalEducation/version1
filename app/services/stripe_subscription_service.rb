@@ -113,11 +113,6 @@ class StripeSubscriptionService < StripeService
   end
 
   def update_old_subscription(new_subscription)
-    @subscription.user.student_access.update(
-      subscription_id: new_subscription.id, account_type: 'Subscription',
-      content_access: true
-    )
-
     reason = "Changed plan to #{new_subscription.subscription_plan.interval_name}"
     @subscription.update(stripe_status: 'canceled',
                          state: 'cancelled',

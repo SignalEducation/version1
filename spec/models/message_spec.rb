@@ -18,7 +18,6 @@
 require 'rails_helper'
 
 describe Message do
-
   describe 'Should Respond' do
     it { should respond_to(:user_id) }
     it { should respond_to(:opens) }

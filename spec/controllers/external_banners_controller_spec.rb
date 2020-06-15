@@ -25,7 +25,6 @@ describe ExternalBannersController, type: :controller do
 
   let(:marketing_manager_user_group) { FactoryBot.create(:marketing_manager_user_group) }
   let(:marketing_manager_user) { FactoryBot.create(:marketing_manager_user, user_group_id: marketing_manager_user_group.id) }
-  let!(:marketing_manager_student_access) { FactoryBot.create(:complimentary_student_access, user_id: marketing_manager_user.id) }
 
   let!(:external_banner_1) { FactoryBot.create(:external_banner) }
   let!(:external_banner_2) { FactoryBot.create(:external_banner) }

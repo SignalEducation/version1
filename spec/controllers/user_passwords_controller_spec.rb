@@ -5,7 +5,6 @@ require 'rails_helper'
 RSpec.describe UserPasswordsController, type: :controller do
   let!(:student_user)           { create(:student_user) }
   let!(:reset_user)             { create(:user_with_reset_requested, user_group: student_user.user_group) }
-  let!(:student_access)         { create(:valid_free_trial_student_access, user_id: student_user.id) }
   let(:unverified_student_user) { create(:unverified_user, user_group: student_user.user_group,
                                          password_reset_requested_at: Time.now - 1.hour,
                                          password_reset_token: ApplicationController::generate_random_code(20)) }

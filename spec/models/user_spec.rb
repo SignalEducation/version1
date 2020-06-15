@@ -80,7 +80,6 @@ describe User do
   it { should have_many(:orders) }
   it { should have_many(:subscriptions) }
   it { should have_many(:subscription_payment_cards) }
-  it { should have_many(:subscription_transactions) }
   it { should have_many(:course_lesson_logs) }
   it { should have_many(:course_section_logs) }
   it { should have_many(:course_logs) }
@@ -90,7 +89,6 @@ describe User do
   it { should have_many(:refunds) }
   it { should have_many(:ahoy_events) }
   it { should have_one(:referral_code) }
-  it { should have_one(:student_access) }
   it { should have_one(:referred_signup) }
   it { should belong_to(:subscription_plan_category) }
   it { should belong_to(:currency) }

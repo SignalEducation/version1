@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'support/mandrill_web_mock_helpers'
 
@@ -6,37 +8,26 @@ RSpec.describe StudentSignUpsController, type: :controller do
     allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
   end
 
-
-  let!(:exam_body_1) { FactoryBot.create(:exam_body) }
-  let!(:group_1) { FactoryBot.create(:group) }
-  let!(:group_2) { FactoryBot.create(:group) }
-  let!(:course_1) { FactoryBot.create(:active_course, group_id: group_1.id, exam_body_id: exam_body_1.id) }
-
-  let!(:home) { FactoryBot.create(:home, group_id: group_1.id) }
-  let!(:landing_page_1) { FactoryBot.create(:landing_page_1, group_id: group_1.id) }
-  let!(:landing_page_2) { FactoryBot.create(:landing_page_2, course_id: course_1.id, group_id: nil) }
-
-  let(:student_user) { FactoryBot.create(:student_user) }
-  let!(:student_access) { FactoryBot.create(:valid_free_trial_student_access, user_id: student_user.id) }
-  let(:gbp) { FactoryBot.create(:gbp) }
-  let(:uk) { FactoryBot.create(:uk, currency_id: gbp.id) }
-  let!(:uk_vat_code) { create(:vat_code, country: uk) }
+  let!(:exam_body_1)    { create(:exam_body) }
+  let!(:group_1)        { create(:group) }
+  let!(:group_2)        { create(:group) }
+  let!(:course_1)       { create(:active_course, group_id: group_1.id, exam_body_id: exam_body_1.id) }
+  let!(:home)           { create(:home, group_id: group_1.id) }
+  let!(:landing_page_1) { create(:landing_page_1, group_id: group_1.id) }
+  let!(:landing_page_2) { create(:landing_page_2, course_id: course_1.id, group_id: nil) }
+  let!(:student_user)   { create(:student_user) }
+  let(:gbp)             { create(:gbp) }
+  let(:uk)              { create(:uk, currency_id: gbp.id) }
+  let!(:uk_vat_code)    { create(:vat_code, country: uk) }
   let!(:subscription_plan_gbp_m) {
-    create(
-        :student_subscription_plan_m,
-        currency: gbp, price: 7.50, stripe_guid: 'stripe_plan_guid_m',
-        payment_frequency_in_months: 3,
-        exam_body: exam_body_1
-    )
+    create(:student_subscription_plan_m, currency: gbp, price: 7.50,
+           stripe_guid: 'stripe_plan_guid_m', payment_frequency_in_months: 3, exam_body: exam_body_1)
   }
 
-  let(:unverified_user) { FactoryBot.create(:student_user, user_group: student_user.user_group, account_activated_at: nil, account_activation_code: '987654321', active: false, email_verified_at: nil, email_verification_code: '123456687', email_verified: false) }
-
-  let!(:sign_up_params) { { first_name: "Test", last_name: "Student", country_id: uk.id, locale: 'en', email: 'test.student@example.com', password: "dummy_pass", password_confirmation: "dummy_pass" , email_verification_code: "c5a8a2cb71d476ff4ed5" } }
-
+  let(:unverified_user) { create(:student_user, user_group: student_user.user_group, account_activated_at: nil, account_activation_code: '987654321', active: false, email_verified_at: nil, email_verification_code: '123456687', email_verified: false) }
+  let!(:sign_up_params) { { first_name: 'Tes', last_name: 'Studen', country_id: uk.id, locale: 'en', email: 'test.student@example.com', password: 'dummy_pas', password_confirmation: 'dummy_pas', email_verification_code: 'c5a8a2cb71d476ff4ed' } }
 
   context 'Not logged in...' do
-
     describe "GET 'home'" do
       it 'should see home with home_page record' do
         get :home, params: { public_url: '/' }
@@ -105,36 +96,33 @@ RSpec.describe StudentSignUpsController, type: :controller do
 
     describe "POST 'create'" do
       # Stripe Customer Create
-      describe "invalid data" do
-
+      describe 'invalid data' do
         it 'does not subscribe user if user with same email already exists' do
           request.env['HTTP_REFERER'] = '/en/student_new'
           post :create, params: { user: sign_up_params.merge(email: student_user.email) }
           expect(response.status).to eq(302)
-          expect(response).to redirect_to(request.referrer)
+          expect(response).to redirect_to(request.referer)
         end
 
         it 'does not subscribe user if password is blank' do
           request.env['HTTP_REFERER'] = '/en/student_new'
           post :create, params: { user: sign_up_params.merge(password: nil) }
           expect(response.status).to eq(302)
-          expect(response).to redirect_to(request.referrer)
+          expect(response).to redirect_to(request.referer)
         end
 
         it 'does not subscribe user if password is not of required length' do
           request.env['HTTP_REFERER'] = '/en/student_new'
           post :create, params: { user: sign_up_params.merge(password: '12345') }
           expect(response.status).to eq(302)
-          expect(response).to redirect_to(request.referrer)
+          expect(response).to redirect_to(request.referer)
         end
-
       end
 
-      describe "valid data" do
-
+      describe 'valid data' do
         it 'signs up new student' do
           stripe_url = 'https://api.stripe.com/v1/customers'
-          stripe_request_body = {'email'=>'test.student@example.com'}
+          stripe_request_body = { 'email' => 'test.student@example.com' }
           stub_customer_create_request(stripe_url, stripe_request_body)
 
           # TODO: Mandrill call needs to be stubbed [verification_code issue]
@@ -155,7 +143,7 @@ RSpec.describe StudentSignUpsController, type: :controller do
 
         xit 'creates referred signup if user comes from referral link' do
           stripe_url = 'https://api.stripe.com/v1/customers'
-          stripe_request_body = { 'email'=>'test.student@example.com' }
+          stripe_request_body = { 'email' => 'test.student@example.com' }
           stub_customer_create_request(stripe_url, stripe_request_body)
 
           cookies.encrypted[:referral_data] = "#{student_user.referral_code.code};http://referral.example.com"
@@ -169,7 +157,7 @@ RSpec.describe StudentSignUpsController, type: :controller do
           rs = ReferredSignup.first
           expect(rs.referral_code_id).to eq(student_user.referral_code.id)
           expect(rs.user_id).to eq(User.last.id)
-          expect(rs.referrer_url).to eq("http://referral.example.com")
+          expect(rs.referrer_url).to eq('http://referral.example.com')
         end
       end
     end
@@ -182,11 +170,9 @@ RSpec.describe StudentSignUpsController, type: :controller do
         expect(response).to render_template(:show)
       end
     end
-
   end
 
   context 'Logged in as a student_user' do
-
     before(:each) do
       activate_authlogic
       UserSession.create!(student_user)
@@ -244,9 +230,6 @@ RSpec.describe StudentSignUpsController, type: :controller do
         expect(response.status).to eq(302)
         expect(response).to redirect_to(student_dashboard_url)
       end
-
     end
-
   end
-
 end

@@ -24,10 +24,8 @@
 require 'rails_helper'
 
 describe GroupsController, type: :controller do
-
   let(:content_management_user_group) { FactoryBot.create(:content_management_user_group) }
   let(:content_management_user) { FactoryBot.create(:content_management_user, user_group_id: content_management_user_group.id) }
-  let!(:content_management_user_student_access) { FactoryBot.create(:complimentary_student_access, user_id: content_management_user.id) }
 
   let!(:exam_body_1) { FactoryBot.create(:exam_body) }
   let!(:group_1) { FactoryBot.create(:group) }
@@ -36,7 +34,6 @@ describe GroupsController, type: :controller do
 
 
   context 'Logged in as a content_management_user: ' do
-
     before(:each) do
       activate_authlogic
       UserSession.create!(content_management_user)

@@ -30,10 +30,8 @@
 require 'rails_helper'
 
 describe HomePagesController, type: :controller do
-
   let(:system_requirements_user_group) { FactoryBot.create(:system_requirements_user_group) }
   let(:system_requirements_user) { FactoryBot.create(:system_requirements_user, user_group_id: system_requirements_user_group.id) }
-  let!(:system_requirements_student_access) { FactoryBot.create(:complimentary_student_access, user_id: system_requirements_user.id) }
 
   let!(:landing_page_1) { FactoryBot.create(:landing_page_1) }
   let!(:landing_page_2) { FactoryBot.create(:landing_page_2) }
@@ -41,7 +39,6 @@ describe HomePagesController, type: :controller do
   let!(:valid_params) { FactoryBot.attributes_for(:home_page) }
 
   context 'Logged in as a system_requirements_user: ' do
-
     before(:each) do
       activate_authlogic
       UserSession.create!(system_requirements_user)
