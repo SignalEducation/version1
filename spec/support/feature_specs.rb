@@ -15,6 +15,7 @@ end
 
 def sign_in_via_sign_in_page(user)
   visit sign_in_path
+
   within('#sign-in') do
     fill_in I18n.t('views.user_sessions.form.email'), with: user.email
     fill_in I18n.t('views.user_sessions.form.password'), with: user.password

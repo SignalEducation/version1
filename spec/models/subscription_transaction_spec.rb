@@ -20,6 +20,7 @@
 require 'rails_helper'
 
 describe SubscriptionTransaction do
+  let(:subscription_transaction) { build(:subscription_transaction) }
 
   # Constants
   it { expect(SubscriptionTransaction.const_defined?(:TRANSACTION_TYPES)).to eq(true) }
@@ -55,10 +56,18 @@ describe SubscriptionTransaction do
   it { expect(SubscriptionTransaction).to respond_to(:all_in_order) }
   it { expect(SubscriptionTransaction).to respond_to(:all_alarms) }
 
-  # class methods
-  it { expect(SubscriptionTransaction).to respond_to(:create_from_stripe_data) }
-
   # instance methods
   it { should respond_to(:destroyable?) }
 
+  describe 'Methods' do
+    before do
+      allow_any_instance_of(StripeApiEvent).to receive(:get_data_from_stripe).and_return(true)
+      allow_any_instance_of(StripePlanService).to receive(:create_plan).and_return(true)
+      allow_any_instance_of(PaypalPlansService).to receive(:create_plan).and_return(true)
+    end
+
+    describe '#destroyable?' do
+      it { expect(subscription_transaction.destroyable?).to be(true) }
+    end
+  end
 end

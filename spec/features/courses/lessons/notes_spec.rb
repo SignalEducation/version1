@@ -35,12 +35,6 @@ describe 'Notes Course Step', type: :feature do
 
       expect(page).to have_title('The Smarter Way to Study | learnsignal')
       expect(page).to have_content(course_note.name)
-
-      within('#course_note_next_step') do
-        expect(page).to have_selector(:link_or_button, I18n.t('views.course_steps.show.next_step'))
-      end
-
-      click_link I18n.t('views.course_steps.show.next_step')
     end
   end
 end

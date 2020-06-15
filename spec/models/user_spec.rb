@@ -236,6 +236,10 @@ describe User do
   end
 
   describe '.get_and_verify' do
+    before do
+      allow_any_instance_of(HubSpot::Contacts).to receive(:batch_create).and_return(:ok)
+    end
+
     it 'returns NIL unless a matching user can be found' do
       expect(User.get_and_verify('test_code', 1)).to be_nil
     end
