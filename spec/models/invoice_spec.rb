@@ -41,6 +41,25 @@
 require 'rails_helper'
 
 describe Invoice do
+  before :each do
+    allow_any_instance_of(StripePlanService).to receive(:create_plan)
+    allow_any_instance_of(PaypalPlansService).to receive(:create_plan)
+    allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
+  end
+
+  let(:stripe_invoice_data) {
+    JSON.parse(file_fixture('stripe/invoice_created.json').read).with_indifferent_access
+  }
+
+  let(:paypal_invoice_data) {
+    JSON.parse(file_fixture('paypal/webhook_payment_sale_completed.json').read).with_indifferent_access
+  }
+
+  let(:currency)         { create(:currency) }
+  let(:user)             { create(:user, currency: currency) }
+  let(:invoice)          { build_stubbed(:invoice) }
+  let!(:subscription_01) { create(:subscription, user: user, stripe_guid: stripe_invoice_data[:data][:object][:subscription]) }
+  let!(:subscription_02) { create(:subscription, user: user, paypal_subscription_guid: paypal_invoice_data['resource']['billing_agreement_id']) }
 
   it 'has a valid factory' do
     allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
@@ -89,11 +108,75 @@ describe Invoice do
   it { should respond_to(:status) }
   it { should respond_to(:update_from_stripe) }
 
-  describe 'instance methods' do
-    let(:invoice) { build_stubbed(:invoice) }
+  describe 'Methods' do
+    describe '.build_from_stripe_data' do
+      it 'save invoice' do
+        allow(User).to receive(:find_by).and_return(user)
+        allow(Currency).to receive(:find_by).and_return(currency)
+        allow(InvoiceLineItem).to receive(:build_from_stripe_data).and_return(true)
 
-    before :each do
-      allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
+        expect(Invoice.build_from_stripe_data(stripe_invoice_data[:data][:object])).to be_a_kind_of(Invoice)
+      end
+
+      it 'dont save invoice' do
+        allow(User).to receive(:find_by).and_return(user)
+        allow(Currency).to receive(:find_by).and_return(currency)
+
+        expect(Rails.logger).to receive(:error)
+
+        expect(Invoice.build_from_stripe_data(stripe_invoice_data[:data][:object])).to be(nil)
+      end
+
+      it 'dont save invoice' do
+        allow(User).to receive(:find_by).and_return(user)
+        allow(Currency).to receive(:find_by).and_return(currency)
+        allow_any_instance_of(Invoice).to receive(:save).and_return(false)
+
+        expect(Rails.logger).to receive(:error)
+
+        expect(Invoice.build_from_stripe_data(stripe_invoice_data[:data][:object])).to be_a_kind_of(Invoice)
+      end
+
+      it 'dont save invoice' do
+        allow(User).to receive(:find_by).and_return(nil)
+        allow(Currency).to receive(:find_by).and_return(currency)
+        allow_any_instance_of(Subscription).to receive(:currency).and_return(false)
+
+        expect(Rails.logger).to receive(:error)
+
+        expect(Invoice.build_from_stripe_data(stripe_invoice_data[:data][:object])).to be(nil)
+      end
+    end
+
+    describe '.build_from_paypal_data' do
+      it 'save invoice' do
+        allow(InvoiceLineItem).to receive(:build_from_paypal_data).and_return(true)
+
+        expect(Invoice.build_from_paypal_data(paypal_invoice_data)).to be_a_kind_of(Invoice)
+      end
+
+      it 'dont save invoice' do
+        allow_any_instance_of(Subscription).to receive(:user).and_return(false)
+        expect(Rails.logger).to receive(:error)
+
+        expect(Invoice.build_from_paypal_data(paypal_invoice_data)).to be_a_kind_of(Invoice)
+      end
+
+      it 'dont save invoice' do
+        allow_any_instance_of(Invoice).to receive(:save).and_return(false)
+
+        expect(Rails.logger).to receive(:error)
+
+        expect(Invoice.build_from_paypal_data(paypal_invoice_data)).to be_a_kind_of(Invoice)
+      end
+
+      it 'dont save invoice' do
+        allow_any_instance_of(Invoice).to receive(:save).and_return(false)
+
+        expect(Rails.logger).to receive(:error)
+
+        expect(Invoice.build_from_paypal_data(paypal_invoice_data)).to be_a_kind_of(Invoice)
+      end
     end
 
     describe '#mark_payment_action_required' do
@@ -121,7 +204,118 @@ describe Invoice do
           invoice.send_receipt('')
         end
       end
+    end
 
+    describe '#mark_payment_action_successful' do
+      let(:invoice_2) { create(:invoice, requires_3d_secure: true) }
+
+      it 'updates the requires_3d_secure field' do
+        allow(invoice_2.subscription).to receive(:restart!)
+
+        expect { invoice_2.mark_payment_action_successful }.to change {
+          invoice_2.requires_3d_secure
+        }.from(true).to(false)
+      end
+
+      it 'calls the mark_payment_action_successful! transition on the subscription' do
+        expect(invoice_2.subscription).to receive(:restart!)
+
+        invoice_2.mark_payment_action_successful
+      end
+    end
+
+    describe '#update_from_stripe' do
+      let(:invoice) { create(:invoice, stripe_guid: stripe_invoice_data[:data][:object][:id]) }
+
+      it 'updates invoice with stripe data' do
+        allow(Stripe::Invoice).to receive(:retrieve).and_return(stripe_invoice_data[:data][:object])
+
+        expect(invoice.update_from_stripe(invoice.stripe_guid)).to be(true)
+      end
+
+      it 'doesnt updates invoice with stripe data' do
+        allow(Invoice).to receive(:find_by).and_return(false)
+        allow(Stripe::Invoice).to receive(:retrieve).and_return(stripe_invoice_data[:data][:object])
+
+        expect(invoice.update_from_stripe(invoice.stripe_guid)).to be(true)
+      end
+
+      it 'doesnt updates invoice with stripe data' do
+        allow(Stripe::Invoice).to receive(:retrieve).and_return(nil)
+
+        expect(invoice.update_from_stripe(invoice.stripe_guid)).to be(true)
+      end
+    end
+
+    describe '#destroyable?' do
+      it 'return true' do
+        expect(invoice).to be_destroyable
+      end
+
+      it 'return false' do
+        allow_any_instance_of(Invoice).to receive(:invoice_line_items).and_return([1])
+
+        expect(invoice).not_to be_destroyable
+      end
+    end
+
+    describe '#status' do
+      context 'Paid' do
+        before do
+          allow_any_instance_of(Invoice).to receive(:paid).and_return(true)
+          allow_any_instance_of(Invoice).to receive(:payment_closed).and_return(true)
+        end
+
+        it { expect(invoice.status).to eq('Paid') }
+      end
+
+      context 'Pending Authentication' do
+        before do
+          allow_any_instance_of(Invoice).to receive(:paid).and_return(false)
+          allow_any_instance_of(Invoice).to receive(:payment_closed).and_return(false)
+          allow_any_instance_of(Invoice).to receive(:requires_3d_secure).and_return(true)
+        end
+
+        it { expect(invoice.status).to eq('Pending Authentication') }
+      end
+
+      context 'Past Due' do
+        before do
+          allow_any_instance_of(Invoice).to receive(:paid).and_return(false)
+          allow_any_instance_of(Invoice).to receive(:payment_attempted).and_return(true)
+          allow_any_instance_of(Invoice).to receive(:next_payment_attempt_at).and_return('1')
+        end
+
+        it { expect(invoice.status).to eq('Past Due') }
+      end
+
+      context 'Pending' do
+        before do
+          allow_any_instance_of(Invoice).to receive(:paid).and_return(false)
+          allow_any_instance_of(Invoice).to receive(:payment_closed).and_return(false)
+        end
+
+        it { expect(invoice.status).to eq('Pending') }
+      end
+
+      context 'Closed' do
+        before do
+          allow_any_instance_of(Invoice).to receive(:paid).and_return(false)
+          allow_any_instance_of(Invoice).to receive(:payment_closed).and_return(true)
+          allow_any_instance_of(Invoice).to receive(:payment_attempted).and_return(true)
+        end
+
+        it { expect(invoice.status).to eq('Closed') }
+      end
+
+      context 'Other' do
+        before do
+          allow_any_instance_of(Invoice).to receive(:paid).and_return(false)
+          allow_any_instance_of(Invoice).to receive(:payment_closed).and_return(true)
+        end
+
+        it { expect(invoice.status).to eq('Other') }
+      end
     end
 
     describe '#send_receipt' do
