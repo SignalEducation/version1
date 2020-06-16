@@ -1,13 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-RSpec.describe DashboardController, :type => :controller do
-
-  let!(:student_user_group ) { FactoryBot.create(:student_user_group ) }
-  let!(:student_user) { FactoryBot.create(:student_user, user_group_id: student_user_group.id) }
-  let!(:student_access) { FactoryBot.create(:valid_free_trial_student_access, user_id: student_user.id) }
+RSpec.describe DashboardController, type: :controller do
+  let(:student_user_group) { create(:student_user_group ) }
+  let!(:student_user)      { create(:student_user, user_group_id: student_user_group.id) }
 
   context 'Logged in as a student_user: ' do
-
     before(:each) do
       activate_authlogic
       UserSession.create!(student_user)
@@ -20,7 +19,5 @@ RSpec.describe DashboardController, :type => :controller do
         expect(response).to render_template(:show)
       end
     end
-
   end
-
 end

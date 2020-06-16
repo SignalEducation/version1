@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_02_173317) do
+ActiveRecord::Schema.define(version: 2020_06_12_103150) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -1291,28 +1291,6 @@ ActiveRecord::Schema.define(version: 2020_06_02_173317) do
     t.datetime "updated_at"
   end
 
-  create_table "student_accesses", id: :serial, force: :cascade do |t|
-    t.integer "user_id"
-    t.datetime "trial_started_date"
-    t.datetime "trial_ending_at_date"
-    t.datetime "trial_ended_date"
-    t.integer "trial_seconds_limit"
-    t.integer "trial_days_limit"
-    t.integer "content_seconds_consumed", default: 0
-    t.integer "subscription_id"
-    t.string "account_type"
-    t.boolean "content_access", default: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["account_type"], name: "index_student_accesses_on_account_type"
-    t.index ["content_access"], name: "index_student_accesses_on_content_access"
-    t.index ["content_seconds_consumed"], name: "index_student_accesses_on_content_seconds_consumed"
-    t.index ["subscription_id"], name: "index_student_accesses_on_subscription_id"
-    t.index ["trial_days_limit"], name: "index_student_accesses_on_trial_days_limit"
-    t.index ["trial_seconds_limit"], name: "index_student_accesses_on_trial_seconds_limit"
-    t.index ["user_id"], name: "index_student_accesses_on_user_id"
-  end
-
   create_table "student_testimonials", force: :cascade do |t|
     t.integer "home_page_id"
     t.integer "sorting_order"
@@ -1395,25 +1373,6 @@ ActiveRecord::Schema.define(version: 2020_06_02_173317) do
     t.index ["currency_id"], name: "index_subscription_plans_on_currency_id"
     t.index ["exam_body_id"], name: "index_subscription_plans_on_exam_body_id"
     t.index ["subscription_plan_category_id"], name: "index_subscription_plans_on_subscription_plan_category_id"
-  end
-
-  create_table "subscription_transactions", id: :serial, force: :cascade do |t|
-    t.integer "user_id"
-    t.integer "subscription_id"
-    t.string "stripe_transaction_guid", limit: 255
-    t.string "transaction_type", limit: 255
-    t.decimal "amount"
-    t.integer "currency_id"
-    t.boolean "alarm", default: false, null: false
-    t.boolean "live_mode", default: false, null: false
-    t.text "original_data"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer "subscription_payment_card_id"
-    t.index ["currency_id"], name: "index_subscription_transactions_on_currency_id"
-    t.index ["subscription_id"], name: "index_subscription_transactions_on_subscription_id"
-    t.index ["subscription_payment_card_id"], name: "index_subscription_transactions_on_subscription_payment_card_id"
-    t.index ["user_id"], name: "index_subscription_transactions_on_user_id"
   end
 
   create_table "subscriptions", id: :serial, force: :cascade do |t|

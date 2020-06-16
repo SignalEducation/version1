@@ -5,8 +5,7 @@ require 'rails_helper'
 describe InvoicesHelper, type: :helper do
   let(:subscription_plan)        { build(:subscription_plan) }
   let(:subscription)             { build(:subscription, subscription_plan: subscription_plan) }
-  let(:subscription_transaction) { build(:subscription_transaction, subscription: subscription) }
-  let(:invoice)                  { build(:invoice, subscription: subscription, subscription_transaction: subscription_transaction) }
+  let(:invoice)                  { build(:invoice, subscription: subscription) }
   let(:invoice_line_item)        { build(:invoice_line_item, invoice: invoice, subscription: subscription, subscription_plan_id: subscription_plan) }
   let(:cbe)                      { build(:cbe) }
   let(:cbe_product)              { build(:product, cbe: cbe, product_type: 'cbe') }

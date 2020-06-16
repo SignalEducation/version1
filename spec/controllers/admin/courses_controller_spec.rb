@@ -44,7 +44,6 @@ require 'rails_helper'
 describe Admin::CoursesController, type: :controller do
   let(:content_management_user_group)           { create(:content_management_user_group) }
   let(:content_management_user)                 { create(:content_management_user, user_group_id: content_management_user_group.id) }
-  let!(:content_management_user_student_access) { create(:complimentary_student_access, user_id: content_management_user.id) }
   let!(:group_1)                                { create(:group) }
   let!(:course_1)                               { create(:active_course, group: group_1) }
   let!(:course_2)                               { create(:active_course, group: group_1, computer_based: true) }

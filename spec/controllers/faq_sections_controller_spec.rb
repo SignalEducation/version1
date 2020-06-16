@@ -18,7 +18,6 @@ describe FaqSectionsController, type: :controller do
 
   let(:marketing_manager_user_group) { FactoryBot.create(:marketing_manager_user_group) }
   let(:marketing_manager_user) { FactoryBot.create(:marketing_manager_user, user_group_id: marketing_manager_user_group.id) }
-  let!(:marketing_manager_student_access) { FactoryBot.create(:complimentary_student_access, user_id: marketing_manager_user.id) }
 
   let!(:faq_section_1) { FactoryBot.create(:faq_section) }
   let!(:faq_section_2) { FactoryBot.create(:faq_section) }

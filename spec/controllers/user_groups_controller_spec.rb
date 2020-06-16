@@ -28,7 +28,6 @@ describe UserGroupsController, type: :controller do
   let!(:student_user_group ) { FactoryBot.create(:student_user_group ) }
   let(:user_group_manager_user_group) { FactoryBot.create(:user_group_manager_user_group) }
   let(:user_group_manager_user) { FactoryBot.create(:user_group_manager_user, user_group_id: user_group_manager_user_group.id) }
-  let!(:user_group_manager_student_access) { FactoryBot.create(:complimentary_student_access, user_id: user_group_manager_user.id) }
 
   let!(:valid_params) { FactoryBot.attributes_for(:user_group) }
 

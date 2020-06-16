@@ -70,8 +70,6 @@ describe Subscription do
     it { should have_many(:invoice_line_items) }
     it { should belong_to(:subscription_plan) }
     it { should belong_to(:coupon) }
-    it { should have_one(:student_access) }
-    it { should have_many(:subscription_transactions) }
     it { should have_many(:charges) }
     it { should have_many(:refunds) }
   end

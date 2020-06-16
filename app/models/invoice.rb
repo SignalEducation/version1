@@ -54,7 +54,6 @@ class Invoice < ApplicationRecord
   has_many :invoice_line_items, autosave: true
   has_many :charges
   has_many :refunds
-  belongs_to :subscription_transaction, optional: true
   belongs_to :subscription, optional: true
   belongs_to :order, optional: true
   belongs_to :user

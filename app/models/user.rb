@@ -64,8 +64,6 @@ class User < ApplicationRecord
     c.crypto_provider = Authlogic::CryptoProviders::SCrypt
   end
 
-  delegate :account_type, :to => :student_access
-
   # Constants
   LOCALES = %w(en)
   SORT_OPTIONS = %w(created user_group name email)
@@ -77,7 +75,6 @@ class User < ApplicationRecord
   belongs_to :user_group
 
   has_one :referral_code
-  has_one :student_access
   has_one :referred_signup
   has_one :onboarding_process
 
@@ -96,7 +93,6 @@ class User < ApplicationRecord
   has_many :orders
   has_many :subscriptions, inverse_of: :user
   has_many :subscription_payment_cards
-  has_many :subscription_transactions
   has_many :subscriptions_cancelled, class_name: 'Subscription', foreign_key: 'cancelled_by_id', inverse_of: :cancelled_by
   has_many :course_lesson_logs
   has_many :course_section_logs
@@ -111,7 +107,6 @@ class User < ApplicationRecord
 
   has_attached_file :profile_image, default_url: 'images/missing_image.jpg'
 
-  accepts_nested_attributes_for :student_access
   accepts_nested_attributes_for :exam_body_user_details, :reject_if => lambda { |c| c[:student_number].blank? }
 
   # validation
@@ -416,12 +411,6 @@ class User < ApplicationRecord
     user_group_management_access? && developer_access? && system_requirements_access?
   end
 
-  ## StudentAccess methods
-
-  def make_student_access
-    build_student_access(account_type: 'Trial')
-  end
-
   def name
     [first_name, last_name].join(' ')
   end
@@ -526,10 +515,6 @@ class User < ApplicationRecord
     end
   end
 
-  def pre_creation_setup
-    make_student_access
-  end
-
   def send_verification_email(url)
     return if Rails.env.test?
 
@@ -587,7 +572,6 @@ class User < ApplicationRecord
       course_lesson_logs.empty? &&
       subscriptions.empty? &&
       subscription_payment_cards.empty? &&
-      subscription_transactions.empty? &&
       orders.empty?
   end
 
