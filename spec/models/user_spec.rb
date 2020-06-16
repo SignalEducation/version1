@@ -402,7 +402,7 @@ describe User do
 
     describe '#parse_csv' do
       it 'parser a user csv file' do
-        data = File.read(Rails.root.join('spec', 'support', 'fixtures', 'file.csv'))
+        data        = File.read(Rails.root.join('spec/support/fixtures/file.csv'))
         data_users  = data.split("\n")
         data_parsed = User.parse_csv(data)
         rand_count  = rand(0..9)
