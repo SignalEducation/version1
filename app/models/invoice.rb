@@ -86,17 +86,16 @@ class Invoice < ApplicationRecord
     inv = nil
     # This is wrapped in a transaction block to ensure that the Invoice record does not save unless all the InvoiceLineItems save successfully. If an InvoiceLineItem record fails all other records including the parent Invoice record will be rolled back.
     Invoice.transaction do
-      user = User.find_by(stripe_customer_id: stripe_data_hash[:customer])
+      user         = User.find_by(stripe_customer_id: stripe_data_hash[:customer])
+      currency     = Currency.find_by(iso_code: stripe_data_hash[:currency].upcase)
       subscription = Subscription.in_reverse_created_order.find_by(stripe_guid: stripe_data_hash[:subscription])
-      currency = Currency.find_by(iso_code: stripe_data_hash[:currency].upcase)
-
       if user && subscription && currency
         inv = Invoice.new(
           user_id: user.id,
           subscription_id: subscription.id,
           number_of_users: 1,
           currency_id: currency.id,
-          issued_at: Time.at(stripe_data_hash[:created]),
+          issued_at: Time.zone.at(stripe_data_hash[:created]),
           stripe_guid: stripe_data_hash[:id],
           sub_total: stripe_data_hash[:subtotal].to_i / 100.0,
           total: stripe_data_hash[:total].to_i / 100.0,
@@ -110,14 +109,15 @@ class Invoice < ApplicationRecord
           livemode: stripe_data_hash[:livemode],
           attempt_count: stripe_data_hash[:attempt_count],
           amount_due: stripe_data_hash[:amount_due].to_i / 100.0,
-          next_payment_attempt_at: (stripe_data_hash[:next_payment_attempt] ? Time.at(stripe_data_hash[:next_payment_attempt]) : nil),
-          webhooks_delivered_at: (stripe_data_hash[:webhooks_delivered_at] ? Time.at(stripe_data_hash[:webhooks_delivered_at]) : nil),
+          next_payment_attempt_at: (stripe_data_hash[:next_payment_attempt] ? Time.zone.at(stripe_data_hash[:next_payment_attempt]) : nil),
+          webhooks_delivered_at: (stripe_data_hash[:webhooks_delivered_at] ? Time.zone.at(stripe_data_hash[:webhooks_delivered_at]) : nil),
           charge_guid: stripe_data_hash[:charge],
           subscription_guid: stripe_data_hash[:subscription],
           tax_percent: stripe_data_hash[:tax_percent],
           tax: stripe_data_hash[:tax].to_i / 100.0,
           original_stripe_data: stripe_data_hash.to_hash
         )
+
         if inv.save
           begin
             stripe_data_hash[:lines][:data].each do |line_item|
@@ -187,7 +187,7 @@ class Invoice < ApplicationRecord
   def update_from_stripe(invoice_guid)
     stripe_invoice = Stripe::Invoice.retrieve(invoice_guid)
     if stripe_invoice
-      invoice = Invoice.find_by_stripe_guid(stripe_invoice[:id])
+      invoice = Invoice.find_by(stripe_guid: stripe_invoice[:id])
       if invoice
         invoice.update_attributes(
           sub_total: stripe_invoice[:subtotal].to_i / 100.0,
