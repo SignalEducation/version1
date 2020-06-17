@@ -315,11 +315,13 @@ class User < ApplicationRecord
                            email_verification_code: verification_code, free_trial: true,
                            user_group_id: user_group.id)
 
-    if user.valid? && user.save
-      stripe_customer = Stripe::Customer.create(email: user.email)
-      user.update_column(:stripe_customer_id, stripe_customer.id)
-      Message.create(process_at: Time.zone.now, user_id: user&.id, kind: :account, template: 'csv_webinar_invite', template_params: { url: UrlHelper.instance.user_verification_url(id: user.email_verification_code) })
-    end
+    return unless user.valid? && user.save
+
+    stripe_customer = Stripe::Customer.create(email: user.email)
+    user.update_column(:stripe_customer_id, stripe_customer.id)
+
+    Message.create(process_at: Time.zone.now, user_id: user&.id, kind: :account, template: 'csv_webinar_invite',
+                   template_params: { url: UrlHelper.instance.user_verification_url(email_verification_code: user.email_verification_code, host: LEARNSIGNAL_HOST) })
   end
 
   ### INSTANCE METHODS =========================================================

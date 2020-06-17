@@ -166,18 +166,87 @@ describe UsersController, type: :controller do
     end
 
     describe "GET 'preview_csv_upload'" do
-      #TODO Test CSV Files Upload
-      xit 'should redirect to root' do
-        post :preview_csv_upload, params: { id: 1 }
-        expect_bounce_as_not_allowed
+      let(:file) { fixture_file_upload('file.csv') }
+
+      it 'should render csv preview' do
+        post :preview_csv_upload, params: { upload: file }
+
+        expect(response).to be_success
+      end
+
+      it 'should redirect to users page' do
+        post :preview_csv_upload
+
+        expect(response).to redirect_to(users_url)
       end
     end
 
     describe "GET 'import_csv_upload'" do
-      #TODO Test CSV Files Upload
-      xit 'should redirect to root' do
-        post :import_csv_upload, params: { id: 1 }
-        expect_bounce_as_not_allowed
+      let(:stripe_customer) { double(livemode: true, id: 'prod_12344') }
+      let(:csv_data) { { '0' => { 'email' => 'giordano13@csv.com', 'first_name' => 'giordano13', 'last_name' => 'giordano13' } } }
+
+      it 'should create users' do
+        allow(Country).to receive(:find).and_return(uk)
+        allow(Message).to receive(:create).and_return(true)
+        allow(Stripe::Customer).to receive(:create).and_return(stripe_customer)
+
+        post :import_csv_upload, params: { csvdata: csv_data, user_group_id: student_user_group.id }
+
+        expect(response).to be_success
+      end
+
+      it 'should redirect to root' do student_user_group
+        post :import_csv_upload, params: { csvdata: csv_data, user_group_id: '' }
+
+        expect(response).to redirect_to(users_url)
+      end
+    end
+
+    describe "GET 'course_log_details'" do
+      let(:course_log) { create(:course_log, user_id:  basic_student.id) }
+
+      it 'should render course log details' do
+        get :course_log_details, params: { scul_id: course_log.id, user_id: course_log.user_id }
+
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:course_log_details)
+      end
+    end
+
+    describe "GET 'user_referral_details'" do
+      it 'should render user referral details' do
+        get :user_referral_details, params: { user_id: basic_student.id }
+
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:user_referral_details)
+      end
+    end
+
+    describe "GET 'user_messages_details'" do
+      it 'should render user referral details' do
+        get :user_messages_details, params: { user_id: basic_student.id }
+
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:user_messages_details)
+      end
+    end
+
+    describe "GET 'user_courses_status'" do
+      let!(:courses) { create_list(:course, 5, active: true) }
+
+      it 'should render user referral details' do
+        get :user_courses_status, params: { user_id: basic_student.id }
+
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:user_courses_status)
       end
     end
 
