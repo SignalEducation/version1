@@ -117,6 +117,42 @@ describe Paypal::SubscriptionValidation, type: :service do
         target_instance.send(:match_with_state)
       end
 
+      it 'calls #check_cancellation_status' do
+        expect(target_instance).to receive(:check_cancellation_status)
+
+        target_instance.send(:match_with_state)
+      end
+    end
+  end
+
+  describe '#check_cancellation_status' do
+    let(:target_dbl) { double(state: 'Cancelled') }
+    let(:sub) { create(:paypal_subscription, paypal_status: 'Active', state: 'active') }
+    let(:target_instance) { Paypal::SubscriptionValidation.new(sub) }
+    let(:pending_cancellation_sub) { create(:paypal_subscription, paypal_status: 'Active', state: 'pending_cancellation') }
+    let(:pending_instance) { Paypal::SubscriptionValidation.new(pending_cancellation_sub) }
+
+    before :each do
+      allow(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(target_dbl)
+    end
+
+    describe 'for pending_cancellation subscriptions' do
+      it 'does not call #cancel on the subscription if the next_renewal_date is in the future' do
+        pending_cancellation_sub.update(next_renewal_date: Time.zone.now + 1.week)
+        expect(pending_cancellation_sub).not_to receive(:cancel!)
+
+        pending_instance.send(:match_with_state)
+      end
+
+      it 'calls #cancel on the subscription if the next_renewal_date is not in the future' do
+        pending_cancellation_sub.update(next_renewal_date: Time.zone.now - 1.week)
+        expect(pending_cancellation_sub).to receive(:cancel!)
+
+        pending_instance.send(:match_with_state)
+      end
+    end
+
+    describe 'for non-pending_cancellation subscriptions' do
       it 'calls #cancel on the subscription' do
         expect(sub).to receive(:cancel!)
 
