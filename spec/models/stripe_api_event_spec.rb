@@ -39,7 +39,7 @@ describe StripeApiEvent do
 
   describe 'callbacks' do
     it { should callback(:set_default_values).before(:validation).on(:create) }
-    it { should callback(:get_data_from_stripe).before(:validation).on(:create) }
+    it { should callback(:sync_data_from_stripe).before(:validation).on(:create) }
     it { should callback(:disseminate_payload).after(:create) }
     it { should callback(:check_dependencies).before(:destroy) }
   end
@@ -107,7 +107,15 @@ describe StripeApiEvent do
   describe 'instance methods' do
     it { should respond_to(:destroyable?) }
     it { should respond_to(:disseminate_payload) }
-    it { should respond_to(:get_data_from_stripe) }
+    it { should respond_to(:sync_data_from_stripe) }
+
+    describe '#destroyable?' do
+      let(:event) { build_stubbed(:stripe_api_event, processed: true) }
+      
+      it 'returns the negative of the #processed attribute' do
+        expect(event.destroyable?).to be false
+      end
+    end
 
     describe '#disseminate_payload' do
       describe 'for invoice.created webhook' do
@@ -258,14 +266,56 @@ describe StripeApiEvent do
         end
       end
 
+      describe 'for an unknown webhook value' do
+        let(:payload) { { type: 'hook.unknown', livemode: false, data: { object: { id: 'test_id' } } } }
+        let(:api_event) { build(:stripe_api_event, payload: payload) }
+
+        it 'calls #log_process_error' do
+          expect(api_event).to(receive(:log_process_error).with('Unknown event type - hook.unknown'))
+
+          api_event.disseminate_payload
+        end
+      end
+
       describe 'for an invalid livemode value' do
         let(:payload) { { type: 'invoice.created', livemode: true } }
         let(:api_event) { build(:stripe_api_event, payload: payload) }
 
-        it 'call #set_process_error' do
-          expect(api_event).to receive(:set_process_error)
+        it 'call #log_process_error' do
+          expect(api_event).to receive(:log_process_error)
 
           api_event.disseminate_payload
+        end
+      end
+    end
+
+    describe '#sync_data_from_stripe' do
+      describe 'when a guid exists' do
+        let(:api_event) { build_stubbed(:stripe_api_event, guid: 'test-guid') }
+
+        it 'retreives the event from stripe' do
+          expect(Stripe::Event).to receive(:retrieve).with('test-guid')
+          allow(api_event).to receive(:assign_attributes)
+
+          api_event.sync_data_from_stripe
+        end
+
+        it 'assigns the payload attribute' do
+          evt_double = double(to_hash: 'test')
+          allow(Stripe::Event).to receive(:retrieve).with('test-guid').and_return(evt_double)
+          expect(api_event).to receive(:assign_attributes).with(hash_including(payload: 'test'))
+
+          api_event.sync_data_from_stripe
+        end
+      end
+
+      describe 'without a valid guid' do
+        let(:api_event) { build_stubbed(:stripe_api_event, guid: nil) }
+
+        it 'assigns the error attributes' do
+          expect(api_event).to receive(:assign_attributes).with(hash_including(error: true))
+
+          api_event.sync_data_from_stripe
         end
       end
     end
@@ -273,9 +323,9 @@ describe StripeApiEvent do
     describe '#process_invoice_payment_success' do
       describe 'when no invoice exists' do
         let(:api_event) { build(:stripe_api_event) }
-        it 'calls #set_process_error' do
+        it 'calls #log_process_error' do
           allow(Invoice).to receive(:find_by).and_return(nil)
-          expect(api_event).to receive(:set_process_error)
+          expect(api_event).to receive(:log_process_error)
 
           api_event.send(:process_invoice_payment_success, 'test_id')
         end
@@ -287,7 +337,7 @@ describe StripeApiEvent do
 
         before :each do
           allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
-          allow(api_event).to receive(:get_data_from_stripe)
+          allow(api_event).to receive(:sync_data_from_stripe)
           allow(Invoice).to receive(:find_by).and_return(invoice)
           allow_any_instance_of(StripeSubscriptionService).to(
             receive(:retrieve_subscription)
@@ -329,9 +379,9 @@ describe StripeApiEvent do
     describe '#process_payment_action_required' do
       describe 'when no invoice exists' do
         let(:api_event) { build(:stripe_api_event) }
-        it 'calls #set_process_error' do
+        it 'calls #log_process_error' do
           allow(Invoice).to receive(:find_by).and_return(nil)
-          expect(api_event).to receive(:set_process_error)
+          expect(api_event).to receive(:log_process_error)
 
           api_event.send(:process_payment_action_required, 'test_id', 'test_sub_id')
         end
@@ -344,7 +394,7 @@ describe StripeApiEvent do
 
         before :each do
           allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
-          allow(api_event).to receive(:get_data_from_stripe)
+          allow(api_event).to receive(:sync_data_from_stripe)
           allow(Invoice).to receive(:find_by).and_return(invoice)
           allow(Subscription).to receive_message_chain(:in_reverse_created_order, :find_by).and_return(subscription)
           allow(subscription).to receive_message_chain(:invoices, :count).and_return(2)
@@ -364,6 +414,389 @@ describe StripeApiEvent do
                                                       ))
 
           api_event.send(:process_payment_action_required, 'inv_12345', 'sub_12345')
+        end
+      end
+    end
+
+    describe 'PROTECTED METHODS' do
+      let(:api_event) { build_stubbed(:stripe_api_event) }
+
+      describe '#check_dependencies' do
+        it 'returns NIL if the record is destroyable?' do
+          allow(api_event).to receive(:destroyable?).and_return(true)
+
+          expect(api_event.send(:check_dependencies)).to be nil
+        end
+
+        it 'add an error if the record is not destroyable?' do
+          allow(api_event).to receive(:destroyable?).and_return(false)
+
+          api_event.send(:check_dependencies)
+
+          expect(api_event.errors.messages[:base].length).to eq 1
+        end
+      end
+
+      describe '#process_invoice_created' do
+        describe 'for a valid invoice' do
+          let(:invoice) { build_stubbed(:invoice) }
+
+          before :each do
+            allow(Invoice).to receive(:build_from_stripe_data).and_return(invoice)
+          end
+
+          it 'updates the record with the processing details' do
+            time = Time.zone.now
+            Timecop.freeze(time) do
+              expect(api_event).to receive(:update!).with({ processed: true, processed_at: time, error: false, error_message: nil })
+
+              api_event.send(:process_invoice_created, { data: { object: 'test-object' } })
+            end
+          end
+        end
+
+        describe 'for an invalid invoice' do
+          before :each do
+            allow(Invoice).to receive(:build_from_stripe_data)
+          end
+
+          it 'calls #log_process_error if there is no matching invoice' do
+            expect(api_event).to receive(:log_process_error).with('Error creating invoice')
+
+            api_event.send(:process_invoice_created, { data: { object: 'test-object' } })
+          end
+        end
+      end
+
+      describe '#process_invoice_payment_failed' do
+        describe 'with valid data' do
+          let(:user) { build_stubbed(:user) }
+          let(:sub) { build_stubbed(:subscription) }
+          let(:invoice) { build_stubbed(:invoice) }
+
+          before :each do
+            allow(User).to receive(:find_by).and_return(user)
+            allow_any_instance_of(ActiveRecord::Relation).to receive(:find_by).and_return(sub)
+            allow(Invoice).to receive(:find_by).and_return(invoice)
+          end
+
+          it 'calls #update_from_stripe on the invoice' do
+            allow(api_event).to receive(:update!)
+            expect(invoice).to receive(:update_from_stripe).with('inv-guid')
+
+            api_event.send(:process_invoice_payment_failed, 'test-guid', nil, 'sub-guid', 'inv-guid')
+          end
+
+          it 'calls #update_from_stripe on the subscription' do
+            allow(api_event).to receive(:update!)
+            allow(invoice).to receive(:update_from_stripe)
+            expect(sub).to receive(:update_from_stripe)
+
+            api_event.send(:process_invoice_payment_failed, 'test-guid', nil, 'sub-guid', 'inv-guid')
+          end
+
+          it 'updates the record with the processing details' do
+            allow(invoice).to receive(:update_from_stripe)
+            time = Time.zone.now
+            Timecop.freeze(time) do
+              expect(api_event).to receive(:update!).with({ processed: true, processed_at: time, error: false, error_message: nil })
+
+              api_event.send(:process_invoice_payment_failed, 'test-guid', nil, 'sub-guid', 'inv-guid')
+            end
+          end
+
+          it 'retruns NIL unless stripe_next_attempt is passed in' do
+            allow(invoice).to receive(:update_from_stripe)
+            allow(api_event).to receive(:update!)
+
+            expect(api_event.send(:process_invoice_payment_failed, 'test-guid', nil, 'sub-guid', 'inv-guid')).to be nil
+          end
+
+          describe 'when stripe_next_attempt is passed' do
+            before :each do
+              allow(invoice).to receive(:update_from_stripe)
+              allow(api_event).to receive(:update!)
+            end
+
+            it 'creates a message' do
+              expect(Message).to receive(:create)
+
+              api_event.send(:process_invoice_payment_failed, 'test-guid', 12_345, 'sub-guid', 'inv-guid')
+            end
+
+            it 'calls #mark_past_due on the subscription' do
+              expect(sub).to receive(:mark_past_due)
+
+              api_event.send(:process_invoice_payment_failed, 'test-guid', 12_345, 'sub-guid', 'inv-guid')
+            end
+          end
+        end
+
+        describe 'with invalid data' do
+          describe 'for a User' do
+            it 'calls #log_process_error' do
+              allow(User).to receive(:find_by)
+              allow(Subscription).to receive(:find_by).and_return(double)
+              allow(Invoice).to receive(:find_by).and_return(double)
+              expect(api_event).to receive(:log_process_error)
+
+              api_event.send(:process_invoice_payment_failed, 'test-guid', 12345, 'sub-guid', 'inv-guid')
+            end
+          end
+
+          describe 'for a Subscription' do
+            it 'calls #log_process_error' do
+              allow(User).to receive(:find_by).and_return(double)
+              allow(Subscription).to receive(:find_by)
+              allow(Invoice).to receive(:find_by).and_return(double)
+              expect(api_event).to receive(:log_process_error)
+
+              api_event.send(:process_invoice_payment_failed, 'test-guid', 12345, 'sub-guid', 'inv-guid')
+            end
+          end
+
+          describe 'for an invoice' do
+            it 'calls #log_process_error' do
+              allow(User).to receive(:find_by).and_return(double)
+              allow(Subscription).to receive(:find_by).and_return(double)
+              allow(Invoice).to receive(:find_by)
+              expect(api_event).to receive(:log_process_error)
+
+              api_event.send(:process_invoice_payment_failed, 'test-guid', 12345, 'sub-guid', 'inv-guid')
+            end
+          end
+        end
+      end
+
+      describe '#process_customer_subscription_deleted' do
+        describe 'with valid data' do
+          let(:user) { build_stubbed(:user) }
+          let(:sub) { build_stubbed(:subscription) }
+
+          before :each do
+            allow(User).to receive(:find_by).and_return(user)
+            allow_any_instance_of(ActiveRecord::Relation).to receive(:find_by).and_return(sub)
+          end
+
+          it 'sends a message to the logger' do
+            allow(api_event).to receive(:update!)
+            allow(sub).to receive(:cancel)
+            expect(Rails.logger).to receive(:debug).with('DEBUG: Deleted Subscription-sub-guid for User-cus-guid')
+
+            api_event.send(:process_customer_subscription_deleted, 'cus-guid', 'sub-guid', true)
+          end
+
+          it 'updates the record with the processing details' do
+            allow(sub).to receive(:cancel)
+            time = Time.zone.now
+            Timecop.freeze(time) do
+              expect(api_event).to receive(:update!).with({ processed: true, processed_at: time, error: false, error_message: nil })
+
+              api_event.send(:process_customer_subscription_deleted, 'cus-guid', 'sub-guid', true)
+            end
+          end
+
+          it 'calls #update_from_stripe on the subscription' do
+            allow(sub).to receive(:cancel)
+            allow(api_event).to receive(:update!)
+            expect(sub).to receive(:update_from_stripe)
+
+            api_event.send(:process_customer_subscription_deleted, 'cus-guid', 'sub-guid', true)
+          end
+
+          it 'calls #cancel on the subscription' do
+            allow(api_event).to receive(:update!)
+            expect(sub).to receive(:cancel)
+
+            api_event.send(:process_customer_subscription_deleted, 'cus-guid', 'sub-guid', true)
+          end
+
+          it 'retruns NIL if cancel_at_period_end is TRUE' do
+            allow(sub).to receive(:update_from_stripe)
+            allow(sub).to receive(:cancel)
+            allow(api_event).to receive(:update!)
+
+            expect(api_event.send(:process_customer_subscription_deleted, 'cus-guid', 'sub-guid', true)).to be nil
+          end
+
+          describe 'when cancel_at_period_end is FALSE' do
+            before :each do
+              allow(sub).to receive(:update_from_stripe)
+              allow(sub).to receive(:cancel)
+              allow(api_event).to receive(:update!)
+            end
+
+            it 'creates a message' do
+              expect(Message).to receive(:create)
+
+              api_event.send(:process_customer_subscription_deleted, 'cus-guid', 'sub-guid', false)
+            end
+          end
+        end
+
+        describe 'with invalid data' do
+          describe 'for a User' do
+            it 'calls #log_process_error' do
+              allow(User).to receive(:find_by)
+              allow(Subscription).to receive(:find_by).and_return(double)
+              expect(api_event).to receive(:log_process_error)
+
+              api_event.send(:process_customer_subscription_deleted, 'cus-guid', 'sub-guid', true)
+            end
+          end
+
+          describe 'for a Subscription' do
+            it 'calls #log_process_error' do
+              allow(User).to receive(:find_by).and_return(double)
+              allow(Subscription).to receive(:find_by)
+              expect(api_event).to receive(:log_process_error)
+
+              api_event.send(:process_customer_subscription_deleted, 'cus-guid', 'sub-guid', true)
+            end
+          end
+        end
+      end
+
+      describe '#process_charge_event' do
+        describe 'for a valid invoice and charge' do
+          let(:invoice) { build_stubbed(:invoice) }
+
+          before :each do
+            allow(Invoice).to receive(:find_by).and_return(invoice)
+            allow(Charge).to receive(:create_from_stripe_data).and_return(double(id: 1))
+          end
+
+          it 'sends a message to the logger' do
+            allow(api_event).to receive(:update!)
+            expect(Rails.logger).to receive(:debug).with("DEBUG: Successful Create Charge - 1 for Invoice - #{invoice.id}")
+
+            api_event.send(:process_charge_event, 'test-guid', { data: { object: 'test-object' } })
+          end
+
+          it 'updates the record with the processing details' do
+            time = Time.zone.now
+            Timecop.freeze(time) do
+              expect(api_event).to receive(:update!).with({ processed: true, processed_at: time, error: false, error_message: nil })
+
+              api_event.send(:process_charge_event, 'test-guid', { data: { object: 'test-object' } })
+            end
+          end
+        end
+
+        describe 'with invalid data' do
+          describe 'for an invoice' do
+            it 'calls #log_process_error' do
+              allow(Invoice).to receive(:find_by).and_return(nil)
+              expect(api_event).to receive(:log_process_error).with('Error creating charge. Invoice Guid: test-guid')
+
+              api_event.send(:process_charge_event, 'test-guid', { data: { object: 'test-object' } })
+            end
+          end
+
+          describe 'for a Charge' do
+            it 'calls #log_process_error' do
+              allow(Invoice).to receive(:find_by).and_return(double)
+              allow(Charge).to receive(:create_from_stripe_data).and_return(false)
+              expect(api_event).to receive(:log_process_error).with('Error creating charge. Invoice Guid: test-guid')
+
+              api_event.send(:process_charge_event, 'test-guid', { data: { object: 'test-object' } })
+            end
+          end
+        end
+      end
+
+      describe '#process_charge_refunded' do
+        describe 'for a valid invoice and charge' do
+          let(:invoice) { build_stubbed(:invoice) }
+
+          before :each do
+            allow(Invoice).to receive(:find_by).and_return(invoice)
+            allow(Charge).to receive(:update_refund_data).and_return(true)
+          end
+
+          it 'updates the record with the processing details' do
+            time = Time.zone.now
+            Timecop.freeze(time) do
+              expect(api_event).to receive(:update!).with({ processed: true, processed_at: time, error: false, error_message: nil })
+
+              api_event.send(:process_charge_refunded, 'test-guid', { data: { object: 'test-object' } })
+            end
+          end
+        end
+
+        describe 'with invalid data' do
+          describe 'for an invoice' do
+            it 'calls #log_process_error' do
+              allow(Invoice).to receive(:find_by).and_return(nil)
+              allow(Charge).to receive(:update_refund_data).and_return(true)
+              expect(api_event).to receive(:log_process_error).with('Error creating charge for invoice test-guid')
+
+              api_event.send(:process_charge_refunded, 'test-guid', { data: { object: 'test-object' } })
+            end
+          end
+
+          describe 'for a Charge' do
+            it 'calls #log_process_error' do
+              allow(Invoice).to receive(:find_by).and_return(double)
+              allow(Charge).to receive(:update_refund_data)
+              expect(api_event).to receive(:log_process_error).with('Error creating charge for invoice test-guid')
+
+              api_event.send(:process_charge_refunded, 'test-guid', { data: { object: 'test-object' } })
+            end
+          end
+        end
+      end
+
+      describe '#process_coupon_updated' do
+        describe 'for a valid coupon' do
+          let(:coupon) { double(deactivate: true) }
+
+          before :each do
+            allow(Coupon).to receive(:find_by).and_return(coupon)
+          end
+
+          it 'calls #deactivate on the coupon' do
+            allow(api_event).to receive(:update!)
+            expect(coupon).to receive(:deactivate)
+
+            api_event.send(:process_coupon_updated, 'test-code')
+          end
+
+          it 'updates the record with the processing details' do
+            time = Time.zone.now
+            Timecop.freeze(time) do
+              expect(api_event).to receive(:update!).with({ processed: true, processed_at: time, error: false, error_message: nil })
+
+              api_event.send(:process_coupon_updated, 'test-code')
+            end
+          end
+        end
+
+        describe 'for an invalid coupon' do
+          before :each do
+            allow(Coupon).to receive(:find_by)
+          end
+
+          it 'calls #log_process_error if there is no matching coupon code' do
+            expect(api_event).to receive(:log_process_error).with('Error updating Coupon. Code: test-code')
+
+            api_event.send(:process_coupon_updated, 'test-code')
+          end
+        end
+      end
+
+      describe '#log_process_error' do
+        it 'sends a message to the logger' do
+          allow(api_event).to receive(:update!)
+          expect(Rails.logger).to receive(:error).with('DEBUG: Stripe event processing error: Test Error')
+
+          api_event.send(:log_process_error, 'Test Error')
+        end
+
+        it 'updates the record with error details' do
+          expect(api_event).to receive(:update!).with({processed: false, error_message: 'Test Error', error: true})
+
+          api_event.send(:log_process_error, 'Test Error')
         end
       end
     end
