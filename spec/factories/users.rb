@@ -176,6 +176,7 @@ FactoryBot.define do
       sequence(:name_url)               { |n| "tutor_#{n}" }
       active                            { true }
       stripe_customer_id                { nil }
+      association :user_group, factory: :tutor_user_group
     end
 
     factory :system_requirements_user do
