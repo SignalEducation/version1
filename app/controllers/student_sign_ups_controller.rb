@@ -102,7 +102,7 @@ class StudentSignUpsController < ApplicationController
     if @currency_id
       @subscription_plans = SubscriptionPlan.where(
           subscription_plan_category_id: nil, exam_body_id: @group.exam_body_id
-      ).includes(:currency).in_currency(@currency_id).all_active.all_in_order.limit(3)
+      ).includes(:currency).in_currency(@currency_id).all_active.all_in_display_order.limit(3)
     end
 
     @navbar = false
