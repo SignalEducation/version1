@@ -13,7 +13,7 @@ class OnboardingEmailWorker
 
     return unless onboarding_process.active
 
-    if user&.active_subscriptions_for_exam_body(exam_body_id)
+    if user&.active_subscriptions_for_exam_body(exam_body_id).any?
       onboarding_process.update(active: false)
     else
       onboarding_process.send_email(day)
