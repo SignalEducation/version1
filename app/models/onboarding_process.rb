@@ -89,8 +89,6 @@ class OnboardingProcess < ApplicationRecord
   end
 
   def update_hubspot
-    return if Rails.env.test?
-
     HubSpot::Contacts.new.batch_create(user_id, { property: 'onboarding_process', value: user.onboarding_state })
   end
 end
