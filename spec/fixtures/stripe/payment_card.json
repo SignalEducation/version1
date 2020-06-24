@@ -1,0 +1,20 @@
+{
+  "id": "card_FACTORY-abc123",
+  "status": "card-live",
+  "brand": "visa",
+  "last4": "4242",
+  "exp_month": 1,
+  "exp_year": "2099",
+  "address_line1": "123 Fake Street",
+  "country": "Ireland",
+  "object": "card",
+  "funding": "credit",
+  "name": "Joe Cardholder",
+  "fingerprint": "ABC123",
+  "cvc_checked": true,
+  "address_line1_check": false,
+  "address_zip_check": false,
+  "dynamic_last4": false,
+  "customer": "cus_ABC123",
+  "is_default_card": true
+}

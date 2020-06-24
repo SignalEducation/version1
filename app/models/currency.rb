@@ -25,7 +25,6 @@ class Currency < ApplicationRecord
   has_many :invoice_line_items
   has_many :products
   has_many :subscription_plans
-  has_many :subscription_transactions
   has_many :coupons
   has_many :charges
 
@@ -53,7 +52,7 @@ class Currency < ApplicationRecord
 
   ## Check if the Currency can be deleted ##
   def destroyable?
-    !self.active && self.countries.empty? && self.invoices.empty? && self.invoice_line_items.empty? && self.subscription_transactions.empty? && self.subscription_plans.empty?
+    !self.active && self.countries.empty? && self.invoices.empty? && self.invoice_line_items.empty? && self.subscription_plans.empty?
   end
 
   ## Used in views to convert a number to currency format - $2.99 ##

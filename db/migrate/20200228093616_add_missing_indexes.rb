@@ -38,7 +38,6 @@ class AddMissingIndexes < ActiveRecord::Migration[5.2]
     add_index :invoice_line_items, :subscription_plan_id
     add_index :invoices, :currency_id
     add_index :invoices, :subscription_id
-    add_index :invoices, :subscription_transaction_id
     add_index :invoices, :user_id
     add_index :invoices, :vat_rate_id
     add_index :ip_addresses, :country_id
@@ -67,10 +66,6 @@ class AddMissingIndexes < ActiveRecord::Migration[5.2]
     add_index :subscription_payment_cards, :user_id
     add_index :subscription_plans, :currency_id
     add_index :subscription_plans, :subscription_plan_category_id
-    add_index :subscription_transactions, :currency_id
-    add_index :subscription_transactions, :subscription_id
-    add_index :subscription_transactions, :subscription_payment_card_id
-    add_index :subscription_transactions, :user_id
     add_index :subscriptions, :ahoy_visit_id
     add_index :subscriptions, :coupon_id
     add_index :subscriptions, :subscription_plan_id

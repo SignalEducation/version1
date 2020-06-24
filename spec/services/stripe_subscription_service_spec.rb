@@ -386,16 +386,6 @@ describe StripeSubscriptionService, type: :service do
 
     subject { StripeSubscriptionService.new(real_sub) }
 
-    before :each do
-      create(:student_access, user: real_sub.user)
-    end
-
-    it "updates the user's student_access" do
-      expect(real_sub.user.student_access).to receive(:update)
-
-      subject.send(:update_old_subscription, new_sub)
-    end
-
     it 'updates the subscription to be cancelled' do
       subject.send(:update_old_subscription, new_sub)
 

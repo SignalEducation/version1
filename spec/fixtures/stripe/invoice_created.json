@@ -6,6 +6,7 @@
   "data": {
     "object": {
       "id": "in_1APVed2eZvKYlo2CP6dsoJTo",
+      "created": 1326853478,
       "object": "invoice",
       "amount_due": 599,
       "application_fee": "null",
@@ -62,7 +63,7 @@
       },
       "livemode": false,
       "metadata": {},
-      "next_payment_attempt": "null",
+      "next_payment_attempt": 1326853478,
       "paid": true,
       "period_end": 1496232623,
       "period_start": 1496232623,

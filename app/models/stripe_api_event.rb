@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: stripe_api_events
@@ -30,7 +32,7 @@ class StripeApiEvent < ApplicationRecord
 
   # RELATIONSHIPS ==============================================================
 
-  has_many :charges
+  has_many :charges, dependent: :nullify
 
   # VALIDATIONS ================================================================
 
@@ -42,7 +44,7 @@ class StripeApiEvent < ApplicationRecord
   # CALLBACKS ==================================================================
 
   before_validation :set_default_values, on: :create
-  before_validation :get_data_from_stripe, on: :create
+  before_validation :sync_data_from_stripe, on: :create
   after_create :disseminate_payload
   before_destroy :check_dependencies
 
@@ -77,7 +79,8 @@ class StripeApiEvent < ApplicationRecord
   end
 
   def disseminate_payload
-    return unless payload && payload.is_a?(Hash) && payload[:type].present?
+    return unless payload&.is_a?(Hash) && payload[:type].present?
+
     if Invoice::STRIPE_LIVE_MODE == payload[:livemode]
       webhook_object = payload[:data][:object]
       case payload[:type]
@@ -104,67 +107,56 @@ class StripeApiEvent < ApplicationRecord
       when 'coupon.updated'
         process_coupon_updated(webhook_object[:id])
       else
-        set_process_error "Unknown event type - #{payload[:type]}"
+        log_process_error "Unknown event type - #{payload[:type]}"
       end
     else
       Rails.logger.error('ERROR: StripeAPIEvent#disseminate_payload: ' \
         'LiveMode of message incompatible with Rails.env. StripeMode:' \
         "#{Invoice::STRIPE_LIVE_MODE}. Rails.env.#{Rails.env} -v- payload:" \
         "#{payload}.")
-      set_process_error("Livemode incorrect")
+      log_process_error('Livemode incorrect')
     end
   end
 
-  def get_data_from_stripe
-    if guid
-      response = Stripe::Event.retrieve(guid)
+  def sync_data_from_stripe
+    if guid && (response = Stripe::Event.retrieve(guid))
       assign_attributes(payload: response.to_hash)
     else
-      assign_attributes(
-        error: true,
-        error_message: I18n.t(
-          'models.stripe_api_event.guid_required_to_get_payload_from_stripe'
-        ),
-        payload: {}
-      )
+      assign_attributes(error: true, payload: {},
+                        error_message: I18n.t('models.stripe_api_event.missing_guid'))
     end
-  rescue => e
-    Rails.logger.error(
-      "ERROR: StripeApiEvent#get_data_from_stripe - Error: #{e.inspect}."
-    )
+  rescue Stripe::StripeError => e
+    Rails.logger.error("ERROR: StripeApiEvent#sync_data_from_stripe: #{e.inspect}.")
     assign_attributes(error: true, error_message: "Error: #{e.inspect}.")
   end
 
   protected
 
   def check_dependencies
-    unless destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-    end
+    return if destroyable?
+
+    errors.add(:base, I18n.t('models.general.dependencies_exist'))
   end
 
   def process_invoice_created(payload)
     invoice = Invoice.build_from_stripe_data(payload[:data][:object])
-    if invoice && invoice.errors.count == 0
-      Rails.logger.debug "DEBUG: Invoice created with id - #{invoice.id}"
+    if invoice && invoice.errors.count.zero?
       update!(processed: true, processed_at: Time.zone.now, error: false,
               error_message: nil)
     else
-      set_process_error(invoice&.errors&.inspect || 'Error creating invoice')
+      log_process_error(invoice&.errors&.inspect || 'Error creating invoice')
     end
   end
 
   def process_invoice_payment_success(stripe_inv_id)
-    invoice = Invoice.find_by(stripe_guid: stripe_inv_id)
-
-    if invoice
+    if (invoice = Invoice.find_by(stripe_guid: stripe_inv_id))
       invoice.update_from_stripe(stripe_inv_id)
       update!(processed: true, processed_at: Time.zone.now, error: false,
               error_message: nil)
       invoice.subscription.update_invoice_payment_success
       invoice.send_receipt(account_url)
     else
-      set_process_error("Error finding Invoice by - #{stripe_inv_id}. " \
+      log_process_error("Error finding Invoice by - #{stripe_inv_id}. " \
                         'InvoicePaymentSucceeded Event')
     end
   end
@@ -194,7 +186,7 @@ class StripeApiEvent < ApplicationRecord
       )
       subscription.mark_past_due
     else
-      set_process_error "Error finding User-#{stripe_customer_guid}, Invoice-#{stripe_invoice_guid} OR Subscription- #{stripe_subscription_guid}. InvoicePaymentFailed Event"
+      log_process_error "Error finding User-#{stripe_customer_guid}, Invoice-#{stripe_invoice_guid} OR Subscription- #{stripe_subscription_guid}. InvoicePaymentFailed Event"
     end
   end
 
@@ -207,7 +199,7 @@ class StripeApiEvent < ApplicationRecord
       update!(processed: true, processed_at: Time.zone.now, error: false,
               error_message: nil)
     else
-      set_process_error("Error finding Invoice by - #{stripe_inv_id} or Subscription by - #{stripe_subscription_guid}.
+      log_process_error("Error finding Invoice by - #{stripe_inv_id} or Subscription by - #{stripe_subscription_guid}.
                         InvoicePaymentSucceeded Event")
     end
   end
@@ -226,20 +218,18 @@ class StripeApiEvent < ApplicationRecord
       # This is to ensure the Account Suspended email is only sent when
       # the subscription is canceled by Stripe due to failed payments
       unless cancel_at_period_end
-        Message.create(
-            process_at: Time.zone.now,
-            user_id: user.id,
-            kind: :account,
-            template: 'send_account_suspended_email'
-            )
+        Message.create(process_at: Time.zone.now,
+                       user_id: user.id,
+                       kind: :account,
+                       template: 'send_account_suspended_email')
       end
     else
-      set_process_error("Error deleting subscription. Couldn't find User with stripe_customer_guid: #{stripe_customer_guid} OR Couldn't find Subscription with stripe_subscription_guid: #{stripe_subscription_guid}")
+      log_process_error("Error deleting subscription. Couldn't find User with stripe_customer_guid: #{stripe_customer_guid} OR Couldn't find Subscription with stripe_subscription_guid: #{stripe_subscription_guid}")
     end
   end
 
   def process_charge_event(invoice_guid, event_data)
-    invoice = Invoice.where(stripe_guid: invoice_guid).first
+    invoice = Invoice.find_by(stripe_guid: invoice_guid)
     charge = Charge.create_from_stripe_data(event_data) if invoice
 
     if invoice && charge
@@ -247,19 +237,19 @@ class StripeApiEvent < ApplicationRecord
       update!(processed: true, processed_at: Time.zone.now, error: false,
               error_message: nil)
     else
-      set_process_error("Error creating charge. Invoice Guid: #{invoice_guid}")
+      log_process_error("Error creating charge. Invoice Guid: #{invoice_guid}")
     end
   end
 
   def process_charge_refunded(invoice_guid, event_data)
-    invoice = Invoice.where(stripe_guid: invoice_guid).first
+    invoice = Invoice.find_by(stripe_guid: invoice_guid)
     charge = Charge.update_refund_data(event_data)
 
     if invoice && charge
       update!(processed: true, processed_at: Time.zone.now, error: false,
               error_message: nil)
     else
-      set_process_error("Error creating charge. #{}")
+      log_process_error("Error creating charge for invoice #{invoice_guid}")
     end
   end
 
@@ -270,7 +260,7 @@ class StripeApiEvent < ApplicationRecord
       update!(processed: true, processed_at: Time.zone.now, error: false,
               error_message: nil)
     else
-      set_process_error("Error updating Coupon. Code: #{coupon_code}")
+      log_process_error("Error updating Coupon. Code: #{coupon_code}")
     end
   end
 
@@ -279,7 +269,7 @@ class StripeApiEvent < ApplicationRecord
                       error: false, error_message: nil)
   end
 
-  def set_process_error(error_message)
+  def log_process_error(error_message)
     Rails.logger.error "DEBUG: Stripe event processing error: #{error_message}"
     update!(processed: false, error_message: error_message, error: true)
   end

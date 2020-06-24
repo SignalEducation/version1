@@ -24,7 +24,7 @@ gem 'coffee-rails', '~> 4.2' # enables CoffeeScript (abbreviated javascript)
 gem 'deep_cloneable', '~> 3.0.0'
 gem 'dynamic_sitemaps' # Sitemap generation grm
 gem 'faraday', '~> 0.15.4'
-gem 'geocoder', '~> 1.3', '>= 1.3.7' #  a public API for geo-locating IP addresses
+gem 'geocoder', '~> 1.6' #  a public API for geo-locating IP addresses
 gem 'groupdate'
 gem 'haml-rails' # a replacement system for HTML
 gem 'jbuilder', '~> 2.5' # https://github.com/rails/jbuilder
@@ -113,6 +113,7 @@ group :development, :test do
 end
 
 group :test do
+  gem 'capybara-screenshot'
   gem 'database_cleaner' # tidies up the test database
   gem 'guard-rspec' # Guard watches for any changed file and reruns that files tests
   gem 'rspec_junit_formatter'

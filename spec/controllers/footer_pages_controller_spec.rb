@@ -9,7 +9,6 @@ describe FooterPagesController, type: :controller do
   let!(:course_1)  { FactoryBot.create(:active_course) }
   let(:tutor_user_group) { FactoryBot.create(:tutor_user_group) }
   let(:tutor_user_1) { FactoryBot.create(:tutor_user, user_group_id: tutor_user_group.id) }
-  let!(:tutor_student_access_1) { FactoryBot.create(:complimentary_student_access, user_id: tutor_user_1.id) }
   let!(:course_tutor_1) { FactoryBot.create(:course_tutor, user_id: tutor_user_1.id, course_id: course_1.id) }
 
   context 'Not logged in: ' do

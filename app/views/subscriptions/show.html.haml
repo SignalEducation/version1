@@ -19,16 +19,6 @@
               .h6
                 =@subscription.state
 
-            .col-md-6.col-sm-12
-              .h3
-                =t('views.user_accounts.subscription_info.member_since')
-              .h6
-                -# Create a account started date that uses account_create if
-                -# not trial_started_date value
-                -if current_user.student_access && current_user.student_access.trial_started_date
-                  =humanize_datetime(current_user.student_access.trial_started_date)
-
-
           -if @subscription.active?
             .col-sm-12.l-margin-top-big
               .col-md-6.col-sm-12

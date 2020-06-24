@@ -41,7 +41,6 @@
 FactoryBot.define do
   factory :invoice do
     user
-    subscription_transaction
     subscription
     number_of_users { 1 }
     currency

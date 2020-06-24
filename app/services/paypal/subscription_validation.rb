@@ -45,10 +45,16 @@ module Paypal
       when 'Suspended'
         @subscription.pause!
       when 'Cancelled'
-        @subscription.cancel!
+        check_cancellation_status
       else
         Airbrake.notify("PAYPAL SYNC ERROR: Weird PayPal state for subscription #{@subscription.id}")
       end
+    end
+
+    def check_cancellation_status
+      return if @subscription.pending_cancellation? && @subscription.next_renewal_date && @subscription.next_renewal_date > Time.zone.now
+
+      @subscription.cancel!
     end
 
     def update_needed?(state)

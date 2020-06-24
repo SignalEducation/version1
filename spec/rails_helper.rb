@@ -10,6 +10,7 @@ require_relative '../config/environment'
 require 'authlogic/test_case'     # required for Authlogic
 require 'bundler/setup'
 require 'capybara/rspec'
+require 'capybara-screenshot/rspec'
 require 'database_cleaner'
 require 'factory_bot_rails'       # suggested by stack overflow
 require 'rspec/rails'

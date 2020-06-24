@@ -5,7 +5,7 @@ describe Api::StripeWebhooksController, type: :controller do
   before :each do
     allow_any_instance_of(StripePlanService).to receive(:create_plan)
     allow_any_instance_of(PaypalPlansService).to receive(:create_plan)
-    allow_any_instance_of(StripeApiEvent).to receive(:get_data_from_stripe).and_return(true)
+    allow_any_instance_of(StripeApiEvent).to receive(:sync_data_from_stripe).and_return(true)
   end
 
   let!(:gbp) { create(:currency) }

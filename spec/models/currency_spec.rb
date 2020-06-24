@@ -31,7 +31,6 @@ describe Currency do
   it { should have_many(:invoice_line_items) }
   it { should have_many(:products) }
   it { should have_many(:subscription_plans) }
-  it { should have_many(:subscription_transactions) }
   it { should have_many(:coupons) }
   it { should have_many(:charges) }
 

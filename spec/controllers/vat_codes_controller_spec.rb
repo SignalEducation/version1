@@ -17,7 +17,6 @@ describe VatCodesController, type: :controller do
 
   let(:system_requirements_user_group) { FactoryBot.create(:system_requirements_user_group) }
   let(:system_requirements_user) { FactoryBot.create(:system_requirements_user, user_group_id: system_requirements_user_group.id) }
-  let!(:system_requirements_student_access) { FactoryBot.create(:complimentary_student_access, user_id: system_requirements_user.id) }
 
   let!(:uk) { FactoryBot.create(:uk) }
   let!(:vat_code_1) { FactoryBot.create(:vat_code, country: uk) }

@@ -18,7 +18,6 @@
 require 'rails_helper'
 
 describe Message do
-
   describe 'Should Respond' do
     it { should respond_to(:user_id) }
     it { should respond_to(:opens) }
@@ -53,10 +52,5 @@ describe Message do
     it { should validate_presence_of(:mandrill_id).on(:update) }
   end
 
-  describe 'callbacks' do
-    it { should callback(:send_message).after(:create) }
-  end
-
   it { expect(Message).to respond_to(:process_webhook_event) }
-
 end
