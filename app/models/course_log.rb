@@ -149,7 +149,6 @@ class CourseLog < ApplicationRecord
     if course&.exam_body&.has_sittings &&
        user&.standard_student_user? &&
        user&.course_logs&.count <= 1 &&
-       course_step_logs.count >= 1 &&
        !user&.viewable_subscriptions&.any? &&
        !user&.onboarding_process
 
