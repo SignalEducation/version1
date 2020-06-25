@@ -17,7 +17,12 @@ module HubSpot
         headers  = { 'Content-Type': 'application/json' }
         http     = Net::HTTP.new(uri.host)
 
-        http.send(method, uri.request_uri, body, headers)
+        case method
+        when 'get'
+          http.get(uri.request_uri, headers)
+        when 'post'
+          http.post(uri.request_uri, body, headers)
+        end
       end
 
       private

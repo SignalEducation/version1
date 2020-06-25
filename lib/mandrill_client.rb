@@ -118,6 +118,17 @@ class MandrillClient
     send_template('invoice-actionable-2019-08-13', msg)
   end
 
+  # Reports
+  def send_report_email(csv_encoded, kind, period)
+    file_name = "#{Date.today}-#{period}-#{kind}-report.csv"
+    msg = message_stub.merge('subject' => "#{kind.capitalize} Report - #{period}").
+            merge('attachments' => [{ 'type' => 'text/csv', 'content' => csv_encoded, 'name' => file_name }])
+
+    msg['global_merge_vars'] << { 'name' => 'RTYPE', 'content' => kind }
+    msg['global_merge_vars'] << { 'name' => 'FTYPE', 'content' => period }
+    send_template('Reports_Templates', msg)
+  end
+
   private
 
   def send_template(template_slug, msg)

@@ -26,6 +26,7 @@
 #
 
 require 'rails_helper'
+require 'concerns/order_report_spec.rb'
 
 describe Order do
   # relationships
@@ -157,6 +158,10 @@ describe Order do
     end
   end
 
+  describe 'Concern' do
+    it_behaves_like 'order_report'
+  end
+
   # class methods
 
   describe '.send_daily_orders_update' do
@@ -202,6 +207,24 @@ describe Order do
     end
     it 'returns the correct count for corrections' do
       expect(Order.product_type_count('correction_pack')).to eq 4
+    end
+  end
+
+  describe '.to_csv' do
+    let!(:order) { create(:order) }
+
+    context 'generate csv data' do
+      it { expect(Order.all.to_csv.split(',')).to include('order_id',
+                                                          'order_created',
+                                                          'name',
+                                                          'product_name',
+                                                          'stripe_id',
+                                                          'paypal_guid',
+                                                          'state',
+                                                          'product_type',
+                                                          'leading_symbol',
+                                                          'price',
+                                                          'user_country') }
     end
   end
 

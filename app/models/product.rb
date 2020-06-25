@@ -74,6 +74,10 @@ class Product < ApplicationRecord
     orders.empty?
   end
 
+  def name_by_type
+    cbe? ? cbe.name : (mock_exam&.name || name)
+  end
+
   # class methods
   def self.search(search)
     search.present? ? where('name ILIKE ?', "%#{search}%") : all
@@ -88,10 +92,6 @@ class Product < ApplicationRecord
     else
       where(active: true)
     end
-  end
-
-  def name_by_type
-    cbe? ? cbe.name : (mock_exam&.name || name)
   end
 
   private

@@ -29,6 +29,8 @@
 
 class Order < ApplicationRecord
   include LearnSignalModelExtras
+  include OrderReport
+
   serialize :stripe_order_payment_data, JSON
   attr_accessor :use_paypal, :paypal_approval_url, :stripe_client_secret
 
@@ -115,6 +117,18 @@ class Order < ApplicationRecord
 
   def self.product_type_count(product_type)
     joins(:product).where(products: { product_type: product_type }).count
+  end
+
+  def self.to_csv(options = {})
+    attributes = %w[order_id order_created name product_name stripe_id paypal_guid state
+                    product_type leading_symbol price user_country card_country]
+
+    CSV.generate(options) do |csv|
+      csv << attributes
+      all.find_each do |order|
+        csv << attributes.map { |attr| order.send(attr) }
+      end
+    end
   end
 
   # INSTANCE METHODS ===========================================================
