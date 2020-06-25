@@ -76,6 +76,69 @@ class Message < ApplicationRecord
     UrlHelper.instance.unsubscribe_url(message_guid: guid, host: LEARNSIGNAL_HOST) if kind == 'onboarding'
   end
 
+  def self.to_csv(options = {}, attributes = %w[id user_id opens clicks state day course subject_line utm_content utm_source utm_term study_visit paid_within_24])
+    CSV.generate(options) do |csv|
+      csv << attributes
+
+      find_each do |user|
+        csv << attributes.map { |attr| user.send(attr) }
+      end
+    end
+  end
+
+  def day
+    template_params['day']
+  end
+
+  def course
+    template_params['course_name'] ? template_params['course_name'] : template_params['course']
+  end
+
+  def subject_line
+    template_params['subject_line']
+  end
+
+  def utm_medium
+    params_hash = Rack::Utils.parse_query URI(template_params['url']).query
+    params_hash['utm_medium']
+  end
+
+  def utm_campaign
+    params_hash = Rack::Utils.parse_query URI(template_params['url']).query
+    params_hash['utm_campaign']
+  end
+
+  def utm_content
+    params_hash = Rack::Utils.parse_query URI(template_params['url']).query
+    params_hash['utm_content']
+  end
+
+  def utm_source
+    params_hash = Rack::Utils.parse_query URI(template_params['url']).query
+    params_hash['utm_source']
+  end
+
+  def utm_term
+    params_hash = Rack::Utils.parse_query URI(template_params['url']).query
+    params_hash['utm_term']
+  end
+
+  def paid_within_24
+    user.viewable_subscriptions.where(created_at: process_at..(process_at + 24.hours)).any?
+  end
+
+  def payment_visit
+    visits = Ahoy::Visit.where(landing_page: template_params['url'], user_id: user_id)
+    payment_visits = visits.map(&:subscription).reject { |item| item.blank? }
+    payment_visits.any?
+  end
+
+  def study_visit
+    visits = Ahoy::Visit.where(landing_page: template_params['url'], user_id: user_id)
+    study_visits = visits.map(&:study_visit?)
+    study_visits.any?
+  end
+
   protected
 
   def send_message

@@ -99,6 +99,64 @@ class OnboardingProcess < ApplicationRecord
     end
   end
 
+  def course_name
+    course.name
+  end
+
+  def message_count
+    messages.count
+  end
+
+  def started_step_count
+    course_lesson_log.course_step_logs.all.pluck(:course_step_id).uniq.count
+  end
+
+  def completed_step_count
+    course_lesson_log.course_step_logs.all_completed.pluck(:course_step_id).uniq.count
+  end
+
+  def message_complete
+    messages.find_by(template: 'send_onboarding_complete_email', state: 'sent') ? messages.find_by(template: 'send_onboarding_complete_email', state: 'sent').process_at : ''
+  end
+
+  def message_expired
+    messages.find_by(template: 'send_onboarding_expired_email', state: 'sent') ? messages.find_by(template: 'send_onboarding_expired_email', state: 'sent').process_at : ''
+  end
+
+  def content_complete
+    course_lesson_log.percentage_complete
+  end
+
+  def loaded_payment_page
+    if started_step_count >= 5
+      user.ahoy_events.all_checkout_events.where('ahoy_events.time > ? AND ahoy_events.time < ?', created_at.beginning_of_month, created_at.end_of_month).count
+    else
+      0
+    end
+  end
+
+  def paid_that_month
+    if started_step_count >= 5 && loaded_payment_page >= 1
+      user.ahoy_events.all_payment_success_events.where('ahoy_events.time > ? AND ahoy_events.time < ?', created_at.beginning_of_month, created_at.end_of_month).any?
+    else
+      0
+    end
+  end
+
+  def get_started_next_event
+    user.ahoy_events.all_get_started_events.where('ahoy_events.time > ? AND ahoy_events.time < ?', ob.created_at.beginning_of_month, ob.created_at.end_of_month)&.first&.next_event&.name
+  end
+
+  def self.to_csv(options = {}, attributes = %w[id user_id created_at exam_body course_name message_count content_complete started_step_count completed_step_count message_complete message_expired paid_that_month loaded_payment_page get_started_next_event])
+    CSV.generate(options) do |csv|
+      csv << attributes
+
+      find_each do |user|
+        csv << attributes.map { |attr| user.send(attr) }
+      end
+    end
+  end
+
   protected
 
   def create_workers

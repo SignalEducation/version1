@@ -12,3 +12,19 @@
           =link_to 'Refunds Report', reports_refunds_path, class: 'btn btn-secondary'
         .col-sm-4
           =link_to 'Orders Report', reports_orders_path, class: 'btn btn-secondary'
+        .col-sm-6
+          = link_to 'Months Subscriptions', export_new_subscriptions_path(format: :xls), class: 'btn btn-secondary'
+
+    .col-sm.pt-4
+      .row
+        .col-sm-6
+          = link_to 'Onboarding Messages', export_messages_path(format: :xls), class: 'btn btn-secondary'
+        .col-sm-6
+          = link_to 'Onboarding Data', export_onboarding_path(format: :xls), class: 'btn btn-secondary'
+
+    .col-sm.pt-4
+      .row
+        .col-sm-6
+          = link_to 'Onboarding Events', export_onboarding_events_path(format: :xls), class: 'btn btn-secondary'
+
+

@@ -112,6 +112,8 @@
                 %thead
                   %tr
                     %th
+                      ID
+                    %th
                       Name
                     %th
                       Time
@@ -121,6 +123,7 @@
                 %tbody
                   -@visit.events.all_in_order.each do |event|
                     %tr
+                      %td=event.id
                       %td=event.name
                       %td=event.time
                       %td

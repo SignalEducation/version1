@@ -307,12 +307,16 @@ Rails.application.routes.draw do
     get '/reports/sales',                 to: 'reports#sales',                            as: :reports_sales
     get '/reports/refunds',               to: 'reports#refunds',                          as: :reports_refunds
     get '/reports/orders',                to: 'reports#orders',                           as: :reports_orders
+    get '/export_messages',               to: 'reports#export_messages',                  as: :export_messages
+    get '/export_onboarding',             to: 'reports#export_onboarding',                as: :export_onboarding
     get '/export_users',                  to: 'reports#export_users',                     as: :export_users
+    get '/export_new_subscriptions',      to: 'reports#export_new_subscriptions',         as: :export_new_subscriptions
     get '/export_users_monthly',          to: 'reports#export_users_monthly',             as: :export_users_monthly
     get '/export_users_with_enrollments', to: 'reports#export_users_with_enrollments',    as: :export_users_with_enrollments
     get '/export_visits',                 to: 'reports#export_visits',                    as: :export_visits
     get '/export_courses',                to: 'reports#export_courses',                   as: :export_courses
     get '/export_enrollments',            to: 'reports#export_enrollments',               as: :export_enrollments
+    get '/export_onboarding_events',      to: 'reports#export_onboarding_events',         as: :export_onboarding_events
     post '/export_sales_report',          to: 'reports#export_sales_report',              as: :export_sales_report
     post '/export_refunds_report',        to: 'reports#export_refunds_report',            as: :export_refunds_report
     post '/export_orders_report',         to: 'reports#export_orders_report',             as: :export_orders_report

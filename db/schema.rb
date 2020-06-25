@@ -22,7 +22,7 @@ ActiveRecord::Schema.define(version: 2020_10_08_091523) do
     t.uuid "visit_id"
     t.integer "user_id"
     t.string "name"
-    t.text "properties"
+    t.jsonb "properties"
     t.datetime "time"
     t.index ["time"], name: "index_ahoy_events_on_time"
     t.index ["user_id"], name: "index_ahoy_events_on_user_id"

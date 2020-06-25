@@ -438,6 +438,74 @@ class Subscription < ApplicationRecord
     'unknown'
   end
 
+
+  def self.to_csv(options = {}, attributes = %w[id created_at state visit_source visit_date visit_medium visit_utm_campaign visit_utm_content visit_utm_term visit_referring_domain visit_search_keyword visit_page_views visit_step_events visit_landing_page visit_referrer ])
+    CSV.generate(options) do |csv|
+      csv << attributes
+
+      find_each do |user|
+        csv << attributes.map { |attr| user.send(attr) }
+      end
+    end
+  end
+
+  def visit_source
+    if ahoy_visit.utm_source.blank?
+      ahoy_visit.generate_source
+    else
+      ahoy_visit.utm_source
+    end
+  end
+
+  def visit_date
+    ahoy_visit.started_at.strftime('%Y-%m-%d')
+  end
+
+  def visit_referring_domain
+    ahoy_visit.referring_domain
+  end
+
+  def visit_medium
+    ahoy_visit.utm_medium
+  end
+
+  def visit_search_keyword
+    ahoy_visit.search_keyword
+  end
+
+  def visit_utm_campaign
+    ahoy_visit.utm_campaign
+  end
+
+  def visit_landing_page
+    ahoy_visit.landing_page
+  end
+
+  def visit_referrer
+    ahoy_visit.referrer
+  end
+
+  def visit_utm_content
+    ahoy_visit.utm_content
+  end
+
+  def visit_utm_term
+    ahoy_visit.utm_term
+  end
+
+  def visit_events
+    ahoy_visit.events.all_in_order.where('time <= ?', created_at)
+  end
+
+  def visit_page_views
+    visit_events.where(name: 'Page View').count
+  end
+
+  def visit_step_events
+    step_types = ['Quiz Start', 'Video Play', 'Notes Start']
+    visit_events.where(name: step_types).count
+  end
+
   protected
 
   def create_subscription_payment_card

@@ -17,6 +17,7 @@
               %thead
                 %tr
                   %th=t('views.visits.index.started_at')
+                  %th="Payment"
                   %th=t('views.visits.index.utm_source')
                   %th=t('views.visits.index.utm_campaign')
                   %th=t('views.visits.index.ip')
@@ -24,7 +25,8 @@
               %tbody
                 -@visits.each do |visit|
                   %tr
-                    %td=humanize_datetime(visit.started_at)
+                    %td=timer_datetime(visit.started_at)
+                    %td=visit.subscription.present? ? 'Payment' : ''
                     %td=visit.utm_source
                     %td=visit.utm_campaign
                     %td=visit.ip

@@ -59,7 +59,7 @@ function notesFinishEvent() {
   let notesWindow = $("#notes-window"),
       lessonData = notesWindow.data();
 
-  ahoy.track('notes Finish', lessonData);
+  ahoy.track('Notes Finish', lessonData);
   dataLayer.push({
     'event': 'notesAction',
     'notes_name': lessonData.lessonName,

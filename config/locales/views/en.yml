@@ -797,7 +797,7 @@ en:
         sorting_order_placeholder: 100
         background_colour: Background Colour
         background_colour_placeholder: "eg. #fff"
-        text_content: Banner Text
+        text_content: "Banner Text - WARNING: Links 'Open in new window' must not be ticked"
         text_content_placeholder: Banner Text
         user_sessions: Sign In Page
         library: Library Pages

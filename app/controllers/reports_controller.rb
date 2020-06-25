@@ -2,6 +2,7 @@
 
 class ReportsController < ApplicationController
   before_action :logged_in_required
+  before_action :management_layout
   before_action do
     ensure_user_has_access_rights(%w[system_requirements_access user_management_access])
   end
@@ -55,13 +56,58 @@ class ReportsController < ApplicationController
     end
   end
 
-  def export_users_with_enrollments
-    @users = User.sort_by_recent_registration.all_students
+  def export_messages
+    @messages = Message.where(kind: 'onboarding', process_at: (Time.zone.now.beginning_of_month - 1.month)..(Time.zone.now))
 
     respond_to do |format|
       format.html
-      format.csv { send_data @users.to_csv_with_enrollments }
-      format.xls { send_data @users.to_csv_with_enrollments(col_sep: "\t", headers: true), filename: "users-with-enrolments-#{Date.today}.xls" }
+      format.csv { send_data @messages.to_csv() }
+      format.xls { send_data @messages.to_csv(col_sep: "\t", headers: true), filename: "Onboarding-Messages-#{Date.today}.xls" }
+    end
+  end
+
+  def export_onboarding
+    @onboarding = OnboardingProcess.where(created_at: (Time.zone.now.beginning_of_month - 1.month)..(Time.zone.now.end_of_month - 1.month))
+
+    respond_to do |format|
+      format.html
+      format.csv { send_data @onboarding.to_csv() }
+      format.xls { send_data @onboarding.to_csv(col_sep: "\t", headers: true), filename: "Onboarding-Data-#{Date.today}.xls" }
+    end
+  end
+
+  def export_onboarding_events
+    onboarding = OnboardingProcess.where(created_at: (Time.zone.now.beginning_of_month - 1.month)..(Time.zone.now.end_of_month - 1.month))
+    user_ids = onboarding.map(&:user_id)
+    get_started_events = Ahoy::Event.all_get_started_events.where(user_id: user_ids, time: (Time.zone.now.beginning_of_month - 1.month)..(Time.zone.now.end_of_month - 1.month))
+    visit_ids = get_started_events.map(&:visit_id)
+    @visits = Ahoy::Visit.where(id: visit_ids)
+
+    respond_to do |format|
+      format.html
+      format.csv { send_data @visits.events_to_csv() }
+      format.xls { send_data @visits.events_to_csv(col_sep: "\t", headers: true), filename: "Onboarding-Data-#{Date.today}.xls" }
+    end
+  end
+
+  def export_visits
+    visit_ids = Ahoy::Event.all_registration_events.map(&:visit_id).uniq
+    @visits = Ahoy::Visit.where(id: visit_ids, started_at: (Time.zone.now.beginning_of_month - 1.month)..(Time.zone.now.end_of_month - 1.month))
+
+    respond_to do |format|
+      format.html
+      format.csv { send_data @visits.to_csv() }
+      format.xls { send_data @visits.to_csv(col_sep: "\t", headers: true), filename: "Visit-Data-#{Date.today}.xls" }
+    end
+  end
+
+  def export_new_subscriptions
+    @subscriptions = Subscription.where(kind: :new_subscription, created_at: Time.zone.now.beginning_of_month..Time.zone.now.end_of_month).where.not(state: :pending)
+
+    respond_to do |format|
+      format.html
+      format.csv { send_data @subscriptions.to_csv }
+      format.xls { send_data @subscriptions.to_csv(col_sep: "\t", headers: true), filename: "new-subscriptions-#{Date.today}.xls" }
     end
   end
 
