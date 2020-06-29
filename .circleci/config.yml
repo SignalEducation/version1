@@ -76,7 +76,7 @@ jobs:
           command: |
             bundle exec rspec --profile 10 \
                               --format RspecJunitFormatter \
-                              --out test_results/rspec.xml \
+                              --out ./test_results/rspec/rspec.xml \
                               --format progress \
                               --color \
                               $(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
@@ -89,10 +89,10 @@ jobs:
 
       # collect reports
       - store_test_results:
-          path: /tmp/test-results
+          path: ./test-results/rspec/
       - store_artifacts:
-          path: /tmp/test-results
-          destination: test-results
+          path: ./tmp/capybara/
+          destination: screenshots
       - deploy:
           command: |
             ./cc-test-reporter sum-coverage --output - --parts $CIRCLE_NODE_TOTAL coverage/codeclimate.*.json | ./cc-test-reporter upload-coverage --debug --input - -r 1802bdcb3406ff0d9ecbaaefb286213d6fbe92da0673d35ad3c972a3750e3cea

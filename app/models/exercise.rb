@@ -163,7 +163,7 @@ class Exercise < ApplicationRecord
         short: true
       }]
     }]
-    SlackService.new.notify_channel('corrections', attachments)
+    SlackService.new.notify_channel('corrections', attachments) if Rails.env.production?
   end
 
   def send_submitted_email
