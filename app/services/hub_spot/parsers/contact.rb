@@ -52,6 +52,7 @@ module HubSpot
          { property: 'firstname',              value: user.first_name },
          { property: 'lastname',               value: user.last_name },
          { property: 'email_verified',         value: user.email_verified },
+         { property: 'ls_created_at',          value: user.created_at&.strftime('%d-%m-%Y') },
          { property: 'date_of_birth',          value: user.date_of_birth },
          { property: 'currency',               value: user&.currency&.name },
          { property: 'country',                value: user&.country&.name },
