@@ -13,7 +13,6 @@ class ApplicationController < ActionController::Base
   before_action :set_session_stuff # not for Api::
   before_action :set_layout_variables
   before_action :authorize_rack_profiler
-  rescue_from ActionController::InvalidAuthenticityToken, with: :log_out_user
 
   helper_method :current_user_session, :current_user
 
@@ -388,10 +387,4 @@ class ApplicationController < ActionController::Base
     @tag_manager_course = course
   end
   helper_method :tag_manager_data_layer
-
-  private
-
-  def handle_unverified_request
-    log_out_user
-  end
 end
