@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class CronService
-  TASK_LIST = %w[paypal_sync ping slack_exercises].freeze
+  TASK_LIST = %w[paypal_sync ping slack_exercises daily_sales_report monthly_sales_report
+                 monthly_refunds_report monthly_orders_report].freeze
 
   def initiate_task(task_name)
     raise(StandardError, "Cron Task #{task_name} is not defined") unless TASK_LIST.include?(task_name)
@@ -17,5 +18,25 @@ class CronService
   def slack_exercises
     Rails.logger.info "CRON: Called the 'slack_exercises' task"
     Order.send_daily_orders_update
+  end
+
+  def daily_sales_report
+    Rails.logger.info "CRON: Called the 'daily_sales_report' task"
+    SalesReportWorker.perform_async('daily', nil, nil)
+  end
+
+  def monthly_sales_report
+    Rails.logger.info "CRON: Called the 'monthly_sales_report' task"
+    SalesReportWorker.perform_async('monthly', nil, nil)
+  end
+
+  def monthly_refunds_report
+    Rails.logger.info "CRON: Called the 'monthly_refunds_report' task"
+    RefundsReportWorker.perform_async
+  end
+
+  def monthly_orders_report
+    Rails.logger.info "CRON: Called the 'monthly_orders_report' task"
+    OrdersReportWorker.perform_async
   end
 end

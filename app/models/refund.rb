@@ -22,6 +22,8 @@
 #
 
 class Refund < ApplicationRecord
+  include RefundReport
+
   # Constants
   REASONS = %w[duplicate fraudulent requested_by_customer].freeze
 
@@ -47,7 +49,22 @@ class Refund < ApplicationRecord
   # scopes
   scope :all_in_order, -> { order(:stripe_guid) }
 
-  # class methods
+  def self.to_csv(options = {})
+    attributes = %w[refund_id refunded_on refund_status stripe_id refund_amount inv_total
+                    inv_created invoice_id invoice_type email user_created sub_created sub_exam_body
+                    sub_status sub_type payment_provider sub_stripe_guid sub_paypal_guid
+                    payment_interval plan_name currency_symbol plan_price card_country user_country
+                    first_visit first_visit_date first_visit_landing_page first_visit_referrer
+                    first_visit_referring_domain first_visit_source first_visit_medium
+                    first_visit_search_keyword first_visit_country first_visit_utm_campaign]
+
+    CSV.generate(options) do |csv|
+      csv << attributes
+      all.find_each do |refund|
+        csv << attributes.map { |attr| refund.send(attr) }
+      end
+    end
+  end
 
   # instance methods
   def destroyable?

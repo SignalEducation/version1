@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: invoices
@@ -40,6 +41,7 @@
 #
 
 class Invoice < ApplicationRecord
+  include InvoiceReport
   include LearnSignalModelExtras
   require 'securerandom'
 
@@ -54,6 +56,7 @@ class Invoice < ApplicationRecord
   has_many :invoice_line_items, autosave: true
   has_many :charges
   has_many :refunds
+  belongs_to :subscription_transaction, optional: true
   belongs_to :subscription, optional: true
   belongs_to :order, optional: true
   belongs_to :user
@@ -63,11 +66,11 @@ class Invoice < ApplicationRecord
   validates :user_id, :currency_id, :total, presence: true
   validates :subscription_id, :number_of_users, presence: true, if: :strip_invoice?
   validates :livemode, inclusion: { in: [STRIPE_LIVE_MODE] }, if: :strip_invoice?
-  validates_length_of :stripe_guid, maximum: 255, allow_blank: true
-  validates_length_of :stripe_customer_guid, maximum: 255, allow_blank: true
-  validates_length_of :charge_guid, maximum: 255, allow_blank: true
-  validates_length_of :object_type, maximum: 255, allow_blank: true
-  validates_length_of :subscription_guid, maximum: 255, allow_blank: true
+  validates :stripe_guid, length: { maximum: 255 }, allow_blank: true
+  validates :stripe_customer_guid, length: { maximum: 255 }, allow_blank: true
+  validates :charge_guid, length: { maximum: 255 }, allow_blank: true
+  validates :object_type, length: { maximum: 255 }, allow_blank: true
+  validates :subscription_guid, length: { maximum: 255 }, allow_blank: true
 
   # callbacks
   after_create :set_vat_rate
@@ -75,9 +78,11 @@ class Invoice < ApplicationRecord
   after_create :generate_sca_guid
 
   # scopes
-  scope :all_in_order,  -> { order(user_id: :asc, id: :desc) }
-  scope :subscriptions, -> { where.not(subscription_id: nil) }
-  scope :orders,        -> { where.not(order_id: nil) }
+  scope :all_in_order,     -> { order(user_id: :asc, id: :desc) }
+  scope :subscriptions,    -> { where.not(subscription_id: nil) }
+  scope :orders,           -> { where.not(order_id: nil) }
+  scope :from_year_start,  -> { where("DATE(created_at) >= ?", Date.today.beginning_of_year) }
+  scope :from_yesterday,   -> { where("DATE(created_at) = ?", Date.today - 1) }
 
   # class methods
 
@@ -170,6 +175,22 @@ class Invoice < ApplicationRecord
     end
 
     inv
+  end
+
+  def self.to_csv(options = {})
+    attributes = %w[invoice_id invoice_created subscription_id sub_created user_email user_created
+                    payment_provider sub_stripe_guid sub_paypal_guid sub_exam_body sub_status sub_type
+                    invoice_type payment_interval plan_name currency_symbol plan_price sub_total total
+                    card_country user_country hubspot_source hubspot_source_1 hubspot_source_2 first_visit_source
+                    first_visit_utm_campaign first_visit_medium first_visit_date first_visit_referring_domain
+                    first_visit_landing_page first_visit_referrer]
+
+    CSV.generate(options) do |csv|
+      csv << attributes
+      all.find_each do |invoice|
+        csv << attributes.map { |attr| invoice.send(attr) }
+      end
+    end
   end
 
   def mark_payment_action_required
