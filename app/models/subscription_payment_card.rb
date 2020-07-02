@@ -145,10 +145,10 @@ class SubscriptionPaymentCard < ApplicationRecord
   def create_on_stripe_using_token
     if stripe_token.to_s.length > 0 && user.stripe_customer_id && stripe_card_guid.blank?
       stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
-      new_card_hash = stripe_customer&.sources&.create(source: stripe_token)&.with_indifferent_access
-
+      new_card_hash = stripe_customer&.sources&.create({source: stripe_token})&.to_hash
       if stripe_customer && new_card_hash
         self.stripe_card_guid    = new_card_hash[:id]
+        self.status              = (new_card_hash[:cvc_check] == 'pass') ? 'card-live' : 'not-live'
         self.brand               = new_card_hash[:brand]
         self.last_4              = new_card_hash[:last4]
         self.expiry_month        = new_card_hash[:exp_month]
@@ -160,7 +160,7 @@ class SubscriptionPaymentCard < ApplicationRecord
         self.address_zip         = new_card_hash[:address_zip]
         self.address_country     = new_card_hash[:address_country]
         self.account_country     = new_card_hash[:country]
-        self.account_country_id  = Country.find_by(iso_code: new_card_hash[:country].upcase)&.id
+        self.account_country_id  = Country.find_by(iso_code: new_card_hash[:country]&.upcase)&.id
         self.stripe_object_name  = new_card_hash[:object]
         self.funding             = new_card_hash[:funding]
         self.cardholder_name     = new_card_hash[:name]
