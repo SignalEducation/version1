@@ -10,7 +10,7 @@ class SubscriptionsController < ApplicationController
   before_action :set_flash, :redirects_conditions, only: :new
 
   def show
-    redirect_to dashboard_path unless @subscription.user_id == current_user.id
+    redirect_to student_dashboard_path if @subscription.user_id != current_user.id
   end
 
   def new
@@ -88,7 +88,7 @@ class SubscriptionsController < ApplicationController
 
   # Setting current subscription to cancel-pending or canceled. We don't actually delete the Subscription Record
   def destroy
-    if @subscription
+    if @subscription.present?
       if @subscription.cancel_by_user
         flash[:success] = I18n.t('controllers.subscriptions.destroy.flash.success')
       else
@@ -102,7 +102,7 @@ class SubscriptionsController < ApplicationController
     if current_user.standard_student_user?
       redirect_to account_url(anchor: 'account-info')
     else
-      redirect_to user_subscription_status_url(@subscription.user)
+      redirect_to user_subscription_url(@subscription.user)
     end
   end
 
@@ -115,6 +115,7 @@ class SubscriptionsController < ApplicationController
   def expire_incomplete
     stripe_subscription = Stripe::Subscription.retrieve(@subscription.stripe_guid)
     stripe_subscription = stripe_subscription.delete.to_hash
+
     if stripe_subscription[:status] == 'incomplete_expired'
       @subscription.update_attributes(stripe_status: 'incomplete_expired')
       @subscription.mark_pending
