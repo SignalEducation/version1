@@ -16,7 +16,7 @@
           =link_to 'Trial Content', admin_course_trial_content_path(@course), class: 'btn btn-warning'
           =link_to t('views.course_resources.show.h2'), admin_course_resources_path(@course), class: 'btn btn-secondary'
           =link_to 'New Course Section (tab)', admin_new_course_section_path(@course.id), class: 'btn btn-primary'
-          =link_to 'Reorder Course Sections', reorder_admin_course_sections_path(@course.id), class: 'btn btn-warning'
+          =link_to 'Reorder Course Sections', admin_reorder_course_sections_path(@course.id), class: 'btn btn-warning'
           =link_to t('views.courses.show.course_tutors'), admin_course_course_tutors_path(course_id: @course), class: 'btn btn-secondary'
           =link_to t('views.courses.show.update_student_logs'), admin_course_update_user_logs_path(@course), method: :post, class: 'btn btn-danger'
       .row
