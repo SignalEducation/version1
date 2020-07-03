@@ -27,8 +27,13 @@ export default {
       const total   = data.totalPages;
       const current = data.currentPage;
 
+      if (current == 1) {
+        notesStartEvent();
+      }
+
       if (current == total) {
         this.updateCourseStepLog();
+        notesFinishEvent();
       }
     },
 
