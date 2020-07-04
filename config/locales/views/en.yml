@@ -874,20 +874,6 @@ en:
         onboarding_level_subheading: Onboarding Sub-Heading
         onboarding_level_subheading_placeholder: Onboarding Sub-Heading
 
-        levels:
-          name: Name
-          name_placeholder: Level Name
-          name_url: Name URL
-          name_url_placeholder: Level Link Label
-          active: Active
-          highlight_colour: Colour
-          icon_label: Icon Label
-          icon_label_placeholder: Budicon Label
-          onboarding_course_heading: Onboarding Heading
-          onboarding_course_heading_placeholder: Onboarding Heading
-          onboarding_course_subheading: Onboarding Sub-Heading
-          onboarding_course_subheading_placeholder: Onboarding Sub-Heading
-
       index:
         h1: Groups
 
@@ -1373,7 +1359,32 @@ en:
         expired: Expired
         notifications: Notifications
 
+    levels:
+      form:
+        name: Name
+        name_placeholder: Course name
+        name_url: Name URL
+        name_url_placeholder: Name URL
+        active: Active
+        highlight_colour: Highlight Colour
+        sorting_order: Sorting order
+        group_id: Group
+        icon_label: Icon Label
+        icon_label_placeholder: Icon Label
+        onboarding_course_subheading: Onboarding Course Subheading
+        onboarding_course_subheading_placeholder: Onboarding Course Subheading
+        onboarding_course_heading: Onboarding Course Heading
+        onboarding_course_heading_placeholder: Onboarding Course Heading
 
+      index:
+        h1: Levels
+        add_course: Add Level
+
+      new:
+        h1: New Level
+
+      edit:
+        h1: Edit Level
 
     subscriptions:
       new_subscription:

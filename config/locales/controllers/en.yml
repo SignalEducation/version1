@@ -295,6 +295,18 @@ en:
           success: Invoice has been deleted
           error: Invoice was not deleted
 
+    levels:
+      create:
+        flash:
+          success: Level has been created successfully
+      update:
+        flash:
+          success: Level details have been updated successfully
+      destroy:
+        flash:
+          success: Level has been deleted
+          error: Level was not deleted
+
     mock_exams:
       create:
         flash:
