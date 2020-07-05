@@ -12,6 +12,9 @@
 require 'rails_helper'
 
 describe OnboardingProcess do
+  let(:basic_student)       { create(:basic_student) }
+  let(:course_log)       { create(:course_log, user: basic_student) }
+  let(:onboarding_process)  { create(:onboarding_process, user: basic_student, course_log: course_log) }
 
   describe 'Should Respond' do
     it { should respond_to(:user_id) }
@@ -44,6 +47,51 @@ describe OnboardingProcess do
     it { should respond_to(:content_remaining?) }
     it { should respond_to(:next_step) }
     it { should respond_to(:send_email) }
+  end
+
+  describe 'Methods' do
+    context '#content_remaining?' do
+      it 'should return true' do
+        expect(onboarding_process.content_remaining?).to eq(true)
+      end
+    end
+
+    context '#onboarding_subject' do
+      it 'return Continue your ..' do
+        expect(onboarding_process.onboarding_subject(1)).to eq("Continue your #{onboarding_process.course_log.course.group.name} study today. See what’s next!")
+      end
+
+      it 'return Pass your ..' do
+        expect(onboarding_process.onboarding_subject(2)).to eq("Pass your #{onboarding_process.course_log.course.group.name} Exams first time. Get Ahead Now!")
+      end
+
+      it 'return .. Exams:' do
+        expect(onboarding_process.onboarding_subject(3)).to eq("#{onboarding_process.course_log.course.group.name} Exams: Keep the momentum going & complete a  today!")
+      end
+
+      it 'return What’s next ..' do
+        expect(onboarding_process.onboarding_subject(4)).to eq("What’s next?  Try this #{onboarding_process.course_log.course.group.name} !")
+      end
+
+      it 'return Continue your ..' do
+        expect(onboarding_process.onboarding_subject(5)).to eq("#{onboarding_process.course_log.course.group.name} Exams: Here’s what to study today!")
+      end
+
+      it 'return Continue your ..' do
+        expect(onboarding_process.onboarding_subject(nil)).to eq('Continue your study today. See what’s next!')
+      end
+    end
+
+    context '#send_email' do
+      it 'send message and update onboarding to false' do
+        expect { onboarding_process.send_email(6) }.to change { onboarding_process.active }.from(true).to(false)
+      end
+
+      it 'send message and update onboarding to false' do
+        allow_any_instance_of(OnboardingProcess).to receive(:content_remaining?).and_return(false)
+        expect { onboarding_process.send_email(1) }.to change { onboarding_process.active }.from(true).to(false)
+      end
+    end
   end
 
 end

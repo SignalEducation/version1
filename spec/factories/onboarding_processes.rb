@@ -12,8 +12,7 @@
 FactoryBot.define do
   factory :onboarding_process do
     active         { true }
-
-    association :user
-    association :course_log
+    user
+    course_log
   end
 end
