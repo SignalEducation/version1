@@ -1,7 +1,8 @@
-.row.row-lg
+.row.row-lg#notes-window{data: {lesson_name: @course_step.name, course_name: @course.name}}
   .col-xl-12
     %h1.h3
       =notes.try(:name)
+
     =# VueJS include
     =javascript_pack_tag 'pdf_viewer'
     #course-notes-reader{ 'data-course-id': notes.id,
