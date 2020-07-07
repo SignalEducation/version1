@@ -42,5 +42,6 @@ class Cbe
     # scopes
     scope :without_scenario, -> { where(cbe_scenario_id: nil) }
     scope :with_scenario,    -> { where.not(cbe_scenario_id: nil) }
+    scope :by_section,       ->(section_id) { where(cbe_section_id: section_id).order(:sorting_order) }
   end
 end

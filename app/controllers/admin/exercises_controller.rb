@@ -66,11 +66,11 @@ module Admin
 
     # CBE Exercise
     def correct_cbe
-      @exercise = Exercise.
-                    includes(cbe_user_log: [questions: [:cbe_question]]).
-                    find(params[:id])
-      @cbe_user_log = @exercise.cbe_user_log
-      @cbe          = @cbe_user_log.cbe
+      @exercise      = Exercise.includes(cbe_user_log: [questions: [:cbe_question]]).find(params[:id])
+      @cbe_user_log  = @exercise.cbe_user_log
+      @cbe           = @cbe_user_log.cbe
+      @total_score   = @cbe.questions.map(&:score).sum
+      @percent_score = @cbe_user_log.score.percent_of(@total_score).round(2)
 
       @exercise.correct
     end
