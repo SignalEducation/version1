@@ -554,7 +554,6 @@ describe User do
     end
 
     describe '#currency_locked?' do
-
       before :each do
         allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
       end

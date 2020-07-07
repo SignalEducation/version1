@@ -67,16 +67,19 @@ def enter_card_details(card, cvv, exp_month, exp_year)
   end
 end
 
-def fill_stripe_elements(card, cvv, exp_month, exp_year)
-  stripe_iframe = all('iframe[name=__privateStripeFrame3]').last
-  using_wait_time(15) { Capybara.within_frame stripe_iframe do
-    card.to_s.chars.each do |piece|
-      find_field('cardnumber').send_keys(piece)
-    end
+def fill_stripe_elements(card: '4242424242424242', expiry: '1234', cvc: '123')
+  find('label[for=pay-with-card]').click
+  using_wait_time(6) do
+    frame = find('#card-element > div > iframe')
+    within_frame(frame) do
+      card.to_s.chars.each do |piece|
+        find_field('cardnumber').send_keys(piece)
+      end
 
-    find_field('exp-date').send_keys(exp_month, exp_year)
-    find_field('cvc').send_keys(cvv)
-  end }
+      find_field('exp-date').send_keys expiry
+      find_field('cvc').send_keys cvc
+    end
+  end
 end
 
 def enter_credit_card_details(card_type='valid')

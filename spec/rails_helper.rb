@@ -30,7 +30,10 @@ require 'support/retry'
 require 'webmock/rspec'
 include Authlogic::TestCase       # required for Authlogic
 
-WebMock.disable_net_connect!(allow_localhost: true)
+WebMock.disable_net_connect!({
+  allow_localhost: true,
+  allow: ['chromedriver.storage.googleapis.com']
+})
 Sidekiq::Testing.inline! # makes background jobs run immediately
 
 # Add additional requires below this line. Rails is not loaded until this point!
@@ -63,6 +66,9 @@ end
 
 Capybara.javascript_driver = :selenium_chrome
 
+Capybara::Screenshot.register_filename_prefix_formatter(:rspec) do |example|
+  "screenshot_#{example.description.gsub(' ', '-').gsub(/^.*\/spec\//,'')}"
+end
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
