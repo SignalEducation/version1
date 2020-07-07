@@ -123,6 +123,75 @@ describe Paypal::SubscriptionValidation, type: :service do
         target_instance.send(:match_with_state)
       end
     end
+
+    describe 'with an invalid state transition' do
+      let(:target_dbl) { double(state: 'Suspended') }
+      let(:sub) { create(:paypal_subscription, paypal_status: 'Suspended', state: 'paused') }
+      let(:target_instance) { Paypal::SubscriptionValidation.new(sub) }
+
+      before :each do
+        allow(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(target_dbl)
+      end
+
+      it 'logs to airbrake' do
+        allow(target_instance).to receive(:update_paypal_status).and_raise(StateMachines::InvalidTransition.new(sub, Subscription.state_machine, 'cancel_pending'))
+        expect(target_instance).to receive(:log_to_airbrake)
+
+        target_instance.send(:match_with_state)
+      end
+    end
+  end
+
+  describe '#check_suspended_status' do
+    let(:target_dbl) { double(state: 'Suspended') }
+
+    before :each do
+      allow(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(target_dbl)
+    end
+
+    describe 'for subscriptions pending cancellation' do
+      let(:sub) { create(:paypal_subscription, paypal_status: 'Suspended', state: 'pending_cancellation') }
+      let(:target_instance) { Paypal::SubscriptionValidation.new(sub) }
+
+      it 'calls #check_scheduled_cancellation_worker' do
+        expect(target_instance).to receive(:check_scheduled_cancellation_worker)
+
+        target_instance.send(:check_suspended_status)
+      end
+    end
+
+    describe 'for non pending cancellation subscriptions' do
+      let(:sub) { create(:paypal_subscription, paypal_status: 'Suspended', state: 'active') }
+      let(:target_instance) { Paypal::SubscriptionValidation.new(sub) }
+
+      it 'calls #pause on the subscription' do
+        expect(sub).to receive(:pause!)
+
+        target_instance.send(:check_suspended_status)
+      end
+    end
+  end
+
+  describe '#check_scheduled_cancellation_worker' do
+    let(:sub) { create(:paypal_subscription, paypal_status: 'Suspended', state: 'active') }
+    let(:target_instance) { Paypal::SubscriptionValidation.new(sub) }
+    let(:target_dbl) { double(state: 'Suspended') }
+
+    before :each do
+      allow(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(target_dbl)
+    end
+
+    it 'calls #cancel_billing_agreement_immediately on PaypalSubscriptionsService' do
+      expect_any_instance_of(PaypalSubscriptionsService).to receive(:cancel_billing_agreement_immediately)
+
+      target_instance.send(:check_scheduled_cancellation_worker)
+    end
+
+    it 'returns nil if there are no scheduled workers' do
+      allow_any_instance_of(Sidekiq::ScheduledSet).to receive(:select).and_return([1])
+
+      expect(target_instance.send(:check_scheduled_cancellation_worker)).to be nil
+    end
   end
 
   describe '#check_cancellation_status' do

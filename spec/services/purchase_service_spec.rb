@@ -51,7 +51,6 @@ describe PurchaseService, type: :service do
 
     it 'returns TRUE if the order has a stripe_guid' do
       order = build_stubbed(:order, stripe_guid: 'test_guid')
-
       expect(PurchaseService.new(order).stripe?).to be true
     end
 

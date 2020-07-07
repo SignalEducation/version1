@@ -20,6 +20,7 @@
 #
 
 require 'rails_helper'
+require 'concerns/refund_report_spec.rb'
 
 describe Refund, type: :model do
   let(:refund) { build(:refund) }
@@ -78,11 +79,65 @@ describe Refund, type: :model do
     it { expect(Refund).to respond_to(:all_in_order) }
   end
 
+  describe 'Concern' do
+    it_behaves_like 'refund_report'
+  end
+
+  describe '.to_csv' do
+    before do
+      allow_any_instance_of(Refund).to receive(:create_on_stripe).and_return(true)
+      allow_any_instance_of(StripeApiEvent).to receive(:sync_data_from_stripe).and_return(true)
+      allow_any_instance_of(StripePlanService).to receive(:create_plan).and_return(true)
+      allow_any_instance_of(PaypalPlansService).to receive(:create_plan).and_return(true)
+      allow_any_instance_of(Invoice).to receive(:hubspot_get_contact).and_return(nil)
+    end
+
+    let(:invoice) { create(:invoice) }
+    let!(:refund) { create(:refund, invoice: invoice) }
+
+    context 'generate csv data' do
+      it { expect(Refund.all.to_csv.split(',')).to include('refund_id',
+                                                           'refunded_on',
+                                                           'refund_status',
+                                                           'stripe_id',
+                                                           'refund_amount',
+                                                           'inv_total',
+                                                           'inv_created',
+                                                           'invoice_id',
+                                                           'invoice_type',
+                                                           'email',
+                                                           'user_created',
+                                                           'sub_created',
+                                                           'sub_exam_body',
+                                                           'sub_status',
+                                                           'sub_type',
+                                                           'payment_provider',
+                                                           'sub_stripe_guid',
+                                                           'sub_paypal_guid',
+                                                           'payment_interval',
+                                                           'plan_name',
+                                                           'currency_symbol',
+                                                           'plan_price',
+                                                           'card_country',
+                                                           'user_country',
+                                                           'first_visit',
+                                                           'first_visit_date',
+                                                           'first_visit_landing_page',
+                                                           'first_visit_referrer',
+                                                           'first_visit_referring_domain',
+                                                           'first_visit_source',
+                                                           'first_visit_medium',
+                                                           'first_visit_search_keyword',
+                                                           'first_visit_country') }
+    end
+  end
+
   describe 'Instance Methods' do
     before :each do
       allow_any_instance_of(SubscriptionPlanService).to receive(:async_action)
       allow(Stripe::Event).to receive(:retrieve).and_return({ "payload": { "key": 1 } })
     end
+
     describe '#destroyable?' do
       it 'returns FALSE' do
         expect(refund.destroyable?).to eq false

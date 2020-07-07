@@ -134,6 +134,110 @@ describe SubscriptionsController, type: :controller do
       end
     end
 
+    describe "GET 'show'" do
+      it 'should redirect user diferent of sub user.' do
+        get :show, params: { id: valid_subscription.id }
+
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response).to redirect_to(student_dashboard_path)
+        expect(response).to have_http_status(:redirect)
+      end
+    end
+
+    describe "GET execute" do
+      before do
+        valid_subscription.mark_pending!
+        allow_any_instance_of(PaypalSubscriptionsService).to receive(:execute_billing_agreement).and_return(true)
+      end
+
+      it 'should redirect to upgrade complete' do
+        get :execute, params: { id: valid_subscription.id, payment_processor: 'paypal' }
+
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(personal_upgrade_complete_url(valid_subscription.completion_guid))
+      end
+
+      it 'should redirect to sub plan changes' do
+        allow_any_instance_of(Subscription).to receive(:changed_from_id).and_return(true)
+        get :execute, params: { id: valid_subscription.id, payment_processor: 'paypal' }
+
+        expect(flash[:notice]).not_to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(subscription_plan_changes_url(subscription_id: valid_subscription.id))
+      end
+
+      it 'should redirect to new subscription' do
+        allow_any_instance_of(PaypalSubscriptionsService).to receive(:execute_billing_agreement).and_return(false)
+        get :execute, params: { id: valid_subscription.id, payment_processor: 'paypal' }
+
+        expect(flash[:error]).not_to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(new_subscription_url)
+      end
+
+      it 'should redirect to new subscription' do
+        get :execute, params: { id: valid_subscription.id, payment_processor: 'anything' }
+
+        expect(flash[:error]).not_to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(new_subscription_url)
+      end
+    end
+
+    describe "GET 'status_from_stripe'" do
+      it 'should update subscriptions status.' do
+        post :status_from_stripe, params: { id: valid_subscription.id, status: 'active' }, format: :json
+
+        body = JSON.parse(response.body)
+        expect(response).to have_http_status(:ok)
+        expect(body['status']).to eq('active')
+        expect(body['subscription_id']).to eq(valid_subscription.id)
+      end
+
+      it 'should update subscriptions status.' do
+        post :status_from_stripe, params: { id: valid_subscription.id, status: 'payment_action_required' }, format: :json
+
+        body = JSON.parse(response.body)
+        expect(response).to have_http_status(:ok)
+        expect(body['status']).to eq('pending_3d_secure')
+        expect(body['subscription_id']).to eq(valid_subscription.id)
+      end
+
+      it 'should update subscriptions status.' do
+        post :status_from_stripe, params: { id: valid_subscription.id, status: 'pending' }, format: :json
+
+        body = JSON.parse(response.body)
+        expect(response).to have_http_status(:ok)
+        expect(body['status']).to eq('pending')
+        expect(body['subscription_id']).to eq(valid_subscription.id)
+      end
+    end
+
+    describe "POST 'expire_incomplete_subscription'" do
+      let(:stripe_sub) { double }
+
+      it 'should redirect user diferent of sub user.' do
+        allow(stripe_sub).to receive(:delete).and_return(status: 'incomplete_expired')
+        expect(Stripe::Subscription).to receive(:retrieve).and_return(stripe_sub)
+
+        post :expire_incomplete, params: { id: valid_subscription.id }
+
+        valid_subscription.reload
+        expect(valid_subscription.stripe_status).to eq('incomplete_expired')
+      end
+
+      it 'should redirect user diferent of sub user.' do
+        allow(stripe_sub).to receive(:delete).and_return(status: 'anything')
+        expect(Stripe::Subscription).to receive(:retrieve).and_return(stripe_sub)
+
+        post :expire_incomplete, params: { id: valid_subscription.id }
+
+        valid_subscription.reload
+        expect(valid_subscription.stripe_status).to eq('active')
+      end
+    end
+
     describe "POST 'create'" do
       let(:client_secret) { data[:client_secret] }
 
@@ -345,7 +449,6 @@ describe SubscriptionsController, type: :controller do
 
         stub_subscription_get_request(get_sub_url, subscription)
 
-
         url = "https://api.stripe.com/v1/subscriptions/#{valid_subscription.stripe_guid}"
         request_body = {"cancel_at_period_end"=>"true"}
         response_body = {
@@ -361,6 +464,43 @@ describe SubscriptionsController, type: :controller do
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
         expect(response).to redirect_to account_url(anchor: 'account-info')
+      end
+
+      context 'should not destroy a subscription' do
+        it 'not cancel by user' do
+          allow_any_instance_of(Subscription).to receive(:cancel_by_user).and_return(false)
+          delete :destroy, params: { id: valid_subscription.id }
+
+          expect(flash[:error]).to be_present
+          expect(flash[:error]).to eq(I18n.t('controllers.subscriptions.destroy.flash.error'))
+          expect(response.status).to eq(302)
+          expect(response).to redirect_to(account_url(anchor: 'account-info'))
+        end
+
+        it 'not find a subscription and raise an error' do
+          expect { delete :destroy, params: { id: '9999' } }.to(raise_error { ActiveRecord::RecordNotFound})
+        end
+
+         it 'not find a subscription and return not permitted error' do
+          allow_any_instance_of(Subscription).to receive(:cancel_by_user).and_return(false)
+          allow_any_instance_of(User).to receive(:standard_student_user?).and_return(false)
+          delete :destroy, params: { id: valid_subscription.id }
+
+          expect(flash[:error]).to be_present
+          expect(flash[:error]).to eq(I18n.t('controllers.subscriptions.destroy.flash.error'))
+          expect(response.status).to eq(302)
+          expect(response).to redirect_to(user_subscription_url(valid_subscription.user))
+        end
+
+        it 'not find a subscription and return message error' do
+          allow_any_instance_of(Subscription).to receive(:present?).and_return(false)
+          delete :destroy, params: { id: valid_subscription.id }
+
+          expect(flash[:error]).to be_present
+          expect(flash[:error]).to eq(I18n.t('controllers.application.you_are_not_permitted_to_do_that'))
+          expect(response.status).to eq(302)
+          expect(response).to redirect_to(account_url(anchor: 'account-info'))
+        end
       end
     end
   end

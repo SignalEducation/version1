@@ -117,4 +117,19 @@ RSpec.describe HubSpot::Contacts do
       end
     end
   end
+
+  describe '#search' do
+    context 'Correct request' do
+      it 'save parsed data in hubspot' do
+        stub_request(:get, "#{uri}/contacts/v1/contact/email/#{user_01.email}/profile?hapikey=#{key}").
+          with(headers: { 'Accept' => '*/*', 'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type' => 'application/json', 'User-Agent' => 'Ruby'}).
+          to_return(status: 200, body: { body: 'OK', code: 200 }.to_json , headers: {})
+
+        response = contacts.search(user_01.email)
+
+        expect(response['code']).to eq(200)
+        expect(response['body']).to eq('OK')
+      end
+    end
+  end
 end

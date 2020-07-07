@@ -28,4 +28,36 @@ describe CronService, type: :service do
       subject.initiate_task('slack_exercises')
     end
   end
+
+  describe '#daily_sales_report' do
+    it 'calls .perform_async on the SalesReportWorker' do
+      expect(SalesReportWorker).to receive(:perform_async)
+
+      subject.initiate_task('daily_sales_report')
+    end
+  end
+
+  describe '#monthly_sales_report' do
+    it 'calls .perform_async on the SalesReportWorker' do
+      expect(SalesReportWorker).to receive(:perform_async)
+
+      subject.initiate_task('monthly_sales_report')
+    end
+  end
+
+  describe '#monthly_refunds_report' do
+    it 'calls .perform_async on the RefundsReportWorker' do
+      expect(RefundsReportWorker).to receive(:perform_async)
+
+      subject.initiate_task('monthly_refunds_report')
+    end
+  end
+
+  describe '#monthly_orders_report' do
+    it 'calls .perform_async on the OrdersReportWorker' do
+      expect(OrdersReportWorker).to receive(:perform_async)
+
+      subject.initiate_task('monthly_orders_report')
+    end
+  end
 end

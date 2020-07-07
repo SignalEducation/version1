@@ -89,6 +89,7 @@ Rails.application.routes.draw do
       get 'courses/:id/trial_content',                                                          to: 'courses#trial_content',             as: :course_trial_content
       get 'courses/:id/resources',                                                              to: 'courses#course_resources',          as: :course_resources
       get 'courses/:id/new_course_resources',                                                   to: 'courses#new_course_resources',      as: :new_course_resources
+      post 'courses/:id/resources/reorder',                                                     to: 'course_resources#reorder',          as: :course_resources_reorder
       post 'courses/:id/update_user_logs',                                                      to: 'courses#update_course_lesson_logs', as: :course_update_user_logs
       post 'courses/:id/create_course_resources',                                               to: 'courses#create_course_resources',   as: :create_course_resources
       post 'courses/:id/clone',                                                                 to: 'courses#clone',                     as: :course_clone
@@ -99,7 +100,7 @@ Rails.application.routes.draw do
         resources :course_tutors, concerns: :supports_reordering
       end
 
-      resources :course_resources, concerns: :supports_reordering
+      resources :course_resources
       resources :course_sections, concerns: :supports_reordering
       resources :course_lessons, concerns: :supports_reordering
       resources :course_steps, except: [:index], concerns: :supports_reordering do
@@ -284,12 +285,14 @@ Rails.application.routes.draw do
 
     # Reports
     get '/reports',                       to: 'reports#index',                            as: :reports
+    get '/reports/sales',                 to: 'reports#sales',                            as: :reports_sales
     get '/export_users',                  to: 'reports#export_users',                     as: :export_users
     get '/export_users_monthly',          to: 'reports#export_users_monthly',             as: :export_users_monthly
     get '/export_users_with_enrollments', to: 'reports#export_users_with_enrollments',    as: :export_users_with_enrollments
     get '/export_visits',                 to: 'reports#export_visits',                    as: :export_visits
     get '/export_courses',                to: 'reports#export_courses',                   as: :export_courses
     get '/export_enrollments',            to: 'reports#export_enrollments',               as: :export_enrollments
+    post '/export_sales_report',          to: 'reports#export_sales_report',              as: :export_sales_report
     get '/export_referral_codes',         to: 'referral_codes#export_referral_codes',     as: :export_referral_codes
     get '/export_referral_codes/:id',     to: 'referred_signups#export_referred_signups', as: :export_referred_signups
     get '/referral',                      to: 'referral_codes#referral', as: :refer_a_friend

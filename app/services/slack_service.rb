@@ -12,6 +12,19 @@ class SlackService
     send_notification(message)
   end
 
+  def upload_file(channel, file)
+    file_data = {
+      channel: "##{channel}",
+      as_user: false,
+      file: Faraday::UploadIO.new(file.path, 'text/csv'),
+      title: 'Upload Test',
+      filename: 'upload_test_name.csv',
+      initial_comment: 'Comment test.'
+    }
+
+    slack_client.files_upload(file_data)
+  end
+
   def order_summary_attachment(orders)
     [{ fallback: 'Daily Orders Summary (Last 24hrs)',
        title: 'Daily Orders Summary (Last 24hrs)',

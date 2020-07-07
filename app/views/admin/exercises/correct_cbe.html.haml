@@ -18,22 +18,26 @@
         .container.py-1
           #sectionTabsContent.tab-content
             -@cbe_user_log.sections_in_user_log.each_with_index do |section, section_index|
-              -section_questions =  @cbe_user_log.questions.by_section(section.id)
+              -all_section_questions =  @cbe.questions.by_section(section.id)
+              -section_questions     =  @cbe_user_log.questions.by_section(section.id)
               .tab-pane{id: "section-#{section.id}", class: "tab-#{section.id} #{section_index == 0 ? 'active show' : ''} ", "aria-labelledby" => "section-#{section.id}-tab", :role => "tabpanel"}
                 .row.pt-4
                   .col-sm-2
                     %nav.mb-4.account-nav
                       %ul#questionTabs.nav.nav-tabs.nav-tabs-vertical{:role => "tablist"}
-                        -section_questions.each_with_index do |question, index|
+                        -# all_section_questions
+                        -# -section_questions.each_with_index do |question, index|
+                        -all_section_questions.each_with_index do |question, index|
                           %li.nav-item
                             %a.nav-link{class: index == 0 ? 'active' : '', id: "#section-#{section.id}-question-#{question.id}", "aria-controls" => "section-#{section.id}-question-#{question.id}", "aria-selected" => "true", "data-toggle" => "tab", :href => "#section-#{section.id}-question-#{question.id}", :role => "tab"}
                               ="Question #{index+1}"
 
                   .col-sm-10
                     #questionTabsContent.tab-content
-                      -section_questions.each_with_index do |user_question, index|
-                        -question = user_question.cbe_question
-                        .tab-pane.tab-account.tab-personal-info{class: index == 0 ? 'show active' : '', id: "section-#{section.id}-question-#{user_question.id}", "aria-labelledby" => "personal-info-tab", :role => "tabpanel"}
+                      -# -section_questions.each_with_index do |user_question, index|
+                      -all_section_questions.each_with_index do |question, index|
+                        -user_question = section_questions.select{ |q| q.cbe_question_id == question.id }.first
+                        .tab-pane.tab-account.tab-personal-info{class: index == 0 ? 'show active' : '', id: "section-#{section.id}-question-#{question.id}", "aria-labelledby" => "personal-info-tab", :role => "tabpanel"}
                           .row
                             .col-sm
                               .h4
@@ -45,9 +49,16 @@
                                   Correct:
                                   =user_question.correct
                               .col-sm-3
-                                .h4{ id: "user_question_#{user_question.id}" }
+                                .h4{ id: "user_question_#{question.id}" }
                                   Score:
                                   =user_question.score
+                            -else
+                              .col-sm-3
+                                .h4
+                                  Correct: false
+                              .col-sm-3
+                                .h4{ id: "user_question_#{question.id}" }
+                                  Score: 00.00
 
                           .accordion#resultsAccordion
                             .card
@@ -80,7 +91,7 @@
     .col-sm-12
       .box-item.table-box
         .h4.cbe_score
-          ="Current Overall Score: #{@cbe_user_log.score}"
+          ="Current Overall Score: #{@cbe_user_log.score}/#{@total_score} - #{@percent_score}%"
         .cbe_user_log_comment
           =form_with(url: cbe_user_log_update_admin_exercise_path(cbe_user_log_id: @cbe_user_log.id, id: @cbe_user_log.exercise_id), html: {class: 'form-horizontal', role: 'form'}) do
             .row.pt-2

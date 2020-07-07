@@ -39,6 +39,7 @@
 #
 
 require 'rails_helper'
+require 'concerns/invoice_report_spec.rb'
 
 describe Invoice do
   before :each do
@@ -101,12 +102,17 @@ describe Invoice do
   it { expect(Invoice).to respond_to(:orders) }
 
   # class methods
+  it { expect(Invoice).to respond_to(:to_csv) }
   it { expect(Invoice).to respond_to(:build_from_stripe_data) }
 
   # instance methods
   it { should respond_to(:destroyable?) }
   it { should respond_to(:status) }
   it { should respond_to(:update_from_stripe) }
+
+  describe 'Concern' do
+    it_behaves_like 'invoice_report'
+  end
 
   describe 'Methods' do
     describe '.build_from_stripe_data' do
@@ -338,6 +344,30 @@ describe Invoice do
           invoice.send_receipt('')
         end
       end
+    end
+  end
+
+  describe '.to_csv' do
+    before do
+      allow_any_instance_of(StripePlanService).to receive(:create_plan).and_return(true)
+      allow_any_instance_of(PaypalPlansService).to receive(:create_plan).and_return(true)
+      allow_any_instance_of(Invoice).to receive(:hubspot_get_contact).and_return(nil)
+    end
+
+    let(:user)         { create(:user) }
+    let(:subscription) { create(:subscription, user: user) }
+    let!(:invoice)     { create(:invoice, user: user, subscription: subscription) }
+
+    context 'generate csv data' do
+      it { expect(Invoice.all.to_csv.split(',')).to include('invoice_id',
+                                                            'invoice_created',
+                                                            'subscription_id',
+                                                            'sub_created',
+                                                            'user_email',
+                                                            'user_created',
+                                                            'first_visit_date',
+                                                            'first_visit_referring_domain',
+                                                            'first_visit_landing_page') }
     end
   end
 end

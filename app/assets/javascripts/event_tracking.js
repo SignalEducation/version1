@@ -30,6 +30,7 @@ function quizStartEvent() {
   dataLayer.push({'event':'quizAction', 'quiz_name': lessonData.lessonName,
     'course_name': lessonData.courseName, 'quiz_action':'Start'});
 }
+
 function quizFinishEvent() {
   let quizResultsWindow = $("#quiz-results-window"),
     lessonData = quizResultsWindow.data();
@@ -38,6 +39,33 @@ function quizFinishEvent() {
   dataLayer.push({'event':'quizAction', 'quiz_name': lessonData.lessonName,
     'course_name': lessonData.courseName, 'quiz_result': lessonData.result,
     'quiz_action':'Finish'});
+}
+
+// Notes Events
+function notesStartEvent() {
+  let notesWindow = $("#notes-window"),
+      lessonData = notesWindow.data();
+
+  ahoy.track('Notes Start', lessonData);
+  dataLayer.push({
+    'event': 'notesAction',
+    'notes_name': lessonData.lessonName,
+    'course_name': lessonData.courseName,
+    'notes_action': 'Start'
+  });
+}
+
+function notesFinishEvent() {
+  let notesWindow = $("#notes-window"),
+      lessonData = notesWindow.data();
+
+  ahoy.track('notes Finish', lessonData);
+  dataLayer.push({
+    'event': 'notesAction',
+    'notes_name': lessonData.lessonName,
+    'course_name': lessonData.courseName,
+    'notes_action': 'Finish'
+  });
 }
 
 // Course Show Page Events
