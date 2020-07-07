@@ -18,6 +18,7 @@ jobs:
           POSTGRES_USER: circleci-demo-ruby
           POSTGRES_DB: db/learnsignal_v3_test
           POSTGRES_PASSWORD: ""
+      - image: redis
     steps:
       - checkout
 

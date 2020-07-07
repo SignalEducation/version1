@@ -43,11 +43,29 @@ module Paypal
       when 'Active'
         @subscription.restart!
       when 'Suspended'
-        @subscription.pause!
+        check_suspended_status
       when 'Cancelled'
         check_cancellation_status
       else
         Airbrake.notify("PAYPAL SYNC ERROR: Weird PayPal state for subscription #{@subscription.id}")
+      end
+    end
+
+    def check_scheduled_cancellation_worker
+      set = Sidekiq::ScheduledSet.new
+      return if set.select do |scheduled|
+                  scheduled.klass == 'PaypalSubscriptionCancellationWorker' &&
+                  scheduled.args[0] == @subscription.id
+                end.any?
+
+      PaypalSubscriptionsService.new(@subscription).cancel_billing_agreement_immediately
+    end
+
+    def check_suspended_status
+      if @subscription.pending_cancellation?
+        check_scheduled_cancellation_worker
+      else
+        @subscription.pause!
       end
     end
 
