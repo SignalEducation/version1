@@ -24,14 +24,14 @@ class CronService
     return if Rails.env.staging?
 
     Rails.logger.info "CRON: Called the 'daily_sales_report' task"
-    SalesReportWorker.perform_async('daily', nil, nil)
+    SalesReportWorker.perform_async('daily', Time.zone.yesterday.all_day, MARKETING_EMAIL)
   end
 
   def monthly_sales_report
     return if Rails.env.staging?
 
     Rails.logger.info "CRON: Called the 'monthly_sales_report' task"
-    SalesReportWorker.perform_async('monthly', nil, nil)
+    SalesReportWorker.perform_async('monthly', Time.zone.yesterday.all_month, SALES_REPORT_EMAIL)
   end
 
   def monthly_refunds_report
