@@ -25,6 +25,7 @@ describe 'An individual purchasing a product', type: :feature do
     end
 
     scenario 'can checkout using PayPal', js: true do
+      sleep(3)
       visit prep_products_path
       first(:link, mock.mock_exam.name).click
 

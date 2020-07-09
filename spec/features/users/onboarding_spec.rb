@@ -11,9 +11,10 @@ describe 'User Onboarding process', type: :feature do
   context 'User visits the onboarding page' do
     let(:group)      { create(:group) }
     let(:user_group) { create(:student_user_group) }
-    let(:student)    { create(:inactive_student_user, :with_group, user_group: user_group) }
+    let!(:student)    { create(:inactive_student_user, :with_group, user_group: user_group) }
 
     scenario 'Loading onboarding page', js: true do
+      sleep(3)
       visit user_verification_path(email_verification_code: student.email_verification_code, group_url: group.name_url)
 
       expect(page).to have_content('Welcome to learnsignal!')
@@ -31,9 +32,10 @@ describe 'User Onboarding process', type: :feature do
   context 'User visits the root page' do
     let(:group)      { create(:group) }
     let(:user_group) { create(:student_user_group) }
-    let(:student)    { create(:inactive_student_user, user_group: user_group) }
+    let!(:student)    { create(:inactive_student_user, user_group: user_group) }
 
     scenario 'Loading root page', js: true do
+      sleep(3)
       visit user_verification_path(email_verification_code: student.email_verification_code, group_url: group.name_url)
 
       expect(page).to have_content('Thank you! Your email is now verified')
