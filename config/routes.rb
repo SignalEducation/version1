@@ -274,6 +274,8 @@ Rails.application.routes.draw do
 
     get 'register_or_login', to: 'student_sign_ups#sign_in_or_register', as: :sign_in_or_register
 
+    get 'pricing/(:group_name_url)', to: 'student_sign_ups#pricing', as: :pricing
+
     # Library Structure
     get 'library',                                          to: 'library#index',       as: :library
     get 'library/:group_name_url',                          to: 'library#group_show',  as: :library_group

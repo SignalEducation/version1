@@ -1,0 +1,43 @@
+%main
+  %article.bg-gray5
+    .container-bg.bg-gray5
+      .container#plans
+        %article.py-5
+          %header.text-center.pb-3.pb-md-4
+            %h2.h1-mega
+              -if @group&.exam_body&.pricing_heading
+                =@group.exam_body.pricing_heading
+              -else
+                ="#{@group&.name} Payment Plans"
+            %p.p-hero.px-lg-8
+              -if @group&.exam_body&.pricing_subheading
+                =@group.exam_body.pricing_subheading
+              -else
+                ='Achieve your learning goals with a learnsignal subscription plan and enjoy professional courses delivered online so that you can study on a schedule that suits you.'
+
+          -if @group
+            .row.row-lg.justify-content-center
+              -@subscription_plans.each do |plan|
+                .col-lg-4
+                  =link_to subscription_checkout_special_link(plan.exam_body_id, plan.guid), class: 'plan-card-link', onclick: "addToCart('#{plan.currency.iso_code}', '#{plan.name}', '#{plan.id}', '#{plan.price}', '#{plan.exam_body.name}');" do
+                    =render partial: 'pricing_plan', locals: {plan: plan, zoom: true, btn: true}
+
+          -else
+            %nav.levels-nav
+              %ul.nav.nav-pills.nav-fill{id: 'levelsTabs', role: 'tablist'}
+                - @exam_bodies.each_with_index do |exam_body, counter|
+                  %li.nav-item{data: {tab_name: exam_body.name}}
+                    -# TODO add active to first li
+                    %a{class: "nav-link #{counter == 0 ? 'active' : ''}", id: "#{exam_body.group.name_url}-tab", data: {toggle: 'tab'}, href: "##{exam_body.group.name_url}", aria: {controls: "#{exam_body.group.name_url}", selected: 'false'}, role: 'tab'}
+                      =exam_body.name
+
+            %section.py-3.py-md-4
+              %h2.sr-only List of Plans
+              #levelsTabsContent.tab-content
+                -@exam_bodies.each_with_index do |exam_body, counter|
+                  .tab-pane{id: exam_body.group.name_url, class: "tab-#{exam_body.group.name_url} #{counter == 0 ? 'active show' : ''} ", "aria-labelledby" => "#{exam_body.group.name_url}-tab", :role => "tabpanel"}
+                    .row.row-lg.justify-content-center
+                      -@subscription_plans.where(exam_body_id: exam_body.id).each do |plan|
+                        .col-lg-4
+                          =link_to subscription_checkout_special_link(plan.exam_body_id, plan.guid), class: 'plan-card-link', onclick: "addToCart('#{plan.currency.iso_code}', '#{plan.name}', '#{plan.id}', '#{plan.price}', '#{plan.exam_body.name}');" do
+                            =render partial: 'pricing_plan', locals: {plan: plan, zoom: false, btn: true}

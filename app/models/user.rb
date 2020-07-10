@@ -359,6 +359,10 @@ class User < ApplicationRecord
     active_subscriptions_for_exam_body(exam_body_id).all_valid.any?
   end
 
+  def valid_subscription?
+    subscriptions.all_valid.any?
+  end
+
   def subscription_action_required?
     viewable_subscriptions.map(&:state).include?('pending_3d_secure')
   end

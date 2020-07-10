@@ -25,6 +25,7 @@
 #  most_popular                  :boolean          default("false"), not null
 #  registration_form_heading     :string
 #  login_form_heading            :string
+#  savings_label                 :string
 #
 
 require 'rails_helper'
