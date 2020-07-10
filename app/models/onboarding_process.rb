@@ -22,8 +22,8 @@ class OnboardingProcess < ApplicationRecord
   after_save   :update_hubspot
 
   def content_remaining?
-    free_step_ids           = course_log.course.free_course_steps.map(&:id).sort
-    completed_log_step_ids  = course_log.course_step_logs.all_completed.map(&:course_step_id).sort
+    free_step_ids           = course_log&.course&.free_course_steps&.map(&:id)&.sort
+    completed_log_step_ids  = course_log&.course_step_logs&.all_completed&.map(&:course_step_id)&.sort
 
     free_step_ids != completed_log_step_ids
   end
@@ -89,6 +89,6 @@ class OnboardingProcess < ApplicationRecord
   end
 
   def update_hubspot
-    HubSpot::Contacts.new.batch_create(user_id, { property: 'onboarding_process', value: user.onboarding_state })
+    HubSpot::Contacts.new.batch_create(user_id, { property: 'onboarding_process', value: user.onboarding_state }) unless Rails.env.test?
   end
 end
