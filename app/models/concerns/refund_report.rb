@@ -8,7 +8,7 @@ module RefundReport
   end
 
   def refunded_on
-    created_at.strftime('%Y-%m-%d')
+    created_at.utc.strftime('%Y-%m-%d')
   end
 
   def refund_status
