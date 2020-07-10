@@ -12,7 +12,7 @@ module InvoiceReport
   end
 
   def invoice_created
-    created_at.strftime('%Y-%m-%d')
+    created_at.utc.strftime('%Y-%m-%d')
   end
 
   def user_created

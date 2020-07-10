@@ -19,7 +19,7 @@ class SalesReportWorker
     return if date_interval.nil?
 
     date_array = date_interval.split('..')
-    date_array.first.to_date..date_array.last.to_date
+    date_array.first.to_date.beginning_of_day..date_array.last.to_date.end_of_day
   end
 
   def send_to_email(csv_data, period, email)
