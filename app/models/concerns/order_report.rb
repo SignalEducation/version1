@@ -8,7 +8,7 @@ module OrderReport
   end
 
   def order_created
-    created_at.strftime('%Y-%m-%d')
+    created_at.utc.strftime('%Y-%m-%d')
   end
 
   def name
