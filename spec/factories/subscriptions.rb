@@ -28,6 +28,7 @@
 #  ahoy_visit_id            :uuid
 #  cancelled_by_id          :bigint
 #  kind                     :integer
+#  paypal_retry_count       :integer          default("0")
 #
 
 FactoryBot.define do

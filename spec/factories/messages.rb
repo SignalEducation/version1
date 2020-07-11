@@ -14,6 +14,7 @@
 #  updated_at      :datetime         not null
 #  state           :string
 #  template_params :hstore
+#  guid            :string
 #
 FactoryBot.define do
   factory :message do
@@ -25,6 +26,7 @@ FactoryBot.define do
     mandrill_id     { '123456abcdef' }
     state           { 'sent' }
     template_params { { 'url': 'abcdefghijklmnopqrstuvwxyz' } }
+    guid            { SecureRandom.hex(15) }
     association     :user
   end
 end

@@ -198,7 +198,8 @@ Rails.application.routes.draw do
     # User Account Verification
     get 'user_verification/:email_verification_code',         to: 'user_verifications#update',                   as: :user_verification
     post 'resend_verification_mail/:email_verification_code', to: 'user_verifications#resend_verification_mail', as: :resend_verification_mail
-    get 'registration_onboarding/:group_url',                 to: 'user_verifications#account_verified',        as: :registration_onboarding
+    get 'registration_onboarding/:group_url',                 to: 'user_verifications#account_verified',         as: :registration_onboarding
+    get 'messages/unsubscribe/:message_guid',                 to: 'messages#unsubscribe',                        as: :unsubscribe
 
     resources :user_groups
     resources :content_pages, except: [:show]
