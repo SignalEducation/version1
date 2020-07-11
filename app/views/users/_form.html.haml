@@ -1,7 +1,6 @@
-.box-item
-  =form_for(@user, html: {class: 'form-horizontal', role: 'form', multipart: true}) do |f|
-    =render partial: '/layouts/error_messages', locals: {thing: @user, message: nil}
-
+=form_for(@user, html: {class: 'form-horizontal', role: 'form', multipart: true}) do |f|
+  =render partial: '/layouts/error_messages', locals: {thing: @user, message: nil}
+  .box-item
     .row.pt-4
       .col-sm-6
         .form-group
@@ -44,33 +43,35 @@
             =f.collection_select :currency_id, Currency.all, :id, :name, {}, {class: 'form-control custom-select', disabled: @user.currency_locked? }
 
 
-    #tutor-info.pt-4
-      %hr/
-      %h2='Tutor Info'
-      .row
-        .col-sm-6
-          =f.label :profile_image, t('views.users.form.profile_image'), class: 'text-danger'
-          -if f.object.profile_image.present?
-            =image_tag f.object.profile_image.url, class: 'img-responsive'
-            %br/
-            Upload a replacement if you wish
-            %br/
-          .input-group.input-group-lg
-            =f.file_field :profile_image, class: 'form-control'
-        .col-sm-6
-          =f.label :name_url, t('views.users.form.name_url'), class: 'text-danger'
-          .input-group.input-group-lg
-            =f.text_field :name_url, class: 'form-control', placeholder: t('views.users.form.name_url_placeholder')
-      .row.pt-6
-        .col-sm-12
-          =f.label :description, t('views.users.form.description')
-          =f.text_area :description, 'data-provider': :summernote, id: 'editor'
+  -if @user.onboarding_process
+    =render partial: 'fields_for_onboarding', locals: {f: f}
+
+  #tutor-info.box-item
+    %h4='Tutor Info'
+    .row
+      .col-sm-6
+        =f.label :profile_image, t('views.users.form.profile_image'), class: 'text-danger'
+        -if f.object.profile_image.present?
+          =image_tag f.object.profile_image.url, class: 'img-responsive'
+          %br/
+          Upload a replacement if you wish
+          %br/
+        .input-group.input-group-lg
+          =f.file_field :profile_image, class: 'form-control'
+      .col-sm-6
+        =f.label :name_url, t('views.users.form.name_url'), class: 'text-danger'
+        .input-group.input-group-lg
+          =f.text_field :name_url, class: 'form-control', placeholder: t('views.users.form.name_url_placeholder')
+    .row.pt-6
+      .col-sm-12
+        =f.label :description, t('views.users.form.description')
+        =f.text_area :description, 'data-provider': :summernote, id: 'editor'
 
 
-    .row.pt-4
-      .col-md-12
-        =f.submit t('views.general.save'), class: 'btn btn-primary'
-        =link_to t('views.general.cancel'), users_url, class: 'btn btn-secondary'
+  .row.pt-4
+    .col-md-12
+      =f.submit t('views.general.save'), class: 'btn btn-primary'
+      =link_to t('views.general.cancel'), users_url, class: 'btn btn-secondary'
 
 
 :javascript
