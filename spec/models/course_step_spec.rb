@@ -41,6 +41,7 @@ describe CourseStep do
     it { should have_many(:quiz_questions) }
     it { should have_many(:course_step_logs) }
     it { should have_many(:course_lesson_logs) }
+    it { should have_many(:course_resources) }
   end
 
   describe 'validations' do

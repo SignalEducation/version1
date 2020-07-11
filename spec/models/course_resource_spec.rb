@@ -30,6 +30,7 @@ describe CourseResource do
 
   # relationships
   it { should belong_to(:course) }
+  it { should belong_to(:course_step) }
 
   # validation
   it { should validate_presence_of(:name) }
