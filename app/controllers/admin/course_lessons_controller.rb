@@ -45,7 +45,8 @@ module Admin
         flash[:success] = I18n.t('controllers.course_lessons.update.flash.success')
         redirect_to admin_course_url(@course_lesson.course_id)
       else
-        render action: :edit
+        flash[:error] = @course_lesson.errors.full_messages.to_sentence
+        redirect_to admin_edit_course_lesson_url(@course_lesson.course_id, @course_lesson.course_section.id, @course_lesson.id)
       end
     end
 

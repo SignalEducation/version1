@@ -105,7 +105,7 @@ describe Admin::CourseLessonsController, type: :controller do
 
       it 'should reject invalid params' do
         put :update, params: { id: course_lesson_1.id, course_lesson: {valid_params.keys.first => ''} }
-        expect_update_error_with_model('course_lesson')
+        expect(flash[:error]).to eq("Name can't be blank")
         expect(assigns(:course_lesson).id).to eq(course_lesson_1.id)
       end
     end
