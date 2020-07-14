@@ -74,11 +74,7 @@ class GroupsController < ApplicationController
                                   :background_colour, :exam_body_id,
                                   :seo_title, :seo_description,
                                   :short_description, :onboarding_level_heading,
-                                  :onboarding_level_subheading,
-                                  levels_attributes: [:id, :name, :name_url,
-                                                      :active, :highlight_colour,
-                                                      :icon_label, :onboarding_course_heading,
-                                                      :onboarding_course_subheading, :_destroy]
+                                  :onboarding_level_subheading
                                   )
   end
 end

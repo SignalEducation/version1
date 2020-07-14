@@ -1,0 +1,32 @@
+.container
+  %header.management-console-section
+    %h1
+      =@level.name
+
+  %section.pb-3
+    .row
+      .col-sm-12
+        =link_to 'Levels', admin_levels_url, class: 'btn btn-primary btn-sm btn-sm-arrow-left'
+        .box-item.table-box
+          .table-responsive
+            %table.table.sorted_table{data: {destination: admin_courses_url}}
+              %thead
+                %tr
+                  %th=t('views.groups.form.name')
+                  %th=t('views.groups.form.active')
+                  %th
+                  %th
+                  %th
+              %tbody
+                -@level.courses.all_in_order.each do |course|
+                  %tr{id: course.id}
+                    %td=course.name
+                    %td=tick_or_cross(course.active)
+                    %td
+                      =link_to t('views.general.edit'), edit_admin_course_url(course), class: 'btn btn-xs btn-primary'
+                      -if course.destroyable?
+                        =link_to t('views.general.delete'), course, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-secondary btn-xs'
+                    %td
+                      =link_to t('views.courses.index.edit_content'), course_url(course), class: 'btn btn-xs btn-secondary'
+                    %td
+                      %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}

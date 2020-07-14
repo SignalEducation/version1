@@ -21,7 +21,7 @@ require 'rails_helper'
 
 RSpec.describe Level, type: :model do
 
-  subject { FactoryBot.build(:level) }
+  let!(:level)                  { create(:level, active: true) }
 
   describe 'Should Respond' do
     it { should respond_to(:group_id) }
@@ -58,5 +58,27 @@ RSpec.describe Level, type: :model do
   # class methods
 
   # instance methods
+  it { should respond_to(:destroyable?) }
 
+  describe '#destroyable?' do
+    context 'always return true' do
+      it { expect(level).to be_destroyable }
+    end
+  end
+
+  describe '.search' do
+    context 'return should find level by name' do
+      it { expect(Level.search(level.name.first(3))).to include(level) }
+      it { expect(Level.search(level.name.last(2))).to include(level) }
+    end
+
+    context 'return should find level by description' do
+      it { expect(Level.search(level.name_url.first(3))).to include(level) }
+      it { expect(Level.search(level.name_url.last(2))).to include(level) }
+    end
+
+    context 'return should find level without any search' do
+      it { expect(Level.search(nil)).to include(level) }
+    end
+  end
 end

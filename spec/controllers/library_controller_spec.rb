@@ -6,13 +6,17 @@ RSpec.describe LibraryController, type: :controller do
   let!(:gbp)               { create(:gbp) }
   let!(:uk)                { create(:uk, currency_id: gbp.id) }
   let!(:exam_body_1)       { create(:exam_body) }
-  let!(:group_1)           { create(:group, exam_body_id: exam_body_1.id) }
-  let!(:group_2)           { create(:group, exam_body_id: exam_body_1.id) }
+  let!(:group_1)           { create(:group, exam_body: exam_body_1) }
+  let!(:group_2)           { create(:group, exam_body: exam_body_1) }
+  let!(:level_1)           { create(:level, group: group_1) }
+  let!(:level_2)           { create(:level, group: group_1) }
   let!(:course_1)          { create(:active_course,
-                                    group_id: group_1.id,
-                                    exam_body_id: exam_body_1.id) }
+                                    level: level_1,
+                                    group: group_1,
+                                    exam_body: exam_body_1) }
   let!(:course_2)          { create(:active_course,
-                                    group_id: group_1.id,
+                                    group: group_1,
+                                    level: level_1,
                                     computer_based: true,
                                     exam_body_id: exam_body_1.id) }
 

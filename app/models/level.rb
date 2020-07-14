@@ -29,4 +29,16 @@ class Level < ApplicationRecord
   # scopes
   scope :all_in_order, -> { order(:sorting_order, :group_id) }
   scope :all_active, -> { where(active: true) }
+
+  def self.search(search)
+    if search
+      where('name ILIKE ? OR name_url ILIKE ?', "%#{search}%", "%#{search}%")
+    else
+      Level.all_active.all_in_order
+    end
+  end
+
+  def destroyable?
+    true
+  end
 end

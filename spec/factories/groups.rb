@@ -42,9 +42,5 @@ FactoryBot.define do
     seo_title                    { |n| "#{Faker::Internet.domain_name} - #{n}" }
     exam_body
 
-    before(:create) do |group|
-      group.save(validate: false)
-      create_list(:level, 3, :active, group: group)
-    end
   end
 end

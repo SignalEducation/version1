@@ -1,0 +1,52 @@
+.box-item.form-box
+  .col-sm-12
+    =form_for([:admin, @level], html: {class: 'form-horizontal', role: 'form'}) do |f|
+      =render partial: '/layouts/error_messages', locals: {thing: @level, message: nil}
+      .row
+        .col-sm-6
+          .form-group
+            =f.label :name, t('views.levels.form.name')
+            .input-group.input-group-lg
+              =f.text_field :name, placeholder: t('views.levels.form.name_placeholder'), class: 'form-control'
+          .form-group
+            =f.label :name_url, t('views.levels.form.name_url')
+            .input-group.input-group-lg
+              =f.text_field :name_url, placeholder: t('views.levels.form.name_url_placeholder'), class: 'form-control'
+          .form-group
+            =f.label :group_id, t('views.levels.form.group_id')
+            .input-group.input-group-lg
+              =f.collection_select :group_id, @groups, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
+
+          %br/
+          .checkbox
+            %label
+              =f.check_box :active
+              Active
+
+        .col-sm-6
+          .form-group
+            =f.label :highlight_colour, t('views.levels.form.highlight_colour')
+            .input-group.input-group-lg
+              =f.select :highlight_colour, options_for_select([%w[Red #fd5c63], %w[Blue #30aabc], %w[Yellow #f0ca28],
+                 %w[Purple #775ead], %w[Green #00b67b]],
+                  selected: f.object.highlight_colour),
+                   {include_blank: t('views.general.select')}, class: 'form-control custom-select'
+          .form-group
+            =f.label :icon_label, t('views.levels.form.icon_label')
+            .input-group.input-group-lg
+              =f.text_field :icon_label, placeholder: t('views.levels.form.icon_label_placeholder'), class: 'form-control'
+          .form-group
+            =f.label :onboarding_course_heading, t('views.levels.form.onboarding_course_heading')
+            .input-group.input-group-lg
+              =f.text_field :onboarding_course_heading, placeholder: t('views.levels.form.onboarding_course_heading_placeholder'), class: 'form-control'
+          .form-group
+            =f.label :onboarding_course_subheading, t('views.levels.form.onboarding_course_subheading')
+            .input-group.input-group-lg
+              =f.text_area :onboarding_course_subheading, placeholder: t('views.levels.form.onboarding_course_subheading_placeholder'), class: 'form-control'
+
+      .row.pt-4
+        .col-md-12
+          =f.submit t('views.general.save'), class: 'btn btn-primary'
+          =link_to t('views.general.cancel'), admin_levels_path, class: 'btn btn-secondary l-margin-right-big l-padding-side-3x'
+
+

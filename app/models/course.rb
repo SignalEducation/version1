@@ -52,7 +52,7 @@ class Course < ApplicationRecord
   # relationships
   belongs_to :exam_body
   belongs_to :group
-  belongs_to :level, optional: true
+  belongs_to :level
   has_many :course_tutors
   has_many :home_pages
   has_many :course_resources
@@ -82,6 +82,7 @@ class Course < ApplicationRecord
   validates :name_url, presence: true, uniqueness: true, length: { maximum: 255 }
   validates :description, presence: true
   validates :group_id, presence: true
+  validates :level_id, presence: true
   validates :quiz_pass_rate, presence: true
   validates :survey_url, presence: true, length: { maximum: 255 }
   validates :accredible_group_id, presence: true, numericality: { only_integer: true }, if: :emit_certificate?

@@ -80,6 +80,8 @@ Rails.application.routes.draw do
 
       post 'search_exercises', to: 'exercises#index', as: :search_exercises
 
+      resources :levels, concerns: :supports_reordering
+
       get 'courses/:id/new_course_section',                                                     to: 'course_sections#new',               as: :new_course_section
       get 'courses/:id/course_section/:course_section_id/new_course_lesson',                    to: 'course_lessons#new',                as: :new_course_lesson
       get 'courses/:id/course_section/:course_section_id/edit_course_lesson/:course_lesson_id', to: 'course_lessons#edit',               as: :edit_course_lesson

@@ -5,32 +5,22 @@
       .row
         .col-sm-6
           =f.hidden_field :default_number_of_possible_exam_answers, value: 4
-
           .form-group
             =f.label :group_id, t('views.courses.form.group_id')
             .input-group.input-group-lg
               =f.collection_select :group_id, @groups, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
-
           .form-group{class: 'accredible_form_group', style: 'display:none;'}
             =f.label :accredible_group_id, t('views.courses.form.accredible_group_id'), { class: 'accredible_group_check_return' }
             .input-group.input-group-lg
               =f.number_field :accredible_group_id, placeholder: t('views.courses.form.accredible_group_id_placeholder'), class: 'form-control'
-
           .form-group
             =f.label :name, t('views.courses.form.name')
             .input-group.input-group-lg
               =f.text_field :name, placeholder: t('views.courses.form.name_placeholder'), class: 'form-control update-my-url'
-
           .form-group
             =f.label :name_url, t('views.courses.form.name_url')
             .input-group.input-group-lg
               =f.text_field :name_url, placeholder: t('views.courses.form.name_url_placeholder'), class: 'form-control'
-
-
-          .form-group
-            =f.label :level_id, t('views.courses.form.level')
-            .input-group.input-group-lg
-              =f.collection_select :level_id, @levels, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
           .form-group
             =f.label :category_label, t('views.courses.form.category_label')
             .input-group.input-group-lg
@@ -46,13 +36,17 @@
 
         .col-sm-6
           .form-group
-            =f.label :quiz_pass_rate, t('views.courses.form.quiz_pass_rate')
+            =f.label :level_id, t('views.courses.form.level')
             .input-group.input-group-lg
-              =f.text_field :quiz_pass_rate, placeholder: t('views.courses.form.quiz_pass_rate_placeholder'), class: 'form-control'
+              =f.collection_select :level_id, @levels, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
           .form-group
             =f.label :exam_body_id, t('views.courses.form.exam_body_id')
             .input-group.input-group-lg
               =f.collection_select :exam_body_id, @exam_bodies, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
+          .form-group
+            =f.label :quiz_pass_rate, t('views.courses.form.quiz_pass_rate')
+            .input-group.input-group-lg
+              =f.text_field :quiz_pass_rate, placeholder: t('views.courses.form.quiz_pass_rate_placeholder'), class: 'form-control'
           .form-group
             =f.label :survey_url, t('views.courses.form.survey_url')
             .input-group.input-group-lg

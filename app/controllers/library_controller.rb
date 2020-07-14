@@ -19,6 +19,7 @@ class LibraryController < ApplicationController
     @group = Group.find_by(name_url: params[:group_name_url])
 
     if @group
+      @levels = @group.levels.all_active.all_in_order
       @courses = @group.active_children.all_in_order
       seo_title_maker(@group.seo_title, @group.seo_description, nil)
       tag_manager_data_layer(@group.try(:name))
