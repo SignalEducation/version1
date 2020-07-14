@@ -25,6 +25,7 @@ class CourseResource < ApplicationRecord
 
   # relationships
   belongs_to :course
+  belongs_to :course_step, optional: true
   has_attached_file :file_upload, default_url: 'images/missing_image.jpg'
 
   # validation

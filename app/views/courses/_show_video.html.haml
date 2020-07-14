@@ -4,3 +4,20 @@
       =render partial: 'courses/video_player', locals: { cme: @course_step }
 
     .pt-5.pb-5
+
+  .col-xl-4
+    -@course_step.course_resources.all_active.all_in_order.each do |resource|
+      -if resource.external_url && resource.external_url.present?
+        =link_to resource.external_url, class: 'card card-horizontal card-horizontal-sm flex-row resource-card', data: {resource_name: resource.name, course_name: @course.name, resource_type: resource.type}, target: '_blank' do
+          .card-header.bg-white.d-flex.align-items-center.justify-content-center
+            %i.budicon-internal-link{"aria-label" => "", :role => "img"}
+          .card-body.d-flex.align-items-center.pl-1
+            %h5.m-0.text-truncate.text-gray2
+              =resource.name
+      -else
+        =link_to resource.file_upload.url, class: 'card card-horizontal card-horizontal-sm flex-row resource-card', data: {resource_name: resource.name, course_name: @course.name, resource_type: resource.type}, target: '_blank' do
+          .card-header.bg-white.d-flex.align-items-center.justify-content-center
+            %i.budicon-files-download{"aria-label" => "", :role => "img"}
+          .card-body.d-flex.align-items-center.pl-1
+            %h5.m-0.text-truncate.text-gray2
+              =resource.name

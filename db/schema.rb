@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_12_103150) do
+ActiveRecord::Schema.define(version: 2020_07_11_105252) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -472,6 +472,7 @@ ActiveRecord::Schema.define(version: 2020_06_12_103150) do
     t.integer "sorting_order"
     t.boolean "available_on_trial", default: false
     t.boolean "download_available", default: false
+    t.integer "course_step_id"
     t.index ["course_id"], name: "index_course_resources_on_course_id"
     t.index ["name"], name: "index_course_resources_on_name"
   end
@@ -987,6 +988,7 @@ ActiveRecord::Schema.define(version: 2020_06_12_103150) do
     t.datetime "updated_at", null: false
     t.string "state"
     t.hstore "template_params", default: {}
+    t.string "guid"
     t.index ["mandrill_id"], name: "index_messages_on_mandrill_id"
     t.index ["process_at"], name: "index_messages_on_process_at"
     t.index ["user_id"], name: "index_messages_on_user_id"

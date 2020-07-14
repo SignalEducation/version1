@@ -1321,6 +1321,7 @@ en:
         course_id_placeholder: Course
         external_url: External URL
         external_url_placeholder: External Web URL
+        course_video_id: Video [optional]
 
       index:
         h1: Course Resources
