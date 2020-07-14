@@ -11,7 +11,7 @@
 #
 FactoryBot.define do
   factory :onboarding_process do
-    active         { true }
+    active { true }
     user
     course_log
   end

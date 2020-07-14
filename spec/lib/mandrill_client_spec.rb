@@ -91,24 +91,24 @@ describe MandrillClient do
     end
 
     it 'send_onboarding_complete_email' do
-      response = @client.send_onboarding_complete_email('subscription_url', 'course')
+      response = @client.send_onboarding_complete_email('subscription_url', 'course', 'unsubscribe_url')
 
       expect(response.first).to be_kind_of(MandrillClient)
-      expect(response.last).to eq('onboarding-complete-030620')
+      expect(response.last).to eq('onboarding-complete-140720')
     end
 
     it 'send_onboarding_expired_email' do
-      response = @client.send_onboarding_expired_email('subscription_url', 'course')
+      response = @client.send_onboarding_expired_email('subscription_url', 'course', 'unsubscribe_url')
 
       expect(response.first).to be_kind_of(MandrillClient)
-      expect(response.last).to eq('onboarding-expired-030620')
+      expect(response.last).to eq('onboarding-expired-140720')
     end
 
     it 'send_onboarding_content_email' do
-      response = @client.send_onboarding_content_email('1', 'subject_line', 'course', 'next_step', 'content_url')
+      response = @client.send_onboarding_content_email('1', 'subject_line', 'course', 'next_step', 'content_url', 'unsubscribe_url')
 
       expect(response.first).to be_kind_of(MandrillClient)
-      expect(response.last).to eq('onboarding-day-1-030620')
+      expect(response.last).to eq('onboarding-day-1-140720')
     end
 
     it 'send_survey_email' do
