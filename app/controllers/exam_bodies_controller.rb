@@ -60,7 +60,8 @@ class ExamBodiesController < ApplicationController
       :preferred_payment_frequency, :subscription_page_subheading_text, :products_heading,
       :constructed_response_intro_heading, :constructed_response_intro_text, :logo_image,
       :registration_form_heading, :login_form_heading, :landing_page_h1, :landing_page_paragraph,
-      :products_subheading, :products_seo_title, :emit_certificate
+      :products_subheading, :products_seo_title, :emit_certificate, :pricing_heading,
+      :pricing_subheading, :pricing_seo_title, :pricing_seo_description
     )
   end
 end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class StudentSignUpsController < ApplicationController
-  before_action :check_logged_in_status, except: %i[landing subscribe group]
+  before_action :check_logged_in_status, except: %i[landing group pricing]
   before_action :get_variables
   before_action :create_user_object, only: %i[new sign_in_or_register landing]
   before_action :create_user_session_object, only: %i[sign_in_or_register landing]
@@ -165,6 +165,31 @@ class StudentSignUpsController < ApplicationController
     @banner = nil
     seo_title_maker('Thank You for Registering | LearnSignal',
                     'Thank you for registering to our basic membership plan you can now explore our course content and discover the smarter way to study with learnsignal.',
+                    false)
+  end
+
+  def pricing
+    @exam_bodies = ExamBody.all_active.all_in_order
+    @group = Group.find_by(name_url: params[:group_name_url])
+    country = IpAddress.get_country(request.remote_ip) || Country.find_by(name: 'United Kingdom')
+    currency =
+      if current_user
+        current_user.get_currency(country)
+      else
+        country.currency
+      end
+
+    @subscription_plans =
+      if @group
+        SubscriptionPlan.where(subscription_plan_category_id: nil, exam_body_id: @group.exam_body_id).
+          includes(:currency).in_currency(currency.id).all_active.all_in_display_order
+      else
+        SubscriptionPlan.where(subscription_plan_category_id: nil).
+          includes(:currency).in_currency(currency.id).all_active.all_in_display_order
+      end
+
+    seo_title_maker(@group&.exam_body&.pricing_seo_title ? "#{@group&.exam_body&.pricing_seo_title} | LearnSignal" : "#{@group&.name} Tuition Plans | LearnSignal",
+                    @group&.exam_body&.pricing_seo_description ? @group&.exam_body&.pricing_seo_description : "Achieve your #{@group&.name} learning goals with a learnsignal subscription plan and enjoy professional courses delivered online so that you can study on a schedule that suits you.",
                     false)
   end
 

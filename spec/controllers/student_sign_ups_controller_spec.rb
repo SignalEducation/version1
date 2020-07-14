@@ -170,6 +170,21 @@ RSpec.describe StudentSignUpsController, type: :controller do
         expect(response).to render_template(:show)
       end
     end
+
+    describe "GET 'pricing'" do
+      # This is the post sign-up landing page - personal_sign_up_complete
+      it 'returns http success' do
+        get :pricing
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:pricing)
+      end
+
+      it '/group returns http success' do
+        get :pricing, params: { group_name_url: group_1.name_url }
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:pricing)
+      end
+    end
   end
 
   context 'Logged in as a student_user' do
@@ -231,5 +246,21 @@ RSpec.describe StudentSignUpsController, type: :controller do
         expect(response).to redirect_to(student_dashboard_url)
       end
     end
+
+    describe "GET 'pricing'" do
+      # This is the post sign-up landing page - personal_sign_up_complete
+      it 'returns http success' do
+        get :pricing
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:pricing)
+      end
+
+      it '/group returns http success' do
+        get :pricing, params: { group_name_url: group_1.name_url }
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:pricing)
+      end
+    end
+
   end
 end

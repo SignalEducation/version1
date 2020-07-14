@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_11_105252) do
+ActiveRecord::Schema.define(version: 2020_07_14_102457) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -699,6 +699,10 @@ ActiveRecord::Schema.define(version: 2020_07_11_105252) do
     t.string "products_seo_title"
     t.string "products_seo_description"
     t.boolean "emit_certificate", default: false
+    t.string "pricing_heading"
+    t.string "pricing_subheading"
+    t.string "pricing_seo_title"
+    t.string "pricing_seo_description"
     t.index ["name"], name: "index_exam_bodies_on_name"
   end
 
@@ -1372,6 +1376,7 @@ ActiveRecord::Schema.define(version: 2020_07_11_105252) do
     t.boolean "most_popular", default: false, null: false
     t.string "registration_form_heading"
     t.string "login_form_heading"
+    t.string "savings_label"
     t.index ["currency_id"], name: "index_subscription_plans_on_currency_id"
     t.index ["exam_body_id"], name: "index_subscription_plans_on_exam_body_id"
     t.index ["subscription_plan_category_id"], name: "index_subscription_plans_on_subscription_plan_category_id"

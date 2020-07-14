@@ -52,47 +52,43 @@
 
 
         .pt-4
-          %h4='Optional Attributes'
-        .row
-          .col-sm-6
-            .form-group
-              =f.label :monthly_percentage_off, t('views.subscription_plans.form.monthly_percentage_off')
-              .input-group.input-group-lg
-                =f.number_field :monthly_percentage_off, placeholder: 0, class: 'form-control'
-          .col-sm-6
-            .form-group
-              =f.label :previous_plan_price, t('views.subscription_plans.form.previous_plan_price')
-              .input-group.input-group-lg
-                =f.text_field :previous_plan_price, placeholder: 0, class: 'form-control'
+          %h4='Pricing Page Attributes'
+          .row
+            .col-sm-6
+              .form-group
+                =f.label :savings_label, t('views.subscription_plans.form.savings_label')
+                .input-group.input-group-lg
+                  =f.text_field :savings_label, placeholder: t('views.subscription_plans.form.savings_label_placeholder'), class: 'form-control'
+            .col-sm-6
+              .col-sm.py-4
+                .checkbox
+                  %label
+                    =f.check_box :most_popular
+                    =t('views.subscription_plans.form.most_popular')
+            .col-sm-12
+              .form-group
+                =f.label :bullet_points_list, t('views.subscription_plans.form.bullet_points_list')
+                .input-group.input-group-lg
+                  =f.text_area :bullet_points_list, placeholder: t('views.subscription_plans.form.bullet_points_list_placeholder'), class: 'form-control'
 
-          .col-sm-6
-            .form-group
-              =f.label :sub_heading_text, t('views.subscription_plans.form.sub_heading_text')
-              .input-group.input-group-lg
-                =f.text_field :sub_heading_text, placeholder: t('views.subscription_plans.form.sub_heading_text_placeholder'), class: 'form-control'
-          .col-sm-6
-            .form-group
-              =f.label :registration_form_heading, t('views.subscription_plans.form.registration_form_heading')
-              .input-group.input-group-lg
-                =f.text_field :registration_form_heading, placeholder: t('views.subscription_plans.form.registration_form_heading_placeholder'), class: 'form-control'
-          .col-sm-6
-            .form-group
-              =f.label :login_form_heading, t('views.subscription_plans.form.login_form_heading')
-              .input-group.input-group-lg
-                =f.text_field :login_form_heading, placeholder: t('views.subscription_plans.form.login_form_heading_placeholder'), class: 'form-control'
-
-          .col-sm-6
-            .form-group
-              =f.label :bullet_points_list, t('views.subscription_plans.form.bullet_points_list')
-              .input-group.input-group-lg
-                =f.text_area :bullet_points_list, placeholder: t('views.subscription_plans.form.bullet_points_list_placeholder'), class: 'form-control'
-          .col-sm-6
-            .col-sm.py-3
-              .checkbox
-                %label
-                  =f.check_box :most_popular
-                  =t('views.subscription_plans.form.most_popular')
-
+        .pt-4
+          %h4='Landing Page Attributes'
+          .row.pt-4
+            .col-sm-6
+              .form-group
+                =f.label :sub_heading_text, t('views.subscription_plans.form.sub_heading_text')
+                .input-group.input-group-lg
+                  =f.text_field :sub_heading_text, placeholder: t('views.subscription_plans.form.sub_heading_text_placeholder'), class: 'form-control'
+            .col-sm-6
+              .form-group
+                =f.label :registration_form_heading, t('views.subscription_plans.form.registration_form_heading')
+                .input-group.input-group-lg
+                  =f.text_field :registration_form_heading, placeholder: t('views.subscription_plans.form.registration_form_heading_placeholder'), class: 'form-control'
+            .col-sm-6
+              .form-group
+                =f.label :login_form_heading, t('views.subscription_plans.form.login_form_heading')
+                .input-group.input-group-lg
+                  =f.text_field :login_form_heading, placeholder: t('views.subscription_plans.form.login_form_heading_placeholder'), class: 'form-control'
 
         .row.pt-4
           .col-sm-12

@@ -43,10 +43,26 @@
 
     .row
       .col-sm-12.mt-5
-        %h4.text-center='Subscription & Products Page Attributes'
+        %h4.text-center='Pricing, Subscription Payment & Products Page Attributes'
         %hr
         .row
           .col-sm-6
+            .form-group
+              =f.label :pricing_heading, t('views.exam_bodies.form.pricing_heading')
+              .input-group.input-group-lg
+                =f.text_field :pricing_heading, placeholder: t('views.exam_bodies.form.pricing_heading_placeholder'), class: 'form-control'
+            .form-group
+              =f.label :pricing_subheading, t('views.exam_bodies.form.pricing_subheading')
+              .input-group.input-group-lg
+                =f.text_field :pricing_subheading, placeholder: t('views.exam_bodies.form.pricing_subheading_placeholder'), class: 'form-control'
+            .form-group
+              =f.label :pricing_seo_title, t('views.exam_bodies.form.pricing_seo_title')
+              .input-group.input-group-lg
+                =f.text_field :pricing_seo_title, placeholder: t('views.exam_bodies.form.pricing_seo_title_placeholder'), class: 'form-control'
+            .form-group
+              =f.label :pricing_seo_description, t('views.exam_bodies.form.pricing_seo_description')
+              .input-group.input-group-lg
+                =f.text_field :pricing_seo_description, placeholder: t('views.exam_bodies.form.pricing_seo_description_placeholder'), class: 'form-control'
             .form-group
               =f.label :subscription_page_subheading_text, t('views.exam_bodies.form.subscription_page_subheading_text')
               .input-group.input-group-lg

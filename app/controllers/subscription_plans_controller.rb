@@ -76,7 +76,8 @@ class SubscriptionPlansController < ApplicationController
       :payment_frequency_in_months, :currency_id, :price, :available_from,
       :name, :subscription_plan_category_id, :available_to, :stripe_guid,
       :monthly_percentage_off, :previous_plan_price, :exam_body_id,
-      :sub_heading_text, :bullet_points_list
+      :sub_heading_text, :bullet_points_list, :most_popular,
+      :registration_form_heading, :login_form_heading, :savings_label
     )
   end
 
@@ -86,7 +87,7 @@ class SubscriptionPlansController < ApplicationController
       :subscription_plan_category_id, :monthly_percentage_off,
       :previous_plan_price, :exam_body_id,
       :sub_heading_text, :bullet_points_list, :most_popular,
-      :registration_form_heading, :login_form_heading
+      :registration_form_heading, :login_form_heading, :savings_label
     )
   end
 end

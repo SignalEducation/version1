@@ -138,7 +138,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
   .margin-top {
-    margin-top: 85px;
+    margin-top: 80px;
   }
   .margin-top-lg {
     margin-top: 124px;
@@ -2912,6 +2912,26 @@ li {
   margin-bottom: 1rem
 }
 .list-default li::before {
+  position: absolute;
+  left: -1.5rem;
+  top: 6px;
+  display: block;
+  width: 8px;
+  height: 8px;
+  content: '';
+  background-color: #00b67b;
+  border-radius: 50%
+}
+.pricing-list-centered {
+  padding-left: 0;
+  list-style: none;
+  margin: 0;
+  text-align: center
+}
+.pricing-list-centered li {
+  margin-bottom: .6rem
+}
+.pricing-list-default li::before {
   position: absolute;
   left: -1.5rem;
   top: 6px;
@@ -6288,4 +6308,24 @@ button.sub-details[aria-expanded="true"]:before{
 .tooltip-custom > .arrow::before{ border-right-color: $navy; }
 .tooltip-custom.show {
   opacity: 1;
+}
+
+.plan-card-link {
+  text-decoration: none;
+  color: #657786;
+}
+.plan-card-link:hover {
+  text-decoration: none;
+  color: #657786;
+}
+.zoom:hover {
+  transform: scale(1.2); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+}
+.zoom:hover .btn, .zoom.hover .btn {
+  color: #fff;
+  background-color: #00b67b;
+  border-color: #00b67b
+}
+.plan-card-link:hover .text-orange, .plan-card-link.hover .text-orange {
+  color: #fd7e14 !important;
 }

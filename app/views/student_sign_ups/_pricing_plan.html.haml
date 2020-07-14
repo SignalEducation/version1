@@ -1,0 +1,69 @@
+%article.card.card-primary.card-primary-alt{style: 'transition: transform .2s;', class: zoom ? 'medium-gap zoom' : ''}
+  -if plan.most_popular
+    .card-banner.bg-mint
+      %large.text-white
+        Most popular payment plan
+  .card-body.text-center.py-3.py-sm-4
+    .card-title
+      %h2
+        =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
+      %p.h2.mb-0
+        =plan.currency.format_number(plan.price)
+
+      -if plan.savings_label
+        %p.h5.text-orange
+          =plan.savings_label
+      -else
+        .pb-3
+
+    %ul.pricing-list-centered
+      -if plan.bullet_points_list && !plan.bullet_points_list.empty?
+        - plan.bullet_points_list.split(/, ?/).each do |bullet|
+          %li
+            %span.glyphicon.glyphicon-ok{style: 'color: #00b67b;'}
+            =bullet
+      -else
+        %li
+          %span.glyphicon.glyphicon-ok{style: 'color: #00b67b;'}
+          ="Instant Access to all #{@group&.name} Courses"
+        %li
+          %span.glyphicon.glyphicon-ok{style: 'color: #00b67b;'}
+          Guided Study Plans
+        %li
+          %span.glyphicon.glyphicon-ok{style: 'color: #00b67b;'}
+          Lectures Covering 100% of the Syllabus
+        %li
+          %span.glyphicon.glyphicon-ok{style: 'color: #00b67b;'}
+          Exam Question Masterclasses
+        %li
+          %span.glyphicon.glyphicon-ok{style: 'color: #00b67b;'}
+          Exam Revision Bootcamp Courses
+        %li
+          %span.glyphicon.glyphicon-ok{style: 'color: #00b67b;'}
+          Downloadable Course Notes
+        %li
+          %span.glyphicon.glyphicon-ok{style: 'color: #00b67b;'}
+          Module Quizzes To Test Your Knowledge
+        %li
+          %span.glyphicon.glyphicon-ok{style: 'color: #00b67b;'}
+          Exam Practice Questions
+        %li
+          %span.glyphicon.glyphicon-ok{style: 'color: #00b67b;'}
+          Exam Question Solution Packs
+        %li
+          %span.glyphicon.glyphicon-ok{style: 'color: #00b67b;'}
+          Student Support Webinars
+        %li
+          %span.glyphicon.glyphicon-ok{style: 'color: #00b67b;'}
+          24/7 Expert Tutor Support
+        %li
+          %span.glyphicon.glyphicon-ok{style: 'color: #00b67b;'}
+          Subject Cheat Sheets
+
+    -if btn
+      .mt-4
+        =link_to subscription_checkout_special_link(plan.exam_body_id, plan.guid), class: 'btn btn-secondary btn-sm', onclick: "addToCart('#{plan.currency.iso_code}', '#{plan.name}', '#{plan.id}', '#{plan.price}', '#{plan.exam_body.name}');" do
+          Choose this plan
+    -else
+      .pt-3.pt-md-4
+        %i.material-icons.icon-bg-round.text-mint.bg-mint-light{"aria-label" => "selected", :role => "img"} check
