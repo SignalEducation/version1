@@ -18,6 +18,7 @@
 #  sorting_order            :integer
 #  available_on_trial       :boolean          default("false")
 #  download_available       :boolean          default("false")
+#  course_step_id           :integer
 #
 
 require 'rails_helper'
