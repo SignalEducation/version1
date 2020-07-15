@@ -23,8 +23,11 @@ class Cbe
 
     has_many :questions, class_name: 'Cbe::UserQuestion', foreign_key: 'cbe_user_log_id',
                          inverse_of: :user_log, dependent: :destroy
+    has_many :responses, class_name: 'Cbe::UserResponse', foreign_key: 'cbe_user_log_id',
+                         inverse_of: :user_log, dependent: :destroy
 
     accepts_nested_attributes_for :questions
+    accepts_nested_attributes_for :responses
 
     # validations
     validates :cbe_id, presence: true

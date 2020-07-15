@@ -272,56 +272,91 @@
                               </div>
                             </div>
                             <br>
-                            <div
-                              v-for="question in scenario.questions"
-                              :key="question.id"
-                            >
-                              <b-card
-                                no-body
-                                class="mb-1"
-                              >
-                                <b-card-header
-                                  header-tag="header"
-                                  class="p-1"
-                                  role="tab"
-                                >
-                                  <b-button
-                                    v-b-toggle="'accordion-' + question.id"
-                                    block
-                                    href="#"
-                                    variant="secondary"
-                                  >
-                                    Question - {{ question.sorting_order }}
-                                  </b-button>
-                                </b-card-header>
+                            <!-- here starts scenario exhibits -->
+                            <div v-if="section.kind === 'exhibits_scenario'">
+                              <div>
+                                <b-card no-body>
+                                  <b-tabs pills card>
+                                    <b-tab title="Exhibits" >
+                                      <ScenarioExhibits
+                                      :scenario-object="scenario"
+                                      @add-scenario-exhibit="updateScenarioExhibits"
+                                      @rm-scenario-exhibit="removeScenarioExhibit" />
+                                    </b-tab>
 
-                                <b-collapse
-                                  :id="'accordion-'+ question.id"
-                                  accordion="question-accordion"
-                                  role="tabpanel"
+                                    <b-tab title="Requirements">
+                                      <ScenarioRequirements
+                                      :scenario-object="scenario"
+                                      @add-scenario-requirement="updateScenarioRequirements"
+                                      @rm-scenario-requirement="removeScenarioRequirement" />
+                                    </b-tab>
+
+                                    <b-tab title="Response Options">
+                                      <ScenarioResponseOptions
+                                        :scenario-object="scenario"
+                                        @add-scenario-response-option="updateScenarioResponseOptions"
+                                        @rm-scenario-response-option="removeScenarioResponseOption"
+                                      />
+                                    </b-tab>
+                                  </b-tabs>
+                                </b-card>
+                              </div>
+                            </div>
+                            <!-- here ends scenario exhibits -->
+
+                            <!-- here starts scenario questions -->
+                            <div v-else>
+                              <div
+                                v-for="question in scenario.questions"
+                                :key="question.id"
+                              >
+                                <b-card
+                                  no-body
+                                  class="mb-1"
                                 >
-                                  <b-card-body>
-                                    <div class="row">
-                                      <div class="col-sm-12">
-                                        <b-card>
-                                          <Question
-                                            :id="question.id"
-                                            :section-id="section.id"
-                                            :section-kind="section.kind"
-                                            :scenario-id="scenario.id"
-                                            :initial-solution="question.solution"
-                                            :initial-sorting-order="question.sorting_order"
-                                            :initial-content="question.content"
-                                            :initial-score="question.score"
-                                            :initial-kind="question.kind"
-                                            @rm-question="removeScenarioQuestion"
-                                          />
-                                        </b-card>
+                                  <b-card-header
+                                    header-tag="header"
+                                    class="p-1"
+                                    role="tab"
+                                  >
+                                    <b-button
+                                      v-b-toggle="'accordion-' + question.id"
+                                      block
+                                      href="#"
+                                      variant="secondary"
+                                    >
+                                      Question - {{ question.sorting_order }}
+                                    </b-button>
+                                  </b-card-header>
+
+                                  <b-collapse
+                                    :id="'accordion-'+ question.id"
+                                    accordion="question-accordion"
+                                    role="tabpanel"
+                                  >
+                                    <b-card-body>
+                                      <div class="row">
+                                        <div class="col-sm-12">
+                                          <b-card>
+                                            <Question
+                                              :id="question.id"
+                                              :section-id="section.id"
+                                              :section-kind="section.kind"
+                                              :scenario-id="scenario.id"
+                                              :initial-solution="question.solution"
+                                              :initial-sorting-order="question.sorting_order"
+                                              :initial-content="question.content"
+                                              :initial-score="question.score"
+                                              :initial-kind="question.kind"
+                                              @rm-question="removeScenarioQuestion"
+                                            />
+                                          </b-card>
+                                        </div>
                                       </div>
-                                    </div>
-                                  </b-card-body>
-                                </b-collapse>
-                              </b-card>
+                                    </b-card-body>
+                                  </b-collapse>
+                                </b-card>
+                              </div>
                             </div>
 
                             <b-card
@@ -394,8 +429,11 @@ import Details from './Details.vue';
 import IntroductionPage from './IntroductionPage.vue';
 import Question from './Question.vue';
 import Resources from './Resources.vue';
-import Scenario from './Scenario.vue';
 import Section from './Section.vue';
+import Scenario from './Scenario.vue';
+import ScenarioExhibits from './ScenarioExhibits.vue';
+import ScenarioRequirements from './ScenarioRequirements.vue';
+import ScenarioResponseOptions from './ScenarioResponseOptions.vue';
 
 export default {
   components: {
@@ -403,8 +441,11 @@ export default {
     IntroductionPage,
     Question,
     Resources,
-    Scenario,
     Section,
+    Scenario,
+    ScenarioExhibits,
+    ScenarioRequirements,
+    ScenarioResponseOptions,
   },
   data() {
     return {
@@ -499,6 +540,102 @@ export default {
       const filtered =
         this.sections.filter(function(section){
           section.scenarios = section.scenarios.filter((scenario) => scenario.id !== data.scenarioId);
+          return section
+        });
+
+      this.sections = filtered;
+    },
+    updateScenarioExhibits(data) {
+      let scenarioIndex = 0;
+      let sectionIndex = 0;
+
+      this.sections.forEach((section, index) => {
+        section.scenarios.forEach((scenario, i) => {
+          if (scenario.id === data.scenario_id) {
+            sectionIndex = index;
+            scenarioIndex = i;
+          }
+        });
+      });
+      const currentScenario = this.sections[sectionIndex].scenarios[scenarioIndex];
+      if (!('exhibits' in currentScenario)) {
+        // This $set syntax is required by Vue to ensure the section.questions array is reactive
+        // It is inside the conditional to ensure section.questions is not reset to empty
+        this.$set(currentScenario, 'exhibits', []);
+      }
+      currentScenario.exhibits.push(data);
+    },
+    removeScenarioExhibit(data) {
+      const filtered =
+        this.sections.filter(function(section){
+          section.scenarios.filter(function(scenario){
+            scenario.exhibits = scenario.exhibits.filter((exhibit) => exhibit.id !== data);
+            return scenario
+          });
+          return section
+        });
+
+      this.sections = filtered;
+    },
+    updateScenarioRequirements(data) {
+      let scenarioIndex = 0;
+      let sectionIndex = 0;
+
+      this.sections.forEach((section, index) => {
+        section.scenarios.forEach((scenario, i) => {
+          if (scenario.id === data.scenario_id) {
+            sectionIndex = index;
+            scenarioIndex = i;
+          }
+        });
+      });
+      const currentScenario = this.sections[sectionIndex].scenarios[scenarioIndex];
+      if (!('requirements' in currentScenario)) {
+        // This $set syntax is required by Vue to ensure the section.questions array is reactive
+        // It is inside the conditional to ensure section.questions is not reset to empty
+        this.$set(currentScenario, 'requirements', []);
+      }
+      currentScenario.requirements.push(data);
+    },
+    removeScenarioRequirement(data) {
+      const filtered =
+        this.sections.filter(function(section){
+          section.scenarios.filter(function(scenario){
+            scenario.requirements = scenario.requirements.filter((requirement) => requirement.id !== data);
+            return scenario
+          });
+          return section
+        });
+
+      this.sections = filtered;
+    },
+    updateScenarioResponseOptions(data) {
+      let scenarioIndex = 0;
+      let sectionIndex = 0;
+
+      this.sections.forEach((section, index) => {
+        section.scenarios.forEach((scenario, i) => {
+          if (scenario.id === data.scenario_id) {
+            sectionIndex = index;
+            scenarioIndex = i;
+          }
+        });
+      });
+      const currentScenario = this.sections[sectionIndex].scenarios[scenarioIndex];
+      if (!('response_options' in currentScenario)) {
+        // This $set syntax is required by Vue to ensure the section.questions array is reactive
+        // It is inside the conditional to ensure section.questions is not reset to empty
+        this.$set(currentScenario, 'response_options', []);
+      }
+      currentScenario.response_options.push(data);
+    },
+    removeScenarioResponseOption(data) {
+      const filtered =
+        this.sections.filter(function(section){
+          section.scenarios.filter(function(scenario){
+            scenario.response_options = scenario.response_options.filter((response_option) => response_option.id !== data);
+            return scenario
+          });
           return section
         });
 

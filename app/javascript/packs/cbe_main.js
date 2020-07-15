@@ -2,6 +2,7 @@
 
 import Vue from 'vue';
 import BootstrapVue from 'bootstrap-vue';
+import fullscreen from "vue-fullscreen";
 import store from '../store';
 import router from '../router';
 import * as VueWindow from '@hscmap/vue-window';
@@ -20,6 +21,7 @@ import CbeHome from '../components/cbe/UserHome.vue';
 // ##############
 
 Vue.use(BootstrapVue);
+Vue.use(fullscreen);
 Vue.use(Loading);
 Vue.use(VueWindow);
 

@@ -5,7 +5,6 @@
         <label for="scenarioName">Name</label>
         <div class="input-group input-group-lg">
           <input
-            id="scenarioName"
             v-model="scenarioName"
             :class="'form-control ' + {error: shouldAppendErrorClass($v.scenarioName), valid: shouldAppendValidClass($v.scenarioName)}"
             placeholder="Name"
