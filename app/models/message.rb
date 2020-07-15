@@ -37,7 +37,7 @@ class Message < ApplicationRecord
   validates :guid, presence: true, on: :create
 
   # callbacks
-  before_validation :set_guid
+  before_create :set_guid
   after_create_commit :send_message
 
   # scopes
