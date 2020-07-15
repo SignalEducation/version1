@@ -111,6 +111,7 @@ class User < ApplicationRecord
   has_attached_file :profile_image, default_url: 'images/missing_image.jpg'
 
   accepts_nested_attributes_for :exam_body_user_details, reject_if: ->(c) { c[:student_number].blank? }
+  accepts_nested_attributes_for :onboarding_process
 
   # validation
   validates :email, presence: true, length: { within: 5..50 }, uniqueness: { case_sensitive: false }, format: { with: /\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i }
@@ -357,6 +358,10 @@ class User < ApplicationRecord
 
   def valid_subscription_for_exam_body?(exam_body_id)
     active_subscriptions_for_exam_body(exam_body_id).all_valid.any?
+  end
+
+  def valid_subscription?
+    subscriptions.all_valid.any?
   end
 
   def subscription_action_required?

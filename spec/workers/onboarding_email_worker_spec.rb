@@ -4,7 +4,9 @@ require 'rails_helper'
 require 'sidekiq/testing'
 
 RSpec.describe OnboardingEmailWorker do
-  let(:onboarding_process) { build(:onboarding_process) }
+  let(:basic_student)       { create(:basic_student) }
+  let(:course_log)       { create(:course_log, user: basic_student) }
+  let(:onboarding_process)  { create(:onboarding_process, user: basic_student, course_log: course_log) }
 
   before do
     Sidekiq::Testing.fake!
@@ -18,7 +20,7 @@ RSpec.describe OnboardingEmailWorker do
 
   subject { OnboardingEmailWorker }
 
-  xit 'OnboardingEmailWorker job is processed in medium queue.' do
-    expect { subject.perform_async(onboarding_process.id, false) }.to change(subject.jobs, :size).by(1)
+  it 'OnboardingEmailWorker job is processed in medium queue.' do
+    expect { subject.perform_async(onboarding_process.id, 1) }.to change(subject.jobs, :size).by(1)
   end
 end

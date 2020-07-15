@@ -80,6 +80,8 @@ Rails.application.routes.draw do
 
       post 'search_exercises', to: 'exercises#index', as: :search_exercises
 
+      resources :levels, concerns: :supports_reordering
+
       get 'courses/:id/new_course_section',                                                     to: 'course_sections#new',               as: :new_course_section
       get 'courses/:id/course_section/:course_section_id/new_course_lesson',                    to: 'course_lessons#new',                as: :new_course_lesson
       get 'courses/:id/course_section/:course_section_id/edit_course_lesson/:course_lesson_id', to: 'course_lessons#edit',               as: :edit_course_lesson
@@ -198,7 +200,8 @@ Rails.application.routes.draw do
     # User Account Verification
     get 'user_verification/:email_verification_code',         to: 'user_verifications#update',                   as: :user_verification
     post 'resend_verification_mail/:email_verification_code', to: 'user_verifications#resend_verification_mail', as: :resend_verification_mail
-    get 'registration_onboarding/:group_url',                 to: 'user_verifications#account_verified',        as: :registration_onboarding
+    get 'registration_onboarding/:group_url',                 to: 'user_verifications#account_verified',         as: :registration_onboarding
+    get 'messages/unsubscribe/:message_guid',                 to: 'messages#unsubscribe',                        as: :unsubscribe
 
     resources :user_groups
     resources :content_pages, except: [:show]
@@ -273,6 +276,8 @@ Rails.application.routes.draw do
     post '/user_contact_form',   to: 'library#user_contact_form'
 
     get 'register_or_login', to: 'student_sign_ups#sign_in_or_register', as: :sign_in_or_register
+
+    get 'pricing/(:group_name_url)', to: 'student_sign_ups#pricing', as: :pricing
 
     # Library Structure
     get 'library',                                          to: 'library#index',       as: :library

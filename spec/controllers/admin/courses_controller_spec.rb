@@ -45,8 +45,9 @@ describe Admin::CoursesController, type: :controller do
   let(:content_management_user_group)           { create(:content_management_user_group) }
   let(:content_management_user)                 { create(:content_management_user, user_group_id: content_management_user_group.id) }
   let!(:group_1)                                { create(:group) }
-  let!(:course_1)                               { create(:active_course, group: group_1) }
-  let!(:course_2)                               { create(:active_course, group: group_1, computer_based: true) }
+  let!(:level_1)                                  { create(:level, group: group_1) }
+  let!(:course_1)                               { create(:active_course, level: level_1) }
+  let!(:course_2)                               { create(:active_course, level: level_1, computer_based: true) }
   let(:exam_body)                               { create(:exam_body) }
   let!(:course_5)                               { create(:inactive_course) }
   let!(:valid_params)                           { attributes_for(:course) }
@@ -99,7 +100,7 @@ describe Admin::CoursesController, type: :controller do
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
-        post :create, params: { course: valid_params.merge(group_id: group_1.id, exam_body_id: exam_body.id) }
+        post :create, params: { course: valid_params.merge(group_id: group_1.id, exam_body_id: exam_body.id, level_id: level_1.id) }
         expect_create_success_with_model('course', admin_course_url(Course.last))
       end
 
@@ -156,7 +157,7 @@ describe Admin::CoursesController, type: :controller do
           expect(response.status).to eq(302)
           expect(response).to redirect_to(admin_courses_url)
           expect(flash[:success]).to be_present
-          expect(flash[:success]).to eq('Course successfully duplicaded')
+          expect(flash[:success]).to eq('Course successfully duplicated')
         end
 
         it 'should not duplicate subject course' do
@@ -167,7 +168,7 @@ describe Admin::CoursesController, type: :controller do
           expect(response.status).to eq(302)
           expect(response).to redirect_to(admin_courses_url)
           expect(flash[:error]).to be_present
-          expect(flash[:error]).to eq('Course not successfully duplicaded')
+          expect(flash[:error]).to eq('Course not successfully duplicated')
         end
       end
     end

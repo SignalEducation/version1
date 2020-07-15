@@ -58,6 +58,7 @@ FactoryBot.define do
     icon_label                              { 'Icon' }
     group
     exam_body
+    level
 
     factory :active_course do
       active  { true }

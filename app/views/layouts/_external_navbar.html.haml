@@ -14,6 +14,9 @@
             %li.nav-item
               =link_to footer_landing_page_url(navbar_landing_page.public_url), class: 'nav-link' do
                 %span=navbar_landing_page.name
+          %li.nav-item
+            =link_to pricing_url, class: 'nav-link' do
+              %span Pricing
           %li.nav-item.dropdown.course-dropdown
             %a#navbarDropdown.nav-link.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
               %span Courses

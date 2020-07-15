@@ -16,6 +16,7 @@
 #  updated_at      :datetime         not null
 #  state           :string
 #  template_params :hstore
+#  guid            :string
 #
 class Message < ApplicationRecord
   # enums
@@ -35,6 +36,7 @@ class Message < ApplicationRecord
   validates :mandrill_id, presence: true, on: :update
 
   # callbacks
+  before_create :set_guid
   after_create_commit :send_message
 
   # scopes
@@ -58,11 +60,27 @@ class Message < ApplicationRecord
     msg.update(state: event['msg']['state'],
                opens: opens,
                clicks: clicks)
+    msg
+  end
+
+  def self.get_and_unsubscribe(message_guid)
+    return unless (msg = Message.find_by(guid: message_guid))
+
+    msg.user.onboarding_process.update(active: false) if msg.kind == 'onboarding'
+    msg
+  end
+
+  def unsubscribe_url
+    UrlHelper.instance.unsubscribe_url(message_guid: guid, host: LEARNSIGNAL_HOST) if kind == 'onboarding'
   end
 
   protected
 
   def send_message
     MandrillWorker.perform_at(process_at, id) unless Rails.env.test?
+  end
+
+  def set_guid
+    self.guid = SecureRandom.hex(15)
   end
 end

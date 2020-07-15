@@ -10,12 +10,16 @@
 
         #navbarNavDropdown.collapse.navbar-collapse.justify-content-end
           %ul.navbar-nav.align-items-lg-center
-            -if action_name == 'group_show' && @subscription_plans && !(current_user && current_user.valid_subscription_for_exam_body?(@group.exam_body_id))
-              %li.nav-item
-                =link_to "#plans", class: 'nav-link' do
-                  %span Pricing
 
             -if current_user
+              -if current_user.preferred_exam_body_id && !current_user.valid_subscription_for_exam_body?(current_user&.preferred_exam_body_id)
+                %li.nav-item
+                  =link_to pricing_url(current_user&.preferred_exam_body&.group&.name_url), class: 'nav-link' do
+                    %span Pricing
+              -elsif !current_user.preferred_exam_body_id && !current_user.valid_subscription?
+                %li.nav-item
+                  =link_to pricing_url, class: 'nav-link' do
+                    %span Pricing
               %li.nav-item
                 =link_to student_dashboard_url, class: 'nav-link' do
                   %span Dashboard
@@ -42,7 +46,9 @@
                 %li.nav-item
                   =link_to footer_landing_page_url(navbar_landing_page.public_url), class: 'nav-link' do
                     %span=navbar_landing_page.name
-
+              %li.nav-item
+                =link_to pricing_url, class: 'nav-link' do
+                  %span Pricing
               %li.nav-item.dropdown.course-dropdown
                 %a#navbarDropdown.nav-link.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
                   %span Courses

@@ -24,7 +24,7 @@ describe 'An individual purchasing a product', type: :feature do
       expect(page).to have_content(correction.mock_exam.name)
     end
 
-    scenario 'can checkout using PayPal', js: true do
+    xscenario 'can checkout using PayPal', js: true do
       visit prep_products_path
       first(:link, mock.mock_exam.name).click
 

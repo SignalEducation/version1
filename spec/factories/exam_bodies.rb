@@ -24,6 +24,10 @@
 #  products_seo_title                 :string
 #  products_seo_description           :string
 #  emit_certificate                   :boolean          default("false")
+#  pricing_heading                    :string
+#  pricing_subheading                 :string
+#  pricing_seo_title                  :string
+#  pricing_seo_description            :string
 #
 
 FactoryBot.define do

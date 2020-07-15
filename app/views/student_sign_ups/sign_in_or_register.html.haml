@@ -15,35 +15,8 @@
       .row.row-lg
         -if @plan
           .col-lg-4
-            %article.card.card-primary.card-primary-alt.mb-6.mb-lg-0
-              .card-body.text-center.py-4.py-sm-5
-                %h2.card-title
-                  =t("views.general.payment_frequency_in_months.a#{@plan.payment_frequency_in_months}")
+            =render partial: 'pricing_plan', locals: {plan: @plan, zoom: false, btn: false}
 
-                %ul.list-centered
-                  -if @plan.bullet_points_list && !@plan.bullet_points_list.empty?
-                    - @plan.bullet_points_list.split(/, ?/).each do |bullet|
-                      %li=bullet
-                  -else
-                    %li="Access all #{@plan.exam_body.group.name} courses"
-                    %li="Topic-by-topic lectures"
-                    %li="24/7 tutor support"
-
-                  -unless @plan && @plan.exam_body.name == "CPD"
-                    %li{style: 'font-style: italic;'}
-                      Cancel anytime
-
-                %p.h2.mb-0
-                  =@plan.currency.format_number(@plan.price)
-
-                -if @plan.monthly_percentage_off
-                  %p.h5.text-gray2
-                    Save over
-                    =@plan.monthly_percentage_off
-                    ='%'
-
-                .pt-4.pt-md-5
-                  %i.material-icons.icon-bg-round.text-mint.bg-mint-light{"aria-label" => "selected", :role => "img"} check
 
 
         -elsif @product

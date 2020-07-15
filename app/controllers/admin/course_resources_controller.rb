@@ -20,6 +20,7 @@ module Admin
 
     def edit
       @action = :update
+      @course_videos = @course_resource.course.course_steps.all_videos.all_free.all_in_order
     end
 
     def create
@@ -70,7 +71,8 @@ module Admin
     def allowed_params
       params.require(:course_resource).permit(
         :name, :course_id, :description, :download_available,
-        :file_upload, :external_url, :active, :sorting_order, :available_on_trial
+        :file_upload, :external_url, :active, :sorting_order,
+        :available_on_trial, :course_step_id
       )
     end
   end

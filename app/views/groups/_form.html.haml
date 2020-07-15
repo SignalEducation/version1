@@ -79,8 +79,6 @@
         %br/
         =f.file_field :background_image
 
-  =render partial: 'fields_for_levels', locals: {f: f}
-
   .row.pt-4
     .col-sm-12
       =f.submit t('views.general.save'), class: 'btn btn-primary'

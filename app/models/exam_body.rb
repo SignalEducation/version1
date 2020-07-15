@@ -24,6 +24,10 @@
 #  products_seo_title                 :string
 #  products_seo_description           :string
 #  emit_certificate                   :boolean          default("false")
+#  pricing_heading                    :string
+#  pricing_subheading                 :string
+#  pricing_seo_title                  :string
+#  pricing_seo_description            :string
 #
 
 class ExamBody < ApplicationRecord
@@ -45,8 +49,9 @@ class ExamBody < ApplicationRecord
   before_destroy :check_dependencies
 
   # scopes
-  scope :all_in_order, -> { order(:name) }
-  scope :all_active, -> { where(active: true) }
+  scope :all_in_order, -> { includes(:group).order('groups.sorting_order') }
+
+  scope :all_active,        -> { where(active: true) }
   scope :all_with_sittings, -> { where(has_sittings: true) }
 
   # instance methods

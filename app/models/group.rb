@@ -43,8 +43,6 @@ class Group < ApplicationRecord
   has_attached_file :image, default_url: 'courses-AAT.jpg'
   has_attached_file :background_image, default_url: 'bg_library_group.jpg'
 
-  accepts_nested_attributes_for :levels, reject_if: lambda { |attributes| level_nested_resource_is_blank?(attributes) }, allow_destroy: true
-
   # validation
   validates :name, presence: true, uniqueness: true, length: {maximum: 255}
   validates :name_url, presence: true, uniqueness: true, length: {maximum: 255}

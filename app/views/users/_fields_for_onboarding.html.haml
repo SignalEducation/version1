@@ -1,0 +1,10 @@
+=f.fields_for :onboarding_process do |onboarding_process|
+  .box-item.form-box
+    %h4='Onboarding Emails'
+    .row
+      .col-sm-6
+        .checkbox
+          %label
+            =onboarding_process.check_box :active
+            Active
+

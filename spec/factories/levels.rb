@@ -25,6 +25,7 @@ FactoryBot.define do
     icon_label                     { 'MyString' }
     onboarding_course_heading      { 'Welcome Message' }
     onboarding_course_subheading   { 'Welcome Message' }
+    group
 
     trait :active do
       active { true }

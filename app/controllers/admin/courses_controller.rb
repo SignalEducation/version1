@@ -40,7 +40,9 @@ module Admin
       end
     end
 
-    def edit; end
+    def edit
+      @levels = @course.group.levels if @course.group_id
+    end
 
     def update
       if @course.update_attributes(allowed_params)
@@ -72,9 +74,9 @@ module Admin
 
     def clone
       if @course.duplicate
-        flash[:success] = 'Course successfully duplicaded'
+        flash[:success] = 'Course successfully duplicated'
       else
-        flash[:error] = 'Course not successfully duplicaded'
+        flash[:error] = 'Course not successfully duplicated'
       end
 
       redirect_to admin_courses_url

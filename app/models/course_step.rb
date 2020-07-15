@@ -43,6 +43,7 @@ class CourseStep < ApplicationRecord
   has_one :course_note
   has_one :constructed_response
   has_one :video_resource, inverse_of: :course_step
+  has_many :course_resources
   has_many :quiz_questions
   has_many :course_step_logs
   has_many :course_lesson_logs, class_name: 'CourseLessonLog',

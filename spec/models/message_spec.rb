@@ -14,6 +14,7 @@
 #  updated_at      :datetime         not null
 #  state           :string
 #  template_params :hstore
+#  guid            :string
 #
 require 'rails_helper'
 
@@ -52,5 +53,45 @@ describe Message do
     it { should validate_presence_of(:mandrill_id).on(:update) }
   end
 
+  describe 'Callbacks' do
+    it { should callback(:set_guid).before(:create) }
+  end
+
   it { expect(Message).to respond_to(:process_webhook_event) }
+  it { expect(Message).to respond_to(:get_and_unsubscribe) }
+
+  describe '.process_webhook_event' do
+    it 'returns NIL unless a matching event can be found' do
+      expect(Message.process_webhook_event('test_event')).to be_nil
+    end
+
+    describe 'with a matching event' do
+      let!(:user) { create(:user) }
+      let!(:message) { create(:message, kind: :onboarding, user: user, mandrill_id: '584fglksjfgfs') }
+      let!(:event_params) { JSON.parse '{"_id":"584fglksjfgfs", "msg":""}' }
+
+      it 'returns the matching message object' do
+        expect(Message.process_webhook_event(event_params).id).to equal message.id
+      end
+    end
+  end
+
+  describe '.get_and_unsubscribe' do
+    it 'returns NIL unless a matching message can be found' do
+      expect(Message.get_and_unsubscribe('test_guid')).to be_nil
+    end
+
+    describe 'with a matching message' do
+      let!(:user) { create(:user) }
+      let!(:course_log) { create(:course_log, user: user) }
+      let!(:onboarding_process) { create(:onboarding_process, user: user, course_log: course_log, active: true) }
+      let!(:message) { create(:message, kind: :onboarding, user: user) }
+
+      it 'returns the matching message object' do
+        expect(Message.get_and_unsubscribe(message.guid).id).to equal message.id
+      end
+
+    end
+  end
+
 end
