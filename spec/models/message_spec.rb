@@ -51,6 +51,12 @@ describe Message do
     it { should validate_presence_of(:process_at) }
     it { should validate_presence_of(:template) }
     it { should validate_presence_of(:mandrill_id).on(:update) }
+
+    it { should validate_presence_of(:guid).on(:create) }
+  end
+
+  describe 'Callbacks' do
+    it { should callback(:set_guid).before(:create) }
   end
 
   it { expect(Message).to respond_to(:process_webhook_event) }
