@@ -51,8 +51,6 @@ describe Message do
     it { should validate_presence_of(:process_at) }
     it { should validate_presence_of(:template) }
     it { should validate_presence_of(:mandrill_id).on(:update) }
-
-    it { should validate_presence_of(:guid).on(:create) }
   end
 
   describe 'Callbacks' do

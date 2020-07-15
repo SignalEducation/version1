@@ -34,7 +34,6 @@ class Message < ApplicationRecord
   validates :process_at, presence: true
   validates :template, presence: true
   validates :mandrill_id, presence: true, on: :update
-  validates :guid, presence: true, on: :create
 
   # callbacks
   before_create :set_guid
