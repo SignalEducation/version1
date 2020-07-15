@@ -24,6 +24,12 @@ class Cbe
     has_many :questions, class_name: 'Cbe::Question', foreign_key: 'cbe_scenario_id',
                          inverse_of: :scenario, dependent: :destroy
 
+    has_many :exhibits, class_name: 'Cbe::Exhibit', foreign_key: 'cbe_scenario_id',
+                        inverse_of: :scenario, dependent: :destroy
+
+    has_many :requirements, class_name: 'Cbe::Requirement', foreign_key: 'cbe_scenario_id',
+                            inverse_of: :scenario, dependent: :destroy
+
     # validations
     validates :name, :content, :cbe_section_id, presence: true
   end

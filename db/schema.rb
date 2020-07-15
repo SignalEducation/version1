@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_14_102457) do
+ActiveRecord::Schema.define(version: 2020_07_15_073803) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -99,6 +99,22 @@ ActiveRecord::Schema.define(version: 2020_07_14_102457) do
     t.index ["cbe_question_id"], name: "index_cbe_answers_on_cbe_question_id"
   end
 
+  create_table "cbe_exhibits", force: :cascade do |t|
+    t.string "name"
+    t.string "content"
+    t.integer "sorting_order"
+    t.string "document_file_name"
+    t.string "document_content_type"
+    t.bigint "document_file_size"
+    t.datetime "document_updated_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "cbe_section_id"
+    t.bigint "cbe_scenario_id"
+    t.index ["cbe_scenario_id"], name: "index_cbe_exhibits_on_cbe_scenario_id"
+    t.index ["cbe_section_id"], name: "index_cbe_exhibits_on_cbe_section_id"
+  end
+
   create_table "cbe_introduction_pages", force: :cascade do |t|
     t.integer "sorting_order"
     t.text "content"
@@ -124,6 +140,20 @@ ActiveRecord::Schema.define(version: 2020_07_14_102457) do
     t.boolean "active", default: true
     t.index ["cbe_scenario_id"], name: "index_cbe_questions_on_cbe_scenario_id"
     t.index ["cbe_section_id"], name: "index_cbe_questions_on_cbe_section_id"
+  end
+
+  create_table "cbe_requirements", force: :cascade do |t|
+    t.string "name"
+    t.string "content"
+    t.float "score"
+    t.integer "sorting_order"
+    t.integer "kind"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "cbe_section_id"
+    t.bigint "cbe_scenario_id"
+    t.index ["cbe_scenario_id"], name: "index_cbe_requirements_on_cbe_scenario_id"
+    t.index ["cbe_section_id"], name: "index_cbe_requirements_on_cbe_section_id"
   end
 
   create_table "cbe_resources", force: :cascade do |t|
