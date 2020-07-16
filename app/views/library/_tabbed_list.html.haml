@@ -15,7 +15,7 @@
     -@levels.each_with_index do |level, counter|
       .tab-pane{id: level.name_url, class: "tab-#{level.name_url} #{counter == 0 ? 'active show' : ''} ", "aria-labelledby" => "#{level.name_url}-tab", :role => "tabpanel"}
         .row.row-lg
-          -level.courses.each do |course|
+          -level.courses.all_in_order.each do |course|
             .col-lg-6.col-xl-4
               =link_to library_special_link(course), class: 'card card-horizontal flex-row card-mint', data: { toggle: 'tooltip', placement: 'right', animation: 'true', delay: { "show": 300, "hide": 100 }}, title: "#{course.short_description}" do
                 .card-header.d-flex.justify-content-center.align-items-center

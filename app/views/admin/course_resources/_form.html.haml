@@ -9,7 +9,7 @@
               =f.label :name, t('views.course_resources.form.name')
               .input-group.input-group-lg
                 =f.text_field :name, placeholder: t('views.course_resources.form.name_placeholder'), class: 'form-control', autofocus: true
-          -if f.object.course_id
+          -if @course_videos && f.object.course_id
             .col-sm-6
               .form-group
                 =f.label :course_step_id, t('views.course_resources.form.course_video_id')
