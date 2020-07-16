@@ -83,8 +83,6 @@
                 %div
                   -if %w[active canceled-pending pending_cancellation].include?(subscription.state)
                     =link_to 'Change Subscription Plan', new_subscription_plan_changes_path(subscription), class: 'btn btn-primary btn-xs', style: 'vertical-align: top;'
-                  -if subscription.paused?
-                    =link_to 'Reactivate Subscription', subscriptions_suspension_path(id: subscription.id), method: :delete, class: 'btn btn-secondary btn-xs', style: 'vertical-align: top;'
                   -if subscription.active?
                     =link_to 'Cancel Subscription', new_subscription_cancellation_path(subscription), class: 'btn btn-danger btn-xs', style: 'vertical-align: top;'
                   -if subscription.pending_3d_secure? || subscription.past_due?
