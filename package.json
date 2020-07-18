@@ -13,7 +13,7 @@
     "bootstrap-vue": "^2.0.0-rc.28",
     "debug": "^4.1.1",
     "intersection-observer": "^0.7.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "mem": "^4.0.0",
     "postcss-preset-env": "^6.7.0",
     "serialize-javascript": "^2.1.1",
