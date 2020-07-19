@@ -19,18 +19,19 @@
 #
 class Cbe
   class Exhibit < ApplicationRecord
-    # concerns
-    include CbeSupport
+    enum kind: { pdf: 0, spreadsheet: 1 }
+
+    # paper_clip
+    has_attached_file :document, default_url: nil
 
     # relationships
-    belongs_to :section, class_name: 'Cbe::Section', foreign_key: 'cbe_section_id',
-                         inverse_of: :exhibits
     belongs_to :scenario, class_name: 'Cbe::Scenario', foreign_key: 'cbe_scenario_id',
                           inverse_of: :exhibits
 
     # validations
-    validates :name, :content, :cbe_scenario_id, presence: true
-    validates :document, attachment_presence: true
+    validates :name, :cbe_scenario_id, presence: true
+    validates :content,  presence: true, if: proc { |kind| kind.spreadsheet? }
+    validates :document, attachment_presence: true, if: proc { |kind| kind.pdf? }
     validates_attachment_content_type :document, content_type: %w[application/pdf text/csv]
   end
 end

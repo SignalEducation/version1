@@ -31,6 +31,7 @@ Rails.application.routes.draw do
           resources :sections, only: %i[index create update destroy], shallow: true do
             resources :questions, only: %i[index create update destroy]
             resources :scenarios, only: %i[create update destroy] do
+              resources :exhibits, only: :create
               resources :questions, only: %i[index create update destroy]
             end
           end

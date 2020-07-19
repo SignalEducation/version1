@@ -239,6 +239,7 @@
                         :key="'scenario-tab-' + scenario.id"
                         :title="scenario.name"
                       >
+
                         <b-card-text>
                           <div class="row">
                             <div class="col-sm-10">
@@ -271,10 +272,84 @@
                             </div>
                           </div>
                           <br>
-                          <div
-                            v-for="question in scenario.questions"
-                            :key="question.id"
-                          >
+
+                          <!-- here starts scenario exhibits -->
+                          <div v-if="section.kind === 'exhibits_scenario'">
+                            <div>
+                              <b-card no-body>
+                                <b-tabs pills card>
+                                  <b-tab title="Exhibits" >
+                                    <ScenarioExhibits
+                                    :scenarioId="scenario.id"/>
+                                  </b-tab>
+
+                                  <b-tab title="Requirements">
+                                    <ScenarioRequirements />
+                                  </b-tab>
+
+                                  <b-tab title="Response Options">
+                                    <ScenarioResponseOptions />
+                                  </b-tab>
+                                </b-tabs>
+                              </b-card>
+                            </div>
+                          </div>
+                          <!-- here ends scenario exhibits -->
+
+                          <!-- here starts scenario questions -->
+                          <div v-else>
+                            <div
+                              v-for="question in scenario.questions"
+                              :key="question.id"
+                            >
+                              <b-card
+                                no-body
+                                class="mb-1"
+                              >
+                                <b-card-header
+                                  header-tag="header"
+                                  class="p-1"
+                                  role="tab"
+                                >
+                                  <b-button
+                                    v-b-toggle="'accordion-' + question.id"
+                                    block
+                                    href="#"
+                                    variant="secondary"
+                                  >
+                                    Question - {{ question.sorting_order }}
+                                  </b-button>
+                                </b-card-header>
+
+                                <b-collapse
+                                  :id="'accordion-'+ question.id"
+                                  accordion="question-accordion"
+                                  role="tabpanel"
+                                >
+                                  <b-card-body>
+                                    <div class="row">
+                                      <div class="col-sm-12">
+                                        <b-card>
+                                          <Question
+                                            :id="question.id"
+                                            :section-id="section.id"
+                                            :section-kind="section.kind"
+                                            :scenario-id="scenario.id"
+                                            :initial-content="question.content"
+                                            :initial-solution="question.solution"
+                                            :initial-score="question.score"
+                                            :initial-kind="question.kind"
+                                            :initial-answers="question.answers"
+                                            @rm-question="removeScenarioQuestion"
+                                          />
+                                        </b-card>
+                                      </div>
+                                    </div>
+                                  </b-card-body>
+                                </b-collapse>
+                              </b-card>
+                            </div>
+
                             <b-card
                               no-body
                               class="mb-1"
@@ -285,80 +360,34 @@
                                 role="tab"
                               >
                                 <b-button
-                                  v-b-toggle="'accordion-' + question.id"
+                                  v-b-toggle.new-question-accordion
                                   block
                                   href="#"
-                                  variant="secondary"
+                                  variant="primary"
                                 >
-                                  Question - {{ question.sorting_order }}
+                                  New Question
                                 </b-button>
                               </b-card-header>
 
                               <b-collapse
-                                :id="'accordion-'+ question.id"
-                                accordion="question-accordion"
+                                id="new-question-accordion"
+                                visible
+                                accordion="my-accordion"
                                 role="tabpanel"
                               >
                                 <b-card-body>
-                                  <div class="row">
-                                    <div class="col-sm-12">
-                                      <b-card>
-                                        <Question
-                                          :id="question.id"
-                                          :section-id="section.id"
-                                          :section-kind="section.kind"
-                                          :scenario-id="scenario.id"
-                                          :initial-content="question.content"
-                                          :initial-solution="question.solution"
-                                          :initial-score="question.score"
-                                          :initial-kind="question.kind"
-                                          :initial-answers="question.answers"
-                                          @rm-question="removeScenarioQuestion"
-                                        />
-                                      </b-card>
-                                    </div>
-                                  </div>
+                                  <Question
+                                    :section-id="section.id"
+                                    :section-kind="section.kind"
+                                    :scenario-id="scenario.id"
+                                    :initial-sorting-order="sortingOrderValue(scenario.section_questions)"
+                                    @add-question="updateScenarioQuestions"
+                                  />
                                 </b-card-body>
                               </b-collapse>
                             </b-card>
                           </div>
-
-                          <b-card
-                            no-body
-                            class="mb-1"
-                          >
-                            <b-card-header
-                              header-tag="header"
-                              class="p-1"
-                              role="tab"
-                            >
-                              <b-button
-                                v-b-toggle.new-question-accordion
-                                block
-                                href="#"
-                                variant="primary"
-                              >
-                                New Question
-                              </b-button>
-                            </b-card-header>
-
-                            <b-collapse
-                              id="new-question-accordion"
-                              visible
-                              accordion="my-accordion"
-                              role="tabpanel"
-                            >
-                              <b-card-body>
-                                <Question
-                                  :section-id="section.id"
-                                  :section-kind="section.kind"
-                                  :scenario-id="scenario.id"
-                                  :initial-sorting-order="sortingOrderValue(scenario.section_questions)"
-                                  @add-question="updateScenarioQuestions"
-                                />
-                              </b-card-body>
-                            </b-collapse>
-                          </b-card>
+                          <!-- here ends scenario questions -->
                         </b-card-text>
                       </b-tab>
                       <b-tab title="New Scenario">
@@ -393,8 +422,11 @@ import Details from './Details.vue';
 import IntroductionPage from './IntroductionPage.vue';
 import Question from './Question.vue';
 import Resources from './Resources.vue';
-import Scenario from './Scenario.vue';
 import Section from './Section.vue';
+import Scenario from './Scenario.vue';
+import ScenarioExhibits from './ScenarioExhibits.vue';
+import ScenarioRequirements from './ScenarioRequirements.vue';
+import ScenarioResponseOptions from './ScenarioResponseOptions.vue';
 
 export default {
   components: {
@@ -404,6 +436,9 @@ export default {
     Resources,
     Section,
     Scenario,
+    ScenarioExhibits,
+    ScenarioRequirements,
+    ScenarioResponseOptions
   },
   data() {
     return {

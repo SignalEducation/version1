@@ -10,7 +10,6 @@ class CreateCbeRequirements < ActiveRecord::Migration[5.2]
       t.timestamps
     end
 
-    add_reference :cbe_requirements, :cbe_section, index: true
     add_reference :cbe_requirements, :cbe_scenario, index: true
   end
 end

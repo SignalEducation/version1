@@ -101,7 +101,8 @@ ActiveRecord::Schema.define(version: 2020_07_15_073803) do
 
   create_table "cbe_exhibits", force: :cascade do |t|
     t.string "name"
-    t.string "content"
+    t.integer "kind"
+    t.json "content"
     t.integer "sorting_order"
     t.string "document_file_name"
     t.string "document_content_type"
@@ -109,10 +110,8 @@ ActiveRecord::Schema.define(version: 2020_07_15_073803) do
     t.datetime "document_updated_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "cbe_section_id"
     t.bigint "cbe_scenario_id"
     t.index ["cbe_scenario_id"], name: "index_cbe_exhibits_on_cbe_scenario_id"
-    t.index ["cbe_section_id"], name: "index_cbe_exhibits_on_cbe_section_id"
   end
 
   create_table "cbe_introduction_pages", force: :cascade do |t|
@@ -150,10 +149,8 @@ ActiveRecord::Schema.define(version: 2020_07_15_073803) do
     t.integer "kind"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "cbe_section_id"
     t.bigint "cbe_scenario_id"
     t.index ["cbe_scenario_id"], name: "index_cbe_requirements_on_cbe_scenario_id"
-    t.index ["cbe_section_id"], name: "index_cbe_requirements_on_cbe_section_id"
   end
 
   create_table "cbe_resources", force: :cascade do |t|
