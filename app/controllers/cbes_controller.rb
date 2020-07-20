@@ -14,6 +14,7 @@ class CbesController < ApplicationController
 
   def cbe_access?
     return if current_user.purchased_cbe?(params[:id]) || current_user.non_student_user?
+    return if current_user.exercise_ids.include?(params[:exercise_id].to_i)
 
     flash[:error] = 'You need to purchase it before access.'
     redirect_to prep_products_url
@@ -23,7 +24,7 @@ class CbesController < ApplicationController
     return if current_user.non_student_user?
     return if %w[pending returned].include?(Exercise.find(params[:exercise_id]).state)
 
-    flash[:error] = 'You have not access to this CBE.'
+    flash[:error] = 'You do not have access to this CBE.'
     redirect_to prep_products_url
   end
 end
