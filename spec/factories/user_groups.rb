@@ -111,6 +111,5 @@ FactoryBot.define do
       name { 'Blocked Users User Group' }
       blocked_user                { true }
     end
-
   end
 end

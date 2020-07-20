@@ -58,12 +58,11 @@ GEM
       rake (>= 10.4, < 14.0)
     arel (9.0.0)
     ast (2.4.0)
-    authlogic (5.0.0)
+    authlogic (6.1.0)
       activemodel (>= 5.2, < 6.1)
       activerecord (>= 5.2, < 6.1)
       activesupport (>= 5.2, < 6.1)
       request_store (~> 1.0)
-      scrypt (>= 1.2, < 4.0)
     autoprefixer-rails (9.4.10.2)
       execjs
     aws-eventstream (1.0.1)
@@ -137,7 +136,10 @@ GEM
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
     crass (1.0.5)
-    database_cleaner (1.7.0)
+    database_cleaner (1.8.5)
+    database_cleaner-active_record (1.8.0)
+      activerecord
+      database_cleaner (~> 1.8.0)
     debug_inspector (0.0.3)
     deep_cloneable (3.0.0)
       activerecord (>= 3.1.0, < 7)
@@ -382,7 +384,7 @@ GEM
     regexp_parser (1.7.0)
     remodal-rails (1.1.1)
     remotipart (1.4.2)
-    request_store (1.4.1)
+    request_store (1.5.0)
       rack (>= 1.4)
     rexml (3.2.4)
     rspec (3.8.0)
@@ -585,7 +587,7 @@ DEPENDENCIES
   ahoy_matey (>= 3.0.0)
   airbrake (~> 9.5)
   annotate
-  authlogic (~> 5.0.0)
+  authlogic (~> 6.1.0)
   aws-sdk-s3 (~> 1)
   better_errors
   blazer (~> 2.1)
@@ -598,7 +600,7 @@ DEPENDENCIES
   capybara-screenshot
   chart-js-rails (~> 0.1.6)
   coffee-rails (~> 4.2)
-  database_cleaner
+  database_cleaner-active_record
   deep_cloneable (~> 3.0.0)
   dynamic_sitemaps
   execjs
