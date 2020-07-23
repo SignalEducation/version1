@@ -69,7 +69,7 @@ end
 
 def fill_stripe_elements(card: '4242424242424242', expiry: '1234', cvc: '123')
   find('label[for=pay-with-card]').click
-  using_wait_time(6) do
+  using_wait_time(3) do
     frame = find('#card-element > div > iframe')
     within_frame(frame) do
       card.to_s.chars.each do |piece|
