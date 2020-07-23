@@ -69,7 +69,8 @@
 
     var allSolutions = $('.all_solutions'),
       summaryButton = $('.btn.answer-correct'),
-      cmeNav = $('.cme-nav');
+      cmeNav = $('.cme-nav'),
+      pass = '#{@pass}';
 
     $( document ).ready(function() {
       allSolutions.hide();
@@ -91,3 +92,9 @@
       cmeNav.show();
       $('#results').show();
     });
+
+    if(pass == 'Pass') {
+      $("#next-lesson-modal").addClass('d-none');
+      $("#next-lesson-link").removeClass('d-none');
+    }
+
