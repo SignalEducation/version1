@@ -135,7 +135,7 @@ class Course < ApplicationRecord
       course_sections: {
         course_lessons: {
           course_steps: [
-            :course_notes,
+            :course_note,
             :video_resource,
             :course_video,
             constructed_response: {
