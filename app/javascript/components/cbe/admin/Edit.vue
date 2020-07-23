@@ -239,7 +239,6 @@
                         :key="'scenario-tab-' + scenario.id"
                         :title="scenario.name"
                       >
-
                         <b-card-text>
                           <div class="row">
                             <div class="col-sm-10">
@@ -280,11 +279,16 @@
                                 <b-tabs pills card>
                                   <b-tab title="Exhibits" >
                                     <ScenarioExhibits
-                                    :scenarioId="scenario.id"/>
+                                    :scenario-object="scenario"
+                                    @add-scenario-exhibit="updateScenarioExhibits"
+                                    @rm-scenario-exhibit="removeScenarioExhibit" />
                                   </b-tab>
 
                                   <b-tab title="Requirements">
-                                    <ScenarioRequirements />
+                                    <ScenarioRequirements
+                                    :scenario-object="scenario"
+                                    @add-scenario-requirement="updateScenarioRequirements"
+                                    @rm-scenario-requirement="removeScenarioRequirement" />
                                   </b-tab>
 
                                   <b-tab title="Response Options">
@@ -537,6 +541,70 @@ export default {
       const filtered =
         this.edit_cbe_data.sections.filter(function(section){
           section.scenarios = section.scenarios.filter((scenario) => scenario.id !== data.scenarioId);
+          return section
+        });
+
+      this.edit_cbe_data.sections = filtered;
+    },
+    updateScenarioExhibits(data) {
+      let scenarioIndex = 0;
+      let sectionIndex = 0;
+
+      this.edit_cbe_data.sections.forEach((section, index) => {
+        section.scenarios.forEach((scenario, i) => {
+          if (scenario.id === data.scenario_id) {
+            sectionIndex = index;
+            scenarioIndex = i;
+          }
+        });
+      });
+      const currentScenario = this.edit_cbe_data.sections[sectionIndex].scenarios[scenarioIndex];
+      if (!('exhibits' in currentScenario)) {
+        // This $set syntax is required by Vue to ensure the section.questions array is reactive
+        // It is inside the conditional to ensure section.questions is not reset to empty
+        this.$set(currentScenario, 'exhibits', []);
+      }
+      currentScenario.exhibits.push(data);
+    },
+    removeScenarioExhibit(data) {
+      const filtered =
+        this.edit_cbe_data.sections.filter(function(section){
+          section.scenarios.filter(function(scenario){
+            scenario.exhibits = scenario.exhibits.filter((exhibit) => exhibit.id !== data);
+            return scenario
+          });
+          return section
+        });
+
+      this.edit_cbe_data.sections = filtered;
+    },
+     updateScenarioRequirements(data) {
+      let scenarioIndex = 0;
+      let sectionIndex = 0;
+
+      this.edit_cbe_data.sections.forEach((section, index) => {
+        section.scenarios.forEach((scenario, i) => {
+          if (scenario.id === data.scenario_id) {
+            sectionIndex = index;
+            scenarioIndex = i;
+          }
+        });
+      });
+      const currentScenario = this.edit_cbe_data.sections[sectionIndex].scenarios[scenarioIndex];
+      if (!('requirements' in currentScenario)) {
+        // This $set syntax is required by Vue to ensure the section.questions array is reactive
+        // It is inside the conditional to ensure section.questions is not reset to empty
+        this.$set(currentScenario, 'requirements', []);
+      }
+      currentScenario.requirements.push(data);
+    },
+    removeScenarioRequirement(data) {
+      const filtered =
+        this.edit_cbe_data.sections.filter(function(section){
+          section.scenarios.filter(function(scenario){
+            scenario.requirements = scenario.requirements.filter((requirement) => requirement.id !== data);
+            return scenario
+          });
           return section
         });
 

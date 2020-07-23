@@ -17,8 +17,7 @@
 #
 class Cbe
   class Requirement < ApplicationRecord
-    # concerns
-    include CbeSupport
+    enum kind: { requirement: 0, task: 1 }
 
     # relationships
     belongs_to :scenario, class_name: 'Cbe::Scenario', foreign_key: 'cbe_scenario_id',

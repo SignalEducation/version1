@@ -1,123 +1,95 @@
 <template>
-  <b-card-text>
-    <h1>Exhibits</h1>
-    <div class="row">
-      <div class="col-sm-8">
-        <div class="form-group">
-          <label for="name">Name</label>
-          <div class="input-group input-group-lg">
-            <input
-              id="exhibitName"
-              v-model="name"
-              placeholder="Exhibit name"
-              class="form-control"
-            />
-          </div>
-
-          <p v-if="!$v.name.required && $v.name.$error" class="error-message">
-            field is required
-          </p>
-        </div>
-      </div>
-
-      <div class="col-sm-4">
-        <div class="form-group">
-          <label for="sortingOrder">Sorting Order</label>
-          <div class="input-group input-group-lg">
-            <input
-              id="sortingOrder"
-              v-model="sortingOrder"
-              placeholder="Sorting Order"
-              class="form-control"
-              type="number"
-            />
-          </div>
-          <p
-            v-if="!$v.sortingOrder.required && $v.sortingOrder.$error"
-            class="error-message"
+  <div>
+    <div v-for="exhibit in scenarioObject.exhibits" :key="exhibit.id">
+      <b-card no-body class="mb-1">
+        <b-card-header header-tag="header" class="p-1" role="tab">
+          <b-button
+            v-b-toggle="'accordion-' + exhibit.id"
+            block
+            href="#"
+            variant="secondary"
           >
-            field is required
-          </p>
-        </div>
-      </div>
+            Exhibit - {{ exhibit.sorting_order }}
+          </b-button>
+        </b-card-header>
 
-      <div class="col-sm-12">
-        <div class="form-group">
-          <label for="exhibitKind">Pdf/Spreadsheet</label>
-          <b-form-radio v-model="exhibitKind" name="exhibit-kind" value="pdf">PDF</b-form-radio>
-          <b-form-radio v-model="exhibitKind" name="exhibit-kind" value="spreadsheet">Spreadsheet</b-form-radio>
-        </div>
-      </div>
+        <b-collapse
+          :id="'accordion-' + exhibit.id"
+          accordion="exhibit-accordion"
+          role="tabpanel"
+        >
+          <b-card-body>
+            <div v-if="exhibit.kind == 'pdf'">
+              <ExhibitForm
+              :id="exhibit.id"
+              :initialName="exhibit.name"
+              :initialKind="exhibit.kind"
+              :initialFile="exhibit.document"
+              :initialSortingOrder="exhibit.sorting_order"
+              :scenario-id="scenarioObject.id"
+              @add-scenario-exhibit="addScenarioExhibit"
+              @rm-scenario-exhibit="rmScenarioExhibit"
+            />
+            </div>
+            <div v-else>
+              <ExhibitForm
+              :id="exhibit.id"
+              :initialName="exhibit.name"
+              :initialKind="exhibit.kind"
+              :initalContent="exhibit.content"
+              :initialSortingOrder="exhibit.sorting_order"
+              :scenario-id="scenarioObject.id"
+              @add-scenario-exhibit="addScenarioExhibit"
+              @rm-scenario-exhibit="rmScenarioExhibit"
+            />
+            </div>
 
-      <div class="col-sm-12" v-show="exhibitKind == 'pdf'">
-        <div class="form-group">
-          <div v-if="file.name" class="mt-3">
-            <label>
-              Selected file:
-            </label>
-            <a :href="file.url" target="_blank">
-              {{ file.name }}
-            </a>
-          </div>
-          <label for="sectionKindSelect">{{
-            file.name ? "Change File" : "Attach File"
-          }}</label>
-          <b-form-file
-            ref="input-file"
-            :state="Boolean(file)"
-            placeholder="Choose a file or drop it here..."
-            drop-placeholder="Drop file here..."
-            @change="attachFile"
-          />
-          <p v-if="!$v.file.required && $v.file.$error" class="error-message">
-            file is required
-          </p>
-        </div>
-      </div>
-
-      <div class="col-sm-12" v-show="exhibitKind == 'spreadsheet'">
-        <SpreadsheetEditor
-          :initial-data="exhibitContent"
-          @spreadsheet-updated="syncSpreadsheetData"
-        />
-      </div>
-
-      <div>
-        <button v-if="id" class="btn btn-primary" @click="updateFile">
-          Update Exhibit
-        </button>
-        <button v-if="id" class="btn btn-danger" @click="deleteFile">
-          Delete Exhibit
-        </button>
-        <button v-else class="btn btn-primary" @click="createExhibit">
-          Create Exhibit
-        </button>
-
-        <p v-if="updateStatus === 'ERROR'" class="typo__p">
-          Please fill the form correctly.
-        </p>
-        <p v-if="updateStatus === 'PENDING'" class="typo__p">
-          Updating...
-        </p>
-        <p v-if="submitStatus === 'ERROR'" class="typo__p">
-          Please fill the form correctly.
-        </p>
-        <p v-if="submitStatus === 'PENDING'" class="typo__p">
-          Sending...
-        </p>
-      </div>
+          </b-card-body>
+        </b-collapse>
+      </b-card>
     </div>
-  </b-card-text>
+
+    <b-card no-body class="mb-1">
+      <b-card-header header-tag="header" class="p-1" role="tab">
+        <b-button
+          v-b-toggle.new-exhibit-accordion
+          block
+          href="#"
+          variant="primary"
+        >
+          New Exhibit
+        </b-button>
+      </b-card-header>
+
+      <b-collapse
+        id="new-exhibit-accordion"
+        visible
+        accordion="my-accordion"
+        role="tabpanel"
+      >
+        <b-card-body>
+          <div class="row">
+            <ExhibitForm
+              :scenario-id="scenarioObject.id"
+              @add-scenario-exhibit="addScenarioExhibit"
+            />
+          </div>
+        </b-card-body>
+      </b-collapse>
+    </b-card>
+  </div>
 </template>
 
 <script>
 import axios from "axios";
 import { validationMixin } from "vuelidate";
 import { required, numeric } from "vuelidate/lib/validators";
-import SpreadsheetEditor from '../../SpreadsheetEditor/SpreadsheetEditor.vue';
+import ExhibitForm from "./ExhibitForm.vue";
+import SpreadsheetEditor from "../../SpreadsheetEditor/SpreadsheetEditor.vue";
 
 export default {
   components: {
+    ExhibitForm,
     SpreadsheetEditor,
   },
   mixins: [validationMixin],
@@ -130,7 +102,7 @@ export default {
       type: String,
       default: "",
     },
-     initialKind: {
+    initialKind: {
       type: String,
       default: "pdf",
     },
@@ -146,8 +118,9 @@ export default {
       type: Number,
       default: 1,
     },
-    scenarioId: {
-      type: Number,
+    scenarioObject: {
+      type: Object,
+      default: () => ({}),
     },
   },
   data() {
@@ -171,132 +144,22 @@ export default {
       required,
       numeric,
     },
-    file: {
-    },
+    file: {},
   },
   computed: {
     tabName() {
       return this.initialName.length > 0 ? this.initialName : "New Exhibit";
     },
   },
+
   methods: {
-    syncSpreadsheetData(jsonData) {
-      this.exhibitContent = {
-        content: {
-          data: jsonData
-        },
-      };
+    addScenarioExhibit(data) {
+      this.$emit("add-scenario-exhibit", data);
     },
-    attachFile(e) {
-      [this.attachedFile] = e.target.files;
-      if (Object.keys(this.file).length === 0) {
-        [this.file] = e.target.files;
-      }
+
+    rmScenarioExhibit(data) {
+      this.$emit("rm-scenario-exhibit", data);
     },
-    createExhibit() {
-      this.$v.$touch();
-      if (this.$v.$invalid) {
-        this.submitStatus = "ERROR";
-      } else {
-        this.submitStatus = "PENDING";
-
-        const formData = new FormData();
-        formData.append("exibits[name]", this.name);
-        formData.append("exibits[kind]", this.exhibitKind);
-        formData.append("exibits[content]", JSON.stringify(this.exhibitContent));
-        formData.append("exibits[document]", this.attachedFile);
-        formData.append("exibits[sorting_order]", this.sortingOrder);
-
-        this.exhibitKind == 'pdf' ? formData.delete("exibits[content]") : formData.delete("exibits[document]")
-
-        axios({
-          method: "post",
-          url: `/api/v1/scenarios/${this.scenarioId}/exhibits/`,
-          data: formData,
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        })
-          .then((response) => {
-            this.exhibitDetails = response.data;
-            if (this.exhibitDetails.id > 0) {
-              this.submitStatus = "OK";
-              this.$emit("add-scenario-exhibit", this.exhibitDetails);
-              this.exhibitDetails = {};
-              this.name = this.initialName;
-              this.exhibitContent = this.initalContent;
-              this.sortingOrder += 1;
-              this.file = {};
-              this.attachedFile = null;
-              this.$refs["input-file"].reset();
-              this.$v.$reset();
-            }
-          })
-          .catch((error) => {
-            this.submitStatus = "ERROR";
-            console.log(error);
-          });
-      }
-    },
-    // updateExhibit() {
-    //   this.$v.$touch();
-    //   if (this.$v.$invalid) {
-    //     this.updateStatus = 'ERROR';
-    //   } else {
-    //     this.updateStatus = 'PENDING';
-    //     const formData = new FormData();
-    //     formData.append('resource[name]', this.name);
-    //     formData.append('resource[sorting_order]', this.sortingOrder);
-    //     if (this.attachedFile) { formData.append('resource[document]', this.attachedFile) };
-
-    //     axios({
-    //       method: 'patch',
-    //       url: `/api/v1/cbes/${this.$store.state.cbeId}/resources/${this.id}`,
-    //       data: formData,
-    //       headers: {
-    //         'Content-Type': 'multipart/form-data',
-    //         'X-CSRF-Token': document.getElementsByTagName('meta')['csrf-token'].getAttribute('content')
-    //       },
-    //     })
-    //       .then(response => {
-    //         this.updateStatus = 'OK';
-    //         this.resourceDetails = response.data;
-    //         this.$emit('add-resource', this.resourceDetails);
-    //         this.title = this.resourceDetails.title;
-    //         this.sortingOrder = this.resourceDetails.sorting_order;
-    //         this.file = this.resourceDetails.file;
-    //         this.attachedFile = null;
-    //         this.$v.$reset();
-    //       })
-    //       .catch(error => {
-    //         this.updateStatus = 'ERROR';
-    //         console.log(error);
-    //       });
-    //   }
-    // },
-    // deleteExhibit() {
-    //   if(confirm("Do you really want to delete?")){
-    //     this.$v.$touch();
-    //     if (this.$v.$invalid) {
-    //       this.updateStatus = 'ERROR';
-    //     } else {
-    //       this.deleteStatus = 'PENDING';
-    //       const resourceId = this.id;
-    //       axios({
-    //         method: 'delete',
-    //         url: `/api/v1/cbes/${this.$store.state.cbeId}/resources/${resourceId}`,
-    //       }).then(response => {
-    //         this.$emit('rm-resource', resourceId);
-    //         this.updateStatus = 'OK';
-    //         this.$v.$reset();
-    //       })
-    //       .catch(error => {
-    //         this.updateStatus = 'ERROR';
-    //         console.log(error);
-    //       });
-    //     }
-    //   }
-    // },
   },
 };
 </script>
