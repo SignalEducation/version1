@@ -54,8 +54,6 @@
           .row.row-lg
             .col-xl-8
               .mb-5.mb-xl-0
-                - if current_user&.standard_student_user? && !@valid_subscription && counter == 0
-                  =render partial: 'free_lesson'
                 - course_section.course_lessons.all_valid.all_in_order.each_with_index do |course_lesson, counter|
                   =render partial: 'course_lesson', locals: { course_lesson: course_lesson, counter: counter, count: course_section.course_lessons.all_valid.count }
 

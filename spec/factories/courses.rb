@@ -57,7 +57,7 @@ FactoryBot.define do
     category_label                          { 'Category' }
     icon_label                              { 'Icon' }
     group
-    exam_body
+    association :exam_body, :with_group
     level
 
     factory :active_course do

@@ -120,7 +120,14 @@ module Admin
       redirect_to admin_course_url(course)
     end
 
-    def trial_content; end
+    def free_lesson
+      @course_sections = @course.course_sections.all_in_order
+      @free_course_lesson =
+        @course.free_lesson || CourseLesson.new(course_id: @course.id, name: 'Free Lesson',
+                                                name_url: 'free-lesson', sorting_order: 1,
+                                                active: true, free: true)
+
+    end
 
     def update_trial_content
       if @course.update_attributes(nested_trial_params)

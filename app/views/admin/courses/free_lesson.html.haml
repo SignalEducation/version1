@@ -1,0 +1,153 @@
+.container
+  %header.management-console-section
+    %h1
+      =@course.name
+    %p.p-hero.px-lg-8
+      ="Upload the free lesson content here!"
+
+  %section.pb-3
+    =link_to '#', class: 'btn btn-primary', data: {toggle: "collapse"}, href: "#multiCollapseExample1", role: "button", aria: { expanded: "false", controls: "multiCollapseExample1" } do
+      Free Lesson Form
+    .row.pt-3
+      .col
+        .collapse.multi-collapse#multiCollapseExample1
+          .card.card-body
+            =form_for([:admin, @free_course_lesson], html: {class: 'form-horizontal', role: 'form', id: 'course_lesson_form'}) do |f|
+              .box-item
+                .row
+                  .col-sm-12
+                    =render partial: '/layouts/error_messages', locals: {thing: @free_course_lesson, message: nil}
+                    =f.hidden_field :sorting_order, value: 1
+                    =f.hidden_field :course_id
+                    =f.hidden_field :active
+                    =f.hidden_field :free
+
+                    .row
+                      .col-sm-6
+                        .form-group
+                          =f.label :name, t('views.course_lessons.form.name')
+                          .input-group.input-group-lg
+                            =f.text_field :name, placeholder: t('views.course_lessons.form.name_placeholder'), class: 'form-control update-my-url'
+                        .form-group
+                          =f.label :name_url, t('views.course_lessons.form.name_url')
+                          .input-group.input-group-lg
+                            =f.text_field :name_url, placeholder: t('views.course_lessons.form.name_url_placeholder'), class: 'form-control'
+                      .col-sm-6
+                        .form-group
+                          =f.label :course_section_id, t('views.course_lessons.form.course_section_id')
+                          .input-group.input-group-lg
+                            =f.collection_select :course_section_id, @course_sections, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
+                        .form-group
+                          =f.label :temporary_label, t('views.course_lessons.form.temporary_label')
+                          .input-group.input-group-lg
+                            =f.text_field :temporary_label, placeholder: t('views.course_lessons.form.temporary_label_placeholder'), rows: 5, class: 'form-control'
+              .row
+                .col-sm-12
+                  =f.submit t('views.general.save'), class: 'btn btn-primary'
+
+  -if @free_course_lesson
+    %section.pb-7
+      .box-item.table-box
+        .table-responsive
+          .row
+            .col-sm-4
+              %p.h5
+                =@free_course_lesson.name
+            .col-sm-4
+              Quizzes
+              =@free_course_lesson.quiz_count
+              Videos
+              =@free_course_lesson.video_count
+              CRs
+              =@free_course_lesson.constructed_response_count
+              Total Count
+              =@free_course_lesson.cme_count
+
+          %table.table.sorted_table{data: {destination: admin_course_steps_url}, id: @free_course_lesson.id}
+            %thead
+              %tr
+                %th Name
+                %th Active
+                %th Trial
+                %th{colspan: 5}
+            %tbody
+              -@free_course_lesson.course_steps.all_in_order.each do |step|
+                %tr{id: step.id, data: {parent: @free_course_lesson.id, destination: admin_course_steps_url}}
+                  %td
+                    =step.name.to_s
+                  %td
+                    =tick_or_cross(step.active)
+                  %td
+                    =step.type_name
+                  %td
+                    =link_to t('views.general.edit'), edit_admin_course_step_path(step.id), class: 'btn btn-xs btn-primary'
+                    -if step.destroyable?
+                      =link_to t('views.general.delete'), admin_course_step_path(step.id), method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-secondary btn-xs'
+                  %td
+                    %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
+
+        .row.pt-4
+          .col-sm-6
+            =link_to t('views.course_steps.form.new_video'), new_admin_course_step_path(type: 'video', cm_id: @free_course_lesson.id), class: 'btn btn-primary'
+            =link_to t('views.course_steps.form.new_quiz'), new_admin_course_step_path(type: 'quiz', cm_id: @free_course_lesson.id), class: 'btn btn-primary'
+            =link_to t('views.course_steps.form.new_note'), new_admin_course_step_path(type: 'note', cm_id: @free_course_lesson.id), class: 'btn btn-primary'
+            =link_to t('views.course_steps.form.new_constructed_response'), new_admin_course_step_path(type: 'constructed_response', cm_id: @free_course_lesson.id), class: 'btn btn-primary'
+
+
+  -#%section.pb-7
+    =form_for(@course, url: admin_course_update_trial_content_url) do |f|
+      =render partial: '/layouts/error_messages', locals: {thing: @course, message: nil}
+      .row
+        .col-sm-12
+          =f.fields_for :course_sections, f.object.course_sections.all_in_order do |cs|
+            .box-item
+              %h3=cs.object.try(:name)
+              =cs.fields_for :course_lessons, cs.object.course_lessons.all_in_order do |cm|
+                .table-box
+                  .table-responsive
+                    .col-md-9.l-margin-bottom
+                      %h4=cm.object.try(:name)
+                    .col-md-3
+                      .pull-right
+                        =tick_or_cross(cm.object.active)
+
+                    %table.table.sorted_table
+                      %thead
+                        %tr
+                          %th Name
+                          %th Type
+                          %th Time (Sec)
+                          %th Trial
+
+                      %tbody
+                        =cm.fields_for :course_steps, cm.object.course_steps.all_in_order do |cme|
+                          %tr
+                            %td=cme.object.name
+                            %td=cme.object.type_name
+                            %td=cme.object.estimated_time_in_seconds
+                            %td=cme.check_box :available_on_trial
+
+          .box-item
+            .table-box
+              .table-responsive
+                %h3{style: 'color: #54a4ee;'}
+                  ='Course Resources'
+                %table.table.sorted_table
+                  %thead
+                    %tr
+                      %th Name
+                      %th Trial
+                      %th
+                  %tbody
+                    =f.fields_for :course_resources, f.object.course_resources.all_in_order do |resource|
+                      %tr
+                        %td
+                          =resource.object.name
+                        %td
+                          =resource.check_box :available_on_trial
+
+
+        .row
+          .col-sm-12
+            =f.submit t('views.general.save'), class: 'btn btn-primary'
+            =link_to 'Cancel', admin_course_url(@course), class: 'btn btn-secondary'

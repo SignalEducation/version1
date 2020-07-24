@@ -26,7 +26,10 @@ module Admin
     def create
       @course_lesson = CourseLesson.new(allowed_params)
 
-      if @course_lesson.save
+      if @course_lesson.free && @course_lesson.save
+        flash[:success] = 'Free Lesson Successfully Created'
+        redirect_to admin_course_free_lesson_content_path(@course_lesson.course)
+      elsif @course_lesson.save
         flash[:success] = I18n.t('controllers.course_lessons.create.flash.success')
         redirect_to admin_course_url(@course_lesson.course_id)
       else
@@ -84,7 +87,7 @@ module Admin
                                             :estimated_time_in_seconds, :active, :seo_description,
                                             :seo_no_index, :number_of_questions, :course_id,
                                             :highlight_colour, :tuition, :test, :revision, :course_section_id,
-                                            :temporary_label)
+                                            :temporary_label, :free)
     end
   end
 end

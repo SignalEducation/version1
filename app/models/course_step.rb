@@ -74,7 +74,6 @@ class CourseStep < ApplicationRecord
   scope :all_quizzes,              -> { where(is_quiz: true) }
   scope :all_notes,                -> { where(is_note: true) }
   scope :all_constructed_response, -> { where(is_constructed_response: true) }
-  scope :all_free,                 -> { where(available_on_trial: true) }
 
   # class methods
 
@@ -109,7 +108,7 @@ class CourseStep < ApplicationRecord
         CourseStep.find(array_of_sibling_ids[my_position_among_siblings + 1])
       elsif my_position_among_siblings == (array_of_sibling_ids.length - 1) && course_lesson.next_module&.active_children&.any?
         # There is no next CME in current CM - find first CME in next CM
-        course_lesson.next_module.first_active_cme
+        course_lesson.next_module
       else
         # There is no next CM in current CS - return the CourseSection
         course_lesson.course_section
@@ -125,22 +124,6 @@ class CourseStep < ApplicationRecord
     else
       prev_id = course_lesson.previous_module.try(:course_steps).try(:all_active).try(:all_in_order).try(:last).try(:id)
       CourseStep.find(prev_id) if prev_id
-    end
-  end
-
-  def free_step_ids
-    course_lesson.course.free_course_steps.all_in_order.map(&:id)
-  end
-
-  def position_among_free_steps
-    free_step_ids.index(id)
-  end
-
-  def next_free_step
-    return unless active && with_active_parents? && available_on_trial && position_among_free_steps
-
-    if position_among_free_steps < (free_step_ids.length - 1)
-      CourseStep.find(free_step_ids[position_among_free_steps + 1])
     end
   end
 
@@ -217,10 +200,10 @@ class CourseStep < ApplicationRecord
           else
             { view: true, reason: nil }
           end
-        elsif available_on_trial && related_course_step && previous_restriction
+        elsif (course_lesson.free || available_on_trial) && related_course_step && previous_restriction
           { view: false, reason: 'related-lesson-restriction' }
         else
-          available_on_trial ? { view: true, reason: nil } : { view: false, reason: 'invalid-subscription' }
+          (course_lesson.free || available_on_trial) ? { view: true, reason: nil } : { view: false, reason: 'invalid-subscription' }
         end
       else
         { view: false, reason: nil }

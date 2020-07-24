@@ -29,6 +29,7 @@
 #  course_section_id          :integer
 #  constructed_response_count :integer          default("0")
 #  temporary_label            :string
+#  free                       :boolean          default("false"), not null
 #
 
 class CourseLesson < ApplicationRecord
@@ -72,6 +73,7 @@ class CourseLesson < ApplicationRecord
   scope :all_valid,    -> { where(active: true).includes(:course_steps).where(course_steps: { active: true }) }
   scope :all_inactive, -> { where(active: false) }
   scope :with_url,     ->(the_url) { where(name_url: the_url) }
+  scope :not_free,     -> { where(free: false) }
 
   ## Parent & Child associations ##
   def parent

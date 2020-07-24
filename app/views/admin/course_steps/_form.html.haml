@@ -25,10 +25,11 @@
 
 
             -# Dropdown list of other CourseLessons in the Course
-            .form-group
-              =f.label :course_lesson_id, t('views.course_steps.form.course_lesson_id')
-              .input-group.input-group-lg
-                =f.collection_select :course_lesson_id, @course_lessons, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
+            - if @course_lessons
+              .form-group
+                =f.label :course_lesson_id, t('views.course_steps.form.course_lesson_id')
+                .input-group.input-group-lg
+                  =f.collection_select :course_lesson_id, @course_lessons, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
             .form-group
               -# Dropdown list of other CMEs in current course module
               =f.label :related_course_step_id, t('views.course_steps.form.related_course_step_id')
@@ -63,13 +64,14 @@
                       =f.check_box :active, default: true
                       =t('views.course_lessons.form.active')
 
-            .col-md-6
-              .form-group
-                .col-sm-8.col-sm-offset-1
-                  .checkbox
-                    %label
-                      =f.check_box :available_on_trial
-                      Available on Trial
+            -if @course_lessons
+              .col-md-6
+                .form-group
+                  .col-sm-8.col-sm-offset-1
+                    .checkbox
+                      %label
+                        =f.check_box :available_on_trial
+                        Available on Trial
 
             -if @course_step.is_quiz? && !@course_step.new_record?
               %br/
@@ -118,7 +120,8 @@
       -if f.object.course_quiz || f.object.constructed_response
         =f.submit t('views.course_steps.form.save_and_add_another'), class: 'btn btn-primary'
 
-      =link_to t('views.general.cancel'), admin_show_course_lesson_url(@course_step.course_lesson.course_id, @course_step.course_lesson.course_section.id, @course_step.course_lesson.id), class: 'btn btn-secondary'
+      -if @course_lessons
+        =link_to t('views.general.cancel'), admin_show_course_lesson_url(@course_step.course_lesson.course_id, @course_step.course_lesson.course_section.id, @course_step.course_lesson.id), class: 'btn btn-secondary'
 
 
 -if @course_step.is_video

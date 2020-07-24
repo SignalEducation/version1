@@ -29,6 +29,9 @@ FactoryBot.define do
     latest_course_step_id { 1 }
     course_id { 1 }
     course_log_id { 1 }
+    course_lesson
+    course_section
+    course
   end
 
 end

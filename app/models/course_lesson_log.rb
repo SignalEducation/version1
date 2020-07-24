@@ -39,6 +39,7 @@ class CourseLessonLog < ApplicationRecord
   belongs_to :course_lesson, optional: true
   belongs_to :latest_course_step, class_name: 'CourseStep', foreign_key: :latest_course_step_id, optional: true
   has_many :course_step_logs
+  has_many :onboarding_processes
 
   # validation
   validates :user_id, presence: true
@@ -50,6 +51,7 @@ class CourseLessonLog < ApplicationRecord
 
   # callbacks
   before_validation :create_course_section_log, unless: :course_section_log_id
+  after_create :create_onboarding_process
   after_update :update_course_section_log
 
   # scopes
@@ -98,6 +100,10 @@ class CourseLessonLog < ApplicationRecord
     course_log.active_enrollment
   end
 
+  def completed?
+    percentage_complete && percentage_complete > 99
+  end
+
   def recalculate_set_completeness
     #Called from the CourseStepLog after_save or the CourseLogWorker
     unique_video_ids                = completed_course_step_logs.videos.pluck(:course_step_id).uniq
@@ -114,13 +120,19 @@ class CourseLessonLog < ApplicationRecord
     save!
   end
 
+  def next_step
+    return unless latest_course_step&.active
+
+    latest_course_step.next_element
+  end
+
   protected
 
   # Before Validation
   def create_course_section_log
     csul = CourseSectionLog.create!(user_id: self.user_id, course_section_id: self.course_section_id,
-                                        course_id: self.course_lesson.course_id,
-                                        course_log_id: self.try(:course_log_id))
+                                    course_id: self.course_lesson.course_id,
+                                    course_log_id: self.try(:course_log_id))
     self.course_section_log_id = csul.id
     self.course_log_id = csul.course_log_id
   end
@@ -129,5 +141,16 @@ class CourseLessonLog < ApplicationRecord
   def update_course_section_log
     course_section_log.latest_course_step_id = latest_course_step_id
     course_section_log.recalculate_csul_completeness # Includes a save!
+  end
+
+  def create_onboarding_process
+    if course&.exam_body&.has_sittings &&
+       user&.standard_student_user? &&
+       user&.course_lesson_logs&.count <= 1 &&
+       !user&.viewable_subscriptions&.any? &&
+       !user&.onboarding_process
+
+      OnboardingProcess.create!(user_id: user_id, course_lesson_log_id: id)
+    end
   end
 end
