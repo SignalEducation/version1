@@ -7,9 +7,9 @@
 
       %section.pb-md-6
         %h2.sr-only List of courses
-        .row.row-lg
+        .row.justify-content-center
           -@groups.each do |group|
-            .col-lg
+            .col-lg-4
               %article.card.card-primary.card-pink
                 =image_tag(group.image.url, class: 'card-img-top', alt: 'People in front of the blackboard', style: "border-bottom-color: #{group.background_colour};")
                 .card-body.text-center
