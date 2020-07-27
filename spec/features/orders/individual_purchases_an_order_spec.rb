@@ -12,11 +12,10 @@ describe 'An individual purchasing a product', type: :feature do
     before(:each) do
       activate_authlogic
       sign_in_via_sign_in_page(user)
+      visit prep_products_path
     end
 
     scenario 'can browse available products' do
-      visit prep_products_path
-
       expect(page).to have_content(mock.mock_exam.name)
 
       click_link 'Correction Packs'
@@ -25,11 +24,10 @@ describe 'An individual purchasing a product', type: :feature do
     end
 
     scenario 'can checkout using PayPal' do
-      visit prep_products_path
       first(:link, mock.mock_exam.name).click
 
       expect(page).to have_content('Choose a way to pay')
-      expect(page).to have_css('#paypal_submit')
+      expect(page).to have_selector('#paypal_submit')
     end
 
     scenario 'can purchase a product with Stripe' do
@@ -43,7 +41,7 @@ describe 'An individual purchasing a product', type: :feature do
       first(:link, mock.mock_exam.name).click
 
       expect(page).to have_content('Choose a way to pay')
-      expect(page).to have_css('#pay-with-card')
+      expect(page).to have_selector('#pay-with-card')
     end
   end
 
