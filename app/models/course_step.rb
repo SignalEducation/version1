@@ -72,6 +72,7 @@ class CourseStep < ApplicationRecord
   scope :all_active,               -> { where(active: true, destroyed_at: nil) }
   scope :all_videos,               -> { where(is_video: true) }
   scope :all_quizzes,              -> { where(is_quiz: true) }
+  scope :all_notes,                -> { where(is_note: true) }
   scope :all_constructed_response, -> { where(is_constructed_response: true) }
   scope :all_free,                 -> { where(available_on_trial: true) }
 
