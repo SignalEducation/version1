@@ -24,7 +24,7 @@ class Cbe
                           inverse_of: :requirements
 
     # validations
-    validates :name, :content, :kind, :cbe_scenario_id, presence: true
-    validates :score, numericality: { greater_than_or_equal_to: 0 }
+    validates :name, :content, :kind, :sorting_order, :cbe_scenario_id, presence: true
+    validates :score, :sorting_order, numericality: { greater_than_or_equal_to: 0 }
   end
 end

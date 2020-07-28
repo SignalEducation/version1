@@ -29,7 +29,8 @@ class Cbe
                           inverse_of: :exhibits
 
     # validations
-    validates :name, :cbe_scenario_id, presence: true
+    validates :name, :kind, :sorting_order, :cbe_scenario_id, presence: true
+    validates :sorting_order, numericality: { greater_than_or_equal_to: 0 }
     validates :content,  presence: true, if: proc { |kind| kind.spreadsheet? }
     validates :document, attachment_presence: true, if: proc { |kind| kind.pdf? }
     validates_attachment_content_type :document, content_type: %w[application/pdf text/csv]

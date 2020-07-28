@@ -5,7 +5,6 @@
         <label for="name">Name</label>
         <div class="input-group input-group-lg">
           <input
-            id="requirementName"
             v-model="name"
             placeholder="requirement name"
             class="form-control"

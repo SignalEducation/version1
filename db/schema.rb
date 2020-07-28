@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_15_073803) do
+ActiveRecord::Schema.define(version: 2020_07_24_080135) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -164,6 +164,16 @@ ActiveRecord::Schema.define(version: 2020_07_15_073803) do
     t.datetime "updated_at", null: false
     t.bigint "cbe_id"
     t.index ["cbe_id"], name: "index_cbe_resources_on_cbe_id"
+  end
+
+  create_table "cbe_response_options", force: :cascade do |t|
+    t.integer "kind"
+    t.integer "quantity"
+    t.integer "sorting_order"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "cbe_scenario_id"
+    t.index ["cbe_scenario_id"], name: "index_cbe_response_options_on_cbe_scenario_id"
   end
 
   create_table "cbe_scenarios", force: :cascade do |t|

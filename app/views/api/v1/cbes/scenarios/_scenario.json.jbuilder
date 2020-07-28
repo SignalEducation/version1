@@ -21,4 +21,8 @@ if scenario.section.exhibits_scenario?
   json.requirements scenario.requirements.sort_by(&:sorting_order) do |requirement|
     json.partial! 'api/v1/cbes/requirements/requirement', locals: { requirement: requirement }
   end
+
+  json.response_options scenario.response_options.sort_by(&:sorting_order) do |response_option|
+    json.partial! 'api/v1/cbes/response_options/response_option', locals: { response_option: response_option }
+  end
 end

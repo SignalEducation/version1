@@ -33,6 +33,7 @@ Rails.application.routes.draw do
             resources :scenarios, only: %i[create update destroy] do
               resources :exhibits, only: %i[create update destroy]
               resources :requirements, only: %i[create update destroy]
+              resources :response_options, only: %i[create update destroy]
               resources :questions, only: %i[index create update destroy]
             end
           end

@@ -5,7 +5,6 @@
         <label for="name">Name</label>
         <div class="input-group input-group-lg">
           <input
-            id="exhibitName"
             v-model="name"
             placeholder="Exhibit name"
             class="form-control"

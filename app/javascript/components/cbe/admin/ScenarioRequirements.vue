@@ -85,7 +85,7 @@ export default {
   },
   computed: {
     tabName() {
-      return this.initialName.length > 0 ? this.initialName : "New Rxhibit";
+      return this.initialName.length > 0 ? this.initialName : "New Requirement";
     },
   },
 

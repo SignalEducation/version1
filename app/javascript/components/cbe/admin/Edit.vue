@@ -292,7 +292,11 @@
                                   </b-tab>
 
                                   <b-tab title="Response Options">
-                                    <ScenarioResponseOptions />
+                                    <ScenarioResponseOptions
+                                      :scenario-object="scenario"
+                                      @add-scenario-response-option="updateScenarioResponseOptions"
+                                      @rm-scenario-response-option="removeScenarioResponseOption"
+                                    />
                                   </b-tab>
                                 </b-tabs>
                               </b-card>
@@ -578,7 +582,7 @@ export default {
 
       this.edit_cbe_data.sections = filtered;
     },
-     updateScenarioRequirements(data) {
+    updateScenarioRequirements(data) {
       let scenarioIndex = 0;
       let sectionIndex = 0;
 
@@ -603,6 +607,38 @@ export default {
         this.edit_cbe_data.sections.filter(function(section){
           section.scenarios.filter(function(scenario){
             scenario.requirements = scenario.requirements.filter((requirement) => requirement.id !== data);
+            return scenario
+          });
+          return section
+        });
+
+      this.edit_cbe_data.sections = filtered;
+    },
+    updateScenarioResponseOptions(data) {
+      let scenarioIndex = 0;
+      let sectionIndex = 0;
+
+      this.edit_cbe_data.sections.forEach((section, index) => {
+        section.scenarios.forEach((scenario, i) => {
+          if (scenario.id === data.scenario_id) {
+            sectionIndex = index;
+            scenarioIndex = i;
+          }
+        });
+      });
+      const currentScenario = this.edit_cbe_data.sections[sectionIndex].scenarios[scenarioIndex];
+      if (!('response_options' in currentScenario)) {
+        // This $set syntax is required by Vue to ensure the section.questions array is reactive
+        // It is inside the conditional to ensure section.questions is not reset to empty
+        this.$set(currentScenario, 'response_options', []);
+      }
+      currentScenario.response_options.push(data);
+    },
+    removeScenarioResponseOption(data) {
+      const filtered =
+        this.edit_cbe_data.sections.filter(function(section){
+          section.scenarios.filter(function(scenario){
+            scenario.response_options = scenario.response_options.filter((response_option) => response_option.id !== data);
             return scenario
           });
           return section
