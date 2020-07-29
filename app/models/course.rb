@@ -155,7 +155,23 @@ class Course < ApplicationRecord
       }
     ]
 
-    new_course.update(name: "#{name} copy", name_url: "#{name_url}_copy", active: false)
+    ActiveRecord::Base.transaction do
+      new_course.update(name: "#{name} copy", name_url: "#{name_url}_copy", active: false) &&
+        new_course.course_sections.map { |s| s.course_lessons.update_all(course_id: new_course.id) } &&
+        update_all_files(new_course)
+    end
+  end
+
+  def update_all_files(new_course)
+    new_course.course_steps.all_notes.each do |note|
+      course_note = note.course_note
+      old_note = course_steps.all_notes.find_by(name: note.name,
+                                                name_url: note.name_url,
+                                                temporary_label: note.temporary_label,
+                                                sorting_order: note.sorting_order).course_note
+      course_note.upload = old_note.upload
+      course_note.save
+    end
   end
 
   # instance methods

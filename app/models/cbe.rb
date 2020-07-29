@@ -36,20 +36,32 @@ class Cbe < ApplicationRecord
 
   def duplicate
     new_cbe = deep_clone include: [
-                            :introduction_pages,
-                            :resources,
-                            sections: [
-                              questions: :answers,
-                              scenarios: { questions: :answers }
-                            ]
-                          ],
-                          use_dictionary: true,
-                          except: [
-                            sections: [
-                              scenarios: { questions: :cbe_section_id }
-                            ]
-                          ], validate: false
+      :introduction_pages,
+      :resources,
+      sections: [
+        questions: :answers,
+        scenarios: { questions: :answers }
+      ]
+    ],
+    use_dictionary: true,
+    except: [
+      sections: [
+        scenarios: { questions: :cbe_section_id }
+      ]
+    ], validate: false
 
-    new_cbe.update(name: "#{name} COPY", active: false)
+    ActiveRecord::Base.transaction do
+      new_cbe.update(name: "#{name} COPY", active: false) && update_all_files(new_cbe)
+    end
+  end
+
+  def update_all_files(new_cbe)
+    new_cbe.resources.each do |resource|
+      old_resource = resources.find_by(name: resource.name,
+                                       sorting_order: resource.sorting_order,
+                                       document_file_name: resource.document_file_name)
+      resource.document = old_resource.document
+      resource.save
+    end
   end
 end
