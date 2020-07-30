@@ -14,7 +14,7 @@ describe 'An individual purchasing a product', type: :feature do
   context 'as an existing user' do
     let(:user) { create(:student_user, country: country, currency: country.currency) }
 
-    scenario 'the user sees the product once they login', js: true do
+    xscenario 'the user sees the product once they login', js: true do
       first(:link, mock.mock_exam.name).click
       within('.register-login-nav') do
         click_link('Log In')
@@ -31,7 +31,7 @@ describe 'An individual purchasing a product', type: :feature do
   context 'as a new user' do
     let(:user) { build(:student_user) }
 
-    scenario 'the user sees the product once they register', js: true do
+    xscenario 'the user sees the product once they register', js: true do
       allow_any_instance_of(User).to receive(:create_stripe_customer)
       first(:link, mock.mock_exam.name).click
       within('.register-login-nav') do
