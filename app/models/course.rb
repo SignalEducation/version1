@@ -172,6 +172,15 @@ class Course < ApplicationRecord
       course_note.upload = old_note.upload
       course_note.save
     end
+
+    new_course.course_resources.each do |resource|
+      old_resource = course_resources.find_by(name: resource.name,
+                                              description: resource.description,
+                                              file_upload_file_name: resource.file_upload_file_name,
+                                              file_upload_file_size: resource.file_upload_file_size)
+      resource.file_upload = old_resource.file_upload
+      resource.save
+    end
   end
 
   # instance methods
