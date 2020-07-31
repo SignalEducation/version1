@@ -44,7 +44,6 @@ class CourseLog < ApplicationRecord
   before_destroy :check_dependencies
   after_save :update_enrollment
   after_save :emit_certificate, if: :saved_change_to_completed?
-  after_create :create_onboarding_process
 
   # scopes
   scope :all_in_order, -> { order(:user_id, :created_at) }
@@ -143,16 +142,5 @@ class CourseLog < ApplicationRecord
     return unless course.emit_certificate? && completed
 
     CourseLogsWorker.perform_async(user_name, user_email, course.accredible_group_id)
-  end
-
-  def create_onboarding_process
-    if course&.exam_body&.has_sittings &&
-       user&.standard_student_user? &&
-       user&.course_logs&.count <= 1 &&
-       !user&.viewable_subscriptions&.any? &&
-       !user&.onboarding_process
-
-      OnboardingProcess.create(user_id: user_id, course_log_id: id)
-    end
   end
 end

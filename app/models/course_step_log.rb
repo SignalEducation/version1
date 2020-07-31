@@ -141,8 +141,9 @@ class CourseStepLog < ApplicationRecord
 
   def calculate_score
     course_pass_rate = course_lesson.course.quiz_pass_rate || 75
+    pass_rate        = course_lesson.free ? 25 : course_pass_rate
     percentage_score = (quiz_attempts.all_correct.count.to_f / quiz_attempts.count.to_f * 100.0).to_i
-    passed           = percentage_score >= course_pass_rate
+    passed           = percentage_score >= pass_rate
     quiz_result      = passed ? 'passed' : 'failed'
 
     update_columns(count_of_questions_taken: quiz_attempts.count,

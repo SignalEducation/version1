@@ -4,19 +4,20 @@
 #
 # Table name: messages
 #
-#  id              :bigint           not null, primary key
-#  user_id         :integer
-#  opens           :integer
-#  clicks          :integer
-#  kind            :integer          default("0"), not null
-#  process_at      :datetime
-#  template        :string
-#  mandrill_id     :string
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#  state           :string
-#  template_params :hstore
-#  guid            :string
+#  id                    :bigint           not null, primary key
+#  user_id               :integer
+#  opens                 :integer
+#  clicks                :integer
+#  kind                  :integer          default("0"), not null
+#  process_at            :datetime
+#  template              :string
+#  mandrill_id           :string
+#  created_at            :datetime         not null
+#  updated_at            :datetime         not null
+#  state                 :string
+#  template_params       :hstore
+#  guid                  :string
+#  onboarding_process_id :integer
 #
 class Message < ApplicationRecord
   # enums
@@ -26,6 +27,7 @@ class Message < ApplicationRecord
 
   # relationships
   belongs_to :user
+  belongs_to :onboarding_process, optional: true
 
   validates :user_id, presence: true
   validates :kind, inclusion: { in: Message.kinds.keys }, presence: true

@@ -7,9 +7,8 @@ class OnboardingEmailWorker
 
   def perform(onboarding_process_id, day)
     onboarding_process = OnboardingProcess.find(onboarding_process_id)
-    user = onboarding_process.user
-    course_log = onboarding_process.course_log
-    exam_body_id = course_log.course.exam_body_id
+    user               = onboarding_process.user
+    exam_body_id       = onboarding_process.exam_body.id
 
     return unless onboarding_process.active
 

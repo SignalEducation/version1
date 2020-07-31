@@ -315,9 +315,7 @@ class ApplicationController < ActionController::Base
                          anchor: the_thing.name_url)
     when CourseLesson
       library_course_url(the_thing.course_section.course.group.name_url,
-                         the_thing.course_section.course.name_url,
-                         the_thing.course_section.name_url,
-                         anchor: the_thing.name_url)
+                         the_thing.course_section.course.name_url)
     when CourseStep
       user_course_correct_url(the_thing, scul)
     else

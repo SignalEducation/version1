@@ -2,23 +2,25 @@
 #
 # Table name: onboarding_processes
 #
-#  id            :bigint           not null, primary key
-#  user_id       :integer
-#  course_log_id :integer
-#  active        :boolean          default("true"), not null
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
+#  id                   :bigint           not null, primary key
+#  user_id              :integer
+#  course_log_id        :integer
+#  active               :boolean          default("true"), not null
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#  course_lesson_log_id :integer
 #
 require 'rails_helper'
 
 describe OnboardingProcess do
   let(:basic_student)       { create(:basic_student) }
-  let(:course_log)       { create(:course_log, user: basic_student) }
-  let(:onboarding_process)  { create(:onboarding_process, user: basic_student, course_log: course_log) }
+  let(:course_lesson_log)   { create(:course_lesson_log, user: basic_student) }
+  let(:onboarding_process)  { create(:onboarding_process, user: basic_student, course_lesson_log: course_lesson_log) }
 
   describe 'Should Respond' do
     it { should respond_to(:user_id) }
     it { should respond_to(:course_log_id) }
+    it { should respond_to(:course_lesson_log_id) }
     it { should respond_to(:active) }
     it { should respond_to(:created_at) }
     it { should respond_to(:updated_at) }
@@ -31,11 +33,11 @@ describe OnboardingProcess do
   describe 'Associations' do
     it { should belong_to(:user) }
     it { should belong_to(:course_log) }
+    it { should belong_to(:course_lesson_log) }
   end
 
   describe 'Validations' do
     it { should validate_presence_of(:user_id) }
-    it { should validate_presence_of(:course_log_id) }
   end
 
   describe 'callbacks' do
@@ -50,6 +52,10 @@ describe OnboardingProcess do
   end
 
   describe 'Methods' do
+    before do
+      allow_any_instance_of(OnboardingProcess).to receive(:next_step).and_return(CourseStep.last)
+    end
+
     context '#content_remaining?' do
       it 'should return true' do
         expect(onboarding_process.content_remaining?).to eq(true)
@@ -58,23 +64,23 @@ describe OnboardingProcess do
 
     context '#onboarding_subject' do
       it 'return Continue your ..' do
-        expect(onboarding_process.onboarding_subject(1)).to eq("Continue your #{onboarding_process.course_log.course.group.name} study today. See what’s next!")
+        expect(onboarding_process.onboarding_subject(1)).to eq("Continue your #{onboarding_process.exam_body.group.name} study today. See what’s next!")
       end
 
       it 'return Pass your ..' do
-        expect(onboarding_process.onboarding_subject(2)).to eq("Pass your #{onboarding_process.course_log.course.group.name} Exams first time. Get Ahead Now!")
+        expect(onboarding_process.onboarding_subject(2)).to eq("Pass your #{onboarding_process.exam_body.group.name} Exams first time. Get Ahead Now!")
       end
 
       it 'return .. Exams:' do
-        expect(onboarding_process.onboarding_subject(3)).to eq("#{onboarding_process.course_log.course.group.name} Exams: Keep the momentum going & complete a  today!")
+        expect(onboarding_process.onboarding_subject(3)).to eq("#{onboarding_process.exam_body.group.name} Exams: Keep the momentum going & complete a  today!")
       end
 
       it 'return What’s next ..' do
-        expect(onboarding_process.onboarding_subject(4)).to eq("What’s next?  Try this #{onboarding_process.course_log.course.group.name} !")
+        expect(onboarding_process.onboarding_subject(4)).to eq("What’s next?  Try this #{onboarding_process.exam_body.group.name} !")
       end
 
       it 'return Continue your ..' do
-        expect(onboarding_process.onboarding_subject(5)).to eq("#{onboarding_process.course_log.course.group.name} Exams: Here’s what to study today!")
+        expect(onboarding_process.onboarding_subject(5)).to eq("#{onboarding_process.exam_body.group.name} Exams: Here’s what to study today!")
       end
 
       it 'return Continue your ..' do

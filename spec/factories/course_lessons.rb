@@ -27,6 +27,7 @@
 #  course_section_id          :integer
 #  constructed_response_count :integer          default("0")
 #  temporary_label            :string
+#  free                       :boolean          default("false"), not null
 #
 
 FactoryBot.define do

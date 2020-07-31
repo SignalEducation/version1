@@ -70,6 +70,7 @@ class Course < ApplicationRecord
   has_many :course_quizzes, through: :course_steps
   has_many :related_course_step, through: :course_steps
   has_many :course_step_logs
+  has_one :free_lesson, -> { where(free: true) }, class_name: 'CourseLesson'
   has_attached_file :background_image, default_url: 'images/home_explore2.jpg'
 
   accepts_nested_attributes_for :course_resources

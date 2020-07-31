@@ -39,7 +39,7 @@ module Admin
 
     def new
       lesson = CourseLesson.find params[:cm_id].to_i
-      @course_lessons = lesson.parent.children
+      @course_lessons = lesson&.parent&.children
       @related_cmes = lesson.course_steps.all_active
       @course_step = CourseStep.new(sorting_order: (CourseStep.all.maximum(:sorting_order).to_i + 1),
                                     course_lesson_id: lesson.id, active: true)
@@ -70,7 +70,7 @@ module Admin
         elsif @course_step.is_constructed_response
           @course_step.constructed_response.scenario.add_an_empty_scenario_question
         end
-        @course_lessons = cm.parent.active_children
+        @course_lessons = cm&.parent&.children
         set_related_cmes
       else
         redirect_to admin_course_url(@course_step.parent.parent)
@@ -93,6 +93,8 @@ module Admin
           redirect_to new_quiz_question_url(quiz_step_id: @course_step.course_quiz.id)
         elsif params[:commit] == I18n.t('views.course_quizzes.form.preview_button')
           redirect_to @course_step.course_quiz.quiz_questions.last
+        elsif @course_step.course_lesson.free
+          redirect_to admin_course_free_lesson_content_path(@course_step.course_lesson.course)
         else
           redirect_to admin_show_course_lesson_url(@course_step.course_lesson.course_id, @course_step.course_lesson.course_section.id, @course_step.course_lesson.id)
         end
@@ -109,7 +111,7 @@ module Admin
       set_related_cmes
       @course_step.assign_attributes(allowed_params)
       cm = @course_step.parent
-      @course_lessons = cm.parent.active_children
+      @course_lessons = cm&.parent&.active_children
 
       if @course_step.save
         flash[:success] = I18n.t('controllers.course_steps.update.flash.success')
@@ -117,6 +119,8 @@ module Admin
           redirect_to edit_admin_course_step_url(@course_step.id)
         elsif params[:commit] == I18n.t('views.course_quizzes.form.preview_button')
           redirect_to @course_step.course_quiz.quiz_questions.last
+        elsif @course_step.course_lesson.free
+          redirect_to admin_course_free_lesson_content_path(@course_step.course_lesson.course)
         else
           redirect_to admin_show_course_lesson_url(@course_step.course_lesson.course_id, @course_step.course_lesson.course_section.id, @course_step.course_lesson.id)
         end

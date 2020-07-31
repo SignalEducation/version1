@@ -20,7 +20,7 @@ module Admin
 
     def edit
       @action = :update
-      @course_videos = @course_resource.course.course_steps.all_videos.all_free.all_in_order
+      @course_videos = @course_resource.course&.free_lesson&.course_steps
     end
 
     def create

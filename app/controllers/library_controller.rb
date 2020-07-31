@@ -47,7 +47,7 @@ class LibraryController < ApplicationController
 
     if @course && @exam_body.active && !@course.preview
       if current_user
-        @free_course_steps   = @course.free_course_steps
+        @free_lesson          = @course.free_lesson
         @valid_subscription   = current_user.active_subscriptions_for_exam_body(@exam_body.id).all_valid.first
         @course_log           = current_user.course_logs.for_course(@course.id).all_in_order.last
 

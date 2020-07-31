@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_14_102457) do
+ActiveRecord::Schema.define(version: 2020_07_30_125130) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -405,6 +405,7 @@ ActiveRecord::Schema.define(version: 2020_07_14_102457) do
     t.integer "course_section_id"
     t.integer "constructed_response_count", default: 0
     t.string "temporary_label"
+    t.boolean "free", default: false, null: false
     t.index ["course_id"], name: "index_course_lessons_on_course_id"
     t.index ["course_section_id"], name: "index_course_lessons_on_course_section_id"
   end
@@ -993,6 +994,7 @@ ActiveRecord::Schema.define(version: 2020_07_14_102457) do
     t.string "state"
     t.hstore "template_params", default: {}
     t.string "guid"
+    t.integer "onboarding_process_id"
     t.index ["mandrill_id"], name: "index_messages_on_mandrill_id"
     t.index ["process_at"], name: "index_messages_on_process_at"
     t.index ["user_id"], name: "index_messages_on_user_id"
@@ -1022,6 +1024,7 @@ ActiveRecord::Schema.define(version: 2020_07_14_102457) do
     t.boolean "active", default: true, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "course_lesson_log_id"
     t.index ["course_log_id"], name: "index_onboarding_processes_on_course_log_id"
     t.index ["user_id"], name: "index_onboarding_processes_on_user_id"
   end
