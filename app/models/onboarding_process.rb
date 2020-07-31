@@ -109,7 +109,7 @@ class OnboardingProcess < ApplicationRecord
     if next_step && next_step.class.name == 'CourseStep'
       UrlHelper.instance.show_course_url(course_name_url: next_step.course_lesson.course_section.course.name_url, course_section_name_url: next_step.course_lesson.course_section.name_url, course_lesson_name_url: next_step.course_lesson.name_url, course_step_name_url: next_step.name_url, host: LEARNSIGNAL_HOST, utm_campaign: 'OnboardingEmails', utm_content: 'send_onboarding_content_email', utm_source: "Onboarding-#{id}", utm_term: "Day-#{day}")
     else
-      UrlHelper.instance.library_course_url(course.group.name_url, course.name_url, host: LEARNSIGNAL_HOST, utm_medium: 'email', utm_campaign: 'OnboardingEmails', utm_content: 'send_onboarding_content_email', utm_source: "Onboarding-#{id}", utm_term: "Day-#{day}")
+      UrlHelper.instance.library_course_url(group_name_url: course.group.name_url, course_name_url: course.name_url, host: LEARNSIGNAL_HOST, utm_medium: 'email', utm_campaign: 'OnboardingEmails', utm_content: 'send_onboarding_content_email', utm_source: "Onboarding-#{id}", utm_term: "Day-#{day}")
     end
   end
 
