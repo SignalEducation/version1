@@ -69,7 +69,7 @@
                           %th
                           %th
                       %tbody
-                        -course_section.course_lessons.not_free.all_in_order.each do |course_lesson|
+                        -course_section.course_lessons.all_in_order.each do |course_lesson|
                           %tr{id: course_lesson.id, data: { parent: @course.id, destination: admin_course_lessons_url}}
                             %td
                               =course_lesson.name.to_s
