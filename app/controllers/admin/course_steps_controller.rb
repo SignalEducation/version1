@@ -70,7 +70,7 @@ module Admin
         elsif @course_step.is_constructed_response
           @course_step.constructed_response.scenario.add_an_empty_scenario_question
         end
-        @course_lessons = cm&.parent&.active_children
+        @course_lessons = cm&.parent&.children
         set_related_cmes
       else
         redirect_to admin_course_url(@course_step.parent.parent)
