@@ -5,6 +5,8 @@
   let course_log_id = "#{@course_log.try(:id) || ''}";
   let section_log_id = "#{@course_section_log.try(:id) || ''}";
   let exam_track_id = "#{@course_lesson_log.try(:id) || ''}";
+  let freeLesson = "#{@course_lesson.free}";
+  let completionPercent = #{@course_lesson.free ? 0.30 : 0.90};
   let logId = '';
   let options = {
     id: "#{cme.course_video.vimeo_guid}",
@@ -21,7 +23,7 @@
   });
 
   let timeUpdate = function(data) {
-    if (data.percent >= 0.90) {
+    if (data.percent >= completionPercent) {
       $.ajax({
         headers: { 'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') },
         url: '#{video_watched_data_courses_path}',
@@ -66,3 +68,10 @@
 
   player.on('play', onPlay);
   player.on('timeupdate', timeUpdate);
+
+
+  $( document ).ready(function() {
+    if ( freeLesson === 'true') {
+      player.play();
+    }
+  });

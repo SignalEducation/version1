@@ -6,7 +6,8 @@
   let course_log_id  = "#{@course_log.try(:id) || ''}";
   let section_log_id = "#{@course_section_log.try(:id) || ''}";
   let exam_track_id  = "#{@course_lesson_log.try(:id) || ''}";
-  let video_id       = "#{ENV['DACAST_PLAYER_KEY']}#{cme.course_video.dacast_id}"
+  let video_id       = "#{ENV['DACAST_PLAYER_KEY']}#{cme.course_video.dacast_id}";
+  let freeLesson = "#{@course_lesson.free}";
   let myPlayer       = dacast(video_id, 'video-player-window');
 
   // Create a log when video start
@@ -29,11 +30,17 @@
           console.log(xhr);
         }
       });
+
+      if ( freeLesson === 'true') {
+        setTimeout(
+          function()
+          { updateLog(); }, 60000);
+      }
     }
   });
 
   // Update the log when video finish
-  myPlayer.onComplete(function(){
+  function updateLog() {
     $.ajax({
       url: '#{video_watched_data_courses_path}',
       method: 'patch',
@@ -49,4 +56,20 @@
         console.log(xhr);
       }
     });
+  };
+
+  myPlayer.onComplete(function(){
+    updateLog();
+  });
+
+  $( document ).ready(function() {
+    if ( freeLesson === 'true') {
+      setTimeout(
+        function()
+        {
+          if ( myPlayer.ready()) {
+            myPlayer.play();
+          }
+        }, 3000);
+    }
   });

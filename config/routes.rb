@@ -84,11 +84,12 @@ Rails.application.routes.draw do
 
       get 'courses/:id/new_course_section',                                                     to: 'course_sections#new',               as: :new_course_section
       get 'courses/:id/course_section/:course_section_id/new_course_lesson',                    to: 'course_lessons#new',                as: :new_course_lesson
+      get 'courses/:id/new_free_course_lesson',                                                 to: 'course_lessons#new',                as: :new_free_course_lesson
       get 'courses/:id/course_section/:course_section_id/edit_course_lesson/:course_lesson_id', to: 'course_lessons#edit',               as: :edit_course_lesson
       get 'courses/:id/course_section/:course_section_id/course_lesson/:course_lesson_id',      to: 'course_lessons#show',               as: :show_course_lesson
       get 'courses/:course_id/reorder_course_sections',                                         to: 'course_sections#reorder_list',      as: :reorder_course_sections
       get 'courses/:id/course_lessons_order',                                                   to: 'courses#course_lessons_order',      as: :course_lessons_order
-      get 'courses/:id/trial_content',                                                          to: 'courses#trial_content',             as: :course_trial_content
+      get 'courses/:id/free_lesson',                                                            to: 'courses#free_lesson',               as: :course_free_lesson_content
       get 'courses/:id/resources',                                                              to: 'courses#course_resources',          as: :course_resources
       get 'courses/:id/new_course_resources',                                                   to: 'courses#new_course_resources',      as: :new_course_resources
       post 'courses/:id/resources/reorder',                                                     to: 'course_resources#reorder',          as: :course_resources_reorder

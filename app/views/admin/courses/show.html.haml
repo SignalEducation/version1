@@ -13,7 +13,7 @@
     -else
       .row
         .col-sm-12
-          =link_to 'Trial Content', admin_course_trial_content_path(@course), class: 'btn btn-warning'
+          =link_to 'Free Lesson', admin_course_free_lesson_content_path(@course), class: 'btn btn-warning'
           =link_to t('views.course_resources.show.h2'), admin_course_resources_path(@course), class: 'btn btn-secondary'
           =link_to 'New Course Section (tab)', admin_new_course_section_path(@course.id), class: 'btn btn-primary'
           =link_to 'Reorder Course Sections', admin_reorder_course_sections_path(@course.id), class: 'btn btn-warning'
@@ -69,7 +69,7 @@
                           %th
                           %th
                       %tbody
-                        -course_section.course_lessons.all_in_order.each do |course_lesson|
+                        -course_section.course_lessons.not_free.all_in_order.each do |course_lesson|
                           %tr{id: course_lesson.id, data: { parent: @course.id, destination: admin_course_lessons_url}}
                             %td
                               =course_lesson.name.to_s
