@@ -9,7 +9,7 @@ gem 'puma', '~> 3.12.4'
 
 # Core gems - common to all environments
 gem 'airbrake', '~> 9.5'
-gem 'authlogic', '~> 5.0.0'
+gem 'authlogic', '~> 6.1.0'
 gem 'ahoy_matey', '>= 3.0.0' # visit tracking
 gem 'uuidtools', '~> 2.1', '>= 2.1.5'
 gem 'blazer', '~> 2.1'
@@ -114,7 +114,7 @@ end
 
 group :test do
   gem 'capybara-screenshot'
-  gem 'database_cleaner' # tidies up the test database
+  gem 'database_cleaner-active_record'
   gem 'guard-rspec' # Guard watches for any changed file and reruns that files tests
   gem 'rspec_junit_formatter'
   gem 'rspec-retry'

@@ -41,6 +41,5 @@ FactoryBot.define do
     onboarding_level_subheading  { 'Welcome Message' }
     seo_title                    { |n| "#{Faker::Internet.domain_name} - #{n}" }
     exam_body
-
   end
 end

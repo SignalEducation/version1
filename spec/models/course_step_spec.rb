@@ -111,8 +111,8 @@ describe CourseStep do
 
     describe '#array_of_sibling_ids' do
       it 'return steps ids' do
-        expect(course_step_01.array_of_sibling_ids).to eq([course_step_01.id, course_step_02.id])
-        expect(course_step_02.array_of_sibling_ids).to eq([course_step_01.id, course_step_02.id])
+        expect(course_step_01.array_of_sibling_ids).to include(course_step_01.id, course_step_02.id)
+        expect(course_step_02.array_of_sibling_ids).to include(course_step_01.id, course_step_02.id)
       end
     end
 

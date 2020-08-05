@@ -40,7 +40,6 @@ FactoryBot.define do
     livemode                        { false }
     exam_body
 
-
     factory :student_subscription_plan do
       factory :student_subscription_plan_m do # monthly
         payment_frequency_in_months { 1 }
