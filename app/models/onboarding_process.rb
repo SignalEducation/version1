@@ -43,7 +43,7 @@ class OnboardingProcess < ApplicationRecord
     elsif course_log&.course_step_logs
       course_log.course_step_logs.where(latest_attempt: true, element_completed: false).order(:created_at)&.last&.course_step
     else
-      course_log.course.free_course_steps.first
+      course_log&.course&.free_course_steps&.first
     end
   end
 
