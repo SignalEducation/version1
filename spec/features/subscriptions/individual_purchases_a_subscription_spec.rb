@@ -56,7 +56,7 @@ describe 'An individual purchasing a subscription', type: :feature do
     end
   end
 
-  context 'as a logged-in user', js: true do
+  context 'as a logged-in user' do
     let(:user) { create(:user, user_group: user_group, currency: country.currency) }
 
     before(:each) do
@@ -77,9 +77,7 @@ describe 'An individual purchasing a subscription', type: :feature do
 
         expect(page).to have_content('Choose a way to pay')
 
-        element = find('label[for=pay-with-paypal]')
-        scroll_to(element)
-        element.click
+        find('label[for=pay-with-paypal]').click
 
         expect(page).to have_selector('#paypal_submit')
       end
@@ -97,10 +95,6 @@ describe 'An individual purchasing a subscription', type: :feature do
         sign_in_via_sign_in_page(user)
         visit pricing_path(group_name_url: exam_body.group.name_url)
         first(:link, 'Choose this plan').click
-        expect(page).not_to have_selector('#all-plans', visible: true)
-
-        click_link('Show all Plans')
-
         expect(page).to have_selector('#all-plans', visible: true)
       end
     end

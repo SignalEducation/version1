@@ -106,7 +106,7 @@ class Subscription < ApplicationRecord
     end
 
     event :pause do
-      transition active: :paused
+      transition %i[active past_due] => :paused
     end
 
     event :record_error do
