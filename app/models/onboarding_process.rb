@@ -38,12 +38,12 @@ class OnboardingProcess < ApplicationRecord
   def next_step
     if course_lesson_log&.next_step
       course_lesson_log&.next_step
-    elsif course_log.latest_course_step&.next_element
+    elsif course_log&.latest_course_step&.next_element
       course_log&.latest_course_step&.next_element
     elsif course_log&.course_step_logs
       course_log.course_step_logs.where(latest_attempt: true, element_completed: false).order(:created_at)&.last&.course_step
     else
-      course_log.course.free_course_steps.first
+      course_log&.course&.free_course_steps&.first
     end
   end
 
