@@ -14,18 +14,21 @@ shared_examples_for 'refund_report' do
   let(:obj) { create(:refund) }
 
   describe 'Methods used to build the refund csv' do
+    Timecop.freeze(Time.zone.local(2020, 7, 1, 15, 0, 0)) do
+      it { expect(obj.refunded_on).to eq(obj.created_at.strftime('%Y-%m-%d')) }
+      it { expect(obj.inv_created).to eq(obj.invoice.created_at.strftime('%Y-%m-%d')) }
+      it { expect(obj.sub_created).to eq(obj.subscription&.created_at.strftime('%Y-%m-%d')) }
+      it { expect(obj.user_created).to eq(obj.user.created_at.strftime('%Y-%m-%d')) }
+      it { expect(obj.sub_created).to eq(obj.subscription&.created_at&.strftime('%Y-%m-%d')) }
+    end
     it { expect(obj.refund_id).to eq(obj&.id) }
-    it { expect(obj.refunded_on).to eq(obj.created_at.strftime('%Y-%m-%d')) }
     it { expect(obj.refund_status).to eq(obj.status) }
     it { expect(obj.stripe_id).to eq(obj.stripe_guid) }
     it { expect(obj.refund_amount).to eq(obj.amount) }
     it { expect(obj.inv_total).to eq(obj.invoice.total) }
-    it { expect(obj.inv_created).to eq(obj.invoice.created_at.strftime('%Y-%m-%d')) }
     it { expect(obj.invoice_id).to eq(obj.invoice.id) }
     it { expect(obj.invoice_type).to eq('New') }
     it { expect(obj.email).to eq(obj.user.email) }
-    it { expect(obj.user_created).to eq(obj.user.created_at.strftime('%Y-%m-%d')) }
-    it { expect(obj.sub_created).to eq(obj.subscription&.created_at&.strftime('%Y-%m-%d')) }
     it { expect(obj.sub_exam_body).to eq(obj.subscription&.subscription_plan&.exam_body&.name) }
     it { expect(obj.sub_status).to eq(obj.subscription&.state) }
     it { expect(obj.sub_type).to eq(obj.subscription&.kind) }

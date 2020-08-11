@@ -117,6 +117,73 @@ describe Subscription do
   it { should respond_to(:un_cancel) }
 
   describe 'Methods' do
+    describe '#update_from_stripe' do
+      let(:sub) { build_stubbed(:subscription) }
+      let(:stripe_sub) { create(:stripe_subscription) }
+
+      before :each do
+        allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
+      end
+
+      it 'returns NIL unless there is a stripe_guid and stripe_customer_id present' do
+        expect(sub.update_from_stripe).to be_nil
+      end
+
+      it 'returns NIL unless a stripe_customer is returned' do
+        allow(Stripe::Customer).to receive(:retrieve).with(stripe_sub.stripe_customer_id).and_return(nil)
+
+        expect(stripe_sub.update_from_stripe).to be_nil
+      end
+
+      it 'calls #update_subscription_attributes if there is a stripe_customer returned' do
+        customer = double
+        allow(Stripe::Customer).to receive(:retrieve).with(stripe_sub.stripe_customer_id).and_return(customer)
+        expect(stripe_sub).to receive(:update_subscription_attributes).with(customer)
+
+        stripe_sub.update_from_stripe
+      end
+
+      it 'rescues from Stripe::InvalidRequestError' do
+        allow(Stripe::Customer).to receive(:retrieve).with(stripe_sub.stripe_customer_id).and_raise(Stripe::InvalidRequestError.new('message', 400))
+
+        stripe_sub.update_from_stripe
+
+        expect(stripe_sub.stripe_status).to eq 'canceled'
+      end
+    end
+
+    describe '#update_subscription_attributes' do
+      let(:sub) { create(:stripe_subscription, stripe_status: nil) }
+      let(:customer) { double }
+      let(:stripe_sub) do
+        JSON.parse(
+          File.read(
+            Rails.root.join('spec/fixtures/stripe/create_subscription_response.json')
+          ), object_class: OpenStruct
+        )
+      end
+
+      before :each do
+        allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
+        allow(stripe_sub).to receive(:id).and_return(sub.stripe_guid)
+      end
+
+      it 'retrieves the subscriptions for the customer' do
+        expect(customer).to receive_message_chain('subscriptions.retrieve').and_return(stripe_sub)
+        sub.update_subscription_attributes(customer)
+      end
+
+      it 'updates the subscription' do
+        allow(customer).to receive_message_chain('subscriptions.retrieve').and_return(stripe_sub)
+
+        expect {
+          sub.update_subscription_attributes(customer)
+          sub.reload
+        }.to change { sub.next_renewal_date }.
+          and change { sub.stripe_status }
+      end
+    end
+
     describe '#schedule_paypal_cancellation' do
       before :each do
         allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)

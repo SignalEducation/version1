@@ -7,7 +7,9 @@ shared_examples_for 'order_report' do
 
   describe 'Methods used to build the order csv' do
     it { expect(obj.order_id).to eq(obj.id) }
-    it { expect(obj.order_created).to eq(obj.created_at.strftime('%Y-%m-%d')) }
+    Timecop.freeze(Time.zone.local(2020, 7, 1, 15, 0, 0)) do
+      it { expect(obj.order_created).to eq(obj.created_at.strftime('%Y-%m-%d')) }
+    end
     it { expect(obj.name).to eq(obj.product.group.name) }
     it { expect(obj.product_name).to eq(obj.product.name) }
     it { expect(obj.stripe_id).to eq(obj.stripe_payment_intent_id) }
