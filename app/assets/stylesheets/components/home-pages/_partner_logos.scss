@@ -1,0 +1,19 @@
+.partner-logo-subtitle {
+    padding: 0 5em 0 5em;
+}
+.logo3{
+    height:100%;
+    width:35%;
+}
+@media (min-width:992px) {
+    .partner-logo-subtitle {
+        padding: 0 10em 0 10em;
+    }
+    .logo2 {
+        padding-left: 4em !important;
+    }
+    .logo3{
+        height:100%;
+        width:50%;
+    }
+}

@@ -10,7 +10,7 @@
               %h1.h1-mega.text-white.pb-4
                 We make learning smarter and easier
               %p.p-hero.px-lg-6.text-white
-                What makes learnsignal different is that we’re a digital-first education company. Our vision is to help as many people as possible pass their ACCA and CIMA exams or update their CPD skills to improve every aspect of their lives.
+                What makes learnsignal different is that we’re a digital-first education company. Our vision is to help as many people as possible pass their Accounting & Finance exams or update their CPD skills to improve every aspect of their lives.
               %p.p-hero.px-lg-6.text-white
                 Our mission is to turn professional education on its head by providing professionals with an easy and affordable way to study in an environment that offers 24/7 access. For us, online learning is the perfect way to do that.
               %p.p-hero.px-lg-6.text-white
@@ -40,23 +40,8 @@
 
 
   .container-bg
-    .container
-      %article.py-5
-        %header.pb-sm-4.pb-md-5
-          .row.row-lg
-            .col-12.col-lg-4
-              .text-center
-                =image_tag('learning-partner-badge.png', alt: 'ACCA Logo')
-            .col-12.col-lg-4
-              .text-center.pt-7
-                =image_tag('CIMA_Registered_Tuition_Provider_RGB.png', alt: 'CIMA Logo')
-            .col-12.col-lg-4
-              .py-6
-                %h2.h1-mega.text-center
-                  Approved ACCA & CIMA Tuition Partners
-                %p.text-gray2.pt-5.text-center
-                  Approved ACCA & CIMA Tuition Partners. Since becoming approved providers we have continued to challenge the traditional way of learning and grown our student base across 130 countries.
-
+    =render partial: 'partner_logos'
+  
   =render partial: 'library/user_form_modal', locals: { ticket_type: 'Contact Us', form_id: 'contact-form-modal' }
   .container-bg.bg-gray5
     .container
