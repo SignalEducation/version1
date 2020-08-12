@@ -201,7 +201,7 @@ class UsersController < ApplicationController
   end
 
   def format_hubspot_properties(data)
-    data.to_unsafe_h.map { |k, v| { property: k, value: v } }
+    data&.to_unsafe_h&.map { |k, v| { property: k, value: v } }
   end
 
   def csv_parsed_errors?(users)

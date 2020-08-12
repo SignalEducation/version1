@@ -31,31 +31,31 @@ class UserVerificationsController < ApplicationController
 
   def account_verified
     # This is the post email verification page
-    redirect_to root_url unless current_user
-
     @group = Group.find_by(name_url: params[:group_url])
 
-    redirect_to root_url and return unless @group&.active && @group&.exam_body&.active
+    if current_user && @group&.active && @group&.exam_body&.active
+      seo_title_maker("Welcome to learnsignal #{@group.name}", @group.seo_description, nil)
 
-    seo_title_maker("Welcome to learnsignal #{@group.name}", @group.seo_description, nil)
+      @levels      = @group.levels.all_active
+      @courses     = @group.courses.all_active.where(on_welcome_page: true)
+      ip_country   = IpAddress.get_country(request.remote_ip)
+      country      = ip_country || Country.find_by(name: 'United Kingdom')
+      @currency_id = current_user ? current_user.get_currency(country).id : country.try(:currency_id)
 
-    @levels      = @group.levels.all_active
-    @courses     = @group.courses.all_active.where(on_welcome_page: true)
-    ip_country   = IpAddress.get_country(request.remote_ip)
-    country      = ip_country || Country.find_by(name: 'United Kingdom')
-    @currency_id = current_user ? current_user.get_currency(country).id : country.try(:currency_id)
+      if country && @currency_id
+        @subscription_plan =
+          SubscriptionPlan.where(
+            subscription_plan_category_id: nil, exam_body_id: @group.exam_body_id,
+            payment_frequency_in_months: @group.exam_body.preferred_payment_frequency
+          ).includes(:currency).in_currency(@currency_id).all_active.all_in_order.first
+      end
 
-    if country && @currency_id
-      @subscription_plan =
-        SubscriptionPlan.where(
-          subscription_plan_category_id: nil, exam_body_id: @group.exam_body_id,
-          payment_frequency_in_months: @group.exam_body.preferred_payment_frequency
-        ).includes(:currency).in_currency(@currency_id).all_active.all_in_order.first
+      @navbar     = false
+      @top_margin = false
+      @footer     = false
+    else
+      redirect_to root_url
     end
-
-    @navbar     = false
-    @top_margin = false
-    @footer     = false
   end
 
   def resend_verification_mail
