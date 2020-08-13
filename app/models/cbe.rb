@@ -20,10 +20,11 @@ class Cbe < ApplicationRecord
   belongs_to :course
   has_one :product, dependent: :destroy
 
-  has_many :sections, dependent: :destroy, inverse_of: :cbe,
-                      class_name: 'Cbe::Section'
   has_many :introduction_pages, dependent: :destroy, inverse_of: :cbe,
                                 class_name: 'Cbe::IntroductionPage'
+  has_many :sections, dependent: :destroy, inverse_of: :cbe,
+                      class_name: 'Cbe::Section'
+  has_many :scenarios, through: :sections, class_name: 'Cbe::Scenario'
   has_many :questions, through: :sections, class_name: 'Cbe::Question'
   has_many :resources, inverse_of: :cbe, class_name: 'Cbe::Resource',
                        dependent: :destroy
@@ -63,5 +64,9 @@ class Cbe < ApplicationRecord
       resource.document = old_resource.document
       resource.save
     end
+  end
+
+  def has_exhibit_scenario?
+    sections.map(&:exhibits_scenario?).any?
   end
 end

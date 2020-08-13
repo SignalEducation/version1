@@ -18,7 +18,7 @@
         <b-navbar class="nav nav-underline bg-cbe-gray">
           <b-navbar-nav>
             <CbeResources
-              v-if="['sections', 'questions'].includes(this.$route.name)"
+              v-if="['sections', 'questions', 'scenarios'].includes(this.$route.name)"
               :cbe_data="cbe_data"
             />
           </b-navbar-nav>
@@ -108,8 +108,14 @@ export default {
     formatedData() {
       const data = {};
       const questions = Object.values(this.user_cbe_data.questions);
+      const responses = Object.values(this.user_cbe_data.responses);
+
       for (let i = 0; i < questions.length; i++) {
         delete questions[i].id;
+      }
+
+      for (let i = 0; i < responses.length; i++) {
+        delete responses[i].id;
       }
 
       data.status = 'finished';
@@ -117,6 +123,7 @@ export default {
       data.user_id = this.user_cbe_data.user_id;
       data.exercise_id = this.user_cbe_data.exercise_id;
       data.questions_attributes = [].concat.apply([], questions);
+      data.responses_attributes = [].concat.apply([], responses);
       return data;
     },
     updateExamPageState(route) {

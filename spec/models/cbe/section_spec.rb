@@ -54,7 +54,8 @@ RSpec.describe Cbe::Section, type: :model do
   describe 'Enums' do
     it do
       should define_enum_for(:kind).
-               with(objective: 0, constructed_response: 1, objective_test_case: 2)
+               with(objective: 0, constructed_response: 1,
+                    objective_test_case: 2, exhibits_scenario: 3)
     end
   end
 

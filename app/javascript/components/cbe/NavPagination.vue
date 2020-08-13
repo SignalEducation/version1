@@ -74,9 +74,15 @@ export default {
           switch(type) {
             case 'sections':
               object_link.push({ name: type, params: { id: item.id } })
-              item.questions.filter(question => {
-                object_link.push({ name: 'questions', params: { id: question.id } })
-              });
+              if (item.kind == 'exhibits_scenario') {
+                item.scenarios.filter(scenario => {
+                  object_link.push({ name: 'scenarios', params: { id: scenario.id } })
+                });
+              } else {
+                item.questions.filter(question => {
+                  object_link.push({ name: 'questions', params: { id: question.id } })
+                });
+              }
               break;
             default:
               object_link.push({ name: type, params: { id: item.id } })

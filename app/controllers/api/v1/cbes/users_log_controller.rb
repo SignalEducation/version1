@@ -23,6 +23,8 @@ module Api
         def update
           # TODO: (giordano), questions are been duplicated
           @user_log.questions.destroy_all
+          @user_log.responses.destroy_all
+
           return if @user_log.update(permitted_params)
 
           render json: { errors: @user_log.errors }, status: :unprocessable_entity
@@ -37,13 +39,16 @@ module Api
         def permitted_params
           params.require(:cbe_user_log).permit(
             :status, :created_at, :updated_at, :cbe_id, :user_id, :exercise_id,
+            responses_attributes: [
+              :cbe_response_option_id,
+              content: {}
+            ],
             questions_attributes: [
               :cbe_question_id, :score, :correct,
               answers_attributes: [
                 :cbe_answer_id,
                 :score,
-                content: {
-                }
+                content: {}
               ]
             ]
           )

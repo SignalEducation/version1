@@ -5,7 +5,6 @@
         <label for="sectionName">Name</label>
         <div class="input-group input-group-lg">
           <input
-            id="sectionName"
             v-model="name"
             :class="'form-control ' + {error: shouldAppendErrorClass($v.name), valid: shouldAppendValidClass($v.name)}"
             placeholder="Name"
@@ -198,7 +197,7 @@ export default {
       default: ""
     },
     initialScore: {
-      type: String,
+      type: Number,
       default: null
     },
     initialSortingOrder: {
@@ -227,9 +226,10 @@ export default {
       kind: this.initialKind,
       content: this.initialContent,
       sectionKinds: [
-        "objective",
-        "objective_test_case",
-        "constructed_response"
+         { value: 'objective', text: 'Objective' },
+         { value: 'objective_test_case', text: 'Objective Test Case' },
+         { value: 'constructed_response', text: 'Constructed Response' },
+         { value: 'exhibits_scenario', text: 'Exhibits Scenario' }
       ],
       random: this.initialRandom,
       showRandom: this.initialKind == "objective" ? true : false,

@@ -30,23 +30,23 @@
     </b-navbar>
 
     <b-navbar
-      v-show="showNavOptions(['sections', 'questions'])"
+      v-show="showNavOptions(['sections', 'scenarios', 'questions'])"
       class="nav nav-underline bg-cbe-gray"
     >
       <b-navbar-nav>
         <!-- <b-nav-text class="symbols-icon">Symbol</b-nav-text> -->
         <CbeCalculator
-          v-show="showNavOptions(['questions'])"
+          v-show="showNavOptions(['scenarios', 'questions'])"
         />
 
         <CbeScratchPad
-          v-if="showNavOptions(['questions'])"
+          v-if="showNavOptions(['scenarios', 'questions'])"
           :user-cbe-data="userCbeData"
         />
       </b-navbar-nav>
       <b-navbar-nav align="right">
         <CbeFlagToReview
-          v-if="showNavOptions(['sections', 'questions'])"
+          v-if="showNavOptions(['sections', 'scenarios', 'questions'])"
           :user_cbe_data="userCbeData"
           :type="$route.name"
           :flag-id="Number($route.params.id)"

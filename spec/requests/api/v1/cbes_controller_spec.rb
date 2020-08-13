@@ -28,9 +28,11 @@ RSpec.describe 'Api::V1::CbesController', type: :request do
                                                             active
                                                             score
                                                             course_id
+                                                            exhibits_scenario
                                                             introduction_pages
                                                             resources
                                                             sections
+                                                            scenarios
                                                             questions
                                                             course
                                                             exam_body])
@@ -75,9 +77,11 @@ RSpec.describe 'Api::V1::CbesController', type: :request do
                                                   active
                                                   score
                                                   course_id
+                                                  exhibits_scenario
                                                   introduction_pages
                                                   resources
                                                   sections
+                                                  scenarios
                                                   questions
                                                   course
                                                   exam_body])
@@ -112,9 +116,11 @@ RSpec.describe 'Api::V1::CbesController', type: :request do
                                                   active
                                                   score
                                                   course_id
+                                                  exhibits_scenario
                                                   introduction_pages
                                                   resources
                                                   sections
+                                                  scenarios
                                                   questions
                                                   course
                                                   exam_body])
@@ -167,9 +173,11 @@ RSpec.describe 'Api::V1::CbesController', type: :request do
                                                   active
                                                   score
                                                   course_id
+                                                  exhibits_scenario
                                                   introduction_pages
                                                   resources
                                                   sections
+                                                  scenarios
                                                   questions
                                                   course
                                                   exam_body])

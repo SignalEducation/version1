@@ -29,6 +29,8 @@ class Cbe
     has_many :scenarios, class_name: 'Cbe::Scenario', foreign_key: 'cbe_section_id',
                          inverse_of: :section, dependent: :destroy
 
+    has_many :exhibits, class_name: 'Cbe::Exhibit', foreign_key: 'cbe_section_id',
+                        inverse_of: :section, dependent: :destroy
     # validations
     validates :name, :kind, :content, :cbe_id, presence: true
 
@@ -36,6 +38,6 @@ class Cbe
     scope :all_in_order, -> { order(:sorting_order) }
 
     # enums
-    enum kind: { objective: 0, constructed_response: 1, objective_test_case: 2 }
+    enum kind: { objective: 0, constructed_response: 1, objective_test_case: 2, exhibits_scenario: 3 }
   end
 end

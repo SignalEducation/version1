@@ -7,6 +7,7 @@ const state = {
     cbe_id: null,
     exercise_id: null,
     questions: {},
+    responses: {},
     status: "",
     exam_pages: {
       state: null,
@@ -24,13 +25,16 @@ const getters = {
 
 const actions = {
   startUserCbeData(context, newData) {
-    context.commit('setUserCbeData', newData);
+    context.commit("setUserCbeData", newData);
   },
   recordUserLog(context, newData) {
-    context.commit('setUserLog', newData);
+    context.commit("setUserLog", newData);
   },
   recordAnswer(context, newData) {
-    context.commit('setAnswerData', newData);
+    context.commit("setAnswerData", newData);
+  },
+  recordResponse(context, newData) {
+    context.commit("setResponseData", newData);
   },
 };
 
@@ -50,10 +54,17 @@ const functions = {
 
     sections.forEach((section) => {
       examPages.push(examPageObject(section.name, 'sections', section.id, null));
-      section.questions.forEach((question) => {
-        page += 1;
-        examPages.push(examPageObject(`Question ${page}`, 'questions', question.id, page));
-      });
+      if (section.kind == 'exhibits_scenario') {
+        section.scenarios.forEach((scenario) => {
+          page += 1;
+          examPages.push(examPageObject(`Case Study ${page}`, 'scenarios', scenario.id, page));
+        });
+      } else {
+        section.questions.forEach((question) => {
+          page += 1;
+          examPages.push(examPageObject(`Question ${page}`, 'questions', question.id, page));
+        });
+      }
     });
 
     return examPages;
@@ -65,7 +76,9 @@ const mutations = {
     state.user_cbe_data.cbe_id = newDat.cbe_id;
     state.user_cbe_data.user_id = newDat.user_id;
     state.user_cbe_data.exercise_id = newDat.exercise_id;
-    state.user_cbe_data.exam_pages = functions.reviewPageLinks(newDat.cbe_data.sections);
+    state.user_cbe_data.exam_pages = functions.reviewPageLinks(
+      newDat.cbe_data.sections
+    );
   },
   setUserLog(state, data) {
     state.user_cbe_data.status = data.status;
@@ -73,6 +86,9 @@ const mutations = {
   },
   setAnswerData(state, question) {
     state.user_cbe_data.questions[question.id] = question;
+  },
+  setResponseData(state, response) {
+    state.user_cbe_data.responses[response.id] = response;
   },
 };
 
