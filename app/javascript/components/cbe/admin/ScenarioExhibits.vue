@@ -9,7 +9,7 @@
             href="#"
             variant="secondary"
           >
-            Exhibit - {{ exhibit.sorting_order }}
+            {{ exhibit.sorting_order }} - {{ exhibit.name }}
           </b-button>
         </b-card-header>
 
