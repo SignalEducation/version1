@@ -10,7 +10,9 @@
           :title="responseOptionFType"
           :closeButton="true"
           :isOpen.sync="showModal"
+          :resizable="true"
           :width="700"
+          :height="700"
           positionHint="center">
 
           <TinyEditor
@@ -19,12 +21,20 @@
             :aditional-toolbar-options="[]"
             :editor-height="520" />
 
-          <div v-if="responseOptionType === 'multiple_open'">
-            <TinyEditor
-            v-for="n in responseOptionQuantity"
-            :key="n"
-            :aditional-toolbar-options="[]"
-            :editor-height="520" />
+          <div class="multiple-editors" v-if="responseOptionType === 'multiple_open'">
+            <div v-for="(response, index) in multipleResponseOption" :key="index">
+              <div class="slide-headers">Slide {{ index + 1 }}</div>
+              <TinyEditor
+                :field-model.sync="response.speaker"
+                :aditional-toolbar-options="[]"
+                :editor-height="520" />
+
+              <div class="slide-headers">Slide {{ index + 1 }}: Speaker Notes</div>
+              <TinyEditor
+                :field-model.sync="response.notes"
+                :aditional-toolbar-options="[]"
+                :editor-height="520" />
+            </div>
           </div>
 
           <SpreadsheetEditor
@@ -78,11 +88,18 @@ export default {
     return {
       showModal: this.responseOptionModal,
       responseOption: this.getInitialValue(),
+      multipleResponseOption: this.getInitialMultipleValue(this.responseOptionQuantity),
     }
   },
   watch: {
     responseOption(newValue) {
-      this.syncResponsesData(newValue)
+      this.syncResponsesData(newValue);
+    },
+    multipleResponseOption: {
+      handler(newValue) {
+        this.syncResponsesData(newValue);
+      },
+     deep: true
     }
   },
   methods: {
@@ -92,18 +109,33 @@ export default {
       if (initialValue != null) {
         switch(this.responseOptionType) {
           case 'open':
-            return initialValue.response_attributes[0].content.data
-            break;
-          case 'multiple_open':
-            return initialValue.response_attributes[0]
+            return initialValue.content.data;
             break;
           case 'spreadsheet':
-            return initialValue.response_attributes[0]
+            return initialValue;
             break;
           default:
             return '';
         }
       }
+    },
+    getInitialMultipleValue(quantity){
+      const initialValue = this.$store.state.userCbe.user_cbe_data.responses[this.responseOptionId];
+
+      let responses = [];
+      let s_value = '';
+      let n_value = '';
+      let i = 0;
+
+      while (i < quantity) {
+        if (initialValue && initialValue.content.data[i].speaker) { s_value = initialValue.content.data[i].speaker };
+        if (initialValue && initialValue.content.data[i].notes) { n_value = initialValue.content.data[i].notes };
+
+        responses[i] = { speaker:  s_value, notes: n_value };
+        i++;
+      }
+
+      return responses;
     },
     syncResponsesData(newValue) {
       this.$store.dispatch("userCbe/recordResponse", {
