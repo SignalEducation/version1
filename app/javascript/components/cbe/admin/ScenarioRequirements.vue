@@ -9,7 +9,7 @@
             href="#"
             variant="secondary"
           >
-            Requirement - {{ requirement.sorting_order }}
+            {{ requirement.sorting_order }} - {{ requirement.name }}
           </b-button>
         </b-card-header>
 

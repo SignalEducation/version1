@@ -9,7 +9,7 @@
             href="#"
             variant="secondary"
           >
-            Response Option - {{ response_option.sorting_order }}
+          {{ response_option.sorting_order }} - {{ response_option.kind_formatted }}
           </b-button>
         </b-card-header>
 

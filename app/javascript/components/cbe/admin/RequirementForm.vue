@@ -241,9 +241,9 @@ export default {
               this.$emit("add-scenario-requirement", this.requirementDetails);
               this.requirementDetails = {};
               this.name = this.initialName;
-              this.requirementContent = initalContent;
-              this.requirementKind = 'requirement';
-              this.requirementScore = '0.0';
+              this.requirementContent = this.initalContent;
+              this.requirementKind = this.initialKind;
+              this.requirementScore = this.initialScore;
               this.sortingOrder += 1;
               this.$v.$reset();
             }
