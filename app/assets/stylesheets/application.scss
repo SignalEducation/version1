@@ -4079,6 +4079,13 @@ a.card:hover .card-title .card-explanation {
   background-size: cover;
   background-repeat: no-repeat
 }
+.hero-section-tutor-card {
+  background: #FFFFFF;
+  border: 1px solid rgba(0, 0, 0, 0.03);
+  box-sizing: border-box;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.15);
+  border-radius: 24px;
+}
 @media (min-width:768px) {
   .hero-section {
     padding: 3rem 0;
