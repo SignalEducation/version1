@@ -13,8 +13,11 @@
             .col-sm-6.col-md-4.col-lg-3
               =link_to profile_url(tutor.name_url), class: 'card text-center mb-4' do
                 .py-4
-                  = image_tag tutor.profile_image.url, class: 'img-thumbnail img-thumbnail-sm', alt: 'Tutor Profile Image'
-
+                  //= image_tag tutor.profile_image.url, class: 'img-thumbnail img-thumbnail-sm', alt: 'Tutor Profile Image'
+                  = image_tag 'https://learnsignal3-production.s3-eu-west-1.amazonaws.com/users/4579/Wojtek_Image.png', class: 'img-thumbnail img-thumbnail-sm', alt: 'Tutor Profile Image'
                 %p.h4.text-ellipsis.mb-4
                   =tutor.full_name
-
+                  .row.col-md-12.offset-md-0.text-center
+                    -if tutor.description
+                      %p
+                        =truncate(tutor.description.html_safe, length:120, escape: false)
