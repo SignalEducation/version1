@@ -36,6 +36,7 @@
 #  password_change_required        :boolean
 #  session_key                     :string
 #  name_url                        :string
+#  tutor_link                      :string
 #  profile_image_file_name         :string
 #  profile_image_content_type      :string
 #  profile_image_file_size         :integer
@@ -116,11 +117,13 @@ describe User do
   context 'is a tutor' do
     before { allow(subject).to receive(:tutor_user?).and_return(true) }
     it { should validate_presence_of(:name_url)}
+    it { should validate_presence_of(:tutor_link)}
   end
 
   context 'is not a tutor' do
     before { allow(subject).to receive(:tutor_user?).and_return(false) }
     it { should_not validate_presence_of(:name_url)}
+    it { should_not validate_presence_of(:tutor_link)}
   end
 
   context 'user email validation' do

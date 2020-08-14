@@ -11,23 +11,26 @@
         .row
           -@tutors.each do |tutor|
             .col-sm-6.col-md-4.col-lg-3
-              =link_to profile_url(tutor.name_url), class: 'card text-center mb-4 hero-section-tutor-card' do
+              %div.card.text-center.mb-4.hero-section-tutor-card
+                = link_to '', profile_url(tutor.name_url), class: 'hero-section-show-link-window' 
                 .py-4
-                  //= image_tag tutor.profile_image.url, class: 'img-thumbnail img-thumbnail-sm', alt: 'Tutor Profile Image'
-                  = image_tag 'https://learnsignal3-production.s3-eu-west-1.amazonaws.com/users/4579/Wojtek_Image.png', class: 'img-thumbnail img-thumbnail-sm', alt: 'Tutor Profile Image'
+                  = image_tag tutor.profile_image.url, class: 'img-thumbnail img-thumbnail-sm', alt: 'Tutor Profile Image'
+                  //= image_tag 'https://learnsignal3-production.s3-eu-west-1.amazonaws.com/users/4579/Wojtek_Image.png', class: 'img-thumbnail img-thumbnail-sm', alt: 'Tutor Profile Image'
                 %p.h4.text-ellipsis
                   =tutor.full_name
-                  .row.col-md-12.offset-md-0.text-center
+                  .row.col-md-12.offset-md-0.offset-sm-0.text-center.hero-section-text-description
                     -if tutor.description
                       =truncate(tutor.description.html_safe, length:120, escape: false)
+                    - else 
+                      Is a valued member of our dedicated team of tutors.
                   .row
-                    .col-md-6.offset-md-1
-                      view course
-                    .col-md-0.hero-section-social-media-icons
-                      %i.fa.fa-facebook-square
-                    .col-md-0.hero-section-social-media-icons
-                      %i.fa.fa-twitter
-                    .col-md-0.hero-section-social-media-icons
-                      %i.fa.fa-linkedin
-                    .col-md-0.hero-section-social-media-icons
-                      %i.fa.fa-youtube-play
+                    .py-4.col-md-6.hero-section-responsive-view-course.offset-md-1
+                      %p
+                        = link_to 'View Courses', profile_url(tutor.name_url), class: 'hero-section-show-link'
+                    .py-4.hero-section-responsive-card
+                      .col-md-0
+                        =link_to tutor.tutor_link, class: "hero-section-social-media-icons", target: "_blank" do
+                          %i.fa.fa-facebook-square
+                          %i.fa.fa-twitter
+                          %i.fa.fa-linkedin
+                          %i.fa.fa-youtube-play

@@ -62,6 +62,11 @@
         =f.label :name_url, t('views.users.form.name_url'), class: 'text-danger'
         .input-group.input-group-lg
           =f.text_field :name_url, class: 'form-control', placeholder: t('views.users.form.name_url_placeholder')
+    .row
+      .col-sm-6.input-group-tutor-link
+        =f.label :tutor_link, t('views.users.form.link_url'), class: 'text-danger'
+        .input-group.input-group-lg
+          =f.text_field :tutor_link, class: 'form-control', placeholder: t('views.users.form.link_url_placeholder')
     .row.pt-6
       .col-sm-12
         =f.label :description, t('views.users.form.description')
