@@ -127,15 +127,11 @@ export default {
       return data;
     },
     updateExamPageState(route) {
-      if (route.name === 'sections' || route.name === 'questions') {
+      if (route.name === 'sections' || route.name === 'scenarios' || route.name === 'questions') {
         const {id} = route.params;
 
         this.user_cbe_data.exam_pages.forEach(page => {
-          if (
-            page.type === 'questions' &&
-            page.param === id &&
-            page.state === 'Unseen'
-          ) {
+          if (page.param === id && page.state === 'Unseen') {
             page.state = 'Seen';
           }
         });
