@@ -16,8 +16,8 @@
 FactoryBot.define do
   factory :exam_sitting do
     sequence(:name)           { |n| "Exam Sitting #{n}" }
-    exam_body_id { 1 }
-    course_id { 1 }
+    association :exam_body
+    association :course
     active { true }
     date { "2019-10-26" }
 
