@@ -120,6 +120,7 @@ class User < ApplicationRecord
   validates :password, presence: true, length: { minimum: 6, maximum: 255 }, on: :create
   validates :user_group_id, presence: true
   validates :name_url, presence: true, uniqueness: { case_sensitive: false }, if: :tutor_user?
+  validates :tutor_link, presence: true, uniqueness: { case_sensitive: false }, if: :tutor_user?
   validates :password, confirmation: true, on: :create
   validates :password, confirmation: true, unless: proc { |u| u.password.blank? }
   validates :locale, inclusion: { in: LOCALES }
