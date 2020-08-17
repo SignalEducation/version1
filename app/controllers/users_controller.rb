@@ -181,8 +181,8 @@ class UsersController < ApplicationController
 
   def allowed_params
     params.require(:user).permit(:email, :first_name, :last_name, :user_group_id, :address, :country_id,
-                                 :profile_image, :date_of_birth, :description, :student_number, :name_url,
-                                 :stripe_account_balance, :preferred_exam_body_id, :currency_id,
+                                 :profile_image, :date_of_birth, :description, :student_number, :name_url, 
+                                 :tutor_link, :stripe_account_balance, :preferred_exam_body_id, :currency_id,
                                  onboarding_process_attributes: [:id, :active])
   end
 
