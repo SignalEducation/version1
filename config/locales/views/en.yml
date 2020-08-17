@@ -1557,6 +1557,8 @@ en:
         address_placeholder: Billing address
         name_url: Name URL (Required)
         name_url_placeholder: must-be-lower-case-and-no-spaces
+        link_url: Contact URL (Required)
+        link_url_placeholder: https://www.linkedin.com/
         country_id: Country
         login_count: Login count
         failed_login_count: Failed login count
