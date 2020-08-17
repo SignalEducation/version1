@@ -265,7 +265,7 @@ GEM
     momentjs-rails (2.20.1)
       railties (>= 3.1)
     msgpack (1.2.6)
-    multi_json (1.13.1)
+    multi_json (1.15.0)
     multipart-post (2.1.1)
     mustermann (1.0.3)
     nenv (0.3.0)
@@ -287,7 +287,7 @@ GEM
     parallel (1.19.1)
     parser (2.7.0.4)
       ast (~> 2.4.0)
-    paypal-sdk-rest (1.7.3)
+    paypal-sdk-rest (1.7.4)
       multi_json (~> 1.0)
       xml-simple
     pdf-core (0.7.0)
