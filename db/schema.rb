@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_10_121225) do
+ActiveRecord::Schema.define(version: 2020_08_17_125534) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -1550,6 +1550,7 @@ ActiveRecord::Schema.define(version: 2020_08_10_121225) do
     t.datetime "communication_approval_datetime"
     t.bigint "preferred_exam_body_id"
     t.bigint "currency_id"
+    t.string "tutor_link"
     t.index ["country_id"], name: "index_users_on_country_id"
     t.index ["currency_id"], name: "index_users_on_currency_id"
     t.index ["preferred_exam_body_id"], name: "index_users_on_preferred_exam_body_id"
