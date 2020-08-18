@@ -56,7 +56,7 @@ gem 'sidekiq', require: %w(sidekiq sidekiq/web)
 gem 'split', require: 'split/dashboard'
 gem 'state_machines-activerecord'
 gem 'stripe', '~> 4.21.0' #, git: 'https://github.com/stripe/stripe-ruby'
-gem 'paypal-sdk-rest'
+gem 'paypal-sdk-rest', git: "https://github.com/quilligana/PayPal-Ruby-SDK.git", branch: "add-g2-certificate"
 gem 'summernote-rails'
 gem 'turbolinks', '~> 5' # speeds up page loading - has negative side-effects
 gem 'uglifier', '>= 1.3.0' # compresses Javascript when sending it to users in production
