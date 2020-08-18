@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe 'User Onboarding process', type: :feature do
+describe 'User Onboarding process', type: :feature, js: true do
   before :each do
     allow_any_instance_of(HubSpot::Contacts).to receive(:batch_create).and_return(:ok)
     activate_authlogic
@@ -13,7 +13,7 @@ describe 'User Onboarding process', type: :feature do
     let(:user_group) { create(:student_user_group) }
     let(:student)    { create(:inactive_student_user, :with_group, user_group: user_group) }
 
-    xscenario 'Loading onboarding page', js: true do
+    xscenario 'Loading onboarding page' do
       visit user_verification_path(email_verification_code: student.email_verification_code, group_url: group.name_url)
 
       expect(page).to have_content('Welcome to learnsignal!')
@@ -33,7 +33,7 @@ describe 'User Onboarding process', type: :feature do
     let(:user_group) { create(:student_user_group) }
     let(:student)    { create(:inactive_student_user, user_group: user_group) }
 
-    xscenario 'Loading root page', js: true do
+    xscenario 'Loading root page' do
       visit user_verification_path(email_verification_code: student.email_verification_code, group_url: group.name_url)
 
       expect(page).to have_content('Thank you! Your email is now verified')

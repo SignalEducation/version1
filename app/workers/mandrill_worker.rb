@@ -10,15 +10,25 @@ class MandrillWorker
     message        = Message.find(message_id)
     method_name    = message.template
     template_args  = message.template_params.values
-    template_args  << message.unsubscribe_url if message.unsubscribe_url
+    template_args << message.unsubscribe_url if message.unsubscribe_url
     # The template_params are pulled out in different order than the order they were input to the hstore
 
     return unless message&.user&.email
 
-    client    = MandrillClient.new(message.user)
-    response  = client.send(method_name, *template_args)
-    state     = response.first.fetch('status')
+    send_message(message, method_name, template_args)
+  end
 
-    message.update(mandrill_id: response.first.fetch('_id'), state: state)
+  def send_message(message, method_name, template_args)
+    client = MandrillClient.new(message.user)
+    retries = 0
+    begin
+      response = client.send(method_name, *template_args)
+      message.update(mandrill_id: response.first.fetch('_id'), state: response.first.fetch('status'))
+    rescue Mandrill::Error
+      raise if (retries += 1) > 3
+
+      sleep(retries)
+      retry
+    end
   end
 end

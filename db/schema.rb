@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_30_125130) do
+ActiveRecord::Schema.define(version: 2020_08_17_125534) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -99,6 +99,21 @@ ActiveRecord::Schema.define(version: 2020_07_30_125130) do
     t.index ["cbe_question_id"], name: "index_cbe_answers_on_cbe_question_id"
   end
 
+  create_table "cbe_exhibits", force: :cascade do |t|
+    t.string "name"
+    t.integer "kind"
+    t.json "content"
+    t.integer "sorting_order"
+    t.string "document_file_name"
+    t.string "document_content_type"
+    t.bigint "document_file_size"
+    t.datetime "document_updated_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "cbe_scenario_id"
+    t.index ["cbe_scenario_id"], name: "index_cbe_exhibits_on_cbe_scenario_id"
+  end
+
   create_table "cbe_introduction_pages", force: :cascade do |t|
     t.integer "sorting_order"
     t.text "content"
@@ -126,6 +141,18 @@ ActiveRecord::Schema.define(version: 2020_07_30_125130) do
     t.index ["cbe_section_id"], name: "index_cbe_questions_on_cbe_section_id"
   end
 
+  create_table "cbe_requirements", force: :cascade do |t|
+    t.string "name"
+    t.string "content"
+    t.float "score"
+    t.integer "sorting_order"
+    t.integer "kind"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "cbe_scenario_id"
+    t.index ["cbe_scenario_id"], name: "index_cbe_requirements_on_cbe_scenario_id"
+  end
+
   create_table "cbe_resources", force: :cascade do |t|
     t.string "name"
     t.integer "sorting_order"
@@ -137,6 +164,16 @@ ActiveRecord::Schema.define(version: 2020_07_30_125130) do
     t.datetime "updated_at", null: false
     t.bigint "cbe_id"
     t.index ["cbe_id"], name: "index_cbe_resources_on_cbe_id"
+  end
+
+  create_table "cbe_response_options", force: :cascade do |t|
+    t.integer "kind"
+    t.integer "quantity"
+    t.integer "sorting_order"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "cbe_scenario_id"
+    t.index ["cbe_scenario_id"], name: "index_cbe_response_options_on_cbe_scenario_id"
   end
 
   create_table "cbe_scenarios", force: :cascade do |t|
@@ -199,6 +236,19 @@ ActiveRecord::Schema.define(version: 2020_07_30_125130) do
     t.bigint "cbe_question_id"
     t.index ["cbe_question_id"], name: "index_cbe_user_questions_on_cbe_question_id"
     t.index ["cbe_user_log_id"], name: "index_cbe_user_questions_on_cbe_user_log_id"
+  end
+
+  create_table "cbe_user_responses", force: :cascade do |t|
+    t.json "content"
+    t.text "educator_comment"
+    t.float "score", default: 0.0
+    t.boolean "correct", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "cbe_user_log_id"
+    t.bigint "cbe_response_option_id"
+    t.index ["cbe_response_option_id"], name: "index_cbe_user_responses_on_cbe_response_option_id"
+    t.index ["cbe_user_log_id"], name: "index_cbe_user_responses_on_cbe_user_log_id"
   end
 
   create_table "cbes", force: :cascade do |t|
@@ -1500,6 +1550,7 @@ ActiveRecord::Schema.define(version: 2020_07_30_125130) do
     t.datetime "communication_approval_datetime"
     t.bigint "preferred_exam_body_id"
     t.bigint "currency_id"
+    t.string "tutor_link"
     t.index ["country_id"], name: "index_users_on_country_id"
     t.index ["currency_id"], name: "index_users_on_currency_id"
     t.index ["preferred_exam_body_id"], name: "index_users_on_preferred_exam_body_id"

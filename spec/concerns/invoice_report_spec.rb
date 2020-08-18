@@ -15,9 +15,11 @@ shared_examples_for 'invoice_report' do
   describe 'Methods used to build the invoice csv' do
     it { expect(obj.invoice_id).to eq(obj.id) }
     it { expect(obj.user_email).to eq(obj.user.email) }
-    it { expect(obj.invoice_created).to eq(obj.created_at.strftime('%Y-%m-%d')) }
-    it { expect(obj.user_created).to eq(obj.user.created_at.strftime('%Y-%m-%d')) }
-    it { expect(obj.sub_created).to eq(obj.subscription&.created_at.strftime('%Y-%m-%d')) }
+    Timecop.freeze(Time.zone.local(2020, 7, 1, 15, 0, 0)) do
+      it { expect(obj.invoice_created).to eq(obj.created_at.strftime('%Y-%m-%d')) }
+      it { expect(obj.user_created).to eq(obj.user.created_at.strftime('%Y-%m-%d')) }
+      it { expect(obj.sub_created).to eq(obj.subscription&.created_at.strftime('%Y-%m-%d')) }
+    end
     it { expect(obj.sub_exam_body).to eq(obj.subscription&.subscription_plan&.exam_body&.name) }
     it { expect(obj.sub_status).to eq(obj.subscription&.state) }
     it { expect(obj.sub_type).to eq(obj.subscription&.kind) }

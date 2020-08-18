@@ -7,7 +7,8 @@ json.content                  cbe.content
 json.agreement_content        cbe.agreement_content
 json.active                   cbe.active
 json.score                    cbe.score
-json.course_id        cbe.course.id
+json.course_id                cbe.course.id
+json.exhibits_scenario        cbe.has_exhibit_scenario?
 
 json.introduction_pages cbe.introduction_pages.order(:sorting_order) do |page|
   json.id            page.id
@@ -28,6 +29,10 @@ end
 
 json.sections cbe.sections.active.order(:sorting_order) do |section|
   json.partial! 'api/v1/cbes/sections/section', locals: { section: section }
+end
+
+json.scenarios cbe.scenarios do |scenario|
+  json.partial! 'api/v1/cbes/scenarios/scenario', locals: { scenario: scenario }
 end
 
 json.questions cbe.questions.order(:sorting_order) do |question|

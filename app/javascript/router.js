@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import IntroductionPages from './views/cbes/Introduction.vue';
 import Sections from './views/cbes/Sections.vue';
+import ExhibitScenarios from './views/cbes/ExhibitScenarios.vue';
 import Questions from './views/cbes/Questions.vue';
 import CbeReview from './views/cbes/Review.vue';
 import ExamSubmited from './views/cbes/ExamSubmited.vue';
@@ -22,6 +23,12 @@ export default new Router({
       path: '/sections/:id',
       name: 'sections',
       component: Sections,
+      props: true,
+    },
+    {
+      path: '/scenarios/:id',
+      name: 'scenarios',
+      component: ExhibitScenarios,
       props: true,
     },
     {

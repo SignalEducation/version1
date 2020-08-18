@@ -1,0 +1,151 @@
+<template>
+  <div>
+    <section :class="`exhibits-sidebar-links ${responseOptionType}-icon`" @click="showModal = !showModal">
+      {{ responseOptionFType }}
+    </section>
+
+
+      <hsc-window-style-metal>
+        <hsc-window
+          :title="responseOptionFType"
+          :closeButton="true"
+          :isOpen.sync="showModal"
+          :resizable="true"
+          :width="700"
+          :height="700"
+          positionHint="center">
+
+          <TinyEditor
+            v-if="responseOptionType === 'open'"
+            :field-model.sync="responseOption"
+            :aditional-toolbar-options="[]"
+            :editor-height="520" />
+
+          <div class="multiple-editors" v-if="responseOptionType === 'multiple_open'">
+            <div v-for="(response, index) in multipleResponseOption" :key="index">
+              <div class="slide-headers">Slide {{ index + 1 }}</div>
+              <TinyEditor
+                :field-model.sync="response.speaker"
+                :aditional-toolbar-options="[]"
+                :editor-height="520" />
+
+              <div class="slide-headers">Slide {{ index + 1 }}: Speaker Notes</div>
+              <TinyEditor
+                :field-model.sync="response.notes"
+                :aditional-toolbar-options="[]"
+                :editor-height="520" />
+            </div>
+          </div>
+
+          <SpreadsheetEditor
+            v-if="responseOptionType === 'spreadsheet'"
+            :initial-data="responseOption"
+            @spreadsheet-updated="syncResponsesData" />
+        </hsc-window>
+
+      </hsc-window-style-metal>
+  </div>
+</template>
+
+<script>
+import VueWindow from '../VueWindow.vue'
+import SpreadsheetEditor from '../SpreadsheetEditor/SpreadsheetEditor.vue';
+import TinyEditor from "../TinyEditor.vue";
+
+export default {
+  components: {
+    SpreadsheetEditor,
+    VueWindow,
+    TinyEditor,
+  },
+  props: {
+    responseOptionId: {
+      type: Number,
+      default: null,
+    },
+    responseOptionType: {
+      type: String,
+      default: "",
+    },
+    responseOptionFType: {
+      type: String,
+      default: "",
+    },
+    responseOptionName: {
+      type: String,
+      default: "",
+    },
+    responseOptionQuantity: {
+      type: Number,
+      default: null,
+    },
+    responseOptionModal: {
+      type: Boolean,
+      default:  false
+    },
+  },
+  data() {
+    return {
+      showModal: this.responseOptionModal,
+      responseOption: this.getInitialValue(),
+      multipleResponseOption: this.getInitialMultipleValue(this.responseOptionQuantity),
+    }
+  },
+  watch: {
+    responseOption(newValue) {
+      this.syncResponsesData(newValue);
+    },
+    multipleResponseOption: {
+      handler(newValue) {
+        this.syncResponsesData(newValue);
+      },
+     deep: true
+    }
+  },
+  methods: {
+    getInitialValue() {
+      const initialValue = this.$store.state.userCbe.user_cbe_data.responses[this.responseOptionId];
+
+      if (initialValue != null) {
+        switch(this.responseOptionType) {
+          case 'open':
+            return initialValue.content.data;
+            break;
+          case 'spreadsheet':
+            return initialValue;
+            break;
+          default:
+            return '';
+        }
+      }
+    },
+    getInitialMultipleValue(quantity){
+      const initialValue = this.$store.state.userCbe.user_cbe_data.responses[this.responseOptionId];
+
+      let responses = [];
+      let s_value = '';
+      let n_value = '';
+      let i = 0;
+
+      while (i < quantity) {
+        if (initialValue && initialValue.content.data[i].speaker) { s_value = initialValue.content.data[i].speaker };
+        if (initialValue && initialValue.content.data[i].notes) { n_value = initialValue.content.data[i].notes };
+
+        responses[i] = { speaker:  s_value, notes: n_value };
+        i++;
+      }
+
+      return responses;
+    },
+    syncResponsesData(newValue) {
+      this.$store.dispatch("userCbe/recordResponse", {
+        id: this.responseOptionId,
+        cbe_response_option_id: this.responseOptionId,
+        content: {
+          data: newValue
+        }
+      });
+    },
+  },
+};
+</script>

@@ -6,7 +6,6 @@
           <label for="pageTitle">Title</label>
           <div class="input-group input-group-lg">
             <input
-              id="pageTitle"
               v-model="title"
               placeholder="Title"
               class="form-control"

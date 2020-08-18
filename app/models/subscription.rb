@@ -106,7 +106,7 @@ class Subscription < ApplicationRecord
     end
 
     event :pause do
-      transition active: :paused
+      transition %i[active past_due] => :paused
     end
 
     event :record_error do
@@ -354,29 +354,25 @@ class Subscription < ApplicationRecord
   end
 
   def update_from_stripe
-    if self.stripe_guid && self.stripe_customer_id
-      begin
-        stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
+    return unless stripe_guid && stripe_customer_id
 
-        if stripe_customer
-          begin
-            stripe_subscription = stripe_customer.subscriptions.retrieve(self.stripe_guid)
+    stripe_customer = Stripe::Customer.retrieve(stripe_customer_id)
+    update_subscription_attributes(stripe_customer) if stripe_customer
+  rescue Stripe::InvalidRequestError
+    update(stripe_status: 'canceled')
+  rescue Stripe::RateLimitError
+    sleep(3)
+    retry
+  end
 
-            subscription = Subscription.where(stripe_guid: stripe_subscription.id).in_reverse_created_order.last
-            subscription.next_renewal_date = Time.at(stripe_subscription.current_period_end)
-            subscription.stripe_status = stripe_subscription.status
-            subscription.livemode = stripe_subscription[:plan][:livemode]
-            subscription.save(validate: false)
+  def update_subscription_attributes(stripe_customer)
+    stripe_subscription = stripe_customer.subscriptions.retrieve(stripe_guid)
 
-          rescue Stripe::InvalidRequestError => e
-            subscription.update_attribute(:stripe_status, 'canceled')
-          end
-
-        end
-      rescue Stripe::InvalidRequestError => e
-
-      end
-    end
+    subscription = Subscription.where(stripe_guid: stripe_subscription.id).in_reverse_created_order.last
+    subscription.next_renewal_date = Time.zone.at(stripe_subscription.current_period_end)
+    subscription.stripe_status = stripe_subscription.status
+    subscription.livemode = stripe_subscription[:plan][:livemode]
+    subscription.save(validate: false)
   end
 
   def un_cancel

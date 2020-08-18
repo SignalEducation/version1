@@ -24,12 +24,12 @@ RSpec.describe 'Api::V1::Cbe::ScenariosController', type: :request do
 
         expect(body['content']).to eq(scenario.content)
 
-        expect([body.keys]).to contain_exactly(%w[id
-                                                  name
-                                                  content
-                                                  section_id
-                                                  questions
-                                                  section_questions])
+        expect(body.keys).to include('id',
+                                     'name',
+                                     'content',
+                                     'section_id',
+                                     'questions',
+                                     'section_questions')
       end
     end
 
@@ -70,12 +70,12 @@ RSpec.describe 'Api::V1::Cbe::ScenariosController', type: :request do
 
         expect(body['content']).to eq(update_params[:content])
 
-        expect([body.keys]).to contain_exactly(%w[id
-                                                  name
-                                                  content
-                                                  section_id
-                                                  questions
-                                                  section_questions])
+        expect(body.keys).to include('id',
+                                     'name',
+                                     'content',
+                                     'section_id',
+                                     'questions',
+                                     'section_questions')
       end
     end
 

@@ -344,7 +344,60 @@ button.flagged{
     color: #00b67B!important;
     cursor: pointer;
   }
-
+  .exhibit-icon {
+    background-image: asset-url('exhibit-icon.png');
+    background-position: left;
+    background-repeat: no-repeat;
+    padding: 10px 0 0 25px;
+    height: 40px;
+  }
+  .exhibit-icon:hover {
+    background-image: asset-url('exhibit-icon-red.png');
+    cursor: pointer;
+  }
+  .requirement-icon {
+    background-image: asset-url('requirement-icon.png');
+    background-position: left;
+    background-repeat: no-repeat;
+    padding: 10px 0 0 25px;
+    height: 40px;
+  }
+  .requirement-icon:hover {
+    background-image: asset-url('requirement-icon-red.png');
+    cursor: pointer;
+  }
+  .open-icon {
+    background-image: asset-url('open-icon.png');
+    background-position: left;
+    background-repeat: no-repeat;
+    padding: 10px 0 0 25px;
+    height: 40px;
+  }
+  .open-icon:hover {
+    background-image: asset-url('open-icon-red.png');
+    cursor: pointer;
+  }
+  .spreadsheet-icon {
+    background-image: asset-url('spreadsheet-icon.png');
+    background-position: left;
+    background-repeat: no-repeat;
+    padding: 10px 0 0 25px;
+    height: 40px;
+  }
+  .spreadsheet-icon:hover {
+    background-image: asset-url('spreadsheet-icon-red.png');
+    cursor: pointer;
+  }
+  .multiple_open-icon {
+    background-image: asset-url('multiple-open-icon.png');
+    background-repeat: no-repeat;
+    padding: 10px 0 0 25px;
+    height: 40px;
+  }
+  .multiple_open-icon:hover {
+    background-image: asset-url('multiple-open-icon-red.png');
+    cursor: pointer;
+  }
 }
 
 #cbe-modals {
@@ -359,6 +412,17 @@ button.flagged{
     overflow: auto; /* Enable scroll if needed */
     background-color: rgb(0,0,0); /* Fallback color */
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  }
+
+  .modal-exhibits {
+    display: block; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left:25%;
+    top: 0;
+    width: 70%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
   }
 
   /* Modal Content/Box */
@@ -406,7 +470,63 @@ button.flagged{
       border-width: thick;
     }
   }
+}
 
+// CBE Exhibits
+
+.exhibits-sidebar {
+  overflow: auto;
+
+  .exhibits-sidebar-head {
+    padding: 4px 0px;
+    margin-top: 17px;
+    font-size: 16px;
+    line-height: 18px;
+    font-weight: bold;
+    color: #595959;
+  }
+
+  .exhibits-sidebar-links {
+    font-family: Arial !important;
+    font-size: 13.3px;
+    font-weight: bold;
+    color: #000;
+    display: block;
+    line-height: 20px;
+    background-color: #f2f2f2;
+    border: 1px solid #DCDDDD;
+    padding: 8px;
+    padding-left: 5px;
+    width: 330px;
+    margin-bottom: 4px;
+  }
+
+  .exhibits-sidebar-links:hover {
+    color: red;
+    cursor: pointer;
+  }
+
+  .window {
+    .content{
+      background: white;
+    }
+  }
+}
+
+.multiple-editors{
+  overflow: scroll;
+  height: 700px;
+  padding: 20px 20px 0px 20px;
+
+  .slide-headers {
+    color: #595959;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    font-size: 12pt;
+    margin: 0.7em 0;
+    cursor: auto;
+    text-align: left;
+  }
 }
 
 // loading

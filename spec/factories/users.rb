@@ -174,6 +174,7 @@ FactoryBot.define do
     factory :tutor_user do
       sequence(:email)                  { |n| "tutor.user-#{n}@example.com" }
       sequence(:name_url)               { |n| "tutor_#{n}" }
+      sequence(:tutor_link)             { |n| "https://www.linkedin.com/#{n}" }
       active                            { true }
       stripe_customer_id                { nil }
       association :user_group, factory: :tutor_user_group

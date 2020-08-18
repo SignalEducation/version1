@@ -82,11 +82,10 @@
                 %p.text-gray2.pt-5.text-center
                   Complete your mock exam and submit it to receive personalized feedback and study recommendations in just 3 days.
                 .row
-                  -@groups.where('exam_bodies.has_sittings = ?', true).each do |group|
-                    .pt-2.col-sm-6
-                      .text-center
-                        =link_to exam_products_url(group.name_url), class: 'btn btn-primary btn-lg' do
-                          ="#{group.name} Mock Exams"
+                  .pt-2.col-sm-6.btn-center-align
+                    .text-center
+                      =link_to "#{prep_products_url}#mocks".html_safe, class: 'btn btn-primary btn-lg' do
+                        ="Explore"
 
 
 
@@ -102,11 +101,10 @@
                 %p.text-gray2.pt-5.text-center
                   Select and complete any question from one of our resources. Then submit your work to receive corrections and feedback in just 3 days.
                 .row
-                  -@groups.where('exam_bodies.has_sittings = ?', true).each do |group|
-                    .pt-2.col-sm-6
-                      .text-center
-                        =link_to exam_products_url(group.name_url, anchor: :questions), class: 'btn btn-primary btn-lg' do
-                          ="#{group.name} Mock Exams"
+                  .pt-2.col-sm-6.btn-center-align
+                    .text-center
+                      =link_to "#{prep_products_url}#questions".html_safe, class: 'btn btn-primary btn-lg' do
+                        ="Explore"
             .col-12.col-sm-6
               .pt-5
                 .webinar-img
@@ -138,5 +136,3 @@
 
 
   =render partial: 'customer_support_section'
-
-
