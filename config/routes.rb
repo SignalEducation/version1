@@ -280,6 +280,7 @@ Rails.application.routes.draw do
     post '/user_contact_form',   to: 'library#user_contact_form'
 
     get 'register_or_login', to: 'student_sign_ups#sign_in_or_register', as: :sign_in_or_register
+    get 'sign_in_checkout', to: 'student_sign_ups#sign_in_checkout', as: :sign_in_checkout
 
     get 'pricing/(:group_name_url)', to: 'student_sign_ups#pricing', as: :pricing
 

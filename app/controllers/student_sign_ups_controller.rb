@@ -3,8 +3,8 @@
 class StudentSignUpsController < ApplicationController
   before_action :check_logged_in_status, except: %i[landing group pricing]
   before_action :get_variables
-  before_action :create_user_object, only: %i[new sign_in_or_register landing]
-  before_action :create_user_session_object, only: %i[sign_in_or_register landing]
+  before_action :create_user_object, only: %i[new sign_in_or_register sign_in_checkout landing]
+  before_action :create_user_session_object, only: %i[sign_in_or_register sign_in_checkout landing]
   before_action :layout_variables, only: %i[home landing]
 
   def home
@@ -82,6 +82,13 @@ class StudentSignUpsController < ApplicationController
     flash[:plan_guid] = @plan.guid if @plan
     flash[:exam_body] = @exam_body.id if @exam_body
     flash[:product_id] = @product.id if @product
+  end
+
+  def sign_in_checkout
+    @plan = SubscriptionPlan.where(guid: params[:plan_guid]).last
+    @exam_body = ExamBody.where(id: params[:exam_body_id]).last
+    flash[:plan_guid] = @plan.guid if @plan
+    flash[:exam_body] = @exam_body.id if @exam_body
   end
 
   def group

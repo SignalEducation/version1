@@ -355,9 +355,11 @@ class ApplicationController < ActionController::Base
 
   helper_method :course_resource_special_link
 
-  def subscription_checkout_special_link(exam_body_id, subscription_plan_guid = nil)
+  def subscription_checkout_special_link(exam_body_id, subscription_plan_guid = nil, login_only = nil)
     if current_user
       new_subscription_url(exam_body_id: exam_body_id, plan_guid: subscription_plan_guid)
+    elsif login_only
+      sign_in_checkout_url(exam_body_id: exam_body_id, plan_guid: subscription_plan_guid)
     else
       sign_in_or_register_url(exam_body_id: exam_body_id, plan_guid: subscription_plan_guid)
     end
