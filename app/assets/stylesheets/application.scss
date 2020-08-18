@@ -4102,7 +4102,7 @@ a.card:hover .card-title .card-explanation {
 }
 .hero-section-show-link-window {
   position: absolute;
-  display:block; 
+  display:block;
   background-color:transparent;
   height: 80%;
   width: 90%;
@@ -5600,20 +5600,38 @@ a.list-group-item {
   @include transition(box-shadow .1s ease);
   &:hover, &:active {
     text-decoration: none;
-    @include box-shadow(0, 0, 12px, rgba(#000, .25));
+    background: #000032;
+    color: #ffffff;
     cursor: pointer;
+    h6 {
+      color:#ffffff;
+    }
+    p {
+      color:#D3D3D3;
+    }
   }
 }
 .faq-inner {
   padding: $gutter/1.5 $gutter/1.5;
-  min-height: 80px;
+  min-height: 3em;
 }
 .narrow {
-  height: 80px;
+  height: auto;
 }
-
 .faq-title {
   margin-bottom: 5px;
+  padding-top: 1em;
+}
+.faq-quest-box {
+  margin: 10px 0 20px 0;
+}
+.faq-pm-icons {
+  float: left;
+  padding: 1px 2px 1px 2px;
+  color: #000032;
+  border-radius: 60%;
+  background-color: #ffffff;
+  margin-right: .25em;
 }
 .closed {
   white-space: nowrap;

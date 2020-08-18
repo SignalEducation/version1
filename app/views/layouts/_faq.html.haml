@@ -11,15 +11,12 @@
       -faq_section.faqs.all_active.all_in_order.each do |faq|
         .col-sm-12
           %section{id: faq.name_url}
-            .faq-box
-              .faq-inner.narrow{onclick: '$(this).toggleClass("narrow"); $(this).find(".faq-answer").toggleClass("d-md-block"); $(this).find(".faq-answer-expanded").toggleClass("d-none");'}
+            .faq-box.faq-quest-box
+              .faq-inner.narrow{onclick: '$(this).toggleClass("narrow"); $(this).find(".faq-answer").toggleClass("d-md-block"); $(this).find(".faq-answer-expanded").toggleClass("d-none"); $(this).find(".fa-plus-circle").toggleClass("d-none"); $(this).find(".fa-minus-circle").toggleClass("d-none");'}
                 .faq-title
+                  %i.fa.fa-plus-circle.faq-pm-icons{"aria-hidden" => "true"}
+                  %i.fa.fa-minus-circle.faq-pm-icons.d-none{"aria-hidden" => "true"}
                   =faq.question_text.html_safe
-
-                .faq-answer.closed.d-none.d-sm-none.d-md-block
-                  %p
-                    =faq.pre_answer_text.truncate(100)
-
                 .faq-answer-expanded.d-none
                   =faq.answer_text.html_safe
 
