@@ -1,3 +1,12 @@
+GIT
+  remote: https://github.com/quilligana/PayPal-Ruby-SDK.git
+  revision: 3d5d179a005d752df0dea23fb2aee01e69acdaea
+  branch: add-g2-certificate
+  specs:
+    paypal-sdk-rest (1.7.4)
+      multi_json (~> 1.0)
+      xml-simple
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -287,9 +296,6 @@ GEM
     parallel (1.19.1)
     parser (2.7.0.4)
       ast (~> 2.4.0)
-    paypal-sdk-rest (1.7.4)
-      multi_json (~> 1.0)
-      xml-simple
     pdf-core (0.7.0)
     pg (1.1.4)
     popper_js (1.14.5)
@@ -631,7 +637,7 @@ DEPENDENCIES
   newrelic_rpm
   nokogiri (>= 1.10.8)
   paperclip (~> 6.1.0)
-  paypal-sdk-rest
+  paypal-sdk-rest!
   pg
   powder
   prawn
