@@ -1,0 +1,55 @@
+%main
+  %article.bg-gray5
+    .container
+      %header.hero-section
+        %h1.h2-hero.mb-2
+          -if @plan
+            = "#{@plan ? @plan.exam_body.name : 'Exam'} Tuition Login"
+          -elsif @exam_body
+            = "#{@exam_body.name} Tuition Login"
+          -else
+            = "Login to Continue"
+
+      .row.row-lg
+        .col-lg-4
+          =render partial: 'pricing_plan', locals: {plan: @plan, zoom: false, btn: false}
+
+        .col-lg-8
+          =render partial: 'login_form'
+
+
+-if @plan
+  :javascript
+    function selectTab(tab, currencyIso, name, id, price, body, type) {
+      dataLayer.push({ 'event': 'checkout',
+        'ecommerce': {
+          'currencyCode': currencyIso,
+          'checkout': {
+            'actionField': {'step': 1, 'option':tab},
+            'products': [{
+              'name': name,
+              'id': id,
+              'price': price,
+              'brand': body,
+              'category': type,
+              'quantity': 1
+            }]
+          }
+        }
+      });
+    }
+
+    let currencyIso = "#{@plan.currency.iso_code}";
+    let name = "#{@plan.name}";
+    let id = "#{@plan.id}";
+    let price = "#{@plan.price}";
+    let body = "#{@plan.exam_body.name}";
+    let type = 'Subscription';
+
+    $(document).ready(function(){
+      selectTab(document.querySelector("#register-tab").innerText, currencyIso, name, id, price, body, type);
+    });
+
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+      selectTab(e.target.innerText, currencyIso, name, id, price, body, type);
+    })

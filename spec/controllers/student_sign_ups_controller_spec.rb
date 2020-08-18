@@ -74,6 +74,16 @@ RSpec.describe StudentSignUpsController, type: :controller do
       end
     end
 
+    describe "GET 'sign_in_checkout'" do
+      it 'should see sign_in_checkout page' do
+        get :sign_in_checkout, params: { plan_guid: subscription_plan_gbp_m.guid, exam_body_id: exam_body_1.id }
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:sign_in_checkout)
+      end
+    end
+
     describe "GET 'group'" do
       it 'should render group page' do
         get :group, params: { name_url: group_1.name_url }
@@ -214,6 +224,15 @@ RSpec.describe StudentSignUpsController, type: :controller do
     describe "GET 'sign_in_or_register'" do
       it 'should see sign_in_or_register page' do
         get :sign_in_or_register, params: { plan_guid: subscription_plan_gbp_m.guid, exam_body_id: exam_body_1.id }
+        expect(flash[:success]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(student_dashboard_url)
+      end
+    end
+
+    describe "GET 'sign_in_checkout'" do
+      it 'should see sign_in_checkout page' do
+        get :sign_in_checkout, params: { plan_guid: subscription_plan_gbp_m.guid, exam_body_id: exam_body_1.id }
         expect(flash[:success]).to be_nil
         expect(response.status).to eq(302)
         expect(response).to redirect_to(student_dashboard_url)
