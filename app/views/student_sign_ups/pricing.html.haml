@@ -19,7 +19,7 @@
             .row.row-lg.justify-content-center
               -@subscription_plans.each do |plan|
                 .col-lg-4
-                  =link_to subscription_checkout_special_link(plan.exam_body_id, plan.guid), class: 'plan-card-link', onclick: "addToCart('#{plan.currency.iso_code}', '#{plan.name}', '#{plan.id}', '#{plan.price}', '#{plan.exam_body.name}');" do
+                  =link_to subscription_checkout_special_link(plan.exam_body_id, plan.guid, params[:login]), class: 'plan-card-link', onclick: "addToCart('#{plan.currency.iso_code}', '#{plan.name}', '#{plan.id}', '#{plan.price}', '#{plan.exam_body.name}');" do
                     =render partial: 'pricing_plan', locals: {plan: plan, zoom: true, btn: true}
 
           -else
