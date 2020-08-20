@@ -29,7 +29,9 @@ module Api
         private
 
         def permitted_params
-          params.require(:requirements).permit(:name, :content, :score, :sorting_order, :kind)
+          params.require(:requirements).permit(
+            :name, :content, :solution, :score, :sorting_order, :kind
+          )
         end
 
         def set_scenario
