@@ -26,6 +26,7 @@
               :initialScore="requirement.score"
               :initialSortingOrder="requirement.sorting_order"
               :initialContent="requirement.content"
+              :initialSolution="requirement.solution"
               :scenario-id="scenarioObject.id"
               @rm-scenario-requirement="rmScenarioRequirement"
             />
