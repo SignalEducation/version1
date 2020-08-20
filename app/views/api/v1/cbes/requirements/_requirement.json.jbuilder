@@ -6,5 +6,6 @@ json.name          requirement.name
 json.score         requirement.score
 json.kind          requirement.kind
 json.content       requirement.content
+json.solution      requirement.solution
 json.sorting_order requirement.sorting_order
 json.modal         false

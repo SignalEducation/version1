@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_17_125534) do
+ActiveRecord::Schema.define(version: 2020_08_20_062302) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -143,13 +143,14 @@ ActiveRecord::Schema.define(version: 2020_08_17_125534) do
 
   create_table "cbe_requirements", force: :cascade do |t|
     t.string "name"
-    t.string "content"
+    t.text "content"
     t.float "score"
     t.integer "sorting_order"
     t.integer "kind"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "cbe_scenario_id"
+    t.text "solution"
     t.index ["cbe_scenario_id"], name: "index_cbe_requirements_on_cbe_scenario_id"
   end
 
@@ -440,9 +441,9 @@ ActiveRecord::Schema.define(version: 2020_08_17_125534) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer "cme_count", default: 0
-    t.string "seo_description", limit: 255
-    t.boolean "seo_no_index", default: false
     t.datetime "destroyed_at"
+    t.string "seo_description"
+    t.boolean "seo_no_index", default: false
     t.integer "number_of_questions", default: 0
     t.integer "course_id"
     t.float "video_duration", default: 0.0
@@ -615,9 +616,9 @@ ActiveRecord::Schema.define(version: 2020_08_17_125534) do
     t.boolean "is_video", default: false, null: false
     t.boolean "is_quiz", default: false, null: false
     t.boolean "active", default: true, null: false
-    t.string "seo_description", limit: 255
-    t.boolean "seo_no_index", default: false
     t.datetime "destroyed_at"
+    t.string "seo_description"
+    t.boolean "seo_no_index", default: false
     t.integer "number_of_questions", default: 0
     t.float "duration", default: 0.0
     t.string "temporary_label"

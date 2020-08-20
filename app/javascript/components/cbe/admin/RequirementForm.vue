@@ -85,19 +85,41 @@
     </div>
 
     <div class="col-sm-12">
-      <TinyEditor
-        :class="{error: shouldAppendErrorClass($v.requirementContent), valid: shouldAppendValidClass($v.requirementContent)}"
-        :field-model.sync="requirementContent"
-        :aditional-toolbar-options="['fullscreen code image']"
-        :editor-id="'requirementContent' + '-' + scenarioId + '-' + id"
-        @blur="$v.requirementContent.$touch()"
-      />
-      <p
-        v-if="!$v.requirementContent.required && $v.requirementContent.$error"
-        class="error-message"
-      >
-        field is required
-      </p>
+      <div class="form-group">
+        <label for="questionContent">Content</label>
+        <TinyEditor
+          :class="{error: shouldAppendErrorClass($v.requirementContent), valid: shouldAppendValidClass($v.requirementContent)}"
+          :field-model.sync="requirementContent"
+          :aditional-toolbar-options="['fullscreen code image']"
+          :editor-id="'requirementContent' + '-' + scenarioId + '-' + id"
+          @blur="$v.requirementContent.$touch()"
+        />
+        <p
+          v-if="!$v.requirementContent.required && $v.requirementContent.$error"
+          class="error-message"
+        >
+          field is required
+        </p>
+      </div>
+    </div>
+
+    <div class="col-sm-12">
+      <div class="form-group">
+        <label for="questionSolution">Solution</label>
+        <TinyEditor
+          :class="{error: shouldAppendErrorClass($v.requirementSolution), valid: shouldAppendValidClass($v.requirementSolution)}"
+          :field-model.sync="requirementSolution"
+          :aditional-toolbar-options="['fullscreen code image']"
+          :editor-id="'requirementSolution' + '-' + scenarioId + '-' + id"
+          @blur="$v.requirementSolution.$touch()"
+        />
+        <p
+          v-if="!$v.requirementSolution.required && $v.requirementSolution.$error"
+          class="error-message"
+        >
+          field is required
+        </p>
+      </div>
     </div>
 
     <br />
@@ -167,6 +189,10 @@ export default {
       type: String,
       default: "",
     },
+    initialSolution: {
+      type: String,
+      default: "",
+    },
     initialSortingOrder: {
       type: Number,
       default: 1,
@@ -184,6 +210,7 @@ export default {
       requirementKind: this.initialKind,
       requirementScore: this.initialScore,
       requirementContent: this.initialContent,
+      requirementSolution: this.initialSolution,
       submitStatus: null,
       updateStatus: null,
     };
@@ -193,6 +220,9 @@ export default {
       required,
     },
     requirementContent: {
+      required,
+    },
+    requirementSolution: {
       required,
     },
     requirementScore: {
@@ -226,8 +256,7 @@ export default {
         formData.append("requirements[kind]", this.requirementKind);
         formData.append("requirements[score]", this.requirementScore);
         formData.append("requirements[content]", this.requirementContent);
-
-        this.requirementKind == 'pdf' ? formData.delete("exibits[content]") : formData.delete("exibits[document]")
+        formData.append("requirements[solution]", this.requirementSolution);
 
         axios({
           method: "post",
@@ -242,6 +271,7 @@ export default {
               this.requirementDetails = {};
               this.name = this.initialName;
               this.requirementContent = this.initalContent;
+              this.requirementSolution = this.initalSolution;
               this.requirementKind = this.initialKind;
               this.requirementScore = this.initialScore;
               this.sortingOrder += 1;
@@ -267,6 +297,7 @@ export default {
         formData.append("requirements[kind]", this.requirementKind);
         formData.append("requirements[score]", this.requirementScore);
         formData.append("requirements[content]", this.requirementContent);
+        formData.append("requirements[solution]", this.requirementSolution);
 
         axios({
           method: "patch",
