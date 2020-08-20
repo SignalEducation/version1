@@ -174,7 +174,7 @@ describe Admin::ExercisesController, type: :controller do
           get :correct_cbe, params: { id: exercise_cbe.id }
 
           expect(response.status).to eq(200)
-          expect(response).to render_template(:correct_cbe)
+          expect(response).to render_template(:questions_correction)
         end
       end
 
@@ -210,7 +210,7 @@ describe Admin::ExercisesController, type: :controller do
           post :return_cbe, params: { id: exercise_cbe.id }
 
           expect(response.status).to eq(200)
-          expect(response).to render_template(:correct_cbe)
+          expect(response).to render_template(:questions_correction)
         end
       end
     end

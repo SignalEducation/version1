@@ -26,6 +26,9 @@ class Cbe < ApplicationRecord
                       class_name: 'Cbe::Section'
   has_many :scenarios, through: :sections, class_name: 'Cbe::Scenario'
   has_many :questions, through: :sections, class_name: 'Cbe::Question'
+  has_many :exhibits, through: :scenarios, class_name: 'Cbe::Exhibit'
+  has_many :requirements, through: :scenarios, class_name: 'Cbe::Requirement'
+  has_many :response_options, through: :scenarios, class_name: 'Cbe::ResponseOption'
   has_many :resources, inverse_of: :cbe, class_name: 'Cbe::Resource',
                        dependent: :destroy
 
@@ -66,7 +69,11 @@ class Cbe < ApplicationRecord
     end
   end
 
-  def has_exhibit_scenario?
+  def exhibit_scenario?
     sections.map(&:exhibits_scenario?).any?
+  end
+
+  def total_score
+    exhibit_scenario? ? requirements.map(&:score).sum : questions.map(&:score).sum
   end
 end

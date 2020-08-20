@@ -15,6 +15,10 @@ module CbeQuestionsHelper
     render partial: partial, locals: { question: question, question_kind: question_kind }
   end
 
+  def render_admin_responses(response)
+    render partial: 'admin/exercises/cbes_responses/open_answer', locals: { response: response }
+  end
+
   def question_title_class(question)
     return "<span style='color: #f59037f2;' class='glyphicon glyphicon-exclamation-sign pull-right'></span>".html_safe if question.nil?
 
