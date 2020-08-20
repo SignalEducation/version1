@@ -742,6 +742,7 @@ ActiveRecord::Schema.define(version: 2020_08_17_125534) do
     t.string "logo_image"
     t.string "registration_form_heading"
     t.string "login_form_heading"
+    t.string "audience_guid"
     t.string "landing_page_h1"
     t.text "landing_page_paragraph"
     t.boolean "has_products", default: false
@@ -763,6 +764,7 @@ ActiveRecord::Schema.define(version: 2020_08_17_125534) do
     t.string "student_number"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "subscription_type"
     t.index ["exam_body_id"], name: "index_exam_body_user_details_on_exam_body_id"
     t.index ["user_id"], name: "index_exam_body_user_details_on_user_id"
   end
@@ -880,8 +882,8 @@ ActiveRecord::Schema.define(version: 2020_08_17_125534) do
     t.string "background_image_content_type"
     t.integer "background_image_file_size"
     t.datetime "background_image_updated_at"
-    t.bigint "exam_body_id"
     t.string "background_colour"
+    t.bigint "exam_body_id"
     t.string "seo_title"
     t.string "seo_description"
     t.string "short_description"
@@ -1143,7 +1145,6 @@ ActiveRecord::Schema.define(version: 2020_08_17_125534) do
 
   create_table "products", id: :serial, force: :cascade do |t|
     t.string "name"
-    t.integer "course_id"
     t.integer "mock_exam_id"
     t.string "stripe_guid"
     t.boolean "live_mode", default: false
@@ -1153,6 +1154,7 @@ ActiveRecord::Schema.define(version: 2020_08_17_125534) do
     t.integer "currency_id"
     t.decimal "price"
     t.string "stripe_sku_guid"
+    t.integer "course_id"
     t.integer "sorting_order"
     t.integer "product_type", default: 0
     t.integer "correction_pack_count"
@@ -1162,7 +1164,6 @@ ActiveRecord::Schema.define(version: 2020_08_17_125534) do
     t.string "payment_subheading"
     t.text "payment_description"
     t.index ["cbe_id"], name: "index_products_on_cbe_id"
-    t.index ["course_id"], name: "index_products_on_course_id"
     t.index ["currency_id"], name: "index_products_on_currency_id"
     t.index ["group_id"], name: "index_products_on_group_id"
     t.index ["mock_exam_id"], name: "index_products_on_mock_exam_id"
@@ -1457,8 +1458,10 @@ ActiveRecord::Schema.define(version: 2020_08_17_125534) do
     t.string "cancellation_reason"
     t.text "cancellation_note"
     t.bigint "changed_from_id"
+    t.string "temp_guid"
     t.string "completion_guid"
     t.uuid "ahoy_visit_id"
+    t.integer "exam_body_user_detail_id"
     t.bigint "cancelled_by_id"
     t.integer "kind"
     t.integer "paypal_retry_count", default: 0

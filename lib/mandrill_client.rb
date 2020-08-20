@@ -81,6 +81,11 @@ class MandrillClient
     send_template('corrections-returned-190510', msg)
   end
 
+  def send_supscription_notification_email
+    msg = message_stub.merge('subject' => 'LearnSignal - Subscription due')
+    send_template('subscription-due-201908', msg)
+  end
+
   # Onboarding Emails
   def send_onboarding_complete_email(subscription_url, course, unsubscribe_url)
     msg = message_stub.merge('subject' => "ACCA Exams: Congratulations #{user.first_name}, you’ve completed all the resources. What’s next?")

@@ -111,7 +111,7 @@ describe StripeApiEvent do
 
     describe '#destroyable?' do
       let(:event) { build_stubbed(:stripe_api_event, processed: true) }
-      
+
       it 'returns the negative of the #processed attribute' do
         expect(event.destroyable?).to be false
       end
@@ -150,7 +150,7 @@ describe StripeApiEvent do
       describe 'for invoice.payment_failed webhook' do
         let(:payload) {{
           type: 'invoice.payment_failed', livemode: false,
-          data: { object: { 
+          data: { object: {
             id: 'test_id', customer: 'test_customer', subscription: 'test_sub',
             next_payment_attempt: 'timestamp'
           }}
@@ -178,6 +178,22 @@ describe StripeApiEvent do
         it 'call #process_payment_action_required' do
           expect(api_event).to(
             receive(:process_payment_action_required).with('test_id', 'test_sub_id')
+          )
+
+          api_event.disseminate_payload
+        end
+      end
+
+      describe 'for invoice.upcoming webhook' do
+        let(:payload) {{
+          type: 'invoice.upcoming', livemode: false,
+          data: { object: { subscription: 'test_sub_id'}}
+        }}
+        let(:api_event) { build(:stripe_api_event, payload: payload) }
+
+        it 'call #process_invoice_upcoming' do
+          expect(api_event).to(
+            receive(:process_invoice_upcoming).with('test_sub_id')
           )
 
           api_event.disseminate_payload
