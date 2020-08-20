@@ -35,7 +35,7 @@ class Enrollment < ApplicationRecord
   validates :course_log_id, presence: true
   validates :exam_body_id, presence: true
   validates :exam_date, allow_nil: true, inclusion:
-      { in: Date.today..Date.today + 2.years, message: '%{value} is not a valid date' }
+      { in: Time.zone.today..Time.zone.today + 2.years, message: '%{value} is not a valid date' }
 
 
   # callbacks
@@ -57,7 +57,7 @@ class Enrollment < ApplicationRecord
   scope :all_expired,               -> { where(expired: true) }
   scope :all_valid,                 -> { where(active: true, expired: false) }
   scope :all_not_expired,           -> { where(expired: false) }
-  scope :for_course,        ->(course_id) { where(course_id: course_id) }
+  scope :for_course,                ->(course_id) { where(course_id: course_id) }
   scope :for_user,                  ->(user_id) { where(user_id: user_id) }
   scope :for_course_and_user,       ->(course_id, user_id) { where(course_id: course_id, user_id: user_id) }
   scope :by_sitting_date,           -> { includes(:exam_sitting).order('exam_sittings.date desc') }

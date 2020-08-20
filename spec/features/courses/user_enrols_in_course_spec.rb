@@ -14,7 +14,7 @@ describe 'A user enrols in a course', type: :feature, js: true do
   end
 
   context 'with a basic subscription' do
-    scenario 'the user can enrol' do
+    xscenario 'the user can enrol' do
       expect(page).to have_content('Dashboard')
       expect(page).to have_link('Activity')
 
