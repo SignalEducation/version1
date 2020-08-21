@@ -55,6 +55,10 @@
               .input-group.input-group-lg
                 =f.text_field :temporary_label, placeholder: t('views.course_steps.form.temporary_label_placeholder'), class: 'form-control'
 
+            .form-group
+              =f.label :vid_end_seconds, t('views.course_steps.form.upgrade_modal_label')
+              .input-group.input-group-lg
+                =f.text_field :vid_end_seconds, placeholder: t('views.course_steps.form.upgrade_modal_label_placeholder'), class: 'form-control'
 
             .col-md-6
               .form-group

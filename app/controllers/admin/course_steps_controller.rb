@@ -217,6 +217,7 @@ module Admin
         :name_url,
         :description,
         :estimated_time_in_seconds,
+        :vid_end_seconds,
         :course_lesson_id,
         :sorting_order,
         :active,

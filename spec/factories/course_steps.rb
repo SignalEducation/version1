@@ -32,6 +32,7 @@ FactoryBot.define do
     sequence(:name_url)         { |n| "course-step-#{n}" }
     description                 { 'Lorem ipsum' }
     estimated_time_in_seconds   { 1 }
+    vid_end_seconds             { 1 }
     course_lesson
     sorting_order               { 1 }
     active                      { true }

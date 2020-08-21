@@ -25,6 +25,7 @@ CourseStep.where(id: 7).first_or_create!(name: "Quant Methods 103 Video", name_u
 CourseStep.where(id: 8).first_or_create!(name: "Business Organisation 101 Video", name_url: "business-organisation-101-video", description: "This is the intro quiz. Best of luck!", estimated_time_in_seconds: 900, course_lesson_id: 2, sorting_order: 6, is_video: true, is_quiz: false, active: true, number_of_questions: 3, available_on_trial: false)
 CourseStep.where(id: 9).first_or_create!(name: "Business Organisation 102 Quiz", name_url: "business-organisation-102-quiz", description: "sdfasdf456645", estimated_time_in_seconds: 99, course_lesson_id: 2, sorting_order: 7, is_video: false, is_quiz: true, active: true, number_of_questions: 3, available_on_trial: false)
 CourseStep.where(id: 10).first_or_create!(name: "Business Organisation 103 Video", name_url: "business-organisation-103-video", description: "dsfa", estimated_time_in_seconds: 200, course_lesson_id: 2, sorting_order: 8, is_video: true, is_quiz: false, active: true, number_of_questions: 3, available_on_trial: false)
+CourseStep.where(id: 11).first_or_create!(name: "Business Organisation 104 Video", name_url: "business-organisation-104-video", description: "dsfa2", estimated_time_in_seconds: 200, course_lesson_id: 2, sorting_order: 9, is_video: true, is_quiz: false, active: true, number_of_questions: 3, vid_end_seconds: 8, available_on_trial: false)
 
 CourseVideo.where(id: 1).first_or_create!(course_step_id: 1, vimeo_guid: '326836832', dacast_id: '326836832', duration: 200)
 CourseVideo.where(id: 2).first_or_create!(course_step_id: 3, vimeo_guid: '326865619', dacast_id: '326865619', duration: 200)
@@ -32,6 +33,7 @@ CourseVideo.where(id: 3).first_or_create!(course_step_id: 5, vimeo_guid: '326872
 CourseVideo.where(id: 4).first_or_create!(course_step_id: 7, vimeo_guid: '326836832', dacast_id: '326836832', duration: 200)
 CourseVideo.where(id: 5).first_or_create!(course_step_id: 8, vimeo_guid: '326865619', dacast_id: '326865619', duration: 200)
 CourseVideo.where(id: 5).first_or_create!(course_step_id: 10, vimeo_guid: '326872692', dacast_id: '326872692', duration: 200)
+CourseVideo.where(id: 6).first_or_create!(course_step_id: 11, vimeo_guid: '326872693', dacast_id: '326872693', duration: 200, vid_end_seconds:8)
 
 CourseQuiz.where(id: 1).first_or_create!(course_step_id: 2, number_of_questions: 10, question_selection_strategy: "random")
 CourseQuiz.where(id: 2).first_or_create!(course_step_id: 4, number_of_questions: 10, question_selection_strategy: "random")
