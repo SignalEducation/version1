@@ -1,5 +1,5 @@
 -if user && !user.can_view_content?(@group.exam_body_id)
-  = link_to ab_test('pricing_link', subscription_checkout_special_link(@course.exam_body_id), pricing_url(@group.name_url)), class: 'btn btn-primary btn-sm mb-5' do
+  = link_to ab_test("#{@group.name_url}_pricing_link", subscription_checkout_special_link(@course.exam_body_id), pricing_url(@group.name_url)), class: 'btn btn-primary btn-sm mb-5' do
     Upgrade Now
 -elsif !user
   =link_to new_student_url, class: 'btn btn-primary btn-sm mb-5' do
