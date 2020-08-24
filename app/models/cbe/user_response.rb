@@ -8,6 +8,10 @@ class Cbe
     belongs_to :cbe_response_option, class_name: 'Cbe::ResponseOption',
                                      foreign_key: 'cbe_response_option_id',
                                      inverse_of: :user_responses
-    has_one :scenario, through: :cbe_response_option
+
+    # scopes
+    scope :by_scenario, lambda { |scenario_id|
+      includes(cbe_response_option: :scenario).where(cbe_scenarios: { id: scenario_id })
+    }
   end
 end

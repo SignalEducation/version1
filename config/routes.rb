@@ -37,10 +37,13 @@ Rails.application.routes.draw do
               resources :questions, only: %i[index create update destroy]
             end
           end
+
           resources :introduction_pages, only: %i[index create update destroy]
           resources :resources, only: %i[index create update destroy]
           resources :users_log, only: %i[index show create update]
+          resources :scenarios, only: :show
           resources :users_answer, only: :show
+          resources :users_response, only: :show
         end
       end
     end
@@ -65,6 +68,7 @@ Rails.application.routes.draw do
         get 'correct_cbe', to: 'exercises#correct_cbe', as: :correct_cbe, on: :member
         post 'return_cbe', to: 'exercises#return_cbe', as: :return_cbe, on: :member
         post 'cbe_user_question_update/answer/:question_id', to: 'exercises#cbe_user_question_update', as: :cbe_user_question_update, on: :member
+        post 'cbe_user_response_update/:response_id', to: 'exercises#cbe_user_response_update', as: :cbe_user_response_update, on: :member
         post 'cbe_user_educator_comment/:cbe_user_log_id', to: 'exercises#cbe_user_educator_comment', as: :cbe_user_log_update, on: :member
       end
 

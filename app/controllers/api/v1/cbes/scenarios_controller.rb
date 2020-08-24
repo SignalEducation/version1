@@ -23,6 +23,10 @@ module Api
           render json: { errors: @scenario.errors }, status: :unprocessable_entity
         end
 
+        def show
+          @scenario = ::Cbe::Scenario.find(params[:id])
+        end
+
         def destroy
           if @scenario.destroy
             render json: { message: "Scenario #{@scenario.id} was deleted." }, status: :accepted

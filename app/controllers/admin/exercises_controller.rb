@@ -69,10 +69,12 @@ module Admin
       @exercise      = Exercise.includes(cbe_user_log: [questions: [:cbe_question]]).find(params[:id])
       @cbe_user_log  = @exercise.cbe_user_log
       @cbe           = @cbe_user_log.cbe
-      @total_score   = @cbe.questions.map(&:score).sum
+      @total_score   = @cbe.total_score
       @percent_score = @cbe_user_log.score.percent_of(@total_score).round(2)
 
       @exercise.correct
+
+      render @cbe_user_log.exhibits? ? 'exhibits_correction' : 'questions_correction'
     end
 
     def cbe_user_question_update
@@ -84,6 +86,26 @@ module Admin
         @question.update(score: params[:score], educator_comment: params[:educator_comment])
         @user_log.update(status: 'corrected')
       end
+
+      @total_score   = @user_log.cbe.total_score
+      @percent_score = @user_log.score.percent_of(@total_score).round(2)
+
+      respond_to do |format|
+        format.js
+      end
+    end
+
+    def cbe_user_response_update
+      @response    = Cbe::UserResponse.find(params[:response_id])
+      @user_log    = @response.user_log
+
+      ActiveRecord::Base.transaction do
+        @response.update(score: params[:score], educator_comment: params[:educator_comment])
+        @user_log.update(status: 'corrected')
+      end
+
+      @total_score   = @user_log.cbe.total_score
+      @percent_score = @user_log.score.percent_of(@total_score).round(2)
 
       respond_to do |format|
         format.js
@@ -104,14 +126,15 @@ module Admin
     end
 
     def return_cbe
-      @cbe_user_log = @exercise.cbe_user_log
-      @cbe          = @cbe_user_log.cbe
+      @cbe_user_log     = @exercise.cbe_user_log
+      @cbe              = @cbe_user_log.cbe
+      correction_action = @cbe_user_log.exhibits? ? :exhibits_correction : :questions_correction
 
       if @exercise.cbe_user_log.status == 'corrected' && @exercise.return
         flash[:success] = I18n.t('controllers.exercises.update.flash.success')
         redirect_to admin_exercises_path
       else
-        render action: :correct_cbe
+        render action: correction_action
       end
     end
     # CBE Exercise
