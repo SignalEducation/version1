@@ -99,6 +99,34 @@ RSpec.describe 'Api::V1::Cbe::ScenariosController', type: :request do
     end
   end
 
+  describe 'get  /api/v1/cbes/:cbe_id/scenarios/:id' do
+    context 'Show a CBE scenario' do
+      let(:scenario) { create(:cbe_scenario, :with_section) }
+
+      before do
+        get "/api/v1/cbes/#{scenario.section.cbe_id}/scenarios/#{scenario.id}"
+      end
+
+      it 'returns HTTP status 200' do
+        expect(response).to have_http_status 200
+      end
+
+      it 'returns scenario json data' do
+        body = JSON.parse(response.body)
+
+        expect(body['name']).to eq(scenario.name)
+        expect(body['content']).to eq(scenario.content)
+
+        expect(body.keys).to include('id',
+                                     'name',
+                                     'content',
+                                     'section_id',
+                                     'questions',
+                                     'section_questions')
+      end
+    end
+  end
+
   describe 'post /api/v1/scenarios/:id' do
     context 'destroy a CBE scenario' do
       let(:scenario) { create(:cbe_scenario, :with_section) }

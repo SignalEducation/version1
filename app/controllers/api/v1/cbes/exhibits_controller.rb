@@ -22,21 +22,23 @@ module Api
         end
 
         def destroy
-          return if @exhibit.destroy
-
-          render json: { errors: @exhibit.errors }, status: :unprocessable_entity
+          if @exhibit.destroy
+            render json: { message: "Exhibit #{@exhibit.id} was deleted." }, status: :accepted
+          else
+            render json: { errors: @exhibit.errors }, status: :unprocessable_entity
+          end
         end
 
         private
 
         def format_spreadsheet
-          return if params[:exibits][:content].blank?
+          return if params[:exhibits][:kind] == 'pdf' || params[:exhibits][:content].blank?
 
-          params[:exibits][:content] = JSON.parse(params[:exibits][:content])
+          params[:exhibits][:content] = JSON.parse(params[:exhibits][:content])
         end
 
         def permitted_params
-          params.require(:exibits).permit(
+          params.require(:exhibits).permit(
             :name, :document, :sorting_order, :kind,
             content: {}
           )

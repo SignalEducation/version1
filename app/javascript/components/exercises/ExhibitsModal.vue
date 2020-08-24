@@ -32,10 +32,10 @@ export default {
     };
   },
   mounted() {
-    this.getExhibtsData();
+    this.getExhibitsData();
   },
   methods: {
-    getExhibtsData() {
+    getExhibitsData() {
       axios
         .get(`/api/v1/cbes/${this.cbeId}/scenarios/${this.scenarioId}`)
         .then((response) => {

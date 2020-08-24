@@ -6,7 +6,8 @@
 #
 #  id                    :bigint           not null, primary key
 #  name                  :string
-#  content               :string
+#  kind                  :integer
+#  content               :json
 #  sorting_order         :integer
 #  document_file_name    :string
 #  document_content_type :string
@@ -14,7 +15,6 @@
 #  document_updated_at   :datetime
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
-#  cbe_section_id        :bigint
 #  cbe_scenario_id       :bigint
 #
 class Cbe
