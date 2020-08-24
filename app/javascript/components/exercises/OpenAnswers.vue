@@ -2,7 +2,6 @@
   <div class="row">
     <div class="col-sm-12">
       <div class="form-group">
-        <label for="questionContent">Content</label>
         <div id="questionContent">
           <TextCorrection
             v-if="answerType === 'TextEditor'"
@@ -11,6 +10,10 @@
           />
           <SpreadsheetCorrection
             v-if="answerType === 'Spreadsheet' && spreadsheetData != null"
+            :spreadsheet-data="spreadsheetData"
+          />
+          <SpreadsheetCorrection
+            v-if="answerType === 'ResponseSpreadsheet' && spreadsheetData != null"
             :spreadsheet-data="spreadsheetData"
           />
         </div>
@@ -44,12 +47,18 @@ export default {
   },
   methods: {
     getPrepopulatedAnswer() {
-      if (this.answerType !== 'Spreadsheet') {
+      let adress = ''
+
+      if (this.answerType == 'Spreadsheet') {
+        adress = `/api/v1/cbes/${this.cbeId}/users_answer/${this.answerId}`
+      } else if (this.answerType == 'ResponseSpreadsheet') {
+        adress = `/api/v1/cbes/${this.cbeId}/users_response/${this.answerId}`
+      } else {
         return false;
       }
 
       axios
-        .get(`/api/v1/cbes/${this.cbeId}/users_answer/${this.answerId}`)
+        .get(adress)
         .then(response => {
           this.spreadsheetData = response.data;
         });

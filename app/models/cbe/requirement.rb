@@ -26,5 +26,8 @@ class Cbe
     # validations
     validates :name, :content, :kind, :sorting_order, :cbe_scenario_id, presence: true
     validates :score, :sorting_order, numericality: { greater_than_or_equal_to: 0 }
+
+    # scopes
+    scope :by_scenario, ->(scenario_id) { where(cbe_scenario_id: scenario_id).order(:sorting_order) }
   end
 end

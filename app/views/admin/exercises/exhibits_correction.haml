@@ -1,0 +1,114 @@
+.container-fluid
+  %header.management-console-section
+    %h1
+      =t('views.exercises.admin.correct_cbe.h1') + " - #{@cbe&.name}"
+    %p
+      =@cbe_user_log.user.email
+
+  %article.card.card-tabs.mb-5
+    .card-body.bg-gray4
+      %nav
+        %ul.nav.nav-tabs.nav-fill{id: 'sectionTabs', role: 'tablist'}
+          -@cbe_user_log.scenarios_in_user_log.each_with_index do |scenario, scenario_index|
+            %li.nav-item
+              %a{class: "nav-link #{scenario_index == 0 ? 'active' : ''}", data: {toggle: 'tab'}, href: "#scenario-#{scenario.id}", aria: {controls: "#{scenario.id}", selected: 'false'}, role: 'tab'}
+                =scenario.name
+
+      .bg-gray5
+        .container.py-1
+          #sectionTabsContent.tab-content
+            -@cbe_user_log.scenarios_in_user_log.each_with_index do |scenario, scenario_index|
+              -all_scenario_exhibits     = @cbe.exhibits.by_scenario(scenario.id)
+              -all_scenario_requirements = @cbe.requirements.by_scenario(scenario.id)
+              -user_responses            = @cbe_user_log.responses.by_scenario(scenario.id)
+
+              .tab-pane{id: "scenario-#{scenario.id}", class: "tab-#{scenario.id} #{scenario_index == 0 ? 'active show' : ''} ", "aria-labelledby" => "scenario-#{scenario.id}-tab", :role => "tabpanel"}
+                .row.pt-4
+                  .col-sm-12
+                    #questionTabsContent.tab-content
+                      .row
+                        .col-sm-8
+                          -all_scenario_requirements.each do |requirement|
+                            .row
+                              .col-sm
+                                .h4
+                                  =requirement.name.humanize
+                              .col-sm-3
+                                .h4
+                                  Score:
+                                  =requirement.score
+                            .row
+                              .col-sm-12
+                                .accordion#resultsAccordion
+                                  .card
+                                    .card-header.bg-gray-light{id: "requirement-#{requirement.id}", type: "button", data:{toggle: "collapse", target: "#requirementContent#{requirement.id}"}, aria:{expanded: "true", controls: "questionCard"}, style: 'padding: 10px;'}
+                                      %h2.mb-0
+                                        .btn.btn-link
+                                          ='Content '
+                                    .collapse{id: "requirementContent#{requirement.id}", aria: {labelledby: "requirement-#{requirement.id}"}, data: {parent: "#resultsAccordion"}}
+                                      .card-body{style: 'margin-left: 10px;'}
+                                        =raw(requirement.content)
+
+                                  .card
+                                    .card-header.bg-gray-light{id: "requirement-#{requirement.id}", type: "button", data:{toggle: "collapse", target: "#requirementSolution#{requirement.id}"}, aria:{expanded: "true", controls: "questionCard"}, style: 'padding: 10px;'}
+                                      %h2.mb-0
+                                        .btn.btn-link
+                                          ='Solution '
+                                    .collapse{id: "requirementSolution#{requirement.id}", aria: {labelledby: "requirement-#{requirement.id}"}, data: {parent: "#resultsAccordion"}}
+                                      .card-body{style: 'margin-left: 10px;'}
+                                        =raw(requirement.solution)
+
+                        -# Exhibits list and modal in vue component.
+                        .col-sm-4
+                          %h4
+                            Exhibits
+                          #exhibits-list-component{ data: { scenario_id: scenario.id, cbe_id: @cbe.id } }
+                          -# VueJS include
+                          = javascript_pack_tag 'exercise_modals'
+                        -# Exhibits list and modal in vue component.
+
+                        .col-sm-12
+                          .h4
+                            User Responses
+                          %nav
+                            %ul.nav.nav-tabs.nav-fill{id: 'sectionTabs', role: 'tablist'}
+                              -user_responses.each_with_index do |response, index|
+                                %li.nav-item
+                                  %a{class: "nav-link #{index == 0 ? 'active' : ''}", data: {toggle: 'tab'}, href: "#response-#{response.id}", aria: {controls: "#{response.id}", selected: 'false'}, role: 'tab'}
+                                    =response.cbe_response_option.formatted_kind
+
+                          .tab-content
+                            -user_responses.each_with_index do |response, index|
+                              .tab-pane{id: "response-#{response.id}", class: "tab-#{response.id} #{index == 0 ? 'active show' : ''} ", "aria-labelledby" => "response-#{response.id}-tab", :role => "tabpanel"}
+                                =render_admin_responses(response)
+  .row
+    .col-sm-12
+      .box-item.table-box
+        .h4.cbe_score
+          ="Current Overall Score: #{@cbe_user_log.score}/#{@total_score} - #{@percent_score}%"
+        .cbe_user_log_comment
+          =form_with(url: cbe_user_log_update_admin_exercise_path(cbe_user_log_id: @cbe_user_log.id, id: @cbe_user_log.exercise_id), html: {class: 'form-horizontal', role: 'form'}) do
+            .row.pt-2
+              .col-sm-12
+                .form-group
+                  =label_tag :educator_comment, 'Overall Comment:'
+                  .input-group.input-group-lg
+                    =text_area_tag(:educator_comment, @cbe_user_log.educator_comment, id: "#{@cbe_user_log.id}-editor", as: 'summernote')
+            .row.pt-3
+              .col-sm-6
+                =submit_tag("Update", class: 'btn btn-primary')
+                %div{:id => "#{@cbe_user_log.id}-response"}
+
+  .row
+    .col-sm-12
+      .box-item.table-box
+        %div
+          =link_to t('views.general.back'), admin_exercises_path, class: 'btn btn-warning btn-xs'
+          -unless @exercise.returned?
+            =link_to t('views.general.return'), return_cbe_admin_exercise_path(@exercise.id), data: {confirm: 'Do you want to finish your correction and return it to user?'}, method: :post, class: 'btn btn-primary btn-xs'
+
+:javascript
+  $("##{@cbe_user_log.id}-editor").summernote({
+    disableDragAndDrop: true,
+    height: 150
+  });

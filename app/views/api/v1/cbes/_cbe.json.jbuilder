@@ -8,7 +8,7 @@ json.agreement_content        cbe.agreement_content
 json.active                   cbe.active
 json.score                    cbe.score
 json.course_id                cbe.course.id
-json.exhibits_scenario        cbe.has_exhibit_scenario?
+json.exhibits_scenario        cbe.exhibit_scenario?
 
 json.introduction_pages cbe.introduction_pages.order(:sorting_order) do |page|
   json.id            page.id

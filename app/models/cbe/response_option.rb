@@ -20,7 +20,7 @@ class Cbe
     scope :without_scenario, -> { where(cbe_scenario_id: nil) }
     scope :with_scenario,    -> { where.not(cbe_scenario_id: nil) }
     scope :by_section,       ->(section_id) { where(cbe_section_id: section_id).order(:sorting_order) }
-
+    scope :by_scenario,      ->(scenario_id) { where(cbe_scenario_id: scenario_id).order(:sorting_order) }
     def formatted_kind
       case kind
       when 'open'
