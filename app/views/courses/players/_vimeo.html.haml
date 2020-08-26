@@ -6,6 +6,9 @@
   let section_log_id = "#{@course_section_log.try(:id) || ''}";
   let exam_track_id = "#{@course_lesson_log.try(:id) || ''}";
   let freeLesson = "#{@course_lesson.free}";
+  let lastLessonStep = "#{@course_lesson.course_steps.all_in_order.all_active.last.id}";
+  let endStepVidTime = "#{cme.vid_end_seconds || ''}";
+  let updateFreeLesson = #{@course_lesson.free ? 0.30 : 0.90};
   let completionPercent = #{@course_lesson.free ? 0.30 : 0.90};
   let logId = '';
   let options = {
@@ -22,7 +25,20 @@
     $('.video-player-window').html('#{j render partial: 'courses/players/dacast', locals: { cme: cme }}')
   });
 
+  let showUpgradeBtn = function(upgradeBool) {
+    if(upgradeBool) {
+      $("#upgrade-subscription-modal").removeClass('video-upgrade-modal-hide');
+      $("#upgrade-subscription-modal").addClass('video-upgrade-modal-show');
+    }
+  };
+
   let timeUpdate = function(data) {
+    var eovCounter = parseInt(endStepVidTime)/100;
+    var updateBtnCount = false;
+    if(freeLesson && video_cme_id == lastLessonStep) {
+      updateBtnCount = data.duration - data.seconds < eovCounter ? true : false;
+      showUpgradeBtn(updateBtnCount);
+    }
     if (data.percent >= completionPercent) {
       $.ajax({
         headers: { 'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') },
@@ -39,7 +55,9 @@
           console.log(xhr);
         }
       });
-      player.off('timeupdate', timeUpdate);
+      if(!freeLesson && video_cme_id != lastLessonStep) {
+        player.off('timeupdate', timeUpdate);
+      }
       videoFinishedEvent(logId);
     }
   };

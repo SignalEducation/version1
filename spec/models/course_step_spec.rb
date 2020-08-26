@@ -44,6 +44,32 @@ describe CourseStep do
     it { should have_many(:course_resources) }
   end
 
+  describe 'Should Respond' do
+    it { should respond_to(:id) }
+    it { should respond_to(:name) }
+    it { should respond_to(:name_url) }
+    it { should respond_to(:description) }
+    it { should respond_to(:estimated_time_in_seconds) }
+    it { should respond_to(:course_lesson_id) }
+    it { should respond_to(:sorting_order) }
+    it { should respond_to(:created_at) }
+    it { should respond_to(:updated_at) }
+    it { should respond_to(:is_video) }
+    it { should respond_to(:is_quiz) }
+    it { should respond_to(:active) }
+    it { should respond_to(:seo_description) }
+    it { should respond_to(:seo_no_index) }
+    it { should respond_to(:destroyed_at) }
+    it { should respond_to(:number_of_questions) }
+    it { should respond_to(:duration) }
+    it { should respond_to(:temporary_label) }
+    it { should respond_to(:is_constructed_response) }
+    it { should respond_to(:available_on_trial) }
+    it { should respond_to(:related_course_step_id) }
+    it { should respond_to(:is_note) }
+    it { should respond_to(:vid_end_seconds) }
+  end
+
   describe 'validations' do
     it { should validate_presence_of(:name) }
     it { should validate_length_of(:name).is_at_most(255) }
