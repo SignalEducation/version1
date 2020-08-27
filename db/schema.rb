@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_20_062302) do
+ActiveRecord::Schema.define(version: 2020_08_24_160853) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -626,6 +626,7 @@ ActiveRecord::Schema.define(version: 2020_08_20_062302) do
     t.boolean "available_on_trial", default: false
     t.integer "related_course_step_id"
     t.boolean "is_note", default: false
+    t.integer "vid_end_seconds"
     t.index ["course_lesson_id"], name: "index_course_steps_on_course_lesson_id"
     t.index ["related_course_step_id"], name: "index_course_steps_on_related_course_step_id"
   end

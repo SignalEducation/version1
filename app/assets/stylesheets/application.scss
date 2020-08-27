@@ -5376,6 +5376,104 @@ a.list-group-item {
   height: 100%;
 }
 
+#upgrade-subscription-modal {
+  @media (max-width:1024px) {
+    .upgrade-btn-slide {
+      width: 200px !important;
+      position: fixed !important;
+      top: 10%;
+      left: 35%;
+    }
+    .btn.btn-primary {
+      font-size: .85em !important;
+    }
+    .btn-close {
+      margin: 3% 1% 1% 1%;
+      font-size: 20px !important;
+    }
+    .good-job .fa-thumbs-o-up {
+      font-size: 16px !important;
+      margin-left: 1.5em;
+    }
+    .good-job h1 {
+      font-size: 15px !important;
+      margin-left: 1.5em;
+    }
+  }
+  .upgrade-modal-logo {
+    padding-top: .5em;
+  }
+  .modal-wrapper {
+    top: 0;
+    left: 0;
+    background: #000032;
+    box-shadow:
+      0 2.8px 2.2px rgba(0, 0, 0, 0.034),
+      0 6.7px 5.3px rgba(0, 0, 0, 0.048),
+      0 12.5px 10px rgba(0, 0, 0, 0.06),
+      0 22.3px 17.9px rgba(0, 0, 0, 0.072),
+      0 41.8px 33.4px rgba(0, 0, 0, 0.086),
+      0 100px 80px rgba(0, 0, 0, 0.12)
+    ;
+  }
+  .modal {
+    display: block;
+    position: inherit;
+    background: #fff;
+  }
+  .btn.btn-primary {
+    font-weight: bold;
+    font-size: 1.5em;
+  }
+  .upgrade-arrow:after {
+    content: '\e5c8';
+    font-family: 'Material Icons';
+    position: relative;
+    top: 5px;
+  }
+  .btn-close {
+    font-size: 28px;
+    display: block;
+    float: right;
+    color: #000032;
+    padding: 5px 15px;
+    cursor: pointer;
+  }
+  .content {
+    padding: 10%;
+  }
+  .good-job {
+    text-align: center;
+    color: #00b67b;
+  }
+  .good-job .fa-thumbs-o-up {
+    font-size: 25px;
+  }
+  .good-job h1 {
+    font-size: 22px;
+  }
+  .upgrade-btn-slide {
+    position: absolute;
+    right: -1500px;
+    width: 400px;
+    height: 370px;
+    z-index: 1030;
+    background: transparent;
+    -webkit-animation: slide 0.5s forwards;
+    -webkit-animation-delay: 2s;
+    animation: slide 0.5s forwards;
+    animation-delay: 2s;
+  }
+  @-webkit-keyframes slide { 100% { right: 0; } }
+  @keyframes slide { 100% { right: 0; } }
+}
+.video-upgrade-modal-show {
+  display: block;
+}
+.video-upgrade-modal-hide {
+  display: none;
+}
+
 // Notes Classes
 .course-notes-reader {
   position: relative;
@@ -5549,6 +5647,43 @@ a.list-group-item {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 11. Course, CourseLesson, CMEQuiz & CMEVideo Creation Process Classes
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Lesson Preview
+.lesson-preview-btn-pad {
+  padding-top: 2.5em;
+}
+.preview-upgrade-btn {
+  .non-upgrade {
+    display: inline-block;
+  }
+  .upgrade, .upgrade-resp-enroll-btn {
+    display: none;
+  }
+}
+.upgrade-resp-enroll-btn-hide {
+  display: none !important;
+}
+@media(max-width:1199px) {
+  .custom-upgrade {
+    .btn {
+      display: none !important;
+    }
+  }
+  .upgrade-btn-flt {
+    float: right;
+  }
+  .upgrade-resp-enroll-btn-hide {
+    display: inline-block !important;
+  }
+  .preview-upgrade-btn {
+    .non-upgrade {
+      display: none;
+    }
+    .upgrade, .upgrade-resp-enroll-btn {
+      display: inline-block;
+    }
+  }
+}
 
 // Quiz Uploading
 .question-box-item {

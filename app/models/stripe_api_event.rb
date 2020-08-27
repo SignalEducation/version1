@@ -26,7 +26,7 @@ class StripeApiEvent < ApplicationRecord
   KNOWN_API_VERSIONS = %w[2015-02-18 2017-06-05 2017-05-25 2019-05-16].freeze
   KNOWN_PAYLOAD_TYPES = %w[invoice.created invoice.payment_succeeded invoice.payment_failed
                            customer.subscription.deleted charge.failed charge.succeeded
-                           charge.refunded coupon.updated invoice.payment_action_required].freeze
+                           charge.refunded coupon.updated invoice.payment_action_required invoice.upcoming].freeze
   DELAYED_TYPES = %w[invoice.payment_succeeded invoice.payment_failed
                      charge.failed charge.succeeded invoice.payment_action_required].freeze
 
@@ -95,6 +95,8 @@ class StripeApiEvent < ApplicationRecord
         )
       when 'invoice.payment_action_required'
         process_payment_action_required(webhook_object[:id], webhook_object[:subscription])
+      when 'invoice.upcoming'
+        process_invoice_upcoming(webhook_object[:subscription])
       when 'customer.subscription.deleted'
         process_customer_subscription_deleted(webhook_object[:customer],
                                               webhook_object[:id], webhook_object[:cancel_at_period_end])
@@ -202,6 +204,18 @@ class StripeApiEvent < ApplicationRecord
       log_process_error("Error finding Invoice by - #{stripe_inv_id} or Subscription by - #{stripe_subscription_guid}.
                         InvoicePaymentSucceeded Event")
     end
+  end
+
+  def process_invoice_upcoming(stripe_subscription_guid)
+    subscription = Subscription.in_reverse_created_order.find_by(stripe_guid: stripe_subscription_guid)
+    return if subscription.subscription_plan.interval_name != 'Yearly'
+
+    Message.create(
+      process_at: Time.zone.now,
+      user_id: subscription.user.id,
+      kind: :account,
+      template: 'send_supscription_notification_email'
+    )
   end
 
   def process_customer_subscription_deleted(stripe_customer_guid, stripe_subscription_guid, cancel_at_period_end)

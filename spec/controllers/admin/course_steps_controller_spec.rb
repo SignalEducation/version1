@@ -23,7 +23,7 @@
 #  is_constructed_response          :boolean          default(FALSE), not null
 #  available_on_trial               :boolean          default(FALSE)
 #  related_course_step_id :integer
-#
+#  vid_end_seconds                  :integer
 
 require 'rails_helper'
 require 'support/course_content'

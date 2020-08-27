@@ -41,7 +41,7 @@ class Cbe
     after_update  :update_exercise_status, if: proc { |u_log| u_log.status == 'finished' }
 
     def update_score
-      self.score = questions.map(&:score).sum
+      self.score = exhibits? ? responses.map(&:score).sum : questions.map(&:score).sum
     end
 
     def default_status
@@ -52,12 +52,22 @@ class Cbe
       questions.includes(:section).map(&:section).uniq.sort_by(&:sorting_order)
     end
 
+    def scenarios_in_user_log
+      cbe.scenarios
+    end
+
+    def exhibits?
+      responses.present?
+    end
+
     private
 
     def update_exercise_status
       questions_kind = questions.map { |q| q.cbe_question.kind }.uniq
 
       exercise&.submit
+
+      return if responses.present?
       return unless questions_kind.exclude?('open') &&
                     questions_kind.exclude?('spreadsheet')
 

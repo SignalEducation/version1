@@ -34,5 +34,8 @@ class Cbe
     validates :content,  presence: true, if: proc { |kind| kind.spreadsheet? }
     validates :document, attachment_presence: true, if: proc { |kind| kind.pdf? }
     validates_attachment_content_type :document, content_type: %w[application/pdf text/csv]
+
+    # scopes
+    scope :by_scenario, ->(scenario_id) { where(cbe_scenario_id: scenario_id).order(:sorting_order) }
   end
 end

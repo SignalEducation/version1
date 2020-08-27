@@ -2,6 +2,8 @@
   .col-xl-8
     .pb-2
       %p.mb-4
+        %a{data: {target: '#enrollment-modal', toggle: 'modal'}, href: '#', class: 'btn btn-secondary btn-sm mb-3 mb-sm-0 upgrade-resp-enroll-btn-hide'}
+          Enrol
         =@course.description.to_s.html_safe
   .col-xl-4
     -if @course.course_tutors.any?
