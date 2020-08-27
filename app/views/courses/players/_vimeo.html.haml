@@ -33,7 +33,7 @@
   };
 
   let timeUpdate = function(data) {
-    var eovCounter = parseInt(endStepVidTime)/100;
+    var eovCounter = data.duration - parseInt(endStepVidTime)/100;
     var updateBtnCount = false;
     if(freeLesson && video_cme_id == lastLessonStep) {
       updateBtnCount = data.duration - data.seconds < eovCounter ? true : false;

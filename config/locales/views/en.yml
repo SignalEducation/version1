@@ -460,8 +460,8 @@ en:
         name_url_placeholder: auto-populated-for-you
         temporary_label: Label
         temporary_label_placeholder: Temp Label
-        upgrade_modal_label: Seconds to end of video * 100
-        upgrade_modal_label_placeholder: 8.5 seconds is 850
+        upgrade_modal_label: Time of trigger in seconds * 100
+        upgrade_modal_label_placeholder: 57 seconds is 5700
         delete: Delete File
         description: Description
         description_placeholder: Description (This is optional)

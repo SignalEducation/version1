@@ -5377,12 +5377,12 @@ a.list-group-item {
 }
 
 #upgrade-subscription-modal {
-  @media (max-width:1024px) {
+  @media (max-width:1200px) {
     .upgrade-btn-slide {
       width: 200px !important;
       position: fixed !important;
       top: 10%;
-      left: 35%;
+      padding-right: 1em;
     }
     .btn.btn-primary {
       font-size: .85em !important;
