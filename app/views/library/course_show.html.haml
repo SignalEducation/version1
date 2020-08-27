@@ -9,10 +9,11 @@
                 =@course.parent.name
 
           -if @exam_body.has_sittings && @new_enrollment && (@computer_exam_sitting || @exam_sittings)
-            .mw-0
-              %a{data: {target: '#enrollment-modal', toggle: 'modal'}, href: '#', class: 'btn btn-primary btn-sm'}
+            .mw-0.preview-upgrade-btn
+              %a{data: {target: '#enrollment-modal', toggle: 'modal'}, href: '#', class: 'btn btn-secondary btn-sm mb-3 mb-sm-0 non-upgrade'}
                 Enrol
               =render partial: 'course_enrollment_modal'
+              =render partial: 'register_upgrade_links', locals: { user: current_user }
 
         .pt-3
           %h1.h1-hero
@@ -23,7 +24,6 @@
           =render partial: 'progress'
         - else
           =render partial: 'course_info'
-
       %nav.courses-nav
         %ul.nav.nav-tabs{id: 'coursesTabs', role: 'tablist'}
           - @course.course_sections.all_active.all_in_order.each_with_index do |course_section, counter|
@@ -57,10 +57,10 @@
                 - course_section.course_lessons.all_valid.all_in_order.each_with_index do |course_lesson, counter|
                   =render partial: 'course_lesson', locals: { course_lesson: course_lesson, counter: counter, count: course_section.course_lessons.all_valid.count }
 
-            .col-xl-4.mb-5
+            .col-xl-4.mb-5.custom-upgrade
               =render partial: 'register_upgrade_links', locals: { user: current_user }
 
-              %aside
+              %aside.lesson-preview-btn-pad
                 .btn.btn-secondary.btn-sm.mb-5{'data-target' => '#contact-form-modal', 'data-toggle' => 'modal', :href => '#'}
                   =@exam_body&.help_text
       -if @course_resources.any?

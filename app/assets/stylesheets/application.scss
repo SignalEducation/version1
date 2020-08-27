@@ -5648,6 +5648,43 @@ a.list-group-item {
 // 11. Course, CourseLesson, CMEQuiz & CMEVideo Creation Process Classes
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// Lesson Preview
+.lesson-preview-btn-pad {
+  padding-top: 2.5em;
+}
+.preview-upgrade-btn {
+  .non-upgrade {
+    display: inline-block;
+  }
+  .upgrade, .upgrade-resp-enroll-btn {
+    display: none;
+  }
+}
+.upgrade-resp-enroll-btn-hide {
+  display: none !important;
+}
+@media(max-width:1199px) {
+  .custom-upgrade {
+    .btn {
+      display: none !important;
+    }
+  }
+  .upgrade-btn-flt {
+    float: right;
+  }
+  .upgrade-resp-enroll-btn-hide {
+    display: inline-block !important;
+  }
+  .preview-upgrade-btn {
+    .non-upgrade {
+      display: none;
+    }
+    .upgrade, .upgrade-resp-enroll-btn {
+      display: inline-block;
+    }
+  }
+}
+
 // Quiz Uploading
 .question-box-item {
   display: block;
