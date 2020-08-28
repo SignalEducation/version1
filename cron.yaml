@@ -15,6 +15,6 @@ cron:
  - name: "monthly-refunds-report"
    url: "/api/cron_tasks/monthly_refunds_report"
    schedule: "0 0 1 * *"
- - name: "monthly-products-report"
-   url: "/api/cron_tasks/monthly_products_report"
+ - name: "monthly-orders-report"
+   url: "/api/cron_tasks/monthly_orders_report"
    schedule: "0 0 1 * *"
