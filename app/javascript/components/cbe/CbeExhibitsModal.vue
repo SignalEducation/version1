@@ -179,4 +179,7 @@ export default {
   .content {
     padding: 16px;
   }
+  #pdfvuer {
+    height: 580px;
+  }
 </style>
