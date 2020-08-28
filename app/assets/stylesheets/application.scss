@@ -6554,3 +6554,11 @@ button.sub-details[aria-expanded="true"]:before{
 .plan-card-link:hover .text-orange, .plan-card-link.hover .text-orange {
   color: #fd7e14 !important;
 }
+
+#pane_0 > div > div.exhibits > div:nth-child(2) > div > div > div.content {
+  height: 600px;
+}
+
+#cbe-nav-header {
+  z-index: 1;
+}
