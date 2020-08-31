@@ -17,7 +17,11 @@ module Paypal
 
     def bill_outstanding
       note = AgreementStateDescriptor.new(note: 'Billing the overdue balance')
-      if @agreement.bill_balance(note: note, amount: @agreement.agreement_details.outstanding_balance)
+      if @agreement.bill_balance(note: note,
+                                 amount: {
+                                   value: @agreement.agreement_details.outstanding_balance,
+                                   currency: @subscription.currency.iso_code
+                                 })
         process_recovery_success
       else
         process_recovery_failure

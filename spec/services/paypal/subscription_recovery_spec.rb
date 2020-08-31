@@ -43,6 +43,13 @@ describe Paypal::SubscriptionRecovery, type: :service do
   end
 
   describe '#bill_outstanding' do
+    it 'calls #bill_balance on the PayPal agreement with the correct attributes' do
+      allow(agreement_dbl).to receive_message_chain('agreement_details.outstanding_balance').and_return(0.0)
+      expect(agreement_dbl).to receive(:bill_balance).with(hash_including(amount: { value: 0.0, currency: subscription.currency.iso_code})).and_return(true)
+
+      subject.bill_outstanding
+    end
+
     it 'calls #process_recovery_success if the PayPal agreement updates' do
       allow(agreement_dbl).to receive_message_chain('agreement_details.outstanding_balance').and_return('0.0')
       allow(agreement_dbl).to receive(:bill_balance).and_return(true)
