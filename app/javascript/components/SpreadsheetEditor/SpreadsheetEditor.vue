@@ -100,6 +100,10 @@
         type: Object,
         default: () => ({ kind: 'spreadsheet', content: { data: {} }}),
       },
+      initialWidth:{
+        type: Number,
+        default: 300,
+      },
     },
     computed: {
       spreadsheetData: function() {
@@ -114,7 +118,7 @@
       return {
         hostClass:'spread-host',
         autoGenerateColumns:true,
-        width:300,
+        width: this.initialWidth,
         visible:true,
         resizable:true,
         selectedCellRow: null,

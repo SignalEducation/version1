@@ -11,15 +11,14 @@
           :closeButton="true"
           :isOpen.sync="showModal"
           :resizable="true"
-          :width="700"
-          :height="700"
+          :width="920"
           positionHint="center">
 
           <TinyEditor
             v-if="responseOptionType === 'open'"
             :field-model.sync="responseOption"
             :aditional-toolbar-options="[]"
-            :editor-height="520" />
+            :editor-height="1200" />
 
           <div class="multiple-editors" v-if="responseOptionType === 'multiple_open'">
             <div v-for="(response, index) in multipleResponseOption" :key="index">
@@ -40,6 +39,7 @@
           <SpreadsheetEditor
             v-if="responseOptionType === 'spreadsheet'"
             :initial-data="responseOption"
+            :initialWidth="920"
             @spreadsheet-updated="syncResponsesData" />
         </hsc-window>
 
@@ -149,3 +149,8 @@ export default {
   },
 };
 </script>
+<style lang="css">
+.spread-host {
+    height: 700px  !important;
+}
+</style>
