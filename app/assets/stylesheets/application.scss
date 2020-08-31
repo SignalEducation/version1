@@ -5669,6 +5669,11 @@ a.list-group-item {
       display: none !important;
     }
   }
+  .lesson-preview-btn-pad {
+    .btn {
+      display: inline-block !important;
+    }
+  }
   .upgrade-btn-flt {
     float: right;
   }

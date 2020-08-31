@@ -473,11 +473,6 @@ button.flagged{
 }
 
 // CBE Exhibits
-div#pdfvuer {
-  height: 750px;
-  overflow: auto;
-  position: relative;
-}
 
 .exhibits-sidebar {
   overflow: auto;
@@ -514,6 +509,9 @@ div#pdfvuer {
   .window {
     .content{
       background: white;
+      height: 750px;
+      overflow: auto;
+      position: relative;
     }
   }
 }

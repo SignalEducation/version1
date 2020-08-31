@@ -35,7 +35,7 @@
   let timeUpdate = function(data) {
     var eovCounter = data.duration - parseInt(endStepVidTime)/100;
     var updateBtnCount = false;
-    if(freeLesson && video_cme_id == lastLessonStep) {
+    if(freeLesson === 'true' && video_cme_id == lastLessonStep) {
       updateBtnCount = data.duration - data.seconds < eovCounter ? true : false;
       showUpgradeBtn(updateBtnCount);
     }
@@ -55,7 +55,7 @@
           console.log(xhr);
         }
       });
-      if(!freeLesson && video_cme_id != lastLessonStep) {
+      if(freeLesson === 'false' && video_cme_id != lastLessonStep) {
         player.off('timeupdate', timeUpdate);
       }
       videoFinishedEvent(logId);
