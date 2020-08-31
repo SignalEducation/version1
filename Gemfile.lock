@@ -582,8 +582,6 @@ GEM
       inflection
       mime-types
       multipart-post (~> 2.0)
-    zeroclipboard-rails (0.1.2)
-      railties (>= 3.1)
 
 PLATFORMS
   ruby
@@ -694,7 +692,6 @@ DEPENDENCIES
   will_paginate
   will_paginate-bootstrap
   zendesk_api
-  zeroclipboard-rails
 
 RUBY VERSION
    ruby 2.6.5p114

@@ -30,7 +30,7 @@
               %li.nav-item
                 =link_to 'FAQs', public_faqs_url, class: 'nav-link'
               %li.nav-item
-                %a{href: 'http://blog.learnsignal.com/', class: 'nav-link', target: '_blank'} Blog
+                %a{href: 'https://blog.learnsignal.com/', class: 'nav-link', target: '_blank', rel: 'noreferrer'} Blog
 
               -@footer_landing_pages.each do |landing_page|
                 %li.nav-item
@@ -55,15 +55,15 @@
           .col-lg-6
             %ul.nav.flex-column
               %li.nav-item
-                =link_to "https://www.facebook.com/learnsignal/", class: 'nav-link social-icon', target: '_blank' do
+                =link_to "https://www.facebook.com/learnsignal/", class: 'nav-link social-icon', target: '_blank', rel: 'noreferrer' do
                   =image_tag('facebook_social.png')
                   Facebook
               %li.nav-item
-                =link_to "https://twitter.com/learnsignal", class: 'nav-link social-icon', target: '_blank' do
+                =link_to "https://twitter.com/learnsignal", class: 'nav-link social-icon', target: '_blank', rel: 'noreferrer' do
                   =image_tag('twitter_social.png')
                   Twitter
               %li.nav-item
-                =link_to "https://www.linkedin.com/company/learnsignal", class: 'nav-link social-icon', target: '_blank' do
+                =link_to "https://www.linkedin.com/company/learnsignal", class: 'nav-link social-icon', target: '_blank', rel: 'noreferrer' do
                   =image_tag('linkedin_social.png')
                   LinkedIn
 
