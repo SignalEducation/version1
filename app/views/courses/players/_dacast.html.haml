@@ -7,8 +7,15 @@
   let section_log_id = "#{@course_section_log.try(:id) || ''}";
   let exam_track_id  = "#{@course_lesson_log.try(:id) || ''}";
   let video_id       = "#{ENV['DACAST_PLAYER_KEY']}#{cme.course_video.dacast_id}";
-  let freeLesson = "#{@course_lesson.free}";
+  let freeLesson     = "#{@course_lesson.free}";
+  let lastLessonStep = "#{@course_lesson.course_steps.all_in_order.all_active.last.id}";
+  let endStepVidTime = "#{cme.vid_end_seconds || ''}";
   let myPlayer       = dacast(video_id, 'video-player-window');
+
+  let showUpgradeBtn = function() {
+    $("#upgrade-subscription-modal").removeClass('video-upgrade-modal-hide');
+    $("#upgrade-subscription-modal").addClass('video-upgrade-modal-show');
+  };
 
   // Create a log when video start
   myPlayer.onPlay(function(){
@@ -35,6 +42,12 @@
         setTimeout(
           function()
           { updateLog(); }, 60000);
+        if(video_cme_id == lastLessonStep) {
+          var eovCounter = parseInt(endStepVidTime)*10;
+          setTimeout(
+          function()
+          { showUpgradeBtn(); }, eovCounter);
+        }
       }
     }
   });
