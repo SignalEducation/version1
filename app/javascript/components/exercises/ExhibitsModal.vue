@@ -49,10 +49,9 @@ export default {
 </script>
 
 <style>
-.window[data-v-300294cc] {
+.window {
     display: flex;
     flex-flow: column;
-    /* position: absolute; */
     border-radius: 4pt 4pt 0 0;
     left: -500px !important;
     top: -150px !important;
