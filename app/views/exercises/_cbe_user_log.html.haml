@@ -1,14 +1,14 @@
 %nav
   %ul.nav.nav-tabs.nav-fill{id: 'sectionTabs', role: 'tablist'}
-    - @exercise.cbe_user_log.sections_in_user_log.each_with_index do |section, section_index|
+    - user_log.sections_in_user_log.each_with_index do |section, section_index|
       %li.nav-item
         %a{class: "nav-link #{section_index == 0 ? 'active' : ''}", data: {toggle: 'tab'}, href: "#section-#{section.id}", aria: {controls: "#{section.id}", selected: 'false'}, role: 'tab'}
           =section.name
 
 .container.py-4
   #sectionTabsContent.tab-content
-    - @exercise.cbe_user_log.sections_in_user_log.each_with_index do |section, section_index|
-      -section_questions =  @exercise.cbe_user_log.questions.by_section(section.id)
+    - user_log.sections_in_user_log.each_with_index do |section, section_index|
+      -section_questions =  user_log.questions.by_section(section.id)
       .tab-pane{id: "section-#{section.id}", class: "tab-#{section.id} #{section_index == 0 ? 'active show' : ''} ", "aria-labelledby" => "section-#{section.id}-tab", :role => "tabpanel"}
         .row.row-lg.py-3
           .col-xl-12
