@@ -174,6 +174,7 @@ export default {
       numeric,
     },
     file: {
+      required
     },
   },
   computed: {
@@ -252,11 +253,10 @@ export default {
         formData.append("exhibits[name]", this.name);
         formData.append("exhibits[kind]", this.exhibitKind);
         formData.append("exhibits[content]", JSON.stringify(this.exhibitContent));
-        formData.append("exhibits[document]", this.attachedFile);
         formData.append("exhibits[sorting_order]", this.sortingOrder);
+         if (this.attachedFile) { formData.append("exhibits[document]", this.attachedFile); }
 
         this.exhibitKind == 'pdf' ? formData.delete("exhibits[content]") : formData.delete("exhibits[document]")
-
         axios({
           method: "patch",
           url: `/api/v1/exhibits/${this.id}`,
@@ -269,10 +269,6 @@ export default {
             this.exhibitDetails = response.data;
             if (this.exhibitDetails.id > 0) {
               this.updateStatus = "OK";
-              this.exhibitDetails = {};
-              this.name = this.initialName;
-              this.exhibitContent = this.initalContent;
-              this.sortingOrder += 1;
               this.file = {};
               this.attachedFile = null;
               this.$refs["input-file"].reset();
