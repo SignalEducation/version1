@@ -516,6 +516,20 @@ button.flagged{
   }
 }
 
+.outside-modals
+{
+  .exhibits-sidebar
+  {
+    .window {
+      display: flex;
+      flex-flow: column;
+      border-radius: 4pt 4pt 0 0;
+      left: -500px !important;
+      top: -150px !important;
+    }
+  }
+}
+
 .multiple-editors{
   overflow: scroll;
   height: 700px;

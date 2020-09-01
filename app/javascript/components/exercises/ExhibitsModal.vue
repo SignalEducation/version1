@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section class="outside-modals">
     <div class="exhibits-sidebar">
       <div class="exhibits" v-if="scenarioData">
         <CbeExhibitsModal
@@ -47,13 +47,3 @@ export default {
   },
 };
 </script>
-
-<style>
-.window {
-    display: flex;
-    flex-flow: column;
-    border-radius: 4pt 4pt 0 0;
-    left: -500px !important;
-    top: -150px !important;
-}
-</style>
