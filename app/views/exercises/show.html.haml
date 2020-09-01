@@ -33,13 +33,14 @@
                   .col-md-12
                     %h3
                       %span.mr-1
-                        ="Educator Comment: "
+                        ="Overall Comment: "
                         =raw(@exercise.cbe_user_log.educator_comment)
 
           -if @exercise.returned?
+            -partial = @exercise.cbe_user_log.exhibits? ? 'cbe_user_log_exhibits' : 'cbe_user_log'
             %article.card.card-tabs.mb-5
               .card-body
-                =render partial: 'cbe_user_log'
+                =render partial: partial, locals: { user_log: @exercise.cbe_user_log }
 
 
       -else
@@ -62,4 +63,3 @@
                     =link_to 'Download Submission', @exercise.submission.url, class: 'btn btn-primary btn-sm', target: '_blank'
                   -if @exercise.correction.present?
                     =link_to 'Download Response', @exercise.correction.url, class: 'btn btn-primary btn-sm', target: '_blank'
-

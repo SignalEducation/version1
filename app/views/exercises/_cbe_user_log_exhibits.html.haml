@@ -1,0 +1,115 @@
+%nav
+  %ul.nav.nav-tabs.nav-fill{id: 'scenarioTabs', role: 'tablist'}
+    - user_log.scenarios_in_user_log.each_with_index do |scenario, scenario_index|
+      %li.nav-item
+        %a{class: "nav-link #{scenario_index == 0 ? 'active' : ''}", data: {toggle: 'tab'}, href: "#scenario-#{scenario.id}", aria: {controls: "#{scenario.id}", selected: 'false'}, role: 'tab'}
+          =scenario.name
+
+.container.py-4
+  #scenarioTabsContent.tab-content
+    -user_log.scenarios_in_user_log.each_with_index do |scenario, scenario_index|
+      -all_scenario_exhibits     = user_log.cbe.exhibits.by_scenario(scenario.id)
+      -all_scenario_requirements = user_log.cbe.requirements.by_scenario(scenario.id)
+      -user_responses            = user_log.responses.by_scenario(scenario.id)
+      .tab-pane{id: "scenario-#{scenario.id}", class: "tab-#{scenario.id} #{scenario_index == 0 ? 'active show' : ''} ", "aria-labelledby" => "scenario-#{scenario.id}-tab", :role => "tabpanel"}
+        .row.row-lg
+          .col-sm-8
+            -all_scenario_requirements.each do |requirement|
+              .row.row-lg.py-3
+                .col-xl-4
+                  .h3
+                    =requirement.name.humanize
+                .col-xl-4
+                  .h3
+                    Score:
+                    =requirement.score
+              .row
+                .col-sm-12
+                  .accordion#resultsAccordion
+                    .card
+                      .card-header.bg-gray-light{id: "requirement-#{requirement.id}", type: "button", data:{toggle: "collapse", target: "#requirementContent#{requirement.id}"}, aria:{expanded: "true", controls: "questionCard"}, style: 'padding: 10px;'}
+                        %h2.mb-0
+                          .btn.btn-link
+                            ='Content '
+                      .collapse{id: "requirementContent#{requirement.id}", aria: {labelledby: "requirement-#{requirement.id}"}, data: {parent: "#resultsAccordion"}}
+                        .card-body{style: 'margin-left: 10px;'}
+                          =raw(requirement.content)
+
+                    .card
+                      .card-header.bg-gray-light{id: "requirement-#{requirement.id}", type: "button", data:{toggle: "collapse", target: "#requirementSolution#{requirement.id}"}, aria:{expanded: "true", controls: "questionCard"}, style: 'padding: 10px;'}
+                        %h2.mb-0
+                          .btn.btn-link
+                            ='Solution '
+                      .collapse{id: "requirementSolution#{requirement.id}", aria: {labelledby: "requirement-#{requirement.id}"}, data: {parent: "#resultsAccordion"}}
+                        .card-body{style: 'margin-left: 10px;'}
+                          =raw(requirement.solution)
+          -# Exhibits list and modal in vue component.
+          .col-sm-4
+            %h4
+              Exhibits
+            #exhibits-list-component{ data: { scenario_id: scenario.id, cbe_id: user_log.cbe.id } }
+            -# VueJS include
+            = javascript_pack_tag 'exercise_modals'
+          -# Exhibits list and modal in vue component.
+
+          .col-sm-12
+            .h4
+              User Responses
+            %nav
+              %ul.nav.nav-tabs.nav-fill{id: 'sectionTabs', role: 'tablist'}
+                -user_responses.each_with_index do |response, index|
+                  %li.nav-item
+                    %a{class: "nav-link #{index == 0 ? 'active' : ''}", data: {toggle: 'tab'}, href: "#response-#{response.id}", aria: {controls: "#{response.id}", selected: 'false'}, role: 'tab'}
+                      =response.cbe_response_option.formatted_kind
+            .tab-content
+              -user_responses.each_with_index do |response, index|
+                .tab-pane{id: "response-#{response.id}", class: "tab-#{response.id} #{index == 0 ? 'active show' : ''} ", "aria-labelledby" => "response-#{response.id}-tab", :role => "tabpanel"}
+                  -# VueJS include
+                  = javascript_pack_tag 'exercise'
+
+                  .card.card-primary{style: 'min-height: 10px;'}
+                    .card-body
+                      .row
+                        .col-sm-12
+                          ="Answer Score: #{response.score.to_i}"
+
+                          .accordion#resultsAccordion
+                            .card
+                              .card-header#questionHeading{type: "button", data:{toggle: "collapse", target: "#responseCard-#{response.id}"}, aria:{expanded: "true", controls: "responseCard"}, style: 'padding: 10px;'}
+                                %h2.mb-0
+                                  .btn.btn-link
+                                    ='Content'
+                              .collapse{id: "responseCard-#{response.id}", aria: {labelledby: "questionHeading"}, data: {parent: "#resultsAccordion"}}
+                                .card-body
+                                  -if response.cbe_response_option.kind == 'open'
+                                    %div{ id: "questionContent-#{response.id}" }
+                                      -if response.content['data'].present?
+                                        =raw(response.content['data'])
+                                      -else
+                                        Response not answered by the student
+                                  -elsif response.cbe_response_option.kind == 'multiple_open'
+                                    %div{ id: "questionContent-#{response.id}" }
+                                      -response.content['data'].each do |content|
+                                        %div.multiple_responses
+                                          %h5
+                                            Notes
+                                          %span
+                                            =raw(content['notes'])
+                                          %h5
+                                            Notes Speaker
+                                          %span
+                                            =raw(content['speaker'])
+                                  -else
+                                    #open-answers-component{ data: { answer_type: 'ResponseSpreadsheet',
+                                                                      answer_id: response.id,
+                                                                      spreadsheet_data: response.content,
+                                                                      cbe_id: response.user_log.cbe_id,
+                                                                      cbe_user_log_id: response.cbe_user_log_id } }
+                            .card
+                              .card-header#questionHeading{type: "button", data:{toggle: "collapse", target: "#responseCard-#{response.id}"}, aria:{expanded: "true", controls: "responseCard"}, style: 'padding: 10px;'}
+                                %h2.mb-0
+                                  .btn.btn-link
+                                    ='Educator Comment '
+                              .collapse{id: "responseCard-#{response.id}", aria: {labelledby: "questionHeading"}, data: {parent: "#resultsAccordion"}}
+                                .card-body
+                                  =raw(response.educator_comment)

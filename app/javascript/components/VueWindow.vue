@@ -4,6 +4,7 @@
     <hsc-window
       :close-button="true"
       :is-open.sync="isOpen"
+      :resizable="isResizable"
       :width="windowWidth"
       :height="windowHeight"
       :title="windowHeader"
@@ -35,6 +36,10 @@ export default {
       type: Boolean,
       default: false
     },
+    isResizable: {
+      type: Boolean,
+      default: false
+    },
   },
   data() {
     return {
@@ -52,7 +57,6 @@ export default {
       handler(openValue) {
         console.log(openValue)
         this.$emit('updateWindowClose', openValue);
-
       },
     },
   },

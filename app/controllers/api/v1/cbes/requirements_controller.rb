@@ -21,9 +21,11 @@ module Api
         end
 
         def destroy
-          return if @requirement.destroy
-
-          render json: { errors: @requirement.errors }, status: :unprocessable_entity
+          if @requirement.destroy
+            render json: { message: "Requirement #{@requirement.id} was deleted." }, status: :accepted
+          else
+            render json: { errors: @requirement.errors }, status: :unprocessable_entity
+          end
         end
 
         private

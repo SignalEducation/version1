@@ -21,9 +21,11 @@ module Api
         end
 
         def destroy
-          return if @response_option.destroy
-
-          render json: { errors: @response_option.errors }, status: :unprocessable_entity
+          if @response_option.destroy
+            render json: { message: "Response Option #{@response_option.id} was deleted." }, status: :accepted
+          else
+            render json: { errors: @response_option.errors }, status: :unprocessable_entity
+          end
         end
 
         private

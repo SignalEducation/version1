@@ -6,14 +6,14 @@
 #
 #  id              :bigint           not null, primary key
 #  name            :string
-#  content         :string
+#  content         :text
 #  score           :float
 #  sorting_order   :integer
 #  kind            :integer
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
-#  cbe_section_id  :bigint
 #  cbe_scenario_id :bigint
+#  solution        :text
 #
 class Cbe
   class Requirement < ApplicationRecord
