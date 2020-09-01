@@ -1,25 +1,28 @@
 <template>
   <div>
-    <section class="exhibits-sidebar-links requirement-icon" @click="showModal = !showModal">
+    <section
+      class="exhibits-sidebar-links requirement-icon"
+      @click="showModal = !showModal"
+    >
       {{ `${requirementName} (${requirementScore} marks)` }}
     </section>
-
-    <hsc-window-style-white>
-      <hsc-window
-        :title="requirementName"
-        :closeButton="true"
-        :isOpen.sync="showModal"
-        :width="700"
-        positionHint="center" >
+    <VueWindow
+      :window-header="requirementName"
+      :window-width="700"
+      :window-is-open="showModal"
+      :isResizable="true"
+      :closeButton="true"
+      @updateWindowClose="handleChange"
+    >
+      <div slot="body">
         <span v-html="requirementContent"></span>
-      </hsc-window>
-
-    </hsc-window-style-white>
+      </div>
+    </VueWindow>
   </div>
 </template>
 
 <script>
-import VueWindow from '../VueWindow.vue'
+import VueWindow from "../VueWindow.vue";
 
 export default {
   components: {
@@ -40,13 +43,18 @@ export default {
     },
     requirementModal: {
       type: Boolean,
-      default:  false
+      default: false,
     },
   },
   data() {
     return {
       showModal: this.requirementModal,
-    }
-  }
+    };
+  },
+  methods: {
+    handleChange(value) {
+      this.showModal = value;
+    },
+  },
 };
 </script>
