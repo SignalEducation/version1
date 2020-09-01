@@ -55,6 +55,7 @@
 #  communication_approval_datetime :datetime
 #  preferred_exam_body_id          :bigint
 #  currency_id                     :bigint
+#  tutor_link                      :string
 #
 
 FactoryBot.define do

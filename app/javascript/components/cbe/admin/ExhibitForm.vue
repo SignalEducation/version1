@@ -203,13 +203,13 @@ export default {
         this.submitStatus = "PENDING";
 
         const formData = new FormData();
-        formData.append("exibits[name]", this.name);
-        formData.append("exibits[kind]", this.exhibitKind);
-        formData.append("exibits[content]", JSON.stringify(this.exhibitContent));
-        formData.append("exibits[document]", this.attachedFile);
-        formData.append("exibits[sorting_order]", this.sortingOrder);
+        formData.append("exhibits[name]", this.name);
+        formData.append("exhibits[kind]", this.exhibitKind);
+        formData.append("exhibits[content]", JSON.stringify(this.exhibitContent));
+        formData.append("exhibits[document]", this.attachedFile);
+        formData.append("exhibits[sorting_order]", this.sortingOrder);
 
-        this.exhibitKind == 'pdf' ? formData.delete("exibits[content]") : formData.delete("exibits[document]")
+        this.exhibitKind == 'pdf' ? formData.delete("exhibits[content]") : formData.delete("exhibits[document]")
 
         axios({
           method: "post",
@@ -249,13 +249,13 @@ export default {
         this.updateStatus = "PENDING";
 
         const formData = new FormData();
-        formData.append("exibits[name]", this.name);
-        formData.append("exibits[kind]", this.exhibitKind);
-        formData.append("exibits[content]", JSON.stringify(this.exhibitContent));
-        formData.append("exibits[document]", this.attachedFile);
-        formData.append("exibits[sorting_order]", this.sortingOrder);
+        formData.append("exhibits[name]", this.name);
+        formData.append("exhibits[kind]", this.exhibitKind);
+        formData.append("exhibits[content]", JSON.stringify(this.exhibitContent));
+        formData.append("exhibits[document]", this.attachedFile);
+        formData.append("exhibits[sorting_order]", this.sortingOrder);
 
-        this.exhibitKind == 'pdf' ? formData.delete("exibits[content]") : formData.delete("exibits[document]")
+        this.exhibitKind == 'pdf' ? formData.delete("exhibits[content]") : formData.delete("exhibits[document]")
 
         axios({
           method: "patch",
