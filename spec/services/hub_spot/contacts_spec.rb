@@ -8,8 +8,8 @@ RSpec.describe HubSpot::Contacts do
   let(:exam_body)    { build(:exam_body, active: true, name: 'EXAM_BODY_NAME') }
   let(:plan)         { build(:subscription_plan, exam_body: exam_body) }
   let(:subscription) { build(:subscription, state: :active, user: user_01, subscription_plan: plan) }
-  let(:key)          { Rails.application.credentials[Rails.env.to_sym][:hubspot][:api_key] }
-  let(:uri)          { 'http://api.hubapi.com' }
+  let(:key)          { Rails.application.credentials[Rails.env.to_sym][:hubspot][:main_api][:api_key] }
+  let(:uri)          { 'https://api.hubapi.com' }
   let(:contacts)     { described_class.new }
 
   describe '#create' do
