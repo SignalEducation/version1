@@ -138,6 +138,9 @@ class StudentSignUpsController < ApplicationController
       )
     )
 
+    @user.hutk = params[:hutk]
+    @user.hs_form_id = params[:hs_form_id]
+
     if verify_recaptcha(model: @user) && @user.valid? && @user.save
       handle_post_user_creation(@user)
       handle_course_enrollment(@user, params[:course_id]) if params[:course_id]

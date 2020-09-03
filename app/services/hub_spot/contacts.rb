@@ -2,6 +2,10 @@
 
 module HubSpot
   class Contacts < Support::Connection
+    def initialize
+      super(:main_api)
+    end
+
     def create(user_id)
       user            = User.find(user_id)
       path            = '/contacts/v1/contact'
@@ -35,8 +39,8 @@ module HubSpot
 
     private
 
-    def service(path, method, query)
-      response(path: path, method: method, query: query)
+    def service(path, method, body)
+      response(path: path, method: method, body: body, query: { hapikey: credentials[:api_key] })
     end
   end
 end
