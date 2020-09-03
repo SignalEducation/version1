@@ -90,8 +90,8 @@ class PaypalSubscriptionsService
   def change_plan(plan_id)
     agreement = Agreement.find(@subscription.paypal_subscription_guid)
     next_billing_date = next_billing_date(agreement.agreement_details.next_billing_date)
-    if new_subscription = create_new_subscription(plan_id, next_billing_date)
-      cancel_billing_agreement(note: 'User changing plans') if %w(Active Suspended).include?(agreement.state)
+    if (new_subscription = create_new_subscription(plan_id, next_billing_date))
+      cancel_billing_agreement(note: 'User changing plans') if %w[Active Suspended].include?(agreement.state)
       new_subscription
     else
       raise_subscription_error(agreement, __method__.to_s, :sub_change)
@@ -101,6 +101,7 @@ class PaypalSubscriptionsService
   def create_new_subscription(plan_id, start_date)
     new_subscription = @subscription.user.subscriptions.create(
       subscription_plan_id: plan_id,
+      next_renewal_date: start_date,
       complimentary: false,
       changed_from: @subscription
     )
@@ -135,9 +136,9 @@ class PaypalSubscriptionsService
   end
 
   def next_billing_date(date)
-    if !date.nil?
-      Time.parse(date).iso8601
-    end
+    return if date.nil?
+
+    Time.parse(date).iso8601
   end
 
   def agreement_attributes(subscription:, start_date: nil)
