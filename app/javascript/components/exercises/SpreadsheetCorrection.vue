@@ -2,7 +2,6 @@
   <div class="row">
     <div class="col-sm-12">
       <div class="form-group">
-        <label for="questionContent">Content</label>
         <div id="questionContent">
           <SpreadsheetEditor
             :initial-data="spreadsheetData"
