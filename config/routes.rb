@@ -53,15 +53,6 @@ Rails.application.routes.draw do
   scope '(:locale)', locale: /en/ do # /en\nl\pl/
     get '404' => redirect('404-page')
 
-    namespace :exercises do
-      resources :csvs do
-        collection do
-          post :preview
-          post :upload
-        end
-      end
-    end
-
     namespace :admin do
       resources :exercises, only: %i[index show new create edit update] do
         get 'generate_daily_summary', on: :collection
@@ -70,6 +61,14 @@ Rails.application.routes.draw do
         post 'cbe_user_question_update/answer/:question_id', to: 'exercises#cbe_user_question_update', as: :cbe_user_question_update, on: :member
         post 'cbe_user_response_update/:response_id', to: 'exercises#cbe_user_response_update', as: :cbe_user_response_update, on: :member
         post 'cbe_user_educator_comment/:cbe_user_log_id', to: 'exercises#cbe_user_educator_comment', as: :cbe_user_log_update, on: :member
+      end
+      namespace :exercises do
+        resources :csvs do
+          collection do
+            post :preview
+            post :upload
+          end
+        end
       end
 
       resources :users do
