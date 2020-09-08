@@ -17,6 +17,27 @@ module HubSpot
         data_array
       end
 
+      def form_contact(data)
+        form_data(data)
+      end
+
+      def form_data(data)
+        {
+          fields: [
+            { name: 'email',     value: data[:email] },
+            { name: 'firstname', value: data[:first_name] },
+            { name: 'lastname',  value: data[:last_name] }
+          ],
+          context: { "hutk": data[:hutk] },
+          legalConsentOptions: {
+            consent: {
+              consentToProcess: data[:consent],
+              text: "I agree to learnsignal's terms and conditions"
+            }
+          }
+        }
+      end
+
       private
 
       def data(user)
