@@ -7,7 +7,7 @@ module HubSpot
     end
 
     def create(data)
-      path = "/submissions/v3/integration/submit/#{credentials[:portal_id]}/#{data[:hs_form_id]}/"
+      path = "/submissions/v3/integration/submit/#{credentials[:portal_id]}/#{data['hs_form_id']}/"
       body = Parsers::Contact.new.form_contact(data)
 
       response = service(path, body)

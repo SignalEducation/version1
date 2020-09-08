@@ -16,7 +16,7 @@ RSpec.describe HubSpot::FormContacts do
 
     context 'Correct request' do
       it 'save parsed data in hubspot' do
-        data = { first_name: user_01.first_name, last_name: user_01.last_name, email: user_01.email, hutk: user_01.hutk, hs_form_id: user_01.hs_form_id, consent: user_01.terms_and_conditions }
+        data = { "first_name" => user_01.first_name, "last_name" => user_01.last_name, "email" => user_01.email, "hutk" => user_01.hutk, "hs_form_id" => user_01.hs_form_id, "consent" => user_01.terms_and_conditions }
         stub_request(:post, "#{uri}/submissions/v3/integration/submit/#{key}/#{user_01.hs_form_id}/").
           with(body: "{\"fields\":[{\"name\":\"email\",\"value\":\"#{user_01.email}\"},{\"name\":\"firstname\",\"value\":\"#{user_01.first_name}\"},{\"name\":\"lastname\",\"value\":\"#{user_01.last_name}\"}],\"context\":{\"hutk\":null},\"legalConsentOptions\":{\"consent\":{\"consentToProcess\":true,\"text\":\"I agree to learnsignal's terms and conditions\"}}}").
           to_return(status: 200, body: 'OK', headers: {})
@@ -30,10 +30,10 @@ RSpec.describe HubSpot::FormContacts do
 
     context 'Incorrect request' do
       it 'no save parsed data in hubspot' do
-        data = { first_name: user_01.first_name, last_name: user_01.last_name, email: user_01.email, hutk: user_01.hutk, hs_form_id: user_01.hs_form_id, consent: user_01.terms_and_conditions }
+        data = { "first_name" => user_01.first_name, "last_name" => user_01.last_name, "email" => user_01.email, "hutk" => user_01.hutk, "hs_form_id" => user_01.hs_form_id, "consent" => user_01.terms_and_conditions }
         stub_request(:post, "#{uri}/submissions/v3/integration/submit/#{key}/#{user_01.hs_form_id}/").
           with(body: "{\"fields\":[{\"name\":\"email\",\"value\":\"#{user_01.email}\"},{\"name\":\"firstname\",\"value\":\"#{user_01.first_name}\"},{\"name\":\"lastname\",\"value\":\"#{user_01.last_name}\"}],\"context\":{\"hutk\":null},\"legalConsentOptions\":{\"consent\":{\"consentToProcess\":true,\"text\":\"I agree to learnsignal's terms and conditions\"}}}").
-          to_return(status: 200, body: '', headers: {})
+          to_return(status: 404, body: '', headers: {})
 
         response = form_contacts.create(data)
 
