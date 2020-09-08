@@ -10,7 +10,7 @@
 
           -if @exam_body.has_sittings && @new_enrollment && (@computer_exam_sitting || @exam_sittings)
             .mw-0.preview-upgrade-btn
-              %a{data: {target: '#enrollment-modal', toggle: 'modal'}, href: '#', class: 'btn btn-secondary btn-sm mb-3 mb-sm-0 non-upgrade'}
+              %a#enrol-top{data: {target: '#enrollment-modal', toggle: 'modal'}, href: '#', class: 'btn btn-secondary btn-sm mb-3 mb-sm-0 non-upgrade'}
                 Enrol
               =render partial: 'course_enrollment_modal'
               =render partial: 'register_upgrade_links', locals: { user: current_user }
