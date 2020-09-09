@@ -115,7 +115,7 @@
         .sk-circle11.sk-child
         .sk-circle12.sk-child
 
-      .logo-acca
+      .logo-acca#sign-up-partner-logo
         -if @home_page
           -if @home_page&.logo_image.present?
             =image_tag(@home_page.logo_image, alt: 'Logo')
@@ -145,6 +145,13 @@
   $(document).ready(function(){
     var hubspotCookie = getCookie("hubspotutk");
     document.getElementById("hutk").value = hubspotCookie;
+    var img = $('#sign-up-partner-logo');
+    var width = img.width();
+    var height = img.height();
+    if(width > height){
+      img.removeClass('logo-acca');
+      img.addClass('logo-acca-landscape');
+    }
   });
 
   $(".sk-circle").hide();
