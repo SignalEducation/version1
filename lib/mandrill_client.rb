@@ -81,7 +81,7 @@ class MandrillClient
     send_template('corrections-returned-190510', msg)
   end
 
-  def send_supscription_notification_email
+  def send_subscription_notification_email
     msg = message_stub.merge('subject' => 'LearnSignal - Subscription due')
     send_template('subscription-due-201908', msg)
   end

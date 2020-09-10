@@ -90,8 +90,8 @@ describe MandrillClient do
       expect(response.last).to eq('corrections-returned-190510')
     end
 
-    it 'send_supscription_notification_email' do
-      response = @client.send_supscription_notification_email
+    it 'send_subscription_notification_email' do
+      response = @client.send_subscription_notification_email
 
       expect(response.first).to be_kind_of(MandrillClient)
       expect(response.last).to eq('subscription-due-201908')
