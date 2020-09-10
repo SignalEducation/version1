@@ -48,6 +48,9 @@ RSpec.describe Cbe, type: :model do
 
   describe 'Methods' do
     it { should respond_to(:duplicate) }
+    it { should respond_to(:update_all_files) }
+    it { should respond_to(:exhibit_scenario?) }
+    it { should respond_to(:total_score) }
   end
 
   describe 'Factory' do

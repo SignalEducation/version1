@@ -20,7 +20,8 @@ describe 'A user enrols in a course', type: :feature, js: true do
 
       click_link course.name
 
-      click_link 'Enrol'
+      find('#enrol-top').click
+
       all('#exam_sitting_select option', minimum: 1)[1].select_option
       click_button 'Next Step'
       fill_in "#{exam_body} Student Number", with: '12345'

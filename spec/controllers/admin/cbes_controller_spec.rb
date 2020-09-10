@@ -3,7 +3,8 @@
 require 'rails_helper'
 
 RSpec.describe Admin::CbesController, type: :controller do
-  let(:cbe) { create(:cbe) }
+  let(:cbe)          { create(:cbe) }
+  let(:cbe_resource) { create(:cbe_resource) }
 
   before :each do
     allow(controller).to receive(:logged_in_required).and_return(true)
@@ -45,7 +46,7 @@ RSpec.describe Admin::CbesController, type: :controller do
   describe '#clone' do
     context 'clone cbe' do
       it 'should duplicate cbe' do
-        post :clone, params: { id: cbe.id }
+        post :clone, params: { id: cbe_resource.cbe.id }
 
         expect(response.status).to eq(302)
         expect(response).to redirect_to(admin_cbes_path)
