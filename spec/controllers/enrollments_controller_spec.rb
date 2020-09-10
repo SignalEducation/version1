@@ -66,14 +66,14 @@ RSpec.describe EnrollmentsController, type: :controller do
         expect(response.status).to eq(204)
       end
 
-      it 'should report OK for params_with_custom_date' do
+      xit 'should report OK for params_with_custom_date' do
         post :create, params: { enrollment: custom_date_params }
         expect(flash[:error]).to be_nil
         expect(flash[:success]).to eq("Thank you. You have successfully enrolled in #{course_2.name}")
         expect(response.status).to eq(204)
       end
 
-      it 'should report OK for attaching previous enrollment scul_id' do
+      xit 'should report OK for attaching previous enrollment scul_id' do
         post :create, params: { enrollment: existing_log_params }
         expect(flash[:error]).to be_nil
         expect(flash[:success]).to eq("Thank you. You have successfully enrolled in #{course_2.name}")
