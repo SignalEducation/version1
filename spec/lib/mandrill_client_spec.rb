@@ -91,10 +91,10 @@ describe MandrillClient do
     end
 
     it 'send_subscription_notification_email' do
-      response = @client.send_subscription_notification_email
+      response = @client.send_subscription_notification_email('account_payment_url')
 
       expect(response.first).to be_kind_of(MandrillClient)
-      expect(response.last).to eq('subscription-due-201908')
+      expect(response.last).to eq('subscription-due-201109')
     end
 
     it 'send_onboarding_complete_email' do
