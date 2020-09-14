@@ -1,13 +1,14 @@
 require 'rails_helper'
 
 describe Paypal::SubscriptionValidation, type: :service do
-  let(:agreement_dbl) {
+  let(:agreement_dbl) do
     double(
       'Agreement',
       id: 'I-ERW92H1T8T1ST',
-      state: 'Active'
+      state: 'Active',
+      agreement_details: double(next_billing_date: Time.zone.now + 1.month)
     )
-  }
+  end
   let(:subscription) { create(:paypal_subscription, paypal_status: 'Active', state: 'active') }
   let(:good_instance) { Paypal::SubscriptionValidation.new(subscription) }
 
@@ -56,9 +57,30 @@ describe Paypal::SubscriptionValidation, type: :service do
 
     it 'calls #check_outstanding if the agreement is Active' do
       expect(bad_instance).to receive(:check_outstanding)
+      allow(bad_instance).to receive(:check_annual_renewal)
       allow(bad_instance).to receive(:match_with_state)
 
       bad_instance.sync_with_paypal
+    end
+
+    it 'calls #check_annual_renewal for annual subs if the agreement is Active' do
+      allow(good_instance).to receive(:check_outstanding)
+      allow(good_instance).to receive(:match_with_state)
+      allow(subscription).to receive(:subscription_plan).and_return(double(interval_name: 'Yearly'))
+
+      expect(good_instance).to receive(:check_annual_renewal)
+
+      good_instance.sync_with_paypal
+    end
+
+    it 'does not call #check_annual_renewal for non-annual subs' do
+      allow(good_instance).to receive(:check_outstanding)
+      allow(good_instance).to receive(:match_with_state)
+      allow(subscription).to receive(:subscription_plan).and_return(double(interval_name: 'Monthly'))
+
+      expect(good_instance).not_to receive(:check_annual_renewal)
+
+      good_instance.sync_with_paypal
     end
   end
 
@@ -226,6 +248,44 @@ describe Paypal::SubscriptionValidation, type: :service do
         expect(sub).to receive(:cancel!)
 
         target_instance.send(:match_with_state)
+      end
+    end
+  end
+
+  describe '#check_annual_renewal' do
+    let(:renewal_dbl) { double(state: 'Active', agreement_details: double(next_billing_date: (Time.zone.now + 7.days).to_s)) }
+    let(:target_dbl) { double(state: 'Active', agreement_details: double(next_billing_date: (Time.zone.now + 1.month).to_s)) }
+    let(:non_renewal_dbl) { double(state: 'Active', agreement_details: nil) }
+    let(:sub) { create(:paypal_subscription, paypal_status: 'Active', state: 'active') }
+    let(:target_instance) { Paypal::SubscriptionValidation.new(sub) }
+
+    before :each do
+      allow(sub).to receive(:subscription_plan).and_return(double(payment_frequency_in_months: 12))
+    end
+
+    it 'returns NIL if there is no next_renewal_date' do
+      allow(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(non_renewal_dbl)
+
+      expect(target_instance.send(:check_annual_renewal)).to be nil
+    end
+
+    it 'returns NIL if the next_renewal_date is not 7 days from now' do
+      allow(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(target_dbl)
+
+      expect(target_instance.send(:check_annual_renewal)).to be nil
+    end
+
+    it 'sends a renewal email if the next_renewal_date is exactly 7 days from now' do
+      Timecop.freeze(Time.zone.local(2020, 9, 30, 15, 0, 0)) do
+        allow(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(renewal_dbl)
+
+        expect(Message).to receive(:create).with(
+          {  process_at: Time.zone.now, user_id: sub.user.id,
+             kind: :account, template: 'send_subscription_notification_email',
+             template_params: { url: 'http://localhost:3000/en/account#payment-details' } }
+        )
+
+        target_instance.send(:check_annual_renewal)
       end
     end
   end
