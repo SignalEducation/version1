@@ -4183,6 +4183,14 @@ a.card:hover .card-title .card-explanation {
 .logo-acca {
   max-width: 6.25rem
 }
+.logo-acca-landscape {
+  max-width: 13.25rem
+}
+@media (max-width:768px) {
+  .logo-acca-landscape {
+    max-width: 8rem;
+  }
+}
 .header-section {
   padding: 3rem 0;
   text-align: center;

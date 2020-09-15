@@ -214,7 +214,10 @@ class StripeApiEvent < ApplicationRecord
       process_at: Time.zone.now,
       user_id: subscription.user.id,
       kind: :account,
-      template: 'send_supscription_notification_email'
+      template: 'send_subscription_notification_email',
+      template_params: {
+        url: account_url(anchor: 'payment-details')
+      }
     )
   end
 

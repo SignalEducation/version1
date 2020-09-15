@@ -87,7 +87,6 @@ RSpec.describe EnrollmentsController, type: :controller do
         expect(response.status).to eq(302)
         expect(response).to redirect_to(library_url)
       end
-
     end
 
     describe "GET 'edit/1'" do

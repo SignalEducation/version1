@@ -98,6 +98,8 @@
       =recaptcha_tags
 
     .d-flex.justify-content-between.align-items-center.pt-4
+      = hidden_field_tag :hutk
+      = hidden_field_tag :hs_form_id, Rails.application.credentials[Rails.env.to_sym][:hubspot][:form_api][:registration_form]
       =f.submit 'Register Now', class: 'btn btn-primary btn-sm', id: 'signUp'
       .sk-circle
         .sk-circle1.sk-child
@@ -113,7 +115,7 @@
         .sk-circle11.sk-child
         .sk-circle12.sk-child
 
-      .logo-acca
+      .logo-acca#sign-up-partner-logo
         -if @home_page
           -if @home_page&.logo_image.present?
             =image_tag(@home_page.logo_image, alt: 'Logo')
@@ -123,6 +125,34 @@
 
 
 :javascript
+
+  function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+  }
+
+  $(document).ready(function(){
+    var hubspotCookie = getCookie("hubspotutk");
+    document.getElementById("hutk").value = hubspotCookie;
+    var img = $('#sign-up-partner-logo');
+    var width = img.width();
+    var height = img.height();
+    if(width > height){
+      img.removeClass('logo-acca');
+      img.addClass('logo-acca-landscape');
+    }
+  });
 
   $(".sk-circle").hide();
   $("#new_user").submit(function(ev) {

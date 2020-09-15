@@ -3,31 +3,30 @@
 
 .card.card-primary{style: 'min-height: 10px;'}
   .card-body
-    .row
-      -if response.cbe_response_option.kind == 'open'
-        %div{ id: "questionContent-#{response.id}" }
-          -if response.content['data'].present?
-            =raw(response.content['data'])
-          -else
-            Response not answered by the student
-      -elsif response.cbe_response_option.kind == 'multiple_open'
-        %div{ id: "questionContent-#{response.id}" }
-          -response.content['data'].each do |content|
-            %div.multiple_responses
-              %h5
-                Notes
-              %span
-                =raw(content['notes'])
-              %h5
-                Notes Speaker
-              %span
-                =raw(content['speaker'])
-      -else
-        #open-answers-component{ data: { answer_type: 'ResponseSpreadsheet',
-                                          answer_id: response.id,
-                                          spreadsheet_data: response.content,
-                                          cbe_id: response.user_log.cbe_id,
-                                          cbe_user_log_id: response.cbe_user_log_id } }
+    -if response.cbe_response_option.kind == 'open'
+      %div{ id: "questionContent-#{response.id}" }
+        -if response.content['data'].present?
+          =raw(response.content['data'])
+        -else
+          Response not answered by the student
+    -elsif response.cbe_response_option.kind == 'multiple_open'
+      %div{ id: "questionContent-#{response.id}" }
+        -response.content['data'].each do |content|
+          %div.multiple_responses
+            %h5
+              Notes
+            %span
+              =raw(content['notes'])
+            %h5
+              Notes Speaker
+            %span
+              =raw(content['speaker'])
+    -else
+      #open-answers-component{ data: { answer_type: 'ResponseSpreadsheet',
+                                        answer_id: response.id,
+                                        spreadsheet_data: response.content,
+                                        cbe_id: response.user_log.cbe_id,
+                                        cbe_user_log_id: response.cbe_user_log_id } }
   .card-body
     .h4.text-gray2
       Question Score & Comment

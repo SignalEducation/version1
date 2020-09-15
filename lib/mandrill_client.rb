@@ -81,9 +81,10 @@ class MandrillClient
     send_template('corrections-returned-190510', msg)
   end
 
-  def send_supscription_notification_email
-    msg = message_stub.merge('subject' => 'LearnSignal - Subscription due')
-    send_template('subscription-due-201908', msg)
+  def send_subscription_notification_email(account_payment_url)
+    msg = message_stub.merge('subject' => 'LearnSignal - Subscription Renewal Upcoming')
+    msg['global_merge_vars'] << { 'name' => 'ACCOUNTPAYMENTURL', 'content' => account_payment_url }
+    send_template('subscription-due-201109', msg)
   end
 
   # Onboarding Emails

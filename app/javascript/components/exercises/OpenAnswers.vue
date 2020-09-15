@@ -1,22 +1,20 @@
 <template>
-  <div class="row">
-    <div class="col-sm-12">
-      <div class="form-group">
-        <div id="questionContent">
-          <TextCorrection
-            v-if="answerType === 'TextEditor'"
-            :question-content="questionContent"
-            :editor-id="answerId"
-          />
-          <SpreadsheetCorrection
-            v-if="answerType === 'Spreadsheet' && spreadsheetData != null"
-            :spreadsheet-data="spreadsheetData"
-          />
-          <SpreadsheetCorrection
-            v-if="answerType === 'ResponseSpreadsheet' && spreadsheetData != null"
-            :spreadsheet-data="spreadsheetData"
-          />
-        </div>
+  <div class="col-sm-12">
+    <div class="form-group">
+      <div id="questionContent">
+        <TextCorrection
+          v-if="answerType === 'TextEditor'"
+          :question-content="questionContent"
+          :editor-id="answerId"
+        />
+        <SpreadsheetCorrection
+          v-if="answerType === 'Spreadsheet' && spreadsheetData != null"
+          :spreadsheet-data="spreadsheetData"
+        />
+        <SpreadsheetCorrection
+          v-if="answerType === 'ResponseSpreadsheet' && spreadsheetData != null"
+          :spreadsheet-data="spreadsheetData"
+        />
       </div>
     </div>
   </div>

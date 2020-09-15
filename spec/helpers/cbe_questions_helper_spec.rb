@@ -3,11 +3,12 @@
 require 'rails_helper'
 
 describe CbeQuestionsHelper, type: :helper do
-  let(:exercise_cbe) { create(:exercise) }
-  let(:cbe)          { create(:cbe) }
-  let(:cbe_user_log) { create(:cbe_user_log, cbe: cbe, exercise: exercise_cbe) }
-  let!(:question)    { create(:cbe_user_question, user_log: cbe_user_log) }
-  let!(:answer)      { create(:cbe_user_answer, cbe_user_question_id: question.id) }
+  let(:exercise_cbe)  { create(:exercise) }
+  let(:cbe)           { create(:cbe) }
+  let(:cbe_user_log)  { create(:cbe_user_log, cbe: cbe, exercise: exercise_cbe) }
+  let!(:question)     { create(:cbe_user_question, user_log: cbe_user_log) }
+  let!(:answer)       { create(:cbe_user_answer, cbe_user_question_id: question.id) }
+  let(:user_response) { create(:cbe_user_response, user_log: cbe_user_log) }
 
   describe '#question_title_class' do
     it 'return correct stylized question title class' do
@@ -85,6 +86,16 @@ describe CbeQuestionsHelper, type: :helper do
       partial = render_admin_answers(question)
 
       expect(partial).to include(raw(question.answers.sample.content['text']))
+    end
+  end
+
+  describe '#render_admin_responses' do
+    it 'render render_admin_responses partial' do
+      user_response.cbe_response_option.kind = 'open'
+      partial = render_admin_responses(user_response)
+
+      expect(partial).to include('Response not answered by the student')
+      expect(partial).to include('Question Score & Comment')
     end
   end
 end

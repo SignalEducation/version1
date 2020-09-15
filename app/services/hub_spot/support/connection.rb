@@ -4,18 +4,20 @@ module HubSpot
   module Support
     # Responsible to manage all HubSpot api requests.
     class Connection
-      attr_reader :credentials
+      attr_reader :credentials, :api_kind
 
-      def initialize
-        @credentials = Rails.application.credentials[Rails.env.to_sym][:hubspot]
+      def initialize(api)
+        @api_kind = api
+        @credentials = Rails.application.credentials[Rails.env.to_sym][:hubspot][api_kind]
       end
 
       def response(params)
-        body     = params[:query].to_json
-        method   = params[:method]
-        uri      = build_uri(params[:path])
-        headers  = { 'Content-Type': 'application/json' }
-        http     = Net::HTTP.new(uri.host)
+        body         = params[:body].to_json
+        method       = params[:method]
+        uri          = build_uri(params[:path], params[:query])
+        headers      = { 'Content-Type': 'application/json' }
+        http         = Net::HTTP.new(uri.host, uri.port)
+        http.use_ssl = true
 
         case method
         when 'get'
@@ -27,10 +29,10 @@ module HubSpot
 
       private
 
-      def build_uri(path)
-        URI::HTTP.build(host: credentials[:url],
-                        path: path,
-                        query: { hapikey: credentials[:api_key] }.to_query)
+      def build_uri(path, query = nil)
+        URI::HTTPS.build(host: credentials[:url],
+                         path: path,
+                         query: query&.to_query)
       end
     end
   end

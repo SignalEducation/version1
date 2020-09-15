@@ -115,7 +115,7 @@
 <script>
 import axios from "axios";
 import { validationMixin } from "vuelidate";
-import { required, numeric } from "vuelidate/lib/validators";
+import { required, requiredIf, numeric } from "vuelidate/lib/validators";
 import SpreadsheetEditor from '../../SpreadsheetEditor/SpreadsheetEditor.vue';
 
 export default {
@@ -174,7 +174,9 @@ export default {
       numeric,
     },
     file: {
-      required
+      required: requiredIf(function () {
+        return this.exhibitKind == 'pdf'
+      })
     },
   },
   computed: {

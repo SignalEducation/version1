@@ -278,6 +278,7 @@ describe User do
       describe 'with a matching user' do
         before :each do
           allow_any_instance_of(HubSpot::Contacts).to receive(:batch_create).and_return(:ok)
+          allow_any_instance_of(HubSpot::FormContacts).to receive(:create).and_return(:ok)
         end
 
         let!(:test_user) { create(:user, active: false, country: nil) }
@@ -520,6 +521,7 @@ describe User do
         Sidekiq::Testing.fake!
         Sidekiq::Worker.clear_all
         allow_any_instance_of(HubSpot::Contacts).to receive(:batch_create).and_return(:ok)
+        allow_any_instance_of(HubSpot::FormContacts).to receive(:create).and_return(:ok)
       end
 
       after do
@@ -726,6 +728,7 @@ describe User do
 
     describe '#update_stripe_customer' do
       before :each do
+        allow(user).to receive(:creating_hubspot_user).and_return(:ok)
         allow(Rails.env).to receive(:test?).and_return(false)
         allow(HubSpotContactWorker).to receive(:perform_async)
       end
@@ -768,6 +771,7 @@ describe User do
 
     describe '#delete_stripe_customer' do
       before :each do
+        allow(user).to receive(:creating_hubspot_user).and_return(:ok)
         allow(Rails.env).to receive(:test?).and_return(false)
         allow(HubSpotContactWorker).to receive(:perform_async)
       end

@@ -72,6 +72,8 @@ class User < ApplicationRecord
   LOCALES = %w[en].freeze
   SORT_OPTIONS = %w[created user_group name email].freeze
 
+  attr_accessor :hutk, :hs_form_id
+
   belongs_to :country, optional: true
   belongs_to :currency, optional: true
   belongs_to :preferred_exam_body, class_name: 'ExamBody', optional: true
@@ -131,6 +133,7 @@ class User < ApplicationRecord
   before_validation { squish_fields(:email, :first_name, :last_name) }
   before_create :add_guid
   before_create :set_additional_user_attributes
+  before_create :creating_hubspot_user
   after_create :create_referral_code_record
   after_update :update_stripe_customer
   after_save :update_hub_spot_data
@@ -607,6 +610,19 @@ class User < ApplicationRecord
     self.communication_approval_datetime = Time.zone.now if communication_approval
     self.account_activation_code = SecureRandom.hex(10)
     self.email_verification_code = SecureRandom.hex(10)
+  end
+
+  def creating_hubspot_user
+    return if Rails.env.test?
+
+    data = { first_name: first_name,
+             last_name: last_name,
+             email: email,
+             hutk: hutk,
+             hs_form_id: hs_form_id,
+             consent: terms_and_conditions }
+
+    HubSpotFormContactsWorker.perform_async(data)
   end
 
   def update_stripe_customer
