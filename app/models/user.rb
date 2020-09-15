@@ -622,7 +622,7 @@ class User < ApplicationRecord
              hs_form_id: hs_form_id,
              consent: terms_and_conditions }
 
-    HubSpotFormContactsWorker.perform_async(data)
+    #HubSpotFormContactsWorker.perform_async(data)
   end
 
   def update_stripe_customer
