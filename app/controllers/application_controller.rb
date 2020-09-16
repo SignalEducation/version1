@@ -7,7 +7,7 @@ require 'will_paginate/array'
 class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
-  protect_from_forgery with: :exception, prepend: true
+  protect_from_forgery with: :reset_session, prepend: true
   before_action :authenticate_if_staging
   before_action :set_locale        # not for Api::
   before_action :set_session_stuff # not for Api::
@@ -40,6 +40,13 @@ class ApplicationController < ActionController::Base
   def log_out_user
     current_user_session&.destroy
     redirect_to sign_in_path
+  end
+
+  def reset_session
+    msg = 'ActionController::InvalidAuthenticityToken - (Session Reseted)'
+    Airbrake::AirbrakeLogger.new(logger).error msg
+
+    super
   end
 
   def set_current_visit(session_user = nil)
