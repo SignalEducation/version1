@@ -207,6 +207,7 @@ class StripeApiEvent < ApplicationRecord
   end
 
   def process_invoice_upcoming(stripe_subscription_guid)
+    account_payment_url = account_url + '#payment-details'
     subscription = Subscription.in_reverse_created_order.find_by(stripe_guid: stripe_subscription_guid)
     return if subscription.subscription_plan.interval_name != 'Yearly'
 
@@ -216,7 +217,7 @@ class StripeApiEvent < ApplicationRecord
       kind: :account,
       template: 'send_subscription_notification_email',
       template_params: {
-        url: account_url(anchor: 'payment-details')
+        url: account_payment_url
       }
     )
   end
