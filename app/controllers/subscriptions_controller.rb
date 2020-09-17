@@ -68,7 +68,7 @@ class SubscriptionsController < ApplicationController
     @subscription = current_user.subscriptions.find_by(completion_guid: params[:completion_guid]) if params[:completion_guid]
     redirect_to account_url(anchor: 'account-info') and return unless @subscription
     @subscription.update(completion_guid: nil)
-    ab_finished('pricing_link')
+    ab_finished("#{@subscription&.subscription_plan&.exam_body&.group&.name_url}_pricing_link")
     Rails.logger.info "DataLayer Event: Subscription#personal_upgrade_complete - Subscription: #{@subscription.id} with completion_guid #{params[:completion_guid]}, Revenue: #{@subscription.subscription_plan.price}, PlanName: #{@subscription.subscription_plan.name}, Brand: #{@subscription.subscription_plan.exam_body.name}"
     seo_title_maker('Thank You for Subscribing | LearnSignal',
                     'Thank you for subscribing to learnsignal you can now access professional course materials, expert notes and corrected questions anytime, anywhere.',
