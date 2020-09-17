@@ -140,15 +140,16 @@ class User < ApplicationRecord
   after_destroy :delete_stripe_customer
 
   # scopes
-  scope :all_in_order, -> { order(:user_group_id, :last_name, :first_name, :email) }
-  scope :sort_by_email, -> { order(:email) }
-  scope :sort_by_name, -> { order(:last_name, :first_name) }
-  scope :sort_by_most_recent, -> { order(created_at: :desc) }
+  scope :all_in_order,                -> { order(:user_group_id, :last_name, :first_name, :email) }
+  scope :sort_by_email,               -> { order(:email) }
+  scope :sort_by_name,                -> { order(:last_name, :first_name) }
+  scope :sort_by_most_recent,         -> { order(created_at: :desc) }
   scope :sort_by_recent_registration, -> { order(created_at: :desc) }
-  scope :this_month, -> { where(created_at: Time.zone.now.beginning_of_month..Time.zone.now.end_of_month) }
-  scope :this_week, -> { where(created_at: Time.zone.now.beginning_of_week..Time.zone.now.end_of_week) }
-  scope :active_this_week, -> { where(last_request_at: Time.zone.now.beginning_of_week..Time.zone.now.end_of_week) }
-  scope :with_course_tutors, -> { joins(:course_tutors) }
+  scope :this_month,                  -> { where(created_at: Time.zone.now.beginning_of_month..Time.zone.now.end_of_month) }
+  scope :this_week,                   -> { where(created_at: Time.zone.now.beginning_of_week..Time.zone.now.end_of_week) }
+  scope :active_this_week,            -> { where(last_request_at: Time.zone.now.beginning_of_week..Time.zone.now.end_of_week) }
+  scope :with_course_tutors,          -> { joins(:course_tutors) }
+  scope :paid_that_month,             ->(date) { joins(:subscriptions).includes(:subscriptions).where('subscriptions.created_at > ? AND subscriptions.created_at < ?', date.beginning_of_month, date.end_of_month).where.not(subscriptions: { state: :pending }) }
 
   ### class methods
   def self.search(term)
@@ -257,6 +258,10 @@ class User < ApplicationRecord
 
   def self.to_csv_with_visits(options = {})
     to_csv(options, %w[email id visit_campaigns visit_sources visit_landing_pages])
+  end
+
+  def paid_that_month
+    subscriptions.last_month.where.not(state: :pending).any?
   end
 
   def self.parse_csv(csv_content)

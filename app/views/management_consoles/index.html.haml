@@ -1,267 +1,374 @@
 .container
   %header.management-console-section
     %h1
-      A Real Graph
+      Conversion Rates
+    %p.p-hero.px-lg-8
+      Number of Verified Members / Number of Verified Leads
 
   %section.pb-3
     %nav.graph-nav
       %ul.nav.nav-tabs{id: 'graphTabs', role: 'tablist'}
         %li.nav-item
-          %a#this-week-tab.nav-link.active{"aria-controls" => "this-week", "aria-selected" => "false", "data-toggle" => "tab", :href => "#this-week", :role => "tab"}
-            This Week
+          %a#tab-2018.nav-link{"aria-controls" => "2018", "aria-selected" => "false", "data-toggle" => "tab", :href => "#tab-1", :role => "tab"}
+            2018
         %li.nav-item
-          %a#last-week-tab.nav-link{"aria-controls" => "last-week", "aria-selected" => "false", "data-toggle" => "tab", :href => "#last-week", :role => "tab"}
-            Last Week
+          %a#tab-2019.nav-link{"aria-controls" => "2019", "aria-selected" => "false", "data-toggle" => "tab", :href => "#tab-2", :role => "tab"}
+            2019
         %li.nav-item
-          %a#last-month-tab.nav-link{"aria-controls" => "last-month", "aria-selected" => "false", "data-toggle" => "tab", :href => "#last-month", :role => "tab"}
-            This Month
+          %a#tab-2020.nav-link.active{"aria-controls" => "2020", "aria-selected" => "true", "data-toggle" => "tab", :href => "#tab-3", :role => "tab"}
+            2020
 
 
     #graphTabsContent.tab-content
-      .tab-pane{id: 'this-week', class: "active show", "aria-labelledby" => 'this-week-tab', :role => 'tabpanel'}
+      .tab-pane{id: 'tab-1', class: "", "aria-labelledby" => 'tab-2018', :role => 'tabpanel'}
         .box-item
-          %h4='This Weeks - Onboarding Email Statistics'
-          %canvas#thisWeeksBarChart{:height => "200", :width => "400"}
-      .tab-pane{id: 'last-week', class: 'last-week ', "aria-labelledby" => 'last-week-tab', :role => 'tabpanel'}
+          %h3 2018
+          .row
+            .col-sm-12
+              .row
+                .col-sm-3
+                  .stats-box
+                    .stats-box-inner
+                      .h3
+                        - leads = @january_users18.count.to_f
+                        - members = @january_users18.paid_that_month(Date.new(2018, 1)).count.to_f
+                        =((members/leads) * 100).round(2).to_s + '%'
+                      .p
+                        January
+                .col-sm-3
+                  .stats-box
+                    .stats-box-inner
+                      .h3
+                        - leads = @february_users18.count.to_f
+                        - members = @february_users18.paid_that_month(Date.new(2018, 2)).count.to_f
+                        =((members/leads) * 100).round(2).to_s + '%'
+                      .p
+                        February
+                .col-sm-3
+                  .stats-box
+                    .stats-box-inner
+                      .h3
+                        - leads = @march_users18.count.to_f
+                        - members = @march_users18.paid_that_month(Date.new(2018, 3)).count.to_f
+                        =((members/leads) * 100).round(2).to_s + '%'
+                      .p
+                        March
+                .col-sm-3
+                  .stats-box
+                    .stats-box-inner
+                      .h3
+                        - leads = @april_users18.count.to_f
+                        - members = @april_users18.paid_that_month(Date.new(2018, 4)).count.to_f
+                        =((members/leads) * 100).round(2).to_s + '%'
+                      .p
+                        April
+              .row
+                .col-sm-3
+                  .stats-box
+                    .stats-box-inner
+                      .h3
+                        - leads = @may_users18.count.to_f
+                        - members = @may_users18.paid_that_month(Date.new(2018, 5)).count.to_f
+                        =((members/leads) * 100).round(2).to_s + '%'
+                      .p
+                        May
+                .col-sm-3
+                  .stats-box
+                    .stats-box-inner
+                      .h3
+                        - leads = @june_users18.count.to_f
+                        - members = @june_users18.paid_that_month(Date.new(2018, 6)).count.to_f
+                        =((members/leads) * 100).round(2).to_s + '%'
+                      .p
+                        June
+                .col-sm-3
+                  .stats-box
+                    .stats-box-inner
+                      .h3
+                        - leads = @july_users18.count.to_f
+                        - members = @july_users18.paid_that_month(Date.new(2018, 7)).count.to_f
+                        =((members/leads) * 100).round(2).to_s + '%'
+                      .p
+                        July
+
+                .col-sm-3
+                  .stats-box
+                    .stats-box-inner
+                      .h3
+                        - leads = @august_users18.count.to_f
+                        - members = @august_users18.paid_that_month(Date.new(2018, 8)).count.to_f
+                        =((members/leads) * 100).round(2).to_s + '%'
+                      .p
+                        August
+                .col-sm-3
+                  .stats-box
+                    .stats-box-inner
+                      .h3
+                        - leads = @september_users18.count.to_f
+                        - members = @september_users18.paid_that_month(Date.new(2018, 9)).count.to_f
+                        =((members/leads) * 100).round(2).to_s + '%'
+                      .p
+                        September
+                .col-sm-3
+                  .stats-box
+                    .stats-box-inner
+                      .h3
+                        - leads = @october_users18.count.to_f
+                        - members = @october_users18.paid_that_month(Date.new(2018, 10)).count.to_f
+                        =((members/leads) * 100).round(2).to_s + '%'
+                      .p
+                        October
+                .col-sm-3
+                  .stats-box
+                    .stats-box-inner
+                      .h3
+                        - leads = @november_users18.count.to_f
+                        - members = @november_users18.paid_that_month(Date.new(2018, 11)).count.to_f
+                        =((members/leads) * 100).round(2).to_s + '%'
+                      .p
+                        November
+                .col-sm-3
+                  .stats-box
+                    .stats-box-inner
+                      .h3
+                        - leads = @december_users18.count.to_f
+                        - members = @december_users18.paid_that_month(Date.new(2018, 12)).count.to_f
+                        =((members/leads) * 100).round(2).to_s + '%'
+                      .p
+                        December
+
+
+
+      .tab-pane{id: 'tab-2', class: "", "aria-labelledby" => 'tab-2019', :role => 'tabpanel'}
         .box-item
-          %h4='Last Weeks - Onboarding Email Statistics'
-          %canvas#lastWeeksBarChart{:height => "200", :width => "400"}
-      .tab-pane{id: 'last-month', class: 'tab-last-month', "aria-labelledby" => 'last-month-tab', :role => 'tabpanel'}
+          %h3 2019
+          .row
+            .col-sm-12
+              .row
+                .col-sm-3
+                  .stats-box
+                    .stats-box-inner
+                      .h3
+                        - leads = @january_users19.count.to_f
+                        - members = @january_users19.paid_that_month(Date.new(2019, 1)).count.to_f
+                        =((members/leads) * 100).round(2).to_s + '%'
+                      .p
+                        January
+                .col-sm-3
+                  .stats-box
+                    .stats-box-inner
+                      .h3
+                        - leads = @february_users19.count.to_f
+                        - members = @february_users19.paid_that_month(Date.new(2019, 2)).count.to_f
+                        =((members/leads) * 100).round(2).to_s + '%'
+                      .p
+                        February
+                .col-sm-3
+                  .stats-box
+                    .stats-box-inner
+                      .h3
+                        - leads = @march_users19.count.to_f
+                        - members = @march_users19.paid_that_month(Date.new(2019, 3)).count.to_f
+                        =((members/leads) * 100).round(2).to_s + '%'
+                      .p
+                        March
+                .col-sm-3
+                  .stats-box
+                    .stats-box-inner
+                      .h3
+                        - leads = @april_users19.count.to_f
+                        - members = @april_users19.paid_that_month(Date.new(2019, 4)).count.to_f
+                        =((members/leads) * 100).round(2).to_s + '%'
+                      .p
+                        April
+              .row
+                .col-sm-3
+                  .stats-box
+                    .stats-box-inner
+                      .h3
+                        - leads = @may_users19.count.to_f
+                        - members = @may_users19.paid_that_month(Date.new(2019, 5)).count.to_f
+                        =((members/leads) * 100).round(2).to_s + '%'
+                      .p
+                        May
+                .col-sm-3
+                  .stats-box
+                    .stats-box-inner
+                      .h3
+                        - leads = @june_users19.count.to_f
+                        - members = @june_users19.paid_that_month(Date.new(2019, 6)).count.to_f
+                        =((members/leads) * 100).round(2).to_s + '%'
+                      .p
+                        June
+                .col-sm-3
+                  .stats-box
+                    .stats-box-inner
+                      .h3
+                        - leads = @july_users19.count.to_f
+                        - members = @july_users19.paid_that_month(Date.new(2019, 7)).count.to_f
+                        =((members/leads) * 100).round(2).to_s + '%'
+                      .p
+                        July
+
+                .col-sm-3
+                  .stats-box
+                    .stats-box-inner
+                      .h3
+                        - leads = @august_users19.count.to_f
+                        - members = @august_users19.paid_that_month(Date.new(2019, 8)).count.to_f
+                        =((members/leads) * 100).round(2).to_s + '%'
+                      .p
+                        August
+                .col-sm-3
+                  .stats-box
+                    .stats-box-inner
+                      .h3
+                        - leads = @september_users19.count.to_f
+                        - members = @september_users19.paid_that_month(Date.new(2019, 9)).count.to_f
+                        =((members/leads) * 100).round(2).to_s + '%'
+                      .p
+                        September
+                .col-sm-3
+                  .stats-box
+                    .stats-box-inner
+                      .h3
+                        - leads = @october_users19.count.to_f
+                        - members = @october_users19.paid_that_month(Date.new(2019, 10)).count.to_f
+                        =((members/leads) * 100).round(2).to_s + '%'
+                      .p
+                        October
+                .col-sm-3
+                  .stats-box
+                    .stats-box-inner
+                      .h3
+                        - leads = @november_users19.count.to_f
+                        - members = @november_users19.paid_that_month(Date.new(2019, 11)).count.to_f
+                        =((members/leads) * 100).round(2).to_s + '%'
+                      .p
+                        November
+                .col-sm-3
+                  .stats-box
+                    .stats-box-inner
+                      .h3
+                        - leads = @december_users19.count.to_f
+                        - members = @december_users19.paid_that_month(Date.new(2019, 12)).count.to_f
+                        =((members/leads) * 100).round(2).to_s + '%'
+                      .p
+                        December
+
+      .tab-pane{id: 'tab-3', class: 'active show ', "aria-labelledby" => 'tab-2020', :role => 'tabpanel'}
         .box-item
-          %h4='This Months - Onboarding Email Statistics'
-          %canvas#thisMonthsBarChart{:height => "200", :width => "400"}
+          %h3 2020
+          .row
+            .col-sm-12
+              .row
+                .col-sm-3
+                  .stats-box
+                    .stats-box-inner
+                      .h3
+                        - leads = @january_users.count.to_f
+                        - members = @january_users.paid_that_month(Date.new(2020, 1)).count.to_f
+                        =((members/leads) * 100).round(2).to_s + '%'
+                      .p
+                        January
+                .col-sm-3
+                  .stats-box
+                    .stats-box-inner
+                      .h3
+                        - leads = @february_users.count.to_f
+                        - members = @february_users.paid_that_month(Date.new(2020, 2)).count.to_f
+                        =((members/leads) * 100).round(2).to_s + '%'
+                      .p
+                        February
+                .col-sm-3
+                  .stats-box
+                    .stats-box-inner
+                      .h3
+                        - leads = @march_users.count.to_f
+                        - members = @march_users.paid_that_month(Date.new(2020, 3)).count.to_f
+                        =((members/leads) * 100).round(2).to_s + '%'
+                      .p
+                        March
+                .col-sm-3
+                  .stats-box
+                    .stats-box-inner
+                      .h3
+                        - leads = @april_users.count.to_f
+                        - members = @april_users.paid_that_month(Date.new(2020, 4)).count.to_f
+                        =((members/leads) * 100).round(2).to_s + '%'
+                      .p
+                        April
+              .row
+                .col-sm-3
+                  .stats-box
+                    .stats-box-inner
+                      .h3
+                        - leads = @may_users.count.to_f
+                        - members = @may_users.paid_that_month(Date.new(2020, 5)).count.to_f
+                        =((members/leads) * 100).round(2).to_s + '%'
+                      .p
+                        May
+                .col-sm-3
+                  .stats-box
+                    .stats-box-inner
+                      .h3
+                        - leads = @june_users.count.to_f
+                        - members = @june_users.paid_that_month(Date.new(2020, 6)).count.to_f
+                        =((members/leads) * 100).round(2).to_s + '%'
+                      .p
+                        June
+                .col-sm-3
+                  .stats-box
+                    .stats-box-inner
+                      .h3
+                        - leads = @july_users.count.to_f
+                        - members = @july_users.paid_that_month(Date.new(2020, 7)).count.to_f
+                        =((members/leads) * 100).round(2).to_s + '%'
+                      .p
+                        July
 
-
-
-:javascript
-  let MONTHS = ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Complete', 'Expired'];
-  let ctx1 = document.getElementById('thisWeeksBarChart').getContext('2d');
-  renderChart1();
-  let ctx2 = document.getElementById('lastWeeksBarChart').getContext('2d');
-  renderChart2();
-  let ctx3 = document.getElementById('thisMonthsBarChart').getContext('2d');
-  renderChart3();
-
-  function renderChart1() {
-    let day1Sent = "#{@tw_day1&.count}";
-    let day1Opens = "#{@tw_day1_opens}";
-    let day1Clicks = "#{@tw_day1_clicks}";
-
-    let day2Sent = "#{@tw_day2&.count}";
-    let day2Opens = "#{@tw_day2_opens}";
-    let day2Clicks = "#{@tw_day2_clicks}";
-
-    let day3Sent = "#{@tw_day3&.count}";
-    let day3Opens = "#{@tw_day3_opens}";
-    let day3Clicks = "#{@tw_day3_clicks}";
-
-    let day4Sent = "#{@tw_day4&.count}";
-    let day4Opens = "#{@tw_day4_opens}";
-    let day4Clicks = "#{@tw_day4_clicks}";
-
-    let day5Sent = "#{@tw_day5&.count}";
-    let day5Opens = "#{@tw_day5_opens}";
-    let day5Clicks = "#{@tw_day5_clicks}";
-
-    let expiredSent = "#{@tw_expired&.count}";
-    let expiredOpens = "#{@tw_expired_opens}";
-    let expiredClicks = "#{@tw_expired_clicks}";
-
-    let completeSent = "#{@tw_complete&.count}";
-    let completeOpens = "#{@tw_complete_opens}";
-    let completeClicks = "#{@tw_complete_clicks}";
-
-    let barChart1 = new Chart(ctx1, {
-        type: 'bar',
-        data: {
-            labels: MONTHS,
-            datasets: [
-            {
-                label: 'Sent',
-                backgroundColor: '#f0ca28',
-                data: [day1Sent, day2Sent, day3Sent, day4Sent, day5Sent, expiredSent, completeSent]
-            },
-            {
-                label: 'Opens',
-                backgroundColor: '#6610f2',
-                data: [day1Opens, day2Opens, day3Opens, day4Opens, day5Opens, expiredOpens, completeOpens]
-            },
-            {
-                label: 'Clicks',
-                backgroundColor: '#fd5c63',
-                data: [day1Clicks, day2Clicks, day3Clicks, day4Clicks, day5Clicks, expiredClicks, completeClicks]
-            },
-            //{
-                //label: 'Studied',
-                //backgroundColor: '#fd7e14',
-                //data: [1, 2, 3, 4, 5, 6, 7]
-            //},
-            //{
-                //label: 'Payment',
-                //backgroundColor: '#20c997',
-                //data: [1, 2, 3, 4, 5, 6, 7]
-            //},
-
-            ]
-        },
-        options: {
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }]
-            }
-        }
-    });
-  };
-
-
-  function renderChart2() {
-    let day1Sent = "#{@lw_day1&.count}";
-    let day1Opens = "#{@lw_day1_opens}";
-    let day1Clicks = "#{@lw_day1_clicks}";
-
-    let day2Sent = "#{@lw_day2&.count}";
-    let day2Opens = "#{@lw_day2_opens}";
-    let day2Clicks = "#{@lw_day2_clicks}";
-
-    let day3Sent = "#{@lw_day3&.count}";
-    let day3Opens = "#{@lw_day3_opens}";
-    let day3Clicks = "#{@lw_day3_clicks}";
-
-    let day4Sent = "#{@lw_day4&.count}";
-    let day4Opens = "#{@lw_day4_opens}";
-    let day4Clicks = "#{@lw_day4_clicks}";
-
-    let day5Sent = "#{@lw_day5&.count}";
-    let day5Opens = "#{@lw_day5_opens}";
-    let day5Clicks = "#{@lw_day5_clicks}";
-
-    let expiredSent = "#{@lw_expired&.count}";
-    let expiredOpens = "#{@lw_expired_opens}";
-    let expiredClicks = "#{@lw_expired_clicks}";
-
-    let completeSent = "#{@lw_complete&.count}";
-    let completeOpens = "#{@lw_complete_opens}";
-    let completeClicks = "#{@lw_complete_clicks}";
-
-    let barChart2 = new Chart(ctx2, {
-        type: 'bar',
-        data: {
-            labels: MONTHS,
-            datasets: [
-            {
-                label: 'Sent',
-                backgroundColor: '#f0ca28',
-                data: [day1Sent, day2Sent, day3Sent, day4Sent, day5Sent, expiredSent, completeSent]
-            },
-            {
-                label: 'Opens',
-                backgroundColor: '#6610f2',
-                data: [day1Opens, day2Opens, day3Opens, day4Opens, day5Opens, expiredOpens, completeOpens]
-            },
-            {
-                label: 'Clicks',
-                backgroundColor: '#fd5c63',
-                data: [day1Clicks, day2Clicks, day3Clicks, day4Clicks, day5Clicks, expiredClicks, completeClicks]
-            },
-            //{
-                //label: 'Studied',
-                //backgroundColor: '#fd7e14',
-                //data: [1, 2, 3, 4, 5, 6, 7]
-            //},
-            //{
-                //label: 'Payment',
-                //backgroundColor: '#20c997',
-                //data: [1, 2, 3, 4, 5, 6, 7]
-            //},
-  
-            ]
-        },
-        options: {
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }]
-            }
-        }
-    });
-  };
-
-  function renderChart3() {
-    let day1Sent = "#{@tm_day1&.count}";
-    let day1Opens = "#{@tm_day1_opens}";
-    let day1Clicks = "#{@tm_day1_clicks}";
-
-    let day2Sent = "#{@tm_day2&.count}";
-    let day2Opens = "#{@tm_day2_opens}";
-    let day2Clicks = "#{@tm_day2_clicks}";
-
-    let day3Sent = "#{@tm_day3&.count}";
-    let day3Opens = "#{@tm_day3_opens}";
-    let day3Clicks = "#{@tm_day3_clicks}";
-
-    let day4Sent = "#{@tm_day4&.count}";
-    let day4Opens = "#{@tm_day4_opens}";
-    let day4Clicks = "#{@tm_day4_clicks}";
-
-    let day5Sent = "#{@tm_day5&.count}";
-    let day5Opens = "#{@tm_day5_opens}";
-    let day5Clicks = "#{@tm_day5_clicks}";
-
-    let expiredSent = "#{@tm_expired&.count}";
-    let expiredOpens = "#{@tm_expired_opens}";
-    let expiredClicks = "#{@tm_expired_clicks}";
-
-    let completeSent = "#{@tm_complete&.count}";
-    let completeOpens = "#{@tm_complete_opens}";
-    let completeClicks = "#{@tm_complete_clicks}";
-
-    var barChart3 = new Chart(ctx3, {
-        type: 'bar',
-        data: {
-            labels: MONTHS,
-            datasets: [
-            {
-                label: 'Sent',
-                backgroundColor: '#f0ca28',
-                data: [day1Sent, day2Sent, day3Sent, day4Sent, day5Sent, expiredSent, completeSent]
-            },
-            {
-                label: 'Opens',
-                backgroundColor: '#6610f2',
-                data: [day1Opens, day2Opens, day3Opens, day4Opens, day5Opens, expiredOpens, completeOpens]
-            },
-            {
-                label: 'Clicks',
-                backgroundColor: '#fd5c63',
-                data: [day1Clicks, day2Clicks, day3Clicks, day4Clicks, day5Clicks, expiredClicks, completeClicks]
-            },
-            //{
-                //label: 'Studied',
-                //backgroundColor: '#fd7e14',
-                //data: [1, 2, 3, 4, 5, 6, 7]
-            //},
-            //{
-                //label: 'Payment',
-                //backgroundColor: '#20c997',
-                //data: [1, 2, 3, 4, 5, 6, 7]
-            //},
-  
-            ]
-        },
-        options: {
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }]
-            }
-        }
-    });
-  };
-
+                .col-sm-3
+                  .stats-box
+                    .stats-box-inner
+                      .h3
+                        - leads = @august_users.count.to_f
+                        - members = @august_users.paid_that_month(Date.new(2020, 8)).count.to_f
+                        =((members/leads) * 100).round(2).to_s + '%'
+                      .p
+                        August
+                .col-sm-3
+                  .stats-box
+                    .stats-box-inner
+                      .h3
+                        - leads = @september_users.count.to_f
+                        - members = @september_users.paid_that_month(Date.new(2020, 9)).count.to_f
+                        =((members/leads) * 100).round(2).to_s + '%'
+                      .p
+                        September
+                .col-sm-3
+                  .stats-box
+                    .stats-box-inner
+                      .h3
+                        - leads = @october_users.count.to_f
+                        - members = @october_users.paid_that_month(Date.new(2020, 10)).count.to_f
+                        =((members/leads) * 100).round(2).to_s + '%'
+                      .p
+                        October
+                .col-sm-3
+                  .stats-box
+                    .stats-box-inner
+                      .h3
+                        - leads = @november_users.count.to_f
+                        - members = @november_users.paid_that_month(Date.new(2020, 11)).count.to_f
+                        =((members/leads) * 100).round(2).to_s + '%'
+                      .p
+                        November
+                .col-sm-3
+                  .stats-box
+                    .stats-box-inner
+                      .h3
+                        - leads = @december_users.count.to_f
+                        - members = @december_users.paid_that_month(Date.new(2020, 12)).count.to_f
+                        =((members/leads) * 100).round(2).to_s + '%'
+                      .p
+                        December
