@@ -351,7 +351,8 @@ class CoursesController < ApplicationController
     @course_step_log.update(allowed_params)
     @course_step_log.session_guid = current_session_guid
 
-    @course_step = @course_step_log.course_step
+    @course_step           = @course_step_log.course_step
+    @course_log            = @course_step_log.course_log
     @course_lesson         = @course_step_log.course_lesson
     @course                = @course_lesson.course
     @group                 = @course.group
