@@ -19,9 +19,12 @@ class ProductsController < ApplicationController
 
   def new
     @product = Product.new
+    @product.faqs.build(sorting_order: 1)
   end
 
-  def edit; end
+  def edit
+    @product.faqs.build(sorting_order: 1)
+  end
 
   def create
     @product = Product.new(allowed_params)
@@ -70,11 +73,11 @@ class ProductsController < ApplicationController
   end
 
   def set_variables
-    @currencies      = Currency.all_in_order
-    @mock_exams      = MockExam.all_in_order
-    @cbes            = Cbe.all
-    @courses = Course.all_active.all_in_order
-    @groups          = Group.all_in_order
+    @currencies = Currency.all_in_order
+    @mock_exams = MockExam.all_in_order
+    @cbes       = Cbe.all
+    @courses    = Course.all_active.all_in_order
+    @groups     = Group.all_in_order
   end
 
   def seo_title
@@ -85,6 +88,11 @@ class ProductsController < ApplicationController
     params.require(:product).permit(:name, :active, :price, :currency_id, :livemode,
                                     :cbe_id, :mock_exam_id, :sorting_order,
                                     :product_type, :correction_pack_count, :group_id,
-                                    :payment_heading, :payment_subheading, :payment_description)
+                                    :payment_heading, :payment_subheading, :payment_description,
+                                    :savings_label,
+                                    faqs_attributes: [
+                                      :id, :name, :name_url, :active, :sorting_order,
+                                      :question_text, :answer_text, :pre_answer_text]
+                                    )
   end
 end

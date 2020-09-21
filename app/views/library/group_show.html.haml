@@ -14,7 +14,7 @@
         =render partial: 'standard_list'
 
 
-  -if @group && @subscription_plans && @subscription_plans.any? && !(current_user && current_user.valid_subscription_for_exam_body?(@group.exam_body_id))
+  -if @group && @subscription_plans && @subscription_plans.any? && !(current_user && current_user.valid_access_for_exam_body?(@group.exam_body_id, @group.id))
     .container-bg.bg-gray5
       .container#plans
         %article.py-6

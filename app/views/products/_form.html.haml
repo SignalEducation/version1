@@ -40,7 +40,7 @@
             .form-group{class: 'mock_exam_form_group'}
               =f.label :mock_exam_id, t('views.products.form.mock_exam_id')
               .input-group.input-group-lg
-                =f.collection_select :mock_exam_id, @mock_exams, :id, :name, {include_blank: t('views.general.select')}, { class: 'form-control custom-select' }
+                =f.collection_select :mock_exam_id, @mock_exams, :id, :name, {prompt: t('views.general.select')}, { class: 'form-control custom-select' }
             .form-group{class: 'cbe_form_group', style: 'display:none;'}
               =f.label :mock_exam_id, t('views.products.form.cbe')
               .input-group.input-group-lg
@@ -58,9 +58,17 @@
               .input-group.input-group-lg
                 =f.text_field :payment_subheading, placeholder: t('views.products.form.payment_subheading_placeholder'), class: 'form-control'
             .form-group
-              =f.label :payment_description, t('views.products.form.payment_description')
+              =f.label :savings_label, t('views.products.form.savings_label')
               .input-group.input-group-lg
-                =f.text_area :payment_description, placeholder: t('views.products.form.payment_description_placeholder'), class: 'form-control'
+                =f.text_area :savings_label, placeholder: t('views.products.form.savings_label_placeholder'), class: 'form-control'
+
+    .row.py-5
+      .col-sm-12
+        =f.label :payment_description, t('views.products.form.payment_description')
+        .input-group.input-group-lg
+          =f.text_area :payment_description, as: :summernote, rows: 5, class: 'form-control', id: 'editor'
+
+      =render partial: 'fields_for_faqs', locals: {f: f}
 
     .row
       .col-sm-12
@@ -99,4 +107,9 @@
           $('#product_correction_pack_count').prop('disabled', false);
       }
     }
+  });
+
+  $('#editor').summernote({
+    disableDragAndDrop: true,
+    height: 150
   });

@@ -87,6 +87,7 @@ class StudentSignUpsController < ApplicationController
   def sign_in_checkout
     @plan = SubscriptionPlan.where(guid: params[:plan_guid]).last
     @exam_body = ExamBody.where(id: params[:exam_body_id]).last
+    @product = Product.where(id: params[:product_id]).last
     flash[:plan_guid] = @plan.guid if @plan
     flash[:exam_body] = @exam_body.id if @exam_body
   end
@@ -189,14 +190,15 @@ class StudentSignUpsController < ApplicationController
         country.currency
       end
 
-    @subscription_plans =
-      if @group
-        SubscriptionPlan.where(subscription_plan_category_id: nil, exam_body_id: @group.exam_body_id).
-          includes(:currency).in_currency(currency.id).all_active.all_in_display_order
-      else
-        SubscriptionPlan.where(subscription_plan_category_id: nil).
-          includes(:currency).in_currency(currency.id).all_active.all_in_display_order
-      end
+    if @group
+      @subscription_plans = SubscriptionPlan.where(subscription_plan_category_id: nil, exam_body_id: @group.exam_body_id).
+                              includes(:currency).in_currency(currency.id).all_active.all_in_display_order
+      @products = Product.for_group(@group.id).where(product_type: :lifetime_access).includes(:currency).in_currency(currency.id).all_active
+    else
+      @subscription_plans = SubscriptionPlan.where(subscription_plan_category_id: nil).
+                              includes(:currency).in_currency(currency.id).all_active.all_in_display_order
+      @products = Product.where(product_type: :lifetime_access).includes(:currency).in_currency(currency.id).all_active
+    end
 
     seo_title_maker(@group&.exam_body&.pricing_seo_title ? "#{@group&.exam_body&.pricing_seo_title} | LearnSignal" : "#{@group&.name} Tuition Plans | LearnSignal",
                     @group&.exam_body&.pricing_seo_description ? @group&.exam_body&.pricing_seo_description : "Achieve your #{@group&.name} learning goals with a learnsignal subscription plan and enjoy professional courses delivered online so that you can study on a schedule that suits you.",

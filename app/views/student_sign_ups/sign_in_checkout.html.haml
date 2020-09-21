@@ -5,20 +5,65 @@
         %h1.h2-hero.mb-2
           -if @plan
             = "#{@plan ? @plan.exam_body.name : 'Exam'} Tuition Login"
+          -elsif @product
+            = "#{@product.name_by_type} Login"
           -elsif @exam_body
             = "#{@exam_body.name} Tuition Login"
           -else
             = "Login to Continue"
 
       .row.row-lg
-        .col-lg-4
-          =render partial: 'pricing_plan', locals: {plan: @plan, zoom: false, btn: false}
+        -if @plan
+          .col-lg-4
+            .card.text-center.mb-4.hero-section-tutor-card.mt-4
+              .hero-section-show-link-window
+              .py-4.pb-0
+                .h3
+                  =t("views.general.payment_frequency_in_months.a#{@plan.payment_frequency_in_months}")
+              .pb-4
+                .text-center
+                  %p.h2.mb-0
+                    =@plan.currency.format_number(@plan.price)
+                .row
+                  .pt-4.col-md-12.hero-section-responsive-view-course
+                    %p.h5.text-orange.mb-0
+                      =@plan.savings_label
+                    .py-4.col-md-12.hero-section-responsive-view-course
+                      %p
+                        %i.material-icons.icon-bg-round.text-mint.bg-mint-light{"aria-label" => "selected", :role => "img"} check
 
-        .col-lg-8
+                  .pb-2.col-md-12.hero-section-responsive-view-course
+                    %p.small.mb-0
+                      Recurring Payment
+                    %p.small.mb-0
+                      Cancel Anytime
+
+
+        -elsif @product
+          .col-lg-4
+            .card.text-center.mb-4.hero-section-tutor-card.mt-4
+              .hero-section-show-link-window
+              .py-4
+                .h3
+                  Lifetime Membership
+              .pb-1
+                .text-center
+                  %p.h2.mb-0
+                    =number_in_local_currency(@product.price, @product.currency)
+                .row
+                  .pt-6.col-md-12.hero-section-responsive-view-course
+                    %p
+                      %i.material-icons.icon-bg-round.text-mint.bg-mint-light{"aria-label" => "selected", :role => "img"} check
+                  .pb-2.col-md-12.hero-section-responsive-view-course
+                    %p.small.my-4
+                      One-time Payment
+
+
+        .col-lg-8{class: "#{(@plan || @product) ? '' : 'offset-2'}"}
           =render partial: 'login_form'
 
 
--if @plan
+-if @plan || @product
   :javascript
     function selectTab(tab, currencyIso, name, id, price, body, type) {
       dataLayer.push({ 'event': 'checkout',
@@ -39,12 +84,12 @@
       });
     }
 
-    let currencyIso = "#{@plan.currency.iso_code}";
-    let name = "#{@plan.name}";
-    let id = "#{@plan.id}";
-    let price = "#{@plan.price}";
-    let body = "#{@plan.exam_body.name}";
-    let type = 'Subscription';
+    let currencyIso = "#{@plan ? @plan.currency.iso_code : @product.currency.iso_code}";
+    let name = "#{@plan ? @plan.name : @product.name}";
+    let id = "#{@plan ? @plan.id : @product.id}";
+    let price = "#{@plan ? @plan.price : @product.price}";
+    let body = "#{@plan ? @plan.exam_body.name : @product.name_by_type}";
+    let type = "#{@plan ? 'Subscription' : 'Exam Papers'}";
 
     $(document).ready(function(){
       selectTab(document.querySelector("#register-tab").innerText, currencyIso, name, id, price, body, type);

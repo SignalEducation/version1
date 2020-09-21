@@ -327,9 +327,9 @@ class User < ApplicationRecord
     self
   end
 
-  def can_view_content?(exam_body_id)
-    valid_subscription_for_exam_body?(exam_body_id) || user_group.site_admin ||
-      complimentary_user?
+  def can_view_content?(exam_body_id, group_id)
+    valid_access_for_exam_body?(exam_body_id, group_id) ||
+      user_group.site_admin || complimentary_user?
   end
 
   def check_country(ip_address)
@@ -368,6 +368,10 @@ class User < ApplicationRecord
 
   def valid_subscription_for_exam_body?(exam_body_id)
     active_subscriptions_for_exam_body(exam_body_id).all_valid.any?
+  end
+
+  def valid_access_for_exam_body?(exam_body_id, group_id = nil)
+    valid_subscription_for_exam_body?(exam_body_id) || lifetime_subscriber?(group_id)
   end
 
   def valid_subscription?
@@ -598,6 +602,10 @@ class User < ApplicationRecord
     elsif !onboarding_process&.active
       'Complete'
     end
+  end
+
+  def preferred_group_id
+    Group.find_by(exam_body_id: preferred_exam_body_id)
   end
 
   private

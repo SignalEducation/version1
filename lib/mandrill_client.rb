@@ -60,6 +60,13 @@ class MandrillClient
     send_template('payment-invoice-new-branding-190605', msg)
   end
 
+  def send_successful_order_email(account_url, product)
+    msg = message_stub.merge('subject' => 'LearnSignal - Payment Invoice')
+    msg['global_merge_vars'] << { 'name' => 'ACCOUNTURL', 'content' => account_url }
+    msg['global_merge_vars'] << { 'name' => 'PRODUCTNAME', 'content' => product }
+    send_template('order-invoice-230920', msg)
+  end
+
   def send_referral_discount_email(amount)
     msg = message_stub.merge('subject' => 'Referral Discount Achieved')
     msg['global_merge_vars'] << { 'name' => 'AMOUNT', 'content' => amount }

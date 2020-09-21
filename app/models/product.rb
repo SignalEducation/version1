@@ -29,7 +29,7 @@
 class Product < ApplicationRecord
   include ActionView::Helpers::NumberHelper
 
-  enum product_type: { mock_exam: 0, correction_pack: 1, cbe: 2 }
+  enum product_type: { mock_exam: 0, correction_pack: 1, cbe: 2, lifetime_access: 3 }
 
   # Constants
 
@@ -41,6 +41,9 @@ class Product < ApplicationRecord
   belongs_to :cbe, optional: true
   has_many :orders, dependent: :restrict_with_error
   has_many :exercises, dependent: :restrict_with_error
+  has_many :faqs, dependent: :restrict_with_error
+
+  accepts_nested_attributes_for :faqs
 
   # validation
   validates :name, presence: true
@@ -50,7 +53,7 @@ class Product < ApplicationRecord
   validates :stripe_sku_guid, presence: true, uniqueness: true, on: :update
   validates :group_id, numericality: { only_integer: true, greater_than: 0 }
   validates :mock_exam_id, numericality: { only_integer: true,
-                                           greater_than: 0 }, unless: :cbe?
+                                           greater_than: 0 }, unless: :non_mock?
   validates :cbe_id, numericality: { only_integer: true,
                                      greater_than: 0 }, if: :cbe?
   validates :correction_pack_count, presence: true,
@@ -75,7 +78,13 @@ class Product < ApplicationRecord
   end
 
   def name_by_type
-    cbe? ? cbe.name : (mock_exam&.name || name)
+    if cbe?
+      cbe.name
+    elsif lifetime_access?
+      "#{group.name} LifeTime Membership"
+    else
+      mock_exam&.name || name
+    end
   end
 
   # class methods
@@ -95,6 +104,10 @@ class Product < ApplicationRecord
   end
 
   private
+
+  def non_mock?
+    cbe? || lifetime_access?
+  end
 
   def create_on_stripe
     StripeProductWorker.perform_async(id, :create) unless Rails.env.test?

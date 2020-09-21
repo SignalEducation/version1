@@ -15,6 +15,12 @@ module UserAccessable
     student_user? && user_group&.trial_or_sub_required
   end
 
+  def lifetime_subscriber?(group_id)
+    orders.includes(:product).with_state(:completed).
+      where(products: { product_type: :lifetime_access }).
+      where(products: { group_id: group_id }).any?
+  end
+
   def complimentary_user?
     user_group&.student_user && !user_group&.trial_or_sub_required
   end

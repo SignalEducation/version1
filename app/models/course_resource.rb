@@ -49,7 +49,7 @@ class CourseResource < ApplicationRecord
     result =
       if user.non_verified_user?
         { view: false, reason: 'verification-required' }
-      elsif user.complimentary_user? || user.non_student_user?
+      elsif user.complimentary_user? || user.non_student_user? || user.lifetime_subscriber?(course.group)
         { view: true, reason: nil }
       elsif user.standard_student_user?
         if valid_subscription
