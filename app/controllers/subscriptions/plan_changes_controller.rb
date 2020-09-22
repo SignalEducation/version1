@@ -61,7 +61,7 @@ module Subscriptions
     end
 
     def change_paypal_subscription
-      kind          = params[:kind]
+      kind          = params[:subscription][:kind]
       plan_id       = params[:subscription][:subscription_plan_id]
       @subscription = PaypalSubscriptionsService.new(@subscription).change_plan(plan_id)
       @subscription.update(kind: kind)
