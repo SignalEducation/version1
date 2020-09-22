@@ -23,6 +23,8 @@ class ApplicationController < ActionController::Base
 
   EXCLUDED_CONTROLLERS = %w[orders subscriptions].freeze
 
+  rescue_from ActionController::InvalidAuthenticityToken, with: :log_in_airbrake
+
   ### User access control and authentication
 
   def current_user_session
@@ -43,10 +45,12 @@ class ApplicationController < ActionController::Base
   end
 
   def reset_session
-    msg = 'ActionController::InvalidAuthenticityToken - (Session Reseted)'
-    Airbrake::AirbrakeLogger.new(logger).error msg
-
     super
+  end
+
+  def log_in_airbrake(e)
+    Airbrake.notify(e)
+    true
   end
 
   def set_current_visit(session_user = nil)
