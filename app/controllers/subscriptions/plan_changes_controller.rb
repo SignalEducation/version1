@@ -43,7 +43,7 @@ module Subscriptions
     private
 
     def change_stripe_subscription
-      kind                = params[:kind]
+      kind                = params[:subscription][:kind]
       coupon              = params[:hidden_coupon_code]
       plan_id             = params[:subscription][:subscription_plan_id]
       sub_service         = StripeSubscriptionService.new(@subscription)
@@ -61,7 +61,7 @@ module Subscriptions
     end
 
     def change_paypal_subscription
-      kind          = params[:kind]
+      kind          = params[:subscription][:kind]
       plan_id       = params[:subscription][:subscription_plan_id]
       @subscription = PaypalSubscriptionsService.new(@subscription).change_plan(plan_id)
       @subscription.update(kind: kind)

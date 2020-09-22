@@ -67,7 +67,8 @@ class StripeSubscriptionService < StripeService
       stripe_status: stripe_sub.status, changed_from: @subscription,
       stripe_guid: stripe_sub.id, next_renewal_date: renewal_date(stripe_sub),
       stripe_customer_id: @subscription.stripe_customer_id,
-      client_secret: client_secret
+      client_secret: client_secret,
+      kind: @subscription.kind
     ), stripe_sub]
   end
 
