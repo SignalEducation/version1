@@ -73,6 +73,7 @@ class Subscription < ApplicationRecord
   validate :plan_change_currencies, :plan_change_active,
            :subscription_change_allowable,
            :user_is_student, if: proc { |sub| sub.changed_from.present? }, on: :create
+  validates :kind, presence: true
 
   # callbacks
   after_initialize :set_completion_guid
