@@ -62,7 +62,7 @@
 
     -if btn
       .mt-4
-        =link_to subscription_checkout_special_link(plan.exam_body_id, plan.guid), class: 'btn btn-secondary btn-sm', onclick: "addToCart('#{plan.currency.iso_code}', '#{plan.name}', '#{plan.id}', '#{plan.price}', '#{plan.exam_body.name}');" do
+        =link_to subscription_checkout_special_link(plan.exam_body_id, plan.guid, params[:login]), class: 'btn btn-secondary btn-sm', onclick: "addToCart('#{plan.currency.iso_code}', '#{plan.name}', '#{plan.id}', '#{plan.price}', '#{plan.exam_body.name}');" do
           Choose this plan
     -else
       .pt-3.pt-md-4
