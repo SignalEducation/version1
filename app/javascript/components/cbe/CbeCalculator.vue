@@ -37,10 +37,24 @@ export default {
       modalIsOpen: false,
     };
   },
+  props:{
+    modalStatus: {
+      type: Boolean,
+      default: null,
+    },
+  },
   methods: {
     handleChange(value) {
-      this.modalIsOpen = value
+      this.modalIsOpen = value;
     }
+  },
+  watch: {
+    modalStatus(status) {
+      this.modalIsOpen = status;
+    },
+    modalIsOpen(value) {
+      this.$emit("update-close-all", this.modalIsOpen);
+    },
   },
 };
 </script>

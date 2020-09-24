@@ -102,6 +102,10 @@ export default {
       type: Object,
       default: () => ({}),
     },
+    modalStatus: {
+      type: Boolean,
+      default: null
+    },
   },
   data() {
     return {
@@ -138,6 +142,13 @@ export default {
         // window.scrollTo(0,this.findPos(document.getElementById(p)));
         document.getElementById(p).scrollIntoView();
       }
+    },
+    modalStatus(status) {
+      console.log('is happening')
+      this.showModal = status;
+    },
+    showModal(value) {
+      this.$emit("update-close-all", this.showModal);
     },
   },
   methods: {

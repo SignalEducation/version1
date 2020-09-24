@@ -45,7 +45,11 @@ export default {
     VueWindow,
   },
   props: {
-    userCbeData: Object
+    userCbeData: Object,
+    modalStatus: {
+      type: Boolean,
+      default: null,
+    },
   },
   data() {
     return {
@@ -57,6 +61,14 @@ export default {
     handleChange(value) {
       this.modalIsOpen = value
     }
+  },
+  watch: {
+    modalStatus(status) {
+      this.modalIsOpen = status;
+    },
+    modalIsOpen(value) {
+      this.$emit("update-close-all", this.modalIsOpen);
+    },
   },
 };
 </script>

@@ -40,7 +40,19 @@ export default {
     };
   },
   props: {
-    cbeId: Number
-  }
+    cbeId: Number,
+    modalStatus: {
+      type: Boolean,
+      default: null,
+    },
+  },
+  watch: {
+    modalStatus(status) {
+      this.modalIsOpen = status;
+    },
+    modalIsOpen(value) {
+      this.$emit("update-close-all", this.modalIsOpen);
+    },
+  },
 };
 </script>

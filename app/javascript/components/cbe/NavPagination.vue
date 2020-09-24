@@ -15,7 +15,7 @@
         <span class="arrow-right-icon">Next</span>
       </template>
       <template v-slot:page>
-        <CbeNavigator :cbe-id="link_data.id" />
+        <CbeNavigator :cbe-id="link_data.id" :modal-status="modalStatus" @update-close-all="updateNavModal($event)" />
       </template>
     </b-pagination-nav>
   </section>
@@ -40,6 +40,7 @@ export default {
   },
   props: {
     link_data: {},
+    modalStatus: null,
   },
   watch: {
     $route(to, from) {
@@ -91,7 +92,11 @@ export default {
       }
 
       return object_link
-    }
+    },
+
+    updateNavModal(value) {
+      this.$emit("update-close-all", value);
+    },
   }
 };
 </script>
