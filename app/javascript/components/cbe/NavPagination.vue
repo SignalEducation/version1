@@ -40,6 +40,7 @@ export default {
   },
   props: {
     link_data: {},
+    modalStatus: null,
   },
   watch: {
     $route(to, from) {
@@ -91,7 +92,11 @@ export default {
       }
 
       return object_link
-    }
+    },
+
+    updateNavModal(value) {
+      this.$emit("update-close-all", value);
+    },
   }
 };
 </script>

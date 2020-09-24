@@ -312,6 +312,18 @@ button.flagged{
     color: #00b67B!important;
     cursor: pointer;
   }
+  .close-all-icon {
+    background-image: asset-url('close-all-icon.png');
+    background-repeat: no-repeat;
+    padding: 0 0 0 25px;
+    margin-top: 5px;
+    height: 20px;
+  }
+  .close-all-icon:hover {
+    background-image: asset-url('close-all-icon-green.png');
+    color: #00b67B!important;
+    cursor: pointer;
+  }
   .flag-icon {
     background-image: asset-url('flag-icon.png');
     background-repeat: no-repeat;

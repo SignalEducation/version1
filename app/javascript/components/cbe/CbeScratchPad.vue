@@ -37,6 +37,7 @@
 <script>
 
 import Editor from "@tinymce/tinymce-vue";
+import eventBus from "./EventBus.vue";
 import VueWindow from '../VueWindow.vue'
 
 export default {
@@ -45,7 +46,7 @@ export default {
     VueWindow,
   },
   props: {
-    userCbeData: Object
+    userCbeData: Object,
   },
   data() {
     return {
@@ -53,10 +54,23 @@ export default {
       modalIsOpen: false
     };
   },
+  created() {
+    eventBus.$on("close-modal",(status)=>{
+      this.modalIsOpen = status;
+    })
+  },
   methods: {
     handleChange(value) {
       this.modalIsOpen = value
     }
+  },
+  watch: {
+    modalStatus(status) {
+      this.modalIsOpen = status;
+    },
+    modalIsOpen(value) {
+      this.$emit("update-close-all", this.modalIsOpen);
+    },
   },
 };
 </script>

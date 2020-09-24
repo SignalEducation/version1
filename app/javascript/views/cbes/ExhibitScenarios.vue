@@ -81,6 +81,10 @@ export default {
       type: Number,
       required: true
     },
+    gioStatus: {
+      type: Boolean,
+      default: null
+    },
   },
   data() {
     return {
@@ -120,6 +124,10 @@ export default {
           .height();
       this.height = $(window).height() - headerFooter;
     },
+    updateModal(status){
+      this.scenarioData.exhibits[0].name = 'Gio test'
+      this.$emit("update-close-all", status);
+    }
   },
 };
 </script>
