@@ -18,11 +18,9 @@ module Admin
     def new; end
 
     def clone
-      if @cbe.duplicate
-        flash[:success] = 'Cbe successfully duplicated'
-      else
-        flash[:error] = 'Cbe not successfully duplicated'
-      end
+      CbeCloneWorker.perform_async(@cbe.id, current_user.id, admin_cbes_path)
+
+      flash[:success] = 'CBE is cloning now, you will receive an email when finished.'
 
       redirect_to admin_cbes_path
     end

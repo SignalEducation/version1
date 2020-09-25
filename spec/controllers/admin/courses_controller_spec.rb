@@ -42,15 +42,15 @@
 require 'rails_helper'
 
 describe Admin::CoursesController, type: :controller do
-  let(:content_management_user_group)           { create(:content_management_user_group) }
-  let(:content_management_user)                 { create(:content_management_user, user_group_id: content_management_user_group.id) }
-  let!(:group_1)                                { create(:group) }
-  let!(:level_1)                                  { create(:level, group: group_1) }
-  let!(:course_1)                               { create(:active_course, level: level_1) }
-  let!(:course_2)                               { create(:active_course, level: level_1, computer_based: true) }
-  let(:exam_body)                               { create(:exam_body) }
-  let!(:course_5)                               { create(:inactive_course) }
-  let!(:valid_params)                           { attributes_for(:course) }
+  let(:content_management_user_group) { create(:content_management_user_group) }
+  let(:content_management_user)       { create(:content_management_user, user_group_id: content_management_user_group.id) }
+  let!(:group_1)                      { create(:group) }
+  let!(:level_1)                      { create(:level, group: group_1) }
+  let!(:course_1)                     { create(:active_course, level: level_1) }
+  let!(:course_2)                     { create(:active_course, level: level_1, computer_based: true) }
+  let(:exam_body)                     { create(:exam_body) }
+  let!(:course_5)                     { create(:inactive_course) }
+  let!(:valid_params)                 { attributes_for(:course) }
 
   context 'Logged in as a content_management_user: ' do
     before(:each) do
@@ -150,25 +150,18 @@ describe Admin::CoursesController, type: :controller do
     end
 
     describe '#clone' do
+
       context 'clone subject course' do
         it 'should duplicate subject course' do
+          allow(controller).to receive(:current_user).and_return(content_management_user)
+          allow(CourseCloneWorker).to receive(:perform_async).and_return(true)
+
           post :clone, params: { id: course_1.id }
 
           expect(response.status).to eq(302)
           expect(response).to redirect_to(admin_courses_url)
           expect(flash[:success]).to be_present
-          expect(flash[:success]).to eq('Course successfully duplicated')
-        end
-
-        it 'should not duplicate subject course' do
-          course_dup = course_1.dup
-          course_dup.update(name: "#{course_1.name} copy", name_url: "#{course_1.name}_copy")
-          post :clone, params: { id: course_1.id }
-
-          expect(response.status).to eq(302)
-          expect(response).to redirect_to(admin_courses_url)
-          expect(flash[:error]).to be_present
-          expect(flash[:error]).to eq('Course not successfully duplicated')
+          expect(flash[:success]).to eq('Course is cloning now, you will receive an email when finished.')
         end
       end
     end

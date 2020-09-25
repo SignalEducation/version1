@@ -120,6 +120,42 @@ class MandrillClient
     send_template('course-completion-survey-190605', msg)
   end
 
+  def successfully_course_clone_email(user_name, url, course_name)
+    msg = message_stub.merge('subject' => 'Course was successfully cloned')
+    msg['global_merge_vars'] << { 'name' => 'USERNAME', 'content' => user_name }
+    msg['global_merge_vars'] << { 'name' => 'URL', 'content' => url }
+    msg['global_merge_vars'] << { 'name' => 'COURSENAME', 'content' => course_name }
+
+    send_template('successfully-course-clone-250920', msg)
+  end
+
+  def failed_course_clone_email(user_name, url, course_name, error)
+    msg = message_stub.merge('subject' => "Course wasn't successfully cloned")
+    msg['global_merge_vars'] << { 'name' => 'USERNAME', 'content' => user_name }
+    msg['global_merge_vars'] << { 'name' => 'URL', 'content' => url }
+    msg['global_merge_vars'] << { 'name' => 'COURSENAME', 'content' => course_name }
+    msg['global_merge_vars'] << { 'name' => 'ERROR', 'content' => error }
+    send_template('failed-course-clone-250920', msg)
+  end
+
+  def successfully_cbe_clone_email(user_name, url, cbe_name)
+    msg = message_stub.merge('subject' => 'CBE was successfully cloned')
+    msg['global_merge_vars'] << { 'name' => 'USERNAME', 'content' => user_name }
+    msg['global_merge_vars'] << { 'name' => 'URL', 'content' => url }
+    msg['global_merge_vars'] << { 'name' => 'CBENAME', 'content' => cbe_name }
+
+    send_template('successfully-cbe-clone-250920', msg)
+  end
+
+  def failed_cbe_clone_email(user_name, url, cbe_name, error)
+    msg = message_stub.merge('subject' => "CBE wasn't successfully cloned")
+    msg['global_merge_vars'] << { 'name' => 'USERNAME', 'content' => user_name }
+    msg['global_merge_vars'] << { 'name' => 'URL', 'content' => url }
+    msg['global_merge_vars'] << { 'name' => 'CBENAME', 'content' => cbe_name }
+    msg['global_merge_vars'] << { 'name' => 'ERROR', 'content' => error }
+    send_template('failed-cbe-clone-250920', msg)
+  end
+
   # Send SCA confirmation email
   def send_sca_confirmation_email(url)
     msg = message_stub.merge('subject' => 'Verify Invoice')
