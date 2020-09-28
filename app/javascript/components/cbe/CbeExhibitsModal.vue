@@ -74,6 +74,7 @@
 import pdfvuer from "pdfvuer";
 import VueWindow from "../VueWindow.vue";
 import SpreadsheetEditor from "../SpreadsheetEditor/SpreadsheetEditor.vue";
+import eventBus from "./EventBus.vue";
 
 export default {
   components: {
@@ -121,6 +122,11 @@ export default {
     formattedZoom() {
       return Number.parseInt(this.scale * 100);
     },
+  },
+  created() {
+    eventBus.$on("close-modal",(status)=>{
+      this.showModal = status;
+    })
   },
   mounted() {
     if (this.currentFile) {

@@ -64,6 +64,7 @@ import CbeCalculator from "./CbeCalculator.vue";
 import CbeFlagToReview from "./CbeFlagToReview.vue";
 import CbeNavPages from "./CbeNavPages.vue";
 import CbeScratchPad from "./CbeScratchPad.vue";
+import eventBus from "./EventBus.vue";
 
 export default {
   components: {
@@ -94,6 +95,7 @@ export default {
     },
     modalsStatus(status) {
       this.$emit("update-close-all", status);
+      eventBus.$emit("close-modal", false);
       this.calcModalStatus = status
       this.scraModalStatus = status
     },
