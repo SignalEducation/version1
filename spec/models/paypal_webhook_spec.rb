@@ -162,10 +162,8 @@ describe PaypalWebhook do
           end
         end
 
-        it 'records an error on the subscription object' do
-          sub_double = double('Subscription')
-          allow(Subscription).to receive(:find_by).and_return(sub_double)
-          expect(sub_double).to receive(:record_error!)
+        it 'calls #update_failed_subscription' do
+          expect(paypal_webhook).to receive(:update_failed_subscription)
 
           paypal_webhook.process_sale_denied
         end
@@ -193,6 +191,30 @@ describe PaypalWebhook do
         expect(PaypalWebhookReprocessWorker).to receive(:perform_async).with(paypal_webhook.id)
 
         paypal_webhook.reprocess
+      end
+    end
+
+    describe '#update_failed_subscription' do
+      let(:invoice) { create(:invoice) }
+
+      before :each do
+        allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
+        allow(Invoice).to receive(:build_from_paypal_data).and_return(invoice)
+      end
+
+      it 'records an error on the subscription object' do
+        sub_double = double('Subscription')
+        allow(Subscription).to receive(:find_by).and_return(sub_double)
+        expect(sub_double).to receive(:record_error!)
+
+        paypal_webhook.process_sale_denied
+      end
+
+      it 'sends a slack notification' do
+        allow(Rails.env).to receive(:production?).and_return(true)
+        expect_any_instance_of(SlackService).to receive(:notify_channel)
+
+        paypal_webhook.process_sale_denied
       end
     end
   end
