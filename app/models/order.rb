@@ -120,7 +120,14 @@ class Order < ApplicationRecord
   end
 
   def self.to_csv(options = {})
-    attributes = %w[order_id order_created name product_name stripe_id paypal_guid state
+    attributes = %w[inv_id invoice_created sub_id sub_created user_email user_created
+                    payment_provider sub_stripe_guid sub_paypal_guid sub_exam_body sub_status sub_type
+                    invoice_type payment_interval plan_name currency_symbol plan_price sub_total total
+                    card_country user_country hubspot_source hubspot_source_1 hubspot_source_2 first_visit_source
+                    first_visit_utm_campaign first_visit_medium first_visit_date first_visit_referring_domain
+                    first_visit_landing_page first_visit_referrer
+
+                    order_id order_created name product_name stripe_id paypal_guid state
                     product_type leading_symbol price user_country card_country]
 
     CSV.generate(options) do |csv|

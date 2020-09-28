@@ -86,49 +86,59 @@ describe Refund, type: :model do
   describe '.to_csv' do
     before do
       allow_any_instance_of(Refund).to receive(:create_on_stripe).and_return(true)
+      allow_any_instance_of(Refund).to receive(:hubspot_get_contact).and_return(nil)
       allow_any_instance_of(StripeApiEvent).to receive(:sync_data_from_stripe).and_return(true)
       allow_any_instance_of(StripePlanService).to receive(:create_plan).and_return(true)
       allow_any_instance_of(PaypalPlansService).to receive(:create_plan).and_return(true)
-      allow_any_instance_of(Invoice).to receive(:hubspot_get_contact).and_return(nil)
     end
 
     let(:invoice) { create(:invoice) }
     let!(:refund) { create(:refund, invoice: invoice) }
 
     context 'generate csv data' do
-      it { expect(Refund.all.to_csv.split(',')).to include('refund_id',
+      it { expect(Refund.all.to_csv.split(',')).to include('inv_id',
+                                                           'invoice_created',
+                                                           'sub_id',
+                                                           'sub_created',
+                                                           'user_email',
+                                                           'user_created',
+                                                           'payment_provider',
+                                                           'sub_stripe_guid',
+                                                           'sub_paypal_guid',
+                                                           'sub_exam_body',
+                                                           'sub_status',
+                                                           'sub_type',
+                                                           'invoice_type',
+                                                           'payment_interval',
+                                                           'plan_name',
+                                                           'currency_symbol',
+                                                           'plan_price',
+                                                           'sub_total',
+                                                           'total',
+                                                           'card_country',
+                                                           'user_country',
+                                                           'hubspot_source',
+                                                           'hubspot_source_1',
+                                                           'hubspot_source_2',
+                                                           'first_visit_source',
+                                                           'first_visit_utm_campaign',
+                                                           'first_visit_medium',
+                                                           'first_visit_date',
+                                                           'first_visit_referring_domain',
+                                                           'first_visit_landing_page',
+                                                           'first_visit_referrer',
+                                                           'refund_id',
                                                            'refunded_on',
                                                            'refund_status',
                                                            'stripe_id',
                                                            'refund_amount',
                                                            'inv_total',
                                                            'inv_created',
-                                                           'invoice_id',
                                                            'invoice_type',
-                                                           'email',
-                                                           'user_created',
-                                                           'sub_created',
-                                                           'sub_exam_body',
                                                            'sub_status',
                                                            'sub_type',
-                                                           'payment_provider',
-                                                           'sub_stripe_guid',
-                                                           'sub_paypal_guid',
-                                                           'payment_interval',
-                                                           'plan_name',
-                                                           'currency_symbol',
-                                                           'plan_price',
-                                                           'card_country',
-                                                           'user_country',
                                                            'first_visit',
-                                                           'first_visit_date',
-                                                           'first_visit_landing_page',
-                                                           'first_visit_referrer',
-                                                           'first_visit_referring_domain',
-                                                           'first_visit_source',
-                                                           'first_visit_medium',
-                                                           'first_visit_search_keyword',
-                                                           'first_visit_country') }
+                                                           'first_visit_search_keyword') }
     end
   end
 

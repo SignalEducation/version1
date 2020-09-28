@@ -6,8 +6,8 @@ class SalesReportWorker
   sidekiq_options queue: :high
 
   def perform(period, date_interval, email)
-    date_interval = format_date_period(date_interval)
-    invoices = Invoice.where(created_at: date_interval, paid: true).subscriptions.order(:created_at)
+    date     = format_date_period(date_interval)
+    invoices = Invoice.where(created_at: date, paid: true).subscriptions.order(:created_at)
     csv_data = invoices.to_csv
 
     send_to_email(csv_data, period, email)

@@ -299,6 +299,8 @@ Rails.application.routes.draw do
     # Reports
     get '/reports',                       to: 'reports#index',                            as: :reports
     get '/reports/sales',                 to: 'reports#sales',                            as: :reports_sales
+    get '/reports/refunds',               to: 'reports#refunds',                          as: :reports_refunds
+    get '/reports/orders',                to: 'reports#orders',                           as: :reports_orders
     get '/export_users',                  to: 'reports#export_users',                     as: :export_users
     get '/export_users_monthly',          to: 'reports#export_users_monthly',             as: :export_users_monthly
     get '/export_users_with_enrollments', to: 'reports#export_users_with_enrollments',    as: :export_users_with_enrollments
@@ -306,6 +308,8 @@ Rails.application.routes.draw do
     get '/export_courses',                to: 'reports#export_courses',                   as: :export_courses
     get '/export_enrollments',            to: 'reports#export_enrollments',               as: :export_enrollments
     post '/export_sales_report',          to: 'reports#export_sales_report',              as: :export_sales_report
+    post '/export_refunds_report',        to: 'reports#export_refunds_report',            as: :export_refunds_report
+    post '/export_orders_report',         to: 'reports#export_orders_report',             as: :export_orders_report
     get '/export_referral_codes',         to: 'referral_codes#export_referral_codes',     as: :export_referral_codes
     get '/export_referral_codes/:id',     to: 'referred_signups#export_referred_signups', as: :export_referred_signups
     get '/referral',                      to: 'referral_codes#referral', as: :refer_a_friend

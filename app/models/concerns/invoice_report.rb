@@ -3,7 +3,7 @@
 module InvoiceReport
   extend ActiveSupport::Concern
 
-  def invoice_id
+  def inv_id
     self&.id
   end
 
@@ -17,6 +17,10 @@ module InvoiceReport
 
   def user_created
     user.created_at.strftime('%Y-%m-%d')
+  end
+
+  def sub_id
+    subscription&.id
   end
 
   def sub_created

@@ -13,7 +13,7 @@ shared_examples_for 'invoice_report' do
   let(:obj)          { create(:invoice, user: user, subscription: subscription) }
 
   describe 'Methods used to build the invoice csv' do
-    it { expect(obj.invoice_id).to eq(obj.id) }
+    it { expect(obj.inv_id).to eq(obj.id) }
     it { expect(obj.user_email).to eq(obj.user.email) }
     Timecop.freeze(Time.zone.local(2020, 7, 1, 15, 0, 0)) do
       it { expect(obj.invoice_created).to eq(obj.created_at.strftime('%Y-%m-%d')) }

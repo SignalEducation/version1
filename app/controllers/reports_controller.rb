@@ -6,18 +6,40 @@ class ReportsController < ApplicationController
     ensure_user_has_access_rights(%w[system_requirements_access user_management_access])
   end
   before_action :management_layout
+  before_action :report_params, only: %i[export_sales_report export_refunds_report export_orders_report]
 
   def index; end
 
   def sales; end
 
   def export_sales_report
-    email         = sales_report_email(params[:period])
-    date_interval = sales_report_date_interval(params[:period], params[:report][:start_date], params[:report][:final_date])
-
-    SalesReportWorker.perform_async(params[:period], date_interval, email)
+    SalesReportWorker.perform_async(params[:period], @report_date_interval, @report_email)
 
     flash[:success] = "Sales report it's been generating now, we'll send it to your email when it's done."
+
+    redirect_to reports_path
+  end
+
+  def export_refunds_report
+    RefundsReportWorker.perform_async(params[:period], @report_date_interval, @report_email)
+
+    flash[:success] = "Refunds report it's been generating now, we'll send it to your email when it's done."
+
+    redirect_to reports_path
+  end
+
+  def export_orders_report
+    OrdersReportWorker.perform_async(params[:period], @report_date_interval, @report_email)
+
+    flash[:success] = "Orders report it's been generating now, we'll send it to your email when it's done."
+
+    redirect_to reports_path
+  end
+
+  def export_sales_orders_report
+    SalesOrdersReportWorker.perform_async(params[:period], @report_date_interval, @report_email)
+
+    flash[:success] = "Sales/Orders report it's been generating now, we'll send it to your email when it's done."
 
     redirect_to reports_path
   end
@@ -55,7 +77,14 @@ class ReportsController < ApplicationController
 
   private
 
-  def sales_report_email(period)
+  def report_params
+    @report_email         = report_email(params[:period])
+    @report_date_interval = report_date_interval(params[:period],
+                                                 params[:report][:start_date],
+                                                 params[:report][:final_date])
+  end
+
+  def report_email(period)
     case period
     when 'daily'
       MARKETING_EMAIL
@@ -66,7 +95,7 @@ class ReportsController < ApplicationController
     end
   end
 
-  def sales_report_date_interval(period, start_date, final_date)
+  def report_date_interval(period, start_date, final_date)
     case period
     when 'daily'
       Time.zone.yesterday.all_day

@@ -1,14 +1,15 @@
 # frozen_string_literal: true
 
-class RefundsReportWorker
+class SalesOrdersReportWorker
   include Sidekiq::Worker
 
   sidekiq_options queue: :high
 
   def perform(period, date_interval, email)
     date     = format_date_period(date_interval)
-    refunds  = Refund.where(created_at: date)
-    csv_data = refunds.to_csv
+    invoices = Invoice.where(created_at: date, paid: true).subscriptions.order(:created_at)
+    orders   = Order.where(created_at: date)
+    csv_data = invoices.with_order_to_csv(orders)
 
     send_to_email(csv_data, period, email)
   end
@@ -23,9 +24,9 @@ class RefundsReportWorker
   end
 
   def send_to_email(csv_data, period, email)
-    user = User.new(email: email, first_name: 'Refunds', last_name: 'Report Bot')
+    user = User.new(email: email, first_name: 'Sales/Orders', last_name: 'Report Bot')
     csv_encoded = Base64.encode64(csv_data)
 
-    MandrillClient.new(user).send('send_report_email', csv_encoded, 'refund', period)
+    MandrillClient.new(user).send('send_report_email', csv_encoded, 'sales_and_orders', period)
   end
 end

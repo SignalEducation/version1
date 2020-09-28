@@ -28,7 +28,7 @@ shared_examples_for 'refund_report' do
     it { expect(obj.inv_total).to eq(obj.invoice.total) }
     it { expect(obj.invoice_id).to eq(obj.invoice.id) }
     it { expect(obj.invoice_type).to eq('New') }
-    it { expect(obj.email).to eq(obj.user.email) }
+    it { expect(obj.user_email).to eq(obj.user.email) }
     it { expect(obj.sub_exam_body).to eq(obj.subscription&.subscription_plan&.exam_body&.name) }
     it { expect(obj.sub_status).to eq(obj.subscription&.state) }
     it { expect(obj.sub_type).to eq(obj.subscription&.kind) }
