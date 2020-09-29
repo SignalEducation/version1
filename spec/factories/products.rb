@@ -44,6 +44,11 @@ FactoryBot.define do
       product_type { 'correction_pack' }
       correction_pack_count { 1 }
     end
+
+    factory :lifetime_product do
+      product_type { 'lifetime_access' }
+      mock_exam { nil }
+    end
   end
 
   trait :for_mock do
@@ -53,6 +58,11 @@ FactoryBot.define do
   trait :for_corrections do
     product_type { 'correction_pack' }
     correction_pack_count { 1 }
+  end
+
+  trait :for_lifetime_access do
+    product_type { 'lifetime_access' }
+    mock_exam { nil }
   end
 
   trait :inactive do

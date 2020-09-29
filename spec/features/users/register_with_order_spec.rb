@@ -6,13 +6,15 @@ describe 'An individual purchasing a product', type: :feature do
   let!(:country) { create(:country, name: 'United Kingdom') }
   let!(:mock) { create(:product, :for_mock, currency_id: country.currency.id) }
   let!(:correction) { create(:product, :for_corrections, currency_id: country.currency.id) }
+  let!(:exam_body) { FactoryBot.create(:exam_body) }
+  let!(:group) { FactoryBot.create(:group, exam_body: exam_body) }
 
   before :each do
     visit prep_products_path
   end
 
   context 'as an existing user' do
-    let(:user) { create(:student_user, country: country, currency: country.currency) }
+    let(:user) { create(:student_user, country: country, currency: country.currency, preferred_exam_body: exam_body) }
 
     scenario 'the user sees the product once they login' do
       first(:link, mock.mock_exam.name).click

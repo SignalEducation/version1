@@ -69,6 +69,13 @@ describe MandrillClient do
       expect(response.last).to eq('payment-invoice-new-branding-190605')
     end
 
+    it 'send_successful_order_email' do
+      response = @client.send_successful_order_email('account_url', 'product')
+
+      expect(response.first).to be_kind_of(MandrillClient)
+      expect(response.last).to eq('order-invoice-230920')
+    end
+
     it 'send_referral_discount_email' do
       response = @client.send_referral_discount_email('amount')
 

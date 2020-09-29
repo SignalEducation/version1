@@ -64,9 +64,20 @@ module HubSpot
 
       def subscriptions_statuses(user, statuses = [])
         ExamBody.where(active: true).each do |body|
+          group = Group.find_by(exam_body_id: body.id)
           subscriptions_for_body = user.subscriptions.for_exam_body(body.id).where.not(state: :pending).order(created_at: :desc)
-          statuses << { property: "#{body&.name}_status".parameterize(separator: '_'),
-                        value: subscriptions_for_body.any? ? subscriptions_for_body.first.user_readable_status : 'Basic' }
+          lifetime_access_for_body = user.orders.for_group(group.id).for_lifetime_access.where(state: :completed).order(created_at: :desc) if group
+
+          account_status =
+            if lifetime_access_for_body&.any?
+              'Lifetime Membership'
+            elsif subscriptions_for_body.any?
+              subscriptions_for_body.first.user_readable_status
+            else
+              'Basic'
+            end
+
+          statuses << { property: "#{body&.name}_status".parameterize(separator: '_'), value: account_status }
         end
 
         statuses

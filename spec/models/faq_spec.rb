@@ -38,12 +38,7 @@ describe Faq do
   it { should validate_presence_of(:sorting_order) }
   it { should validate_numericality_of(:sorting_order) }
 
-  it { should validate_presence_of(:faq_section_id) }
-  it { should validate_numericality_of(:faq_section_id) }
-
   it { should validate_presence_of(:question_text) }
-
-  it { should validate_presence_of(:pre_answer_text) }
 
   it { should validate_presence_of(:answer_text) }
 

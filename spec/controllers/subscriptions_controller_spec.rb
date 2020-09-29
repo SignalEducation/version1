@@ -35,6 +35,7 @@ describe SubscriptionsController, type: :controller do
   end
 
   let!(:exam_body_1) { FactoryBot.create(:exam_body) }
+  let!(:group) { FactoryBot.create(:group, exam_body: exam_body_1) }
   let!(:gbp) { create(:gbp) }
   let!(:uk) { create(:uk, currency: gbp) }
   let!(:uk_vat_code) { create(:vat_code, country: uk) }

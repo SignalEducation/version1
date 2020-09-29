@@ -73,6 +73,33 @@ shared_examples_for 'user_accessable' do
     end
   end
 
+  describe '#lifetime_subscriber?' do
+    it 'returns FALSE if there are no lifetime orders for the user' do
+      user = create(:user)
+      group = create(:group)
+
+      expect(user.lifetime_subscriber?(group)).to be_falsey
+    end
+
+    it 'returns TRUE if there is a lifetime order for the user for that exam body' do
+      user = create(:user)
+      group = create(:group)
+      product = create(:product, :for_lifetime_access, group: group)
+      user.orders.create(product_id: product.id, state: 'completed')
+
+      expect(user.lifetime_subscriber?(group)).to be_truthy
+    end
+
+    it 'returns FALSE if there is a lifetime order for the user for another exam body' do
+      user = create(:user)
+      group = create(:group)
+      product = create(:product, :for_lifetime_access)
+      user.orders.create(product_id: product.id, state: 'completed')
+
+      expect(user.lifetime_subscriber?(group)).to be_falsey
+    end
+  end
+
   describe '#complimentary_user?' do
     it 'returns FALSE if there is no user_group' do
       user = build_stubbed(:user, user_group: nil)

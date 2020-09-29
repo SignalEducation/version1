@@ -15,26 +15,49 @@
       .row.row-lg
         -if @plan
           .col-lg-4
-            =render partial: 'pricing_plan', locals: {plan: @plan, zoom: false, btn: false}
+            .card.text-center.mb-4.hero-section-tutor-card.mt-4
+              .hero-section-show-link-window
+              .py-4.pb-0
+                .h3
+                  =t("views.general.payment_frequency_in_months.a#{@plan.payment_frequency_in_months}")
+              .pb-4
+                .text-center
+                  %p.h2.mb-0
+                    =@plan.currency.format_number(@plan.price)
+                .row
+                  .pt-4.col-md-12.hero-section-responsive-view-course
+                    %p.h5.text-orange.mb-0
+                      =@plan.savings_label
+                    .py-4.col-md-12.hero-section-responsive-view-course
+                      %p
+                        %i.material-icons.icon-bg-round.text-mint.bg-mint-light{"aria-label" => "selected", :role => "img"} check
+
+                  .pb-2.col-md-12.hero-section-responsive-view-course
+                    %p.small.mb-0
+                      Recurring Payment
+                    %p.small.mb-0
+                      Cancel Anytime
 
 
 
         -elsif @product
           .col-lg-4
-            %article.mb-6.mb-lg-0
-              .card.card-link.text-center.mb-5
-                .py-4
-                  %h4.text-ellipsis.mb-4
-                    =@product.mock_exam.try(:name)
-                  .pt-2
-                    %i.budicon-files-tick{"aria-label" => "", :role => "img"}
-                  .pt-5
-                    %p.h4.mb-3.text-torquoise
-                      Total:
-                      %span
-                        =number_in_local_currency(@product.price, @product.currency)
-                  .pt-4.pt-md-5
-                    %i.material-icons.icon-bg-round.text-mint.bg-mint-light{"aria-label" => "selected", :role => "img"} check
+            .card.text-center.mb-4.hero-section-tutor-card.mt-4
+              .hero-section-show-link-window
+              .py-4
+                .h3
+                  Lifetime Membership
+              .pb-1
+                .text-center
+                  %p.h2.mb-0
+                    =number_in_local_currency(@product.price, @product.currency)
+                .row
+                  .pt-6.col-md-12.hero-section-responsive-view-course
+                    %p
+                      %i.material-icons.icon-bg-round.text-mint.bg-mint-light{"aria-label" => "selected", :role => "img"} check
+                  .pb-2.col-md-12.hero-section-responsive-view-course
+                    %p.small.my-4
+                      One-time Payment
 
 
 

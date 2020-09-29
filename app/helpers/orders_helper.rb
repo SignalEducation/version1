@@ -25,18 +25,23 @@ module OrdersHelper
       'Purchase a Mock Exam and increase your chances of passing the your exams.'
     elsif order.product.cbe?
       'Purchase a CBE and increase your chances of passing your exams.'
+    elsif order.product.lifetime_access?
+      "One-time Payment - Instant Access to all #{order.product.group.name} Courses"
     else
       'Pass your exams faster with a question and solution correction pack.'
     end
   end
 
   def order_description(order)
+    group = order.product.group.name
     if order.product.payment_description.present?
-      order.product.payment_description
+      order.product.payment_description.html_safe
     elsif order.product.mock_exam?
       'Purchase your Mock Exam today. Once submitted we will give you a solution paper, your result, question by question, personalised feedback on your exam and study topic recommendations within 3 days.'
     elsif order.product.cbe?
       'Purchase your CBE today to start practicing for your online exam by simulating the computer based exam on the learnsignal site.'
+    elsif order.product.lifetime_access?
+      "Enjoy incredible savings and unlock Lifetime access to ACCA tuition for every #{group} exam. Get all the #{group} tuition you need to pass every #{group} exam on your journey to becoming fully qualified for just one single fee. Learnsignal Lifetime Members can access tuition and study materials for every #{group} course and never worry about paying for exam tuition again."
     else
       'This correction pack is applicable to all courses. Pick and complete any question from any resource. Once you have submitted your work, our expert tutors will correct it and give you feedback within 3 days.'
     end

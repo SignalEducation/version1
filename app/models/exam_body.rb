@@ -67,6 +67,10 @@ class ExamBody < ApplicationRecord
     has_sittings ? 'Ask the Tutor' : 'Need Help'
   end
 
+  def group
+    Group.find_by(exam_body_id: id)
+  end
+
   private
 
   def check_dependencies

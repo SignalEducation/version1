@@ -1112,6 +1112,19 @@ en:
         payment_subheading_placeholder: Product Payment Checkout Page Sub-Heading
         payment_description: Product Description
         payment_description_placeholder: Product Payment Page Description
+        savings_label: Savings Label
+        savings_label_placeholder: Savings Label On Pricing Page
+
+        faqs:
+          name: Name
+          name_url: Name URL
+          active: Active
+          question_text: Question Text
+          question_text_placeholder: Question Text
+          answer_text: Answer Text
+          answer_text_placeholder: Answer Text
+          pre_answer_text: Basic Answer Text
+          pre_answer_text_placeholder: Basic Version of the Answer Text without any Text Formatting or HTML elements
 
       index:
         h1: Products
