@@ -2,6 +2,8 @@
 
 module Paypal
   class SubscriptionValidation < Paypal::Subscription
+    include Rails.application.routes.url_helpers
+
     class << self
       def run_paypal_sync
         ::Subscription.all_paypal.all_active.each do |sub|
@@ -14,10 +16,26 @@ module Paypal
 
     def sync_with_paypal
       match_with_state unless consistent_states(@agreement.state)
-      check_outstanding if @agreement.state == 'Active'
+      return unless @agreement.state == 'Active'
+
+      check_outstanding
+      check_annual_renewal if @subscription.subscription_plan.interval_name == 'Yearly'
     end
 
     private
+
+    def check_annual_renewal
+      renewal_date = @agreement.agreement_details&.next_billing_date
+      return unless renewal_date && (renewal_date.to_date - Time.zone.today).to_i == 7
+
+      Message.create(
+        process_at: Time.zone.now, user_id: @subscription.user.id,
+        kind: :account, template: 'send_subscription_notification_email',
+        template_params: {
+          url: account_url(anchor: 'payment-details', host: ENV.fetch('LEARNSIGNAL_V3_SERVER_EMAIL_DOMAIN', 'localhost:3000'))
+        }
+      )
+    end
 
     def check_outstanding
       sub_recovery = Paypal::SubscriptionRecovery.new(subscription, agreement)

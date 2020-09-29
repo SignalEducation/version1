@@ -52,6 +52,8 @@ Rails.application.configure do
           enable_starttls_auto: true
   }
 
+  config.default_url_options = { host: 'localhost:3000' }
+
   # Paperclip rspec config
   Paperclip::Attachment.default_options[:path] = "#{Rails.root}/spec/test_files/:class/:id_partition/:style.:extension"
 end
