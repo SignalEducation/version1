@@ -103,7 +103,8 @@ class PaypalSubscriptionsService
       subscription_plan_id: plan_id,
       next_renewal_date: start_date,
       complimentary: false,
-      changed_from: @subscription
+      changed_from: @subscription,
+      kind: @subscription.kind
     )
 
     new_agreement = create_billing_agreement(
