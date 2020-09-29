@@ -15,8 +15,8 @@
 FactoryBot.define do
   factory :paypal_webhook do
     guid { 'test_paypal_guid' }
-    payload { { 'resource' => { 'id' => 'test_12345' } } }
-    processed_at { "2018-11-14 11:43:47" }
+    payload { { 'resource' => { 'id' => 'test_12345' }, 'create_time' => '2020-09-18T09:33:05.136Z' } }
+    processed_at { '2018-11-14 11:43:47' }
     event_type { 'paypal.event.type' }
   end
 end
