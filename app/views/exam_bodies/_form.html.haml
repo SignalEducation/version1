@@ -10,6 +10,11 @@
               .input-group.input-group-lg
                 =f.text_field :name, placeholder: t('views.exam_bodies.form.name_placeholder'), class: 'form-control', autofocus: true
 
+            .form-group
+              =f.label :name, t('views.exam_bodies.form.hubspot_property')
+              .input-group.input-group-lg
+                =f.text_field :hubspot_property, placeholder: t('views.exam_bodies.form.hubspot_property_placeholder'), class: 'form-control'
+
             .row.pt-4.m-3
               .col-sm-6.my-3
                 .checkbox

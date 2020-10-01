@@ -21,7 +21,7 @@ RSpec.describe HubSpot::Contacts do
     context 'Correct request' do
       it 'save parsed data in hubspot' do
         subject
-        preferred_exam_body = "#{user_01&.preferred_exam_body&.name}_status".parameterize(separator: '_')
+        preferred_exam_body = user_01.preferred_exam_body.hubspot_property.parameterize(separator: '_')
 
         stub_request(:post, "#{uri}/contacts/v1/contact?hapikey=#{key}").
           with(body: "{\"properties\":[{\"property\":\"email\",\"value\":\"#{user_01.email}\"},{\"property\":\"firstname\",\"value\":\"#{user_01.first_name}\"},{\"property\":\"lastname\",\"value\":\"#{user_01.last_name}\"},{\"property\":\"email_verified\",\"value\":false},{\"property\":\"date_of_birth\",\"value\":\"#{user_01.date_of_birth}\"},{\"property\":\"currency\",\"value\":\"#{user_01.currency.name}\"},{\"property\":\"country\",\"value\":\"#{user_01&.country&.name}\"},{\"property\":\"user_group\",\"value\":\"#{user_01&.user_group&.name}\"},{\"property\":\"sub_close_date\",\"value\":null},{\"property\":\"sub_payment_interval\",\"value\":null},{\"property\":\"sub_exam_body\",\"value\":null},{\"property\":\"sub_type\",\"value\":null},{\"property\":\"sub_cancelation_date\",\"value\":null},{\"property\":\"sub_cancelation_reason\",\"value\":null},{\"property\":\"sub_cancelation_note\",\"value\":null},{\"property\":\"next_renewal_date\",\"value\":null},{\"property\":\"preferred_exam_body\",\"value\":\"#{user_01&.preferred_exam_body&.name}\"},{\"property\":\"#{preferred_exam_body}\",\"value\":\"Basic\"}]}").
@@ -37,7 +37,7 @@ RSpec.describe HubSpot::Contacts do
     context 'Incorrect request' do
       it 'no save parsed data in hubspot' do
         subject
-        preferred_exam_body = "#{user_01&.preferred_exam_body&.name}_status".parameterize(separator: '_')
+        preferred_exam_body = user_01.preferred_exam_body.hubspot_property.parameterize(separator: '_')
 
         stub_request(:post, "#{uri}/contacts/v1/contact?hapikey=#{key}").
           with(body: "{\"properties\":[{\"property\":\"email\",\"value\":\"#{user_01.email}\"},{\"property\":\"firstname\",\"value\":\"#{user_01.first_name}\"},{\"property\":\"lastname\",\"value\":\"#{user_01.last_name}\"},{\"property\":\"email_verified\",\"value\":false},{\"property\":\"date_of_birth\",\"value\":\"#{user_01.date_of_birth}\"},{\"property\":\"currency\",\"value\":\"#{user_01.currency.name}\"},{\"property\":\"country\",\"value\":\"#{user_01&.country&.name}\"},{\"property\":\"user_group\",\"value\":\"#{user_01&.user_group&.name}\"},{\"property\":\"sub_close_date\",\"value\":null},{\"property\":\"sub_payment_interval\",\"value\":null},{\"property\":\"sub_exam_body\",\"value\":null},{\"property\":\"sub_type\",\"value\":null},{\"property\":\"sub_cancelation_date\",\"value\":null},{\"property\":\"sub_cancelation_reason\",\"value\":null},{\"property\":\"sub_cancelation_note\",\"value\":null},{\"property\":\"next_renewal_date\",\"value\":null},{\"property\":\"preferred_exam_body\",\"value\":\"#{user_01&.preferred_exam_body&.name}\"},{\"property\":\"#{preferred_exam_body}\",\"value\":\"Basic\"}]}").
@@ -61,8 +61,8 @@ RSpec.describe HubSpot::Contacts do
       it 'save parsed data in hubspot' do
         subject
 
-        preferred_exam_body1 = "#{user_01&.preferred_exam_body&.name}_status".parameterize(separator: '_')
-        preferred_exam_body2 = "#{user_02&.preferred_exam_body&.name}_status".parameterize(separator: '_')
+        preferred_exam_body1 = user_01.preferred_exam_body.hubspot_property.parameterize(separator: '_')
+        preferred_exam_body2 = user_02.preferred_exam_body.hubspot_property.parameterize(separator: '_')
 
         stub_request(:post, "#{uri}/contacts/v1/contact/batch/?hapikey=#{key}").
           with(
@@ -80,8 +80,8 @@ RSpec.describe HubSpot::Contacts do
       it 'save parsed data with custom data in hubspot' do
         subject
 
-        preferred_exam_body1 = "#{user_01&.preferred_exam_body&.name}_status".parameterize(separator: '_')
-        preferred_exam_body2 = "#{user_02&.preferred_exam_body&.name}_status".parameterize(separator: '_')
+        preferred_exam_body1 = user_01.preferred_exam_body.hubspot_property.parameterize(separator: '_')
+        preferred_exam_body2 = user_02.preferred_exam_body.hubspot_property.parameterize(separator: '_')
 
         stub_request(:post, "#{uri}/contacts/v1/contact/batch/?hapikey=#{key}").
           with(
@@ -101,8 +101,8 @@ RSpec.describe HubSpot::Contacts do
       it 'no save parsed data in hubspot' do
         subject
 
-        preferred_exam_body1 = "#{user_01&.preferred_exam_body&.name}_status".parameterize(separator: '_')
-        preferred_exam_body2 = "#{user_02&.preferred_exam_body&.name}_status".parameterize(separator: '_')
+        preferred_exam_body1 = user_01.preferred_exam_body.hubspot_property.parameterize(separator: '_')
+        preferred_exam_body2 = user_02.preferred_exam_body.hubspot_property.parameterize(separator: '_')
 
         stub_request(:post, "#{uri}/contacts/v1/contact/batch/?hapikey=#{key}").
           with(

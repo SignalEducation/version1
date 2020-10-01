@@ -56,7 +56,7 @@ class ExamBodiesController < ApplicationController
 
   def allowed_params
     params.require(:exam_body).permit(
-      :name, :url, :active, :has_sittings, :has_products, :products_seo_description,
+      :name, :hubspot_property, :url, :active, :has_sittings, :has_products, :products_seo_description,
       :preferred_payment_frequency, :subscription_page_subheading_text, :products_heading,
       :constructed_response_intro_heading, :constructed_response_intro_text, :logo_image,
       :registration_form_heading, :login_form_heading, :landing_page_h1, :landing_page_paragraph,

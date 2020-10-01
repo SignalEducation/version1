@@ -694,6 +694,8 @@ en:
       form:
         name: Name
         name_placeholder: Name of Examining Body
+        hubspot_property: Hubspot Property
+        hubspot_property_placeholder: exam-body-name-status
         url: Url
         url_placeholder: Home URL of Examining Body
         active: Active
