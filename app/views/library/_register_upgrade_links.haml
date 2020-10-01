@@ -1,4 +1,4 @@
--if user && !user.can_view_content?(@group.exam_body_id)
+-if user && !user.can_view_content?(@group.exam_body_id, @group.id)
   = link_to ab_test("#{@group.name_url}_pricing_link", subscription_checkout_special_link(@course.exam_body_id), pricing_url(@group.name_url)), class: 'btn btn-primary upgrade' do
     Upgrade Now
 -elsif !user

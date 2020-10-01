@@ -257,10 +257,12 @@ Rails.application.routes.draw do
     resources :home_pages
     resources :mock_exams, concerns: :supports_reordering, path: '/admin/mock_exams'
     resources :products, concerns: :supports_reordering, shallow: true do
-      resources :orders, except: %i[index show] do
+      resources :orders, except: %i[index show order_complete] do
         get 'execute', on: :member
       end
     end
+    get 'orders/:exam_body_id/lifetime-membership', to: 'orders#new'
+    get 'order_complete', to: 'orders#order_complete', as: :order_complete
     resources :quiz_questions, except: [:index], concerns: :supports_reordering
     resources :refunds
     resources :vat_codes

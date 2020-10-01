@@ -74,9 +74,8 @@ class ApplicationController < ActionController::Base
 
     return unless current_user&.preferred_exam_body && current_user&.standard_student_user?
 
-    # TODO: (James) This can be done better!
     @banner =
-      if current_user.valid_subscription_for_exam_body?(current_user.preferred_exam_body_id)
+      if current_user.valid_access_for_exam_body?(current_user.preferred_exam_body_id, current_user.preferred_group_id)
         ExternalBanner.all_active.
           for_exam_body(current_user.preferred_exam_body).
           for_paid.all_in_order.first
@@ -378,9 +377,11 @@ class ApplicationController < ActionController::Base
 
   helper_method :subscription_checkout_special_link
 
-  def product_checkout_special_link(exam_body_id, product_id = nil)
+  def product_checkout_special_link(exam_body_id, product_id = nil, login_only = nil)
     if current_user
       new_product_order_url(product_id)
+    elsif login_only
+      sign_in_checkout_url(exam_body_id: exam_body_id, product_id: product_id)
     else
       sign_in_or_register_url(exam_body_id: exam_body_id, product_id: product_id)
     end

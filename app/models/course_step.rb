@@ -50,6 +50,8 @@ class CourseStep < ApplicationRecord
   has_many :course_lesson_logs, class_name: 'CourseLessonLog',
            foreign_key: :latest_course_step_id
 
+  delegate :course, to: :course_lesson, allow_nil: true
+
   accepts_nested_attributes_for :course_quiz
   accepts_nested_attributes_for :course_video
   accepts_nested_attributes_for :constructed_response
@@ -192,7 +194,7 @@ class CourseStep < ApplicationRecord
     result =
       if user.non_verified_user?
         { view: false, reason: 'verification-required' }
-      elsif user.complimentary_user? || user.non_student_user?
+      elsif user.complimentary_user? || user.non_student_user? || user.lifetime_subscriber?(course.group)
         available_for_complimentary(scul)
       elsif user.standard_student_user?
         if valid_subscription

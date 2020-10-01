@@ -54,6 +54,7 @@ describe Product do
     it { should respond_to(:payment_heading) }
     it { should respond_to(:payment_subheading) }
     it { should respond_to(:payment_description) }
+    it { should respond_to(:savings_label) }
   end
 
   # relationships

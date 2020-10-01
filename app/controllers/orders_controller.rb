@@ -7,11 +7,22 @@ class OrdersController < ApplicationController
   include OrdersHelper
 
   def new
-    @product = Product.find(params[:product_id])
-    @order   = @product.orders.build
+    @product =
+      if params[:product_id]
+        Product.find(params[:product_id])
+      elsif params[:exam_body_id]
+        currency_id = user_currency_id
+        exam_body = ExamBody.find(params[:exam_body_id])
+        @product = Product.for_group(exam_body.group.id).where(product_type: :lifetime_access).includes(:currency).in_currency(currency_id).all_active.all_in_order.first
+      end
+
+
+    redirect_to prep_products_url unless @product
+
+    @order   = @product&.orders&.build
     @layout  = 'standard'
 
-    seo_title_maker("#{@order.product.name_by_type} Payment | LearnSignal", 'Get access to ACCA question and solution correction packs from learnsignal designed by experts to help you pass your exams the first time.', true)
+    seo_title_maker("#{@order&.product&.name_by_type} Payment | LearnSignal", 'Get access to ACCA question and solution correction packs from learnsignal designed by experts to help you pass your exams the first time.', true)
   end
 
   def create
@@ -55,13 +66,21 @@ class OrdersController < ApplicationController
       PaypalService.new.execute_payment(@order, params[:paymentId], params[:PayerID])
       flash[:success] =
         I18n.t('controllers.orders.create.flash.mock_exam_success')
-      redirect_to user_exercises_path(current_user)
+      if @order.product.lifetime_access?
+        redirect_to order_complete_url
+      else
+        redirect_to user_exercises_path(current_user)
+      end
     else
       render_general_html_error(@order.product_id, 'Your payment request was ' \
                                 'declined. Please contact us for assistance!')
     end
   rescue Learnsignal::PaymentError => e
     render_general_html_error(@order.product_id, e.message)
+  end
+
+  def order_complete
+    @order = Order.find_by(id: params[:order_id])
   end
 
   private
@@ -112,5 +131,18 @@ class OrdersController < ApplicationController
       raise Learnsignal::PaymentError, 'Your payment was declined. Please try again.'
     end
     render 'create', status: :ok
+  end
+
+  def user_currency_id
+    if current_user
+      country = IpAddress.get_country(request.remote_ip) || current_user.country
+      currency = current_user.get_currency(country)
+      currency_id = currency.id
+    else
+      country = IpAddress.get_country(request.remote_ip) || Country.find_by(name: 'United Kingdom')
+      currency_id = country.currency_id
+    end
+
+    currency_id
   end
 end

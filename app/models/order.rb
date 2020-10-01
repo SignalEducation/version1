@@ -63,9 +63,12 @@ class Order < ApplicationRecord
   # scopes
   scope :all_in_order,    -> { order(:product_id) }
   scope :all_stripe,      -> { where.not(stripe_guid: nil).where(paypal_guid: nil) }
+  scope :for_lifetime_access, -> { includes(:product).where('products.product_type = ?', 3).references(:products) }
+  scope :for_group,       ->(group_id)   { includes(:product).where('products.group_id = ?', group_id).references(:products) }
   scope :all_for_course,  ->(course_id)  { where(course_id: course_id) }
   scope :all_for_product, ->(product_id) { where(product_id: product_id) }
   scope :all_for_user,    ->(user_id)    { where(user_id: user_id) }
+  scope :all_valid,       -> { where(state: completed) }
 
   scope :cbe_by_user, lambda { |user_id, cbe_id|
     joins(:product).
@@ -142,23 +145,39 @@ class Order < ApplicationRecord
   end
 
   def execute_order_completion
-    return if Rails.env.test? || product.cbe?
+    return if Rails.env.test?
 
-    Message.create(
-      process_at: Time.zone.now,
-      user_id: user_id,
-      kind: :account,
-      template: 'send_mock_exam_email',
-      template_params: {
-        url: user_exercise_url,
-        product: product.name_by_type,
-        reference_guid: reference_guid
-      }
-    )
+    if %w[mock_exam correction_pack].include?(product.product_type)
+      Message.create(
+        process_at: Time.zone.now,
+        user_id: user_id,
+        kind: :account,
+        template: 'send_mock_exam_email',
+        template_params: {
+          url: user_exercise_url,
+          product: product.name_by_type,
+          reference_guid: reference_guid
+        }
+      )
+    elsif %w[lifetime_access].include?(product.product_type)
+      Message.create(
+        process_at: Time.zone.now,
+        user_id: user_id,
+        kind: :account,
+        template: 'send_successful_order_email',
+        template_params: {
+          url: account_url,
+          product: product.name_by_type
+        }
+      )
+    end
+
     invoice.update(paid: true, payment_closed: true)
   end
 
   def generate_exercises
+    return if %w[lifetime_access].include?(product.product_type)
+
     count = product.correction_pack_count || 1
     (1..count).each { user.exercises.create(product_id: product_id, order_id: id) }
   end
@@ -209,5 +228,9 @@ class Order < ApplicationRecord
   def user_exercise_url
     UrlHelper.instance.student_dashboard_url(anchor: :exercises,
                                           host: LEARNSIGNAL_HOST)
+  end
+
+  def account_url
+    UrlHelper.instance.account_url(host: LEARNSIGNAL_HOST)
   end
 end

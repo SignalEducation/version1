@@ -5,7 +5,8 @@ require 'rails_helper'
 describe 'An individual purchasing a subscription', type: :feature do
   let(:country) { create(:country, name: 'United Kingdom') }
   let!(:user_group) { create(:student_user_group) }
-  let(:exam_body) { create(:exam_body, :with_group) }
+  let!(:exam_body) { FactoryBot.create(:exam_body) }
+  let!(:group) { FactoryBot.create(:group, exam_body: exam_body) }
 
   before(:each) do
     allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
@@ -57,7 +58,7 @@ describe 'An individual purchasing a subscription', type: :feature do
   end
 
   context 'as a logged-in user' do
-    let(:user) { create(:user, user_group: user_group, currency: country.currency) }
+    let(:user) { create(:user, user_group: user_group, currency: country.currency, preferred_exam_body: exam_body) }
 
     before(:each) do
       activate_authlogic

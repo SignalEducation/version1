@@ -1,0 +1,52 @@
+.box-item.form-box
+  =f.fields_for :faqs do |faq|
+    =faq.hidden_field :sorting_order, value: faq.options[:child_index]
+    -if faq.object.new_record?
+      %h4
+        New Product FAQ
+    -else
+      %h4
+        Edit Product FAQ
+
+    .row
+      .col-sm-6
+        .form-group
+          =faq.label :name, t('views.products.form.faqs.name')
+          .input-group.input-group-lg
+            =faq.text_field :name, placeholder: t('views.products.form.faqs.name'), class: 'form-control update-my-url'
+        .form-group
+          =faq.label :name_url, t('views.products.form.faqs.name_url')
+          .input-group.input-group-lg
+            =faq.text_field :name_url, placeholder: t('views.products.form.faqs.name_url'), class: 'form-control'
+      .col-sm-6
+        .form-group.pt-5
+          .col-sm-8.col-sm-offset-4
+            .checkbox
+              %label
+                =faq.check_box :active
+                =t('views.products.form.faqs.active')
+
+      .col-sm-12.pt-4
+        .form-group
+          =faq.label :question_text, t('views.products.form.faqs.question_text')
+          .input-group.input-group-lg
+            =faq.text_area :question_text, placeholder: t('views.products.form.faqs.question_text_placeholder'), as: :summernote, rows: 5, class: 'form-control', id: "#{faq.options[:child_index]}_question_editor"
+
+      .col-sm-12.pt-4
+        .form-group
+          =faq.label :answer_text, t('views.products.form.faqs.answer_text')
+          .input-group.input-group-lg
+            =faq.text_area :answer_text, placeholder: t('views.products.form.faqs.answer_text_placeholder'), as: :summernote, rows: 5, class: 'form-control', id: "#{faq.options[:child_index]}_answer_editor"
+
+
+    :javascript
+      $("##{faq.options[:child_index]}_question_editor").summernote({
+        disableDragAndDrop: true,
+        height: 150
+      });
+
+      $("##{faq.options[:child_index]}_answer_editor").summernote({
+        disableDragAndDrop: true,
+        height: 150
+      });
+

@@ -40,8 +40,7 @@ class PaypalWebhook < ApplicationRecord
       invoice.update!(paid: false, payment_closed: false)
       invoice.increment!(:attempt_count)
       update!(processed_at: Time.zone.now)
-      subscription = Subscription.find_by(paypal_subscription_guid: payload['resource']['billing_agreement_id'])
-      subscription.record_error!
+      update_failed_subscription
     else
       update!(verified: false)
     end
@@ -79,5 +78,20 @@ class PaypalWebhook < ApplicationRecord
 
     errors.add(:base, I18n.t('models.general.dependencies_exist'))
     false
+  end
+
+  def paypal_failed_attachments(subscription)
+    [{ fallback: "#{subscription.user.name} has a failed PayPal subscription payment",
+       title: "<https://www.paypal.com/billing/subscriptions/#{payload['resource']['billing_agreement_id']}|#{subscription.user.name}> has a failed PayPal subscription payment.",
+       title_link: "https://www.paypal.com/billing/subscriptions/#{payload['resource']['billing_agreement_id']}",
+       color: '#7CD197',
+       footer: 'PayPal',
+       ts: Time.zone.parse(payload['create_time']).to_i }]
+  end
+
+  def update_failed_subscription
+    subscription = Subscription.find_by(paypal_subscription_guid: payload['resource']['billing_agreement_id'])
+    subscription.record_error!
+    SlackService.new.notify_channel('payments', paypal_failed_attachments(subscription), icon_emoji: 'rotating_light') if Rails.env.production?
   end
 end

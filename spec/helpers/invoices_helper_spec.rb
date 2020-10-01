@@ -10,8 +10,10 @@ describe InvoicesHelper, type: :helper do
   let(:cbe)                      { build(:cbe) }
   let(:cbe_product)              { build(:product, cbe: cbe, product_type: 'cbe') }
   let(:mock_exam_product)        { build(:product, cbe: cbe, product_type: 'mock_exam', correction_pack_count: 3) }
+  let(:lifetime_product)         { create(:product, product_type: 'lifetime_access') }
   let(:cbe_order)                { build(:order, product: cbe_product) }
   let(:mock_exam_order)          { build(:order, product: mock_exam_product) }
+  let(:lifetime_order)           { build(:order, product: lifetime_product) }
 
   describe 'Methods' do
     it '#invoice_type' do
@@ -38,6 +40,11 @@ describe InvoicesHelper, type: :helper do
         it 'cbe' do
           invoice.order = cbe_order
           expect(pdf_description(invoice, invoice_line_item)).to eq(cbe.name)
+        end
+
+        it 'lifetime_access' do
+          invoice.order = lifetime_order
+          expect(pdf_description(invoice, invoice_line_item)).to eq(lifetime_product.name)
         end
       end
     end

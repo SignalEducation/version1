@@ -18,7 +18,7 @@ describe 'A user cancels a subscription', type: :feature do
 
     scenario 'the user can keep the subscription' do
       expect(page).to have_content('Profile')
-      click_link 'Account Info'
+      click_link 'Subscriptions'
       find(:css, '.sub-details').click
       click_link 'Cancel Subscription'
 
@@ -29,7 +29,7 @@ describe 'A user cancels a subscription', type: :feature do
 
     scenario 'the user can cancel' do
       expect(page).to have_content('Profile')
-      click_link 'Account Info'
+      click_link 'Subscriptions'
       find(:css, '.sub-details').click
       click_link 'Cancel Subscription'
       choose 'The service is too expensive'
@@ -42,7 +42,7 @@ describe 'A user cancels a subscription', type: :feature do
 
     xscenario 'the user must give a reason for cancelling' do
       expect(page).to have_content('Profile')
-      click_link 'Account Info'
+      click_link 'Subscriptions'
       find(:css, '.sub-details').click
       click_link 'Cancel Subscription'
       click_button 'Cancel My Subscription'

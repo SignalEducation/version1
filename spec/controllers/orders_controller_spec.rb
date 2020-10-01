@@ -28,16 +28,18 @@ require 'rails_helper'
 
 describe OrdersController, type: :controller do
   let!(:exam_body_1)         { create(:exam_body) }
-  let(:gbp)                  { create(:gbp) }
+  let!(:group_1)             { create(:group, exam_body: exam_body_1) }
+  let(:gbp)                        { create(:gbp) }
   let!(:uk)                  { create(:uk, currency: gbp) }
   let!(:uk_vat_code)         { create(:vat_code, country: uk) }
 
-  let!(:student_user_group ) { create(:student_user_group ) }
-  let!(:basic_student)       { create(:basic_student, user_group: student_user_group, preferred_exam_body_id: exam_body_1.id) }
+  let!(:student_user_group)  { create(:student_user_group) }
+  let!(:basic_student)       { create(:basic_student, user_group: student_user_group, preferred_exam_body_id: exam_body_1.id, currency: gbp) }
 
   let!(:mock_exam_1)         { create(:mock_exam) }
   let!(:product_1)           { create(:product, currency_id: gbp.id, mock_exam_id: mock_exam_1.id, price: '99.9') }
   let!(:product_2)           { create(:product, currency_id: gbp.id) }
+  let!(:product_3)           { create(:lifetime_product, currency_id: gbp.id, group: group_1) }
   let!(:valid_params)        { attributes_for(:order, product_id: product_1.id, stripe_payment_method_id: 'pi_afsdafdfafsd') }
   let(:order_1)              { create(:order, product_id: product_1.id,
                                       stripe_customer_id: 'cus_fadsfdsf',
@@ -46,6 +48,7 @@ describe OrdersController, type: :controller do
                                       stripe_order_payment_data: { currency: gbp.iso_code },
                                                                    stripe_status: 'paid') }
   let(:order_2)              { create(:order, stripe_order_payment_data: { currency: gbp.iso_code }) }
+  let(:order_3)              { create(:order, product_id: product_3.id, stripe_order_payment_data: { currency: gbp.iso_code }) }
 
   context 'Logged in as a valid_subscription_student: ' do
     before(:each) do
@@ -54,8 +57,16 @@ describe OrdersController, type: :controller do
     end
 
     describe "GET 'new'" do
-      it 'should respond OK' do
+      it 'should respond OK with product id' do
         get :new, params: { product_id: product_1.id }
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:new)
+      end
+
+      it 'should respond OK with exam_body id' do
+        get :new, params: { exam_body_id: exam_body_1.id }
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
@@ -135,12 +146,40 @@ describe OrdersController, type: :controller do
         expect(response).to redirect_to(user_exercises_path(basic_student))
       end
 
+      it 'should redirect to user exercises an error' do
+        get :execute, params: { id: order_1.id, payment_processor: 'paypal' }
+
+        expect(flash[:success]).not_to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(user_exercises_path(basic_student))
+      end
+
+      it 'should redirect to order complete' do
+        get :execute, params: { id: order_3.id, payment_processor: 'paypal' }
+
+        expect(flash[:success]).not_to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(order_complete_url)
+      end
+
       it 'should return an error' do
         get :execute, params: { id: order_1.id }
 
         expect(flash[:success]).to be_nil
         expect(flash[:error]).not_to be_nil
         expect(response.status).to eq(302)
+      end
+    end
+
+    describe "GET 'order_complete'" do
+      it 'should respond OK' do
+        get :order_complete
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:order_complete)
       end
     end
   end

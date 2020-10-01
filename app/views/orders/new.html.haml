@@ -10,7 +10,7 @@
       -if flash[:success] || flash[:error] || flash[:warning]
         =render partial: 'layouts/flash_messages'
 
-      %section.pb-md-6.pb-5
+      %section.pb-md-3.pb-2
         .order-checkout-section
           .container#product_purchase
             =form_for([@product, @order], html: {id: 'orders-form', class: 'payment', role: 'form'}) do |f|
@@ -62,6 +62,24 @@
                               %span PayPal
                           %span.custom-check
                       =render partial: 'orders/paypal_form', locals: {f: f}
+
+
+  -if @order.product.faqs.any?
+    %article.bg-gray5
+      .container-bg.bg-white-light
+        .row
+          .col-sm-12
+            %section.px-2.px-md-8.pb-6
+              -@order.product.faqs.each do |faq|
+                .faq-box.faq-quest-box
+                  .faq-inner.narrow{onclick: '$(this).toggleClass("narrow"); $(this).find(".faq-answer").toggleClass("d-md-block"); $(this).find(".faq-answer-expanded").toggleClass("d-none"); $(this).find(".fa-plus-circle").toggleClass("d-none"); $(this).find(".fa-minus-circle").toggleClass("d-none");'}
+                    .faq-title
+                      %i.fa.fa-plus-circle.faq-pm-icons{"aria-hidden" => "true"}
+                      %i.fa.fa-minus-circle.faq-pm-icons.d-none{"aria-hidden" => "true"}
+                      =faq.question_text.html_safe
+                    .faq-answer-expanded.d-none
+                      =faq.answer_text.html_safe
+
 
 :javascript
 
@@ -239,7 +257,7 @@
               if(data.status == 'pending_3d_secure'){
                 handlePayment(data.client_secret, data.id)
               }else if(data.status == 'completed'){
-                window.location.replace("#{user_exercises_path(current_user)}");
+                window.location.replace("#{@order.product&.lifetime_access? ? order_complete_url : user_exercises_path(current_user)}");
               }
             },
             error: function(xhr,status,error){
@@ -267,7 +285,7 @@
             dataType: 'json',
             success: function(data,status,xhr){
               if (data.status == 'completed') {
-                window.location.replace("#{user_exercises_path(current_user)}");
+                window.location.replace("#{@order.product&.lifetime_access? ? order_complete_url : user_exercises_path(current_user)}");
               } else {
                 resetForm(data);
               }

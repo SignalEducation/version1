@@ -20,17 +20,17 @@ class Faq < ApplicationRecord
   # Constants
 
   # relationships
-  belongs_to :faq_section
+  belongs_to :faq_section, optional: true
+  belongs_to :product, optional: true
 
   # validation
   validates :name, presence: true, uniqueness: true, length: {maximum: 255}
   validates :name_url, presence: true, uniqueness: true, length: {maximum: 255}
   validates :sorting_order, presence: true,
             numericality: {only_integer: true}
-  validates :faq_section_id, presence: true,
+  validates :faq_section_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :question_text, presence: true
-  validates :pre_answer_text, presence: true
   validates :answer_text, presence: true
 
   # callbacks

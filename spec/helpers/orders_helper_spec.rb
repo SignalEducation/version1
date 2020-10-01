@@ -12,6 +12,8 @@ describe OrdersHelper, type: :helper do
   let(:correction_pack_order)   { create(:order, product: correction_pack_product) }
   let(:custom_product)          { create(:product, payment_heading: 'The custom product', payment_subheading: 'Custom product subheading', payment_description: 'Custom product description') }
   let(:custom_order)            { create(:order, product: custom_product) }
+  let(:lifetime_product)        { create(:product, product_type: 'lifetime_access') }
+  let(:lifetime_order)          { build(:order, product: lifetime_product) }
 
   describe '#order_link' do
     context 'returns product link' do
@@ -67,6 +69,10 @@ describe OrdersHelper, type: :helper do
         expect(order_short_description(correction_pack_order)).to eq('Pass your exams faster with a question and solution correction pack.')
       end
 
+      it 'lifetime order short description' do
+        expect(order_short_description(lifetime_order)).to eq("One-time Payment - Instant Access to all #{lifetime_product.group.name} Courses")
+      end
+
       it 'custom order short description' do
         expect(order_short_description(custom_order)).to eq('Custom product subheading')
       end
@@ -85,6 +91,10 @@ describe OrdersHelper, type: :helper do
 
       it 'correction pack description' do
         expect(order_description(correction_pack_order)).to eq('This correction pack is applicable to all courses. Pick and complete any question from any resource. Once you have submitted your work, our expert tutors will correct it and give you feedback within 3 days.')
+      end
+
+      it 'lifetime order description' do
+        expect(order_description(lifetime_order)).to eq("Enjoy incredible savings and unlock Lifetime access to ACCA tuition for every #{lifetime_product.group.name} exam. Get all the #{lifetime_product.group.name} tuition you need to pass every #{lifetime_product.group.name} exam on your journey to becoming fully qualified for just one single fee. Learnsignal Lifetime Members can access tuition and study materials for every #{lifetime_product.group.name} course and never worry about paying for exam tuition again.")
       end
 
       it 'custom order description' do
