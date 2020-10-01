@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_01_074618) do
+ActiveRecord::Schema.define(version: 2020_10_08_091523) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -886,13 +886,14 @@ ActiveRecord::Schema.define(version: 2020_10_01_074618) do
     t.string "background_image_content_type"
     t.integer "background_image_file_size"
     t.datetime "background_image_updated_at"
-    t.bigint "exam_body_id"
     t.string "background_colour"
+    t.bigint "exam_body_id"
     t.string "seo_title"
     t.string "seo_description"
     t.string "short_description"
     t.text "onboarding_level_subheading"
     t.string "onboarding_level_heading"
+    t.boolean "tab_view", default: false, null: false
     t.index ["exam_body_id"], name: "index_groups_on_exam_body_id"
     t.index ["name"], name: "index_groups_on_name"
   end
@@ -934,6 +935,8 @@ ActiveRecord::Schema.define(version: 2020_10_01_074618) do
     t.string "background_image"
     t.boolean "usp_section", default: true
     t.text "stats_content"
+    t.text "course_description"
+    t.text "header_description"
     t.index ["course_id"], name: "index_home_pages_on_course_id"
     t.index ["group_id"], name: "index_home_pages_on_group_id"
     t.index ["public_url"], name: "index_home_pages_on_public_url"
@@ -1149,7 +1152,6 @@ ActiveRecord::Schema.define(version: 2020_10_01_074618) do
 
   create_table "products", id: :serial, force: :cascade do |t|
     t.string "name"
-    t.integer "course_id"
     t.integer "mock_exam_id"
     t.string "stripe_guid"
     t.boolean "live_mode", default: false
@@ -1159,6 +1161,7 @@ ActiveRecord::Schema.define(version: 2020_10_01_074618) do
     t.integer "currency_id"
     t.decimal "price"
     t.string "stripe_sku_guid"
+    t.integer "course_id"
     t.integer "sorting_order"
     t.integer "product_type", default: 0
     t.integer "correction_pack_count"
@@ -1169,7 +1172,6 @@ ActiveRecord::Schema.define(version: 2020_10_01_074618) do
     t.text "payment_description"
     t.string "savings_label"
     t.index ["cbe_id"], name: "index_products_on_cbe_id"
-    t.index ["course_id"], name: "index_products_on_course_id"
     t.index ["currency_id"], name: "index_products_on_currency_id"
     t.index ["group_id"], name: "index_products_on_group_id"
     t.index ["mock_exam_id"], name: "index_products_on_mock_exam_id"

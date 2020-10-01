@@ -1,5 +1,8 @@
--if user && !user.can_view_content?(@group.exam_body_id, @group.id)
-  = link_to ab_test("#{@group.name_url}_pricing_link", subscription_checkout_special_link(@course.exam_body_id), pricing_url(@group.name_url)), class: 'btn btn-primary upgrade' do
+-if user && @course_product && !user.can_view_content?(@group.exam_body_id, @group.id, @course.id)
+  %a#enrol-top{data: {target: '#pricing-modal', toggle: 'modal'}, href: '#', class: 'btn btn-primary'}
+    ='Upgrade Now'
+-elsif user && !user.can_view_content?(@group.exam_body_id, @group.id, @course.id)
+  = link_to pricing_url(@group.name_url), class: 'btn btn-primary upgrade' do
     Upgrade Now
 -elsif !user
   =link_to new_student_url, class: 'btn btn-primary upgrade' do

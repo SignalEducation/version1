@@ -106,6 +106,7 @@ html {
   -ms-text-size-adjust: 100%;
   -ms-overflow-style: scrollbar;
   -webkit-tap-highlight-color: rgba(0,0,0,0);
+  scroll-behavior: smooth;
 }
 @-ms-viewport {
   width: device-width;
@@ -1800,6 +1801,10 @@ textarea.form-control {
   border-radius: 0;
   outline: 0
 }
+.modal-content.pricing {
+  background-color: #f5f8fa;
+  border-radius: 12px;
+}
 .modal-backdrop {
   position: fixed;
   top: 0;
@@ -1880,7 +1885,7 @@ textarea.form-control {
 }
 @media (min-width:576px) {
   .modal-dialog {
-    max-width: 500px;
+    max-width: 1000px;
     margin: 1.75rem auto
   }
   .modal-dialog-centered {

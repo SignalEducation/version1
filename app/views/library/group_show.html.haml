@@ -8,7 +8,7 @@
         %p.p-hero.px-lg-6.text-white
           =@group.short_description
 
-      -if @group.courses.count >= 30
+      -if @group.tab_view && @group.levels.all_active.count >= 2
         =render partial: 'tabbed_list'
       -else
         =render partial: 'standard_list'

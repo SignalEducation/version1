@@ -63,6 +63,18 @@
                       =f.check_box :usp_section
                       ='USP Section'
 
+            .mt-4.form-group
+              =f.label :header_h1, t('views.home_pages.form.header_h1')
+              .input-group.input-group-lg
+                =f.text_field :header_h1, placeholder: t('views.home_pages.form.header_h1_placeholder'), class: 'form-control'
+            .form-group
+              =f.label :header_paragraph, t('views.home_pages.form.header_paragraph')
+              .input-group.input-group-lg
+                =f.text_field :header_paragraph, placeholder: t('views.home_pages.form.header_paragraph_placeholder'), class: 'form-control'
+            .form-group
+              =f.label :header_h3, t('views.home_pages.form.header_h3')
+              .input-group.input-group-lg
+                =f.text_field :header_h3, placeholder: t('views.home_pages.form.header_h3_placeholder'), class: 'form-control'
 
           .col-sm-6
             -unless @home_page.home
@@ -85,6 +97,11 @@
                 =f.collection_select :group_id, @groups, :id, :name, {include_blank: t('views.general.none')}, {class: 'form-control custom-select'}
 
             .form-group
+              =f.label :course_id, t('views.home_pages.form.course_id')
+              .input-group.input-group-lg
+                =f.collection_select :course_id, @courses, :id, :name, {include_blank: t('views.general.none')}, {class: 'form-control custom-select'}
+
+            .form-group
               =f.label :preferred_payment_frequency, t('views.home_pages.form.preferred_payment_frequency')
               .input-group.input-group-lg
                 =f.select :preferred_payment_frequency, options_for_select([1, 3, 12,], selected: f.object.preferred_payment_frequency),
@@ -96,18 +113,6 @@
                 =f.collection_select :subscription_plan_category_id, @subscription_plan_categories, :id, :name, {include_blank: t('views.general.none')}, {class: 'form-control custom-select'}
 
 
-            .form-group
-              =f.label :header_h1, t('views.home_pages.form.header_h1')
-              .input-group.input-group-lg
-                =f.text_field :header_h1, placeholder: t('views.home_pages.form.header_h1_placeholder'), class: 'form-control'
-            .form-group
-              =f.label :header_paragraph, t('views.home_pages.form.header_paragraph')
-              .input-group.input-group-lg
-                =f.text_field :header_paragraph, placeholder: t('views.home_pages.form.header_paragraph_placeholder'), class: 'form-control'
-            .form-group
-              =f.label :header_h3, t('views.home_pages.form.header_h3')
-              .input-group.input-group-lg
-                =f.text_field :header_h3, placeholder: t('views.home_pages.form.header_h3_placeholder'), class: 'form-control'
 
             .form-group
               =f.label :registration_form_heading, t('views.home_pages.form.registration_form_heading')
@@ -123,6 +128,16 @@
               .input-group.input-group-lg
                 =f.text_area :stats_content, placeholder: t('views.home_pages.form.stats_content_placeholder'), class: 'form-control'
 
+          .col-sm-12
+            .form-group
+              =f.label :header_description, t('views.home_pages.form.header_description')
+              .input-group.input-group-lg
+                =f.text_area :header_description, as: :summernote, rows: 5, class: 'form-control', id: 'header_description_editor'
+            .form-group
+              =f.label :course_description, t('views.home_pages.form.course_description')
+              .input-group.input-group-lg
+                =f.text_area :course_description, as: :summernote, rows: 5, class: 'form-control', id: 'course_description_editor'
+
 
   =render partial: 'fields_for_student_testimonials', locals: {f: f}
   =render partial: 'fields_for_blog_posts', locals: {f: f}
@@ -131,3 +146,16 @@
     .col-sm-12
       =f.submit t('views.general.save'), class: 'btn btn-primary'
       =link_to t('views.general.cancel'), home_pages_path, class: 'btn btn-secondary'
+
+
+
+:javascript
+
+  $('#header_description_editor').summernote({
+    disableDragAndDrop: true,
+    height: 150
+  });
+  $('#course_description_editor').summernote({
+    disableDragAndDrop: true,
+    height: 150
+  });

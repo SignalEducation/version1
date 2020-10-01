@@ -2,12 +2,13 @@
 #
 # Table name: exam_body_user_details
 #
-#  id             :integer          not null, primary key
-#  user_id        :integer
-#  exam_body_id   :integer
-#  student_number :string
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
+#  id                :integer          not null, primary key
+#  user_id           :integer
+#  exam_body_id      :integer
+#  student_number    :string
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  subscription_type :string
 #
 
 FactoryBot.define do

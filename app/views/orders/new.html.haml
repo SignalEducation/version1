@@ -257,7 +257,8 @@
               if(data.status == 'pending_3d_secure'){
                 handlePayment(data.client_secret, data.id)
               }else if(data.status == 'completed'){
-                window.location.replace("#{@order.product&.lifetime_access? ? order_complete_url : user_exercises_path(current_user)}");
+                // Can we add a flash message ?
+                window.location.replace("#{@order.product&.lifetime_access? ? order_complete_url : (@order.product&.course_access? ? library_course_url(@order.product.group.name_url, @order.product.course.name_url): user_exercises_path(current_user))}");
               }
             },
             error: function(xhr,status,error){
@@ -285,7 +286,8 @@
             dataType: 'json',
             success: function(data,status,xhr){
               if (data.status == 'completed') {
-                window.location.replace("#{@order.product&.lifetime_access? ? order_complete_url : user_exercises_path(current_user)}");
+                // Can we add a flash message ?
+                window.location.replace("#{@order.product&.lifetime_access? ? order_complete_url : (@order.product&.course_access? ? library_course_url(@order.product.group.name_url, @order.product.course.name_url): user_exercises_path(current_user))}");
               } else {
                 resetForm(data);
               }

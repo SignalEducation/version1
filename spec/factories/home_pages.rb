@@ -32,6 +32,8 @@
 #  background_image              :string
 #  usp_section                   :boolean          default("true")
 #  stats_content                 :text
+#  course_description            :text
+#  header_description            :text
 #
 
 FactoryBot.define do

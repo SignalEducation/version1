@@ -36,6 +36,7 @@ class StudentSignUpsController < ApplicationController
     if @home_page
       @public_url = params[:public_url]
       @group = @home_page.group
+      @course = @home_page.course
 
       if @group
         @exam_body = @group.exam_body
@@ -49,6 +50,8 @@ class StudentSignUpsController < ApplicationController
             country.currency_id
           end
 
+        @course_product = Product.find_by(product_type: :course_access, course_id: @course.id, active: true, currency_id: @currency_id) if @course
+        @lifetime_product = Product.find_by(product_type: :lifetime_access, course_id: nil, active: true, currency_id: @currency_id, group_id: @group.id)
         @subscription_plans =
           if @home_page&.subscription_plan_category&.current
             @home_page.subscription_plan_category.subscription_plans.for_exam_body(@group.exam_body_id).in_currency(@currency_id).all_active.all_in_order
@@ -57,9 +60,11 @@ class StudentSignUpsController < ApplicationController
               includes(:currency).in_currency(@currency_id).all_active.all_in_order.limit(3)
           end
 
+        @course_tutors = @course.course_tutors.all_in_order if @course
         @preferred_plan = @subscription_plans.where(payment_frequency_in_months: @home_page.preferred_payment_frequency).first
         flash[:plan_guid] = @preferred_plan.guid if @preferred_plan
         flash[:exam_body] = @exam_body.id if @exam_body
+        flash[:product_id] = @course_product.id if @course_product
 
         referral_code = ReferralCode.find_by(code: request.params[:ref_code]) if params[:ref_code]
         drop_referral_code_cookie(referral_code) if params[:ref_code] && referral_code

@@ -870,6 +870,7 @@ en:
         description: Description
         description_placeholder: Description goes here!
         active: Active
+        tab_view: Tab Library
         sorting_order: Sorting order
         sorting_order_placeholder: 100
         course_count: No. of Courses
@@ -943,6 +944,8 @@ en:
         video_guid_placeholder: Vimeo Video File Id
         stats_content: Stats Panel Content
         stats_content_placeholder: "* seperated values"
+        header_description: Header Description
+        course_description: Course Description
 
       index:
         h1: Landing Pages
@@ -1103,6 +1106,7 @@ en:
         currency: Currency
         mock_exam_id: Mock Exam
         cbe: CBE
+        course_id: Course
         product_type: Product Type
         correction_pack_count: Number of Corrections
         course: Course
