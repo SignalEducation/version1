@@ -42,4 +42,70 @@ module OrderReport
   def card_country
     user&.subscription_payment_cards&.all_default_cards&.first&.account_country
   end
+
+  def inv_id; end
+
+  def user_email; end
+
+  def invoice_created; end
+
+  def user_created; end
+
+  def sub_id; end
+
+  def sub_created; end
+
+  def sub_exam_body; end
+
+  def sub_status; end
+
+  def sub_type; end
+
+  def sub_total; end
+
+  def total; end
+
+  def payment_provider; end
+
+  def invoice_type; end
+
+  def sub_stripe_guid; end
+
+  def sub_paypal_guid; end
+
+  def payment_interval; end
+
+  def plan_name; end
+
+  def currency_symbol; end
+
+  def plan_price; end
+
+  def first_visit; end
+
+  def first_visit_date; end
+
+  def first_visit_landing_page; end
+
+  def first_visit_referrer; end
+
+  def first_visit_referring_domain; end
+
+  def first_visit_source; end
+
+  def first_visit_medium; end
+
+  def first_visit_search_keyword; end
+
+  def first_visit_country; end
+
+  def first_visit_utm_campaign; end
+
+  def hubspot_get_contact; end
+
+  def hubspot_source; end
+
+  def hubspot_source_1; end
+
+  def hubspot_source_2; end
 end

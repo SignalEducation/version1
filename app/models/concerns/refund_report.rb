@@ -2,13 +2,20 @@
 
 module RefundReport
   extend ActiveSupport::Concern
-
   def refund_id
     self&.id
   end
 
   def refunded_on
     created_at.utc.strftime('%Y-%m-%d')
+  end
+
+  def sub_id
+    subscription.id
+  end
+
+  def sub_created
+    subscription&.created_at&.strftime('%Y-%m-%d')
   end
 
   def refund_status
@@ -27,11 +34,11 @@ module RefundReport
     invoice.total
   end
 
-  def inv_created
+  def invoice_created
     invoice.created_at.strftime('%Y-%m-%d')
   end
 
-  def invoice_id
+  def inv_id
     invoice&.id
   end
 
@@ -39,16 +46,12 @@ module RefundReport
     created_at.strftime('%Y-%m-%d') > subscription.created_at.strftime('%Y-%m-%d') ? 'Recurring' : 'New'
   end
 
-  def email
+  def user_email
     user.email
   end
 
   def user_created
     user.created_at.strftime('%Y-%m-%d')
-  end
-
-  def sub_created
-    subscription&.created_at&.strftime('%Y-%m-%d')
   end
 
   def sub_exam_body
@@ -81,6 +84,18 @@ module RefundReport
 
   def plan_name
     subscription.subscription_plan.name
+  end
+
+  def sub_total
+    invoice.sub_total
+  end
+
+  def total
+    invoice.total
+  end
+
+  def inv_created
+    invoice.created_at.strftime('%Y-%m-%d')
   end
 
   def currency_symbol
@@ -137,5 +152,30 @@ module RefundReport
 
   def first_visit_utm_campaign
     first_visit ? first_visit.utm_campaign : ''
+  end
+
+  def hubspot_get_contact
+    @hubspot_get_contact ||= HubSpot::Contacts.new.search(user_email)
+    return nil if @hubspot_get_contact['status'] == 'error'
+
+    @hubspot_get_contact
+  end
+
+  def hubspot_source
+    return '' if hubspot_get_contact.nil?
+
+    hubspot_get_contact['properties']['hs_analytics_source']['value']
+  end
+
+  def hubspot_source_1
+    return '' if hubspot_get_contact.nil?
+
+    hubspot_get_contact['properties']['hs_analytics_source_data_1']['value']
+  end
+
+  def hubspot_source_2
+    return '' if hubspot_get_contact.nil?
+
+    hubspot_get_contact['properties']['hs_analytics_source_data_2']['value'] if hubspot_get_contact['properties']['hs_analytics_source_data_2']
   end
 end

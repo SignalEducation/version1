@@ -359,9 +359,9 @@ describe Invoice do
     let!(:invoice)     { create(:invoice, user: user, subscription: subscription) }
 
     context 'generate csv data' do
-      it { expect(Invoice.all.to_csv.split(',')).to include('invoice_id',
+      it { expect(Invoice.all.to_csv.split(',')).to include('inv_id',
                                                             'invoice_created',
-                                                            'subscription_id',
+                                                            'sub_id',
                                                             'sub_created',
                                                             'user_email',
                                                             'user_created',
