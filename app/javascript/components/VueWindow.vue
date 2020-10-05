@@ -55,7 +55,6 @@ export default {
     },
     isOpen: {
       handler(openValue) {
-        console.log(openValue)
         this.$emit('updateWindowClose', openValue);
       },
     },
