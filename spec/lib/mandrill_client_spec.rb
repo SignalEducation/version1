@@ -138,6 +138,34 @@ describe MandrillClient do
       expect(response.first).to be_kind_of(MandrillClient)
       expect(response.last).to eq('invoice-actionable-2019-08-13')
     end
+
+    it 'successfully_course_clone_email' do
+      response = @client.successfully_course_clone_email('user_name', 'url', 'course_name')
+
+      expect(response.first).to be_kind_of(MandrillClient)
+      expect(response.last).to eq('successfully-course-clone-250920')
+    end
+
+    it 'failed_course_clone_email' do
+      response = @client.failed_course_clone_email('user_name', 'url', 'course_name', 'error')
+
+      expect(response.first).to be_kind_of(MandrillClient)
+      expect(response.last).to eq('failed-course-clone-250920')
+    end
+
+    it 'successfully_cbe_clone_email' do
+      response = @client.successfully_cbe_clone_email('user_name', 'url', 'cbe_name')
+
+      expect(response.first).to be_kind_of(MandrillClient)
+      expect(response.last).to eq('successfully-cbe-clone-250920')
+    end
+
+    it 'failed_cbe_clone_email' do
+      response = @client.failed_cbe_clone_email('user_name', 'url', 'cbe_name', 'error')
+
+      expect(response.first).to be_kind_of(MandrillClient)
+      expect(response.last).to eq('failed-cbe-clone-250920')
+    end
   end
 
   describe 'private methods' do
