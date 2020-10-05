@@ -77,7 +77,7 @@ module HubSpot
               'Basic'
             end
 
-          statuses << { property: "#{body&.name}_status".parameterize(separator: '_'), value: account_status }
+          statuses << { property: body&.hubspot_property.parameterize(separator: '_'), value: account_status }
         end
 
         statuses
