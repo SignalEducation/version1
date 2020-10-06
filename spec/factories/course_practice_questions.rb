@@ -21,7 +21,7 @@ FactoryBot.define do
     course_step_id { 1 }
 
     trait :with_questions do
-      answers { build_list :practice_question_questions, 3 }
+      questions { build_list :practice_question_questions, 3 }
     end
   end
 end

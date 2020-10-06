@@ -1,20 +1,21 @@
 %main
   %article.courses.bg-gray5
     .container
-      %header
-        .d-flex.flex-wrap.flex-sm-nowrap.justify-content-between.py-4.py-md-5
-          .mw-0
-            =link_to navigation_special_link(@course_step), class: 'btn btn-secondary btn-sm btn-sm-arrow-left mb-3 mb-sm-0' do
-              =@course_step.course_lesson.course_section.course.name
+      -unless @course_step.try(:is_practice_question)
+        %header
+          .d-flex.flex-wrap.flex-sm-nowrap.justify-content-between.py-4.py-md-5
+            .mw-0
+              =link_to navigation_special_link(@course_step), class: 'btn btn-secondary btn-sm btn-sm-arrow-left mb-3 mb-sm-0' do
+                =@course_step.course_lesson.course_section.course.name
 
-          -if @course_step && (@course_step.is_video? || @course_step.is_note?  || @course_step.is_constructed_response?)
-            .mw-0{ id: 'course_note_next_step' }
-              =render partial: 'next_lesson_navigation'
+            -if @course_step && (@course_step.is_video? || @course_step.is_note?  || @course_step.is_constructed_response?)
+              .mw-0{ id: 'course_note_next_step' }
+                =render partial: 'next_lesson_navigation'
 
-        -if @course_step.is_video?
-          .pt-3
-            %h1.h3
-              =@course_step.name
+          -if @course_step.is_video?
+            .pt-3
+              %h1.h3
+                =@course_step.name
 
       %section.course-content
         -if defined?(@results)
@@ -26,6 +27,8 @@
             =render partial: 'courses/show_quiz'
           -elsif @course_step.try(:is_note)
             =render partial: 'courses/show_notes', locals: { notes: @course_step.course_note, log: @course_step_log }
+          -elsif @course_step.try(:is_practice_question)
+            =render partial: 'courses/show_practice_question', locals: { practice_question: @course_step.course_practice_question }
           -elsif @course_step.try(:is_constructed_response)
             =render partial: 'courses/constructed_response_start'
           -else
