@@ -2,7 +2,7 @@
 
 class CronService
   TASK_LIST = %w[paypal_sync ping slack_exercises daily_sales_report monthly_sales_report
-                 monthly_refunds_report monthly_orders_report].freeze
+                 cumulative_monthly_sales_report monthly_refunds_report monthly_orders_report].freeze
 
   def initiate_task(task_name)
     raise(StandardError, "Cron Task #{task_name} is not defined") unless TASK_LIST.include?(task_name)
@@ -30,7 +30,7 @@ class CronService
   def cumulative_monthly_sales_report
     return if Rails.env.staging?
 
-    Rails.logger.info "CRON: Called the 'daily_sales_report' task"
+    Rails.logger.info "CRON: Called the 'cumulative_monthly_sales_report' task"
     SalesReportWorker.perform_async('cumulative', Time.zone.today.beginning_of_month..Time.zone.yesterday, MARKETING_EMAIL)
   end
 
