@@ -1,0 +1,64 @@
+%h2=t('views.course_practice_question.list.h2')
+
+-# VueJS include
+= javascript_pack_tag 'spreadsheet'
+
+=f.fields_for :course_practice_question do |q|
+  -answers_list = q.object.answers.sort_by(&:id)
+  =q.fields_for :answers, answers_list  do |a|
+    %h2=t('views.course_practice_question.new.h2')
+
+    .form-group
+      =a.label :name, t('views.course_practice_question.form.kind')
+      .input-group.input-group-lg
+        = a.select :kind, [['Open', 'open'], ['Spreadsheet', 'spreadsheet']], {}, class: 'form-control', id: :answers_kind
+
+    .open_questions
+      =a.label :content, t('views.course_practice_question.form.content'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =a.text_area :content, as: 'summernote', class: 'form-control', id: :answers_content
+
+      %br
+
+      =a.label :solution, t('views.course_practice_question.form.solution'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =a.text_area :solution, as: 'summernote', class: 'form-control', id: :answers_solution
+
+    .spreadsheet_questions{:style => "display: none;"}
+      =a.label :content, t('views.course_practice_question.form.content'), class: 'control-label'
+      %div{class: :spreadsheet_component, data: { spreadsheet_content: '' } }
+
+      %br
+
+      =a.label :solution, t('views.course_practice_question.form.solution'), class: 'control-label'
+      %div{class: :spreadsheet_component, data: { spreadsheet_content: '' } }
+
+    %br
+      =f.submit t('views.course_steps.form.save_and_add_another'), class: 'btn btn-primary'
+      -# =a.submit t('views.course_practice_question.form.add_question'), id: 'add_question', class: 'btn btn-primary', disabled: false
+
+:javascript
+  $(document).ready(function(){
+    $('#answers_kind').change(function() {
+      switch(this.value) {
+        case 'open' :
+          $('.open_questions' ).show();
+          $('.spreadsheet_questions').hide();
+          break;
+        case 'spreadsheet':
+          $('.spreadsheet_questions').show();
+          $('.open_questions' ).hide();
+          break;
+      }
+    });
+  });
+
+  $("#answers_content").summernote({
+    disableDragAndDrop: true,
+    height: 150
+  });
+
+  $("#answers_solution").summernote({
+    disableDragAndDrop: true,
+    height: 150
+  });

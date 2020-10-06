@@ -44,18 +44,24 @@ module Admin
       @course_step = CourseStep.new(sorting_order: (CourseStep.all.maximum(:sorting_order).to_i + 1),
                                     course_lesson_id: lesson.id, active: true)
 
-      if params[:type] == 'video'
+      case params[:type]
+      when 'video'
         @course_step.is_video = true
         @course_step.build_course_video
         @course_step.build_video_resource
-      elsif params[:type] == 'quiz'
+      when 'quiz'
         spawn_quiz_children
-      elsif params[:type] == 'note'
+      when 'note'
         @course_step.is_note = true
         @course_step.build_course_note
-      elsif params[:type] == 'constructed_response'
+      when 'practice_question'
+        @course_step.is_practice_question = true
+        @course_step.build_course_practice_question
+        @course_step.course_practice_question.answers.build
+      when 'constructed_response'
         spawn_constructed_response_children
       end
+
       set_related_cmes
     end
 
@@ -224,6 +230,7 @@ module Admin
         :is_video,
         :is_note,
         :is_quiz,
+        :is_practice_question,
         :is_constructed_response,
         :seo_description,
         :seo_no_index,
@@ -238,6 +245,21 @@ module Admin
           :vimeo_guid,
           :dacast_id,
           :video_id
+        ],
+        course_practice_question_attributes: [
+          :course_step_id,
+          :id,
+          :name,
+          :content,
+          :kind,
+          :estimated_time,
+          answers_attributes: [
+            :id,
+            :course_practice_question_id,
+            :content,
+            :solution,
+            :sorting_order
+          ]
         ],
         course_note_attributes: [
           :course_step_id,
