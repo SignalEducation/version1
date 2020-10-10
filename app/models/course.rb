@@ -53,6 +53,7 @@ class Course < ApplicationRecord
   belongs_to :exam_body
   belongs_to :group
   belongs_to :level
+  has_many :product
   has_many :course_tutors
   has_many :home_pages
   has_many :course_resources

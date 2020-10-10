@@ -6,7 +6,6 @@
 #
 #  id                    :integer          not null, primary key
 #  name                  :string
-#  course_id             :integer
 #  mock_exam_id          :integer
 #  stripe_guid           :string
 #  live_mode             :boolean          default("false")
@@ -16,6 +15,7 @@
 #  currency_id           :integer
 #  price                 :decimal(, )
 #  stripe_sku_guid       :string
+#  course_id             :integer
 #  sorting_order         :integer
 #  product_type          :integer          default("0")
 #  correction_pack_count :integer
@@ -24,12 +24,13 @@
 #  payment_heading       :string
 #  payment_subheading    :string
 #  payment_description   :text
+#  savings_label         :string
 #
 
 class Product < ApplicationRecord
   include ActionView::Helpers::NumberHelper
 
-  enum product_type: { mock_exam: 0, correction_pack: 1, cbe: 2, lifetime_access: 3 }
+  enum product_type: { mock_exam: 0, correction_pack: 1, cbe: 2, lifetime_access: 3, course_access: 4 }
 
   # Constants
 
@@ -43,7 +44,7 @@ class Product < ApplicationRecord
   has_many :exercises, dependent: :restrict_with_error
   has_many :faqs, dependent: :restrict_with_error
 
-  accepts_nested_attributes_for :faqs
+  accepts_nested_attributes_for :faqs, allow_destroy: true, reject_if: proc { |attributes| attributes['name'].blank? }
 
   # validation
   validates :name, presence: true
@@ -82,6 +83,8 @@ class Product < ApplicationRecord
       cbe.name
     elsif lifetime_access?
       "#{group.name} LifeTime Membership"
+    elsif course_access?
+      course.name.to_s
     else
       mock_exam&.name || name
     end
@@ -106,7 +109,7 @@ class Product < ApplicationRecord
   private
 
   def non_mock?
-    cbe? || lifetime_access?
+    cbe? || lifetime_access? || course_access?
   end
 
   def create_on_stripe

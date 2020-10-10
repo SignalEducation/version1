@@ -32,6 +32,8 @@
 #  background_image              :string
 #  usp_section                   :boolean          default("true")
 #  stats_content                 :text
+#  course_description            :text
+#  header_description            :text
 #
 
 class HomePage < ApplicationRecord
@@ -40,8 +42,8 @@ class HomePage < ApplicationRecord
 
   # Constants
   LOGO_IMAGES = %w[learning-partner-badge.png acca_approved_white.png acca_approved_red.png ALP_LOGO_(GOLD).png ALP_LOGO_GOLD_REVERSED.png CIMA_logo_small.png AAT_Approved.png CIMA_Registered_Tuition_Provider_RGB.png].freeze
-  TEMPLATES = %w[default.html.haml basic_registration.html.haml basic_login.html.haml pricing_plans.html.haml preferred_plan.html.haml bootcamp.html.haml podcast.html.haml open_week.html.haml resources.html.haml about_us.html.haml testimonials.html.haml careers.html.haml].freeze
-  BG_IMAGES = %w[hero-bg.jpg hero-bg-1.jpg hero-bg-2.jpg hero-bg-3.jpg hero-bg-4.jpg hero-bg-5.jpg hero-bg-6.jpg hero-bg-7.jpg hero-bg-8.jpg black-bg.jpg black-friday-bg.jpg blue-background.png green-background.png alt-black-background.png blue-green-background.png red-background.png].freeze
+  TEMPLATES = %w[default.html.haml basic_registration.html.haml basic_login.html.haml pricing_plans.html.haml preferred_plan.html.haml bootcamp.html.haml podcast.html.haml open_week.html.haml resources.html.haml about_us.html.haml testimonials.html.haml careers.html.haml course_registration.html.haml].freeze
+  BG_IMAGES = %w[hero-bg.jpg hero-bg-1.jpg hero-bg-2.jpg hero-bg-3.jpg hero-bg-4.jpg hero-bg-5.jpg hero-bg-6.jpg hero-bg-7.jpg hero-bg-8.jpg black-bg.jpg black-friday-bg.jpg blue-background.png green-background.png alt-black-background.png blue-green-background.png red-background.png course-bg.png].freeze
   FOOTER_OPTIONS = %w[white dark].freeze
 
   # relationships
@@ -84,10 +86,6 @@ class HomePage < ApplicationRecord
 
   def default_home_page
     HomePage.where(course: nil).where(home: true).where(subscription_plan_category_id: nil).first
-  end
-
-  def course
-    self.course
   end
 
   protected

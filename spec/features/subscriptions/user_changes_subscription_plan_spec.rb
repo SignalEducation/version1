@@ -22,7 +22,7 @@ describe 'A user changes subscription plans', type: :feature do
       visit account_path
     end
 
-    scenario 'the user can view other subscription plans' do
+    xscenario 'the user can view other subscription plans' do
       expect(page).to have_content('Profile')
       click_link 'Account Info'
       find(:css, '.sub-details').click

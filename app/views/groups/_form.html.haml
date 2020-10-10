@@ -23,6 +23,12 @@
               =f.check_box :active
               =t('views.groups.form.active')
 
+        .form-group.pt-3
+          .checkbox
+            %label
+              =f.check_box :tab_view
+              =t('views.groups.form.tab_view')
+
       .col-sm-6
         .form-group
           =f.label :description, t('views.groups.form.description')

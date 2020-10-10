@@ -4,7 +4,6 @@
 #
 #  id                    :integer          not null, primary key
 #  name                  :string
-#  course_id             :integer
 #  mock_exam_id          :integer
 #  stripe_guid           :string
 #  live_mode             :boolean          default("false")
@@ -14,6 +13,7 @@
 #  currency_id           :integer
 #  price                 :decimal(, )
 #  stripe_sku_guid       :string
+#  course_id             :integer
 #  sorting_order         :integer
 #  product_type          :integer          default("0")
 #  correction_pack_count :integer
@@ -22,6 +22,7 @@
 #  payment_heading       :string
 #  payment_subheading    :string
 #  payment_description   :text
+#  savings_label         :string
 #
 
 FactoryBot.define do

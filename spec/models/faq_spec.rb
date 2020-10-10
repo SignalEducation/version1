@@ -13,6 +13,7 @@
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  pre_answer_text :text
+#  product_id      :integer
 #
 
 require 'rails_helper'

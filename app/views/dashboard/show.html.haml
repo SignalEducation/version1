@@ -11,10 +11,7 @@
             %h1.h1-hero.pt-5
               =t('views.dashboard.student.h1')
           .mw-0.pt-5
-            - if @default_group&.name_url == 'cpd'
-              =link_to library_special_link(@default_group), class: 'btn btn-secondary btn-sm btn-sm-arrow-right mb-3 mb-sm-0' do
-                ='Explore More CPD Courses'
-            -if current_user&.preferred_exam_body_id && !current_user.valid_access_for_exam_body?(current_user&.preferred_exam_body_id, current_user&.preferred_exam_body&.group&.id)
+            -if current_user.standard_student_user? && current_user&.preferred_exam_body_id && !current_user.valid_access_for_exam_body?(current_user&.preferred_exam_body_id, current_user&.preferred_exam_body&.group&.id)
               =link_to pricing_url(current_user&.preferred_exam_body&.group&.name_url), class: 'btn btn-secondary btn-sm btn-sm-arrow-right mb-3 mb-sm-0' do
                 ='LifeTime Membership'
 

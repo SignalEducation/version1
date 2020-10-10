@@ -327,8 +327,9 @@ class User < ApplicationRecord
     self
   end
 
-  def can_view_content?(exam_body_id, group_id)
+  def can_view_content?(exam_body_id, group_id, course_id = nil)
     valid_access_for_exam_body?(exam_body_id, group_id) ||
+      valid_access_for_course?(course_id) ||
       user_group.site_admin || complimentary_user?
   end
 
@@ -372,6 +373,10 @@ class User < ApplicationRecord
 
   def valid_access_for_exam_body?(exam_body_id, group_id = nil)
     valid_subscription_for_exam_body?(exam_body_id) || lifetime_subscriber?(group_id)
+  end
+
+  def valid_access_for_course?(course_id)
+    course_access?(course_id)
   end
 
   def valid_subscription?
@@ -592,6 +597,10 @@ class User < ApplicationRecord
       where(state: %i[incomplete active past_due canceled cancelled canceled-pending pending_cancellation]).
       in_reverse_created_order.
       first
+  end
+
+  def last_purchased_course
+    orders.where(state: %i[complete]).where.not(course_id: nil).order(created_at: :asc).last
   end
 
   def onboarding_state

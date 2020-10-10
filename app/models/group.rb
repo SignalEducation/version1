@@ -26,6 +26,7 @@
 #  short_description             :string
 #  onboarding_level_subheading   :text
 #  onboarding_level_heading      :string
+#  tab_view                      :boolean          default("false"), not null
 #
 
 class Group < ApplicationRecord

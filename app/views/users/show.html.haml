@@ -87,5 +87,7 @@
                         .p
                           -if @user.active_subscription_for_exam_body?(body.id)
                             =@user.active_subscriptions_for_exam_body(body.id).last.state
+                          -elsif @user.lifetime_subscriber?(body.group.id)
+                            ='LifeTime'
                           -else
                             ='Basic'

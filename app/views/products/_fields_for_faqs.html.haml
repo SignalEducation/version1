@@ -25,6 +25,14 @@
               %label
                 =faq.check_box :active
                 =t('views.products.form.faqs.active')
+        -if faq&.object&.destroyable?
+          %br/
+          %br/
+          .checkbox
+            %label
+              =faq.check_box :_destroy
+              Remove FAQ
+
 
       .col-sm-12.pt-4
         .form-group

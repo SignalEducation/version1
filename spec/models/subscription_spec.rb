@@ -24,8 +24,10 @@
 #  cancellation_reason      :string
 #  cancellation_note        :text
 #  changed_from_id          :bigint
+#  temp_guid                :string
 #  completion_guid          :string
 #  ahoy_visit_id            :uuid
+#  exam_body_user_detail_id :integer
 #  cancelled_by_id          :bigint
 #  kind                     :integer
 #  paypal_retry_count       :integer          default("0")

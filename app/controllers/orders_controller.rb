@@ -16,8 +16,13 @@ class OrdersController < ApplicationController
         @product = Product.for_group(exam_body.group.id).where(product_type: :lifetime_access).includes(:currency).in_currency(currency_id).all_active.all_in_order.first
       end
 
-
-    redirect_to prep_products_url unless @product
+    @existing_order = current_user.orders.for_product(@product.id).where(state: :completed).last
+    if @existing_order && %w[lifetime_access course_access].include?(@existing_order.product.product_type)
+      flash[:warning] = 'You have already purchased that product. You cannot purchase it twice.'
+      redirect_to student_dashboard_url and return
+    elsif !@product
+      redirect_to prep_products_url
+    end
 
     @order   = @product&.orders&.build
     @layout  = 'standard'

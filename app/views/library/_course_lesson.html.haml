@@ -5,7 +5,7 @@
       %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
         - if course_lesson.free
           check
-        - elsif current_user && !current_user.can_view_content?(@group.exam_body_id, @group.id)
+        - elsif current_user && !current_user.can_view_content?(@group.exam_body_id, @group.id, @course.id)
           lock_outline
         - else
           check

@@ -19,13 +19,14 @@
 #  background_image_content_type :string
 #  background_image_file_size    :integer
 #  background_image_updated_at   :datetime
-#  exam_body_id                  :bigint
 #  background_colour             :string
+#  exam_body_id                  :bigint
 #  seo_title                     :string
 #  seo_description               :string
 #  short_description             :string
 #  onboarding_level_subheading   :text
 #  onboarding_level_heading      :string
+#  tab_view                      :boolean          default("false"), not null
 #
 
 require 'rails_helper'
@@ -58,6 +59,7 @@ describe Group do
     it { should respond_to(:short_description) }
     it { should respond_to(:onboarding_level_subheading) }
     it { should respond_to(:onboarding_level_heading) }
+    it { should respond_to(:tab_view) }
   end
 
   # relationships

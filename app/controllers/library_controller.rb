@@ -44,6 +44,13 @@ class LibraryController < ApplicationController
     seo_title_maker((@course.seo_title.presence || @course.name), @course.seo_description, nil)
     @form_type = "Course Tutor Question. Course: #{@course.name}"
     @course_tutors = @course.course_tutors.all_in_order
+    country = IpAddress.get_country(request.remote_ip) || Country.find_by(name: 'United Kingdom')
+    currency = current_user ? current_user.get_currency(country) : country.currency
+
+    @subscription_plans = SubscriptionPlan.where(exam_body_id: @group.exam_body_id).
+                            includes(:currency).in_currency(currency.id).all_active.all_in_display_order
+    @course_product = Product.find_by(product_type: :course_access, course_id: @course.id, active: true, currency_id: currency.id)
+    @lifetime_product = Product.find_by(product_type: :lifetime_access, course_id: nil, active: true, currency_id: currency.id, group_id: @group.id)
 
     if @course && @exam_body.active && !@course.preview
       if current_user

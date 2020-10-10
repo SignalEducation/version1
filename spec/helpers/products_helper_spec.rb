@@ -7,6 +7,7 @@ describe ProductsHelper, type: :helper do
   let(:cbe_product)             { create(:product, cbe: cbe, product_type: 'cbe') }
   let(:correction_pack_product) { create(:product, cbe: cbe, product_type: 'correction_pack', correction_pack_count: 3) }
   let(:lifetime_product)        { create(:product, product_type: 'lifetime_access') }
+  let(:course_product)          { create(:product, product_type: 'course_access') }
 
   describe '#product_link' do
     context 'returns product link to a logged user' do
@@ -20,6 +21,10 @@ describe ProductsHelper, type: :helper do
 
       it 'lifetime product' do
         expect(product_link(lifetime_product, true)).to include("products/#{lifetime_product.id}/orders/new")
+      end
+
+      it 'course product' do
+        expect(product_link(course_product, true)).to include("products/#{course_product.id}/orders/new")
       end
     end
 

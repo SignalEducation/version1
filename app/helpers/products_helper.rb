@@ -12,6 +12,8 @@ module ProductsHelper
       elsif product.product_type == 'lifetime_access'
         group = Group.find_by(id: product.group_id)
         group.exam_body.id
+      elsif product.course
+        product.course.group.exam_body.id
       else
         product.mock_exam.course.group.exam_body.id
       end
@@ -26,6 +28,8 @@ module ProductsHelper
       tag.i class: 'budicon-files-tick', role: 'img'
     elsif product.product_type == 'lifetime_access'
       tag.i class: 'budicon-web-banking', role: 'img'
+    elsif product.product_type == 'course_access'
+      tag.i class: product.course.icon_label, role: 'img'
     else
       tag.i class: 'budicon-file-tick', role: 'img'
     end
