@@ -1,5 +1,6 @@
-class CronTasks
+# frozen_string_literal: true
 
+class CronTasks
   def self.update_course_logs
     courses = Course.all_active
     courses.each do |course|
@@ -11,6 +12,4 @@ class CronTasks
       end
     end
   end
-
-
 end

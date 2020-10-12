@@ -16,6 +16,7 @@
 #  logo_image                         :string
 #  registration_form_heading          :string
 #  login_form_heading                 :string
+#  audience_guid                      :string
 #  landing_page_h1                    :string
 #  landing_page_paragraph             :text
 #  has_products                       :boolean          default("false")
@@ -57,11 +58,11 @@ describe ExamBody do
     it { should respond_to(:products_subheading) }
     it { should respond_to(:products_seo_title) }
     it { should respond_to(:products_seo_description) }
+    it { should respond_to(:hubspot_property) }
   end
 
   # relationships
   it { should have_one(:group) }
-
   it { should have_many(:enrollments) }
   it { should have_many(:exam_sittings) }
   it { should have_many(:courses) }
@@ -70,12 +71,11 @@ describe ExamBody do
 
   # validation
   it { should validate_presence_of(:name) }
-  it { should validate_uniqueness_of(:name) }
-
   it { should validate_presence_of(:landing_page_h1) }
-
+  it { should validate_presence_of(:hubspot_property) }
   it { should validate_presence_of(:landing_page_paragraph) }
-
+  it { should validate_uniqueness_of(:name) }
+  it { should validate_uniqueness_of(:hubspot_property) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }

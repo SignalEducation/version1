@@ -58,6 +58,7 @@
 </template>
 
 <script>
+import eventBus from "./EventBus.vue";
 import VueWindow from "../VueWindow.vue";
 import SpreadsheetEditor from "../SpreadsheetEditor/SpreadsheetEditor.vue";
 import TinyEditor from "../TinyEditor.vue";
@@ -113,6 +114,11 @@ export default {
       },
       deep: true,
     },
+  },
+  created() {
+    eventBus.$on("close-modal", (status) => {
+      this.showModal = status;
+    });
   },
   methods: {
     handleChange(value) {

@@ -12,9 +12,9 @@
 #  created_at                 :datetime
 #  updated_at                 :datetime
 #  cme_count                  :integer          default("0")
-#  destroyed_at               :datetime
-#  seo_description            :string
+#  seo_description            :string(255)
 #  seo_no_index               :boolean          default("false")
+#  destroyed_at               :datetime
 #  number_of_questions        :integer          default("0")
 #  course_id                  :integer
 #  video_duration             :float            default("0.0")

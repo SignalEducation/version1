@@ -71,6 +71,7 @@
 </template>
 
 <script>
+import eventBus from "./EventBus.vue";
 import pdfvuer from "pdfvuer";
 import VueWindow from "../VueWindow.vue";
 import SpreadsheetEditor from "../SpreadsheetEditor/SpreadsheetEditor.vue";
@@ -118,6 +119,11 @@ export default {
       return Number.parseInt(this.scale * 100);
     },
   },
+  created() {
+    eventBus.$on("close-modal", (status) => {
+      this.showModal = status;
+    });
+  },
   mounted() {
     if (this.currentFile) {
       this.getPdf();
@@ -143,7 +149,7 @@ export default {
   methods: {
     handleChange(value) {
       this.showModal = value;
-      this.$emit('updateWindowClose', value);
+      this.$emit("updateWindowClose", value);
     },
     getPdf() {
       var self = this;

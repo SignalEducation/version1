@@ -25,6 +25,7 @@
 
 <script>
 import Calculator from '../Calculator.vue';
+import eventBus from "./EventBus.vue";
 import VueWindow from '../VueWindow.vue'
 
 export default {
@@ -37,10 +38,23 @@ export default {
       modalIsOpen: false,
     };
   },
+  created() {
+    eventBus.$on("close-modal",(status)=>{
+      this.modalIsOpen = status;
+    })
+  },
   methods: {
     handleChange(value) {
-      this.modalIsOpen = value
+      this.modalIsOpen = value;
     }
+  },
+  watch: {
+    modalStatus(status) {
+      this.modalIsOpen = status;
+    },
+    modalIsOpen(value) {
+      this.$emit("update-close-all", this.modalIsOpen);
+    },
   },
 };
 </script>

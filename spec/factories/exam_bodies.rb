@@ -16,6 +16,7 @@
 #  logo_image                         :string
 #  registration_form_heading          :string
 #  login_form_heading                 :string
+#  audience_guid                      :string
 #  landing_page_h1                    :string
 #  landing_page_paragraph             :text
 #  has_products                       :boolean          default("false")
@@ -33,6 +34,7 @@
 FactoryBot.define do
   factory :exam_body do
     sequence(:name)                    { |n| "#{Faker::Commerce.product_name} - #{n}" }
+    sequence(:hubspot_property)                    { |n| "#{Faker::Commerce.product_name} - #{n}" }
     url                                { 'accaglobal.com/ie/en.html' }
     active                             { true }
     constructed_response_intro_heading { 'Intro Heading' }

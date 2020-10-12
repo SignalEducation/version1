@@ -1,0 +1,165 @@
+%a{name: 'top'}
+=render partial: 'layouts/external_navbar'
+%main
+  .container-bg.home-hero-alt-2{style: @home_page&.background_image.present? ? "background-image: url(#{image_url(@home_page.background_image)});" : ''}
+    .container
+      %article.home-hero.home-hero-preferred-plan
+        .row.justify-content-between
+          .col-sm-12.col-xl-6
+            %header.home-hero-header
+              %h1.h1-hero.text-white.mb-5
+                -if @home_page&.header_h1.present?
+                  =@home_page.header_h1
+                -else
+                  =@home_page.course.name
+
+              -if @home_page&.header_paragraph.present?
+                %p.text-white.mb-5.pr-xl-4
+                  =@home_page.header_paragraph.html_safe
+              -else
+                .mb-5.pt-5
+                  =@home_page.header_description.html_safe
+
+              %h3.h2.text-white.pr-xl-4
+                =number_in_local_currency(@course_product.price, @course_product.currency)
+
+
+          -unless current_user
+            #reg-form.col-xl-6
+              =render partial: 'registration_form', locals: {btn: 'Buy Now'}
+
+
+  .container
+    %article.py-1.text-center.text-lg-left
+      .row.row-lg
+        .col-lg-8
+          =@home_page.course_description.html_safe
+
+        -if @course.course_tutors.any?
+          .col-lg-4
+            %h4.text-gray2 Course Tutor
+            -@course_tutors.each do |course_tutor|
+              %div
+                =link_to profile_url(course_tutor.user.name_url), class: 'profile-item link-alt d-inline-flex align-items-center mb-3' do
+                  .mr-3
+                    =image_tag course_tutor.user.profile_image.url, class: 'img-thumbnail img-thumbnail-xs', alt: 'Tutor Profile Image'
+                  %div
+                    %p.profile-name.font-weight-medium.mb-0
+                      =course_tutor.user.full_name.to_s
+                    %small.text-gray2
+                      =course_tutor.title
+
+      %article.mt-6.mb-3.text-center
+        =link_to 'Buy Now', '#top', class: 'btn btn-primary', title: 'Bak to Top'
+
+  -if @home_page.pricing_section && @subscription_plans.any?
+    .container-bg.bg-gray5
+      .container#plans
+        %article.py-6
+          %header.text-center.pb-5.pb-md-6
+            %h2.h1-mega
+              ="#{@group.name} Payment Plans"
+            %p.p-hero.px-lg-8
+              -if @group.exam_body.subscription_page_subheading_text
+                =@group.exam_body.subscription_page_subheading_text
+              -else
+                ='Get instant access to 200+ CPD hours, expert podcasts and 21 unit CPD tracks and develop the skills you need to succeed and to stay ahead of industry trends and innovations. Choose a plan that suits you.'
+
+          .row.row-lg.justify-content-center
+            -@subscription_plans.each do |plan|
+              .col-sm-6.col-lg-4
+                .card.text-center.mb-4.hero-section-tutor-card.mt-4
+                  = link_to '', pricing_url(@group.name_url), class: 'hero-section-show-link-window'
+                  .py-4
+                    .h3
+                      =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
+                    .text-center
+                      %p.h2.mb-0.pt-5
+                        =plan.currency.format_number(plan.price)
+                    .row
+                      -if !plan.savings_label.blank?
+                        .py-1.col-md-12.hero-section-responsive-view-course
+                          %p.h5.text-orange.mb-0
+                            =plan.savings_label
+                          .pt-4.pb-2.col-md-12.hero-section-responsive-view-course
+                            %p
+                              = link_to 'Subscribe Now', subscription_checkout_special_link(plan.exam_body_id, plan.guid, params[:login]), class: 'btn btn-secondary btn-sm'
+                      -else
+                        .pt-4.col-md-12.hero-section-responsive-view-course
+                          %p.h5.text-orange.mb-0
+                            =plan.savings_label
+                          .pt-4.pb-2.col-md-12.hero-section-responsive-view-course
+                            %p
+                              = link_to 'Subscribe Now', subscription_checkout_special_link(plan.exam_body_id, plan.guid, params[:login]), class: 'btn btn-secondary btn-sm'
+
+                      .py-2.pb-0.col-md-12.hero-section-responsive-view-course
+                        %p.small.mb-0
+                          Recurring Payment
+                        %p.small.mb-0
+                          Cancel Anytime
+            -if @lifetime_product
+              .col-sm-6.col-lg-4
+                .card.text-center.mb-4.hero-section-tutor-card.mt-4
+                  = link_to '', product_link(@lifetime_product, current_user, params[:login]), class: 'hero-section-show-link-window'
+                  .py-4
+                    .h3
+                      =@lifetime_product.name_by_type
+                    .text-center
+                      %p.h2.mb-0.pt-5
+                        =number_in_local_currency(@lifetime_product.price, @lifetime_product.currency)
+                    .row
+                      -if @lifetime_product.savings_label.present?
+                        .py-0.col-md-12.hero-section-responsive-view-course
+                          %p.h5.text-orange.mb-0
+                            =@lifetime_product.savings_label
+                          .pt-4.pb-2.col-md-12.hero-section-responsive-view-course
+                            %p
+                              = link_to 'Pay Now', product_link(@lifetime_product, current_user, params[:login]), class: 'btn btn-secondary btn-sm'
+                      -else
+                        .pt-5.col-md-12.hero-section-responsive-view-course{style: 'padding-bottom: 3px !important;'}
+                          %p
+                            = link_to 'Pay Now', product_link(@lifetime_product, current_user, params[:login]), class: 'btn btn-secondary btn-sm'
+
+                      .pb-2.col-md-12.hero-section-responsive-view-course
+                        %p.small.mt-4.mb-1
+                          One-time Payment
+
+
+
+  .container
+    %article.py-5
+      %header.text-center.pb-sm-4.pb-md-5
+        %h2.h1-mega
+          ="Explore our #{@group.name} courses"
+        %p.p-hero.px-lg-6
+          =@group.description
+
+      .row.row-lg
+        -@group.courses.all_active.limit(6).all_in_order.each do |course|
+          .col-sm
+            =link_to library_special_link(course), class: 'card card-horizontal flex-row card-mint', data: { toggle: 'tooltip', placement: 'right', animation: 'true', delay: { "show": 300, "hide": 100 }}, title: "#{course.short_description}" do
+              .card-header.d-flex.justify-content-center.align-items-center
+                -# TODO - Convert this into partial
+                -if course.unit_label
+                  .pb-0.d-flex.flex-column.align-items-center
+                    .mb-3.mx-md-2
+                      %i{"aria-label" => course.icon_label, :role => "img", class: course.icon_label ? course.icon_label : 'budicon-office-bag-c', style: "color: #{course.highlight_colour};"}
+                    %p.m-0.text-left.text-md-center{style: "color: #{course.highlight_colour};"}
+                      =course.unit_label
+                -else
+                  %i{"aria-label" => course.icon_label, :role => "img", class: course.icon_label ? course.icon_label : 'budicon-office-bag-c', style: "color: #{course.highlight_colour};"}
+
+              .card-body.d-flex.flex-column.justify-content-center
+                %small.card-category.mb-2{style: "color: #{course.highlight_colour};"}
+                  =course.category_label
+                %h5.card-title.mb-1
+                  %span.mr-1
+                    =course.name
+
+      .d-flex.flex-wrap.flex-sm-nowrap.justify-content-end
+        =link_to library_special_link(@group), class: 'btn btn-secondary btn-sm btn-sm-arrow-right' do
+          ='Explore More'
+
+
+      %article.mt-6.mb-3.text-center
+        =link_to 'Buy Now', '#top', class: 'btn btn-primary', title: 'Bak to Top'

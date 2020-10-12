@@ -16,6 +16,7 @@
 #  logo_image                         :string
 #  registration_form_heading          :string
 #  login_form_heading                 :string
+#  audience_guid                      :string
 #  landing_page_h1                    :string
 #  landing_page_paragraph             :text
 #  has_products                       :boolean          default("false")
@@ -44,7 +45,9 @@ class ExamBody < ApplicationRecord
   has_many :products
 
   validates :name, presence: true, uniqueness: true
+  validates :hubspot_property, presence: true, uniqueness: true
   validates :landing_page_h1, :landing_page_paragraph, :products_heading, presence: true
+  validate :check_hubspot_property
 
   before_destroy :check_dependencies
 
@@ -69,6 +72,13 @@ class ExamBody < ApplicationRecord
 
   def group
     Group.find_by(exam_body_id: id)
+  end
+
+  def check_hubspot_property
+    return if Rails.env.test?
+    return if HubSpot::Properties.new.exists?(hubspot_property)
+
+    errors.add(:hubspot_property, 'should be added in hubspot first.')
   end
 
   private

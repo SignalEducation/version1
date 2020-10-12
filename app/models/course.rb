@@ -53,6 +53,7 @@ class Course < ApplicationRecord
   belongs_to :exam_body
   belongs_to :group
   belongs_to :level
+  has_many :product
   has_many :course_tutors
   has_many :home_pages
   has_many :course_resources
@@ -157,10 +158,15 @@ class Course < ApplicationRecord
     ]
 
     ActiveRecord::Base.transaction do
-      new_course.update(name: "#{name} copy", name_url: "#{name_url}_copy", active: false) &&
+      new_course.update!(name: "#{name} copy", name_url: "#{name_url}_copy", active: false) &&
         new_course.course_sections.map { |s| s.course_lessons.update_all(course_id: new_course.id) } &&
         update_all_files(new_course)
     end
+
+    new_course
+  rescue ActiveRecord::RecordInvalid => e
+    Airbrake.notify(e)
+    e
   end
 
   def update_all_files(new_course)

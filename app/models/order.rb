@@ -61,14 +61,15 @@ class Order < ApplicationRecord
   before_destroy :check_dependencies
 
   # scopes
-  scope :all_in_order,    -> { order(:product_id) }
-  scope :all_stripe,      -> { where.not(stripe_guid: nil).where(paypal_guid: nil) }
+  scope :all_in_order,        -> { order(:product_id) }
+  scope :all_stripe,          -> { where.not(stripe_guid: nil).where(paypal_guid: nil) }
   scope :for_lifetime_access, -> { includes(:product).where('products.product_type = ?', 3).references(:products) }
-  scope :for_group,       ->(group_id)   { includes(:product).where('products.group_id = ?', group_id).references(:products) }
-  scope :all_for_course,  ->(course_id)  { where(course_id: course_id) }
-  scope :all_for_product, ->(product_id) { where(product_id: product_id) }
-  scope :all_for_user,    ->(user_id)    { where(user_id: user_id) }
-  scope :all_valid,       -> { where(state: completed) }
+  scope :for_product,         ->(product_id) { includes(:product).where('products.id = ?', product_id).references(:products) }
+  scope :for_group,           ->(group_id)   { includes(:product).where('products.group_id = ?', group_id).references(:products) }
+  scope :all_for_course,      ->(course_id)  { where(course_id: course_id) }
+  scope :all_for_product,     ->(product_id) { where(product_id: product_id) }
+  scope :all_for_user,        ->(user_id)    { where(user_id: user_id) }
+  scope :all_valid,           -> { where(state: completed) }
 
   scope :cbe_by_user, lambda { |user_id, cbe_id|
     joins(:product).
@@ -123,7 +124,14 @@ class Order < ApplicationRecord
   end
 
   def self.to_csv(options = {})
-    attributes = %w[order_id order_created name product_name stripe_id paypal_guid state
+    attributes = %w[inv_id invoice_created sub_id sub_created user_email user_created
+                    payment_provider sub_stripe_guid sub_paypal_guid sub_exam_body sub_status sub_type
+                    invoice_type payment_interval plan_name currency_symbol plan_price sub_total total
+                    card_country user_country hubspot_source hubspot_source_1 hubspot_source_2 first_visit_source
+                    first_visit_utm_campaign first_visit_medium first_visit_date first_visit_referring_domain
+                    first_visit_landing_page first_visit_referrer
+
+                    order_id order_created name product_name stripe_id paypal_guid state
                     product_type leading_symbol price user_country card_country]
 
     CSV.generate(options) do |csv|
@@ -159,7 +167,7 @@ class Order < ApplicationRecord
           reference_guid: reference_guid
         }
       )
-    elsif %w[lifetime_access].include?(product.product_type)
+    elsif %w[lifetime_access course_access].include?(product.product_type)
       Message.create(
         process_at: Time.zone.now,
         user_id: user_id,
@@ -176,7 +184,7 @@ class Order < ApplicationRecord
   end
 
   def generate_exercises
-    return if %w[lifetime_access].include?(product.product_type)
+    return if %w[lifetime_access course_access].include?(product.product_type)
 
     count = product.correction_pack_count || 1
     (1..count).each { user.exercises.create(product_id: product_id, order_id: id) }

@@ -1,20 +1,8 @@
+
+
 .container
   %header.management-console-section
     %h1
       Sales Report
 
-  %section.pb-7
-    .row
-      =form_with url: export_sales_report_path, local: true do
-        =hidden_field_tag(:period, 'Specific Dates')
-        .col
-          .form-group#custom_exam_date
-            =label_tag(:start_date, 'Initial Date')
-            =date_field :report, :start_date
-
-        .col
-          .form-group#custom_exam_date
-            =label_tag(:final_date, 'Final Date')
-            =date_field :report, :final_date
-        .col-sm-6
-          =submit_tag("Search")
+  =render partial: 'period_form', locals: { export_path: export_sales_report_path }

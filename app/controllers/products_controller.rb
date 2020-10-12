@@ -89,10 +89,11 @@ class ProductsController < ApplicationController
                                     :cbe_id, :mock_exam_id, :sorting_order,
                                     :product_type, :correction_pack_count, :group_id,
                                     :payment_heading, :payment_subheading, :payment_description,
-                                    :savings_label,
+                                    :savings_label, :course_id,
                                     faqs_attributes: [
                                       :id, :name, :name_url, :active, :sorting_order,
-                                      :question_text, :answer_text, :pre_answer_text]
+                                      :question_text, :answer_text, :pre_answer_text,
+                                      :_destroy]
                                     )
   end
 end

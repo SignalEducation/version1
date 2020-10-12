@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_28_124213) do
+ActiveRecord::Schema.define(version: 2020_10_08_091523) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -757,6 +757,7 @@ ActiveRecord::Schema.define(version: 2020_09_28_124213) do
     t.string "pricing_subheading"
     t.string "pricing_seo_title"
     t.string "pricing_seo_description"
+    t.string "hubspot_property"
     t.index ["name"], name: "index_exam_bodies_on_name"
   end
 
@@ -892,6 +893,7 @@ ActiveRecord::Schema.define(version: 2020_09_28_124213) do
     t.string "short_description"
     t.text "onboarding_level_subheading"
     t.string "onboarding_level_heading"
+    t.boolean "tab_view", default: false, null: false
     t.index ["exam_body_id"], name: "index_groups_on_exam_body_id"
     t.index ["name"], name: "index_groups_on_name"
   end
@@ -933,6 +935,8 @@ ActiveRecord::Schema.define(version: 2020_09_28_124213) do
     t.string "background_image"
     t.boolean "usp_section", default: true
     t.text "stats_content"
+    t.text "course_description"
+    t.text "header_description"
     t.index ["course_id"], name: "index_home_pages_on_course_id"
     t.index ["group_id"], name: "index_home_pages_on_group_id"
     t.index ["public_url"], name: "index_home_pages_on_public_url"

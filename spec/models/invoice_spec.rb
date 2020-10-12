@@ -13,9 +13,9 @@
 #  updated_at                  :datetime
 #  issued_at                   :datetime
 #  stripe_guid                 :string(255)
-#  sub_total                   :decimal(, )      default("0")
-#  total                       :decimal(, )      default("0")
-#  total_tax                   :decimal(, )      default("0")
+#  sub_total                   :decimal(, )      default("0.0")
+#  total                       :decimal(, )      default("0.0")
+#  total_tax                   :decimal(, )      default("0.0")
 #  stripe_customer_guid        :string(255)
 #  object_type                 :string(255)      default("invoice")
 #  payment_attempted           :boolean          default("false")
@@ -24,7 +24,7 @@
 #  paid                        :boolean          default("false")
 #  livemode                    :boolean          default("false")
 #  attempt_count               :integer          default("0")
-#  amount_due                  :decimal(, )      default("0")
+#  amount_due                  :decimal(, )      default("0.0")
 #  next_payment_attempt_at     :datetime
 #  webhooks_delivered_at       :datetime
 #  charge_guid                 :string(255)
@@ -359,9 +359,9 @@ describe Invoice do
     let!(:invoice)     { create(:invoice, user: user, subscription: subscription) }
 
     context 'generate csv data' do
-      it { expect(Invoice.all.to_csv.split(',')).to include('invoice_id',
+      it { expect(Invoice.all.to_csv.split(',')).to include('inv_id',
                                                             'invoice_created',
-                                                            'subscription_id',
+                                                            'sub_id',
                                                             'sub_created',
                                                             'user_email',
                                                             'user_created',

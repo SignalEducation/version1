@@ -55,8 +55,13 @@ class Cbe < ApplicationRecord
     ], validate: false
 
     ActiveRecord::Base.transaction do
-      new_cbe.update(name: "#{name} COPY", active: false) && update_all_files(new_cbe)
+      new_cbe.update!(name: "#{name} COPY", active: false) && update_all_files(new_cbe)
     end
+
+    new_cbe
+  rescue ActiveRecord::RecordInvalid => e
+    Airbrake.notify(e)
+    e
   end
 
   def update_all_files(new_cbe)

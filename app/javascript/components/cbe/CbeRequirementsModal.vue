@@ -22,6 +22,7 @@
 </template>
 
 <script>
+import eventBus from "./EventBus.vue";
 import VueWindow from "../VueWindow.vue";
 
 export default {
@@ -50,6 +51,11 @@ export default {
     return {
       showModal: this.requirementModal,
     };
+  },
+  created() {
+    eventBus.$on("close-modal", (status) => {
+      this.showModal = status;
+    });
   },
   methods: {
     handleChange(value) {

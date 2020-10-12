@@ -15,9 +15,9 @@
 #  updated_at                  :datetime
 #  issued_at                   :datetime
 #  stripe_guid                 :string(255)
-#  sub_total                   :decimal(, )      default("0")
-#  total                       :decimal(, )      default("0")
-#  total_tax                   :decimal(, )      default("0")
+#  sub_total                   :decimal(, )      default("0.0")
+#  total                       :decimal(, )      default("0.0")
+#  total_tax                   :decimal(, )      default("0.0")
 #  stripe_customer_guid        :string(255)
 #  object_type                 :string(255)      default("invoice")
 #  payment_attempted           :boolean          default("false")
@@ -26,7 +26,7 @@
 #  paid                        :boolean          default("false")
 #  livemode                    :boolean          default("false")
 #  attempt_count               :integer          default("0")
-#  amount_due                  :decimal(, )      default("0")
+#  amount_due                  :decimal(, )      default("0.0")
 #  next_payment_attempt_at     :datetime
 #  webhooks_delivered_at       :datetime
 #  charge_guid                 :string(255)
@@ -178,7 +178,7 @@ class Invoice < ApplicationRecord
   end
 
   def self.to_csv(options = {})
-    attributes = %w[invoice_id invoice_created subscription_id sub_created user_email user_created
+    attributes = %w[inv_id invoice_created sub_id sub_created user_email user_created
                     payment_provider sub_stripe_guid sub_paypal_guid sub_exam_body sub_status sub_type
                     invoice_type payment_interval plan_name currency_symbol plan_price sub_total total
                     card_country user_country hubspot_source hubspot_source_1 hubspot_source_2 first_visit_source
@@ -189,6 +189,29 @@ class Invoice < ApplicationRecord
       csv << attributes
       all.find_each do |invoice|
         csv << attributes.map { |attr| invoice.send(attr) }
+      end
+    end
+  end
+
+  def self.with_order_to_csv(orders)
+    inv_attributes = %w[inv_id invoice_created sub_id sub_created user_email user_created
+                        payment_provider sub_stripe_guid sub_paypal_guid sub_exam_body sub_status sub_type
+                        invoice_type payment_interval plan_name currency_symbol plan_price sub_total total
+                        card_country user_country hubspot_source hubspot_source_1 hubspot_source_2 first_visit_source
+                        first_visit_utm_campaign first_visit_medium first_visit_date first_visit_referring_domain
+                        first_visit_landing_page first_visit_referrer]
+    ord_attributes = %w[order_id order_created name product_name stripe_id paypal_guid state
+                        product_type leading_symbol price user_country card_country]
+
+    CSV.generate do |csv|
+      csv << inv_attributes + ord_attributes
+
+      all.find_each do |invoice|
+        csv << inv_attributes.map { |attr| invoice.send(attr) }
+      end
+
+      orders.find_each do |order|
+        csv << inv_attributes.map { '' } + ord_attributes.map { |attr| order.send(attr) }
       end
     end
   end

@@ -41,7 +41,8 @@ module HubSpot
       private
 
       def data(user)
-        last_subscription = user.last_subscription
+        last_subscription     = user.last_subscription
+        last_purchased_course = user.last_purchased_course
 
         [{ property: 'email',                  value: user.email },
          { property: 'firstname',              value: user.first_name },
@@ -59,6 +60,7 @@ module HubSpot
          { property: 'sub_cancelation_reason', value: last_subscription&.cancellation_reason },
          { property: 'sub_cancelation_note',   value: last_subscription&.cancellation_note },
          { property: 'next_renewal_date',      value: last_subscription&.next_renewal_date&.strftime('%d-%m-%Y') },
+         { property: 'last_purchased_course',  value: last_purchased_course&.name },
          { property: 'preferred_exam_body',    value: user&.preferred_exam_body&.name }] + subscriptions_statuses(user)
       end
 
@@ -77,7 +79,7 @@ module HubSpot
               'Basic'
             end
 
-          statuses << { property: "#{body&.name}_status".parameterize(separator: '_'), value: account_status }
+          statuses << { property: body&.hubspot_property.parameterize(separator: '_'), value: account_status }
         end
 
         statuses

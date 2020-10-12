@@ -29,6 +29,7 @@
 
 <script>
 import CbeReview from "../../views/cbes/Review.vue";
+import eventBus from "./EventBus.vue";
 
 export default {
   components: {
@@ -40,7 +41,12 @@ export default {
     };
   },
   props: {
-    cbeId: Number
-  }
+    cbeId: Number,
+  },
+  created() {
+    eventBus.$on("close-modal",(status)=>{
+      this.modalIsOpen = status;
+    })
+  },
 };
 </script>

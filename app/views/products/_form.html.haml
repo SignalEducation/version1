@@ -45,6 +45,10 @@
               =f.label :mock_exam_id, t('views.products.form.cbe')
               .input-group.input-group-lg
                 =f.collection_select :cbe_id, @cbes, :id, :name, { include_blank: t('views.general.select') }, { class: 'form-control custom-select' }
+            .form-group{class: 'course_form_group', style: 'display:none;'}
+              =f.label :course_id, t('views.products.form.course_id')
+              .input-group.input-group-lg
+                =f.collection_select :course_id, @courses, :id, :name, { include_blank: t('views.general.select') }, { class: 'form-control custom-select' }
             .form-group
               =f.label :correction_pack_count, t('views.products.form.correction_pack_count')
               .input-group.input-group-lg
@@ -97,6 +101,15 @@
           $('.cbe_form_group').hide();
           $('.mock_exam_form_group').show();
           $('#product_cbe_id').val('');
+          $('#product_correction_pack_count').val('');
+          $('#product_correction_pack_count').prop('disabled', false);
+          break;
+        case 'course_access':
+          $('.cbe_form_group').hide();
+          $('.mock_exam_form_group').hide();
+          $('.course_form_group').show();
+          $('#product_cbe_id').val('');
+          $('#product_mock_exam_id').val('');
           $('#product_correction_pack_count').val('');
           $('#product_correction_pack_count').prop('disabled', false);
           break;

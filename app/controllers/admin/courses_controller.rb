@@ -73,11 +73,9 @@ module Admin
     end
 
     def clone
-      if @course.duplicate
-        flash[:success] = 'Course successfully duplicated'
-      else
-        flash[:error] = 'Course not successfully duplicated'
-      end
+      CourseCloneWorker.perform_async(@course.id, current_user.id, admin_courses_url)
+
+      flash[:success] = 'Course is cloning now, you will receive an email when finished.'
 
       redirect_to admin_courses_url
     end
