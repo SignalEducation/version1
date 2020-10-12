@@ -667,7 +667,7 @@ class User < ApplicationRecord
   def update_hub_spot_data
     return if saved_changes.include?(:last_request_at) || Rails.env.test?
 
-    HubSpotContactWorker.perform_async(id)
+    HubSpotContactWorker.perform_at(2.minutes, id)
   end
 
   def last_subscription_per_exam
