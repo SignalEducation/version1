@@ -63,6 +63,8 @@
         ='No credit card required. Set-up takes one minute.'
 
       = hidden_field_tag :hutk
+      = hidden_field_tag :page_uri
+      = hidden_field_tag :page_name
       = hidden_field_tag :hs_form_id, Rails.application.credentials[Rails.env.to_sym][:hubspot][:form_api][:registration_form]
       =f.submit 'Register Now', class: 'btn btn-primary', id: 'signUp'
       .sk-circle
@@ -100,6 +102,8 @@
 
   $(document).ready(function(){
     document.getElementById("hutk").value = getCookie("hubspotutk");
+    document.getElementById("page_uri").value = document.URL;
+    document.getElementById("page_name").value = document.title;
   });
 
   $(".sk-circle").hide();
