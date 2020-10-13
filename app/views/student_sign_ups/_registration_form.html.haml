@@ -129,7 +129,6 @@
 
 :javascript
 
-  let hubspotCookie = getCookie("hubspotutk");
   function getCookie(cname) {
     var name = cname + "=";
     var decodedCookie = decodeURIComponent(document.cookie);
@@ -147,7 +146,7 @@
   }
 
   $(document).ready(function(){
-    document.getElementById("hutk").value = hubspotCookie;
+    document.getElementById("hutk").value = getCookie("hubspotutk");
     var img = $('#sign-up-partner-logo');
     var width = img.width();
     var height = img.height();
@@ -159,7 +158,7 @@
 
   $(".sk-circle").hide();
   $("#new_user").submit(function(ev) {
-    document.getElementById("hutk").value = hubspotCookie;
+    document.getElementById("hutk").value = getCookie("hubspotutk");
     ev.preventDefault();
     $(".sk-circle").show();
     $("#signUp").hide();
