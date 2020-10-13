@@ -146,6 +146,8 @@ class StudentSignUpsController < ApplicationController
 
     @user.hutk = params[:hutk]
     @user.hs_form_id = params[:hs_form_id]
+    @user.page_uri = params[:page_uri]
+    @user.page_name = params[:page_name]
 
     if verify_recaptcha(model: @user) && @user.valid? && @user.save
       handle_post_user_creation(@user)

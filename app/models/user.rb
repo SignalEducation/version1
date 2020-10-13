@@ -72,7 +72,7 @@ class User < ApplicationRecord
   LOCALES = %w[en].freeze
   SORT_OPTIONS = %w[created user_group name email].freeze
 
-  attr_accessor :hutk, :hs_form_id
+  attr_accessor :hutk, :hs_form_id, :page_uri, :page_name
 
   belongs_to :country, optional: true
   belongs_to :currency, optional: true
@@ -641,6 +641,8 @@ class User < ApplicationRecord
              last_name: last_name,
              email: email,
              hutk: hutk,
+             page_uri: page_uri,
+             page_name: page_name,
              hs_form_id: hs_form_id,
              consent: terms_and_conditions }
 
