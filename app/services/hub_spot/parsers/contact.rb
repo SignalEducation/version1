@@ -28,10 +28,10 @@ module HubSpot
             { name: 'firstname', value: data['first_name'] },
             { name: 'lastname',  value: data['last_name'] }
           ],
-          context: { 
-              "hutk": data['hutk'],
-              "pageUri": data['pageURL'],
-              "pageName": data['pageTitle']
+          context: {
+            "hutk": data['hutk'],
+            "pageUri": data['pageURL'],
+            "pageName": data['pageTitle']
           },
           legalConsentOptions: {
             consent: {
