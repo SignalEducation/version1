@@ -43,13 +43,21 @@ module OrderReport
     user&.subscription_payment_cards&.all_default_cards&.first&.account_country
   end
 
-  def inv_id; end
+  def inv_id
+    invoice&.id
+  end
 
-  def user_email; end
+  def user_email
+    user&.email
+  end
 
-  def invoice_created; end
+  def invoice_created
+    invoice&.created_at&.strftime('%Y-%m-%d')
+  end
 
-  def user_created; end
+  def user_created
+    user&.created_at
+  end
 
   def sub_id; end
 
@@ -65,7 +73,9 @@ module OrderReport
 
   def total; end
 
-  def payment_provider; end
+  def payment_provider
+    stripe? ? 'Stripe' : 'PayPal'
+  end
 
   def invoice_type; end
 
