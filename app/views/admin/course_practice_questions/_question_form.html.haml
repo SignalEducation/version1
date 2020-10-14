@@ -1,0 +1,77 @@
+-# VueJS include
+= javascript_pack_tag 'spreadsheet'
+
+=f.fields_for :course_practice_question do |practice_question|
+  =practice_question.fields_for :questions do |question|
+    .box-item
+      .row
+        .col-sm-12
+          %h2
+            =question.object.id.nil? ? t('views.course_quizzes.form.h3.question_new') : t('views.course_quizzes.form.h3.question_number') + question.object.id.to_s
+      .row
+        .col-sm-6
+          .form-group
+            =question.label :name, t('views.course_practice_question.form.kind')
+            .input-group.input-group-lg
+              = question.select :kind, [['Open', 'open'], ['Spreadsheet', 'spreadsheet']], {}, onChange: "javascript: your_onchange_handler(#{question.index}, $(this).val());", class: 'form-control question_kind'
+        .col-sm-6
+          .form-group
+            =question.label :name, t('views.course_practice_question.form.sorting_order')
+            .input-group.input-group-lg
+              = question.text_field :sorting_order, class: 'form-control'
+
+      -open_style = (question.object.open? || question.object.kind.nil? )? 'show' : 'none'
+      .open_questions{id: "open_questions_#{question.index}", style: "display: #{open_style};"}
+        .row
+          .col-sm-12
+            .form-group
+              =question.label :content, t('views.course_practice_question.form.content'), class: 'control-label'
+              .input-group.input-group-lg.full-width
+                =question.text_area :content, as: 'summernote', class: 'form-control summernote_text'
+
+          .col-sm-12
+            .form-group
+              =question.label :solution, t('views.course_practice_question.form.solution'), class: 'control-label'
+              .input-group.input-group-lg.full-width
+                =question.text_area :solution, as: 'summernote', class: 'form-control summernote_text'
+
+      - spreadsheet_style = question.object.spreadsheet? ? 'show' : 'none'
+      .spreadsheet_questions{id: "spreadsheet_questions_#{question.index}", style: "display: #{spreadsheet_style};"}
+        .row
+          .col-sm-12
+            .form-group
+              =question.label :content, t('views.course_practice_question.form.content'), class: 'control-label'
+              %div{class: :spreadsheet_component, data: { spreadsheet_content: question.object.content, field_name: "course_step[course_practice_question_attributes][answers_attributes][#{question.index}][content]" } }
+
+          .col-sm-12
+            .form-group
+              =question.label :solution, t('views.course_practice_question.form.solution'), class: 'control-label'
+              %div{class: :spreadsheet_component, data: { spreadsheet_content: question.object.solution, field_name: "course_step[course_practice_question_attributes][answers_attributes][#{question.index}][solution]" } }
+
+      .row
+        .col-sm-12
+          -submit_text = question.object.id.nil? ? t('views.course_steps.form.save_and_add_another') : t('views.course_practice_question.form.update')
+          =f.submit submit_text, class: 'btn btn-primary'
+          -if question.object.id.present?
+            =link_to t('views.general.delete'), admin_practice_question_remove_question_path(@course_step.id, question.object.id), method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger'
+
+:javascript
+   function your_onchange_handler(index, value){
+    switch(value) {
+      case "open" :
+        $("#open_questions_" + index).show();
+        $("#spreadsheet_questions_" + index).hide();
+        break;
+      case "spreadsheet":
+        $("#spreadsheet_questions_" + index).show();
+        $("#open_questions_" + index).hide();
+        break;
+    }
+  };
+
+  $("[class='form-control summernote_text']").each(function (elem, obj) {
+    $(obj).summernote({
+      disableDragAndDrop: true,
+      height: 150
+    });
+  });

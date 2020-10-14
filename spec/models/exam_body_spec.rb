@@ -29,6 +29,7 @@
 #  pricing_subheading                 :string
 #  pricing_seo_title                  :string
 #  pricing_seo_description            :string
+#  hubspot_property                   :string
 #
 
 require 'rails_helper'

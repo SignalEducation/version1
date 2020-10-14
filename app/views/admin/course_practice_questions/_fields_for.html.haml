@@ -1,0 +1,10 @@
+=f.fields_for :course_practice_question do |practice_question|
+  .form-group
+    =practice_question.label :estimated_time, t('views.course_practice_question.form.estimated_time')
+    .input-group.input-group-lg
+      =practice_question.text_field :estimated_time, placeholder: t('views.course_practice_question.form.estimated_time_placeholder'), class: 'form-control'
+
+  .form-group
+    =practice_question.label :name, t('views.course_practice_question.form.kind')
+    .input-group.input-group-lg
+      = practice_question.select :kind, [['Standard', 'standard']], {}, class: 'form-control'
