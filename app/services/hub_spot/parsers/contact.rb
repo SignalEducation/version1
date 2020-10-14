@@ -29,7 +29,7 @@ module HubSpot
             { name: 'lastname',  value: data['last_name'] }
           ],
           context: {
-            "hutk": data['hutk'],
+            "hutk": data['hutk'].presence || 'null',
             "pageUri": data['pageURL'],
             "pageName": data['pageTitle']
           },
@@ -52,19 +52,19 @@ module HubSpot
          { property: 'firstname',              value: user.first_name },
          { property: 'lastname',               value: user.last_name },
          { property: 'email_verified',         value: user.email_verified },
-         { property: 'ls_created_at',          value: user.created_at&.strftime('%d-%m-%Y') },
+         { property: 'ls_created_at',          value: user.created_at&.strftime('%m-%d-%Y') },
          { property: 'date_of_birth',          value: user.date_of_birth },
          { property: 'currency',               value: user&.currency&.name },
          { property: 'country',                value: user&.country&.name },
          { property: 'user_group',             value: user&.user_group&.name },
-         { property: 'sub_close_date',         value: last_subscription&.created_at&.strftime('%d-%m-%Y') },
+         { property: 'sub_close_date_2',       value: last_subscription&.created_at&.strftime('%m-%d-%Y') },
          { property: 'sub_payment_interval',   value: last_subscription&.subscription_plan&.interval_name },
          { property: 'sub_exam_body',          value: last_subscription&.subscription_plan&.exam_body&.name },
          { property: 'sub_type',               value: last_subscription&.kind&.humanize },
-         { property: 'sub_cancelation_date',   value: last_subscription&.cancelled_at&.strftime('%d-%m-%Y') },
+         { property: 'sub_canceled_at',        value: last_subscription&.cancelled_at&.strftime('%m-%d-%Y') },
          { property: 'sub_cancelation_reason', value: last_subscription&.cancellation_reason },
          { property: 'sub_cancelation_note',   value: last_subscription&.cancellation_note },
-         { property: 'next_renewal_date',      value: last_subscription&.next_renewal_date&.strftime('%d-%m-%Y') },
+         { property: 'sub_renewal_date',       value: last_subscription&.next_renewal_date&.strftime('%m-%d-%Y') },
          { property: 'last_purchased_course',  value: last_purchased_course&.name },
          { property: 'preferred_exam_body',    value: user&.preferred_exam_body&.name }] + subscriptions_statuses(user)
       end

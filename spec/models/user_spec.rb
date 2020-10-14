@@ -114,16 +114,21 @@ describe User do
   it { should_not validate_presence_of(:country_id) }
   it { should validate_presence_of(:user_group_id) }
 
+  context 'is a student' do
+    before { allow(subject).to receive(:standard_student_user?).and_return(true) }
+    it { should validate_presence_of(:preferred_exam_body_id).on(:create) }
+  end
+
   context 'is a tutor' do
     before { allow(subject).to receive(:tutor_user?).and_return(true) }
-    it { should validate_presence_of(:name_url)}
-    it { should validate_presence_of(:tutor_link)}
+    it { should validate_presence_of(:name_url) }
+    it { should validate_presence_of(:tutor_link) }
   end
 
   context 'is not a tutor' do
     before { allow(subject).to receive(:tutor_user?).and_return(false) }
-    it { should_not validate_presence_of(:name_url)}
-    it { should_not validate_presence_of(:tutor_link)}
+    it { should_not validate_presence_of(:name_url) }
+    it { should_not validate_presence_of(:tutor_link) }
   end
 
   context 'user email validation' do
