@@ -46,7 +46,9 @@ class CourseStepLog < ApplicationRecord
   belongs_to :course_lesson, optional: true
   belongs_to :course_lesson_log, optional: true
   belongs_to :course_step, optional: true
+  belongs_to :current_practice_question_answer, optional: true, class_name: 'PracticeQuestion::Answer'
   has_many   :quiz_attempts, inverse_of: :course_step_log
+  has_many   :practice_question_answers, inverse_of: :course_step_log
   has_one    :constructed_response_attempt
   accepts_nested_attributes_for :quiz_attempts, :constructed_response_attempt
 

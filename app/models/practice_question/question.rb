@@ -24,5 +24,8 @@ module PracticeQuestion
     belongs_to :practice_question, class_name: 'CoursePracticeQuestion',
                                    foreign_key: :course_practice_question_id,
                                    inverse_of: :questions
+
+    validates :course_practice_question_id, presence: true, on: :update
+    validates :content, :solution, presence: true
   end
 end

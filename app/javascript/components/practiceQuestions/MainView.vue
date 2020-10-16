@@ -16,7 +16,7 @@
           <LeftPane :content="practiceQuestion.content" />
         </span>
       <span>
-        <RightPane :totalQuestions="practiceQuestion.total_questions" :questionContentArray="practiceQuestion.questions" :answerContentArray="practiceQuestion.questions" />
+        <RightPane :totalQuestions="practiceQuestion.total_questions" :questionContentArray="practiceQuestion.questions" :answerContentArray="practiceQuestion.questions" :stepLogId="stepLogId" />
       </span>
       </splitpanes>
           <HelpBtn />
@@ -56,6 +56,7 @@ export default {
   },
   data() {
     return {
+      stepLogId: this.$parent.stepLogId,
       practiceQuestionId: this.$parent.practiceQuestionId,
       practiceQuestion: null,
       zIndexArr: ['calcModal', 'scratchPadModal', 'solutionModal', 'helpModal'],

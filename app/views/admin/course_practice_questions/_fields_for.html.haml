@@ -8,3 +8,15 @@
     =practice_question.label :name, t('views.course_practice_question.form.kind')
     .input-group.input-group-lg
       = practice_question.select :kind, [['Standard', 'standard']], {}, class: 'form-control'
+
+  .form-group
+    =practice_question.label :document, t('views.course_practice_question.form.document'), class: 'control-label'
+    .input-group.input-group-lg
+      -if practice_question.object.document.present?
+        .form-control-static
+          =link_to practice_question.object.document_file_name, practice_question.object.document.try(:url), target: '_blank'
+
+        Upload a replacement note file or delete the note file.
+
+      .input-group.input-group-lg
+        =practice_question.file_field :document, class: 'form-control'

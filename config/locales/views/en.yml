@@ -597,8 +597,10 @@ en:
         name_placeholder: Name that users will see
         estimated_time: Estimated Time in seconds
         estimated_time_placeholder: 57 seconds is 5700
+        document: Upload help file
         kind: Type of questions/solution
         sorting_order: Order
+        scenario: Scenario Content
         content: Question Content
         solution: Question Solution
         add_question: Add Question
