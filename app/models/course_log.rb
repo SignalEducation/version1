@@ -81,11 +81,12 @@ class CourseLog < ApplicationRecord
   end
 
   def recalculate_scul_completeness
-    self.count_of_videos_taken                = course_section_logs.with_valid_course_section.sum(:count_of_videos_taken)
-    self.count_of_quizzes_taken               = course_section_logs.with_valid_course_section.sum(:count_of_quizzes_taken)
-    self.count_of_notes_completed             = course_section_logs.with_valid_course_section.sum(:count_of_notes_taken)
-    self.count_of_constructed_responses_taken = course_section_logs.with_valid_course_section.sum(:count_of_constructed_responses_taken)
-    self.count_of_cmes_completed              = course_section_logs.with_valid_course_section.sum(:count_of_cmes_completed)
+    self.count_of_videos_taken                 = course_section_logs.with_valid_course_section.sum(:count_of_videos_taken)
+    self.count_of_quizzes_taken                = course_section_logs.with_valid_course_section.sum(:count_of_quizzes_taken)
+    self.count_of_notes_completed              = course_section_logs.with_valid_course_section.sum(:count_of_notes_taken)
+    self.count_of_practice_questions_completed = course_section_logs.with_valid_course_section.sum(:count_of_practice_questions_taken)
+    self.count_of_constructed_responses_taken  = course_section_logs.with_valid_course_section.sum(:count_of_constructed_responses_taken)
+    self.count_of_cmes_completed               = course_section_logs.with_valid_course_section.sum(:count_of_cmes_completed)
 
     self.percentage_complete = (count_of_cmes_completed / elements_total_for_completion.to_f) * 100 if elements_total_for_completion.positive?
 
