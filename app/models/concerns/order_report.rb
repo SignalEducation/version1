@@ -12,7 +12,7 @@ module OrderReport
   end
 
   def name
-    product.group.name
+    product&.group&.name
   end
 
   def product_name
@@ -36,7 +36,7 @@ module OrderReport
   end
 
   def user_country
-    user.country.name
+    user&.country&.name
   end
 
   def card_country
