@@ -1,7 +1,7 @@
 <template>
     <div>
-        <button @click="modalIsOpen = !modalIsOpen" href="#calcModal" class="btn btn-settings calculator-icon-no-title" title="Calculator" data-backdrop="false" data-toggle="modal"></button>
-        <div id="calcModal" class="modal2-calc fade" v-show="modalIsOpen">
+        <button @click="modalIsOpen = !modalIsOpen; updateZindex()" href="#calcModal" class="btn btn-settings calculator-icon-no-title" title="Calculator" data-backdrop="false" data-toggle="modal"></button>
+        <div @click="updateZindex()" id="calcModal" class="modal2-calc fade" v-show="modalIsOpen">
             <div class="modal2-dialog">
                 <div class="modal2-content">
                   <button @click="modalIsOpen = !modalIsOpen" type="button" class="close modal-close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -21,10 +21,12 @@
 <script>
 
 import Calculator from '../Calculator.vue';
+import eventBus from "../cbe/EventBus.vue";
 
 export default {
   components: {
-    Calculator
+    Calculator,
+    eventBus
   },
   data() {
     return {
@@ -39,6 +41,9 @@ export default {
   methods: {
     handleChange(value) {
       this.modalIsOpen = value;
+    },
+    updateZindex() {
+      eventBus.$emit('z-index-click', 'calcModal');
     }
   },
   watch: {

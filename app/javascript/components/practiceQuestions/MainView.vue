@@ -37,7 +37,7 @@ import ModalCalculator from './ModalCalculator.vue';
 import ModalScratchPad from './ModalScratchPad.vue';
 import ModalSolution from './ModalSolution.vue';
 import QuestionAnswers from '../../components/cbe/QuestionAnswers.vue';
-
+import eventBus from "../cbe/EventBus.vue";
 
 export default {
   components: {
@@ -50,12 +50,20 @@ export default {
     ModalScratchPad,
     ModalSolution,
     QuestionAnswers,
+    eventBus,
   },
   data() {
     return {
       practiceQuestionId: this.$parent.practiceQuestionId,
       practiceQuestion: null,
+      zIndexArr: ['calcModal', 'scratchPadModal', 'solutionModal'],
     };
+  },
+  created() {
+    eventBus.$on("z-index-click",(lastClickedModal)=>{
+      this.zIndexSort(lastClickedModal);
+      this.zIndexStyle(this.zIndexArr);
+    })
   },
   mounted() {
     this.getPracticeQuestion();
@@ -77,6 +85,18 @@ export default {
           .first()
           .height();
       this.height = $(window).height() - headerFooter;
+    },
+    zIndexSort(lastModal) {
+      let index = this.zIndexArr.indexOf(lastModal);
+      if (index > 0) {
+        this.zIndexArr.splice(index,1);
+        this.zIndexArr.unshift(lastModal);
+      }
+    },
+    zIndexStyle(modalArr) {
+      document.getElementById(modalArr[0]).style.zIndex = 1032;
+      document.getElementById(modalArr[1]).style.zIndex = 1031;
+      document.getElementById(modalArr[2]).style.zIndex = 1030;
     },
   },
 };

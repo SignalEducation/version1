@@ -1,7 +1,7 @@
 <template>
     <div>
-        <button @click="modalIsOpen = !modalIsOpen" href="#solutionModal" class="btn btn-settings solution-btn-title" data-backdrop="false" data-toggle="modal">Solution</button>
-        <div id="solutionModal" class="modal2 fade" v-show="modalIsOpen">
+        <button @click="modalIsOpen = !modalIsOpen; updateZindex()" href="#solutionModal" class="btn btn-settings solution-btn-title" data-backdrop="false" data-toggle="modal">Solution</button>
+        <div @click="updateZindex()" id="solutionModal" class="modal2 fade" v-show="modalIsOpen">
             <div class="modal2-dialog">
                 <div class="modal2-content">
                   <button @click="modalIsOpen = !modalIsOpen" type="button" class="close modal-close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -56,6 +56,9 @@ export default {
   methods: {
     handleChange(value) {
       this.modalIsOpen = value;
+    },
+    updateZindex() {
+      eventBus.$emit('z-index-click', 'solutionModal');
     }
   },
   watch: {
