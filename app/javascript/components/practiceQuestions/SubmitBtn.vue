@@ -1,7 +1,6 @@
 <template>
   <div id="cbe-modals">
     <b-nav-text
-      title="Mark as Complete"
       class="submit-btn-title"
       @click="modalIsOpen = !modalIsOpen"
     >

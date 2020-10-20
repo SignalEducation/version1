@@ -9,23 +9,43 @@
         <li v-else class="lightgrey nav-ques-arrow-shw"> &raquo; </li>
       </ul>
       <p v-html="questionContentArray[this.activePage-1].content"></p>
+      <div class="prac-ques-ans-box">
+        <div v-show="questionContentArray[this.activePage-1].kind == 'open'">
+          <OpenAnswer :question-id="questionContentArray[this.activePage-1].id" />
+        </div>
+        <div v-show="questionContentArray[this.activePage-1].kind == 'spreadsheet'">
+          <SpreadsheetEditor
+            :initial-data="answerContentArray[this.activePage-1].content"
+            @spreadsheet-updated="syncSpreadsheetData"
+          />
+        </div>
+      </div>
     </div>
   </section>
 </template>
 
 <script>
 
+import OpenAnswer from "../cbe/answers/OpenAnswer.vue"
+import SpreadsheetAnswer from "../cbe/answers/SpreadsheetAnswer.vue"
+import SpreadsheetEditor from "../SpreadsheetEditor/SpreadsheetEditor.vue";
 import eventBus from "../cbe/EventBus.vue";
 
 export default {
   components: {
-    eventBus
+    eventBus,
+    OpenAnswer,
+    SpreadsheetAnswer,
+    SpreadsheetEditor
   },
   props: {
   	totalQuestions: {
       type: Number,
     },
     questionContentArray: {
+      type: Array,
+    },
+    answerContentArray: {
       type: Array,
     },
   },
@@ -36,20 +56,12 @@ export default {
       isActive: true,
     };
   },
-  mounted() {
-    this.questionArrIndexOf(this.questionContentArray);
-  },
   methods: {
     handleChange(value) {
       this.modalIsOpen = value
     },
     showNavOptions(permittedPages) {
       return permittedPages.includes(this.$route.name);
-    },
-    questionArrIndexOf(questionContentArray) {
-      questionContentArray.forEach(function (question, index) {
-        console.log(question.content, index);
-      });
     },
     changePage: function(num) {
       this.activePage = num
@@ -59,7 +71,17 @@ export default {
     },
     prevPage: function() {
       if(this.activePage > 1) this.activePage--
-    }
+    },
+    syncSpreadsheetData(jsonData) {
+      this.$store.dispatch('userCbe/recordAnswer', {
+        id: this.questionId,
+        answers_attributes: [{
+          content: {
+            data: jsonData,
+          },
+        }],
+      });
+    },
   },
   watch: {
     activePage: function(newVal, oldVal) {

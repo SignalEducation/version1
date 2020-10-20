@@ -16,11 +16,13 @@
           <LeftPane :content="practiceQuestion.content" />
         </span>
       <span>
-        <RightPane :totalQuestions="practiceQuestion.total_questions" :questionContentArray="practiceQuestion.questions" />
+        <RightPane :totalQuestions="practiceQuestion.total_questions" :questionContentArray="practiceQuestion.questions" :answerContentArray="practiceQuestion.questions" />
       </span>
       </splitpanes>
           <HelpBtn />
-          <SubmitBtn />
+          <div :title="dynamicTitle" :class="{ outsidelastpage: outsideLastPage }">
+            <SubmitBtn />
+          </div>
     </div>
   </section>
 </template>
@@ -56,13 +58,25 @@ export default {
     return {
       practiceQuestionId: this.$parent.practiceQuestionId,
       practiceQuestion: null,
-      zIndexArr: ['calcModal', 'scratchPadModal', 'solutionModal'],
+      zIndexArr: ['calcModal', 'scratchPadModal', 'solutionModal', 'helpModal'],
+      outsideLastPage: true,
+      dynamicTitle: 'All answers required before completing',
+      lastPageIndex: null,
     };
   },
   created() {
     eventBus.$on("z-index-click",(lastClickedModal)=>{
       this.zIndexSort(lastClickedModal);
       this.zIndexStyle(this.zIndexArr);
+    }),
+    eventBus.$on("active-solution-index",(activePage)=>{
+      if (activePage + 1 == this.practiceQuestion.total_questions) {
+        this.outsideLastPage = false;
+        this.dynamicTitle = 'Mark as Complete';
+      } else {
+        this.outsideLastPage = true;
+        this.dynamicTitle = 'All answers required before completing';
+      }
     })
   },
   mounted() {
@@ -94,9 +108,10 @@ export default {
       }
     },
     zIndexStyle(modalArr) {
-      document.getElementById(modalArr[0]).style.zIndex = 1032;
-      document.getElementById(modalArr[1]).style.zIndex = 1031;
-      document.getElementById(modalArr[2]).style.zIndex = 1030;
+      document.getElementById(modalArr[0]).style.zIndex = 1033;
+      document.getElementById(modalArr[1]).style.zIndex = 1032;
+      document.getElementById(modalArr[2]).style.zIndex = 1031;
+      document.getElementById(modalArr[3]).style.zIndex = 1030;
     },
   },
 };

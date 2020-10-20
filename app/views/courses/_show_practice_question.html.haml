@@ -2,10 +2,10 @@
   .col-xl-12
     %h1.h4
       .practice-ques-navigation
-        .v1_111
+        =link_to course_special_link(@course_step.previous_element), class: 'v1_111' do
           %i.material-icons.v1_137 navigate_before
         =practice_question.course_step.name
-        .v1_111
+        =link_to course_special_link(@course_step.next_element), class: 'v1_111' do
           %i.material-icons.v1_137 navigate_next
 
     =# VueJS include

@@ -243,6 +243,18 @@ button2.btn-settings:active {
   border: 5px solid #000032;
   box-shadow: 0 0 0 1px hsl(0, 0%, 80%), 0 0 0 2px hsl(0, 0%, 90%);
 }
+.modal2-solution {
+  background-color: #f5f8fa;
+  z-index: 1030;
+  padding-right: 0 !important;
+  position: absolute !important;
+  width: 50em;
+  height: 27em;
+  border-radius: 10px;
+  border: 5px solid #000032;
+  box-shadow: 0 0 0 1px hsl(0, 0%, 80%), 0 0 0 2px hsl(0, 0%, 90%);
+  overflow-y: auto;
+}
 .modal2-dialog {
     margin-right: 0;
     margin-left: 0;
@@ -328,4 +340,40 @@ button.modal-close:focus {
   display:flex;
   flex-direction:row;
   margin-bottom:-11px;
+}
+.prac-ques-ans-box {
+  padding:0;
+  .container-fluid {
+    width: 105%;
+    padding-right: 0;
+    padding-left: 0;
+    margin-right: 0;
+    margin-left: -10px;
+  }
+  .btn-row:nth-child(3) {
+    .font-size-select[data-v-5994f0e8] {
+      width: 0;
+      margin-right: 2px;
+    }
+  }
+}
+@media screen and (max-width: 1200px) {
+  .prac-ques-ans-box {
+    .container-fluid {
+      width: 140% !important;
+      padding-right: 20px !important;
+    }
+  }
+}
+.modal-help {
+  top: 70px;
+}
+#solutionModal {
+  padding-left: 0;
+}
+.outsidelastpage {
+  .submit-btn-title {
+    background-color: rgba(89, 89, 110, 0.95);
+    cursor: not-allowed;
+  }
 }
