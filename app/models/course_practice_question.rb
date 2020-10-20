@@ -18,6 +18,8 @@ class CoursePracticeQuestion < ApplicationRecord
   include LearnSignalModelExtras
   include Archivable
 
+  has_attached_file :document
+
   # enums
   enum kind: { standard: 0, exhibit: 1 }
 
@@ -31,6 +33,13 @@ class CoursePracticeQuestion < ApplicationRecord
   # validations
   validates :course_step_id, presence: true, on: :update
   validates :content, presence: true
+  validates_attachment_content_type :document, content_type: %w[application/pdf]
 
-  accepts_nested_attributes_for :questions
+  accepts_nested_attributes_for :questions, reject_if: ->(attributes) { question_is_blank?(attributes) }
+
+  private
+
+  def self.question_is_blank?(attributes)
+    attributes['content'].blank? && attributes['solution'].blank?
+  end
 end

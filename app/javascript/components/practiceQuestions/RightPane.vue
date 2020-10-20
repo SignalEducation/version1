@@ -26,10 +26,11 @@
 
 <script>
 
+import axios from 'axios';
+import eventBus from "../cbe/EventBus.vue";
 import OpenAnswer from "../cbe/answers/OpenAnswer.vue"
 import SpreadsheetAnswer from "../cbe/answers/SpreadsheetAnswer.vue"
 import SpreadsheetEditor from "../SpreadsheetEditor/SpreadsheetEditor.vue";
-import eventBus from "../cbe/EventBus.vue";
 
 export default {
   components: {
@@ -48,6 +49,9 @@ export default {
     answerContentArray: {
       type: Array,
     },
+    stepLogId:{
+      type: String, Number
+    }
   },
   data() {
     return {
@@ -82,10 +86,24 @@ export default {
         }],
       });
     },
+    updateCurrentAnswer: function(index) {
+      const lastQuestion = this.questionContentArray[index-1]
+
+       axios
+        .patch(`/api/v1/practice_questions/${lastQuestion.practice_question_id}/`, {
+          practice_questions: lastQuestion,
+          step_log: this.stepLogId,
+        })
+        .then(response => {
+          console.log
+        })
+        .catch(error => {});
+    },
   },
   watch: {
     activePage: function(newVal, oldVal) {
       eventBus.$emit("active-solution-index", newVal-1);
+      this.updateCurrentAnswer(oldVal);
     },
   },
 };

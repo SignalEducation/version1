@@ -265,6 +265,7 @@ module Admin
           :content,
           :kind,
           :estimated_time,
+          :document,
           questions_attributes: [
             :id,
             :kind,

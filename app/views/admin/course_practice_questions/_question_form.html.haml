@@ -13,7 +13,7 @@
           .form-group
             =question.label :name, t('views.course_practice_question.form.kind')
             .input-group.input-group-lg
-              = question.select :kind, [['Open', 'open'], ['Spreadsheet', 'spreadsheet']], {}, onChange: "javascript: your_onchange_handler(#{question.index}, $(this).val());", class: 'form-control question_kind'
+              = question.select :kind, [['Open', 'open'], ['Spreadsheet', 'spreadsheet']], {}, onChange: "javascript: showQuestionsByType(#{question.index}, $(this).val());", class: 'form-control question_kind'
         .col-sm-6
           .form-group
             =question.label :name, t('views.course_practice_question.form.sorting_order')
@@ -56,7 +56,7 @@
             =link_to t('views.general.delete'), admin_practice_question_remove_question_path(@course_step.id, question.object.id), method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger'
 
 :javascript
-   function your_onchange_handler(index, value){
+   function showQuestionsByType(index, value){
     switch(value) {
       case "open" :
         $("#open_questions_" + index).show();

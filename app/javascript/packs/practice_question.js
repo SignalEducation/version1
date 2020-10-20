@@ -8,7 +8,8 @@ const mountViewerElement = (element, data, component) =>
 new Vue({
   el: element,
     data: {
-      practiceQuestionId: data.practiceQuestionId
+      practiceQuestionId: data.practiceQuestionId,
+      stepLogId: data.stepLogId
     },
     render: h => h(component)
   });
