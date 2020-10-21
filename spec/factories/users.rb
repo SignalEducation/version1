@@ -60,20 +60,21 @@
 
 FactoryBot.define do
   factory :user do
-    sequence(:email)      { |n| "john.smith-#{n}@example.com" }
-    first_name            { Faker::Name.first_name }
-    last_name             { Faker::Name.last_name }
-    association           :country
-    password              { '123123123' }
-    password_confirmation { '123123123' }
-    active                { true }
-    terms_and_conditions  { true }
-    locale                { 'en' }
-    date_of_birth         { '2001-10-03' }
-    student_number        { '123456789' }
-    association           :user_group
-    association           :preferred_exam_body, factory: :exam_body
-    association           :currency
+    sequence(:email)       { |n| "john.smith-#{n}@example.com" }
+    first_name             { Faker::Name.first_name }
+    last_name              { Faker::Name.last_name }
+    association            :country
+    password               { '123123123' }
+    password_confirmation  { '123123123' }
+    active                 { true }
+    terms_and_conditions   { true }
+    locale                 { 'en' }
+    date_of_birth          { '2001-10-03' }
+    student_number         { '123456789' }
+    preferred_exam_body_id { '123456789' }
+    association            :user_group
+    association            :preferred_exam_body, factory: :exam_body
+    association            :currency
 
     factory :basic_student do
       sequence(:email)                { |n| "trial.student-#{n}@example.com" }

@@ -105,7 +105,7 @@ namespace :hub_spot do
 
     total_time = Benchmark.measure do
       @errors = []
-      batches = User.where(preferred_exam_body_id: nil).find_in_batches(batch_size: 500)
+      batches = User.where(preferred_exam_body_id: nil, user_group_id: 1).find_in_batches(batch_size: 500)
 
       batches.each do |users|
         ActiveRecord::Base.transaction do
