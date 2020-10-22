@@ -1191,11 +1191,6 @@ ActiveRecord::Schema.define(version: 2020_10_23_135426) do
     t.index ["course_practice_question_id"], name: "index_pq_questions_on_course_practice_question_id"
   end
 
-  create_table "pratice_questions", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "products", id: :serial, force: :cascade do |t|
     t.string "name"
     t.integer "course_id"

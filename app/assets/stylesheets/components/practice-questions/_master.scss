@@ -17,6 +17,7 @@
     position: relative;
     top: -8px;
     left: 8vw;
+    box-shadow: 0px -13px 31px -17px rgba(0, 0, 0, 0.15);
     cursor: pointer;
   }
   .calculator-icon-no-title:focus {
@@ -52,6 +53,7 @@
     position: relative;
     top: -8px;
     left: 12vw;
+    box-shadow: 0px -13px 31px -17px rgba(0, 0, 0, 0.15);
     cursor: pointer;
   }
   .scratch-pad-no-title:focus {
@@ -72,6 +74,7 @@
     top: -11px;
     left: 47vw;
     font-weight: bold;
+    box-shadow: 0px -13px 31px -17px rgba(0, 0, 0, 0.15);
     cursor: pointer;
   }
   .solution-btn-title:focus {
@@ -108,7 +111,7 @@
     background-size: 35%;
     background-color: #ffffff;
     width: 4.5em;
-    padding-bottom: 3.85em;
+    padding-bottom: 3.15em;
     position: absolute;
     top: 30%;
     right: -22px;
@@ -119,6 +122,9 @@
     -o-transform: rotate(90deg);
     -ms-transform: rotate(90deg);
     transform: rotate(90deg);
+  }
+  .help-btn-title:focus {
+    box-shadow: none;
   }
   .left-arrow-ques {
     background-image: asset-url('leftarrow.png');
@@ -195,18 +201,27 @@
   }
 }
 
-.splitpanes__splitter {
-  background-color: #000032 !important;
+#practice-question-window > div > section > div.questions > div:nth-child(2) > button {
+  .btn:focus {
+    background-color: red;
+  }
 }
 
-.splitpanes.practice-question-theme .splitpanes__pane {
-  background-color: #ffffff!important;
-  height: 70vh;
-}
+.practice-question-theme {
+  .splitpanes__splitter {
+    background-color: #000032 !important;
+    width: .4em;
+    opacity: .85;
+  }
+  .splitpanes__pane {
+    background-color: #ffffff!important;
+    height: 70vh;
+  }
 
-.splitpanes--vertical {
-  margin-bottom: 2rem;
-  background-color: #ffffff;
+  .splitpanes--vertical {
+    margin-bottom: 2rem;
+    background-color: #ffffff;
+  }
 }
 
 button2.btn-settings {
@@ -225,7 +240,7 @@ button2.btn-settings:active {
   padding-right: 0 !important;
   position: absolute !important;
   width: 37em;
-  height: 27em;
+  height: 28em;
   border-radius: 10px;
   border: 5px solid #000032;
   box-shadow: 0 0 0 1px hsl(0, 0%, 80%), 0 0 0 2px hsl(0, 0%, 90%);
@@ -247,6 +262,7 @@ button2.btn-settings:active {
   background-color: #f5f8fa;
   z-index: 1030;
   padding-right: 0 !important;
+  padding-left: 0 !important;
   position: absolute !important;
   width: 50em;
   height: 27em;
@@ -264,6 +280,18 @@ button2.btn-settings:active {
   padding: 20px;
   background-color:#000032;
   color:white;
+  position: fixed;
+  z-index: 100;
+  width: 36.5em;
+}
+.modal2-header-lg {
+  height: 45px;
+  padding: 20px;
+  background-color:#000032;
+  color:white;
+  position: fixed;
+  z-index: 100;
+  width: 49em;
 }
 .modal2-content {
   button.close {
@@ -280,6 +308,10 @@ button2.btn-settings:active {
   color: #000032;
   background-color: #ffffff;
 }
+
+.modal2-margin-top {
+  margin-top: 3em;
+}
 .modal-close {
   width: 31px;
   height: 31px;
@@ -291,7 +323,9 @@ button2.btn-settings:active {
   border-bottom-right-radius: 20px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   overflow: hidden;
-  margin-top: -.35em;
+  position: sticky;
+  top: .3rem;
+  z-index: 101;
 }
 button.modal-close:hover {
   background-color: #000032;
@@ -375,5 +409,18 @@ button.modal-close:focus {
   .submit-btn-title {
     background-color: rgba(89, 89, 110, 0.95);
     cursor: not-allowed;
+  }
+}
+
+#helpModal {
+  .pdf-viewer .scrolling-page {
+    margin-bottom: 1em;
+    canvas {
+      width: 100% !important;
+      height: 100% !important;
+    }
+  }
+  .pdf-viewer__document {
+    top: 0;
   }
 }

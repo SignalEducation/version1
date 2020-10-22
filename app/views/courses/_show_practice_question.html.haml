@@ -3,12 +3,26 @@
     %h1.h4
       .practice-ques-navigation
         =link_to course_special_link(@course_step.previous_element), class: 'v1_111' do
-          %i.material-icons.v1_137 navigate_before
+          %i.material-icons.v1_137{:title => "Go back to Course Page"} navigate_before
         =practice_question.course_step.name
         =link_to course_special_link(@course_step.next_element), class: 'v1_111' do
-          %i.material-icons.v1_137 navigate_next
+          %i.material-icons.v1_137{:title => "Next Step"} navigate_next
+      #fade-overlay.load-overlay
+        .spinner-border.text-success.spinning-loading{:role => "status"}
+          %span.sr-only Loading...
+      #small-screen-overlay.load-overlay
+        .small-screen-overlay-text
+          Please use a larger screen device
 
     =# VueJS include
     =stylesheet_link_tag 'splitpanes'
     =javascript_pack_tag 'practice_question'
     #practice-question-viewer{ 'data-practice-question-id': practice_question.id, 'data-step-log-id': step_log_id }
+
+  :javascript
+
+    setTimeout(
+      function(){
+        var x = document.getElementById("fade-overlay");
+        x.style.display = "none";
+    }, 2000);

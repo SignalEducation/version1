@@ -1,53 +1,37 @@
 <template>
-  <div>
-    <button
-      @click="
-        modalIsOpen = !modalIsOpen;
-        updateZindex();
-      "
-      href="#solutionModal"
-      class="btn btn-settings solution-btn-title"
-      data-backdrop="false"
-      data-toggle="modal"
-    >
-      Solution
-    </button>
-    <div
-      @click="updateZindex()"
-      id="solutionModal"
-      class="modal2-solution fade"
-      v-show="modalIsOpen"
-    >
-      <div class="modal2-dialog">
-        <div class="modal2-content">
-          <button
-            @click="modalIsOpen = !modalIsOpen"
-            type="button"
-            class="close modal-close"
-            data-dismiss="modal"
-            aria-hidden="true"
-          >
-            &times;
-          </button>
-          <div class="modal2-header">
-            <h4 class="modal2-title">Solution</h4>
-          </div>
-          <div class="modal2-body">
-            <h3>{{ solutionTitle }}</h3>
-            <h5>Question {{ this.indexOfQuestion + 1 }}</h5>
-            <div v-if="solutionObj.kind === 'spreadsheet'"></div>
-            <div v-else>
-              <p v-html="solutionObj.solution"></p>
-            </div>
-            <div v-show="solutionObj.kind == 'open'">
-              <p v-html="solutionObj.solution"></p>
-            </div>
-            <div v-show="solutionObj.kind == 'spreadsheet'">
-              <SpreadsheetEditor
-                :initial-data="solutionObj.solution"
-                :key="solutionObj.id"
-                @spreadsheet-updated="syncSpreadsheetData"
-              />
+    <div>
+        <button @click="modalIsOpen = !modalIsOpen; updateZindex()" href="#solutionModal" class="btn btn-settings solution-btn-title" data-backdrop="false" data-toggle="modal">Solution</button>
+        <div @click="updateZindex()" id="solutionModal" class="modal2-solution fade" v-show="modalIsOpen">
+            <div class="modal2-dialog">
+                <div class="modal2-content">
+                  <button @click="modalIsOpen = !modalIsOpen" type="button" class="close modal-close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <div class="modal2-header-lg">
+                        <h4 class="modal2-title">Solution</h4>
+
+                    </div>
+                    <div class="modal2-body">
+                      <div class="modal2-margin-top">
+                        <h3>{{solutionTitle}}</h3>
+                        <h5>Question {{this.indexOfQuestion + 1}}</h5>
+                        <div v-if="solutionContent[this.indexOfQuestion].kind === 'spreadsheet'">
+
+                        </div>
+                        <div v-else>
+                          <p v-html="solutionContent[this.indexOfQuestion].solution"></p>
+                        </div>
+                        <div v-show="solutionContent[this.indexOfQuestion].kind == 'open'">
+                          <p v-html="solutionContent[this.indexOfQuestion].solution"></p>
+                        </div>
+                        <div v-show="solutionContent[this.indexOfQuestion].kind == 'spreadsheet'">
+                          <SpreadsheetEditor
+                            :initial-data="solutionContent[this.indexOfQuestion].solution"
+                            :key="solutionContent[this.indexOfQuestion].id"
+                            @spreadsheet-updated="syncSpreadsheetData"
+                          />
+                        </div>
+                    </div>
+                  </div>
+                </div>
             </div>
           </div>
         </div>
