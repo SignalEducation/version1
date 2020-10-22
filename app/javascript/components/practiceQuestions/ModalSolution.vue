@@ -49,7 +49,7 @@ export default {
       type: String,
     },
     solutionContent: {
-      type: Object,
+      type: [Object, Array],
     },
   },
   data() {

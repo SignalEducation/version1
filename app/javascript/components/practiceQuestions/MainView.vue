@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section v-if="!isFetching">
     <div class="top-btns-prac-ques">
       <ModalCalculator />
       <ModalScratchPad />
@@ -16,7 +16,7 @@
           <LeftPane :content="practiceQuestion.content" />
         </span>
       <span>
-        <RightPane :totalQuestions="practiceQuestion.total_questions" :questionContentArray="practiceQuestion.questions" :answerContentArray="practiceQuestion.questions" :stepLogId="stepLogId" />
+        <RightPane :totalQuestions="practiceQuestion.total_questions" :questionContentArray="practiceQuestion.questions" :answerContentArray="practiceQuestion.answers" :stepLogId="stepLogId" />
       </span>
       </splitpanes>
           <HelpBtn />
@@ -63,6 +63,7 @@ export default {
       outsideLastPage: true,
       dynamicTitle: 'All answers required before completing',
       lastPageIndex: null,
+      isFetching: true,
     };
   },
   created() {
@@ -89,6 +90,7 @@ export default {
         .get(`/api/v1/practice_questions/${this.practiceQuestionId}`)
         .then(response => {
           this.practiceQuestion = response.data;
+          this.isFetching = false;
         })
         .catch(e => {});
     },
