@@ -41,12 +41,12 @@
           .col-sm-12
             .form-group
               =question.label :content, t('views.course_practice_question.form.content'), class: 'control-label'
-              %div{class: :spreadsheet_component, data: { spreadsheet_content: question.object.content, field_name: "course_step[course_practice_question_attributes][answers_attributes][#{question.index}][content]" } }
+              %div{class: :spreadsheet_component, data: { spreadsheet_content: question.object.content, field_name: "course_step[course_practice_question_attributes][questions_attributes][#{question.index}][content]" } }
 
           .col-sm-12
             .form-group
               =question.label :solution, t('views.course_practice_question.form.solution'), class: 'control-label'
-              %div{class: :spreadsheet_component, data: { spreadsheet_content: question.object.solution, field_name: "course_step[course_practice_question_attributes][answers_attributes][#{question.index}][solution]" } }
+              %div{class: :spreadsheet_component, data: { spreadsheet_content: question.object.solution, field_name: "course_step[course_practice_question_attributes][questions_attributes][#{question.index}][solution]" } }
 
       .row
         .col-sm-12
