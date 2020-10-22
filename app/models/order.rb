@@ -59,6 +59,7 @@ class Order < ApplicationRecord
   before_create :assign_random_guid
   before_create :generate_invoice
   before_destroy :check_dependencies
+  after_save :update_hub_spot_data
 
   # scopes
   scope :all_in_order,        -> { order(:product_id) }
@@ -240,5 +241,11 @@ class Order < ApplicationRecord
 
   def account_url
     UrlHelper.instance.account_url(host: LEARNSIGNAL_HOST)
+  end
+
+  def update_hub_spot_data
+    return if Rails.env.test?
+
+    HubSpotContactWorker.perform_async(user_id) if for_lifetime_access && completed?
   end
 end

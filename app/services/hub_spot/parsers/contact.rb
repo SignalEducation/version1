@@ -21,6 +21,10 @@ module HubSpot
         form_data(data)
       end
 
+      def format_hubspot_date(date)
+        date&.utc&.beginning_of_day&.to_datetime&.strftime('%Q')
+      end
+
       def form_data(data)
         {
           fields: [
@@ -52,19 +56,19 @@ module HubSpot
          { property: 'firstname',              value: user.first_name },
          { property: 'lastname',               value: user.last_name },
          { property: 'email_verified',         value: user.email_verified },
-         { property: 'ls_created_at',          value: user.created_at&.strftime('%m-%d-%Y') },
+         { property: 'ls_created_at',          value: format_hubspot_date(user.created_at) },
          { property: 'date_of_birth',          value: user.date_of_birth },
          { property: 'currency',               value: user&.currency&.name },
          { property: 'country',                value: user&.country&.name },
          { property: 'user_group',             value: user&.user_group&.name },
-         { property: 'sub_close_date_2',       value: last_subscription&.created_at&.strftime('%m-%d-%Y') },
+         { property: 'sub_close_date_2',       value: format_hubspot_date(last_subscription&.created_at) },
          { property: 'sub_payment_interval',   value: last_subscription&.subscription_plan&.interval_name },
          { property: 'sub_exam_body',          value: last_subscription&.subscription_plan&.exam_body&.name },
          { property: 'sub_type',               value: last_subscription&.kind&.humanize },
-         { property: 'sub_canceled_at',        value: last_subscription&.cancelled_at&.strftime('%m-%d-%Y') },
+         { property: 'sub_canceled_at',        value: format_hubspot_date(last_subscription&.cancelled_at) },
          { property: 'sub_cancelation_reason', value: last_subscription&.cancellation_reason },
          { property: 'sub_cancelation_note',   value: last_subscription&.cancellation_note },
-         { property: 'sub_renewal_date',       value: last_subscription&.next_renewal_date&.strftime('%m-%d-%Y') },
+         { property: 'sub_renewal_date',       value: format_hubspot_date(last_subscription&.next_renewal_date) },
          { property: 'last_purchased_course',  value: last_purchased_course&.name },
          { property: 'preferred_exam_body',    value: user&.preferred_exam_body&.name }] + subscriptions_statuses(user)
       end
