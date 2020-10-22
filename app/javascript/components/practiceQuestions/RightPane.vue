@@ -1,26 +1,12 @@
 <template>
   <section>
-    <div style="padding: 15px">
-      <ul class="flex-container">
-        <li
-          v-if="totalQuestions > 1"
-          @click="prevPage"
-          class="lightgrey nav-ques-arrow"
-        >
-          &laquo;
-        </li>
-        <li v-else class="lightgrey nav-ques-arrow-shw">&raquo;</li>
-        <li class="flex-item">
-          Question {{ this.activePage }} of {{ totalQuestions }}
-        </li>
-        <li
-          v-if="this.activePage < totalQuestions && totalQuestions > 1"
-          @click="nextPage(totalQuestions)"
-          class="lightgrey nav-ques-arrow"
-        >
-          &raquo;
-        </li>
-        <li v-else class="lightgrey nav-ques-arrow-shw">&raquo;</li>
+    <div style="padding:15px;">
+      <ul v-show="totalQuestions > 1" class="flex-container">
+        <li v-if="totalQuestions > 1" @click="prevPage" class="lightgrey nav-ques-arrow"> &laquo; </li>
+        <li v-else class="lightgrey nav-ques-arrow-shw"> &raquo; </li>
+        <li class="flex-item">Question {{this.activePage}} of {{totalQuestions}}</li>
+        <li v-if="this.activePage < totalQuestions && totalQuestions > 1" @click="nextPage(totalQuestions)" class="lightgrey nav-ques-arrow"> &raquo; </li>
+        <li v-else class="lightgrey nav-ques-arrow-shw"> &raquo; </li>
       </ul>
 
       <p v-html="questionContent.description"></p>
@@ -120,16 +106,15 @@ export default {
   },
   watch: {
     activePage: function(newVal, oldVal) {
-      eventBus.$emit("active-solution-index", newVal - 1);
-
       this.questionContent = this.questionContentArray[this.activePage - 1];
       this.updateCurrentAnswer();
     },
     "questionContent.answer_content": {
-      handler() {
-        console.log("gio here")
-      },
-     deep: true
+       handler() {
+         console.log('Inside my handler: ', this.activePage);
+         //eventBus.$emit("active-solution-index", newVal - 1);
+       },
+      deep: true
     }
   },
 };

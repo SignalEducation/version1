@@ -10,7 +10,9 @@
 
                     </div>
                     <div class="modal2-body">
-                      <Calculator />
+                      <div class="modal2-margin-top">
+                        <Calculator />
+                      </div>
                     </div>
                 </div>
             </div>

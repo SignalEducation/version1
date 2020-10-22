@@ -19,7 +19,7 @@
           />
         </span>
       </splitpanes>
-      <HelpBtn />
+      <HelpBtn :helpPdf="practiceQuestion.document.url" />
       <div :title="dynamicTitle" :class="{ outsidelastpage: outsideLastPage }">
         <SubmitBtn
           :totalQuestions="practiceQuestion.total_questions"
@@ -69,6 +69,7 @@ export default {
       dynamicTitle: "All answers required before completing",
       lastPageIndex: null,
       isFetching: true,
+      latestAnswer: false,
     };
   },
   created() {
@@ -76,15 +77,23 @@ export default {
       this.zIndexSort(lastClickedModal);
       this.zIndexStyle(this.zIndexArr);
     }),
-      eventBus.$on("active-solution-index", (activePage) => {
-        if (activePage + 1 == this.practiceQuestion.total_questions) {
-          this.outsideLastPage = false;
-          this.dynamicTitle = "Mark as Complete";
-        } else {
-          this.outsideLastPage = true;
-          this.dynamicTitle = "All answers required before completing";
-        }
-      });
+    eventBus.$on("update-answer-text",(ans)=>{
+      if (ans.length > 0) {
+        this.latestAnswer = true;
+        this.evaluateAnsText(true);
+      } else {
+        this.evaluateAnsText(false);
+      }
+    }),
+    eventBus.$on("active-solution-index",(activePage)=>{
+      if (activePage + 1 == this.practiceQuestion.total_questions && this.latestAnswer) {
+        this.outsideLastPage = false;
+        this.dynamicTitle = 'Mark as Complete';
+      } else {
+        this.outsideLastPage = true;
+        this.dynamicTitle = 'All answers required before completing';
+      }
+    })
   },
   mounted() {
     this.getPracticeQuestion();
@@ -122,6 +131,15 @@ export default {
       document.getElementById(modalArr[1]).style.zIndex = 1032;
       document.getElementById(modalArr[2]).style.zIndex = 1031;
       document.getElementById(modalArr[3]).style.zIndex = 1030;
+    },
+    evaluateAnsText(latestAns) {
+      if (this.practiceQuestion.total_questions == 1 && latestAns) {
+        this.outsideLastPage = false;
+        this.dynamicTitle = 'Mark as Complete';
+      } else {
+        this.outsideLastPage = true;
+        this.dynamicTitle = 'All answers required before completing';
+      }
     },
   },
 };

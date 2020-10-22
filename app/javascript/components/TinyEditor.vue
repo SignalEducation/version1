@@ -27,6 +27,7 @@ import axios from 'axios';
 import Editor from "@tinymce/tinymce-vue";
 import '../lib/TinyEditor/styles/custom/skin.min.css';
 import '../lib/TinyEditor/styles/custom/content.min.css';
+import eventBus from "./cbe/EventBus.vue";
 
 export default {
   components: {
@@ -39,7 +40,8 @@ export default {
     editorHeight: {
       type: Number,
       default: 300,
-    }
+    },
+    eventBus
   },
   data() {
     return {
@@ -50,6 +52,7 @@ export default {
   watch: {
     localFieldModel(fieldModel) {
       this.$emit("update", fieldModel);
+      eventBus.$emit("update-answer-text", fieldModel);
     },
     fieldModel() {
       if(this.fieldModel === null){
