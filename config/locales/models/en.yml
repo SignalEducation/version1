@@ -13,6 +13,11 @@ en:
       web_url_or_upload_error: You must enter a web URL or upload a file
       must_link_with_an_upload_or_url: You must link this Resource to an upload or URL
 
+    course_practice_questions:
+      questions:
+        content: Question Content
+        solution: Solution Content
+
     coupons:
       must_populate_one: Amount Off or Percent Off must have a value
       cant_populate_both: Only Amount Off or Percent Off can have a value
@@ -87,7 +92,7 @@ en:
       import_csv: Imported Users
       dont_reload: 'Do Not Reload This Page!'
       sidekiq_explanation: "Users are created as background jobs so as not to cause heavy cpu strain on the servers. If you want to check their progress click the 'Sidekiq' link below."
-    
+
     exercises:
       preview_csv: Preview Exercise Allocations
       import_csv: Bulk Exercise Assignments

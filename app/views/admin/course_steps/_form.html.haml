@@ -88,7 +88,7 @@
             .col-sm-12
               =f.fields_for :course_practice_question do |q|
                 .form-group
-                  =q.label :solution, t('views.course_practice_question.form.content'), class: 'control-label'
+                  =q.label :solution, t('views.course_practice_question.form.scenario'), class: 'control-label'
                   .input-group.input-group-lg.full-width
                     =q.text_area :content, as: 'summernote', class: 'form-control'
 

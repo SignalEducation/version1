@@ -1,56 +1,78 @@
 <template>
     <div>
         <button @click="modalIsOpen = !modalIsOpen; updateZindex()" href="#solutionModal" class="btn btn-settings solution-btn-title" data-backdrop="false" data-toggle="modal">Solution</button>
-        <div @click="updateZindex()" id="solutionModal" class="modal2 fade" v-show="modalIsOpen">
+        <div @click="updateZindex()" id="solutionModal" class="modal2-solution fade resizemove" v-show="modalIsOpen">
             <div class="modal2-dialog">
                 <div class="modal2-content">
                   <button @click="modalIsOpen = !modalIsOpen" type="button" class="close modal-close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <div class="modal2-header">
+                    <div class="modal2-header-lg">
                         <h4 class="modal2-title">Solution</h4>
 
                     </div>
                     <div class="modal2-body">
+                      <div class="modal2-margin-top">
                         <h3>{{solutionTitle}}</h3>
                         <h5>Question {{this.indexOfQuestion + 1}}</h5>
-                        <p v-html="solutionContent[this.indexOfQuestion].solution"></p>
+                        <div v-if="solutionContent[this.indexOfQuestion].kind === 'spreadsheet'">
+
+                        </div>
+                        <div v-else>
+                          <p v-html="solutionContent[this.indexOfQuestion].solution"></p>
+                        </div>
+                        <div v-show="solutionContent[this.indexOfQuestion].kind == 'open'">
+                          <p v-html="solutionContent[this.indexOfQuestion].solution"></p>
+                        </div>
+                        <div v-show="solutionContent[this.indexOfQuestion].kind == 'spreadsheet'">
+                          <SpreadsheetEditor
+                            :initial-data="solutionContent[this.indexOfQuestion].solution"
+                            :key="solutionContent[this.indexOfQuestion].id"
+                            @spreadsheet-updated="syncSpreadsheetData"
+                          />
+                        </div>
                     </div>
+                  </div>
                 </div>
             </div>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
-
 import eventBus from "../cbe/EventBus.vue";
+import SpreadsheetEditor from "../SpreadsheetEditor/SpreadsheetEditor.vue";
 
 export default {
   components: {
-    eventBus
+    eventBus,
+    SpreadsheetEditor,
   },
   props: {
-  	solutionTitle: {
+    solutionTitle: {
       type: String,
     },
     solutionContent: {
-      type: Object,
+      type: [Object, Array],
     },
   },
   data() {
     return {
       modalIsOpen: false,
       indexOfQuestion: 0,
+      solutionObj: null,
     };
   },
-  created() {
-    eventBus.$on("active-solution-index",(index)=>{
-      console.log("index: ", index);
+  async created() {
+    eventBus.$on("active-solution-index", (index) => {
       this.indexOfQuestion = index;
-    })
+      this.solutionObj = this.solutionContent[index - 1];
+    });
   },
   mounted() {
     this.$nextTick(function () {
-        $('#solutionModal').draggable();
+        $('#solutionModal').draggable({ handle:'.modal2-header-lg'});
     })
   },
   methods: {
@@ -58,8 +80,8 @@ export default {
       this.modalIsOpen = value;
     },
     updateZindex() {
-      eventBus.$emit('z-index-click', 'solutionModal');
-    }
+      eventBus.$emit("z-index-click", "solutionModal");
+    },
   },
   watch: {
     modalStatus(status) {
@@ -68,7 +90,6 @@ export default {
     modalIsOpen(value) {
       this.$emit("update-close-all", this.modalIsOpen);
     },
-
   },
 };
 </script>

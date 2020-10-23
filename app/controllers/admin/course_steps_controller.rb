@@ -265,10 +265,12 @@ module Admin
           :content,
           :kind,
           :estimated_time,
+          :document,
           questions_attributes: [
             :id,
             :kind,
             :course_practice_question_id,
+            :description,
             :content,
             :solution,
             :sorting_order

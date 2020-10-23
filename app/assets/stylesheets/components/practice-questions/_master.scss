@@ -17,6 +17,7 @@
     position: relative;
     top: -8px;
     left: 8vw;
+    box-shadow: 0px -13px 31px -17px rgba(0, 0, 0, 0.15);
     cursor: pointer;
   }
   .calculator-icon-no-title:focus {
@@ -52,6 +53,7 @@
     position: relative;
     top: -8px;
     left: 12vw;
+    box-shadow: 0px -13px 31px -17px rgba(0, 0, 0, 0.15);
     cursor: pointer;
   }
   .scratch-pad-no-title:focus {
@@ -72,6 +74,7 @@
     top: -11px;
     left: 47vw;
     font-weight: bold;
+    box-shadow: 0px -13px 31px -17px rgba(0, 0, 0, 0.15);
     cursor: pointer;
   }
   .solution-btn-title:focus {
@@ -90,7 +93,7 @@
     padding-bottom: 3.85em;
     position: absolute;
     top: 70%;
-    right: -23px;
+    right: -26px;
     cursor: pointer;
     box-shadow: 0px -13px 31px -7px rgba(0, 0, 0, 0.15);
     -webkit-transform: rotate(90deg);
@@ -108,7 +111,7 @@
     background-size: 35%;
     background-color: #ffffff;
     width: 4.5em;
-    padding-bottom: 3.85em;
+    padding-bottom: 3.15em;
     position: absolute;
     top: 30%;
     right: -22px;
@@ -119,6 +122,9 @@
     -o-transform: rotate(90deg);
     -ms-transform: rotate(90deg);
     transform: rotate(90deg);
+  }
+  .help-btn-title:focus {
+    box-shadow: none;
   }
   .left-arrow-ques {
     background-image: asset-url('leftarrow.png');
@@ -195,18 +201,27 @@
   }
 }
 
-.splitpanes__splitter {
-  background-color: #000032 !important;
+#practice-question-window > div > section > div.questions > div:nth-child(2) > button {
+  .btn:focus {
+    background-color: red;
+  }
 }
 
-.splitpanes.practice-question-theme .splitpanes__pane {
-  background-color: #ffffff!important;
-  height: 70vh;
-}
+.practice-question-theme {
+  .splitpanes__splitter {
+    background-color: #000032 !important;
+    width: .4em;
+    opacity: .85;
+  }
+  .splitpanes__pane {
+    background-color: #ffffff!important;
+    height: 70vh;
+  }
 
-.splitpanes--vertical {
-  margin-bottom: 2rem;
-  background-color: #ffffff;
+  .splitpanes--vertical {
+    margin-bottom: 2rem;
+    background-color: #ffffff;
+  }
 }
 
 button2.btn-settings {
@@ -225,9 +240,9 @@ button2.btn-settings:active {
   padding-right: 0 !important;
   position: absolute !important;
   width: 37em;
-  height: 27em;
+  height: 28em;
   border-radius: 10px;
-  border: 5px solid #000032;
+  border: 6px solid #000032;
   box-shadow: 0 0 0 1px hsl(0, 0%, 80%), 0 0 0 2px hsl(0, 0%, 90%);
   overflow-y: auto;
 }
@@ -243,6 +258,19 @@ button2.btn-settings:active {
   border: 5px solid #000032;
   box-shadow: 0 0 0 1px hsl(0, 0%, 80%), 0 0 0 2px hsl(0, 0%, 90%);
 }
+.modal2-solution {
+  background-color: #f5f8fa;
+  z-index: 1030;
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+  position: absolute !important;
+  width: 50em;
+  height: 27em;
+  border-radius: 10px;
+  border: 5px solid #000032;
+  box-shadow: 0 0 0 1px hsl(0, 0%, 80%), 0 0 0 2px hsl(0, 0%, 90%);
+  overflow-y: auto;
+}
 .modal2-dialog {
     margin-right: 0;
     margin-left: 0;
@@ -252,6 +280,17 @@ button2.btn-settings:active {
   padding: 20px;
   background-color:#000032;
   color:white;
+  position: fixed;
+  z-index: 100;
+  width: 36.5em;
+}
+.modal2-header-lg {
+  height: 45px;
+  padding: 20px;
+  background-color:#000032;
+  color:white;
+  z-index: 100;
+  width: 100%;
 }
 .modal2-content {
   button.close {
@@ -268,6 +307,10 @@ button2.btn-settings:active {
   color: #000032;
   background-color: #ffffff;
 }
+
+.modal2-margin-top {
+  margin-top: 3em;
+}
 .modal-close {
   width: 31px;
   height: 31px;
@@ -279,7 +322,8 @@ button2.btn-settings:active {
   border-bottom-right-radius: 20px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   overflow: hidden;
-  margin-top: -.35em;
+  top: .3rem;
+  z-index: 101;
 }
 button.modal-close:hover {
   background-color: #000032;
@@ -328,4 +372,58 @@ button.modal-close:focus {
   display:flex;
   flex-direction:row;
   margin-bottom:-11px;
+}
+.prac-ques-ans-box {
+  padding:0;
+  .container-fluid {
+    width: 105%;
+    padding-right: 0;
+    padding-left: 0;
+    margin-right: 0;
+    margin-left: -10px;
+  }
+  .btn-row:nth-child(3) {
+    .font-size-select[data-v-5994f0e8] {
+      width: 0;
+      margin-right: 2px;
+    }
+  }
+}
+@media screen and (max-width: 1200px) {
+  .prac-ques-ans-box {
+    .container-fluid {
+      width: 140% !important;
+      padding-right: 20px !important;
+    }
+  }
+}
+.modal-help {
+  top: 70px;
+}
+#solutionModal {
+  padding-left: 0;
+}
+.outsidelastpage {
+  .submit-btn-title {
+    background-color: rgba(89, 89, 110, 0.95);
+    cursor: not-allowed;
+  }
+}
+
+#helpModal {
+  .pdf-viewer .scrolling-page {
+    margin-bottom: 1em;
+    canvas {
+      width: 100% !important;
+      height: 100% !important;
+    }
+  }
+  .pdf-viewer__document {
+    top: 0;
+  }
+}
+
+.resizemove {
+  resize: both;
+  overflow: auto;
 }

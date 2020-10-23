@@ -10,6 +10,7 @@
 
                     </div>
                     <div class="modal2-body">
+                      <div class="modal2-margin-top">
                       <editor
                         :api-key="apiKey"
                         :init="{
@@ -21,8 +22,9 @@
                           toolbar: ['cut copy paste undo redo']
                         }"
                       />
-                        </div>
+                      </div>
                     </div>
+                </div>
             </div>
         </div>
     </div>

@@ -28,7 +28,7 @@
           -elsif @course_step.try(:is_note)
             =render partial: 'courses/show_notes', locals: { notes: @course_step.course_note, log: @course_step_log }
           -elsif @course_step.try(:is_practice_question)
-            =render partial: 'courses/show_practice_question', locals: { practice_question: @course_step.course_practice_question }
+            =render partial: 'courses/show_practice_question', locals: { practice_question: @course_step.course_practice_question, step_log_id:  @course_step_log.id }
           -elsif @course_step.try(:is_constructed_response)
             =render partial: 'courses/constructed_response_start'
           -else

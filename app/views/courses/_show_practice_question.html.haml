@@ -2,13 +2,28 @@
   .col-xl-12
     %h1.h4
       .practice-ques-navigation
-        .v1_111
-          %i.material-icons.v1_137 navigate_before
+        =link_to navigation_special_link(@course_step), class: 'btn btn-secondary btn-sm btn-sm-arrow-left mb-3 mb-sm-0' do
+          =@course_step.course_lesson.course_section.course.name
         =practice_question.course_step.name
-        .v1_111
-          %i.material-icons.v1_137 navigate_next
+        =render partial: 'next_lesson_navigation'
+      #fade-overlay.load-overlay
+        .spinner-border.text-success.spinning-loading{:role => "status"}
+          %span.sr-only Loading...
+      #small-screen-overlay.load-overlay
+        .small-screen-overlay-text
+          Please use a larger screen device
+          =link_to navigation_special_link(@course_step), class: 'btn btn-secondary btn-sm btn-sm-arrow-left mb-3 mb-sm-0' do
+            =@course_step.course_lesson.course_section.course.name
 
     =# VueJS include
     =stylesheet_link_tag 'splitpanes'
     =javascript_pack_tag 'practice_question'
-    #practice-question-viewer{ 'data-practice-question-id': practice_question.id }
+    #practice-question-viewer{ 'data-practice-question-id': practice_question.id, 'data-step-log-id': step_log_id }
+
+  :javascript
+
+    setTimeout(
+      function(){
+        var x = document.getElementById("fade-overlay");
+        x.style.display = "none";
+    }, 2000);

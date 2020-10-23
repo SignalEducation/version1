@@ -114,6 +114,9 @@
         }
       }
     },
+    created() {
+
+    },
     data() {
       return {
         hostClass:'spread-host',

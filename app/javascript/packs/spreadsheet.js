@@ -10,6 +10,7 @@ const mountViewerElement = (element, data, component) =>
     data: {
       content: data.spreadsheetContent,
       hidden_field_name: data.fieldName,
+      hidden_field_id: data.fieldId,
     },
     render: (h) => h(component),
   });
