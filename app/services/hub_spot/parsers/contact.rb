@@ -68,7 +68,7 @@ module HubSpot
          { property: 'sub_canceled_at',        value: format_hubspot_date(last_subscription&.cancelled_at) },
          { property: 'sub_cancelation_reason', value: last_subscription&.cancellation_reason },
          { property: 'sub_cancelation_note',   value: last_subscription&.cancellation_note },
-         { property: 'sub_renewal_date',       value: format_hubspot_date(last_subscription&.next_renewal_date) },
+         { property: 'sub_renewal_date',       value: format_hubspot_date(last_subscription&.next_renewal_date&.to_datetime) },
          { property: 'last_purchased_course',  value: last_purchased_course&.name },
          { property: 'preferred_exam_body',    value: user&.preferred_exam_body&.name }] + subscriptions_statuses(user)
       end
