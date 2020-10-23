@@ -5,9 +5,10 @@ module PracticeQuestion
     self.table_name_prefix = 'practice_question_'
 
     # relationships
-    belongs_to :practice_question_questions, class_name: 'PracticeQuestion::Question',
-                                              foreign_key: :practice_question_question_id,
-                                              inverse_of: :answers
+    belongs_to :course_step_log, foreign_key: :course_step_log_id, inverse_of: :practice_question_answers
+    belongs_to :question, class_name: 'PracticeQuestion::Question',
+                          foreign_key: :practice_question_question_id,
+                          inverse_of: :answers
 
     validates :practice_question_question_id, presence: true, on: :update
     validates :content, presence: true

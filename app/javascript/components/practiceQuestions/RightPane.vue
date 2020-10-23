@@ -23,10 +23,12 @@
         <li v-else class="lightgrey nav-ques-arrow-shw">&raquo;</li>
       </ul>
 
+      <p v-html="questionContent.description"></p>
+
       <div class="prac-ques-ans-box">
         <div v-if="questionContent.kind == 'open'">
           <TinyEditor
-            :field-model.sync="questionContent.content"
+            :field-model.sync="questionContent.answer_content"
             :aditional-toolbar-options="[]"
             :editor-id="`${questionContent.id}`"
             :key="questionContent.id"
@@ -36,7 +38,7 @@
 
         <div v-if="questionContent.kind == 'spreadsheet'">
           <spreadsheet-editor
-            :initial-data="questionContent.content"
+            :initial-data="questionContent.answer_content"
             :key="questionContent.id"
             @spreadsheet-updated="syncSpreadsheetData"
           />
@@ -65,12 +67,11 @@ export default {
     questionContentArray: {
       type: Array,
     },
-    answerContentArray: {
-      type: Array,
-    },
     stepLogId: {
-      type: String,
-      Number,
+      type: [String, Number],
+    },
+    practiceQuestionId: {
+      type: [String, Number],
     },
   },
   data() {
@@ -101,17 +102,14 @@ export default {
       if (this.activePage > 1) this.activePage--;
     },
     syncSpreadsheetData(jsonData) {
-      this.questionContent.content = { data: jsonData };
+      this.questionContent.answer_content = { content: { data: jsonData } };
     },
-    updateCurrentAnswer: function(index) {
-      const lastQuestion = this.questionContentArray[index - 1];
-
+    updateCurrentAnswer: function() {
       axios
         .patch(
-          `/api/v1/practice_questions/${lastQuestion.practice_question_id}/`,
+          `/api/v1/course_step_log/${this.stepLogId}/practice_questions/${this.practiceQuestionId}`,
           {
-            practice_questions: lastQuestion,
-            step_log: this.stepLogId,
+            practice_questions: this.questionContentArray,
           }
         )
         .then((response) => {
@@ -119,15 +117,20 @@ export default {
         })
         .catch((error) => {});
     },
-    answersContent: function(index) {},
   },
   watch: {
     activePage: function(newVal, oldVal) {
       eventBus.$emit("active-solution-index", newVal - 1);
 
       this.questionContent = this.questionContentArray[this.activePage - 1];
-      this.updateCurrentAnswer(oldVal);
+      this.updateCurrentAnswer();
     },
+    "questionContent.answer_content": {
+      handler() {
+        console.log("gio here")
+      },
+     deep: true
+    }
   },
 };
 </script>

@@ -105,6 +105,7 @@ describe CourseLog do
       context 'change completed lessons in log' do
         it { expect { subject }.to change { course_log.count_of_videos_taken }.from(nil).to(0) }
         it { expect { subject }.to change { course_log.count_of_notes_completed }.from(nil).to(0) }
+        it { expect { subject }.to change { course_log.count_of_practice_questions_completed }.from(nil).to(0) }
         it { expect { subject }.to change { course_log.count_of_constructed_responses_taken }.from(nil).to(0) }
         it { expect(course_log.count_of_cmes_completed).to be_zero }
       end

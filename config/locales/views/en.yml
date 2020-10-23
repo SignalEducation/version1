@@ -600,6 +600,7 @@ en:
         document: Upload help file
         kind: Type of questions/solution
         sorting_order: Order
+        description: Question Description
         scenario: Scenario Content
         content: Question Content
         solution: Question Solution

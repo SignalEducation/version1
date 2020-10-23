@@ -19,6 +19,12 @@
             =question.label :name, t('views.course_practice_question.form.sorting_order')
             .input-group.input-group-lg
               = question.text_field :sorting_order, class: 'form-control'
+      .row
+        .col-sm-12
+          .form-group
+            =question.label :name, t('views.course_practice_question.form.description')
+            .input-group.input-group-lg
+              =question.text_area :description, as: 'summernote', class: 'form-control summernote_text'
 
       -open_style = (question.object.open? || question.object.kind.nil? )? 'show' : 'none'
       .open_questions{id: "open_questions_#{question.index}", style: "display: #{open_style};"}
@@ -27,26 +33,28 @@
             .form-group
               =question.label :content, t('views.course_practice_question.form.content'), class: 'control-label'
               .input-group.input-group-lg.full-width
-                =question.text_area :content, as: 'summernote', class: 'form-control summernote_text'
+                =question.text_area :content, as: 'summernote', class: 'form-control summernote_text', id: "open_content_#{question.index}"
 
           .col-sm-12
             .form-group
               =question.label :solution, t('views.course_practice_question.form.solution'), class: 'control-label'
               .input-group.input-group-lg.full-width
-                =question.text_area :solution, as: 'summernote', class: 'form-control summernote_text'
+                =question.text_area :solution, as: 'summernote', class: 'form-control summernote_text', id: "open_solution_#{question.index}"
 
-      - spreadsheet_style = question.object.spreadsheet? ? 'show' : 'none'
+      - spreadsheet_style         = question.object.spreadsheet? ? 'show' : 'none'
+      - spreadsheet_content_name  = question.object.spreadsheet? ? "course_step[course_practice_question_attributes][questions_attributes][#{question.index}][content]" : 'empty_content'
+      - spreadsheet_solution_name = question.object.spreadsheet? ? "course_step[course_practice_question_attributes][questions_attributes][#{question.index}][solution]" : 'empty_solution'
       .spreadsheet_questions{id: "spreadsheet_questions_#{question.index}", style: "display: #{spreadsheet_style};"}
         .row
           .col-sm-12
             .form-group
               =question.label :content, t('views.course_practice_question.form.content'), class: 'control-label'
-              %div{class: :spreadsheet_component, data: { spreadsheet_content: question.object.content, field_name: "course_step[course_practice_question_attributes][questions_attributes][#{question.index}][content]" } }
+              %div{class: :spreadsheet_component, data: { spreadsheet_content: question.object.parsed_content, field_id: "spreadsheet_content_#{question.index}", field_name: spreadsheet_content_name } }
 
           .col-sm-12
             .form-group
               =question.label :solution, t('views.course_practice_question.form.solution'), class: 'control-label'
-              %div{class: :spreadsheet_component, data: { spreadsheet_content: question.object.solution, field_name: "course_step[course_practice_question_attributes][questions_attributes][#{question.index}][solution]" } }
+              %div{class: :spreadsheet_component, data: { spreadsheet_content: question.object.parsed_solution, field_id: "spreadsheet_content_#{question.index}", field_name: spreadsheet_solution_name } }
 
       .row
         .col-sm-12
@@ -56,15 +64,27 @@
             =link_to t('views.general.delete'), admin_practice_question_remove_question_path(@course_step.id, question.object.id), method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger'
 
 :javascript
-   function showQuestionsByType(index, value){
+  function showQuestionsByType(index, value){
     switch(value) {
       case "open" :
         $("#open_questions_" + index).show();
         $("#spreadsheet_questions_" + index).hide();
+
+        // TODO(giordano), find a better way to fix the  name duplication
+        $("#open_content_" + index).attr('name', `course_step[course_practice_question_attributes][questions_attributes][${index}][content]`);
+        $("#open_solution_" + index).attr('name', `course_step[course_practice_question_attributes][questions_attributes][${index}][solution]`);
+        $("#spreadsheet_content_" + index).attr('name', `empty_content`);
+        $("#spreadsheet_solution_" + index).attr('name', `empty_solution`);
         break;
       case "spreadsheet":
         $("#spreadsheet_questions_" + index).show();
         $("#open_questions_" + index).hide();
+
+        // TODO(giordano), find a better way to fix the  name duplication
+        $("#spreadsheet_content_" + index).attr('name', `course_step[course_practice_question_attributes][questions_attributes][${index}][content]`);
+        $("#spreadsheet_solution_" + index).attr('name', `course_step[course_practice_question_attributes][questions_attributes][${index}][solution]`);
+        $("#open_content_" + index).attr('name', `empty_content`);
+        $("#open_solution_" + index).attr('name', `empty_solution`);
         break;
     }
   };
