@@ -106,16 +106,15 @@ export default {
   },
   watch: {
     activePage: function(newVal, oldVal) {
-      eventBus.$emit("active-solution-index", newVal - 1);
-
       this.questionContent = this.questionContentArray[this.activePage - 1];
       this.updateCurrentAnswer();
     },
     "questionContent.answer_content": {
-      handler() {
-        console.log("gio here")
-      },
-     deep: true
+       handler() {
+         console.log('Inside my handler: ', this.activePage);
+         //eventBus.$emit("active-solution-index", newVal - 1);
+       },
+      deep: true
     }
   },
 };

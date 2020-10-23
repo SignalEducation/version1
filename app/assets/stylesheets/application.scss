@@ -6591,7 +6591,7 @@ button.sub-details[aria-expanded="true"]:before{
   right: 0;
   top: -80px;
   background: #fff;
-  opacity: 0.95;
+  opacity: 0.97;
   margin-left: -105px;
   width: 150%;
   z-index: 1030;
@@ -6620,6 +6620,13 @@ button.sub-details[aria-expanded="true"]:before{
     top: 22%;
     left: 27%;
     color: #000032;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .btn.btn-sm.btn-sm-arrow-left {
+      width: 60%;
+      margin-top: 1em;
+    }
   }
 }
 

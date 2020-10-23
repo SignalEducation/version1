@@ -2,17 +2,18 @@
   .col-xl-12
     %h1.h4
       .practice-ques-navigation
-        =link_to course_special_link(@course_step.previous_element), class: 'v1_111' do
-          %i.material-icons.v1_137{:title => "Go back to Course Page"} navigate_before
+        =link_to navigation_special_link(@course_step), class: 'btn btn-secondary btn-sm btn-sm-arrow-left mb-3 mb-sm-0' do
+          =@course_step.course_lesson.course_section.course.name
         =practice_question.course_step.name
-        =link_to course_special_link(@course_step.next_element), class: 'v1_111' do
-          %i.material-icons.v1_137{:title => "Next Step"} navigate_next
+        =render partial: 'next_lesson_navigation'
       #fade-overlay.load-overlay
         .spinner-border.text-success.spinning-loading{:role => "status"}
           %span.sr-only Loading...
       #small-screen-overlay.load-overlay
         .small-screen-overlay-text
           Please use a larger screen device
+          =link_to navigation_special_link(@course_step), class: 'btn btn-secondary btn-sm btn-sm-arrow-left mb-3 mb-sm-0' do
+            =@course_step.course_lesson.course_section.course.name
 
     =# VueJS include
     =stylesheet_link_tag 'splitpanes'

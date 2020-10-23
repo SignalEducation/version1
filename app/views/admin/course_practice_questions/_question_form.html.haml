@@ -27,7 +27,7 @@
               =question.text_area :description, as: 'summernote', class: 'form-control summernote_text'
 
       -open_style = (question.object.open? || question.object.kind.nil? )? 'show' : 'none'
-      .open_questions{id: "open_questions_#{question.index}", style: "display: #{open_style};"}
+      .open_questions{id: "open_questions_#{question.index}", style: "display: #{open_style};", name: "course_step[course_practice_question_attributes][questions_attributes][#{question.index}][content]" }
         .row
           .col-sm-12
             .form-group

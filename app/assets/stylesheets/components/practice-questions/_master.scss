@@ -93,7 +93,7 @@
     padding-bottom: 3.85em;
     position: absolute;
     top: 70%;
-    right: -23px;
+    right: -26px;
     cursor: pointer;
     box-shadow: 0px -13px 31px -7px rgba(0, 0, 0, 0.15);
     -webkit-transform: rotate(90deg);
@@ -242,7 +242,7 @@ button2.btn-settings:active {
   width: 37em;
   height: 28em;
   border-radius: 10px;
-  border: 5px solid #000032;
+  border: 6px solid #000032;
   box-shadow: 0 0 0 1px hsl(0, 0%, 80%), 0 0 0 2px hsl(0, 0%, 90%);
   overflow-y: auto;
 }
@@ -289,9 +289,8 @@ button2.btn-settings:active {
   padding: 20px;
   background-color:#000032;
   color:white;
-  position: fixed;
   z-index: 100;
-  width: 49em;
+  width: 100%;
 }
 .modal2-content {
   button.close {
@@ -323,7 +322,6 @@ button2.btn-settings:active {
   border-bottom-right-radius: 20px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   overflow: hidden;
-  position: sticky;
   top: .3rem;
   z-index: 101;
 }
@@ -423,4 +421,9 @@ button.modal-close:focus {
   .pdf-viewer__document {
     top: 0;
   }
+}
+
+.resizemove {
+  resize: both;
+  overflow: auto;
 }

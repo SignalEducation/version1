@@ -1,7 +1,7 @@
 <template>
     <div>
         <button @click="modalIsOpen = !modalIsOpen; updateZindex()" href="#solutionModal" class="btn btn-settings solution-btn-title" data-backdrop="false" data-toggle="modal">Solution</button>
-        <div @click="updateZindex()" id="solutionModal" class="modal2-solution fade" v-show="modalIsOpen">
+        <div @click="updateZindex()" id="solutionModal" class="modal2-solution fade resizemove" v-show="modalIsOpen">
             <div class="modal2-dialog">
                 <div class="modal2-content">
                   <button @click="modalIsOpen = !modalIsOpen" type="button" class="close modal-close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -71,9 +71,9 @@ export default {
     });
   },
   mounted() {
-    this.$nextTick(function() {
-      $("#solutionModal").draggable();
-    });
+    this.$nextTick(function () {
+        $('#solutionModal').draggable({ handle:'.modal2-header-lg'});
+    })
   },
   methods: {
     handleChange(value) {
