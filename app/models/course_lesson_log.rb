@@ -109,13 +109,15 @@ class CourseLessonLog < ApplicationRecord
     unique_video_ids                = completed_course_step_logs.videos.pluck(:course_step_id).uniq
     unique_quiz_ids                 = completed_course_step_logs.quizzes.pluck(:course_step_id).uniq
     unique_notes_ids                = completed_course_step_logs.notes.pluck(:course_step_id).uniq
+    unique_practice_questions_ids   = completed_course_step_logs.practice_questions.pluck(:course_step_id).uniq
     unique_constructed_response_ids = completed_course_step_logs.constructed_responses.pluck(:course_step_id).uniq
 
     self.count_of_videos_taken                = unique_video_ids.count
     self.count_of_quizzes_taken               = unique_quiz_ids.count
     self.count_of_notes_taken                 = unique_notes_ids.count
+    self.count_of_practice_questions_taken    = unique_practice_questions_ids.count
     self.count_of_constructed_responses_taken = unique_constructed_response_ids.count
-    self.count_of_cmes_completed = (count_of_videos_taken + count_of_quizzes_taken + count_of_notes_taken + count_of_constructed_responses_taken)
+    self.count_of_cmes_completed = (count_of_videos_taken + count_of_quizzes_taken + count_of_notes_taken + count_of_practice_questions_taken + count_of_constructed_responses_taken)
     self.percentage_complete = (count_of_cmes_completed / elements_total.to_f) * 100.0
     save!
   end

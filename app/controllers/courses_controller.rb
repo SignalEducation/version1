@@ -157,7 +157,7 @@ class CoursesController < ApplicationController
 
   def update_practice_question_data
     @course_step_log = CourseStepLog.find(params[:cmeul_id])
-@course_step_log.quiz_attempts.create(user_id: current_user.try(:id), quiz_question_id: params[:question_id], quiz_answer_id: params[:answer_id], answer_array: params[:answer_array])
+    @course_step_log.quiz_attempts.create(user_id: current_user.try(:id), quiz_question_id: params[:question_id], quiz_answer_id: params[:answer_id], answer_array: params[:answer_array])
 
     respond_to do |format|
       format.json do
@@ -275,21 +275,18 @@ class CoursesController < ApplicationController
   end
 
   def set_up_practice_question
-    @course_step_log = CourseStepLog.create(
-      session_guid: current_session_guid,
-      course_step_id: @course_step.id,
-      course_lesson_id: @course_step.course_lesson_id,
-      course_section_id: @course_step.course_lesson.course_section_id,
-      course_id: @course_step.course_lesson.course_id,
-      course_log_id: @course_log.try(:id),
-      course_section_log_id: @course_section_log.try(:id),
-      course_lesson_log_id: @course_lesson_log.try(:id),
-      is_quiz: false,
-      is_video: false,
-      is_note: false,
-      is_practice_question: true,
-      user_id: current_user.try(:id)
-    )
+    @course_step_log = CourseStepLog.find_or_create_by(course_step_id: @course_step.id,
+                                                       course_lesson_id: @course_step.course_lesson_id,
+                                                       course_section_id: @course_step.course_lesson.course_section_id,
+                                                       course_id: @course_step.course_lesson.course_id,
+                                                       course_log_id: @course_log.try(:id),
+                                                       course_section_log_id: @course_section_log.try(:id),
+                                                       course_lesson_log_id: @course_lesson_log.try(:id),
+                                                       is_practice_question: true,
+                                                       user_id: current_user.try(:id))
+
+    @course_step_log.update(session_guid: current_session_guid)
+    @course_step_log.build_practice_question_answers
   end
 
   def set_up_constructed_response_start_screen

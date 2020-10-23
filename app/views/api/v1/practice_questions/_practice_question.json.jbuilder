@@ -19,7 +19,12 @@ json.questions practice_question.questions.order(:sorting_order) do |question|
   json.id                   question.id
   json.sorting_order        question.sorting_order
   json.kind                 question.kind
-  json.content              question.open? ? question.content : JSON.parse(question.content)
-  json.solution             question.open? ? question.solution : JSON.parse(question.solution)
+  json.description          question.description
+  json.content              question.content
+  json.solution             question.solution
   json.practice_question_id practice_question.id
+
+  answer = question.answers.find_by(course_step_log_id: step_log.id)
+  json.answer_id      answer.id
+  json.answer_content answer.content
 end

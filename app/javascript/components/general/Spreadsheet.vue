@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-sm-12">
       <div class="form-group">
-          <input type='hidden' :name="hiddenFormName" :value="hiddenFormData"  />
+          <input type='hidden' :name="hiddenFormName"   :id="hiddenFormId" :value="hiddenFormData"  />
           <SpreadsheetEditor :initial-data="spreadsheetData" @spreadsheet-updated="syncSpreadsheetData" />
       </div>
     </div>
@@ -19,13 +19,16 @@ export default {
   data() {
     return {
       hiddenFormName: this.$parent.hidden_field_name,
+      hiddenFormId: this.$parent.hidden_field_id,
       hiddenFormData: "",
       spreadsheetData: {},
     };
   },
   mounted() {
-    if (this.$parent.content) {
+    try {
       this.spreadsheetData = JSON.parse(this.$parent.content);
+    } catch (error) {
+      console.log(error)
     }
   },
   methods: {

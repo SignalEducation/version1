@@ -47,7 +47,11 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :practice_questions, only: %i[index show update], format: 'json'
+      resources :course_step_log, only: :show, format: 'json' do
+        resources :practice_questions, only: %i[show update]
+      end
+
+      resources :practice_questions, only: :index
       resources :uploads, only: :create
     end
   end

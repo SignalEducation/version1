@@ -270,6 +270,7 @@ module Admin
             :id,
             :kind,
             :course_practice_question_id,
+            :description,
             :content,
             :solution,
             :sorting_order

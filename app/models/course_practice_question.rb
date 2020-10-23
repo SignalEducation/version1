@@ -37,8 +37,6 @@ class CoursePracticeQuestion < ApplicationRecord
 
   accepts_nested_attributes_for :questions, reject_if: ->(attributes) { question_is_blank?(attributes) }
 
-  private
-
   def self.question_is_blank?(attributes)
     attributes['content'].blank? && attributes['solution'].blank?
   end

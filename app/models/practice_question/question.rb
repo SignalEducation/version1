@@ -21,11 +21,42 @@ module PracticeQuestion
     enum kind: { open: 0, spreadsheet: 1 }
 
     # relationships
+    has_many   :answers, inverse_of: :question, class_name: 'PracticeQuestion::Answer',
+                                                foreign_key: :practice_question_question_id,
+                                                dependent: :nullify
     belongs_to :practice_question, class_name: 'CoursePracticeQuestion',
                                    foreign_key: :course_practice_question_id,
                                    inverse_of: :questions
 
+    # validations
     validates :course_practice_question_id, presence: true, on: :update
     validates :content, :solution, presence: true
+
+    # callbacks
+
+    before_save :parse_spreadsheet
+
+    def parse_spreadsheet
+      return if open?
+
+      self.content  = JSON.parse(content)
+      self.solution = JSON.parse(solution)
+    end
+
+    def parsed_content
+      parser_content(content)
+    end
+
+    def parsed_solution
+      parser_content(solution)
+    end
+
+    protected
+
+    def parser_content(json)
+      return if open? || json.blank?
+
+      json.to_json
+    end
   end
 end
