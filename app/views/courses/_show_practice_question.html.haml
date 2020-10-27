@@ -6,9 +6,7 @@
           =@course_step.course_lesson.course_section.course.name
         =practice_question.course_step.name
         =render partial: 'next_lesson_navigation'
-      #fade-overlay.load-overlay
-        .spinner-border.text-success.spinning-loading{:role => "status"}
-          %span.sr-only Loading...
+      #fade-overlay.load-overlay-blank
       #small-screen-overlay.load-overlay
         .small-screen-overlay-text
           Please use a larger screen device
@@ -26,4 +24,4 @@
       function(){
         var x = document.getElementById("fade-overlay");
         x.style.display = "none";
-    }, 2000);
+    }, 500);

@@ -75,6 +75,7 @@ export default {
     };
   },
   created() {
+    this.loadingPracticeQuestion();
     eventBus.$on("z-index-click", (lastClickedModal) => {
       this.zIndexSort(lastClickedModal);
       this.zIndexStyle(this.zIndexArr);
@@ -109,6 +110,7 @@ export default {
         .then((response) => {
           this.practiceQuestion = response.data;
           this.isFetching = false;
+          this.loader.hide();
         })
         .catch((e) => {});
     },
@@ -142,6 +144,14 @@ export default {
         this.outsideLastPage = true;
         this.dynamicTitle = 'All answers required before completing';
       }
+    },
+    loadingPracticeQuestion() {
+      this.loader = this.$loading.show({
+        loader: "dots",
+        color: "#00b67B",
+        opacity: '.98',
+        container: this.fullPage ? null : this.$refs.formContainer,
+      });
     },
   },
 };
