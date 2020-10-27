@@ -600,9 +600,9 @@ en:
         document: Upload help file
         kind: Type of questions/solution
         sorting_order: Order
-        description: Question Description
+        description: Question Content
         scenario: Scenario Content
-        content: Question Content
+        content: Answer Template
         solution: Question Solution
         add_question: Add Question
         update: Update Question
