@@ -13,10 +13,7 @@
     background-size: 40%;
     background-color: #ffffff;
     width: 4.5em;
-    padding-bottom: 1.85em;
-    position: relative;
-    top: -8px;
-    left: 8vw;
+    padding-bottom: 2em;
     box-shadow: 0px -13px 31px -17px rgba(0, 0, 0, 0.15);
     cursor: pointer;
   }
@@ -49,10 +46,7 @@
     background-size: 40%;
     background-color: #ffffff;
     width: 4.5em;
-    padding-bottom: 1.85em;
-    position: relative;
-    top: -8px;
-    left: 12vw;
+    padding-bottom: 2em;
     box-shadow: 0px -13px 31px -17px rgba(0, 0, 0, 0.15);
     cursor: pointer;
   }
@@ -61,6 +55,7 @@
     box-shadow: none;
   }
   .solution-btn-title {
+    color: rgba(0, 0, 50, 0.95);
     text-align: center;
     background-position: center;
     border-top-left-radius: 8px;
@@ -69,10 +64,7 @@
     background-color: #ffffff;
     width: 9em;
     margin-top: 3px;
-    padding-bottom: 0.35em;
-    position: relative;
-    top: -11px;
-    left: 47vw;
+    padding-bottom: 1em;
     font-weight: bold;
     box-shadow: 0px -13px 31px -17px rgba(0, 0, 0, 0.15);
     cursor: pointer;
@@ -372,6 +364,14 @@ button.modal-close:focus {
   display:flex;
   flex-direction:row;
   margin-bottom:-11px;
+  justify-content: space-around;
+  .top-btns-left-pane{
+    display: flex;
+    margin-left: -5em;
+    .top-btns-left-pane-spc {
+      margin-right: 2em;
+    }
+  }
 }
 .prac-ques-ans-box {
   padding:0;

@@ -1,8 +1,10 @@
 <template>
   <section v-if="!isFetching">
     <div class="top-btns-prac-ques">
-      <ModalCalculator />
-      <ModalScratchPad />
+      <div class="top-btns-left-pane">
+        <ModalCalculator class="top-btns-left-pane-spc"/>
+        <ModalScratchPad />
+      </div>
       <ModalSolution :solutionTitle="practiceQuestion.course_step.name" :solutionContent="practiceQuestion.questions"  />
     </div>
     <div class="questions">
