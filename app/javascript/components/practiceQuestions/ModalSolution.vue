@@ -1,16 +1,16 @@
 <template>
     <div>
-        <button @click="modalIsOpen = !modalIsOpen; updateZindex()" href="#solutionModal" class="btn btn-settings solution-btn-title" data-backdrop="false" data-toggle="modal">Solution</button>
+        <button @click="modalIsOpen = !modalIsOpen; updateZindex(); resetModalDims()" href="#solutionModal" class="btn btn-settings solution-btn-title" data-backdrop="false" data-toggle="modal">Solution</button>
         <div @click="updateZindex()" id="solutionModal" class="modal2-solution fade resizemove" v-show="modalIsOpen">
             <div class="modal2-dialog">
                 <div class="modal2-content">
-                  <button @click="modalIsOpen = !modalIsOpen" type="button" class="close modal-close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                  <button @click="modalIsOpen = !modalIsOpen" type="button" class="close modal-close modal-close-solution" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <div class="modal2-header-lg">
                         <h4 class="modal2-title">Solution</h4>
 
                     </div>
                     <div class="modal2-body">
-                      <div class="modal2-margin-top">
+                      <div>
                         <h3>{{solutionTitle}}</h3>
                         <h5>Question {{this.indexOfQuestion + 1}}</h5>
                         <div v-if="solutionContent[this.indexOfQuestion].kind === 'spreadsheet'">
@@ -81,6 +81,10 @@ export default {
     },
     updateZindex() {
       eventBus.$emit("z-index-click", "solutionModal");
+    },
+    resetModalDims() {
+      $('#solutionModal').css('width', '60em');
+      $('#solutionModal').css('height', '37em');
     },
   },
   watch: {

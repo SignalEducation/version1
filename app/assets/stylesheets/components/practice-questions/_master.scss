@@ -82,10 +82,10 @@
     background-size: 21%;
     background-color: #000032;
     width: 4.5em;
-    padding-bottom: 3.85em;
+    padding-bottom: 2.5em;
     position: absolute;
     top: 70%;
-    right: -26px;
+    right: -30px;
     cursor: pointer;
     box-shadow: 0px -13px 31px -7px rgba(0, 0, 0, 0.15);
     -webkit-transform: rotate(90deg);
@@ -103,10 +103,10 @@
     background-size: 35%;
     background-color: #ffffff;
     width: 4.5em;
-    padding-bottom: 3.15em;
+    padding-bottom: 2.5em;
     position: absolute;
     top: 30%;
-    right: -22px;
+    right: -30px;
     cursor: pointer;
     box-shadow: 0px -13px 31px -7px rgba(0, 0, 0, 0.15);
     -webkit-transform: rotate(90deg);
@@ -253,11 +253,25 @@ button2.btn-settings:active {
 .modal2-solution {
   background-color: #f5f8fa;
   z-index: 1030;
+  left: 30px;
   padding-right: 0 !important;
   padding-left: 0 !important;
   position: absolute !important;
-  width: 50em;
-  height: 27em;
+  width: 60em;
+  height: 37em;
+  border-radius: 10px;
+  border: 5px solid #000032;
+  box-shadow: 0 0 0 1px hsl(0, 0%, 80%), 0 0 0 2px hsl(0, 0%, 90%);
+  overflow-y: auto;
+}
+.modal2-help {
+  background-color: #f5f8fa;
+  z-index: 1030;
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+  position: absolute !important;
+  width: 60em;
+  height: 37em;
   border-radius: 10px;
   border: 5px solid #000032;
   box-shadow: 0 0 0 1px hsl(0, 0%, 80%), 0 0 0 2px hsl(0, 0%, 90%);
@@ -316,6 +330,9 @@ button2.btn-settings:active {
   overflow: hidden;
   top: .3rem;
   z-index: 101;
+}
+.modal-close-solution {
+  top: .4rem;
 }
 button.modal-close:hover {
   background-color: #000032;
@@ -412,6 +429,7 @@ button.modal-close:focus {
 
 #helpModal {
   .pdf-viewer .scrolling-page {
+    margin-top: 4em;
     margin-bottom: 1em;
     canvas {
       width: 100% !important;

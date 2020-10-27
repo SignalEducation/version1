@@ -1,7 +1,7 @@
 <template>
     <div>
-        <button @click="modalIsOpen = !modalIsOpen; updateZindex()" href="#helpModal" class="btn btn-settings help-btn-title" title="Help" data-backdrop="false" data-toggle="modal"></button>
-        <div @click="updateZindex()" id="helpModal" class="modal2-solution modal-help fade resizemove" v-show="modalIsOpen">
+        <button @click="modalIsOpen = !modalIsOpen; updateZindex(); resetModalDims()" href="#helpModal" class="btn btn-settings help-btn-title" title="Help" data-backdrop="false" data-toggle="modal"></button>
+        <div @click="updateZindex()" id="helpModal" class="modal2-help modal-help fade resizemove" v-show="modalIsOpen">
             <div class="modal2-dialog">
                 <div class="modal2-content">
                   <button @click="modalIsOpen = !modalIsOpen" type="button" class="close modal-close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -9,7 +9,7 @@
                         <h4 class="modal2-title">Help</h4>
                     </div>
                     <div class="modal2-body">
-                      <div class="modal2-margin-top">
+                      <div>
                         <PDFViewer :active=true :file-url="helpPdf" />
                       </div>
                     </div>
@@ -46,7 +46,11 @@ export default {
     },
     updateZindex() {
       eventBus.$emit('z-index-click', 'helpModal');
-    }
+    },
+    resetModalDims() {
+      $('#helpModal').css('width', '60em');
+      $('#helpModal').css('height', '37em');
+    },
   },
   watch: {
     modalStatus(status) {
