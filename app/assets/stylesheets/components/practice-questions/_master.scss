@@ -445,3 +445,42 @@ button.modal-close:focus {
   resize: both;
   overflow: auto;
 }
+
+
+.submit-btn-modal {
+  modal-title { font-size: 18px; font-weight: bold; }
+ .no-borders { border: 0px; }
+ .body-message { font-size: 18px; margin-top: .25em;}
+ .centered { text-align: center; }
+ .btn-submit-modal { color: #ffffff; background-color: #00b67b; border-color: transparent; outline: none; border-radius: 8px; font-size: 15px; padding: 10px 25px; }
+ .btn-submit-modal-outline { color: #00b67b; background-color: transparent; border-color: #00b67b; outline: none; border-radius: 8px; font-size: 15px; padding: 10px 25px; }
+ .btn-submit-modal:hover { background-color: #000032; border-color: transparent; }
+ .btn-submit-modal-outline:hover { color: #000032; border-color: #000032; border-style: dashed;}
+ .btn-submit-modal:focus { outline: none; }
+ .btn:focus {
+  outline: 0;
+  box-shadow: none;
+  }
+ .modal {
+   background-color: #000032;
+   opacity: 0.98;
+ }
+ .modal-header {
+   button:focus {
+     outline: none;
+   }
+ }
+ .modal-content {
+   width: 45%;
+   border-radius: 10px;
+   outline: 0;
+ }
+ .modal-dialog {
+   display: flex;
+   justify-content: center;
+ }
+ .modal-footer {
+   justify-content: flex-end;
+   margin-top: 1.75em;
+ }
+}
