@@ -4,15 +4,19 @@
 #
 # Table name: course_practice_questions
 #
-#  id             :bigint           not null, primary key
-#  name           :string
-#  content        :text
-#  kind           :integer
-#  estimated_time :integer
-#  course_step_id :bigint
-#  destroyed_at   :datetime
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
+#  id                    :bigint           not null, primary key
+#  name                  :string
+#  content               :text
+#  kind                  :integer
+#  estimated_time        :integer
+#  course_step_id        :bigint
+#  destroyed_at          :datetime
+#  created_at            :datetime         not null
+#  updated_at            :datetime         not null
+#  document_file_name    :string
+#  document_content_type :string
+#  document_file_size    :bigint
+#  document_updated_at   :datetime
 #
 class CoursePracticeQuestion < ApplicationRecord
   include LearnSignalModelExtras
@@ -33,11 +37,12 @@ class CoursePracticeQuestion < ApplicationRecord
   # validations
   validates :course_step_id, presence: true, on: :update
   validates :content, presence: true
+  validates_attachment_presence :document
   validates_attachment_content_type :document, content_type: %w[application/pdf]
 
   accepts_nested_attributes_for :questions, reject_if: ->(attributes) { question_is_blank?(attributes) }
 
   def self.question_is_blank?(attributes)
-    attributes['content'].blank? && attributes['solution'].blank?
+    attributes['solution'].blank?
   end
 end

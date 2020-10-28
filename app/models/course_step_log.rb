@@ -30,6 +30,7 @@
 #  course_section_log_id      :integer
 #  quiz_result                :integer
 #  is_note                    :boolean          default("false")
+#  is_practice_question       :boolean          default("false")
 #
 class CourseStepLog < ApplicationRecord
   include LearnSignalModelExtras

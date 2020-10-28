@@ -27,6 +27,7 @@
 #  related_course_step_id    :integer
 #  is_note                   :boolean          default("false")
 #  vid_end_seconds           :integer
+#  is_practice_question      :boolean
 #
 
 class CourseStep < ApplicationRecord

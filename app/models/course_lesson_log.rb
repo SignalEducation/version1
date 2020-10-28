@@ -11,7 +11,7 @@
 #  updated_at                           :datetime
 #  session_guid                         :string(255)
 #  course_lesson_id                     :integer
-#  percentage_complete                  :float            default("0.0")
+#  percentage_complete                  :float            default("0")
 #  count_of_cmes_completed              :integer          default("0")
 #  course_id                            :integer
 #  count_of_questions_taken             :integer
@@ -23,6 +23,7 @@
 #  course_section_id                    :integer
 #  course_section_log_id                :integer
 #  count_of_notes_taken                 :integer
+#  count_of_practice_questions_taken    :integer
 #
 
 class CourseLessonLog < ApplicationRecord

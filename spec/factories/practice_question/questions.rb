@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: practice_questions_answers
+# Table name: practice_question_questions
 #
 #  id                          :bigint           not null, primary key
 #  kind                        :integer
@@ -10,6 +10,7 @@
 #  course_practice_question_id :bigint
 #  created_at                  :datetime         not null
 #  updated_at                  :datetime         not null
+#  description                 :text
 #
 FactoryBot.define do
   factory :practice_question_questions, class: ::PracticeQuestion::Question do

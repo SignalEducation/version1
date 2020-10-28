@@ -179,18 +179,18 @@ module Admin
       case cme.type_name
       when 'Constructed Response'
         cme.constructed_response.duplicate
-        flash[:success] = 'Constructed Response successfully duplicaded'
+        flash[:success] = 'Constructed Response successfully duplicated'
       when 'Quiz'
         cme.course_quiz.duplicate
-        flash[:success] = 'Quiz successfully duplicaded'
+        flash[:success] = 'Quiz successfully duplicated'
       when 'Notes'
         cme.course_note.duplicate
-        flash[:success] = 'Video successfully duplicaded'
+        flash[:success] = 'Video successfully duplicated'
       when 'Video'
         cme.course_video.duplicate
-        flash[:success] = 'Video successfully duplicaded'
+        flash[:success] = 'Video successfully duplicated'
       else
-        flash[:error] = 'Course Element was not successfully duplicaded'
+        flash[:error] = 'Course Element was not successfully duplicated'
       end
 
       redirect_to admin_show_course_lesson_path(cme.course_lesson.course_id,

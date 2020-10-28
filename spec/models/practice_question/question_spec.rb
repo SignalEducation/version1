@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: practice_question_questions
+#
+#  id                          :bigint           not null, primary key
+#  kind                        :integer
+#  content                     :json
+#  solution                    :json
+#  sorting_order               :integer
+#  course_practice_question_id :bigint
+#  created_at                  :datetime         not null
+#  updated_at                  :datetime         not null
+#  description                 :text
+#
 require 'rails_helper'
 
 RSpec.describe PracticeQuestion::Question, type: :model do

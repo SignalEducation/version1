@@ -16,6 +16,7 @@
 #  course_id                            :integer
 #  count_of_constructed_responses_taken :integer
 #  count_of_notes_taken                 :integer
+#  count_of_practice_questions_taken    :integer
 #
 
 class CourseSectionLog < ApplicationRecord

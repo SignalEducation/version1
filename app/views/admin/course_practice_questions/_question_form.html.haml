@@ -54,7 +54,7 @@
           .col-sm-12
             .form-group
               =question.label :solution, t('views.course_practice_question.form.solution'), class: 'control-label'
-              %div{class: :spreadsheet_component, data: { spreadsheet_content: question.object.parsed_solution, field_id: "spreadsheet_content_#{question.index}", field_name: spreadsheet_solution_name } }
+              %div{class: :spreadsheet_component, data: { spreadsheet_content: question.object.parsed_solution, field_id: "spreadsheet_solution_#{question.index}", field_name: spreadsheet_solution_name } }
 
       .row
         .col-sm-12

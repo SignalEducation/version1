@@ -2,7 +2,7 @@
 
 # == Schema Information
 #
-# Table name: practice_question_question
+# Table name: practice_question_questions
 #
 #  id                          :bigint           not null, primary key
 #  kind                        :integer
@@ -12,6 +12,7 @@
 #  course_practice_question_id :bigint
 #  created_at                  :datetime         not null
 #  updated_at                  :datetime         not null
+#  description                 :text
 #
 module PracticeQuestion
   class Question < ApplicationRecord
@@ -30,7 +31,7 @@ module PracticeQuestion
 
     # validations
     validates :course_practice_question_id, presence: true, on: :update
-    validates :content, :solution, presence: true
+    validates :solution, presence: true
 
     # callbacks
 
@@ -39,8 +40,8 @@ module PracticeQuestion
     def parse_spreadsheet
       return if open?
 
-      self.content  = JSON.parse(content)
-      self.solution = JSON.parse(solution)
+      self.content  = JSON.parse(content) if content&.present?
+      self.solution = JSON.parse(solution) if solution&.present?
     end
 
     def parsed_content

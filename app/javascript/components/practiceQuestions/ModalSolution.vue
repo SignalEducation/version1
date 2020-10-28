@@ -11,23 +11,17 @@
                     </div>
                     <div class="modal2-body">
                       <div>
-                        <h3>{{solutionTitle}}</h3>
                         <h5>Question {{this.indexOfQuestion + 1}}</h5>
                         <div v-if="solutionContent[this.indexOfQuestion].kind === 'spreadsheet'">
+                          <SpreadsheetEditor
+                              :initial-data="solutionContent[this.indexOfQuestion].solution"
+                              :key="solutionContent[this.indexOfQuestion].id"
+                              @spreadsheet-updated="syncSpreadsheetData"
+                          />
 
                         </div>
                         <div v-else>
                           <p v-html="solutionContent[this.indexOfQuestion].solution"></p>
-                        </div>
-                        <div v-show="solutionContent[this.indexOfQuestion].kind == 'open'">
-                          <p v-html="solutionContent[this.indexOfQuestion].solution"></p>
-                        </div>
-                        <div v-show="solutionContent[this.indexOfQuestion].kind == 'spreadsheet'">
-                          <SpreadsheetEditor
-                            :initial-data="solutionContent[this.indexOfQuestion].solution"
-                            :key="solutionContent[this.indexOfQuestion].id"
-                            @spreadsheet-updated="syncSpreadsheetData"
-                          />
                         </div>
                     </div>
                   </div>
@@ -76,6 +70,13 @@ export default {
     })
   },
   methods: {
+    syncSpreadsheetData(jsonData) {
+      this.solutionContent = {
+        content: {
+          data: jsonData
+        },
+      };
+    },
     handleChange(value) {
       this.modalIsOpen = value;
     },
