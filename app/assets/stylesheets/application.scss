@@ -6598,20 +6598,25 @@ button.sub-details[aria-expanded="true"]:before{
   height: 250%;
 }
 
-.spinner-border {
-  z-index: 1030;
+.load-overlay-blank {
+  bottom: 0;
+  left: -300px;
   position: absolute;
-  width: 5rem;
-  height: 5rem;
-  top: 32%;
-  left: 36%;
+  right: 0;
+  top: -80px;
+  background: #000032;
+  opacity: 1;
+  margin-left: -105px;
+  width: 180%;
+  z-index: 1030;
+  height: 250%;
 }
 
 #small-screen-overlay {
   display: none;
 }
 
-@media (max-width:992px) {
+@media (max-width: 751px) and (max-width:992px) {
   #small-screen-overlay {
     display: block;
   }
@@ -6630,6 +6635,26 @@ button.sub-details[aria-expanded="true"]:before{
   }
 }
 
+@media (max-width:750px) {
+  #small-screen-overlay {
+    display: block;
+  }
+  .small-screen-overlay-text {
+    position: absolute;
+    top: 22%;
+    left: 32%;
+    color: #000032;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .btn.btn-sm.btn-sm-arrow-left {
+      width: 60%;
+      margin-top: 1em;
+    }
+  }
+}
+
 #practice-question-window {
   padding-bottom: 2em;
+  padding-right: 3em;
 }
