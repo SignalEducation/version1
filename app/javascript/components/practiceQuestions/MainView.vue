@@ -72,6 +72,7 @@ export default {
       lastPageIndex: null,
       isFetching: true,
       latestAnswer: false,
+      updateAnsArr: null,
     };
   },
   created() {
@@ -88,8 +89,8 @@ export default {
         this.evaluateAnsText(false);
       }
     }),
-    eventBus.$on("active-solution-index",(activePage)=>{
-      if (activePage + 1 == this.practiceQuestion.total_questions && this.latestAnswer) {
+    eventBus.$on("active-solution-index",(showSubmitBtn)=>{
+      if (showSubmitBtn[0]) {
         this.outsideLastPage = false;
         this.dynamicTitle = 'Mark as Complete';
       } else {
@@ -111,6 +112,8 @@ export default {
           this.practiceQuestion = response.data;
           this.isFetching = false;
           this.loader.hide();
+          let fillArr = new Array(this.practiceQuestion.total_questions);
+          this.updateAnsArr = fillArr.fill(0);
         })
         .catch((e) => {});
     },
@@ -149,7 +152,7 @@ export default {
       this.loader = this.$loading.show({
         loader: "dots",
         color: "#00b67B",
-        opacity: '.98',
+        opacity: 0.98,
         container: this.fullPage ? null : this.$refs.formContainer,
       });
     },

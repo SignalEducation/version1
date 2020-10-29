@@ -12,7 +12,7 @@
       <p v-html="questionContent.description"></p>
 
       <div class="prac-ques-ans-box">
-        <div v-if="questionContent.kind == 'open'">
+        <div v-show="questionContent.kind == 'open'">
           <TinyEditor
             :field-model.sync="questionContent.answer_content"
             :aditional-toolbar-options="[]"
@@ -22,7 +22,7 @@
           />
         </div>
 
-        <div v-if="questionContent.kind == 'spreadsheet'">
+        <div v-show="questionContent.kind == 'spreadsheet'">
           <spreadsheet-editor
             :initial-data="questionContent.answer_content"
             :key="questionContent.id"
@@ -66,7 +66,13 @@ export default {
       activePage: 1,
       isActive: true,
       questionContent: null,
+      fillArr: null,
     };
+  },
+  mounted() {
+    let questionChangeArr = new Array(this.totalQuestions);
+    this.fillArr = questionChangeArr.fill(0);
+    this.updateSubmitBtn(this.questionContentArray);
   },
   async created() {
     this.questionContent = this.questionContentArray[this.activePage - 1];
@@ -103,6 +109,29 @@ export default {
         })
         .catch((error) => {});
     },
+    updateSubmitBtn: function(contentArr) {
+      contentArr.forEach((pageArr, index) => {
+        return new Promise((resolve) => {
+          resolve(pageArr);
+        }).then((data) => {
+          let origDataLength;
+          let userChangedDataLength;
+          if (data.kind == 'spreadsheet') {
+            origDataLength =  Object.keys(data.content.content.data.data.dataTable).length;
+            userChangedDataLength = Object.keys(data.answer_content.content.data.data.dataTable).length;
+          } else {
+            origDataLength = data.content.length;
+            userChangedDataLength = data.answer_content.length;
+          }
+          if (origDataLength != userChangedDataLength) {
+            this.fillArr[index] = 1;
+          }
+        });
+      });
+      return new Promise((resolve) => {
+        resolve(true);
+      });
+    },
   },
   watch: {
     activePage: function(newVal, oldVal) {
@@ -111,8 +140,11 @@ export default {
     },
     "questionContent.answer_content": {
        handler() {
-         console.log('Inside my handler: ', this.activePage);
-         //eventBus.$emit("active-solution-index", newVal - 1);
+         this.updateSubmitBtn(this.questionContentArray).then((response) => {
+           if (response) {
+             eventBus.$emit("active-solution-index", [this.fillArr.every(item => item === 1), this.activePage - 1]);
+           }
+        });
        },
       deep: true
     }
