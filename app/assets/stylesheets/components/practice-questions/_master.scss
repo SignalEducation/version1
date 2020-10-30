@@ -462,13 +462,11 @@ button.modal-close:focus {
   box-shadow: none;
   }
  .modal {
-   background-color: #000032;
-   opacity: 0.98;
+   background-color:rgba(0,0,50,0.85);
  }
  .modal-header {
-   button:focus {
-     outline: none;
-   }
+   button:focus { outline: none; }
+   .close { padding: 0; margin: -20px -10px 0 auto; }
  }
  .modal-content {
    width: 45%;
