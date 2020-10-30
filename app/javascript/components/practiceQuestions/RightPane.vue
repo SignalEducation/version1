@@ -72,7 +72,12 @@ export default {
   mounted() {
     let questionChangeArr = new Array(this.totalQuestions);
     this.fillArr = questionChangeArr.fill(0);
-    this.updateSubmitBtn(this.questionContentArray);
+    this.updateSubmitBtn(this.questionContentArray).then((response) => {
+      if (response) {
+        eventBus.$emit("active-solution-index", [this.fillArr.every(item => item === 1), this.activePage - 1]);
+        eventBus.$emit("show-submit-btn", this.fillArr.every(item => item === 1));
+      }
+    });
   },
   async created() {
     this.questionContent = this.questionContentArray[this.activePage - 1];
@@ -140,10 +145,11 @@ export default {
     },
     "questionContent.answer_content": {
        handler() {
-         this.updateSubmitBtn(this.questionContentArray).then((response) => {
-           if (response) {
-             eventBus.$emit("active-solution-index", [this.fillArr.every(item => item === 1), this.activePage - 1]);
-           }
+        this.updateSubmitBtn(this.questionContentArray).then((response) => {
+          if (response) {
+            eventBus.$emit("active-solution-index", [this.fillArr.every(item => item === 1), this.activePage - 1]);
+            eventBus.$emit("show-submit-btn", this.fillArr.every(item => item === 1));
+          }
         });
        },
       deep: true
