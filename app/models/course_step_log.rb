@@ -161,9 +161,9 @@ class CourseStepLog < ApplicationRecord
   end
 
   def build_practice_question_answers
-    return if practice_question_answers.present?
-
     course_step.course_practice_question.questions.each do |question|
+      next if practice_question_answers.map(&:practice_question_question_id).include?(question.id)
+
       practice_question_answers.create(content: question.content,
                                        practice_question_question_id: question.id)
     end

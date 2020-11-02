@@ -25,6 +25,8 @@ json.questions practice_question.questions.order(:sorting_order) do |question|
   json.practice_question_id practice_question.id
 
   answer = question.answers.find_by(course_step_log_id: step_log.id)
-  json.answer_id      answer.id
-  json.answer_content answer.content
+  if answer.present?
+    json.answer_id      answer.id
+    json.answer_content answer.content
+  end
 end
