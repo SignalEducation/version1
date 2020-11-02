@@ -7,6 +7,7 @@
         <li class="flex-item">Question {{this.activePage}} of {{totalQuestions}}</li>
         <li v-if="this.activePage < totalQuestions && totalQuestions > 1" @click="nextPage(totalQuestions)" class="lightgrey nav-ques-arrow"> &raquo; </li>
         <li v-else class="lightgrey nav-ques-arrow-shw"> &raquo; </li>
+        <div id="rightPaneTopUnderline" class="right-pane-underline"></div>
       </ul>
 
       <p v-html="questionContent.description"></p>
@@ -35,6 +36,18 @@
 </template>
 
 <script>
+
+function rightPaneScrolling() {
+  let isScrolling;
+  if ($("#pane_1").scrollTop() == 0) {
+    setTimeout(() => {
+      document.getElementById("rightPaneTopUnderline").style.display = "none";
+    }, 500);
+  }
+  document.getElementById("rightPaneTopUnderline").style.display = "block";
+  window.clearTimeout( isScrolling );
+}
+
 import axios from "axios";
 import eventBus from "../cbe/EventBus.vue";
 import TinyEditor from "../TinyEditor.vue";
@@ -70,6 +83,7 @@ export default {
     };
   },
   mounted() {
+    document.querySelector('#pane_1').addEventListener("scroll", rightPaneScrolling);
     let questionChangeArr = new Array(this.totalQuestions);
     this.fillArr = questionChangeArr.fill(0);
     this.updateSubmitBtn(this.questionContentArray).then((response) => {
@@ -93,9 +107,15 @@ export default {
       this.activePage = num;
     },
     nextPage: function(lastQuestion) {
+      setTimeout(() => {
+        document.getElementById("rightPaneTopUnderline").style.display = "none";
+      }, 500);
       if (this.activePage < lastQuestion) this.activePage++;
     },
     prevPage: function() {
+      setTimeout(() => {
+        document.getElementById("rightPaneTopUnderline").style.display = "none";
+      }, 500);
       if (this.activePage > 1) this.activePage--;
     },
     syncSpreadsheetData(jsonData) {
