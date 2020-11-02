@@ -27,11 +27,26 @@
 
 // TODO: Refactor code to make this modal an independent component not just for submit button
 
+import axios from "axios";
 import eventBus from "../cbe/EventBus.vue";
 
 export default {
   components: {
     eventBus,
+  },
+  props: {
+    totalQuestions: {
+      type: Number,
+    },
+    questionContentArray: {
+      type: Array,
+    },
+    stepLogId: {
+      type: [String, Number],
+    },
+    practiceQuestionId: {
+      type: [String, Number],
+    },
   },
   data() {
     return {
@@ -53,6 +68,7 @@ export default {
     nextStepCounter() {
       this.stayHere = false;
       this.timerCount = 5;
+      this.updateCurrentAnswer();
     },
     navigateToNextStep() {
       $("#practice-ques-next-step")[0].click();
@@ -60,6 +76,20 @@ export default {
     cancelNavigation() {
       this.stayHere = true;
       this.timerCount = 5;
+    },
+    updateCurrentAnswer: function() {
+      axios
+        .patch(
+          `/api/v1/course_step_log/${this.stepLogId}/practice_questions/${this.practiceQuestionId}`,
+          {
+            practice_questions: this.questionContentArray,
+            status: 'submited'
+          }
+        )
+        .then((response) => {
+          console.log;
+        })
+        .catch((error) => {});
     },
   },
   watch: {
