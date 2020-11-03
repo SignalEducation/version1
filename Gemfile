@@ -109,7 +109,7 @@ group :development, :test do
   gem 'rubocop-rails', require: false # rubocop lint
   gem 'rubocop-rspec', require: false
   gem 'ultrahook' # allows incoming webhooks from stripe
-  gem 'faker', '~> 2.1.2'
+  gem 'faker', '~> 2.14.0'
 end
 
 group :test do

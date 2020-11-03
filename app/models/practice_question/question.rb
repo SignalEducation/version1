@@ -40,8 +40,8 @@ module PracticeQuestion
     def parse_spreadsheet
       return if open?
 
-      self.content  = JSON.parse(content) if content&.present?
-      self.solution = JSON.parse(solution) if solution&.present?
+      self.content  = JSON.parse(content) if content&.present? && content.kind_of?(String)
+      self.solution = JSON.parse(solution) if solution&.present? && solution.kind_of?(String)
     end
 
     def parsed_content
