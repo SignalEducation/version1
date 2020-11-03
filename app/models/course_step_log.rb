@@ -175,10 +175,10 @@ class CourseStepLog < ApplicationRecord
   # This triggers the creation of parent CSUL and its parent SCUL
   def create_course_lesson_log
     set = CourseLessonLog.create!(user_id: user_id, course_lesson_id: course_lesson_id,
-                                   course_section_id: course_lesson.course_section_id,
-                                   course_id: course_section.course_id,
-                                   course_section_log_id: try(:course_section_log_id),
-                                   course_log_id: try(:course_log_id))
+                                  course_section_id: course_lesson.course_section_id,
+                                  course_id: course_section.course_id,
+                                  course_section_log_id: try(:course_section_log_id),
+                                  course_log_id: try(:course_log_id))
     self.course_lesson_log_id = set.id
     self.course_section_log_id = set.course_section_log_id
     self.course_log_id = set.course_log_id

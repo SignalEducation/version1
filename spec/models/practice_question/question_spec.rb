@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: practice_question_questions
@@ -38,5 +40,40 @@ RSpec.describe PracticeQuestion::Question, type: :model do
   describe 'Factory' do
     it { expect(question).to be_a PracticeQuestion::Question }
     it { expect(question).to be_valid }
+  end
+
+  context 'Methods' do
+    describe '.parse_spreadsheet' do
+      let(:spreadsheet_question) { build(:practice_question_questions, :spreadsheet_question, practice_question: practice_question) }
+
+      before { spreadsheet_question.parse_spreadsheet }
+
+      it 'parse json' do
+        expect(spreadsheet_question.content).to be_a_kind_of(Hash)
+        expect(spreadsheet_question.solution).to be_a_kind_of(Hash)
+      end
+    end
+
+    describe '.parsed_content' do
+      let(:spreadsheet_question) { build(:practice_question_questions, :spreadsheet_question, practice_question: practice_question) }
+
+      before { spreadsheet_question.parsed_content }
+
+      it 'parse json content' do
+        expect(spreadsheet_question.content).to be_a_kind_of(String)
+        expect(spreadsheet_question.solution).to be_a_kind_of(String)
+      end
+    end
+
+    describe '.parsed_solution' do
+      let(:spreadsheet_question) { build(:practice_question_questions, :spreadsheet_question, practice_question: practice_question) }
+
+      before { spreadsheet_question.parsed_solution }
+
+      it 'parse json solution' do
+        expect(spreadsheet_question.content).to be_a_kind_of(String)
+        expect(spreadsheet_question.solution).to be_a_kind_of(String)
+      end
+    end
   end
 end
