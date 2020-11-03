@@ -23,8 +23,8 @@ module PracticeQuestion
 
     # relationships
     has_many   :answers, inverse_of: :question, class_name: 'PracticeQuestion::Answer',
-                                                foreign_key: :practice_question_question_id,
-                                                dependent: :nullify
+                         foreign_key: :practice_question_question_id,
+                         dependent: :nullify
     belongs_to :practice_question, class_name: 'CoursePracticeQuestion',
                                    foreign_key: :course_practice_question_id,
                                    inverse_of: :questions
