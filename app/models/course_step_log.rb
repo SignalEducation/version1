@@ -30,6 +30,7 @@
 #  course_section_log_id      :integer
 #  quiz_result                :integer
 #  is_note                    :boolean          default("false")
+#  is_practice_question       :boolean          default("false")
 #
 class CourseStepLog < ApplicationRecord
   include LearnSignalModelExtras
@@ -47,8 +48,10 @@ class CourseStepLog < ApplicationRecord
   belongs_to :course_lesson_log, optional: true
   belongs_to :course_step, optional: true
   has_many   :quiz_attempts, inverse_of: :course_step_log
+  has_many   :practice_question_answers, inverse_of: :course_step_log, class_name: 'PracticeQuestion::Answer'
   has_one    :constructed_response_attempt
   accepts_nested_attributes_for :quiz_attempts, :constructed_response_attempt
+  accepts_nested_attributes_for :practice_question_answers
 
   # validation
   validates :user_id, presence: true
@@ -77,6 +80,7 @@ class CourseStepLog < ApplicationRecord
   scope :quizzes, -> { where(is_quiz: true) }
   scope :videos, -> { where(is_video: true) }
   scope :notes, -> { where(is_note: true) }
+  scope :practice_questions, -> { where(is_practice_question: true) }
   scope :constructed_responses, -> { where(is_constructed_response: true) }
   scope :with_elements_active, -> { includes(:course_step).where('course_steps.active = ?', true).references(:course_steps) }
   scope :this_week, -> { where(created_at: Time.zone.now.beginning_of_week..Time.zone.now.end_of_week) }
@@ -115,6 +119,8 @@ class CourseStepLog < ApplicationRecord
       'Video'
     elsif is_note?
       'Notes'
+    elsif is_practice_question?
+      'Practice Question'
     elsif is_constructed_response?
       'Constructed Response'
     else
@@ -154,6 +160,15 @@ class CourseStepLog < ApplicationRecord
                    element_completed: passed)
   end
 
+  def build_practice_question_answers
+    course_step.course_practice_question.questions.each do |question|
+      next if practice_question_answers.map(&:practice_question_question_id).include?(question.id)
+
+      practice_question_answers.create(content: question.content,
+                                       practice_question_question_id: question.id)
+    end
+  end
+
   protected
 
   # Before Validation
@@ -175,13 +190,16 @@ class CourseStepLog < ApplicationRecord
       self.is_quiz = true
     elsif course_step.is_video
       self.is_video = true
-     elsif course_step.is_note
+    elsif course_step.is_note
       self.is_note = true
+    elsif course_step.is_practice_question
+      self.is_practice_question = true
     elsif course_step.is_constructed_response
       self.is_constructed_response = true
     else
       self.is_video = true
     end
+
     true
   end
 

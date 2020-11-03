@@ -4,23 +4,24 @@
 #
 # Table name: course_logs
 #
-#  id                                   :integer          not null, primary key
-#  user_id                              :integer
-#  session_guid                         :string
-#  course_id                            :integer
-#  percentage_complete                  :integer          default("0")
-#  count_of_cmes_completed              :integer          default("0")
-#  latest_course_step_id                :integer
-#  completed                            :boolean          default("false")
-#  created_at                           :datetime         not null
-#  updated_at                           :datetime         not null
-#  count_of_questions_correct           :integer
-#  count_of_questions_taken             :integer
-#  count_of_videos_taken                :integer
-#  count_of_quizzes_taken               :integer
-#  completed_at                         :datetime
-#  count_of_constructed_responses_taken :integer
-#  count_of_notes_completed             :integer
+#  id                                    :integer          not null, primary key
+#  user_id                               :integer
+#  session_guid                          :string
+#  course_id                             :integer
+#  percentage_complete                   :integer          default("0")
+#  count_of_cmes_completed               :integer          default("0")
+#  latest_course_step_id                 :integer
+#  completed                             :boolean          default("false")
+#  created_at                            :datetime         not null
+#  updated_at                            :datetime         not null
+#  count_of_questions_correct            :integer
+#  count_of_questions_taken              :integer
+#  count_of_videos_taken                 :integer
+#  count_of_quizzes_taken                :integer
+#  completed_at                          :datetime
+#  count_of_constructed_responses_taken  :integer
+#  count_of_notes_completed              :integer
+#  count_of_practice_questions_completed :integer
 #
 
 class CourseLog < ApplicationRecord
@@ -81,11 +82,12 @@ class CourseLog < ApplicationRecord
   end
 
   def recalculate_scul_completeness
-    self.count_of_videos_taken                = course_section_logs.with_valid_course_section.sum(:count_of_videos_taken)
-    self.count_of_quizzes_taken               = course_section_logs.with_valid_course_section.sum(:count_of_quizzes_taken)
-    self.count_of_notes_completed             = course_section_logs.with_valid_course_section.sum(:count_of_notes_taken)
-    self.count_of_constructed_responses_taken = course_section_logs.with_valid_course_section.sum(:count_of_constructed_responses_taken)
-    self.count_of_cmes_completed              = course_section_logs.with_valid_course_section.sum(:count_of_cmes_completed)
+    self.count_of_videos_taken                 = course_section_logs.with_valid_course_section.sum(:count_of_videos_taken)
+    self.count_of_quizzes_taken                = course_section_logs.with_valid_course_section.sum(:count_of_quizzes_taken)
+    self.count_of_notes_completed              = course_section_logs.with_valid_course_section.sum(:count_of_notes_taken)
+    self.count_of_practice_questions_completed = course_section_logs.with_valid_course_section.sum(:count_of_practice_questions_taken)
+    self.count_of_constructed_responses_taken  = course_section_logs.with_valid_course_section.sum(:count_of_constructed_responses_taken)
+    self.count_of_cmes_completed               = course_section_logs.with_valid_course_section.sum(:count_of_cmes_completed)
 
     self.percentage_complete = (count_of_cmes_completed / elements_total_for_completion.to_f) * 100 if elements_total_for_completion.positive?
 

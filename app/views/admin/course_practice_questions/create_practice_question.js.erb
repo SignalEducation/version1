@@ -1,0 +1,1 @@
+$("#questions_list").append("<%= escape_javascript("#{render :partial => 'admin/course_practice_questions/question_form', locals: f: @course_step}").html_safe %>");

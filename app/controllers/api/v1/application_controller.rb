@@ -3,6 +3,8 @@
 module Api
   module V1
     class ApplicationController < ActionController::Base
+      include ExceptionHandler
+
       protect_from_forgery unless: -> { request.format.json? }
     end
   end

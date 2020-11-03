@@ -121,6 +121,7 @@ class User < ApplicationRecord
   validates :first_name, presence: true, length: { minimum: 2, maximum: 20 }
   validates :last_name, presence: true, length: { minimum: 2, maximum: 30 }
   validates :password, presence: true, length: { minimum: 6, maximum: 255 }, on: :create
+  validates :preferred_exam_body_id, presence: true, on: :create, if: :standard_student_user?
   validates :user_group_id, presence: true
   validates :name_url, presence: true, uniqueness: { case_sensitive: false }, if: :tutor_user?
   validates :tutor_link, presence: true, uniqueness: { case_sensitive: false }, if: :tutor_user?

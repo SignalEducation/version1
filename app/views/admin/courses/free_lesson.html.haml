@@ -88,11 +88,8 @@
 
         .row.pt-4
           .col-sm-6
-            =link_to t('views.course_steps.form.new_video'), new_admin_course_step_path(type: 'video', cm_id: @free_course_lesson.id), class: 'btn btn-primary'
-            =link_to t('views.course_steps.form.new_quiz'), new_admin_course_step_path(type: 'quiz', cm_id: @free_course_lesson.id), class: 'btn btn-primary'
-            =link_to t('views.course_steps.form.new_note'), new_admin_course_step_path(type: 'note', cm_id: @free_course_lesson.id), class: 'btn btn-primary'
-            =link_to t('views.course_steps.form.new_constructed_response'), new_admin_course_step_path(type: 'constructed_response', cm_id: @free_course_lesson.id), class: 'btn btn-primary'
-
+            - %w[video quiz note practice_question constructed_response].each do |step_type|
+              =link_to t("views.course_steps.form.new_#{step_type}"), new_admin_course_step_path(type: step_type, cm_id: @free_course_lesson.id), class: 'btn btn-primary'
 
   -#%section.pb-7
     =form_for(@course, url: admin_course_update_trial_content_url) do |f|

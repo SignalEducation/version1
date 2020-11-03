@@ -27,6 +27,7 @@
 #  related_course_step_id    :integer
 #  is_note                   :boolean          default("false")
 #  vid_end_seconds           :integer
+#  is_practice_question      :boolean
 #
 
 class CourseStep < ApplicationRecord
@@ -42,6 +43,7 @@ class CourseStep < ApplicationRecord
   has_one :course_quiz
   has_one :course_video
   has_one :course_note
+  has_one :course_practice_question
   has_one :constructed_response
   has_one :video_resource, inverse_of: :course_step
   has_many :course_resources
@@ -54,6 +56,7 @@ class CourseStep < ApplicationRecord
 
   accepts_nested_attributes_for :course_quiz
   accepts_nested_attributes_for :course_video
+  accepts_nested_attributes_for :course_practice_question
   accepts_nested_attributes_for :constructed_response
   accepts_nested_attributes_for :video_resource, reject_if: ->(attributes) { nested_video_resource_is_blank?(attributes) }
   accepts_nested_attributes_for :course_note, reject_if: ->(attributes) { nested_resource_is_blank?(attributes) }, allow_destroy: true
@@ -232,6 +235,8 @@ class CourseStep < ApplicationRecord
       'Video'
     elsif is_note
       'Notes'
+    elsif is_practice_question
+      'Practice Questions'
     elsif is_constructed_response
       'Constructed Response'
     else
@@ -246,6 +251,8 @@ class CourseStep < ApplicationRecord
       'playlist_add_check'
     elsif is_note
       'insert_drive_file'
+    elsif is_practice_question
+      'grid_on'
     elsif is_constructed_response
       'grid_on'
     else

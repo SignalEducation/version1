@@ -12,8 +12,8 @@
           .col-xs-12.col-sm-8
             .box-item.text-center
               %p
-                ="Your payment receipt will be sent to #{current_user.email}"
+                ="Your payment receipt will be sent to #{current_user&.email}"
 
               =link_to student_dashboard_url do
                 .btn.btn-primary
-                  ="Continue Your #{current_user.preferred_exam_body.name} Studies"
+                  ="Continue Your #{current_user&.preferred_exam_body&.name} Studies"

@@ -24,8 +24,8 @@ RSpec.describe StudentSignUpsController, type: :controller do
            stripe_guid: 'stripe_plan_guid_m', payment_frequency_in_months: 3, exam_body: exam_body_1)
   }
 
-  let(:unverified_user) { create(:student_user, user_group: student_user.user_group, account_activated_at: nil, account_activation_code: '987654321', active: false, email_verified_at: nil, email_verification_code: '123456687', email_verified: false) }
-  let!(:sign_up_params) { { first_name: 'Tes', last_name: 'Studen', country_id: uk.id, locale: 'en', email: 'test.student@example.com', password: 'dummy_pas', password_confirmation: 'dummy_pas', email_verification_code: 'c5a8a2cb71d476ff4ed' } }
+  let(:unverified_user) { create(:student_user, user_group: student_user.user_group, account_activated_at: nil, account_activation_code: '987654321', active: false, email_verified_at: nil, email_verification_code: '123456687', email_verified: false, preferred_exam_body_id: exam_body_1.id) }
+  let!(:sign_up_params) { { first_name: 'Test', last_name: 'Student', country_id: uk.id, locale: 'en', email: 'test.student@example.com', password: 'dummy_pas', password_confirmation: 'dummy_pas', email_verification_code: 'c5a8a2cb71d476ff4ed', preferred_exam_body_id: exam_body_1.id } }
 
   context 'Not logged in...' do
     describe "GET 'home'" do

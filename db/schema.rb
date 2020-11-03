@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_08_091523) do
+ActiveRecord::Schema.define(version: 2020_10_23_135426) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -422,6 +422,7 @@ ActiveRecord::Schema.define(version: 2020_10_08_091523) do
     t.integer "course_section_id"
     t.integer "course_section_log_id"
     t.integer "count_of_notes_taken"
+    t.integer "count_of_practice_questions_taken"
     t.index ["course_id"], name: "index_course_lesson_logs_on_course_id"
     t.index ["course_lesson_id"], name: "index_course_lesson_logs_on_course_lesson_id"
     t.index ["course_log_id"], name: "index_course_lesson_logs_on_course_log_id"
@@ -478,6 +479,7 @@ ActiveRecord::Schema.define(version: 2020_10_08_091523) do
     t.datetime "completed_at"
     t.integer "count_of_constructed_responses_taken"
     t.integer "count_of_notes_completed"
+    t.integer "count_of_practice_questions_completed"
     t.index ["course_id"], name: "index_course_logs_on_course_id"
     t.index ["latest_course_step_id"], name: "index_scu_logs_on_latest_course_step_id"
     t.index ["session_guid"], name: "index_course_logs_on_session_guid"
@@ -497,6 +499,22 @@ ActiveRecord::Schema.define(version: 2020_10_08_091523) do
     t.datetime "destroyed_at"
     t.boolean "download_available", default: false
     t.index ["course_step_id"], name: "index_course_notes_on_course_step_id"
+  end
+
+  create_table "course_practice_questions", force: :cascade do |t|
+    t.string "name"
+    t.text "content"
+    t.integer "kind"
+    t.integer "estimated_time"
+    t.bigint "course_step_id"
+    t.datetime "destroyed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "document_file_name"
+    t.string "document_content_type"
+    t.bigint "document_file_size"
+    t.datetime "document_updated_at"
+    t.index ["course_step_id"], name: "index_course_practice_questions_on_course_step_id"
   end
 
   create_table "course_quizzes", id: :serial, force: :cascade do |t|
@@ -543,6 +561,7 @@ ActiveRecord::Schema.define(version: 2020_10_08_091523) do
     t.integer "course_id"
     t.integer "count_of_constructed_responses_taken"
     t.integer "count_of_notes_taken"
+    t.integer "count_of_practice_questions_taken"
     t.index ["course_id"], name: "index_course_section_logs_on_course_id"
     t.index ["course_log_id"], name: "index_course_section_logs_on_course_log_id"
     t.index ["course_section_id"], name: "index_course_section_logs_on_course_section_id"
@@ -594,6 +613,7 @@ ActiveRecord::Schema.define(version: 2020_10_08_091523) do
     t.integer "course_section_log_id"
     t.integer "quiz_result"
     t.boolean "is_note", default: false
+    t.boolean "is_practice_question", default: false
     t.index ["course_id"], name: "index_course_step_logs_on_course_id"
     t.index ["course_lesson_id"], name: "index_course_step_logs_on_course_lesson_id"
     t.index ["course_lesson_log_id"], name: "index_course_step_logs_on_course_lesson_log_id"
@@ -627,6 +647,7 @@ ActiveRecord::Schema.define(version: 2020_10_08_091523) do
     t.integer "related_course_step_id"
     t.boolean "is_note", default: false
     t.integer "vid_end_seconds"
+    t.boolean "is_practice_question"
     t.index ["course_lesson_id"], name: "index_course_steps_on_course_lesson_id"
     t.index ["related_course_step_id"], name: "index_course_steps_on_related_course_step_id"
   end
@@ -744,7 +765,6 @@ ActiveRecord::Schema.define(version: 2020_10_08_091523) do
     t.string "logo_image"
     t.string "registration_form_heading"
     t.string "login_form_heading"
-    t.string "audience_guid"
     t.string "landing_page_h1"
     t.text "landing_page_paragraph"
     t.boolean "has_products", default: false
@@ -767,7 +787,6 @@ ActiveRecord::Schema.define(version: 2020_10_08_091523) do
     t.string "student_number"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "subscription_type"
     t.index ["exam_body_id"], name: "index_exam_body_user_details_on_exam_body_id"
     t.index ["user_id"], name: "index_exam_body_user_details_on_user_id"
   end
@@ -886,8 +905,8 @@ ActiveRecord::Schema.define(version: 2020_10_08_091523) do
     t.string "background_image_content_type"
     t.integer "background_image_file_size"
     t.datetime "background_image_updated_at"
-    t.string "background_colour"
     t.bigint "exam_body_id"
+    t.string "background_colour"
     t.string "seo_title"
     t.string "seo_description"
     t.string "short_description"
@@ -1150,8 +1169,31 @@ ActiveRecord::Schema.define(version: 2020_10_08_091523) do
     t.boolean "verified", default: true
   end
 
+  create_table "practice_question_answers", force: :cascade do |t|
+    t.json "content"
+    t.bigint "practice_question_question_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "course_step_log_id"
+    t.index ["course_step_log_id"], name: "index_practice_question_answers_on_course_step_log_id"
+    t.index ["practice_question_question_id"], name: "index_pq_answers_on_practice_question_question_id"
+  end
+
+  create_table "practice_question_questions", force: :cascade do |t|
+    t.integer "kind"
+    t.json "content"
+    t.json "solution"
+    t.integer "sorting_order"
+    t.bigint "course_practice_question_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.text "description"
+    t.index ["course_practice_question_id"], name: "index_pq_questions_on_course_practice_question_id"
+  end
+
   create_table "products", id: :serial, force: :cascade do |t|
     t.string "name"
+    t.integer "course_id"
     t.integer "mock_exam_id"
     t.string "stripe_guid"
     t.boolean "live_mode", default: false
@@ -1161,7 +1203,6 @@ ActiveRecord::Schema.define(version: 2020_10_08_091523) do
     t.integer "currency_id"
     t.decimal "price"
     t.string "stripe_sku_guid"
-    t.integer "course_id"
     t.integer "sorting_order"
     t.integer "product_type", default: 0
     t.integer "correction_pack_count"
@@ -1172,6 +1213,7 @@ ActiveRecord::Schema.define(version: 2020_10_08_091523) do
     t.text "payment_description"
     t.string "savings_label"
     t.index ["cbe_id"], name: "index_products_on_cbe_id"
+    t.index ["course_id"], name: "index_products_on_course_id"
     t.index ["currency_id"], name: "index_products_on_currency_id"
     t.index ["group_id"], name: "index_products_on_group_id"
     t.index ["mock_exam_id"], name: "index_products_on_mock_exam_id"
@@ -1466,10 +1508,8 @@ ActiveRecord::Schema.define(version: 2020_10_08_091523) do
     t.string "cancellation_reason"
     t.text "cancellation_note"
     t.bigint "changed_from_id"
-    t.string "temp_guid"
     t.string "completion_guid"
     t.uuid "ahoy_visit_id"
-    t.integer "exam_body_user_detail_id"
     t.bigint "cancelled_by_id"
     t.integer "kind"
     t.integer "paypal_retry_count", default: 0
@@ -1631,11 +1671,14 @@ ActiveRecord::Schema.define(version: 2020_10_08_091523) do
 
   add_foreign_key "cbe_sections", "cbes"
   add_foreign_key "cbes", "courses"
+  add_foreign_key "course_practice_questions", "course_steps"
   add_foreign_key "exercises", "products"
   add_foreign_key "exercises", "users"
   add_foreign_key "exercises", "users", column: "corrector_id"
   add_foreign_key "groups", "exam_bodies"
   add_foreign_key "invoices", "orders"
+  add_foreign_key "practice_question_answers", "practice_question_questions"
+  add_foreign_key "practice_question_questions", "course_practice_questions"
   add_foreign_key "subscription_plans", "exam_bodies"
   add_foreign_key "subscriptions", "subscriptions", column: "changed_from_id"
   add_foreign_key "users", "currencies"

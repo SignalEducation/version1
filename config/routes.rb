@@ -25,7 +25,7 @@ Rails.application.routes.draw do
       resources :courses, only: :index do
         post 'read_note_log'
       end
-      resources :uploads, only: :create
+
       resources :cbes, format: 'json', only: %i[index show create edit update] do
         scope module: 'cbes' do
           resources :sections, only: %i[index create update destroy], shallow: true do
@@ -46,6 +46,13 @@ Rails.application.routes.draw do
           resources :users_response, only: :show
         end
       end
+
+      resources :course_step_log, only: :show, format: 'json' do
+        resources :practice_questions, only: %i[show update]
+      end
+
+      resources :practice_questions, only: :index
+      resources :uploads, only: :create
     end
   end
 
@@ -116,9 +123,10 @@ Rails.application.routes.draw do
         resources :course_notes, except: [:show], concerns: :supports_reordering
         post :clone, to: 'course_steps#clone'
       end
+
+      delete 'course_steps/:id/remove_question/:question_id', to: 'course_steps#remove_question', as: :practice_question_remove_question
       get 'course_steps/:id/quiz_questions_order', to: 'course_steps#quiz_questions_order', as: :quiz_questions_order
     end
-
 
     # Subscriptions
     resources :subscriptions, only: %i[show new create update destroy] do

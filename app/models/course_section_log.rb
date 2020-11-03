@@ -16,6 +16,7 @@
 #  course_id                            :integer
 #  count_of_constructed_responses_taken :integer
 #  count_of_notes_taken                 :integer
+#  count_of_practice_questions_taken    :integer
 #
 
 class CourseSectionLog < ApplicationRecord
@@ -73,6 +74,7 @@ class CourseSectionLog < ApplicationRecord
     self.count_of_videos_taken                = course_lesson_logs.with_valid_course_lesson.sum(:count_of_videos_taken)
     self.count_of_quizzes_taken               = course_lesson_logs.with_valid_course_lesson.sum(:count_of_quizzes_taken)
     self.count_of_notes_taken                 = course_lesson_logs.with_valid_course_lesson.sum(:count_of_notes_taken)
+    self.count_of_practice_questions_taken    = course_lesson_logs.with_valid_course_lesson.sum(:count_of_practice_questions_taken)
     self.count_of_constructed_responses_taken = course_lesson_logs.with_valid_course_lesson.sum(:count_of_constructed_responses_taken)
     self.count_of_cmes_completed              = course_lesson_logs.with_valid_course_lesson.sum(:count_of_cmes_completed)
     self.percentage_complete                  = (count_of_cmes_completed / elements_total.to_f) * 100.0

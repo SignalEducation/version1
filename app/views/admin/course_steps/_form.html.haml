@@ -8,8 +8,8 @@
         =f.hidden_field :is_quiz
         =f.hidden_field :is_video
         =f.hidden_field :is_note
+        =f.hidden_field :is_practice_question
         =f.hidden_field :is_constructed_response
-
 
         .row
           .col-sm-6
@@ -20,6 +20,8 @@
               =render partial: 'admin/course_quizzes/fields_for', locals: {f: f}
             -elsif @course_step.course_note
               =render partial: 'admin/course_notes/fields_for', locals: {f: f}
+            -elsif @course_step.course_practice_question
+              =render partial: 'admin/course_practice_questions/fields_for', locals: {f: f}
             -elsif @course_step.constructed_response
               =render partial: 'admin/constructed_responses/basic_fields_for', locals: {f: f}
 
@@ -82,6 +84,21 @@
               %br/
               =link_to 'Reorder Quiz Questions', admin_quiz_questions_order_url(@course_step), class: 'btn btn-secondary'
 
+          -if @course_step.course_practice_question
+            .col-sm-12
+              =f.fields_for :course_practice_question do |q|
+                .form-group
+                  =q.label :solution, t('views.course_practice_question.form.scenario'), class: 'control-label'
+                  .input-group.input-group-lg.full-width
+                    =q.text_area :content, as: 'summernote', class: 'form-control'
+
+
+            :javascript
+              $("#course_step_course_practice_question_attributes_content").summernote({
+                disableDragAndDrop: true,
+                height: 150
+              });
+
 
 
   -if @course_step.course_quiz
@@ -99,13 +116,9 @@
           .input-group.input-group-lg
             =f.text_area :description, as: :summernote, class: 'form-control', id: 'description'
 
-    -#.box-item
-      .row
-        .col-sm-12
-          =render partial: 'course_videos/fields_for_video_resources', locals: {f: f}
-
-    -# -if @course_step.course_notes.any?
-    -#   =render partial: 'admin/course_videos/fields_for_course_notes', locals: {f: f}
+  -elsif @course_step.course_practice_question
+    -# CoursePracticeQuestion Partial
+    =render partial: 'admin/course_practice_questions/question_form', locals: {f: f}
 
   -elsif @course_step.constructed_response
     %br/
@@ -142,7 +155,6 @@
     })
 
 :javascript
-
   $('#description').summernote({
     disableDragAndDrop: true,
     placeholder: 'write description here...'

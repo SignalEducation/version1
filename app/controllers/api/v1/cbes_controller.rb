@@ -4,6 +4,7 @@ module Api
   module V1
     class CbesController < Api::V1::ApplicationController
       before_action :set_cbe, only: %i[show update edit]
+
       def index
         @cbes = ::Cbe.all
       end

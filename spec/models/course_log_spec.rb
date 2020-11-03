@@ -4,23 +4,24 @@
 #
 # Table name: course_logs
 #
-#  id                                   :integer          not null, primary key
-#  user_id                              :integer
-#  session_guid                         :string
-#  course_id                            :integer
-#  percentage_complete                  :integer          default("0")
-#  count_of_cmes_completed              :integer          default("0")
-#  latest_course_step_id                :integer
-#  completed                            :boolean          default("false")
-#  created_at                           :datetime         not null
-#  updated_at                           :datetime         not null
-#  count_of_questions_correct           :integer
-#  count_of_questions_taken             :integer
-#  count_of_videos_taken                :integer
-#  count_of_quizzes_taken               :integer
-#  completed_at                         :datetime
-#  count_of_constructed_responses_taken :integer
-#  count_of_notes_completed             :integer
+#  id                                    :integer          not null, primary key
+#  user_id                               :integer
+#  session_guid                          :string
+#  course_id                             :integer
+#  percentage_complete                   :integer          default("0")
+#  count_of_cmes_completed               :integer          default("0")
+#  latest_course_step_id                 :integer
+#  completed                             :boolean          default("false")
+#  created_at                            :datetime         not null
+#  updated_at                            :datetime         not null
+#  count_of_questions_correct            :integer
+#  count_of_questions_taken              :integer
+#  count_of_videos_taken                 :integer
+#  count_of_quizzes_taken                :integer
+#  completed_at                          :datetime
+#  count_of_constructed_responses_taken  :integer
+#  count_of_notes_completed              :integer
+#  count_of_practice_questions_completed :integer
 #
 require 'rails_helper'
 
@@ -105,6 +106,7 @@ describe CourseLog do
       context 'change completed lessons in log' do
         it { expect { subject }.to change { course_log.count_of_videos_taken }.from(nil).to(0) }
         it { expect { subject }.to change { course_log.count_of_notes_completed }.from(nil).to(0) }
+        it { expect { subject }.to change { course_log.count_of_practice_questions_completed }.from(nil).to(0) }
         it { expect { subject }.to change { course_log.count_of_constructed_responses_taken }.from(nil).to(0) }
         it { expect(course_log.count_of_cmes_completed).to be_zero }
       end

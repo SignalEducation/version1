@@ -44,18 +44,24 @@ module Admin
       @course_step = CourseStep.new(sorting_order: (CourseStep.all.maximum(:sorting_order).to_i + 1),
                                     course_lesson_id: lesson.id, active: true)
 
-      if params[:type] == 'video'
+      case params[:type]
+      when 'video'
         @course_step.is_video = true
         @course_step.build_course_video
         @course_step.build_video_resource
-      elsif params[:type] == 'quiz'
+      when 'quiz'
         spawn_quiz_children
-      elsif params[:type] == 'note'
+      when 'note'
         @course_step.is_note = true
         @course_step.build_course_note
-      elsif params[:type] == 'constructed_response'
+      when 'practice_question'
+        @course_step.is_practice_question = true
+        @course_step.build_course_practice_question
+        @course_step.course_practice_question.questions.build
+      when 'constructed_response'
         spawn_constructed_response_children
       end
+
       set_related_cmes
     end
 
@@ -65,6 +71,8 @@ module Admin
         if @course_step.is_quiz
           @course_step.course_quiz.add_an_empty_question
           @quiz_questions = @course_step&.course_quiz&.quiz_questions&.sort_by { |q| q.sorting_order || 0 }
+        elsif @course_step.is_practice_question
+          @course_step.course_practice_question.questions.build
         elsif @course_step.is_video
           @course_step.build_video_resource unless @course_step.video_resource
         elsif @course_step.is_constructed_response
@@ -150,6 +158,16 @@ module Admin
       redirect_to admin_show_course_lesson_url(@course_step.course_lesson.course_id, @course_step.course_lesson.course_section.id, @course_step.course_lesson.id)
     end
 
+    def remove_question
+      if PracticeQuestion::Question.find(params[:question_id]).destroy
+        flash[:success] = I18n.t('controllers.course_practice_question.questions.destroy.flash.success')
+      else
+        flash[:error] = I18n.t('controllers.course_practice_question.question.destroy.flash.error')
+      end
+
+      redirect_to edit_admin_course_step_url(@course_step.id)
+    end
+
     # Reordering of Questions if CMEQ selection_strategy is not random #
     def quiz_questions_order
       @quiz_questions = @course_step.course_quiz.quiz_questions
@@ -161,18 +179,18 @@ module Admin
       case cme.type_name
       when 'Constructed Response'
         cme.constructed_response.duplicate
-        flash[:success] = 'Constructed Response successfully duplicaded'
+        flash[:success] = 'Constructed Response successfully duplicated'
       when 'Quiz'
         cme.course_quiz.duplicate
-        flash[:success] = 'Quiz successfully duplicaded'
+        flash[:success] = 'Quiz successfully duplicated'
       when 'Notes'
         cme.course_note.duplicate
-        flash[:success] = 'Video successfully duplicaded'
+        flash[:success] = 'Video successfully duplicated'
       when 'Video'
         cme.course_video.duplicate
-        flash[:success] = 'Video successfully duplicaded'
+        flash[:success] = 'Video successfully duplicated'
       else
-        flash[:error] = 'Course Element was not successfully duplicaded'
+        flash[:error] = 'Course Element was not successfully duplicated'
       end
 
       redirect_to admin_show_course_lesson_path(cme.course_lesson.course_id,
@@ -224,6 +242,7 @@ module Admin
         :is_video,
         :is_note,
         :is_quiz,
+        :is_practice_question,
         :is_constructed_response,
         :seo_description,
         :seo_no_index,
@@ -238,6 +257,24 @@ module Admin
           :vimeo_guid,
           :dacast_id,
           :video_id
+        ],
+        course_practice_question_attributes: [
+          :course_step_id,
+          :id,
+          :name,
+          :content,
+          :kind,
+          :estimated_time,
+          :document,
+          questions_attributes: [
+            :id,
+            :kind,
+            :course_practice_question_id,
+            :description,
+            :content,
+            :solution,
+            :sorting_order
+          ]
         ],
         course_note_attributes: [
           :course_step_id,

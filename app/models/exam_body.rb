@@ -16,7 +16,6 @@
 #  logo_image                         :string
 #  registration_form_heading          :string
 #  login_form_heading                 :string
-#  audience_guid                      :string
 #  landing_page_h1                    :string
 #  landing_page_paragraph             :text
 #  has_products                       :boolean          default("false")
@@ -29,6 +28,7 @@
 #  pricing_subheading                 :string
 #  pricing_seo_title                  :string
 #  pricing_seo_description            :string
+#  hubspot_property                   :string
 #
 
 class ExamBody < ApplicationRecord

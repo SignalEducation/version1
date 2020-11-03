@@ -125,6 +125,12 @@ en:
           success: Course Lesson Element Resource has been deleted
           error: Course Lesson Element Resource was not deleted
 
+    course_practice_question:
+      destroy:
+        flash:
+          success: Course Lesson Element Resource has been deleted
+          error: Course Lesson Element Resource was not deleted
+
     course_tutors:
       create:
         flash:

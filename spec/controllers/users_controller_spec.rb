@@ -82,8 +82,8 @@ describe UsersController, type: :controller do
     create(:valid_subscription, user: basic_student, subscription_plan: subscription_plan_gbp_m, stripe_customer_id: basic_student.stripe_customer_id )
   end
 
-  let!(:valid_params)              { attributes_for(:student_user, user_group_id: student_user_group.id) }
-  let!(:update_params)             { attributes_for(:student_user, user_group_id: student_user_group.id) }
+  let!(:valid_params)              { attributes_for(:student_user, user_group_id: student_user_group.id, preferred_exam_body_id: exam_body_1.id) }
+  let!(:update_params)             { attributes_for(:student_user, user_group_id: student_user_group.id, preferred_exam_body_id: exam_body_1.id) }
 
   context 'Logged in as a user_management_user' do
     before(:each) do
