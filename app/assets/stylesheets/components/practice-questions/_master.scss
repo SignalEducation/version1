@@ -106,7 +106,7 @@
     padding-bottom: 2.5em;
     position: absolute;
     top: 30%;
-    right: -30px;
+    right: -32px;
     cursor: pointer;
     box-shadow: 0px -13px 31px -7px rgba(0, 0, 0, 0.15);
     -webkit-transform: rotate(90deg);
@@ -142,10 +142,13 @@
     display: flex;
     flex-flow: row wrap;
     justify-content: space-around;
-    padding: 0;
-    margin: 0;
+    margin: -1.5em -2.2em 1em -2.2em;
     list-style: none;
-    margin-bottom: 1.5em;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    padding: 2.5em 0 1.5em 0;
+    background-color: #ffffff;
   }
 
   .flex-item {
@@ -159,27 +162,16 @@
     font-size: 1.25em;
     text-align: center;
   }
-
-.v1_111 {
-  width: 31px;
-  height: 31px;
-  background: rgba(255,255,255,1);
-  opacity: 1;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  overflow: hidden;
-}
-
-.v1_137 {
-  width: 31px;
-  color: rgba(169,169,169,1);
-  opacity: 1;
-  text-align: center;
-  cursor: pointer;
-}
+  #pane_1 {
+    padding-top: 0;
+  }
+  .right-pane-underline {
+    position: absolute;
+    top: 100px;
+    border: 1px solid #e6ecf0;
+    width: 100%;
+    display: none;
+  }
 
 .practice-ques-navigation {
   display: flex;
