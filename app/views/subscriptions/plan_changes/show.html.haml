@@ -14,6 +14,9 @@
               -if current_user.non_verified_user?
                 %h3.text-warning
                   Your email requires verification. You will be unable to access content until you verify your email.
+                  -if !current_user.email_verified && current_user.email_verification_code
+                    =link_to resend_verification_mail_url(current_user.email_verification_code), method: :post, class: 'btn btn-secondary verification-btn btn-sm mb-3 mb-sm-0' do
+                      ='Resend Verification Email'
                 %p
                   ="You have subscribed to the #{t("views.general.subscription_label_in_months.a#{@subscription.subscription_plan.payment_frequency_in_months}")}."
                 %p
