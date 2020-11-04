@@ -2,7 +2,11 @@
 
 module Zendesk
   class Requests < Support::Client
-    attr_reader :name, :email, :subject, :message
+    include ActiveModel::Validations
+    attr_accessor :name, :email, :subject, :message
+
+    # validations
+    validates :name, :email, :subject, :message, presence: true
 
     def initialize(name, email, subject, message)
       @name    = name
