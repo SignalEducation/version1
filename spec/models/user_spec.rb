@@ -785,20 +785,10 @@ describe User do
         expect(user.send(:delete_stripe_customer)).to be_nil
       end
 
-      it 'call #retrieve on Stripe::Customer' do
-        user.stripe_customer_id = 'cus_12234555'
-        customer = double(delete: true)
-        allow(customer).to receive(:delete).with('cus_12234555')
-        expect(Stripe::Customer).to receive(:retrieve).with('cus_12234555').and_return(customer)
-
-        user.send(:delete_stripe_customer)
-      end
-
       it 'call #delete on an instance of Stripe::Customer' do
         user.stripe_customer_id = 'cus_12234555'
-        customer = double(delete: true)
-        expect(Stripe::Customer).to receive(:retrieve).with('cus_12234555').and_return(customer)
-        expect(customer).to receive(:delete).with('cus_12234555')
+        expect(Stripe::Customer).to receive(:delete).with('cus_12234555').and_return(true)
+        # expect(customer).to receive(:delete).with('cus_12234555')
 
         user.send(:delete_stripe_customer)
       end
