@@ -68,7 +68,7 @@ namespace :hub_spot do
     Rails.logger.info '=============================================='
   end
 
-  desc 'Update hubspot users dada who have/had a valid subscrition'
+  desc 'Update hubspot users dada who have/had a valid subscription'
   task update_subscribed_contacts: :environment do
     Rails.logger = Logger.new(Rails.root.join('log', 'tasks.log'))
     Rails.logger.info 'Updating subscribed contacts...'
@@ -111,7 +111,9 @@ namespace :hub_spot do
         ActiveRecord::Base.transaction do
           Rails.logger.info "======= #{users.count} USERS ========="
           bench_time = Benchmark.measure do
-            users.update_all(preferred_exam_body_id: 1)
+            users.each do |user|
+              user.update_column(:preferred_exam_body_id, 1)
+            end
           end
 
           Rails.logger.info '============ Bench time execution ==============='
