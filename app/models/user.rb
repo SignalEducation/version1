@@ -663,8 +663,7 @@ class User < ApplicationRecord
 
     return unless stripe_customer_id
 
-    stripe_customer = Stripe::Customer.retrieve(stripe_customer_id)
-    stripe_customer.delete(stripe_customer_id)
+    Stripe::Customer.delete(stripe_customer_id)
   end
 
   def update_hub_spot_data

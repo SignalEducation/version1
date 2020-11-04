@@ -21,6 +21,7 @@ FactoryBot.define do
     name           { { text: Faker::Lorem.word } }
     content        { { text: Faker::Lorem.sentence } }
     kind           { CoursePracticeQuestion.kinds.keys.sample }
+    document       { File.new(Rails.root.join('spec', 'support', 'fixtures', 'file.pdf')) }
     estimated_time { 30..160 }
     course_step_id { 1 }
 

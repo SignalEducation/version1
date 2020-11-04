@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe 'Api::V1::PracticeQuestionsController', type: :request do
   let(:step) { build(:course_step) }
-  let!(:log)  { build(:course_step_log, id: 1, is_practice_question: true, course_step: step) }
+  let!(:log) { build(:course_step_log, id: 1, is_practice_question: true, course_step: step) }
 
   # show
   describe 'get  /api/v1/course_step_log/:course_step_log_id/practice_questions/:id' do
@@ -16,18 +16,19 @@ RSpec.describe 'Api::V1::PracticeQuestionsController', type: :request do
         get "/api/v1/course_step_log/#{log.id}/practice_questions/#{practice_question.id}"
       end
 
-      xit 'returns HTTP status 200' do
+      it 'returns HTTP status 200' do
         expect(response).to have_http_status 200
       end
 
-      xit 'returns cbes json data' do
-        binding.pry
+      it 'returns cbes json data' do
         body = JSON.parse(response.body)
 
         expect(body['id']).to eq(practice_question.id)
         expect(body['name']).to eq(practice_question.name)
         expect(body['content']).to eq(practice_question.content)
-        expect([body.keys]).to contain_exactly(%w[id kind name content course_step total_questions questions])
+        expect(body['document']['name']).to eq(practice_question.document_file_name)
+        expect(body['document']['url']).to eq(practice_question.document.url(:original, timestamp: false))
+        expect([body.keys]).to contain_exactly(%w[id kind name content course_step total_questions document questions])
       end
     end
 

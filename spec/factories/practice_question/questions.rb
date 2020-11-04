@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: practice_question_questions
@@ -21,6 +23,94 @@ FactoryBot.define do
 
     trait :with_question do
       association :practice_question, factory: :course_practice_question
+    end
+
+    trait :spreadsheet_question do
+      kind    { :spreadsheet }
+      content {
+        { 'content' =>
+          {
+            'data' => {
+              'name' => 'Sheet1',
+              'isSelected' => true,
+              'activeRow' => 7,
+              'activeCol' => 2,
+              'theme' => 'Office',
+              'data' => {
+                'dataTable' => {
+                  '4' => {
+                    '1' => { 'value' => 'dsa' },
+                    '2' => { 'value' => 'dad' }
+                  },
+                  '7' => {
+                    '0' => { 'value' => 'dadas' },
+                    '2' => { 'value' => 'ad' }
+                  },
+                  '9' => { '2' => { 'value' => 'asdsas' } }
+                },
+                'defaultDataNode' => { 'style' => { 'themeFont' => 'Body' } }
+              },
+              'rowHeaderData' => {
+                'defaultDataNode' => { 'style' => { 'themeFont' => 'Body' } }
+              },
+              'colHeaderData' => {
+                'defaultDataNode' => { 'style' => { 'themeFont' => 'Body' } }
+              },
+              'leftCellIndex' => 0,
+              'topCellIndex' => 0,
+              'selections' => {
+                '0' => { 'row' => 7, 'rowCount' => 1, 'col' => 2, 'colCount' => 1 },
+                'length' => 1
+              },
+              'cellStates' => {},
+              'outlineColumnOptions' => {},
+              'autoMergeRangeInfos' => []
+            }
+          }
+        }.to_json
+      }
+      solution {
+        { 'solution' =>
+          {
+            'data' => {
+              'name' => 'Sheet1',
+              'isSelected' => true,
+              'activeRow' => 7,
+              'activeCol' => 2,
+              'theme' => 'Office',
+              'data' => {
+                'dataTable' => {
+                  '4' => {
+                    '1' => { 'value' => 'dsa' },
+                    '2' => { 'value' => 'dad' }
+                  },
+                  '7' => {
+                    '0' => { 'value' => 'dadas' },
+                    '2' => { 'value' => 'ad' }
+                  },
+                  '9' => { '2' => { 'value' => 'asdsas' } }
+                },
+                'defaultDataNode' => { 'style' => { 'themeFont' => 'Body' } }
+              },
+              'rowHeaderData' => {
+                'defaultDataNode' => { 'style' => { 'themeFont' => 'Body' } }
+              },
+              'colHeaderData' => {
+                'defaultDataNode' => { 'style' => { 'themeFont' => 'Body' } }
+              },
+              'leftCellIndex' => 0,
+              'topCellIndex' => 0,
+              'selections' => {
+                '0' => { 'row' => 7, 'rowCount' => 1, 'col' => 2, 'colCount' => 1 },
+                'length' => 1
+              },
+              'cellStates' => {},
+              'outlineColumnOptions' => {},
+              'autoMergeRangeInfos' => []
+            }
+          }
+        }.to_json
+      }
     end
   end
 end

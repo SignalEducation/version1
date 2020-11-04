@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: scenarios
@@ -14,7 +16,6 @@
 require 'rails_helper'
 
 describe Scenario do
-
   # relationships
   it { should belong_to(:constructed_response) }
   it { should have_many(:scenario_questions) }
@@ -37,6 +38,4 @@ describe Scenario do
   # instance methods
   it { should respond_to(:destroyable?) }
   it { should respond_to(:add_an_empty_scenario_question) }
-
-
 end
