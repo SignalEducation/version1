@@ -119,6 +119,11 @@ describe User do
     it { should validate_presence_of(:preferred_exam_body_id).on(:create) }
   end
 
+  context 'is an invited student' do
+    before { allow(subject).to receive(:password_change_required?).and_return(false) }
+    it { should validate_presence_of(:terms_and_conditions).on(:create) }
+  end
+
   context 'is a tutor' do
     before { allow(subject).to receive(:tutor_user?).and_return(true) }
     it { should validate_presence_of(:name_url) }
