@@ -246,6 +246,6 @@ class Order < ApplicationRecord
   def update_hub_spot_data
     return if Rails.env.test?
 
-    HubSpotContactWorker.perform_async(user_id) if for_lifetime_access && completed?
+    HubSpotContactWorker.perform_async(user_id) if product.lifetime_access? && completed?
   end
 end
