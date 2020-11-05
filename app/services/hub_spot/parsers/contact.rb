@@ -33,7 +33,7 @@ module HubSpot
             { name: 'lastname',  value: data['last_name'] }
           ],
           context: {
-            "hutk": data['hutk'].presence || 'null',
+            "hutk": data['hutk'].presence || nil,
             "pageUri": data['pageURL'],
             "pageName": data['pageTitle']
           },

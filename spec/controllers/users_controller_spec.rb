@@ -64,9 +64,9 @@ describe UsersController, type: :controller do
 
   let!(:student_user_group)        { create(:student_user_group) }
   let!(:basic_student)             { create(:basic_student, user_group_id: student_user_group.id) }
-  let(:user_management_user_group) { create(:user_management_user_group) }
-  let(:user_management_user)       { create(:user_management_user, user_group_id: user_management_user_group.id) }
-  let(:unverified_student_user)    { create(:unverified_user, user_group_id: student_user_group.id) }
+  let(:user_management_user_group)       { create(:user_management_user_group) }
+  let(:user_management_user)             { create(:user_management_user, user_group_id: user_management_user_group.id) }
+  let(:unverified_student_user)          { create(:unverified_user, user_group_id: student_user_group.id) }
   let!(:exam_body_1)               { create(:exam_body) }
   let!(:group_1)                   { create(:group, exam_body_id: exam_body_1.id) }
   let!(:gbp)                       { create(:gbp) }
@@ -122,7 +122,7 @@ describe UsersController, type: :controller do
     describe "POST 'create'" do
       it 'should successfully create record' do
         stripe_url = 'https://api.stripe.com/v1/customers'
-        stripe_request_body = {'email'=>valid_params[:email]}
+        stripe_request_body = { 'email'=>valid_params[:email] }
         stub_customer_create_request(stripe_url, stripe_request_body)
 
         post :create, params: { user: valid_params }
