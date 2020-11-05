@@ -3,9 +3,9 @@
 require 'rails_helper'
 
 describe 'Register in process', type: :feature do
-  let(:user_group) { create(:student_user_group ) }
+  let(:user_group) { create(:student_user_group) }
   let(:student)    { create(:basic_student, :with_group, user_group: user_group) }
-  let!(:new_user)  { build(:basic_student,:with_group, user_group: user_group) }
+  let!(:new_user)  { build(:basic_student, :with_group, user_group: user_group) }
 
   before :each do
     activate_authlogic
@@ -36,6 +36,8 @@ describe 'Register in process', type: :feature do
         fill_in I18n.t('views.users.form.password'), with: 'pass1234'
         fill_in I18n.t('views.users.form.password_confirmation'), with: 'pass1234'
         all('#user_exam_body option')[1].select_option
+        hidden_field = find_field('hidden_term_and_conditions', type: :hidden)
+        hidden_field.set(true)
         find('label[for=terms_and_conditions]').click
         find('label[for=communication_approval]').click
 

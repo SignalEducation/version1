@@ -12,7 +12,7 @@
           %ul.navbar-nav.align-items-lg-center
 
             -if current_user
-              -if current_user&.preferred_exam_body_id && !current_user&.valid_access_for_exam_body?(current_user&.preferred_exam_body_id, current_user&.preferred_exam_body.group.id)
+              -if current_user&.preferred_exam_body_id && !current_user&.valid_access_for_exam_body?(current_user&.preferred_exam_body_id, current_user&.preferred_exam_body&.group&.id)
                 %li.nav-item
                   =link_to pricing_url(current_user&.preferred_exam_body&.group&.name_url), class: 'nav-link' do
                     %span Pricing

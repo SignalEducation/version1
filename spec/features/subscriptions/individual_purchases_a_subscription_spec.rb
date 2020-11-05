@@ -36,6 +36,8 @@ describe 'An individual purchasing a subscription', type: :feature do
         fill_in 'user_email', with: user.email
         fill_in 'user_password', with: 'pass1234'
         fill_in 'user_password_confirmation', with: 'pass1234'
+        hidden_field = find_field('hidden_term_and_conditions', type: :hidden)
+        hidden_field.set(true)
         find('label[for=terms_and_conditions]').click
         find('label[for=communication_approval]').click
 
