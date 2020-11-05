@@ -120,9 +120,35 @@ RSpec.describe LibraryController, type: :controller do
     it 'redirect and return a success message' do
       expect(Zendesk::RequestWorker).to receive(:perform_async).and_return(true)
 
-      post :user_contact_form
+      post :user_contact_form, params: { full_name: 'John Doe', email_address: 'johndoe77@unknownemail.com', type: 'Contact Us', question: 'Where is the contact form?' }
 
       expect(flash[:success]).to eq('Thank you! Your submission was successful. We will contact you shortly.')
+      expect(response.status).to eq(302)
+    end
+
+    it 'redirect and cancel submission with unverified recaptcha' do
+      allow(controller).to receive(:verify_recaptcha).and_return(false)
+
+      post :user_contact_form, params: { full_name: 'John Doe', email_address: 'johndoe77@unknownemail.com', type: 'Contact Us', question: 'Where is the contact form?' }
+
+      expect(flash[:success]).to be_nil
+      expect(flash[:error]).to eq('Your submission was not successful. Please try again.')
+      expect(response.status).to eq(302)
+    end
+
+    it 'redirect and cancel submission with missing param' do
+      post :user_contact_form, params: { full_name: 'John Doe', email_address: 'johndoe77@unknownemail.com', type: 'Contact Us' }
+
+      expect(flash[:success]).to be_nil
+      expect(flash[:error]).to eq('Your submission was not successful. Please try again.')
+      expect(response.status).to eq(302)
+    end
+
+    it 'redirect and cancel submission with empty param' do
+      post :user_contact_form, params: { full_name: 'John Doe', email_address: 'johndoe77@unknownemail.com', type: 'Contact Us', question: '' }
+
+      expect(flash[:success]).to be_nil
+      expect(flash[:error]).to eq('Your submission was not successful. Please try again.')
       expect(response.status).to eq(302)
     end
   end
