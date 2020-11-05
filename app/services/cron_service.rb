@@ -11,8 +11,10 @@ class CronService
   end
 
   def paypal_sync
+    return if Rails.env.staging?
+
     Rails.logger.info "CRON: Called the 'paypal_sync' task"
-    Paypal::SubscriptionValidation.run_paypal_sync
+    PaypalAnnualRenewalWorker.perform_async
   end
 
   def slack_exercises
