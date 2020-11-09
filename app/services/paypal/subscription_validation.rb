@@ -19,7 +19,7 @@ module Paypal
       return unless @agreement.state == 'Active'
 
       check_outstanding
-      check_annual_renewal if @subscription.subscription_plan.interval_name == 'Yearly'
+      # check_annual_renewal if @subscription.subscription_plan.interval_name == 'Yearly'
     end
 
     private
