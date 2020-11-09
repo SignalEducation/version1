@@ -191,7 +191,7 @@ describe StripeApiEvent do
         }}
         let(:api_event) { build(:stripe_api_event, payload: payload) }
 
-        it 'call #process_invoice_upcoming' do
+        xit 'call #process_invoice_upcoming' do
           expect(api_event).to(
             receive(:process_invoice_upcoming).with('test_sub_id')
           )

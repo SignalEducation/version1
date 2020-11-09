@@ -96,7 +96,7 @@ class StripeApiEvent < ApplicationRecord
       when 'invoice.payment_action_required'
         process_payment_action_required(webhook_object[:id], webhook_object[:subscription])
       when 'invoice.upcoming'
-        process_invoice_upcoming(webhook_object[:subscription])
+        # process_invoice_upcoming(webhook_object[:subscription])
       when 'customer.subscription.deleted'
         process_customer_subscription_deleted(webhook_object[:customer],
                                               webhook_object[:id], webhook_object[:cancel_at_period_end])
