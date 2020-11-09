@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class PaypalAnnualRenewalWorker
+class PaypalCronWorker
   include Sidekiq::Worker
 
   sidekiq_options queue: :high

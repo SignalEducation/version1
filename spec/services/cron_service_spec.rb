@@ -15,7 +15,7 @@ describe CronService, type: :service do
 
   describe '#paypal_sync' do
     it 'calls #run_paypal_sync on the Paypal::SubscriptionValidation class' do
-      expect(PaypalAnnualRenewalWorker).to receive(:perform_async)
+      expect(PaypalCronWorker).to receive(:perform_async)
 
       subject.initiate_task('paypal_sync')
     end
