@@ -1,0 +1,68 @@
+-# VueJS include
+= javascript_pack_tag 'spreadsheet'
+
+.container
+  %header.management-console-section
+    %h1
+      Edit Exhibit
+
+  %section.pb-3
+    = form_for [:admin, @exhibit], url: admin_course_step_practice_question_exhibit_url, html: {class: "form-horizontal"} do |f|
+      =f.hidden_field :practice_question_id, value: @practice_question.id
+      =f.hidden_field :id, value: @exhibit.id
+      .box-item
+        .row
+          .col-sm-6
+            .form-group
+              =f.label :name, 'Name'
+              .input-group.input-group-lg
+                = f.text_field :name, class: 'form-control'
+          #document-upload-input.col-sm-6
+            .form-group
+              =f.label :document, t('views.course_practice_question.form.document'), class: 'control-label'
+              .input-group.input-group-lg
+                -if f.object.document.present?
+                  .form-control-static
+                    =link_to f.object.document_file_name, f.object.document.try(:url), target: '_blank'
+
+                  Upload a replacement note file or delete the note file.
+
+                .input-group.input-group-lg
+                  =f.file_field :document, class: 'form-control'
+          .col-sm-6
+            .form-group
+              =f.label :sorting_order, 'Choose order'
+              .input-group.input-group-lg
+                = f.text_field :sorting_order, class: 'form-control'
+
+        -open_style = (f.object.open? || f.object.kind.nil? )? 'show' : 'none'
+        .open_questions{id: "open_questions", style: "display: #{open_style};", name: "practice_question_exhibit[content]" }
+          .row
+            .col-sm-12
+              .form-group
+                =f.label :content, 'Content', class: 'control-label'
+                .input-group.input-group-lg.full-width
+                  =f.text_area :content, as: 'summernote', class: 'form-control summernote_text', id: "open_content"
+
+        - spreadsheet_style         = f.object.spreadsheet? ? 'show' : 'none'
+        - spreadsheet_content_name  = f.object.spreadsheet? ? "practice_question_exhibit[content]" : 'empty_content'
+        .spreadsheet_questions{id: "spreadsheet_exhibits", style: "display: #{spreadsheet_style};"}
+          .row
+            .col-sm-12
+              .form-group
+                =f.label :content, 'Content', class: 'control-label'
+                %div{class: :spreadsheet_component, data: { spreadsheet_content: f.object.content, field_id: "spreadsheet_content", field_name: spreadsheet_content_name } }
+
+        .row
+          .col-sm-12
+            =f.submit 'Save Exhibit', class: 'btn btn-primary'
+            =link_to t('views.general.cancel'), admin_course_step_practice_question_exhibits_url, class: 'btn btn-secondary'
+
+:javascript
+  $("[class='form-control summernote_text']").each(function (elem, obj) {
+    $(obj).summernote({
+      disableDragAndDrop: true,
+      height: 150
+    });
+  });
+

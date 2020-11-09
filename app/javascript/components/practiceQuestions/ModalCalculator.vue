@@ -35,6 +35,11 @@ export default {
       modalIsOpen: false,
     };
   },
+  created() {
+    eventBus.$on("close-modal",(status)=>{
+      this.modalIsOpen = status;
+    })
+  },
   mounted() {
     this.$nextTick(function () {
         $('#calcModal').draggable();

@@ -33,6 +33,18 @@ class CoursePracticeQuestion < ApplicationRecord
                        foreign_key: :course_practice_question_id,
                        inverse_of: :practice_question,
                        dependent: :destroy
+  has_many :responses, class_name: 'PracticeQuestion::Response',
+                       foreign_key: :practice_question_id,
+                       inverse_of: :practice_question,
+                       dependent: :destroy
+  has_many :exhibits, class_name: 'PracticeQuestion::Exhibit',
+                       foreign_key: :practice_question_id,
+                       inverse_of: :practice_question,
+                       dependent: :destroy
+  has_many :solutions, class_name: 'PracticeQuestion::Solution',
+                       foreign_key: :practice_question_id,
+                       inverse_of: :practice_question,
+                       dependent: :destroy
 
   # validations
   validates :course_step_id, presence: true, on: :update

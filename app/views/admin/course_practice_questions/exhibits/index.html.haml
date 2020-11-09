@@ -1,0 +1,31 @@
+.container
+  %header.management-console-section
+    %h1
+      Exhibits
+
+    .row
+      .col-sm-12
+        .box-item.table-box
+          .row
+            =link_to 'New Exhibit', new_admin_course_step_practice_question_exhibit_url(practice_question_id: @practice_question.id, course_step_id: @practice_question.course_step_id), class: 'btn btn-primary btn-xs'
+
+          .table-responsive.pt-4
+            %table.table.sorted_table
+              %thead
+                %tr
+                  %th='Name'
+                  %th='Kind'
+                  %th
+                  %th
+              %tbody
+                -@exhibits.each do |exhibit|
+                  %tr
+                    %td=exhibit.name
+                    %td
+                      =exhibit.kind
+                    %td
+                      =link_to 'Edit', edit_admin_course_step_practice_question_exhibit_url(practice_question_id: @practice_question.id, course_step_id: @practice_question.course_step_id, id: exhibit.id), class: 'btn btn-primary btn-xs'
+                      -if exhibit.destroyable?
+                        =link_to 'Delete', admin_course_step_practice_question_exhibit_path(practice_question_id: @practice_question.id, course_step_id: @practice_question.course_step_id, id: exhibit.id), method: :delete, class: 'btn btn-secondary-reverse btn-xs'
+                      -#%td
+                        %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}

@@ -37,6 +37,11 @@ export default {
   props: {
     helpPdf: String
   },
+  created() {
+    eventBus.$on("close-modal",(status)=>{
+      this.modalIsOpen = status;
+    })
+  },
   mounted() {
     $('#helpModal').draggable({ handle:'.modal2-header-lg'});
   },

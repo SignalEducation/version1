@@ -11,18 +11,23 @@
       .row
         .col-sm-6
           .form-group
-            =question.label :name, t('views.course_practice_question.form.kind')
+            =question.label :name, 'Name'
+            .input-group.input-group-lg
+              = question.text_field :name, class: 'form-control'
+        .col-sm-6
+          .form-group
+            =question.label :kind, t('views.course_practice_question.form.kind')
             .input-group.input-group-lg
               = question.select :kind, [['Open', 'open'], ['Spreadsheet', 'spreadsheet']], {}, onChange: "javascript: showQuestionsByType(#{question.index}, $(this).val());", class: 'form-control question_kind'
         .col-sm-6
           .form-group
-            =question.label :name, t('views.course_practice_question.form.sorting_order')
+            =question.label :text_field, t('views.course_practice_question.form.sorting_order')
             .input-group.input-group-lg
               = question.text_field :sorting_order, class: 'form-control'
       .row
         .col-sm-12
           .form-group
-            =question.label :name, t('views.course_practice_question.form.description')
+            =question.label :description, t('views.course_practice_question.form.description')
             .input-group.input-group-lg
               =question.text_area :description, as: 'summernote', class: 'form-control summernote_text'
 
