@@ -85,7 +85,7 @@ class LibraryController < ApplicationController
   end
 
   def user_contact_form
-    if verify_recaptcha
+    if verify_recaptcha && check_if_params_present
       Zendesk::RequestWorker.perform_async(params[:full_name],
                                            params[:email_address],
                                            params[:type],
@@ -96,6 +96,12 @@ class LibraryController < ApplicationController
       flash[:error] = 'Your submission was not successful. Please try again.'
     end
     redirect_to request.referer || root_url
+  end
+
+  private
+
+  def check_if_params_present
+    return true if params[:full_name].present? && params[:email_address].present? && params[:type].present? && params[:question].present?
   end
 
   protected
