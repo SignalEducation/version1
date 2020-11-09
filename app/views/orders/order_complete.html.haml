@@ -12,8 +12,40 @@
           .col-xs-12.col-sm-8
             .box-item.text-center
               %p
-                ="Your payment receipt will be sent to #{current_user&.email}"
+                ="Your payment receipt for #{@product.name_by_type} will be sent to #{current_user&.email}"
 
-              =link_to student_dashboard_url do
+              =link_to @studies_link do
                 .btn.btn-primary
-                  ="Continue Your #{current_user&.preferred_exam_body&.name} Studies"
+                  ="Continue Your Studies"
+
+
+:javascript
+  $(document).ready(function(){
+    fbq('track', 'Purchase', {
+      value: "#{@product.price}",
+      currency: "#{@product.currency.iso_code}",
+      product_id: "#{@product.id}",
+      name: "#{@product.name}",
+      brand: "#{@product&.product_type}",
+      content_category:  "#{@product&.product_type.humanize }"
+    });
+
+    dataLayer.push({
+      'ecommerce': {
+        'purchase': {
+          'actionField': {
+            'id': "#{@product.id}",
+            'revenue': "#{@product.price}"
+          },
+          'products': [{
+            'name': "#{@product.name}",
+            'price': "#{@product.price}",
+            'brand': "#{@product&.product_type}",
+            'category': "#{@product&.product_type.humanize }",
+            'quantity': 1
+            }]
+        }
+      },
+    'event':'ecomSuccess'}
+    );
+  });

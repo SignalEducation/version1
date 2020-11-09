@@ -212,7 +212,6 @@ class StudentSignUpsController < ApplicationController
                     false)
   end
 
-
   private
 
   def student_allowed_params

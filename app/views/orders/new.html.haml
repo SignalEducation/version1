@@ -258,7 +258,7 @@
                 handlePayment(data.client_secret, data.id)
               }else if(data.status == 'completed'){
                 // Can we add a flash message ?
-                window.location.replace("#{@order.product&.lifetime_access? ? order_complete_url : (@order.product&.course_access? ? library_course_url(@order.product.group.name_url, @order.product.course.name_url): user_exercises_path(current_user))}");
+                window.location.replace("#{order_complete_url(product_id: @order.product_id)}");
               }
             },
             error: function(xhr,status,error){
@@ -287,7 +287,7 @@
             success: function(data,status,xhr){
               if (data.status == 'completed') {
                 // Can we add a flash message ?
-                window.location.replace("#{@order.product&.lifetime_access? ? order_complete_url : (@order.product&.course_access? ? library_course_url(@order.product.group.name_url, @order.product.course.name_url): user_exercises_path(current_user))}");
+                window.location.replace("#{order_complete_url(product_id: @order.product_id)}");
               } else {
                 resetForm(data);
               }
@@ -310,4 +310,3 @@
 
     $('#pay-with-card').click(); // To open the stripe card section on page load
   });
-
