@@ -80,6 +80,7 @@
         %iframe{src: '//www.googletagmanager.com/ns.html?id=GTM-5SC76S', height: 0, width: 0, style: 'display:none;visibility:hidden'}
 
       -if @layout == 'standard'
+        =render partial: 'layouts/facebook_tracking_code'
         -if @navbar
           =render partial: 'layouts/navbar'
 
