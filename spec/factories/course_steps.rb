@@ -60,6 +60,13 @@ FactoryBot.define do
       is_note  { true }
     end
 
+    trait :practice_question_step do
+      is_quiz               { false }
+      is_video              { false }
+      is_note               { false }
+      is_practice_question  { true }
+    end
+
     trait :constructed_response_step do
       is_quiz                 { false }
       is_video                { false }

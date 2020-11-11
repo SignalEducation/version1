@@ -238,6 +238,31 @@ describe Admin::CourseStepsController, type: :controller do
                                                                         course_step_3.course_lesson.id))
         end
       end
+
+      context 'Practice Question' do
+        it 'should duplicate practice question' do
+          post :clone, params: { course_step_id: course_step_6.id }
+
+          expect(response.status).to eq(302)
+          expect(flash[:success]).to be_present
+          expect(flash[:success]).to eq('Practice Question successfully duplicated')
+          expect(response).to redirect_to(admin_show_course_lesson_path(course_step_6.course_lesson.course_id,
+                                                                        course_step_6.course_lesson.course_section.id,
+                                                                        course_step_6.course_lesson.id))
+        end
+
+        it 'should not duplicate practice question' do
+          expect_any_instance_of(CourseStep).to receive(:type_name).and_return('')
+          post :clone, params: { course_step_id: course_step_6.id }
+
+          expect(response.status).to eq(302)
+          expect(flash[:error]).to be_present
+          expect(flash[:error]).to eq('Course Element was not successfully duplicated')
+          expect(response).to redirect_to(admin_show_course_lesson_path(course_step_6.course_lesson.course_id,
+                                                                        course_step_6.course_lesson.course_section.id,
+                                                                        course_step_6.course_lesson.id))
+        end
+      end
     end
   end
 end
