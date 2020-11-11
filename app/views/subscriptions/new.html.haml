@@ -130,6 +130,13 @@
       subscription_interval: "#{@subscription.subscription_plan.interval_name}",
       content_category: 'Subscription'
     });
+
+    window.uetq = window.uetq || [];
+    window.uetq.push('event', 'AddToCart', {
+      'event_category': 'Subscription',
+      'event_label': '#{@subscription.subscription_plan.exam_body.name}',
+      'event_value': selectedPlan.attr('data-price')
+    });
   }
 
   function checkout1() {
