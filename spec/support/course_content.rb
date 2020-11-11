@@ -28,6 +28,10 @@ shared_context 'course_content' do
   let!(:course_step_5)  { create(:course_step, :notes_step, course_lesson: course_lesson_1, available_on_trial: true) }
   let!(:course_note)    { create(:course_note, :file_uploaded, course_step_id: course_step_5.id) }
 
+  # Available on Trial
+  let!(:course_step_6)            { create(:course_step, :practice_question_step, course_lesson: course_lesson_1, available_on_trial: true) }
+  let!(:course_practice_question) { create(:course_practice_question, course_step_id: course_step_6.id) }
+
   # Subscription Required
   let!(:course_step_3)  { create(:course_step, :video_step, course_lesson: course_lesson_1) }
   let!(:course_video_2) { create(:course_video, course_step_id: course_step_3.id, vimeo_guid: '123abc', dacast_id: 1234) }

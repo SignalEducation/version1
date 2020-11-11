@@ -121,6 +121,22 @@
         }
       }
     });
+
+    fbq('track', 'AddToCart', {
+      value: selectedPlan.attr('data-price'),
+      currency: "#{@subscription.subscription_plan.currency.iso_code}",
+      name: "#{@subscription.subscription_plan.name}",
+      brand:  "#{@subscription.subscription_plan.exam_body.name}",
+      subscription_interval: "#{@subscription.subscription_plan.interval_name}",
+      content_category: 'Subscription'
+    });
+
+    window.uetq = window.uetq || [];
+    window.uetq.push('event', 'AddToCart', {
+      'event_category': 'Subscription',
+      'event_label': '#{@subscription.subscription_plan.exam_body.name}',
+      'event_value': selectedPlan.attr('data-price')
+    });
   }
 
   function checkout1() {

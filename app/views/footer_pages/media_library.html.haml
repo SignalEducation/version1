@@ -39,7 +39,7 @@
                 .col-xs-12.col-sm-6.col-md-4
                   -link = product_link(product, current_user)
                   -name = product.name_by_type
-                  =link_to link, class: 'card card-link text-center mb-5', onclick: "addToCart('#{product.currency.iso_code}', '#{product.name}', '#{product.id}', '#{product.price}', '#{name}');" do
+                  =link_to link, class: 'card card-link text-center mb-5', onclick: "addToCart(\"#{product.currency.iso_code}\", \"#{product.name}\", \"#{product.id}\", \"#{product.price}\", \"#{name}\");" do
                     .py-4
                       %h4.text-ellipsis.mb-4
                         =name
@@ -57,7 +57,7 @@
             .row.row-lg
               -@questions.each do |question|
                 .col-xs-12.col-sm-6.col-md-4
-                  =link_to product_checkout_special_link(question.group.exam_body.id, question.id), class: 'card card-link text-center mb-5',onclick: "addToCart('#{question.currency.iso_code}', '#{question.name}', '#{question.id}', '#{question.price}', '#{question.group.exam_body.name}');" do
+                  =link_to product_checkout_special_link(question.group.exam_body.id, question.id), class: 'card card-link text-center mb-5',onclick: "addToCart(\"#{question.currency.iso_code}\", \"#{question.name}\", \"#{question.id}\", \"#{question.price}\", \"#{question.group.exam_body.name}\");" do
                     .py-4
                       %h4.text-ellipsis.mb-4
                         =question.mock_exam.try(:name)
@@ -101,5 +101,12 @@
         }
       }
     });
-  }
 
+    fbq('track', 'AddToCart', {
+      value: price,
+      currency: currency,
+      name: name,
+      brand:  body,
+      content_category: "Exam Papers"
+    });
+  }
