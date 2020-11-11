@@ -45,4 +45,17 @@ class CoursePracticeQuestion < ApplicationRecord
   def self.question_is_blank?(attributes)
     attributes['solution'].blank?
   end
+
+  def duplicate
+    new_cme_practice_question = deep_clone include: [
+      :course_step,
+      questions: :answers
+    ], validate: false
+    new_cme_practice_question.document = document
+
+    new_cme_practice_question.
+      course_step.update(name: "#{course_step.name} COPY",
+                         name_url: "#{course_step.name_url}_copy",
+                         active: false)
+  end
 end

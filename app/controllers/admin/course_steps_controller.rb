@@ -189,6 +189,9 @@ module Admin
       when 'Video'
         cme.course_video.duplicate
         flash[:success] = 'Video successfully duplicated'
+      when 'Practice Questions'
+        cme.course_practice_question.duplicate
+        flash[:success] = 'Practice Question successfully duplicated'
       else
         flash[:error] = 'Course Element was not successfully duplicated'
       end

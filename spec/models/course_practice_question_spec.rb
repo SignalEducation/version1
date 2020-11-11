@@ -34,6 +34,10 @@ describe CoursePracticeQuestion do
     it { should define_enum_for(:kind).with(standard: 0, exhibit: 1) }
   end
 
+  describe 'instance methods' do
+    it { should respond_to(:duplicate) }
+  end
+
   describe 'Concern' do
     it_behaves_like 'archivable'
   end
