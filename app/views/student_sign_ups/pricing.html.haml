@@ -335,4 +335,11 @@
       subscription_interval: interval_name,
       content_category: 'Subscription'
     });
+
+    window.uetq = window.uetq || [];
+    window.uetq.push('event', 'AddToCart', {
+      'event_category': 'Subscription',
+      'event_label': plan_name,
+      'event_value': price
+    });
   }
