@@ -35,6 +35,13 @@
 
 :javascript
   $(document).ready(function(){
+    window.uetq = window.uetq || [];
+    window.uetq.push('event', 'Purchase', {
+      'event_category': "#{@subscription.subscription_plan.exam_body.name}",
+      'event_label': "#{@subscription.subscription_plan.name}",
+      'event_value': "#{@subscription.subscription_plan.price}"
+    });
+
     fbq('track', 'Purchase', {
       value: "#{@subscription&.subscription_plan&.price}",
       currency: "#{@subscription&.subscription_plan&.currency&.iso_code}",
