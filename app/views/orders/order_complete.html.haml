@@ -21,13 +21,20 @@
 
 :javascript
   $(document).ready(function(){
+    window.uetq = window.uetq || [];
+    window.uetq.push('event', 'Purchase', {
+      'event_category': "#{@product&.product_type.humanize}",
+      'event_label': "#{@product&.product_type}",
+      'event_value': "#{@product.price}"
+    });
+
     fbq('track', 'Purchase', {
       value: "#{@product&.price}",
       currency: "#{@product&.currency&.iso_code}",
       product_id: "#{@product&.id}",
       name: "#{@product&.name}",
       brand: "#{@product&.product_type}",
-      content_category:  "#{@product&.product_type&.humanize }"
+      content_category: "#{@product&.product_type.humanize}"
     });
 
     dataLayer.push({
@@ -41,7 +48,7 @@
             'name': "#{@product&.name}",
             'price': "#{@product&.price}",
             'brand': "#{@product&.product_type}",
-            'category': "#{@product&.product_type&.humanize }",
+            'category': "#{@product&.product_type.humanize}",
             'quantity': 1
             }]
         }
