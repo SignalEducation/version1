@@ -1,9 +1,9 @@
 .modal.fade{id: 'pricing-modal', tabindex: '-1', role: 'dialog', 'aria-labelledby': 'pricingModal', 'aria-hidden': 'true'}
   .modal-dialog{role: 'document'}
     .modal-content.pricing
-      %button.btn.btn-icon.modal-close{'data-dismiss': 'modal'}
-        %i.material-icons.ml-1{'aria-hidden': 'true'}
-          close
+      %button.btn.btn-text.modal-close.p-0{"data-dismiss" => "modal"}
+        %span.sr-only Close Modal
+        %i.material-icons{"aria-hidden" => "true"} close
       .modal-header.mb-1
         %h3{id: 'pricingOptions'}
           Payment Options
@@ -12,7 +12,7 @@
         .row
           - if @course_product
             .col-sm-6.col-md-4
-              .card.text-center.mb-4.hero-section-tutor-card.mt-4
+              .card.text-center.mb-4.hero-section-tutor-card.mt-4{style: 'height: 360px'}
                 = link_to '', product_link(@course_product, current_user, params[:login]), class: 'hero-section-show-link-window'
                 .py-4
                   .h3
@@ -40,7 +40,7 @@
 
           -@subscription_plans.each do |plan|
             .col-sm-6.col-md-4
-              .card.text-center.mb-4.hero-section-tutor-card.mt-4
+              .card.text-center.mb-4.hero-section-tutor-card.mt-4{style: 'height: 360px'}
                 = link_to '', pricing_url(@group.name_url), class: 'hero-section-show-link-window'
                 .py-4
                   .h3
