@@ -1,5 +1,5 @@
 =render partial: 'layouts/navbar'
-%main.margin-top
+%main.margin-top-cpd-onboarding
   %article.bg-gray5
     .container
       %header.hero-section{style: 'padding-top: 2rem;'}
@@ -56,11 +56,12 @@
                   -@courses.each do |course|
                     .col
                       =link_to library_special_link(course), class: 'card card-horizontal flex-row card-mint', style: 'margin-bottom: 60px;' do
-                        .card-body.d-flex.flex-column
+                        .card-body.d-flex.flex-column{style: 'min-height: 185px;'}
                           %h5.card-title.mb-2
                             %span
                               =course.name
-                          .row
+
+                          .row{style: "#{course.name.length < 30 ? 'padding-top: 27px' : ''}"}
                             .col
                               %span{style: "color: #{course.highlight_colour};"}
                                 =course.unit_label
