@@ -186,7 +186,6 @@ export default {
       }
     },
     zIndexLoadArr(exh, ques, resp) {
-      console.log(exh);
       for (let index = 0; index < exh.length; index++) {
         this.zIndexArr.push(`exhibitsModal${index}`);
       }

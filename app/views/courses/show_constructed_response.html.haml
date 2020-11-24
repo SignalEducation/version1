@@ -1,23 +1,13 @@
-%main
-  %article.courses.bg-gray5
-    .row.row-lg
-      .col-xl-12.mt-3.mb-5.pb-6
-        -if @course_step && @course_step_log && (@course_step.active || @course_step_log.preview_mode) && @course_step.available_to_user(current_user, @valid_subscription, @course_log)
-          -if @course_step.try(:is_constructed_response)
-            #constructed-response-window
-              :javascript
-                var crDialog = $("#constructed-response-window");
-                kendo.ui.progress(crDialog, true);
-
-
-              =render partial: 'courses/constructed_response'
-          -else
-            %h2 Sorry Unknown Content Type Requested
-            -Rails.logger.error "views/courses/show - unknown CME type. CME: #{@course_step.inspect}."
-        -elsif @course_lesson
-          .well
-            %h3=t('views.general.coming_soon')
-            %p=t('views.courses.show.coming_soon')
+-if @course_step && @course_step_log && (@course_step.active || @course_step_log.preview_mode) && @course_step.available_to_user(current_user, @valid_subscription, @course_log)
+  -if @course_step.try(:is_constructed_response)
+    =render partial: 'courses/constructed_response'
+  -else
+    %h2 Sorry Unknown Content Type Requested
+    -Rails.logger.error "views/courses/show - unknown CME type. CME: #{@course_step.inspect}."
+-elsif @course_lesson
+  .well
+    %h3=t('views.general.coming_soon')
+    %p=t('views.courses.show.coming_soon')
 
 
 

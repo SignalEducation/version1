@@ -243,7 +243,7 @@ button2.btn-settings:active {
   box-shadow: 0 0 0 1px hsl(0, 0%, 80%), 0 0 0 2px hsl(0, 0%, 90%);
 }
 .modal2-solution {
-  background-color: #f5f8fa;
+  background-color: #ffffff;
   z-index: 1030;
   left: 30px;
   padding-right: 0 !important;
@@ -401,6 +401,17 @@ button.modal-close:focus {
     }
   }
 }
+.exhibits-spread-sheet {
+  .btn-group {
+    width: 60%;
+  }
+  .btn-row:nth-child(2) {
+    .btn-group {
+      width: 30%;
+      height: 2em;
+    }
+  }
+}
 .prac-ques-ans-box {
   padding:0;
   .container-fluid {
@@ -510,12 +521,14 @@ button.modal-close:focus {
     transition: $property $duration $ease;
   }
   .practice-question-v2-title {
-    padding-left: 3em;
     text-align: left;
     padding-bottom: .75em;
     font-size: .85em;
     font-weight: bold;
     color: #657786;
+  }
+  .practice-question-left-pane {
+    display: flex;
   }
   .material-icons {
     line-height: .35 !important;
@@ -525,7 +538,6 @@ button.modal-close:focus {
     left: 10px;
   }
   .practice-question-section {
-    text-align: center;
     padding-bottom: 1em;
   }
   .pdf-preview-toggle > a.icon > svg {

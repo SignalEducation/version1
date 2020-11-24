@@ -1,11 +1,6 @@
 .row.row-lg#practice-question-window
   .col-xl-12
     %h1.h4
-      .practice-ques-navigation
-        =link_to navigation_special_link(@course_step), class: 'btn btn-secondary btn-sm btn-sm-arrow-left mb-3 mb-sm-0' do
-          =@course_step.course_lesson.course_section.course.name
-        =practice_question.course_step.name
-        =render partial: 'next_lesson_navigation'
       #fade-overlay.load-overlay-blank
       #small-screen-overlay.load-overlay
         .small-screen-overlay-text
@@ -19,6 +14,7 @@
     #practice-question-viewer{ 'data-practice-question-id': practice_question.id, 'data-step-log-id': step_log_id }
 
   :javascript
+    collapseFunc();
 
     setTimeout(
       function(){

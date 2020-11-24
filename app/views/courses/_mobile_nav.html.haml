@@ -1,0 +1,74 @@
+#courses-mobile-nav
+    %div#overlay-active-shadow
+    %section.side-nav-overlay
+        .side-nav-content
+            .exit-btn-box
+                %i#exitBtn.material-icons.exit-btn-close{"aria-label" => "failed", :role => "img", :style => "margin-left:1px"} close
+            -if current_user
+                -if current_user&.preferred_exam_body_id && !current_user&.valid_access_for_exam_body?(current_user&.preferred_exam_body_id, current_user&.preferred_exam_body&.group&.id)
+                    .nav-item-box
+                        =link_to 'Pricing', pricing_url(current_user&.preferred_exam_body&.group&.name_url)
+                -elsif !current_user&.preferred_exam_body_id && !current_user&.valid_subscription?
+                    .nav-item-box
+                        =link_to 'Pricing', pricing_url
+                .nav-item-box
+                    =link_to 'Dashboard', student_dashboard_url
+                .nav-item-box
+                    =link_to 'Library', library_url
+
+                -if current_user.non_student_user?
+                    .nav-item-box
+                        =link_to 'Console', management_consoles_url
+
+
+                .nav-item-box
+                    =link_to t('views.users.show.h1'), account_url
+                .nav-item-box-last
+                    =link_to t('views.general.log_out'), sign_out_url
+
+    .btn-box
+    %button.material-icons.btn-side-nav{:type => "button"}drag_handle
+
+
+    :javascript
+
+        const btnSideNavToggle = document.querySelector(".btn-side-nav");
+        const sideNavOverlay = document.querySelector(".side-nav-overlay");
+        const exitBtn = document.querySelector("#exitBtn");
+        const shadow = document.querySelector("#overlay-active-shadow");
+
+        $(document).mouseup(function(e){
+            var container = $("#courses-mobile-nav > section");
+
+            // If the target of the click isn't the container
+            if(!container.is(e.target) && container.has(e.target).length === 0){
+                sideNavOverlay.classList.remove("overlay-active");
+                btnSideNavToggle.style.display = "";
+                shadow.style.opacity = "0";
+                shadow.style.visibility = "hidden";
+
+                const btnOpacityOn = setTimeout((e) => {
+                    btnSideNavToggle.style.opacity = "1";
+                }, 10);
+            }
+        });
+
+        btnSideNavToggle.onclick = () => {
+            sideNavOverlay.classList.add("overlay-active");
+            btnSideNavToggle.style.opacity = "1";
+            btnSideNavToggle.style.transition = "opacity 0.3s";
+            shadow.style.visibility = "visible";
+            shadow.style.opacity = "1";
+            shadow.style.transition = "opacity 1s";
+        };
+
+        exitBtn.onclick = () => {
+            sideNavOverlay.classList.remove("overlay-active");
+            btnSideNavToggle.style.display = "";
+            shadow.style.opacity = "0";
+            shadow.style.visibility = "hidden";
+
+            const btnOpacityOn = setTimeout((e) => {
+                btnSideNavToggle.style.opacity = "1";
+            }, 10);
+        };

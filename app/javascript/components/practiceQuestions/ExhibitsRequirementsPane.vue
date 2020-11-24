@@ -3,24 +3,24 @@
     <div class="practice-question-V2" style="padding:15px;">
       <div class="practice-question-section">
         <div class="practice-question-v2-title">Exhibits</div>
-        <div v-for="(task, index) in exhibitContentArray" :key="task">
+        <div class="practice-question-left-pane" v-for="(task, index) in exhibitContentArray" :key="convertObj2Str(task)">
           <ExhibitsModal :exhibitsObj="exhibitContentArray[index]" :exhibitsInd="index" />
         </div>
       </div>
       <div class="practice-question-section">
         <div class="practice-question-v2-title">Requirements</div>
-        <div v-for="(task, index) in requirementContentArray" :key="task">
+        <div class="practice-question-left-pane" v-for="(task, index) in requirementContentArray" :key="convertObj2Str(task)">
           <RequirementsModal :requirementsObj="requirementContentArray[index]" :requirementsInd="index" />
         </div>
       </div>
       <div class="practice-question-section">
         <div class="practice-question-v2-title">Response Options</div>
-        <span v-for="(task, index) in requirementContentArray" :key="task">
-          <span v-if="responseContentArray[index].kind == 'open'">
+        <span v-for="(task, index) in responseContentArray" :key="convertObj2Str(task)">
+          <span class="practice-question-left-pane" v-if="responseContentArray[index].kind == 'open'">
             <TextEditorModal :responseObj="responseContentArray[index]" :responseInd="index" />
           </span>
-          <span v-else>
-            <ResponseSpreadsheetModal :responseObj="responseContentArray[index]"  :responseInd="index" />
+          <span class="practice-question-left-pane" v-else >
+            <ResponseSpreadsheetModal :responseObj="responseContentArray[index]" :responseInd="index" />
           </span>
         </span>
       </div>
@@ -32,12 +32,14 @@
 
 function rightPaneScrolling() {
   let isScrolling;
-  if ($("#pane_1").scrollTop() == 0) {
-    setTimeout(() => {
-      document.getElementById("rightPaneTopUnderline").style.display = "none";
-    }, 500);
+  if (document.getElementById("rightPaneTopUnderline") != null) {
+    if ($("#pane_1").scrollTop() == 0) {
+      setTimeout(() => {
+        document.getElementById("rightPaneTopUnderline").style.display = "none";
+      }, 500);
+    }
+    document.getElementById("rightPaneTopUnderline").style.display = "block";
   }
-  document.getElementById("rightPaneTopUnderline").style.display = "block";
   window.clearTimeout( isScrolling );
 }
 
@@ -113,6 +115,9 @@ export default {
           console.log;
         })
         .catch((error) => {});
+    },
+    convertObj2Str(obj) {
+      JSON.stringify(obj);
     },
   },
 };

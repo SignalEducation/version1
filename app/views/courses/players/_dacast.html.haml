@@ -76,6 +76,14 @@
   });
 
   $( document ).ready(function() {
+    setTimeout(
+      function()
+      {
+        const dacast_ht = $("#video-player-window > div").height();
+        $("#video-player-window").css("height",`${dacast_ht}px`);
+        $("#video-player-window").css("paddingBottom","30%");
+      }, 1500);
+
     if ( freeLesson === 'true') {
       setTimeout(
         function()

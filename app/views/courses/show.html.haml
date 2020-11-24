@@ -1,21 +1,24 @@
-%main
-  %article.courses.bg-gray5
+%main.sidebar-right-main
+  =render partial: 'mobile_nav'
+  %article#sidebar-right-content.courses.bg-gray5
     .container
-      -unless @course_step.try(:is_practice_question)
-        %header
-          .d-flex.flex-wrap.flex-sm-nowrap.justify-content-between.py-4.py-md-5
-            .mw-0
-              =link_to navigation_special_link(@course_step), class: 'btn btn-secondary btn-sm btn-sm-arrow-left mb-3 mb-sm-0' do
-                =@course_step.course_lesson.course_section.course.name
+      %div.course-show-external-banner#courses-show-external-banner
+        =render partial: 'layouts/external_banner'
+      %header
+        .d-flex.flex-wrap.flex-sm-nowrap.justify-content-between.py-4.py-md-5
+          -if @course_step
+            =render partial: 'prev_lesson_navigation'
 
-            -if @course_step && (@course_step.is_video? || @course_step.is_note?  || @course_step.is_constructed_response?)
-              .mw-0{ id: 'course_note_next_step' }
-                =render partial: 'next_lesson_navigation'
-
-          -if @course_step.is_video?
-            .pt-3
+          -if @course_step
+            .pt-3.sidebar-right-title
               %h1.h3
                 =@course_step.name
+
+          .right-topbar-item.color-shade.course-nav-helpers{'data-target' => '#contact-form-modal', 'data-toggle' => 'modal', :href => '#'}
+            %i.material-icons.icon-bg-round{"aria-label" => "failed", :role => "img", :title => "Contact Us"}help_outline
+
+          -if @course_step
+            =render partial: 'next_lesson_navigation'
 
       %section.course-content
         -if defined?(@results)
@@ -35,6 +38,27 @@
             %h2 Course module element - type unknown
             -Rails.logger.error "views/courses/show - unknown CME type. CME: #{@course_step.inspect}."
 
+  #upgrade-subscription-modal.video-upgrade-modal-hide
+    .upgrade-btn-slide
+      .modal-wrapper
+        .modal
+          .head
+            %a.btn-close.trigger{onclick: "upgradeClose()"}
+              %i.fa.fa-times{"aria-hidden" => "true"}
+          .content
+            .good-job
+              %i.fa.fa-thumbs-o-up{"aria-hidden" => "true"}
+              %h1 Good Job!
+              =link_to "Upgrade Now ", pricing_url(current_user&.preferred_exam_body&.group&.name_url), class: "btn btn-primary upgrade-arrow"
+
 - if current_user
   =render partial: 'library/subscription_restriction_modal'
   =render partial: 'library/related_lesson_restriction_modal'
+  =render partial: 'library/user_form_modal', locals: { ticket_type: 'Contact Us', form_id: 'contact-form-modal' }
+
+  :javascript
+
+    function upgradeClose() {
+      console.log('Upgrade Close');
+      $("#upgrade-subscription-modal").css("display", "none");
+    }

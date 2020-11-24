@@ -2,6 +2,7 @@
 
 module Admin
   class ExhibitsController < ApplicationController
+    include PracticeQuestions
     before_action :logged_in_required
     before_action { ensure_user_has_access_rights(%w[content_management_access]) }
     before_action :management_layout
@@ -15,8 +16,8 @@ module Admin
     end
 
     def new
-      last_exhibit = @practice_question&.exhibits&.all_in_order&.last&.sorting_order
-      @exhibit = PracticeQuestion::Exhibit.new(sorting_order: last_exhibit + 1 || 1, practice_question_id: params[:id])
+      @exhibit = new_practice_question_resource(@practice_question&.exhibits&.all_in_order&.last&.sorting_order, 'exhibit', params[:id])
+
       render 'admin/course_practice_questions/exhibits/new'
     end
 

@@ -1,14 +1,14 @@
 %div{id: "solutions_#{counter}", class: 'all_solutions'}
   -correct_answer = 0; your_answer = 0
-  %h3.text-bold.l-margin-top-big.l-margin-bottom
+  %h3.text-bold.l-margin-top-big.l-margin-bottom.quiz-solution-font
     =t('views.courses.show_results.attempts_table.question')
     =counter + 1
 
   -if attempt.quiz_question && attempt.quiz_question.custom_styles
-    .l-margin-bottom-big
+    .l-margin-bottom-big.quiz-solution-font
       =render partial: 'quiz_contents/index', locals: {contents: attempt.quiz_question.quiz_contents}
   -else
-    %h3.l-margin-bottom-big
+    %h3.l-margin-bottom-big.quiz-solution-font
       =render partial: 'quiz_contents/index', locals: {contents: attempt.quiz_question.quiz_contents}
 
 
@@ -42,25 +42,28 @@
     %p.text-inline.text-bold=(('A'..'Z').to_a[your_answer].to_s)
 
   -if attempt.try(:quiz_question).try(:quiz_solutions).try(:count).to_i > 0
-    %h3.mt-4.mb-3
+    %h3.mt-4.mb-3.quiz-solution-font
       ='Explanation'
 
     -if attempt.try(:quiz_question).try(:quiz_solutions)
-      .l-margin-bottom
+      .l-margin-bottom.quiz-solution-ans
         -if attempt.quiz_question && attempt.quiz_question.custom_styles
           =render partial: 'quiz_contents/index', locals: {contents: attempt.quiz_question.quiz_solutions}
         -else
+          %i.material-icons.icon-bg-round.color-shade{"aria-label" => "failed", :role => "img", :style => "margin-left:1px"} check
           %p=render partial: 'quiz_contents/index', locals: {contents: attempt.quiz_question.quiz_solutions}
 
   .panel.panel-default.border-same-backcolor
     .list-group
       -if attempt.try(:quiz_question).try(:quiz_answers)
         -attempt.answers.includes(:quiz_contents).each_with_index do |qa, counter2|
-          %li.list-group-item.quiz-answer-clickable
-            .container-fluid
-              .row
-                .col-md-1
+          .step.step-result{id: "answer_#{qa.id}"}
+            .step-part
+              %div.align-quiz-text
+                .col-md-1.align-dot-quiz
                   %h2=('A'..'Z').to_a[counter2]
+                  %i.learnsignal-letter{"aria-label" => "failed"}
+                    %span.small-dot-quiz
                 .col-md-11
                   -if attempt.quiz_question && attempt.quiz_question.custom_styles
                     =render partial: 'quiz_contents/index', locals: {contents: qa.quiz_contents}
