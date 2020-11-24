@@ -49,6 +49,7 @@ class CourseStepLog < ApplicationRecord
   belongs_to :course_step, optional: true
   has_many   :quiz_attempts, inverse_of: :course_step_log
   has_many   :practice_question_answers, inverse_of: :course_step_log, class_name: 'PracticeQuestion::Answer'
+  has_many   :practice_question_responses, inverse_of: :course_step_log, class_name: 'PracticeQuestion::Response'
   has_one    :constructed_response_attempt
   accepts_nested_attributes_for :quiz_attempts, :constructed_response_attempt
   accepts_nested_attributes_for :practice_question_answers
@@ -161,11 +162,16 @@ class CourseStepLog < ApplicationRecord
   end
 
   def build_practice_question_answers
-    course_step.course_practice_question.questions.each do |question|
-      next if practice_question_answers.map(&:practice_question_question_id).include?(question.id)
+    if course_step.course_practice_question.standard?
+      course_step.course_practice_question.questions.each do |question|
+        next if practice_question_answers.map(&:practice_question_question_id).include?(question.id)
 
-      practice_question_answers.create(content: question.content,
-                                       practice_question_question_id: question.id)
+        practice_question_answers.create(content: question.content,
+                                        practice_question_question_id: question.id)
+      end
+    else
+      practice_question_responses.find_or_create_by(kind: :open, practice_question_id: course_step.course_practice_question.id)
+      practice_question_responses.find_or_create_by(kind: :spreadsheet, practice_question_id: course_step.course_practice_question.id)
     end
   end
 

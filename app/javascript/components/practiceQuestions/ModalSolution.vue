@@ -60,6 +60,9 @@ export default {
       this.indexOfQuestion = showSubmitBtn[1];
       this.solutionObj = this.solutionContent[showSubmitBtn[1] - 1];
     });
+    eventBus.$on("close-modal",(status)=>{
+      this.modalIsOpen = status;
+    });
   },
   mounted() {
     this.$nextTick(function () {

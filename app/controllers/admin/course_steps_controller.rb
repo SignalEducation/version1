@@ -271,6 +271,7 @@ module Admin
           :document,
           questions_attributes: [
             :id,
+            :name,
             :kind,
             :course_practice_question_id,
             :description,

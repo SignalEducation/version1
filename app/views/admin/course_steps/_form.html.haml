@@ -79,6 +79,14 @@
                         =f.check_box :available_on_trial
                         Available on Trial
 
+            -if @course_step.course_practice_question && !@course_step.new_record?
+              .row.center-practice-ques-btns
+                .form-group
+                  .col-sm-8.col-sm-offset-1.exhibits-helpers
+                    =link_to 'Manage Exhibits', admin_course_step_practice_question_exhibits_path(course_step_id: @course_step.id, practice_question_id: @course_step.course_practice_question.id), class: 'btn btn-secondary'
+                .form-group
+                  .col-sm-8.col-sm-offset-1.exhibits-helpers
+                    =link_to 'Manage Solutions', admin_course_step_practice_question_solutions_path(course_step_id: @course_step.id, practice_question_id: @course_step.course_practice_question.id), class: 'btn btn-secondary'
             -if @course_step.is_quiz? && !@course_step.new_record?
               %br/
               %br/

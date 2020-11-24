@@ -6668,3 +6668,26 @@ button.sub-details[aria-expanded="true"]:before{
 .verification-btn {
   margin-left: 2em;
 }
+
+.exhibits-helpers {
+  max-width: 100%;
+}
+
+#exhibit_open {
+  display: none;
+}
+#exhibit_spreadsheet {
+  display: none;
+}
+#exhibit_document {
+  display: none;
+}
+#document-upload-input {
+  display: none;
+}
+.center-practice-ques-btns {
+  justify-content: center;
+}
+.exh-sol-go-back-btn {
+  float: right;
+}

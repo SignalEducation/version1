@@ -126,6 +126,17 @@ Rails.application.routes.draw do
 
       delete 'course_steps/:id/remove_question/:question_id', to: 'course_steps#remove_question', as: :practice_question_remove_question
       get 'course_steps/:id/quiz_questions_order', to: 'course_steps#quiz_questions_order', as: :quiz_questions_order
+
+      resources :course_steps do
+        resources :practice_questions do
+          resources :exhibits do
+            patch 'update', to: 'exhibits#update'
+          end
+          resources :solutions do
+            patch 'update', to: 'solutions#update'
+          end
+        end
+      end
     end
 
     # Subscriptions
