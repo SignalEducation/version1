@@ -19,6 +19,7 @@
                 </div>
               </div>
           </div>
+          <div class="draggable-overlay-text"></div>
         </div>
     </div>
 </template>
@@ -56,7 +57,7 @@ export default {
   },
   mounted() {
     this.$nextTick(function () {
-        $('#requirementsModal'+this.requirementsInd).draggable({ handle:'.modal2-header-lg'});
+        $('#requirementsModal'+this.requirementsInd).draggable({ handle:'.modal2-header-lg, .draggable-overlay-text'});
     })
   },
   methods: {
