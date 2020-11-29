@@ -29,3 +29,6 @@
                         =link_to 'Delete', admin_course_step_practice_question_exhibit_path(practice_question_id: @practice_question.id, course_step_id: @practice_question.course_step_id, id: exhibit.id), method: :delete, class: 'btn btn-secondary-reverse btn-xs'
                       -#%td
                         %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
+          .row
+            .col-sm-12
+              =link_to 'Go Back', edit_admin_course_step_url(@course_step_id), class: 'btn btn-secondary exh-sol-go-back-btn'

@@ -14,11 +14,11 @@
                       <li v-for="(solution, index) in solutionContentArray" :key="solution">
                         <a v-show="solution.kind == 'open'" :href="'#tab'+(index+1)" :class="{ 'active' : index == 0}">
                           <i class="material-icons exhibits-icon">create</i>
-                          Text
+                          <p v-html="solution.name"></p>
                         </a>
                         <a v-show="solution.kind == 'spreadsheet'" :href="'#tab'+(index+1)" :class="{ 'active' : index == 0}">
                           <i class="material-icons exhibits-icon">table_view</i>
-                          Spreadsheet
+                          <p v-html="solution.name"></p>
                         </a>
                       </li>
                     </ul>

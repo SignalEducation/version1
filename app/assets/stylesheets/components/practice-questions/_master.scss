@@ -692,7 +692,8 @@ button.modal-close:focus {
       margin-right: 1px;
     }
     a {
-      display:block;
+      display:flex;
+      min-height: 3.5em;
       text-align:center;
       text-decoration:none;
       text-transform:uppercase;
@@ -719,6 +720,7 @@ button.modal-close:focus {
         border: none;
       }
       i {
+        float: left;
         position: relative;
         top: 5px;
         padding-right: 5px;
