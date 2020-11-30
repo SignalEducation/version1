@@ -8,6 +8,7 @@ module Admin
     before_action :set_variables
 
     def index
+      @course_step_id = params[:course_step_id]
       @solutions = PracticeQuestion::Solution.where(practice_question_id: @practice_question.id).all_in_order
 
       render 'admin/course_practice_questions/solutions/index'

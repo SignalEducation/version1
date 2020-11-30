@@ -79,7 +79,7 @@
                         =f.check_box :available_on_trial
                         Available on Trial
 
-            -if @course_step.course_practice_question && !@course_step.new_record?
+            -if @course_step.course_practice_question && !@course_step.new_record? && @course_step.course_practice_question.kind == 'exhibit'
               .row.center-practice-ques-btns
                 .form-group
                   .col-sm-8.col-sm-offset-1.exhibits-helpers

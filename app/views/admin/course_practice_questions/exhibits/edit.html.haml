@@ -17,6 +17,7 @@
               =f.label :name, 'Name'
               .input-group.input-group-lg
                 = f.text_field :name, class: 'form-control'
+
           #document-upload-input.col-sm-6
             .form-group
               =f.label :document, t('views.course_practice_question.form.document'), class: 'control-label'
@@ -59,6 +60,42 @@
             =link_to t('views.general.cancel'), admin_course_step_practice_question_exhibits_url, class: 'btn btn-secondary'
 
 :javascript
+  let exhibit_kind = "#{@exhibit.kind}";
+  $(document).ready(function() {
+    showQuestionsByType(exhibit_kind);
+  });
+  function showQuestionsByType(value){
+    switch(value) {
+      case "open" :
+        $("#open_questions").show();
+        $("#spreadsheet_exhibits").hide();
+        $("#document-upload-input").hide();
+
+        // TODO(giordano), find a better way to fix the  name duplication
+        $("#open_content").attr('name', `practice_question_exhibit[content]`);
+        $("#spreadsheet_content").attr('name', `empty_content`);
+        break;
+      case "spreadsheet":
+        $("#spreadsheet_exhibits").show();
+        $("#open_questions").hide();
+        $("#document-upload-input").hide();
+
+        // TODO(giordano), find a better way to fix the  name duplication
+        $("#spreadsheet_content").attr('name', `practice_question_exhibit[content]`);
+        $("#open_content").attr('name', `empty_content`);
+        break;
+      case "document":
+        $("#document-upload-input").show();
+        $("#spreadsheet_exhibits").hide();
+        $("#open_questions").hide();
+
+        // TODO(giordano), find a better way to fix the  name duplication
+        $("#spreadsheet_content").attr('name', `practice_question_exhibit[content]`);
+        $("#open_content").attr('name', `empty_content`);
+        break;
+    }
+  };
+
   $("[class='form-control summernote_text']").each(function (elem, obj) {
     $(obj).summernote({
       disableDragAndDrop: true,
