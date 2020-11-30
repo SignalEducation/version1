@@ -28,7 +28,7 @@
                   .h3
                     Last Active
 
-                  -if @latest_cmeul
+                  -if @latest_cmeul && @latest_cmeul&.course_step&.created_at
                     .h6
                       =humanize_datetime(@latest_cmeul.course_step.created_at)
                       ='Never'
