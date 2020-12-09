@@ -419,6 +419,16 @@ class User < ApplicationRecord
     enrollments.all_valid.map(&:course_id).include?(course_id)
   end
 
+  def subscriber_type
+    if subscriptions.all_valid.any?
+      'Subscriber'
+    elsif subscriptions.cancelled.any?
+      'Cancelled Subscriber'
+    else
+      'Basic'
+    end
+  end
+
   # Orders/Products
   def valid_order_ids
     order_ids = []

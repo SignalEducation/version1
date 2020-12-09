@@ -112,22 +112,22 @@
 :javascript
   function addToCart(theThing) {
     let parentThing = $(theThing).parent().parent().parent().parent();
-    dataLayer.push({
-      'event': 'addToCart',
-      'ecommerce': {
-        'currencyCode': parentThing.attr('data-currency'),
-        'add': {
-          'products': [{
-            'name': parentThing.attr('data-name'),
-            'id': parentThing.attr('data-plan-id'),
-            'price': parentThing.attr('data-price'),
-            'brand': parentThing.attr('data-body'),
-            'category': 'Change Subscription',
-            'quantity': 1
-            }]
-        }
-      }
-    });
+    // dataLayer.push({
+    //   'event': 'addToCart',
+    //   'ecommerce': {
+    //     'currencyCode': parentThing.attr('data-currency'),
+    //     'add': {
+    //       'products': [{
+    //         'name': parentThing.attr('data-name'),
+    //         'id': parentThing.attr('data-plan-id'),
+    //         'price': parentThing.attr('data-price'),
+    //         'brand': parentThing.attr('data-body'),
+    //         'category': 'Change Subscription',
+    //         'quantity': 1
+    //         }]
+    //     }
+    //   }
+    // });
   }
 
   // UnChecks radio buttons except the one that was clicked.
