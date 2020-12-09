@@ -47,8 +47,5 @@ module LearnsignalV3
         ENV[key.to_s] = value
       end if File.exists?(env_file)
     end
-
-    # to enable Rack-Attack gem
-    #config.middleware.use Rack::Attack
   end
 end

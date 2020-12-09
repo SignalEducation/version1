@@ -1,12 +1,12 @@
-# Required by the RackAttack gem
 class Rack::Attack
+
   ### Configure Cache ###
 
   # If you don't want to use Rails.cache (Rack::Attack's default), then
   # configure it here.
   #
-  # Note: The store is only used for throttling (not blacklisting and
-  # whitelisting). It must implement .increment and .write like
+  # Note: The store is only used for throttling (not blocklisting and
+  # safelisting). It must implement .increment and .write like
   # ActiveSupport::Cache::Store
 
   # Rack::Attack.cache.store = ActiveSupport::Cache::MemoryStore.new
@@ -24,8 +24,8 @@ class Rack::Attack
   # Throttle all requests by IP (60rpm)
   #
   # Key: "rack::attack:#{Time.now.to_i/:period}:req/ip:#{req.ip}"
-  throttle('req/ip', limit: 30, period: 2.minutes) do |req|
-    req.ip unless req.path.starts_with?('/assets')
+  throttle('req/ip', limit: 30, period: 1.minutes) do |req|
+    req.ip # unless req.path.start_with?('/assets')
   end
 
   ### Prevent Brute-Force Login Attacks ###
@@ -40,70 +40,27 @@ class Rack::Attack
   # Throttle POST requests to /login by IP address
   #
   # Key: "rack::attack:#{Time.now.to_i/:period}:logins/ip:#{req.ip}"
-  throttle('logins/ip', limit: 5, period: 20.seconds) do |req|
-    if req.path == '/login' && req.post?
-      req.ip
-    end
-  end
-  throttle('sign_in/ip', limit: 5, period: 20.seconds) do |req|
-    if req.path == '/sign_in' && req.post?
-      req.ip
-    end
-  end
-  throttle('sign_in/ip', limit: 5, period: 20.seconds) do |req|
-    if req.path == '/en/sign_in' && req.post?
-      req.ip
-    end
-  end
+  # throttle('logins/ip', limit: 5, period: 20.seconds) do |req|
+  #   if req.path == '/login' && req.post?
+  #     req.ip
+  #   end
+  # end
 
   # Throttle POST requests to /login by email param
   #
-  # Key: "rack::attack:#{Time.now.to_i/:period}:logins/email:#{req.email}"
+  # Key: "rack::attack:#{Time.now.to_i/:period}:logins/email:#{normalized_email}"
   #
   # Note: This creates a problem where a malicious user could intentionally
   # throttle logins for another user and force their login requests to be
   # denied, but that's not very common and shouldn't happen to you. (Knock
   # on wood!)
-
-  # /login, params[:email]  --  shouldn't go anywhere as we don't respond to it
-  throttle('logins/email', limit: 5, period: 20.seconds) do |req|
-    if req.path == '/login' && req.post?
-      # return the email if present, nil otherwise
-      req.params['email'].presence
-    end
-  end
-
-  # /sign_in, params[:email]
-  throttle('sign_in/email', limit: 5, period: 20.seconds) do |req|
-    if req.path == '/sign_in' && req.post?
-      # return the email if present, nil otherwise
-      req.params['email'].presence
-    end
-  end
-
-  # /sign_in, params[:user][:email]
-  throttle('sign_in/email', limit: 5, period: 20.seconds) do |req|
-    if req.path == '/sign_in' && req.post?
-      # return the email if present, nil otherwise
-      req.params['user']['email'].presence
-    end
-  end
-
-  # /en/sign_in, params[:email]
-  throttle('sign_in/email', limit: 5, period: 20.seconds) do |req|
-    if req.path == '/en/sign_in' && req.post?
-      # return the email if present, nil otherwise
-      req.params['email'].presence
-    end
-  end
-
-  # en/sign_in, params[:user][:email]
-  throttle('sign_in/email', limit: 5, period: 20.seconds) do |req|
-    if req.path == '/en/sign_in' && req.post?
-      # return the email if present, nil otherwise
-      req.params['user']['email'].presence
-    end
-  end
+  # throttle("logins/email", limit: 5, period: 20.seconds) do |req|
+  #   if req.path == '/login' && req.post?
+  #     # Normalize the email, using the same logic as your authentication process, to
+  #     # protect against rate limit bypasses. Return the normalized email if present, nil otherwise.
+  #     req.params['email'].to_s.downcase.gsub(/\s+/, "").presence
+  #   end
+  # end
 
   ### Custom Throttle Response ###
 
@@ -118,26 +75,4 @@ class Rack::Attack
   #    {},   # headers
   #    ['']] # body
   # end
-
-  # ### from the Advanced setup suggestions:
-  # # After 5 requests with incorrect auth in 1 minute,
-  # # block all requests from that IP for 1 hour.
-  # Rack::Attack.blacklist('basic auth crackers') do |req|
-  #   Rack::Attack::Allow2Ban.filter(req.ip, maxretry: 5, findtime: 1.minute, bantime: 1.hour) do
-  #     # Return true if the authorization header not incorrect
-  #     auth = Rack::Auth::Basic::Request.new(req.env)
-  #     auth.credentials != ['signal', 'MeagherMacRedmond']
-  #   end
-  # end
-end
-
-# Always allow requests from localhost
-# (blacklist & throttles are skipped)
-Rack::Attack.safelist('allow from localhost') do |req|
-  # Requests are allowed if the return value is truthy
-  '127.0.0.1' == req.ip ||
-  '93.107.187.217' == req.ip || # Vodafone base station 31AD's fixed external IP
-  '93.107.187.215' == req.ip || # Vodafone base station 8D17's fixed external IP
-  '54.154.194.123' == req.ip || # Staging LoadBalancer
-  '54.171.70.58' == req.ip # Production LoadBalancer
 end
