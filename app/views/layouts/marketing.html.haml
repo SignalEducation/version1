@@ -1,0 +1,93 @@
+!!! 5
+%html{lang: params[:locale] || 'en'}
+  %head
+    %meta{charset: 'utf-8'}
+      %meta{http: {equiv:'X-UA-Compatible'}, content:'IE=edge'}
+      %meta{name: 'viewport', content: 'width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=0'}
+      %title
+        -if @seo_title
+          =@seo_title
+        -else
+          The Smarter Way to Study | learnsignal
+
+    =stylesheet_link_tag 'application', media: 'all'
+    =javascript_include_tag 'marketing', modernizr: :true
+
+    =render partial: 'layouts/google_tag_manager'
+
+    =yield :head
+
+    %link{href: 'https://fonts.googleapis.com/css?family=Rubik:300,400,500,700', rel: 'stylesheet'}
+    %link{href: 'https://fonts.googleapis.com/icon?family=Material+Icons', rel: 'stylesheet'}
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    =csrf_meta_tags
+    -if @seo_description
+      %meta{name: 'description', content: @seo_description}
+    -if @seo_no_index
+      %meta{name: 'robots', content: 'noindex'}
+    =render 'application/favicon'
+
+    -if Rails.env.production?
+      =render partial: 'layouts/cookie_banner'
+
+  %body{class: (controller_name == 'student_sign_ups' && action_name != 'new') ? 'page-light' : (action_name == 'account_verified') ? 'page-gray' : ''}
+
+    %noscript
+      %iframe{src: '//www.googletagmanager.com/ns.html?id=GTM-5SC76S', height: 0, width: 0, style: 'display:none;visibility:hidden'}
+
+    =render partial: 'layouts/facebook_tracking_code'
+    -if @layout == 'standard'
+      -if @navbar
+        =render partial: 'layouts/navbar'
+
+      -if @top_margin
+        -if @banner
+          .margin-top-lg
+        -else
+          .margin-top
+
+      -unless controller_name == 'subscriptions' || controller_name == 'orders' || controller_name == 'footer_pages' || controller_name == 'student_sign_ups' || controller_name == 'user_accounts'
+        -if flash[:success] || flash[:error] || flash[:warning]
+          =render partial: 'layouts/flash_messages'
+
+      =yield
+
+      -if @footer
+        =render partial: 'layouts/footer'
+    -else
+      =render partial: 'layouts/navbar'
+      -if @top_margin
+        .margin-top
+      -if flash[:success] || flash[:error] || flash[:warning]
+        =render partial: 'layouts/flash_messages'
+      =yield
+      =render partial: 'layouts/footer'
+
+
+    -#General partials
+    =render partial: 'layouts/misc_javascript'
+    =render partial: 'layouts/bing_tracking_code'
+    -if current_user
+      -data = current_user.analytics_exam_body_plan_data
+      :javascript
+        dataLayer.push({'user_id':"#{current_user.id}", 'user_plan':"#{data[0]}", 'plan_type':"#{data[1]}", 'plan_status':"#{data[2]}"});
+
+      -if flash[:datalayer_verify]
+        :javascript
+          dataLayer.push({'event':'registrationEmailConfirmed', 'user_id':"#{current_user.id}", 'user_plan':"#{current_user.subscriptions.all_valid.any? ? 'Subscription Plan' : 'Basic Plan'}", 'plan_type':"#{current_user.try(:preferred_exam_body).try(:name)}"});
+
+
+    -unless controller_name == 'home_pages'
+      %script{type: 'text/javascript'} try{Typekit.load();}catch(e){}
+
+    -if !current_user || current_user&.student_user?
+      =render partial: 'layouts/hubspot_js'
+    -if ENV['ZENDESK_ON'] == 'true' && @chat
+      =render partial: 'layouts/zendesk_js'
