@@ -19,7 +19,7 @@ module Admin
       @solution = PracticeQuestion::Solution.new(allowed_params)
 
       if @solution.save
-        flash[:success] = 'Solution succesfully created'
+        flash[:success] = 'Solution successfully created'
       else
         flash[:error] = 'Solution not created'
       end

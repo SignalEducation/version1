@@ -9,7 +9,7 @@ module InvoicesHelper
     return 'Prorated Discount' if item.prorated.present?
 
     if subscription?(invoice)
-      I18n.t("views.general.subscription_in_months.a#{invoice.subscription.subscription_plan.payment_frequency_in_months}")
+      "#{exam_body_name(invoice)} #{invoice.subscription.subscription_plan.interval_name} Subscription"
     elsif invoice.order.product.mock_exam?
       invoice.order.product.mock_exam.name.to_s.truncate(20)
     elsif invoice.order.product.cbe?
@@ -27,5 +27,9 @@ module InvoicesHelper
 
   def subscription?(invoice)
     invoice.subscription_id.present?
+  end
+
+  def exam_body_name(invoice)
+    subscription?(invoice) ? invoice.subscription.subscription_plan.exam_body : invoice.order.product.group.exam_body
   end
 end

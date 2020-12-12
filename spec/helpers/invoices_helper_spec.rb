@@ -29,7 +29,7 @@ describe InvoicesHelper, type: :helper do
         it 'subscription' do
           allow_any_instance_of(InvoicesHelper).to receive(:subscription?).and_return(true)
 
-          expect(pdf_description(invoice, invoice_line_item)).to eq('LearnSignal Monthly Subscription')
+          expect(pdf_description(invoice, invoice_line_item)).to eq("#{subscription_plan.exam_body.name} Monthly Subscription")
         end
 
         it 'mock_exam' do
