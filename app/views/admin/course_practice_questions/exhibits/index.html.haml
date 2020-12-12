@@ -3,6 +3,7 @@
     %h1
       Exhibits
 
+  %section.pb-7
     .row
       .col-sm-12
         .box-item.table-box
@@ -13,6 +14,7 @@
             %table.table.sorted_table
               %thead
                 %tr
+                  %th
                   %th='Name'
                   %th='Kind'
                   %th
@@ -20,9 +22,9 @@
               %tbody
                 -@exhibits.each do |exhibit|
                   %tr
+                    %td=exhibit.sorting_order
                     %td=exhibit.name
-                    %td
-                      =exhibit.kind
+                    %td=exhibit.kind
                     %td
                       =link_to 'Edit', edit_admin_course_step_practice_question_exhibit_url(practice_question_id: @practice_question.id, course_step_id: @practice_question.course_step_id, id: exhibit.id), class: 'btn btn-primary btn-xs'
                       -if exhibit.destroyable?
