@@ -58,6 +58,7 @@
 #  preferred_exam_body_id          :bigint
 #  currency_id                     :bigint
 #  tutor_link                      :string
+#  video_player                    :integer          default("0"), not null
 #
 
 class User < ApplicationRecord
@@ -69,6 +70,9 @@ class User < ApplicationRecord
   end
 
   # Constants
+
+  enum video_player: { vimeo: 0, dacast: 1 }
+
   LOCALES = %w[en].freeze
   SORT_OPTIONS = %w[created user_group name email].freeze
 

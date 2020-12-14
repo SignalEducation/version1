@@ -41,7 +41,14 @@
           =f.label :currency
           .input-group.input-group-lg
             =f.collection_select :currency_id, Currency.all, :id, :name, {}, {class: 'form-control custom-select', disabled: @user.currency_locked? }
-
+      .col-sm-6
+        .form-group
+          %p.label.pb-2
+            ='Video Player Preference'
+          -User.video_players.keys.each do |video_player|
+            .form-check.form-check-inline
+              = f.radio_button :video_player, video_player, class: 'form-check-input'
+              = f.label video_player.to_sym, class: 'form-check-label', for: "user_video_player_#{video_player}"
 
   -if @user.onboarding_process
     =render partial: 'fields_for_onboarding', locals: {f: f}

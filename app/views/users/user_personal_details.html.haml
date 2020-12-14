@@ -37,6 +37,18 @@
                   .h6
                     =@user.last_name
 
+                .col-sm-6
+                  .h3
+                    Preferred Exam Body
+                  .h6
+                    =@user&.preferred_exam_body&.name
+
+                .col-sm-6
+                  .h3
+                    Video Player
+                  .h6
+                    =@user.video_player.camelcase
+
             .col-sm-2
               =link_to 'Edit Details', edit_user_url(@user), class: 'btn btn-primary'
 
