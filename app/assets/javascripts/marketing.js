@@ -11,9 +11,9 @@
 // about supported directives.
 //
 // //// Removed Turbolinks from just after jquery-sortable
-//= require rails-ujs
 //= require jquery2
 //= require ahoy
+//= require rails-ujs
 //= require jquery-ui
 //= require bootstrap-sprockets
 //= require ./event_tracking.js

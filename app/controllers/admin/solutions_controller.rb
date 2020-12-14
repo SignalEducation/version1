@@ -14,6 +14,13 @@ module Admin
       render 'admin/course_practice_questions/solutions/index'
     end
 
+    def new
+      last_solution = @practice_question&.solutions&.all_in_order&.last&.sorting_order
+      @solution = PracticeQuestion::Solution.new(sorting_order: last_solution + 1 || 1, practice_question_id: params[:id])
+
+      render 'admin/course_practice_questions/solutions/new'
+    end
+
     def create
       @practice_question = CoursePracticeQuestion.find(params[:practice_question_solution][:practice_question_id])
       @solution = PracticeQuestion::Solution.new(allowed_params)
@@ -43,11 +50,6 @@ module Admin
         flash[:error] = 'Solution not succesfully updated'
         render 'admin/course_practice_questions/solutions/edit'
       end
-    end
-
-    def new
-      @solution = PracticeQuestion::Solution.new(sorting_order: 1, practice_question_id: params[:id])
-      render 'admin/course_practice_questions/solutions/new'
     end
 
     def destroy

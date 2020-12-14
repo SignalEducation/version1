@@ -14,6 +14,12 @@ module Admin
       render 'admin/course_practice_questions/exhibits/index'
     end
 
+    def new
+      last_exhibit = @practice_question&.exhibits&.all_in_order&.last&.sorting_order
+      @exhibit = PracticeQuestion::Exhibit.new(sorting_order: last_exhibit + 1 || 1, practice_question_id: params[:id])
+      render 'admin/course_practice_questions/exhibits/new'
+    end
+
     def create
       @practice_question = CoursePracticeQuestion.find(params[:practice_question_exhibit][:practice_question_id])
       @exhibit = PracticeQuestion::Exhibit.new(allowed_params)
@@ -43,11 +49,6 @@ module Admin
         flash[:error] = 'Exhibit not succesfully updated'
         render 'admin/course_practice_questions/exhibits/edit'
       end
-    end
-
-    def new
-      @exhibit = PracticeQuestion::Exhibit.new(sorting_order: 1, practice_question_id: params[:id])
-      render 'admin/course_practice_questions/exhibits/new'
     end
 
     def destroy

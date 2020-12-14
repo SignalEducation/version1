@@ -3,6 +3,7 @@
     %h1
       Solutions
 
+  %section.pb-7
     .row
       .col-sm-12
         .box-item.table-box
@@ -13,6 +14,7 @@
             %table.table.sorted_table
               %thead
                 %tr
+                  %th
                   %th='Name'
                   %th='Kind'
                   %th
@@ -20,9 +22,9 @@
               %tbody
                 -@solutions.each do |solution|
                   %tr
+                    %td=solution.sorting_order
                     %td=solution.name
-                    %td
-                      =solution.kind
+                    %td=solution.kind
                     %td
                       =link_to 'Edit', edit_admin_course_step_practice_question_solution_url(practice_question_id: @practice_question.id, course_step_id: @practice_question.course_step_id, id: solution.id), class: 'btn btn-primary btn-xs'
                       -if solution.destroyable?
