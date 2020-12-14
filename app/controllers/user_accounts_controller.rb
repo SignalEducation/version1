@@ -101,7 +101,7 @@ class UserAccountsController < ApplicationController
   def allowed_params
     params.require(:user).permit(:email, :first_name, :last_name,
                                  :address, :date_of_birth,
-                                 :unsubscribed_from_emails,
+                                 :unsubscribed_from_emails, :video_player,
                                  exam_body_user_details_attributes: [:id,
                                                                      :exam_body_id,
                                                                      :student_number])

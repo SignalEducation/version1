@@ -5,6 +5,7 @@
 # Table name: practice_question_questions
 #
 #  id                          :bigint           not null, primary key
+#  name                        :string
 #  kind                        :integer
 #  content                     :json
 #  solution                    :json
@@ -31,6 +32,7 @@ module PracticeQuestion
 
     # validations
     validates :course_practice_question_id, presence: true, on: :update
+    validates :name, presence: true
     validates :solution, presence: true
 
     # callbacks

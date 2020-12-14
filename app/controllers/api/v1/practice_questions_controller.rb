@@ -9,10 +9,18 @@ module Api
       def show; end
 
       def update
-        if update_practice_question_answers(params[:practice_questions])
-          render 'api/v1/practice_questions/show.json'
+        if params[:responses].present?
+          if update_practice_question_responses(params[:responses])
+            render 'api/v1/practice_questions/show.json'
+          else
+            render json: { errors: @practice_question.errors }, status: :unprocessable_entity
+          end
         else
-          render json: { errors: @practice_question.errors }, status: :unprocessable_entity
+          if update_practice_question_answers(params[:practice_questions])
+            render 'api/v1/practice_questions/show.json'
+          else
+            render json: { errors: @practice_question.errors }, status: :unprocessable_entity
+          end
         end
       end
 
@@ -31,6 +39,14 @@ module Api
 
         answers.each do |answer|
           PracticeQuestion::Answer.find(answer[:answer_id]).update(content: answer[:answer_content])
+        end
+      end
+
+      def update_practice_question_responses(responses)
+        @course_step_log.update(element_completed: true) if params[:status] == 'submited'
+
+        responses.each do |response|
+          PracticeQuestion::Response.find(response[:id]).update(content: response[:content])
         end
       end
     end

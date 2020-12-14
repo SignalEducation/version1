@@ -56,6 +56,7 @@
 #  preferred_exam_body_id          :bigint
 #  currency_id                     :bigint
 #  tutor_link                      :string
+#  video_player                    :integer          default("0"), not null
 #
 require 'rails_helper'
 require Rails.root.join 'spec/concerns/user_accessable_spec.rb'

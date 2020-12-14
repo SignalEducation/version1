@@ -16,8 +16,14 @@
                     =subscription.pending_3d_secure? ? 'Action Required' : subscription.state.capitalize
 
                 %p.mb-1
-                  Subscription created on
-                  %span=humanize_datetime_full(subscription.created_at)
+                  Subscription Created:
+                  %span
+                    =humanize_datetime_full(subscription.created_at)
+                -if subscription.next_renewal_date
+                  %p.mb-1
+                    Next Charge:
+                    %span
+                      =humanize_date(subscription.next_renewal_date)
                 %p
                   Payment Type:
                   %span

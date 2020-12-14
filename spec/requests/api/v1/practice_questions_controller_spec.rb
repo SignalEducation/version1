@@ -28,7 +28,7 @@ RSpec.describe 'Api::V1::PracticeQuestionsController', type: :request do
         expect(body['content']).to eq(practice_question.content)
         expect(body['document']['name']).to eq(practice_question.document_file_name)
         expect(body['document']['url']).to eq(practice_question.document.url(:original, timestamp: false))
-        expect([body.keys]).to contain_exactly(%w[id kind name content course_step total_questions document questions])
+        expect([body.keys]).to contain_exactly(%w[id kind name content course_step total_questions document questions responses exhibits solutions_v2])
       end
     end
 

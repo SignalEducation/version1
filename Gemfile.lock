@@ -65,6 +65,8 @@ GEM
     annotate (3.1.0)
       activerecord (>= 3.2, < 7.0)
       rake (>= 10.4, < 14.0)
+    appsignal (2.11.0)
+      rack
     arel (9.0.0)
     ast (2.4.0)
     authlogic (6.1.0)
@@ -582,8 +584,6 @@ GEM
       inflection
       mime-types
       multipart-post (~> 2.0)
-    zeroclipboard-rails (0.1.2)
-      railties (>= 3.1)
 
 PLATFORMS
   ruby
@@ -592,6 +592,7 @@ DEPENDENCIES
   ahoy_matey (>= 3.0.0)
   airbrake (~> 9.5)
   annotate
+  appsignal
   authlogic (~> 6.1.0)
   aws-sdk-s3 (~> 1)
   better_errors
@@ -694,7 +695,6 @@ DEPENDENCIES
   will_paginate
   will_paginate-bootstrap
   zendesk_api
-  zeroclipboard-rails
 
 RUBY VERSION
    ruby 2.6.5p114

@@ -1,0 +1,36 @@
+.container
+  %header.management-console-section
+    %h1
+      Solutions
+
+  %section.pb-7
+    .row
+      .col-sm-12
+        .box-item.table-box
+          .row
+            =link_to 'New Solution', new_admin_course_step_practice_question_solution_url(practice_question_id: @practice_question.id, course_step_id: @practice_question.course_step_id), class: 'btn btn-primary btn-xs'
+
+          .table-responsive.pt-4
+            %table.table.sorted_table
+              %thead
+                %tr
+                  %th
+                  %th='Name'
+                  %th='Kind'
+                  %th
+                  %th
+              %tbody
+                -@solutions.each do |solution|
+                  %tr
+                    %td=solution.sorting_order
+                    %td=solution.name
+                    %td=solution.kind
+                    %td
+                      =link_to 'Edit', edit_admin_course_step_practice_question_solution_url(practice_question_id: @practice_question.id, course_step_id: @practice_question.course_step_id, id: solution.id), class: 'btn btn-primary btn-xs'
+                      -if solution.destroyable?
+                        =link_to 'Delete', admin_course_step_practice_question_solution_path(practice_question_id: @practice_question.id, course_step_id: @practice_question.course_step_id, id: solution.id), method: :delete, class: 'btn btn-secondary-reverse btn-xs'
+                      -#%td
+                        %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
+          .row
+            .col-sm-12
+              =link_to 'Go Back', edit_admin_course_step_url(@course_step_id), class: 'btn btn-secondary exh-sol-go-back-btn'

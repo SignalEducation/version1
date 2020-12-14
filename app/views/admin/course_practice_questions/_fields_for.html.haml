@@ -7,7 +7,7 @@
   .form-group
     =practice_question.label :name, t('views.course_practice_question.form.kind')
     .input-group.input-group-lg
-      = practice_question.select :kind, [['Standard', 'standard']], {}, class: 'form-control'
+      = practice_question.select :kind, [['Standard', 'standard'], ['Exhibit', 'exhibit']], {}, class: 'form-control'
 
   .form-group
     =practice_question.label :document, t('views.course_practice_question.form.document'), class: 'control-label'

@@ -17,6 +17,7 @@ end
 
 json.questions practice_question.questions.order(:sorting_order) do |question|
   json.id                   question.id
+  json.name                 question.name
   json.sorting_order        question.sorting_order
   json.kind                 question.kind
   json.description          question.description
@@ -30,3 +31,9 @@ json.questions practice_question.questions.order(:sorting_order) do |question|
     json.answer_content answer.content
   end
 end
+
+
+  json.partial! 'responses', locals: { practice_question: practice_question }
+  json.partial! 'exhibits', locals: { practice_question: practice_question }
+  json.partial! 'solutions', locals: { practice_question: practice_question }
+
