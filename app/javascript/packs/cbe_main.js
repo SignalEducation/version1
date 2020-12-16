@@ -19,6 +19,9 @@ import CbeEdit from '../components/cbe/admin/Edit.vue';
 //
 import CbeHome from '../components/cbe/UserHome.vue';
 // ##############
+import Appsignal from "@appsignal/javascript";
+import { errorHandler } from "@appsignal/vue";
+
 
 Vue.use(BootstrapVue);
 Vue.use(fullscreen);
@@ -32,6 +35,12 @@ const mountCbeElement = (element, theComponent) =>
     components: { theComponent },
     render: h => h(theComponent)
   });
+
+const appsignal = new Appsignal({
+  key: "0f61ecea-6bab-48d4-aef5-e97718468d68",
+});
+
+Vue.config.errorHandler = errorHandler(appsignal, Vue);
 
 document.addEventListener('DOMContentLoaded', () => {
   const cbeNew = document.getElementById('cbes-new-view');
