@@ -5389,7 +5389,7 @@ a.list-group-item {
   position: relative;
   padding-bottom: 56.25%;
   height: 0;
-  overflow: hidden;
+  //overflow: hidden; Cutting off bottom of Dacast video player
   max-width: 100%;
 }
 .vimeo-player {
