@@ -1,4 +1,4 @@
-//= require jquery2
+//= require jquery
 //= require ahoy
 //= require jquery_ujs
 //= require jquery-ui
