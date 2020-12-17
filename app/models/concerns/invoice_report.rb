@@ -135,7 +135,7 @@ module InvoiceReport
   def hubspot_source_1
     return '' if hubspot_get_contact.nil?
 
-    hubspot_get_contact['properties']['hs_analytics_source_data_1']['value']
+    hubspot_get_contact['properties']['hs_analytics_source_data_1']['value'] if hubspot_get_contact['properties']['hs_analytics_source_data_1']
   end
 
   def hubspot_source_2
