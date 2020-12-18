@@ -27,6 +27,7 @@
                 </div>
               </div>
           </div>
+          <div class="draggable-overlay"></div>
         </div>
     </div>
 </template>
@@ -66,7 +67,7 @@ export default {
   },
   mounted() {
     this.$nextTick(function () {
-        $('#solutionModal').draggable({ handle:'.modal2-header-lg'});
+        $('#solutionModal').draggable({ handle:'.modal2-header-lg, .draggable-overlay'});
     })
   },
   methods: {
