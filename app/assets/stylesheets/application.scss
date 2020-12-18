@@ -6688,17 +6688,13 @@ button.sub-details[aria-expanded="true"]:before{
 }
 
 .load-overlay {
-  bottom: 0;
-  left: 0;
-  position: absolute;
-  right: 0;
-  top: -80px;
-  background: #fff;
-  opacity: 0.97;
-  margin-left: -105px;
-  width: 150%;
   z-index: 1030;
-  height: 250%;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  background-color: rgba(255,255,255,.98);
 }
 
 .load-overlay-blank {
@@ -6724,9 +6720,9 @@ button.sub-details[aria-expanded="true"]:before{
     display: block;
   }
   .small-screen-overlay-text {
-    position: absolute;
-    top: 22%;
-    left: 27%;
+    position: relative;
+    top: 45%;
+    width: 100%;
     color: #000032;
     display: flex;
     flex-direction: column;
@@ -6743,9 +6739,9 @@ button.sub-details[aria-expanded="true"]:before{
     display: block;
   }
   .small-screen-overlay-text {
-    position: absolute;
-    top: 22%;
-    left: 32%;
+    position: relative;
+    top: 45%;
+    width: 100%;
     color: #000032;
     display: flex;
     flex-direction: column;
