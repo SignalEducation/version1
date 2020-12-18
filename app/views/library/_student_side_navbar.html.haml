@@ -3,14 +3,14 @@
     #menu
       .menu-title
         %div
-          %h3.sidebar-title{:title => "#{@course_lesson.name}"}
+          %h3.sidebar-title{data: {course: @course.name, module: @course_lesson.name}}
             = link_to @course.name, navigation_special_link(@course_step), title: @course.name
             = succeed @course_lesson.name do
               %i.material-icons.color-shade{"aria-label" => "failed", :role => "img", :style => "position: relative;top: 6px;"} arrow_right
         #step-block
           -@course_lesson.active_children.each_with_index  do |step, index|
             =link_to course_special_link(step, @course_log) do
-              .step{:title => "#{step.name}", :class => sidepanel_border_radius(@course_step_index,index,@course_lesson.active_children.length.to_i) }
+              .step{data: {course_step: step.name}, :class => sidepanel_border_radius(@course_step_index,index,@course_lesson.active_children.length.to_i) }
                 .step-part
                   %div
                     %i.material-icons.icon-bg-round{"aria-label" => "failed", :role => "img", :style => "background-color: #000032;\n    color: #ffffff;\n    padding: 0em 0.4em 1.2em 0em;\n    border-radius: 5px;\n    width: 100%;"}
@@ -40,7 +40,7 @@
   #sidebar-bottom-menu
     .bottom-menu
       -if @course_lesson.next_module
-        =link_to course_special_link(@course_lesson&.next_module&.first_active_cme), class: 'btn btn-secondary btn-sm btn-sm-arrow-right mb-3 mb-sm-0' do
+        =link_to course_special_link(@course_lesson&.next_module&.first_active_cme), class: 'btn btn-secondary btn-sm btn-sm-arrow-right mb-3 mb-sm-0', data: {module: @course_lesson&.next_module&.name} do
           Next Module
 
 #sidebar-wrapper-student-responsive.text-center
@@ -48,14 +48,14 @@
     #menu
       .menu-title
         %div
-          %h3.sidebar-title{:title => "#{@course_lesson.name}"}
+          %h3.sidebar-title{data: {course: @course.name, module: @course_lesson.name}}
             = link_to @course.name, navigation_special_link(@course_step), title: @course.name
             = succeed @course_lesson.name do
               %i.material-icons.color-shade{"aria-label" => "failed", :role => "img", :style => "position: relative;top: 6px;"} arrow_right
         #step-block.step-block-column
           -@course_lesson.active_children.each_with_index  do |step, index|
             =link_to course_special_link(step, @course_log) do
-              .step{:title => "#{step.name}", class: @course_step_index-1 == index ? 'active-step' : '' }
+              .step{data: {course_step: step.name}, class: @course_step_index-1 == index ? 'active-step' : '' }
                 .step-part
                   %div
                     %i.material-icons.icon-bg-round{"aria-label" => "failed", :role => "img", :style => "background-color: #000032;\n    color: #ffffff;\n    padding: 0em 0.4em 1.2em 0em;\n    border-radius: 5px;\n    width: 100%;"}
@@ -88,6 +88,6 @@
           =@course_lesson.active_children.count
           Steps
         .bottom-menu
-          =link_to navigation_special_link(@course_step), class: 'btn btn-secondary btn-sm btn-sm-arrow-right mb-3 mb-sm-0' do
+          =link_to navigation_special_link(@course_step), class: 'btn btn-secondary btn-sm btn-sm-arrow-right mb-3 mb-sm-0', data: {module: @course_lesson&.next_module&.name} do
             Next Module
 
