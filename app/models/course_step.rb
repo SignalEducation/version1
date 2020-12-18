@@ -108,29 +108,18 @@ class CourseStep < ApplicationRecord
   end
 
   def next_element
-    if active && with_active_parents? && my_position_among_siblings
-      if my_position_among_siblings < (array_of_sibling_ids.length - 1)
-        # Find the next CME in the current CM
-        CourseStep.find(array_of_sibling_ids[my_position_among_siblings + 1])
-      elsif my_position_among_siblings == (array_of_sibling_ids.length - 1) && course_lesson.next_module&.active_children&.any?
-        # There is no next CME in current CM - find first CME in next CM
-        course_lesson.next_module
-      else
-        # There is no next CM in current CS - return the CourseSection
-        course_lesson.course_section
-      end
-    else
-      course_lesson&.course_section&.course
-    end
+    return unless active && with_active_parents? && my_position_among_siblings
+
+    return unless my_position_among_siblings < (array_of_sibling_ids.length - 1)
+
+    # Find the next CME in the current CM
+    CourseStep.find(array_of_sibling_ids[my_position_among_siblings + 1])
   end
 
   def previous_element
-    if my_position_among_siblings && my_position_among_siblings > 0
-      CourseStep.find(array_of_sibling_ids[my_position_among_siblings - 1])
-    else
-      prev_id = course_lesson.previous_module.try(:course_steps).try(:all_active).try(:all_in_order).try(:last).try(:id)
-      CourseStep.find(prev_id) if prev_id
-    end
+    return if !course_lesson.previous_module_id && my_position_among_siblings.zero?
+
+    evaluate_previous_element(my_position_among_siblings, course_lesson, array_of_sibling_ids)
   end
 
   #######################################################################
@@ -295,5 +284,13 @@ class CourseStep < ApplicationRecord
 
   def update_parent
     course_lesson.try(:update_video_and_quiz_counts)
+  end
+
+  def evaluate_previous_element(prev_index, course_lesson, array_of_sibling_ids)
+    if prev_index&.zero?
+      course_lesson.previous_module.last_active_cme
+    elsif prev_index&.positive?
+      CourseStep.find(array_of_sibling_ids[prev_index - 1])
+    end
   end
 end

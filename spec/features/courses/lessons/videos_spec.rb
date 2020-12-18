@@ -8,6 +8,7 @@ describe 'Video Course Step', type: :feature do
 
   let(:user_group)    { create(:student_user_group) }
   let(:student)       { create(:basic_student, :with_group, user_group: user_group) }
+  let!(:course_log)   { create(:course_log, course: course_1, user: student) }
 
   before :each do
     activate_authlogic
@@ -35,10 +36,10 @@ describe 'Video Course Step', type: :feature do
 
       expect(page).to have_title('The Smarter Way to Study | learnsignal')
       expect(page).to have_content(course_video_3.course_step.name)
-      expect(page).to have_selector(:link_or_button, I18n.t('views.course_steps.show.next_step'))
+      expect(page).to have_selector('div', text: 'keyboard_arrow_left')
 
-      within('#course_note_next_step') do
-        expect(page).to have_selector(:link_or_button, I18n.t('views.course_steps.show.next_step'))
+      within('.sidebar-nav-btn-right') do
+        expect(page).to have_selector('div', text: 'keyboard_arrow_right')
       end
     end
   end

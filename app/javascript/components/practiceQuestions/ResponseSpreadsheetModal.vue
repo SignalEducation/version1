@@ -16,6 +16,7 @@
                     <SpreadsheetEditor
                         :initial-data="responseObj.content"
                         :key="responseObj.id"
+                        class="exhibits-spread-sheet"
                         @spreadsheet-updated="syncSpreadsheetData"
                     />
                 </div>
@@ -48,7 +49,6 @@ export default {
     return {
       modalIsOpen: false,
       indexOfQuestion: 0,
-      responseObj: null,
     };
   },
   created() {

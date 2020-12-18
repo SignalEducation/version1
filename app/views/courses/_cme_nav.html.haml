@@ -1,7 +1,4 @@
 .d-flex.flex-wrap.flex-sm-nowrap.justify-content-between
   .mw-0
-    =link_to course_special_link(cme, @course_log), class: 'btn btn-secondary btn-sm mb-3 mb-sm-0' do
+    =link_to course_special_link(cme, @course_log), class: 'btn btn-secondary btn-sm btn-sm-arrow-left mb-3 mb-sm-0' do
       =t('views.course_steps.show.retake_quiz')
-
-  .mw-0
-    =render partial: 'next_lesson_navigation'

@@ -92,6 +92,10 @@ class CourseLesson < ApplicationRecord
     active_children.first
   end
 
+  def last_active_cme
+    active_children.last
+  end
+
   def children_available_count
     active_children.count
   end
@@ -126,7 +130,7 @@ class CourseLesson < ApplicationRecord
   end
 
   def previous_module_id
-    return unless my_position_among_siblings > 0
+    return unless my_position_among_siblings&.positive?
 
     array_of_sibling_ids[my_position_among_siblings - 1]
   end

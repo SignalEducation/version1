@@ -116,6 +116,26 @@
             -if flash[:success] || flash[:error] || flash[:warning]
               =render partial: 'layouts/flash_messages'
             =yield
+      -elsif @layout == 'student_sidebar'
+        #console-wrapper-sidebar.side-bar-nav
+          .d-none.d-sm-block
+          #sidebar-btn-collapse.sidebar-btn-collapse
+            #sidebar-btn-collapse-elem.sidebar-btn-collapse-content{:onclick => "collapseFunc()"}
+              #arrow-collapse.i.material-icons{:style => "font-size:32px;"} keyboard_arrow_left
+            =render partial: 'library/student_side_navbar'
+
+          -unless controller_name == 'subscriptions' || controller_name == 'orders' || controller_name == 'footer_pages' || controller_name == 'student_sign_ups' || controller_name == 'user_accounts'
+            -if flash[:success] || flash[:error] || flash[:warning]
+              =render partial: 'layouts/flash_messages'
+          -if current_user&.subscription_action_required? && !(controller_name == 'user_accounts' || controller_name == 'subscriptions' || controller_name == 'student_sign_ups')
+            .alert.alert-warning.text-center
+              There is an problem with your subscription.
+              -if current_user.actionable_invoice
+                =link_to 'Resolve Issue!', show_invoice_url(current_user.actionable_invoice.sca_verification_guid)
+              -else
+                =link_to 'Resolve Issue!', account_url(anchor: 'account-info')
+
+          =yield
       -else
         =render partial: 'layouts/navbar'
         -if @top_margin

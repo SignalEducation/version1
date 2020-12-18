@@ -161,14 +161,17 @@ describe CourseStep do
 
     describe '#next_element' do
       context 'inactive step' do
-        it 'return next element' do
-          expect(course_step_01.next_element).to eq(course_step_01.course_lesson.course_section.course)
-          expect(course_step_02.next_element).to eq(course_step_02.course_lesson.course_section.course)
+        it 'does not return next element' do
+          expect(course_step_01.next_element).not_to eq(course_step_01.course_lesson.course_section.course)
+          expect(course_step_02.next_element).not_to eq(course_step_02.course_lesson.course_section.course)
         end
       end
 
       context 'active step' do
         it 'return next element' do
+          allow(CourseStep).to receive(:find).and_return(active_lesson.course_section)
+          allow_any_instance_of(CourseStep).to receive(:my_position_among_siblings).and_return(-99)
+
           expect(course_step_03.next_element).to eq(course_step_03.course_lesson.course_section)
         end
       end
@@ -205,7 +208,7 @@ describe CourseStep do
         it 'return previous element' do
           allow_any_instance_of(CourseLesson).to receive(:previous_module).and_return(active_lesson)
 
-          expect(course_step_03.previous_element).to eq(course_step_03)
+          expect(course_step_02.previous_element).to eq(course_step_01)
         end
       end
     end

@@ -90,6 +90,10 @@ class ApplicationController < ActionController::Base
     @layout = 'management'
   end
 
+  def student_sidebar_layout
+    @layout = 'student_sidebar'
+  end
+
   def logged_in_required
     return if current_user
 
