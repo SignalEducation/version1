@@ -89,22 +89,22 @@
 -if @plan || @product
   :javascript
     function selectTab(tab, currencyIso, name, id, price, body, type) {
-      dataLayer.push({ 'event': 'checkout',
-        'ecommerce': {
-          'currencyCode': currencyIso,
-          'checkout': {
-            'actionField': {'step': 1, 'option':tab},
-            'products': [{
-              'name': name,
-              'id': id,
-              'price': price,
-              'brand': body,
-              'category': type,
-              'quantity': 1
-            }]
-          }
-        }
-      });
+      // dataLayer.push({ 'event': 'checkout',
+      //   'ecommerce': {
+      //     'currencyCode': currencyIso,
+      //     'checkout': {
+      //       'actionField': {'step': 1, 'option':tab},
+      //       'products': [{
+      //         'name': name,
+      //         'id': id,
+      //         'price': price,
+      //         'brand': body,
+      //         'category': type,
+      //         'quantity': 1
+      //       }]
+      //     }
+      //   }
+      // });
     }
 
     let currencyIso = "#{@plan ? @plan.currency.iso_code : @product.currency.iso_code}";

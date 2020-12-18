@@ -89,6 +89,7 @@ class Subscription < ApplicationRecord
   scope :all_of_status,            ->(status) { where(stripe_status: status) }
   scope :all_active,               -> { with_states(:active, :past_due, :paused, :errored, :pending_cancellation) }
   scope :all_valid,                -> { where(state: VALID_STATES) }
+  scope :cancelled,                -> { where(state: 'cancelled') }
   scope :not_pending,              -> { where.not(state: 'pending') }
   scope :this_week,                -> { where(created_at: Time.zone.now.beginning_of_week..Time.zone.now.end_of_week) }
   scope :all_stripe,               -> { where.not(stripe_guid: nil).where(paypal_token: nil) }

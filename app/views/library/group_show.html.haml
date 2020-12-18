@@ -67,22 +67,22 @@
 
     :javascript
       function addToCart(currency, name, id, price, body) {
-        dataLayer.push({
-          'event': 'addToCart',
-          'ecommerce': {
-            'currencyCode': currency,
-            'add': {
-              'products': [{
-                'name': name,
-                'id': id,
-                'price': price,
-                'brand': body,
-                'category': 'Subscription',
-                'quantity': 1
-                }]
-            }
-          }
-        });
+        // dataLayer.push({
+        //   'event': 'addToCart',
+        //   'ecommerce': {
+        //     'currencyCode': currency,
+        //     'add': {
+        //       'products': [{
+        //         'name': name,
+        //         'id': id,
+        //         'price': price,
+        //         'brand': body,
+        //         'category': 'Subscription',
+        //         'quantity': 1
+        //         }]
+        //     }
+        //   }
+        // });
 
       }
 
@@ -114,4 +114,3 @@
           })
         }
       })
-

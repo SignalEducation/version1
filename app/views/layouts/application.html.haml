@@ -15,11 +15,12 @@
     =preload_link_tag 'icons/budicon_classic.ttf'
     =stylesheet_link_tag 'application', media: 'all'
     =javascript_include_tag 'application', modernizr: :true
-    -# VueJS include
-    = javascript_pack_tag 'cbe_main'
-    = stylesheet_pack_tag 'cbe_main'
+    -# CBE VueJS include
+    =javascript_pack_tag 'cbe_main'
+    =stylesheet_pack_tag 'cbe_main'
+    -# CBE VueJS include
+    =render partial: 'layouts/global_site_tag'
 
-    =render partial: 'layouts/google_tag_manager'
 
     %script{type: 'text/javascript', src: 'https://js.stripe.com/v3/'}
 
@@ -79,9 +80,6 @@
         %script{src: 'https://kendo.cdn.telerik.com/2018.2.516/js/jszip.min.js'}
         %script{src: 'https://kendo.cdn.telerik.com/2018.2.516/js/kendo.all.min.js'}
 
-      %noscript
-        %iframe{src: '//www.googletagmanager.com/ns.html?id=GTM-5SC76S', height: 0, width: 0, style: 'display:none;visibility:hidden'}
-
       =render partial: 'layouts/facebook_tracking_code'
       -if @layout == 'standard'
         -if @navbar
@@ -131,17 +129,17 @@
       -#General partials
       =render partial: 'layouts/misc_javascript'
       =render partial: 'layouts/bing_tracking_code'
-      -if current_user
-        -data = current_user.analytics_exam_body_plan_data
-        :javascript
-          dataLayer.push({'user_id':"#{current_user.id}", 'user_plan':"#{data[0]}", 'plan_type':"#{data[1]}", 'plan_status':"#{data[2]}"});
 
-        -if flash[:datalayer_verify]
-          :javascript
-            dataLayer.push({'event':'registrationEmailConfirmed', 'user_id':"#{current_user.id}", 'user_plan':"#{current_user.subscriptions.all_valid.any? ? 'Subscription Plan' : 'Basic Plan'}", 'plan_type':"#{current_user.try(:preferred_exam_body).try(:name)}"});
+      -if current_user.nil?
+        :javascript
+          gtag('event', 'user_type_dimension', {'user_type': 'Not Registered'});
+
+      -if current_user
+        :javascript
+          gtag('set', { 'user_id': "#{current_user.id}" });
+          gtag('event', 'user_type_dimension', {'user_type':  "#{current_user.subscriber_type}"});
 
       <!-- Mathjax -->
-
       -if @mathjax_required && !controller_name == 'home_pages'
         %script{type: 'text/x-mathjax-config'}
           MathJax.Hub.Config({"HTML-CSS": { linebreaks: { automatic: true } }, tex2jax: {inlineMath: [["(math)","(/math)"]]}});

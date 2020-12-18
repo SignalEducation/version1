@@ -91,51 +91,51 @@
   let searchParams = new URLSearchParams(window.location.search);
 
   function checkout1() {
-    dataLayer.push({ 'event': 'checkout',
-      'ecommerce': {
-        'checkout': {
-          'actionField': {'step': 1, 'option': 'Logged In'},
-          'products': [{
-            'name': productName,
-            'id': productId,
-            'price': productPrice,
-            'brand': productBody,
-            'category': 'Exam Papers',
-            'quantity': 1
-          }]
-        }
-      }
-    });
+    // dataLayer.push({ 'event': 'checkout',
+    //   'ecommerce': {
+    //     'checkout': {
+    //       'actionField': {'step': 1, 'option': 'Logged In'},
+    //       'products': [{
+    //         'name': productName,
+    //         'id': productId,
+    //         'price': productPrice,
+    //         'brand': productBody,
+    //         'category': 'Exam Papers',
+    //         'quantity': 1
+    //       }]
+    //     }
+    //   }
+    // });
   }
 
   function checkout2(type) {
     let convertType = (type === "stripe") ? "Credit Card" : "PayPal";
-    dataLayer.push({ 'event': 'checkout',
-      'ecommerce': {
-        'checkout': {
-          'actionField': {'step': 2, 'option':convertType},
-          'products': [{
-            'name': productName,
-            'id': productId,
-            'price': productPrice,
-            'brand': productBody,
-            'category': 'Exam Papers',
-            'quantity': 1
-          }]
-        }
-      }
-    });
+    // dataLayer.push({ 'event': 'checkout',
+    //   'ecommerce': {
+    //     'checkout': {
+    //       'actionField': {'step': 2, 'option':convertType},
+    //       'products': [{
+    //         'name': productName,
+    //         'id': productId,
+    //         'price': productPrice,
+    //         'brand': productBody,
+    //         'category': 'Exam Papers',
+    //         'quantity': 1
+    //       }]
+    //     }
+    //   }
+    // });
   }
 
   function checkoutOption(type) {
-    dataLayer.push({
-      'event': 'checkoutOption',
-      'ecommerce': {
-        'checkout_option': {
-          'actionField': {'step': 1, 'option': type}
-        }
-      }
-    });
+    // dataLayer.push({
+    //   'event': 'checkoutOption',
+    //   'ecommerce': {
+    //     'checkout_option': {
+    //       'actionField': {'step': 1, 'option': type}
+    //     }
+    //   }
+    // });
   }
 
   $(document).on('ready', function() {

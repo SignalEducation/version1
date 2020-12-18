@@ -53,8 +53,7 @@
                   =render partial: 'dashboard/purchase_products'
 
 -if flash[:success]
-  :javascript
-
+  -# :javascript
     dataLayer.push({
       'ecommerce': {
         'purchase': {

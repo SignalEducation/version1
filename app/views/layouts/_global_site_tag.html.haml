@@ -1,0 +1,23 @@
+-if Rails.env.staging?
+  / Global site tag (gtag.js) - Google Analytics
+  %script{:async => "", :src => "https://www.googletagmanager.com/gtag/js?id=UA-185199057-2"}
+  :javascript
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-185199057-2', {
+      'custom_map': {'dimension1': 'user_type'}
+    });
+
+-if Rails.env.production?
+  / Global site tag (gtag.js) - Google Analytics
+  %script{:async => "", :src => "https://www.googletagmanager.com/gtag/js?id=UA-141784351-1"}
+  :javascript
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-141784351-1', {
+      'custom_map': {'dimension4': 'user_type'}
+    });
