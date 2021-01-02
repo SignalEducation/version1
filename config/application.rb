@@ -48,6 +48,5 @@ module LearnsignalV3
       end if File.exists?(env_file)
     end
 
-    config.middleware.use Rack::Attack
   end
 end

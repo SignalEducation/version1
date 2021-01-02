@@ -44,7 +44,6 @@ gem 'bootstrap3-datetimepicker-rails', '~> 4.14.30'
 gem 'multipart-post' #To allow uploading wistia api
 gem 'pg' # PostgreSQL database engine
 gem 'rack', '2.0.8'
-gem 'rack-attack'
 gem 'redis-rails' #use redis from AWS Elasticache service
 # gem 'redis', '~> 4.0'
 gem 'remotipart' # enables file upload in forms that work using AJAX
