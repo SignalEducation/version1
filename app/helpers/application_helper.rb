@@ -193,4 +193,31 @@ module ApplicationHelper
       'btn btn-purple'
     end
   end
+
+  def navbar_landing_page_menu(landing_page)
+    content_tag :li, class: 'nav-item' do
+      onclick = ga_on_click_actions(landing_page.public_url)
+
+      link_to footer_landing_page_url(landing_page.public_url), class: 'nav-link', onclick: onclick do
+        content_tag('span', landing_page.name)
+      end
+    end
+  end
+
+  private
+
+  def ga_on_click_actions(public_url)
+    case public_url
+    when 'about-us'
+      "gtag('event', 'clicks_header_about_us', {'event_category': 'pre-registration', 'event_label': 'about_us'})"
+    when 'resources'
+      "gtag('event', 'clicks_header_resources', {'event_category': 'pre-registration', 'event_label': 'resources'})"
+    when 'testimonials'
+      "gtag('event', 'clicks_header_testimonials', {'event_category': 'pre-registration', 'event_label': 'testimonials'})"
+    when 'pricing'
+      "gtag('event', 'clicks_header_pricing', {'event_category': 'pre-registration', 'event_label': 'pricing'})"
+    else
+      ''
+    end
+  end
 end

@@ -76,16 +76,35 @@
     =render partial: 'layouts/bing_tracking_code'
     -if current_user.nil?
       :javascript
-        gtag('event', 'user_type_dimension', {'user_type': 'Not Registered'});
+        gtag('event', 'user_type_dimension', {'user_type': 'Not Registered',
+                                              'event_category':  "user",
+                                              'event_label':  "user_type"});
+
+        var waitForZopim = setInterval(function () {
+          if (window.$zopim === undefined || window.$zopim.livechat === undefined) {
+            return;
+          }
+          $zopim(function() {
+            $zopim.livechat.window.onShow(function(callback) {
+              gtag('event', 'clicks_support', {'event_category': 'pre-registration', 'event_label': 'support'})
+            });
+          });
+          clearInterval(waitForZopim);
+        }, 100);
+
 
     -if current_user
       :javascript
         gtag('set', { 'user_id': "#{current_user.id}" });
-        gtag('event', 'user_type_dimension', {'user_type':  "#{current_user.subscriber_type}"});
+        gtag('event', 'user_type_dimension', {'user_type':  "#{current_user.subscriber_type}",
+                                              'event_category':  "user",
+                                              'event_label':  "user_type"});
+
+    :javascript
+      gtag('event', 'visits_website', {'event_category':  "pre-registration", 'event_label':  "learnsignal"});
 
     -unless controller_name == 'home_pages'
       %script{type: 'text/javascript'} try{Typekit.load();}catch(e){}
-
     -if !current_user || current_user&.student_user?
       =render partial: 'layouts/hubspot_js'
     -if ENV['ZENDESK_ON'] == 'true' && @chat
