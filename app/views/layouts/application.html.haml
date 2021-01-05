@@ -150,14 +150,14 @@
       =render partial: 'layouts/misc_javascript'
       =render partial: 'layouts/bing_tracking_code'
 
-      -if current_user.nil?
-        :javascript
-          gtag('event', 'user_type_dimension', {'user_type': 'Not Registered'});
+    -if current_user.nil?
+      :javascript
+        gtag('event', 'user_type_dimension', {'user_type': 'Not Registered'});
 
-      -if current_user
-        :javascript
-          gtag('set', { 'user_id': "#{current_user.id}" });
-          gtag('event', 'user_type_dimension', {'user_type':  "#{current_user.subscriber_type}"});
+    -if current_user
+      :javascript
+        gtag('set', { 'user_id': "#{current_user.id}" });
+        gtag('event', 'user_type_dimension', {'user_type':  "#{current_user.subscriber_type}"});
 
       <!-- Mathjax -->
       -if @mathjax_required && !controller_name == 'home_pages'
