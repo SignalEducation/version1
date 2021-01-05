@@ -52,7 +52,8 @@
   opacity: .65
 }
 .btn:not(:disabled):not(.disabled) {
-  cursor: pointer
+  cursor: pointer;
+  border:none;
 }
 .btn.dropdown-toggle {
   padding-right: -webkit-calc(1rem - .4rem);

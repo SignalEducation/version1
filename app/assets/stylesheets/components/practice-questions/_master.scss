@@ -328,37 +328,40 @@ button2.btn-settings:active {
 .modal2-margin-top {
   margin-top: 3em;
 }
-.modal-close {
-  width: 31px;
-  height: 31px;
-  background: rgba(255,255,255,1);
-  opacity: 1;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  overflow: hidden;
-  top: .3rem;
-  z-index: 101;
-}
-.modal-close-solution {
-  top: .4rem;
-}
-button.modal-close:hover {
-  background-color: #000032;
-  color: #ffffff;
-  border: 3px solid #ffffff;
-  opacity: 1;
+.side-bar-nav {
+  .modal-close {
+    width: 31px;
+    height: 31px;
+    background: rgba(255,255,255,1);
+    opacity: 1;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+    top: .3rem;
+    z-index: 101;
+  }
+  .modal-close-solution {
+    top: .4rem;
+  }
+  button.modal-close:hover {
+    background-color: #000032;
+    color: #ffffff;
+    border: 3px solid #ffffff;
+    opacity: 1;
+  }
+
+  button.modal-close:not(:disabled):not(.disabled):hover {
+    opacity: 1;
+  }
+
+  button.modal-close:focus {
+    outline: none;
+  }
 }
 
-button.modal-close:not(:disabled):not(.disabled):hover {
-  opacity: 1;
-}
-
-button.modal-close:focus {
-  outline: none;
-}
 .modal2-body {
   color:#888;
   //padding: 5px 35px 20px;
@@ -505,6 +508,7 @@ button.modal-close:focus {
  .modal-dialog {
    display: flex;
    justify-content: center;
+   max-width: 1000px;
  }
  .modal-footer {
    justify-content: flex-end;
