@@ -60,7 +60,7 @@
                   %div
                     %i.material-icons.icon-bg-round{"aria-label" => "failed", :role => "img", :style => "background-color: #000032;\n    color: #ffffff;\n    padding: 0em 0.4em 1.2em 0em;\n    border-radius: 5px;\n    width: 100%;"}
                       -if @course_log
-                        %span{class: @course_log.course_step_logs && @course_log.course_step_logs.map(&:course_step_id).include?(step.id) ? (@course_log.course_step_logs.all_completed.map(&:course_step_id).include?(step.id) ? 'small-dot' : 'small-dot-alt') : ''}
+                        %span{class: @course_log && @course_log.course_step_logs && @course_log.course_step_logs.map(&:course_step_id).include?(step.id) ? (@course_log.course_step_logs.all_completed.map(&:course_step_id).include?(step.id) ? 'small-dot' : 'small-dot-alt') : 'small-dot-neutral'}
                       -else
                         %span
                       -if step.is_video?
