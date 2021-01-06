@@ -14,7 +14,7 @@
               %h1.h3
                 =@course_step.name
 
-          .right-topbar-item.color-shade.course-nav-helpers{'data-target' => '#contact-form-modal', 'data-toggle' => 'modal', :href => '#'}
+          .right-topbar-item.color-shade.course-nav-helpers{onclick: "openZendesk()"}
             %i.material-icons.icon-bg-round{"aria-label" => "failed", :role => "img", :title => "Contact Us"}help_outline
 
           -if @course_step
@@ -61,4 +61,8 @@
     function upgradeClose() {
       console.log('Upgrade Close');
       $("#upgrade-subscription-modal").css("display", "none");
+    }
+
+    function openZendesk() {
+      $zopim.livechat.window.show()
     }

@@ -6940,7 +6940,7 @@ button.sub-details[aria-expanded="true"]:before{
   .small-dot-neutral {
     height: 5px;
     width: 5px;
-    background-color: #000032;
+    background-color: #ffffff;
     border-radius: 1px;
     display: inline-block;
     position: relative;
@@ -7497,8 +7497,15 @@ button.sub-details[aria-expanded="true"]:before{
   display: none;
 }
 @media(max-width:768px) {
+  .menu-title {
+    width: 100%;
+  }
+  .video-player-window {
+    height: 100%;
+  }
   #courses-mobile-nav {
     display: block;
+    background-color: #ffffff;
     a {
       text-decoration: none;
       color: rgba(255, 255, 255, 0.8);
@@ -7522,14 +7529,17 @@ button.sub-details[aria-expanded="true"]:before{
       }
     }
     .btn-side-nav {
-      width: 60px;
-      height: 60px;
+      width: 50px;
+      height: 50px;
       border-radius: 5px;
-      background-color: #243E56;
-      box-shadow: 0px 5px 12px 0px #ccc;
-      color: rgba(255, 255, 255, 0.8);
+      background-color: #ffffff;
+      color: #657786;
       margin: 5px;
       font-size: 28px;
+      border: none;
+    }
+    .btn-side-nav:focus {
+      outline: none;
     }
     .side-nav-overlay {
       position: absolute;
@@ -7615,8 +7625,8 @@ button.sub-details[aria-expanded="true"]:before{
   #sidebar {
     .sidebar-title {
       max-width: 100% !important;
-      padding-left: 10% !important;
-      padding-right: 20% !important;
+      padding-left: 4% !important;
+      padding-right: 4% !important;
     }
   }
   .step-block-column {
@@ -7644,12 +7654,14 @@ button.sub-details[aria-expanded="true"]:before{
   #sidebar-right-content {
     width: 100%;
     margin-left: 0%;
+    .justify-content-between {
+      align-items: center;
+    }
     .container {
       max-width: 100%;
     }
     .py-md-5 {
       margin-left: 0;
-      max-width: 400px;
     }
     .pt-3 {
       text-align: center;
@@ -7676,7 +7688,9 @@ button.sub-details[aria-expanded="true"]:before{
       margin-right: 1em;
     }
     #step-block {
-      width: 85%;
+      width: 90%;
+      margin-left: 5%;
+      margin-right: 5%;
     }
   }
   .side-bar-nav #sidebar {
