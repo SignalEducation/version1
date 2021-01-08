@@ -4004,6 +4004,11 @@ a.card:hover .card-title .card-explanation {
   padding: 2.5rem 0;
 
 }
+.plan-change-col {
+  .col {
+    max-width: 50%;
+  }
+}
 .onboarding-card:hover,
 .onboarding-card:hover .card-header {
   text-decoration: none;
