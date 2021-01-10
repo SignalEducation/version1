@@ -9,7 +9,7 @@
             Change Plan
           %p.p-hero.px-lg-6
             Select your preferred payment plan
-        %section.pb-md-6.pb-5
+        %section.pb-md-6.pb-5.plan-change-col
           -if flash[:success] || flash[:error] || flash[:warning]
             =render partial: 'layouts/flash_messages'
           =form_for(@subscription, url: subscription_plan_changes_path(@subscription), method: :post, html: {class: 'form-horizontal', role: 'form', id: 'upgrade-subscription-form'}) do |f|
