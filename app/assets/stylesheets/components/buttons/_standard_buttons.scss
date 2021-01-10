@@ -53,6 +53,8 @@
 }
 .btn:not(:disabled):not(.disabled) {
   cursor: pointer;
+}
+.btn-icon {
   border:none;
 }
 .btn.dropdown-toggle {
