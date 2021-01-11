@@ -29,7 +29,7 @@
           .row.row-lg
             -@group.courses.all_active.all_in_order.each do |course|
               .col-lg-6.col-xl-4
-                =link_to library_special_link(course), class: 'card card-horizontal flex-row card-mint', data: { toggle: 'tooltip', placement: 'right', animation: 'true', delay: { "show": 300, "hide": 100 }}, title: "#{course.short_description}" do
+                =link_to library_special_link(course), class: 'card card-horizontal flex-row card-mint', data: { toggle: 'tooltip', placement: 'right', animation: 'true', delay: { "show": 300, "hide": 100 }}, title: "#{course.short_description}", onclick: "gtag('event', 'clicks_course_name', {'event_category': 'pre-registration', 'event_label': #{course.name})" do
                   .card-header.d-flex.justify-content-center.align-items-center
                     -# TODO - Convert this into partial
                     -if course.unit_label

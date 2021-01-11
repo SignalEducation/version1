@@ -10,10 +10,8 @@
 
       #navbarNavDropdown.collapse.navbar-collapse.justify-content-end
         %ul.navbar-nav.align-items-lg-center
-          -@navbar_landing_pages.each do |navbar_landing_page|
-            %li.nav-item
-              =link_to footer_landing_page_url(navbar_landing_page.public_url), class: 'nav-link' do
-                %span=navbar_landing_page.name
+          -@navbar_landing_pages.each do |landing_page|
+            =navbar_landing_page_menu(landing_page)
           %li.nav-item
             =link_to pricing_url, class: 'nav-link' do
               %span Pricing
@@ -22,7 +20,7 @@
               %span Courses
             .dropdown-menu.dropdown-menu-right.dropdown-menu-course{"aria-labelledby" => "navbarDropdown"}
               -@groups.each do |group|
-                =link_to group.name, group_landing_url(group.name_url), class: 'nav-link dropdown-item'
+                =link_to group.name, group_landing_url(group.name_url), class: 'nav-link dropdown-item', onclick: "gtag('event', 'clicks_header_courses', {'event_category': 'pre-registration', 'event_label': #{group.name}})"
 
 
           -if current_user
@@ -40,8 +38,8 @@
 
           -else
             %li.nav-item
-              =link_to new_student_url, class: 'nav-link' do
+              =link_to new_student_url, class: 'nav-link', onclick: "gtag('event', 'clicks_register', {'event_category': 'pre-registration', 'event_label': 'register'})" do
                 %span Register
             %li.nav-item
-              =link_to sign_in_url, class: 'nav-link navbar-login' do
+              =link_to sign_in_url, class: 'nav-link navbar-login', onclick: "gtag('event', 'clicks_login', {'event_category': 'pre-registration', 'event_label': 'login'})" do
                 %span Login

@@ -344,4 +344,23 @@ RSpec.describe ApplicationHelper, type: :helper do
       end
     end
   end
+
+  describe '#navbar_landing_page_menu' do
+    context 'about_us link' do
+      let(:page) { build(:home_page, :about_us) }
+
+      it 'returns the correctly formatted date' do
+        expect(navbar_landing_page_menu(page)).to include('onclick')
+        expect(navbar_landing_page_menu(page)).to include('clicks_header_about_us')
+      end
+    end
+
+    context 'any other link' do
+      let(:page) { build(:home_page) }
+
+      it 'returns the correctly formatted date' do
+        expect(navbar_landing_page_menu(page)).to include('onclick=""')
+      end
+    end
+  end
 end

@@ -16,7 +16,6 @@
               -else
                 ="Instant Access to all #{@group&.name} Courses"
 
-
           -if @group
             .row.row-lg.justify-content-center.mt-4
               -@subscription_plans.each do |plan|
@@ -27,7 +26,7 @@
                         %p.pb-0.mb-0.text-white
                           Most Popular
                       .hero-section-tutor-card{style: 'border-top-left-radius: 0; border-top-right-radius: 0;'}
-                        =link_to '', subscription_checkout_special_link(plan.exam_body_id, plan.guid, params[:login]), class: 'hero-section-show-link-window', onclick: "addToCart('#{plan.currency.iso_code}', '#{plan.name}', '#{plan.id}', '#{plan.price}', '#{plan.exam_body.name}', '#{plan.interval_name}');"
+                        =link_to '', subscription_checkout_special_link(plan.exam_body_id, plan.guid, params[:login]), class: 'hero-section-show-link-window', onclick: "addToCart('#{plan.currency.iso_code}', '#{plan.name}', '#{plan.id}', '#{plan.price}', '#{plan.exam_body.name}', '#{plan.interval_name}'); gtag('event', 'clicks_plan', {'event_category': 'pre-registration', 'event_label': #{plan.payment_frequency_in_months}});"
                         .py-4.pb-0
                           .h3
                             =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
@@ -42,14 +41,14 @@
                                   =plan.savings_label
                                 .pt-4.pb-2.col-md-12.hero-section-responsive-view-course
                                   %p
-                                    = link_to 'Choose this plan', subscription_checkout_special_link(plan.exam_body_id, plan.guid, params[:login]), class: 'btn btn-secondary btn-sm'
+                                    = link_to 'Choose this plan', subscription_checkout_special_link(plan.exam_body_id, plan.guid, params[:login]), class: 'btn btn-secondary btn-sm', onclick: "gtag('event', 'clicks_plan', {'event_category': 'pre-registration', 'event_label': #{plan.payment_frequency_in_months}});"
                             -else
                               .pt-4.col-md-12.hero-section-responsive-view-course
                                 %p.h5.text-orange.mb-0
                                   =plan.savings_label
                                 .pt-4.pb-2.col-md-12.hero-section-responsive-view-course
                                   %p
-                                    = link_to 'Choose this plan', subscription_checkout_special_link(plan.exam_body_id, plan.guid, params[:login]), class: 'btn btn-secondary btn-sm'
+                                    = link_to 'Choose this plan', subscription_checkout_special_link(plan.exam_body_id, plan.guid, params[:login]), class: 'btn btn-secondary btn-sm', onclick: "gtag('event', 'clicks_plan', {'event_category': 'pre-registration', 'event_label': #{plan.payment_frequency_in_months}});"
 
                             .pb-2.col-md-12.hero-section-responsive-view-course
                               %p.small.mb-0
@@ -59,7 +58,7 @@
 
                   -else
                     .card.text-center.mb-4.hero-section-tutor-card.mt-4
-                      =link_to '', subscription_checkout_special_link(plan.exam_body_id, plan.guid, params[:login]), class: 'hero-section-show-link-window', onclick: "addToCart('#{plan.currency.iso_code}', '#{plan.name}', '#{plan.id}', '#{plan.price}', '#{plan.exam_body.name}', '#{plan.interval_name}');"
+                      =link_to '', subscription_checkout_special_link(plan.exam_body_id, plan.guid, params[:login]), class: 'hero-section-show-link-window', onclick: "addToCart('#{plan.currency.iso_code}', '#{plan.name}', '#{plan.id}', '#{plan.price}', '#{plan.exam_body.name}', '#{plan.interval_name}'); gtag('event', 'clicks_plan', {'event_category': 'pre-registration', 'event_label': #{plan.payment_frequency_in_months}});"
                       .py-4.pb-0
                         .h3
                           =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
@@ -74,14 +73,14 @@
                                 =plan.savings_label
                               .pt-4.pb-2.col-md-12.hero-section-responsive-view-course
                                 %p
-                                  = link_to 'Choose this plan', subscription_checkout_special_link(plan.exam_body_id, plan.guid, params[:login]), class: 'btn btn-secondary btn-sm'
+                                  = link_to 'Choose this plan', subscription_checkout_special_link(plan.exam_body_id, plan.guid, params[:login]), class: 'btn btn-secondary btn-sm', onclick: "gtag('event', 'clicks_plan', {'event_category': 'pre-registration', 'event_label': #{plan.payment_frequency_in_months}});"
                           -else
                             .pt-4.col-md-12.hero-section-responsive-view-course{style: 'padding-bottom: 3px !important;'}
                               %p.h5.text-orange.mb-0
                                 =plan.savings_label
                               .pt-4.pb-2.col-md-12.hero-section-responsive-view-course
                                 %p
-                                  = link_to 'Choose this plan', subscription_checkout_special_link(plan.exam_body_id, plan.guid, params[:login]), class: 'btn btn-secondary btn-sm'
+                                  = link_to 'Choose this plan', subscription_checkout_special_link(plan.exam_body_id, plan.guid, params[:login]), class: 'btn btn-secondary btn-sm', onclick: "gtag('event', 'clicks_plan', {'event_category': 'pre-registration', 'event_label': #{plan.payment_frequency_in_months}});"
 
                           .pb-2.col-md-12.hero-section-responsive-view-course
                             %p.small.mb-0
@@ -94,7 +93,7 @@
                 -name = product.name_by_type
                 .col-sm-6.col-lg-3
                   .card.text-center.mb-4.hero-section-tutor-card.mt-4
-                    = link_to '', link, class: 'hero-section-show-link-window', onclick: "addToCart('#{product.currency.iso_code}', '#{product.price}', '#{product.name}', '#{product.id}', '#{product.price}', '#{name}');"
+                    = link_to '', link, class: 'hero-section-show-link-window', onclick: "addToCart('#{product.currency.iso_code}', '#{product.price}', '#{product.name}', '#{product.id}', '#{product.price}', '#{name}'); gtag('event', 'clicks_plan', {'event_category': 'pre-registration', 'event_label': #{name}});"
                     .py-4
                       .h3
                         Lifetime Membership
@@ -109,18 +108,15 @@
                               =product.savings_label
                             .pt-4.pb-2.col-md-12.hero-section-responsive-view-course
                               %p
-                                = link_to 'Choose this plan', link, class: 'btn btn-secondary btn-sm'
+                                = link_to 'Choose this plan', link, class: 'btn btn-secondary btn-sm', onclick: "gtag('event', 'clicks_plan', {'event_category': 'pre-registration', 'event_label': #{name}});"
                         -else
                           .pt-5.col-md-12.hero-section-responsive-view-course{style: 'padding-bottom: 3px !important;'}
                             %p
-                              = link_to 'Choose this plan', link, class: 'btn btn-secondary btn-sm'
+                              = link_to 'Choose this plan', link, class: 'btn btn-secondary btn-sm', onclick: "gtag('event', 'clicks_plan', {'event_category': 'pre-registration', 'event_label': #{name}});"
 
                         .pb-2.col-md-12.hero-section-responsive-view-course
                           %p.small.my-4
                             One-time Payment
-
-
-
 
           -else
             %nav.levels-nav
@@ -128,7 +124,7 @@
                 - @exam_bodies.each_with_index do |exam_body, counter|
                   %li.nav-item{data: {tab_name: exam_body.name}}
                     -# TODO add active to first li
-                    %a{class: "nav-link #{counter == 0 ? 'active' : ''}", id: "#{exam_body.group.name_url}-tab", data: {toggle: 'tab'}, href: "##{exam_body.group.name_url}", aria: {controls: "#{exam_body.group.name_url}", selected: 'false'}, role: 'tab'}
+                    %a{class: "nav-link #{counter == 0 ? 'active' : ''}", id: "#{exam_body.group.name_url}-tab", data: {toggle: 'tab'}, href: "##{exam_body.group.name_url}", aria: {controls: "#{exam_body.group.name_url}", selected: 'false'}, role: 'tab', onclick: "gtag('event', 'clicks_exam_body_price', {'event_category': 'pre-registration', 'event_label': #{exam_body.name}});" }
                       =exam_body.name
 
             %section.py-3.py-md-4
@@ -146,7 +142,7 @@
                                 %p.pb-0.mb-0.text-white
                                   Most Popular
                               .hero-section-tutor-card{style: 'border-top-left-radius: 0; border-top-right-radius: 0;'}
-                                =link_to '', subscription_checkout_special_link(plan.exam_body_id, plan.guid, params[:login]), class: 'hero-section-show-link-window', onclick: "addToCart('#{plan.currency.iso_code}', '#{plan.name}', '#{plan.id}', '#{plan.price}', '#{plan.exam_body.name}', '#{plan.interval_name}');"
+                                =link_to '', subscription_checkout_special_link(plan.exam_body_id, plan.guid, params[:login]), class: 'hero-section-show-link-window', onclick: "addToCart('#{plan.currency.iso_code}', '#{plan.name}', '#{plan.id}', '#{plan.price}', '#{plan.exam_body.name}', '#{plan.interval_name}'); gtag('event', 'clicks_plan', {'event_category': 'pre-registration', 'event_label': #{plan.payment_frequency_in_months}});"
                                 .py-4.pb-0
                                   .h3
                                     =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
@@ -161,14 +157,14 @@
                                           =plan.savings_label
                                         .pt-4.pb-2.col-md-12.hero-section-responsive-view-course
                                           %p
-                                            = link_to 'Choose this plan', subscription_checkout_special_link(plan.exam_body_id, plan.guid, params[:login]), class: 'btn btn-secondary btn-sm'
+                                            = link_to 'Choose this plan', subscription_checkout_special_link(plan.exam_body_id, plan.guid, params[:login]), class: 'btn btn-secondary btn-sm', onclick: "gtag('event', 'clicks_plan', {'event_category': 'pre-registration', 'event_label': #{plan.payment_frequency_in_months}});"
                                     -else
                                       .pt-4.col-md-12.hero-section-responsive-view-course
                                         %p.h5.text-orange.mb-0
                                           =plan.savings_label
                                         .pt-4.pb-2.col-md-12.hero-section-responsive-view-course
                                           %p
-                                            = link_to 'Choose this plan', subscription_checkout_special_link(plan.exam_body_id, plan.guid, params[:login]), class: 'btn btn-secondary btn-sm'
+                                            = link_to 'Choose this plan', subscription_checkout_special_link(plan.exam_body_id, plan.guid, params[:login]), class: 'btn btn-secondary btn-sm', onclick: "gtag('event', 'clicks_plan', {'event_category': 'pre-registration', 'event_label': #{plan.payment_frequency_in_months}});"
 
                                     .pb-2.col-md-12.hero-section-responsive-view-course
                                       %p.small.mb-0
@@ -178,7 +174,7 @@
 
                           -else
                             .card.text-center.mb-4.hero-section-tutor-card.mt-4
-                              =link_to '', subscription_checkout_special_link(plan.exam_body_id, plan.guid, params[:login]), class: 'hero-section-show-link-window', onclick: "addToCart('#{plan.currency.iso_code}', '#{plan.name}', '#{plan.id}', '#{plan.price}', '#{plan.exam_body.name}', '#{plan.interval_name}');"
+                              =link_to '', subscription_checkout_special_link(plan.exam_body_id, plan.guid, params[:login]), class: 'hero-section-show-link-window', onclick: "addToCart('#{plan.currency.iso_code}', '#{plan.name}', '#{plan.id}', '#{plan.price}', '#{plan.exam_body.name}', '#{plan.interval_name}'); gtag('event', 'clicks_plan', {'event_category': 'pre-registration', 'event_label': #{plan.interval_name}});"
                               .py-4.pb-0
                                 .h3
                                   =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
@@ -193,14 +189,14 @@
                                         =plan.savings_label
                                       .pt-4.pb-2.col-md-12.hero-section-responsive-view-course
                                         %p
-                                          = link_to 'Choose this plan', subscription_checkout_special_link(plan.exam_body_id, plan.guid, params[:login]), class: 'btn btn-secondary btn-sm'
+                                          = link_to 'Choose this plan', subscription_checkout_special_link(plan.exam_body_id, plan.guid, params[:login]), class: 'btn btn-secondary btn-sm', onclick: "gtag('event', 'clicks_plan', {'event_category': 'pre-registration', 'event_label': #{plan.payment_frequency_in_months}});"
                                   -else
                                     .pt-4.col-md-12.hero-section-responsive-view-course
                                       %p.h5.text-orange.mb-0
                                         =plan.savings_label
                                       .pt-4.pb-2.col-md-12.hero-section-responsive-view-course
                                         %p
-                                          = link_to 'Choose this plan', subscription_checkout_special_link(plan.exam_body_id, plan.guid, params[:login]), class: 'btn btn-secondary btn-sm'
+                                          = link_to 'Choose this plan', subscription_checkout_special_link(plan.exam_body_id, plan.guid, params[:login]), class: 'btn btn-secondary btn-sm', onclick: "gtag('event', 'clicks_plan', {'event_category': 'pre-registration', 'event_label': #{plan.payment_frequency_in_months}});"
 
                                   .pb-2.col-md-12.hero-section-responsive-view-course
                                     %p.small.mb-0
@@ -213,7 +209,7 @@
                         -name = product.name_by_type
                         .col-sm-6.col-lg-3
                           .card.text-center.mb-4.hero-section-tutor-card.mt-4
-                            = link_to '', link, class: 'hero-section-show-link-window', onclick: "addToCart('#{product.currency.iso_code}', '#{product.price}', '#{product.name}', '#{product.id}', '#{product.price}', '#{name}');"
+                            = link_to '', link, class: 'hero-section-show-link-window', onclick: "addToCart('#{product.currency.iso_code}', '#{product.price}', '#{product.name}', '#{product.id}', '#{product.price}', '#{name}'); gtag('event', 'clicks_plan', {'event_category': 'pre-registration', 'event_label': #{name}});"
                             .py-4
                               .h3
                                 Lifetime Membership
@@ -228,11 +224,11 @@
                                       =product.savings_label
                                     .pt-4.pb-2.col-md-12.hero-section-responsive-view-course
                                       %p
-                                        = link_to 'Choose this plan', link, class: 'btn btn-secondary btn-sm'
+                                        = link_to 'Choose this plan', link, class: 'btn btn-secondary btn-sm', onclick: "gtag('event', 'clicks_plan', {'event_category': 'pre-registration', 'event_label': #{name}});"
                                 -else
                                   .pt-5.col-md-12.hero-section-responsive-view-course{style: 'padding-bottom: 3px !important;'}
                                     %p
-                                      = link_to 'Choose this plan', link, class: 'btn btn-secondary btn-sm'
+                                      = link_to 'Choose this plan', link, class: 'btn btn-secondary btn-sm', onclick: "gtag('event', 'clicks_plan', {'event_category': 'pre-registration', 'event_label': #{name}});"
 
                                 .pb-2.col-md-12.hero-section-responsive-view-course
                                   %p.small.my-4
