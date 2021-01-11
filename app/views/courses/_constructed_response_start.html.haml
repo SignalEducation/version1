@@ -1,96 +1,95 @@
-.row.row-lg
+.row.row-lg#constructed-response-window
   .col-xl-12.mb-5
-    .start-screen-box-nav.start-screen-box-nav-header
-      .cr-resources
-        =@course_step.try(:name).try(:html_safe)
+    #course-right-show-elem-notes.course-right-show-content
+      .course-right-show-frame
+        .start-screen-box
+          .row
+            .col-sm.mb-3
+              .welcome-text
+                -if @group && @group.exam_body && @group.exam_body.constructed_response_intro_heading && !@group.exam_body.constructed_response_intro_heading.blank?
+                  =@group.exam_body.constructed_response_intro_heading
+                -else
+                  WELCOME TO YOUR CBE CONSTRUCTED RESPONSE TOOL
 
-    .start-screen-box
-      .row
-        .col-sm.mb-3
-          .welcome-text
-            -if @group && @group.exam_body && @group.exam_body.constructed_response_intro_heading && !@group.exam_body.constructed_response_intro_heading.blank?
-              =@group.exam_body.constructed_response_intro_heading
-            -else
-              WELCOME TO YOUR CBE CONSTRUCTED RESPONSE TOOL
-
-          -if @group && @group.exam_body && @group.exam_body.constructed_response_intro_text && !@group.exam_body.constructed_response_intro_text.blank?
-            =@group.exam_body.constructed_response_intro_text.html_safe
-          -else
-            .before-text
-              ='Before you attempt this question for the first time:'
-            %ul
-              -#%li='Watch your CBE introduction video'
-              %li='Ensure you have watched all the lectures and read the notes associated with this topic'
-              %li='Only watch the tutor completing this question after your first attempt'
-              %li='Keep track of time to get into the exam mindset from your first attempt'
-              %li='You can make as many attempts as you like but only your most recent 8 attempts will be available to view'
+              -if @group && @group.exam_body && @group.exam_body.constructed_response_intro_text && !@group.exam_body.constructed_response_intro_text.blank?
+                =@group.exam_body.constructed_response_intro_text.html_safe
+              -else
+                .before-text
+                  ='Before you attempt this question for the first time:'
+                %ul
+                  -#%li='Watch your CBE introduction video'
+                  %li='Ensure you have watched all the lectures and read the notes associated with this topic'
+                  %li='Only watch the tutor completing this question after your first attempt'
+                  %li='Keep track of time to get into the exam mindset from your first attempt'
+                  %li='You can make as many attempts as you like but only your most recent 8 attempts will be available to view'
 
 
-          -# -if @course_step.course_notes && @course_step.course_notes.any?
-          -#   %h6.pb-3.pt-3
-          -#     ='Help/Formulae Sheets'
-          -#   .row
-          -#     -@course_step.course_notes.each do |resource|
-          -#       .col-sm-6.pb-2
-          -#         =link_to resource.upload.url, target: '_blank' do
-          -#           .btn.btn-secondary
-          -#             =resource.name
+              -# -if @course_step.course_notes && @course_step.course_notes.any?
+              -#   %h6.pb-3.pt-3
+              -#     ='Help/Formulae Sheets'
+              -#   .row
+              -#     -@course_step.course_notes.each do |resource|
+              -#       .col-sm-6.pb-2
+              -#         =link_to resource.upload.url, target: '_blank' do
+              -#           .btn.btn-secondary
+              -#             =resource.name
 
-        .col-sm.text-center
-          =link_to courses_constructed_response_url(course_name_url: @course_step.course_lesson.course_section.course.name_url,
-           course_section_name_url: @course_step.course_lesson.course_section.name_url,
-            course_lesson_name_url: @course_step.course_lesson.name_url,
-             course_step_name_url: @course_step.name_url), id: 'newConstructedResponseButton' do
-            .btn.btn-primary.mt-3
-              ='New Constructed Response'
+            .col-sm.text-center
+              =link_to courses_constructed_response_url(course_name_url: @course_step.course_lesson.course_section.course.name_url,
+              course_section_name_url: @course_step.course_lesson.course_section.name_url,
+                course_lesson_name_url: @course_step.course_lesson.name_url,
+                course_step_name_url: @course_step.name_url), id: 'newConstructedResponseButton' do
+                .btn.btn-primary.mt-3
+                  ='New Constructed Response'
 
-          .sk-circle
-            .sk-circle1.sk-child
-            .sk-circle2.sk-child
-            .sk-circle3.sk-child
-            .sk-circle4.sk-child
-            .sk-circle5.sk-child
-            .sk-circle6.sk-child
-            .sk-circle7.sk-child
-            .sk-circle8.sk-child
-            .sk-circle9.sk-child
-            .sk-circle10.sk-child
-            .sk-circle11.sk-child
-            .sk-circle12.sk-child
+              .sk-circle
+                .sk-circle1.sk-child
+                .sk-circle2.sk-child
+                .sk-circle3.sk-child
+                .sk-circle4.sk-child
+                .sk-circle5.sk-child
+                .sk-circle6.sk-child
+                .sk-circle7.sk-child
+                .sk-circle8.sk-child
+                .sk-circle9.sk-child
+                .sk-circle10.sk-child
+                .sk-circle11.sk-child
+                .sk-circle12.sk-child
 
 
 
-          -if @course_step_logs && @course_step_logs.any?
-            .table-responsive.pt-3
-              %table.table
-                %thead
-                  %tr
-                    %th='Previous Responses'
-                    %th='Created'
-                    %th='Updated'
-                    %th='Status'
+              -if @course_step_logs && @course_step_logs.any?
+                .table-responsive.pt-3
+                  %table.table
+                    %thead
+                      %tr
+                        %th='Previous Responses'
+                        %th='Created'
+                        %th='Updated'
+                        %th='Status'
 
-                %tbody
-                  -@course_step_logs.each do |cmeul|
-                    %tr
-                      %td
-                        =link_to "Response-##{cmeul.constructed_response_attempt.try(:guid)}", courses_constructed_response_url(@course_step.course_lesson.course.name_url, @course_step.course_lesson.course_section.name_url, @course_step.course_lesson.name_url, @course_step.name_url, cmeul.id)
-                      %td
-                        =humanize_datetime(cmeul.created_at)
-                      %td
-                        =humanize_datetime(cmeul.updated_at)
-                      %td
-                        =cmeul.constructed_response_attempt.status
+                    %tbody
+                      -@course_step_logs.each do |cmeul|
+                        %tr
+                          %td
+                            =link_to "Response-##{cmeul.constructed_response_attempt.try(:guid)}", courses_constructed_response_url(@course_step.course_lesson.course.name_url, @course_step.course_lesson.course_section.name_url, @course_step.course_lesson.name_url, @course_step.name_url, cmeul.id)
+                          %td
+                            =humanize_datetime(cmeul.created_at)
+                          %td
+                            =humanize_datetime(cmeul.updated_at)
+                          %td
+                            =cmeul.constructed_response_attempt.status
 
 
 
 
-    .start-screen-box-nav.start-screen-box-nav-footer{style: 'min-height: 35px;'}
-      .cr-resources
-        =''
+        .start-screen-box-nav.start-screen-box-nav-footer{style: 'min-height: 35px;'}
+          .cr-resources
+            =''
 
 
 :javascript
+  collapseFunc();
   $(".sk-circle").hide();
   $(document).on('ready', function() {
 

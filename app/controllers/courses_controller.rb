@@ -3,6 +3,7 @@
 class CoursesController < ApplicationController
   skip_before_action :verify_authenticity_token, only: %i[create_video_user_log video_watched_data]
   before_action :logged_in_required
+  before_action :student_sidebar_layout
   before_action :check_permission, only: %i[show show_constructed_response]
 
   def show
@@ -11,6 +12,7 @@ class CoursesController < ApplicationController
     @course_section_log = @course_log.course_section_logs.where(course_section_id: @course_section.id).last if @course_log
     @course_lesson_log = @course_section_log.course_lesson_logs.where(course_lesson_id: @course_lesson.id).last if @course_section_log
     @group = @course.group
+    @course_step_index = @course_lesson.active_children.find_index { |item| item.name == @course_step.name } + 1
 
     if @course_step.is_quiz
       set_up_quiz
@@ -36,6 +38,7 @@ class CoursesController < ApplicationController
       percentage_score = @course_step_log.quiz_score_actual || 0
 
       @pass = percentage_score >= pass_rate ? 'Pass' : 'Fail'
+      @course_step_index = @course_lesson.active_children.find_index { |item| item.name == @course_step.name } + 1
 
       if @course_lesson && @course_step && @course_step_log
         render :show
@@ -104,6 +107,8 @@ class CoursesController < ApplicationController
     if @course_lesson&.active_children
       @course_step = @course_lesson.children.find_by(name_url: params[:course_step_name_url])
       current_user.non_student_user? && !@course_step.active ? (@preview_mode = true) : (@preview_mode = false)
+
+      @course_step_index = @course_lesson.active_children.find_index { |item| item.name == @course_step.name } + 1
 
       # CME name is not in the seo title because it is html_safe
       seo_title_maker("#{@course_lesson.name} - #{@course.name}", @course_step.try(:description), @course_step.try(:seo_no_index))

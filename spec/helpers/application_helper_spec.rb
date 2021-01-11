@@ -13,6 +13,50 @@ RSpec.describe ApplicationHelper, type: :helper do
     end
   end
 
+  describe '#red_or_green_arrow' do
+    it 'return a green arrow' do
+      expect(red_or_green_arrow(true)).to include('#21CE99')
+    end
+
+    it 'return a red arrow' do
+      expect(red_or_green_arrow(false)).to include('#eb4242')
+    end
+  end
+
+  describe '#red_or_green_text' do
+    it 'return a green text' do
+      expect(red_or_green_text(true, 'A')).to include('#21CE99')
+    end
+
+    it 'return a red text' do
+      expect(red_or_green_text(false, 'B')).to include('#eb4242')
+    end
+  end
+
+  describe '#red_or_green_tick' do
+    it 'return a green check mark' do
+      expect(red_or_green_tick(true)).to include('check')
+    end
+
+    it 'return a red check mark' do
+      expect(red_or_green_tick(false)).to include('close')
+    end
+  end
+
+  describe '#sidepanel_border_radius' do
+    it 'contains active step class' do
+      expect(sidepanel_border_radius(4, 3, 12)).to include('active-step')
+    end
+
+    it 'contains first step class' do
+      expect(sidepanel_border_radius(4, 0, 12)).to include('step-first-step')
+    end
+
+    it 'contains last step class' do
+      expect(sidepanel_border_radius(4, 11, 12)).to include('step-last-step')
+    end
+  end
+
   describe '#flagged_for_review' do
     it 'return a flagged span' do
       expect(flagged_for_review(true)).to include('#eb4242')
@@ -297,6 +341,25 @@ RSpec.describe ApplicationHelper, type: :helper do
         Timecop.freeze(2018, 11, 16) do
           expect(humanize_stripe_date).to eq '16 Dec 18'
         end
+      end
+    end
+  end
+
+  describe '#navbar_landing_page_menu' do
+    context 'about_us link' do
+      let(:page) { build(:home_page, :about_us) }
+
+      it 'returns the correctly formatted date' do
+        expect(navbar_landing_page_menu(page)).to include('onclick')
+        expect(navbar_landing_page_menu(page)).to include('clicks_header_about_us')
+      end
+    end
+
+    context 'any other link' do
+      let(:page) { build(:home_page) }
+
+      it 'returns the correctly formatted date' do
+        expect(navbar_landing_page_menu(page)).to include('onclick=""')
       end
     end
   end

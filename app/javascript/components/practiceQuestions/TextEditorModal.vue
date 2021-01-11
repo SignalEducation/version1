@@ -50,7 +50,6 @@ export default {
     return {
       modalIsOpen: false,
       indexOfQuestion: 0,
-      responseObj: null,
     };
   },
   created() {

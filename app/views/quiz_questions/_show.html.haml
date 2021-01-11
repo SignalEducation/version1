@@ -9,18 +9,15 @@
     .list-group
       -answers = question.quiz_answers.includes(:quiz_contents).sample(question.quiz_answers.size)
       -answers.each_with_index do |qa, counter|
-        .list-group-item.quiz-answer.quiz-answer-clickable{id: "answer_#{qa.id}", onclick: "logAnswer(#{@course_step_log.id}, #{question.id},#{qa.id}, [#{answers.map(&:id)}]); return false;", style: 'cursor:pointer'}
-          .container-fluid
-            .row
-              .col-md-1
+        .step{id: "answer_#{qa.id}", onclick: "logAnswer(#{@course_step_log.id}, #{question.id},#{qa.id}, [#{answers.map(&:id)}]); return false;", style: 'cursor:pointer'}
+          .step-part
+            %div.align-quiz-text
+              .col-md-1.align-dot-quiz
                 %h2=('A'..'Z').to_a[counter]
+                %i.learnsignal-letter{"aria-label" => "failed"}
+                  %span.small-dot-quiz
               .col-md-11
                 -if question.custom_styles
                   =render partial: 'quiz_contents/index', locals: {contents: qa.quiz_contents}
                 -else
                   %p=render partial: 'quiz_contents/index', locals: {contents: qa.quiz_contents}
-
-  %small
-    %small.text-muted
-      QID:
-      =question.id

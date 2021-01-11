@@ -1,23 +1,11 @@
-.row.row-lg
-  .col-xl-8
-    #video-player-window.video-player-window{data: {lesson_name: @course_step.name, course_name: @course.name}}
-      =render partial: 'courses/video_player', locals: { cme: @course_step }
+.row.row-lg#show-video-window
+  .col-xl-12
+    #course-right-show-elem-vid.course-right-show-content
+      .course-right-show-frame
+        #video-player-window.video-player-window{:class => alt_video_player(current_user.video_player), data: {lesson_name: @course_step.name, course_name: @course.name}}
+          =render partial: 'courses/video_player', locals: { cme: @course_step }
 
     .pt-5.pb-5
-
-  .col-xl-4
-    #upgrade-subscription-modal.video-upgrade-modal-hide
-      .upgrade-btn-slide
-        .modal-wrapper
-          .modal
-            .head
-              %a.btn-close.trigger{onclick: "upgradeClose()"}
-                %i.fa.fa-times{"aria-hidden" => "true"}
-            .content
-              .good-job
-                %i.fa.fa-thumbs-o-up{"aria-hidden" => "true"}
-                %h1 Good Job!
-                =link_to "Upgrade Now ", pricing_url(current_user&.preferred_exam_body&.group&.name_url), class: "btn btn-primary upgrade-arrow"
 
     -@course_step.course_resources.all_active.all_in_order.each do |resource|
       -if resource.external_url && resource.external_url.present?
@@ -34,10 +22,3 @@
           .card-body.d-flex.align-items-center.pl-1
             %h5.m-0.text-truncate.text-gray2
               =resource.name
-
-
-:javascript
-
-  function upgradeClose() {
-    $("#upgrade-subscription-modal").css("display", "none");
-  }

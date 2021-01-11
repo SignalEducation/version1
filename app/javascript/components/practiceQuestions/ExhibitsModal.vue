@@ -13,17 +13,18 @@
                   </div>
                   <div class="modal2-body">
                     <br>
-                    <div v-show="exhibitsObj.kind === 'open'">
+                    <div v-if="exhibitsObj.kind === 'open'">
                       <p v-html="exhibitsObj.content"></p>
                     </div>
-                    <div v-show="exhibitsObj.kind === 'spreadsheet'">
+                    <div v-else-if="exhibitsObj.kind === 'spreadsheet'">
                       <SpreadsheetEditor
-                          :initial-data="exhibitsObj.content"
+                          :initial-data="convertStr2Obj(exhibitsObj.content)"
                           :key="exhibitsObj.id"
+                          class="exhibits-spread-sheet"
                           @spreadsheet-updated="syncSpreadsheetData"
                       />
                     </div>
-                    <div v-show="exhibitsObj.kind === 'document'">
+                    <div v-else>
                       <PDFViewer :active=true :file-url="exhibitsObj.document" />
                     </div>
                 </div>
@@ -72,7 +73,7 @@ export default {
   },
   methods: {
     syncSpreadsheetData(jsonData) {
-      this.solutionContent = {
+      this.exhibitsObj = {
         content: {
           data: jsonData
         },
@@ -87,6 +88,9 @@ export default {
     resetModalDims() {
       $('#exhibitsModal'+this.exhibitsInd).css('width', '60em');
       $('#exhibitsModal'+this.exhibitsInd).css('height', '37em');
+    },
+    convertStr2Obj(str) {
+      return JSON.parse(str);
     },
   },
   watch: {

@@ -6,8 +6,9 @@ require 'support/course_content'
 describe 'Notes Course Step', type: :feature do
   include_context 'course_content'
 
-  let(:user_group) { create(:student_user_group ) }
-  let(:student)    { create(:basic_student, :with_group, user_group: user_group) }
+  let(:user_group)    { create(:student_user_group) }
+  let(:student)       { create(:basic_student, :with_group, user_group: user_group) }
+  let!(:course_log)   { create(:course_log, course: course_1, user: student) }
 
   before :each do
     activate_authlogic
@@ -34,7 +35,6 @@ describe 'Notes Course Step', type: :feature do
                              course_step_name_url: course_note.course_step.name_url)
 
       expect(page).to have_title('The Smarter Way to Study | learnsignal')
-      expect(page).to have_content(course_note.name)
     end
   end
 end

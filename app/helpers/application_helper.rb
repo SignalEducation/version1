@@ -1,15 +1,40 @@
 module ApplicationHelper
-
   def tick_or_cross(the_thing)
-    the_thing ?
-            "<span style='color: #21CE99;' class='glyphicon glyphicon-ok'></span>".html_safe :
-            "<span style='color: #eb4242;' class='glyphicon glyphicon-remove'></span>".html_safe
+    color = the_thing ? '#21CE99' : '#eb4242'
+    the_class = the_thing ? 'glyphicon glyphicon-ok' : 'glyphicon glyphicon-remove'
+    html_sanitizer('', the_class, "color: #{color};")
+  end
+
+  def red_or_green_arrow(the_thing)
+    color = the_thing ? '#21CE99' : '#eb4242'
+    html_sanitizer('', 'glyphicon glyphicon-arrow-right', "color: #{color};")
+  end
+
+  def red_or_green_text(the_thing, letter)
+    color = the_thing ? '#21CE99' : '#eb4242'
+    html_sanitizer(letter, '', "color: #{color};")
+  end
+
+  def red_or_green_tick(the_thing)
+    the_thing ? 'check' : 'close'
+  end
+
+  def sidepanel_border_radius(course_step_index, loop_index, loop_length)
+    classes = ['']
+    classes = ['active-step'] if course_step_index - 1 == loop_index
+    classes << 'step-first-step' if loop_index.zero?
+    classes << 'step-last-step' if loop_index == loop_length - 1
+    classes
+  end
+
+  def alt_video_player(video_player)
+    'dacast-player' if video_player == 'dacast'
   end
 
   def flagged_for_review(the_thing)
-    the_thing ?
-            "<span style='color: #eb4242;' class='glyphicon glyphicon-flag'></span>".html_safe :
-            "<span style='color: #ffffff;' class='glyphicon glyphicon-flag'></span>".html_safe
+    color = the_thing ? '#eb4242' : '#ffffff'
+    the_class = 'glyphicon glyphicon-flag'
+    html_sanitizer('', the_class, "color: #{color};")
   end
 
   def number_in_local_currency(amount, currency)
@@ -32,6 +57,10 @@ module ApplicationHelper
     raw(some_text)
   end
 
+  def html_sanitizer(content, myclasses, mystyle)
+    content_tag(:span, content, class: myclasses, style: mystyle)
+  end
+
   def seconds_to_time(seconds)
     if seconds > 3600
       Time.at(seconds).utc.strftime('%H:%M:%S')
@@ -51,11 +80,10 @@ module ApplicationHelper
 
   def simple_hour_time(seconds)
     if seconds > 3600
-      (seconds/3600).to_s + 'h'
+      (seconds / 3600).to_s + 'h'
     else
-      (seconds/60).to_s + 'm'
+      (seconds / 60).to_s + 'm'
     end
-
   end
 
   def simple_time(seconds)
@@ -163,6 +191,33 @@ module ApplicationHelper
       'btn btn-red'
     when 12
       'btn btn-purple'
+    end
+  end
+
+  def navbar_landing_page_menu(landing_page)
+    content_tag :li, class: 'nav-item' do
+      onclick = ga_on_click_actions(landing_page.public_url)
+
+      link_to footer_landing_page_url(landing_page.public_url), class: 'nav-link', onclick: onclick do
+        content_tag('span', landing_page.name)
+      end
+    end
+  end
+
+  private
+
+  def ga_on_click_actions(public_url)
+    case public_url
+    when 'about-us'
+      "gtag('event', 'clicks_header_about_us', {'event_category': 'pre-registration', 'event_label': 'about_us'})"
+    when 'resources'
+      "gtag('event', 'clicks_header_resources', {'event_category': 'pre-registration', 'event_label': 'resources'})"
+    when 'testimonials'
+      "gtag('event', 'clicks_header_testimonials', {'event_category': 'pre-registration', 'event_label': 'testimonials'})"
+    when 'pricing'
+      "gtag('event', 'clicks_header_pricing', {'event_category': 'pre-registration', 'event_label': 'pricing'})"
+    else
+      ''
     end
   end
 end

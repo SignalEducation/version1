@@ -9,7 +9,7 @@
             Change Plan
           %p.p-hero.px-lg-6
             Select your preferred payment plan
-        %section.pb-md-6.pb-5
+        %section.pb-md-6.pb-5.plan-change-col
           -if flash[:success] || flash[:error] || flash[:warning]
             =render partial: 'layouts/flash_messages'
           =form_for(@subscription, url: subscription_plan_changes_path(@subscription), method: :post, html: {class: 'form-horizontal', role: 'form', id: 'upgrade-subscription-form'}) do |f|
@@ -112,22 +112,22 @@
 :javascript
   function addToCart(theThing) {
     let parentThing = $(theThing).parent().parent().parent().parent();
-    dataLayer.push({
-      'event': 'addToCart',
-      'ecommerce': {
-        'currencyCode': parentThing.attr('data-currency'),
-        'add': {
-          'products': [{
-            'name': parentThing.attr('data-name'),
-            'id': parentThing.attr('data-plan-id'),
-            'price': parentThing.attr('data-price'),
-            'brand': parentThing.attr('data-body'),
-            'category': 'Change Subscription',
-            'quantity': 1
-            }]
-        }
-      }
-    });
+    // dataLayer.push({
+    //   'event': 'addToCart',
+    //   'ecommerce': {
+    //     'currencyCode': parentThing.attr('data-currency'),
+    //     'add': {
+    //       'products': [{
+    //         'name': parentThing.attr('data-name'),
+    //         'id': parentThing.attr('data-plan-id'),
+    //         'price': parentThing.attr('data-price'),
+    //         'brand': parentThing.attr('data-body'),
+    //         'category': 'Change Subscription',
+    //         'quantity': 1
+    //         }]
+    //     }
+    //   }
+    // });
   }
 
   // UnChecks radio buttons except the one that was clicked.

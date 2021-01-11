@@ -194,22 +194,22 @@
 
 
     function addToCart(currencyIso, name, id, price, body) {
-      dataLayer.push({
-        'event': 'addToCart',
-        'ecommerce': {
-          'currencyCode': currencyIso,
-          'add': {
-            'products': [{
-              'name': name,
-              'id': id,
-              'price': price,
-              'brand': body,
-              'category': 'Subscription',
-              'quantity': 1
-              }]
-          }
-        }
-      });
+      // dataLayer.push({
+      //   'event': 'addToCart',
+      //   'ecommerce': {
+      //     'currencyCode': currencyIso,
+      //     'add': {
+      //       'products': [{
+      //         'name': name,
+      //         'id': id,
+      //         'price': price,
+      //         'brand': body,
+      //         'category': 'Subscription',
+      //         'quantity': 1
+      //         }]
+      //     }
+      //   }
+      // });
     }
 
     $(document).ready(function(){
@@ -217,22 +217,22 @@
     });
 
     function selectTab(tab, currencyIso, name, id, price, body, type) {
-      dataLayer.push({ 'event': 'checkout',
-        'ecommerce': {
-          'currencyCode': currencyIso,
-          'checkout': {
-            'actionField': {'step': 1, 'option':tab},
-            'products': [{
-              'name': name,
-              'id': id,
-              'price': price,
-              'brand': body,
-              'category': type,
-              'quantity': 1
-            }]
-          }
-        }
-      });
+      // dataLayer.push({ 'event': 'checkout',
+      //   'ecommerce': {
+      //     'currencyCode': currencyIso,
+      //     'checkout': {
+      //       'actionField': {'step': 1, 'option':tab},
+      //       'products': [{
+      //         'name': name,
+      //         'id': id,
+      //         'price': price,
+      //         'brand': body,
+      //         'category': type,
+      //         'quantity': 1
+      //       }]
+      //     }
+      //   }
+      // });
     }
 
     $(document).ready(function(){

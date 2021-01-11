@@ -2,6 +2,7 @@
 
 module Admin
   class SolutionsController < ApplicationController
+    include PracticeQuestions
     before_action :logged_in_required
     before_action { ensure_user_has_access_rights(%w[content_management_access]) }
     before_action :management_layout
@@ -15,8 +16,7 @@ module Admin
     end
 
     def new
-      last_solution = @practice_question&.solutions&.all_in_order&.last&.sorting_order
-      @solution = PracticeQuestion::Solution.new(sorting_order: last_solution + 1 || 1, practice_question_id: params[:id])
+      @solution = new_practice_question_resource(@practice_question&.solutions&.all_in_order&.last&.sorting_order, 'solution', params[:id])
 
       render 'admin/course_practice_questions/solutions/new'
     end

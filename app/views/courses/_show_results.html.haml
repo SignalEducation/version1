@@ -1,99 +1,103 @@
 .row.row-lg#quiz-results-window{data: {lesson_name: @course_step.name, course_name: @course.name, result: @pass, log_id: @course_step_log.id}}
   .col-xl-12
-    %h1.h3
-      =@course_step_log.course_step.try(:name).try(:html_safe)
+    #course-right-show-elem-notes.course-right-show-content
+      .course-right-show-frame
+        #quiz-contents
+          .btn.btn-secondary.btn-sm.btn-sm-arrow-left.answer-correct.mb-4
+            Back to Results
+          #results
+            %div.align-quiz-result-text
+              %h3.h4
+                ="Result: "
+                -result_colour = @pass == 'Pass' ? '#00cc66' : '#EE5457'
+                %span{style: "color: #{result_colour};"}
+                  =@pass
 
-    .box-item.question-box.quiz-results#quiz-contents
-      .btn.btn-secondary.answer-correct.mb-4
-        &#60; Back to Results
-      #results
-        %h3.h4
-          ="Result: "
-          -result_colour = @pass == 'Pass' ? '#00cc66' : '#EE5457'
-          %span{style: "color: #{result_colour};"}
-            =@pass
+              %h3.h4
+                =t('views.courses.show_results.score')
+                =@course_step_log.quiz_attempts.where(correct: true).count
+                &#47;
+                =@course_step_log.quiz_attempts.count
+            -@course_step_log.quiz_attempts.sort_by(&:id).each_with_index do |attempt, counter|
+              .step{id: "#{counter}", onclick: 'showSolution.call(this); return false;'}
+                %p.text-inline.text-bold.no-margin-bottom Question #{counter + 1}
+                %i.text-inline{style: 'font-size: 25px; float: right'}=red_or_green_arrow attempt.try(:correct)
 
-        %h3.h4
-          =t('views.courses.show_results.score')
-          =@course_step_log.quiz_attempts.where(correct: true).count
-          &#47;
-          =@course_step_log.quiz_attempts.count
-        -@course_step_log.quiz_attempts.sort_by(&:id).each_with_index do |attempt, counter|
-          .answer.mt-2{class: attempt.correct ? 'answer-correct' : 'answer-failed', id: "#{counter}", onclick: 'showSolution.call(this); return false;'}
-            %p.text-inline.text-bold Question #{counter + 1}
-            %i.text-inline{style: 'font-size: 25px; float: right'}=tick_or_cross attempt.try(:correct)
+                -correct_answers = []; your_answer = 0
+                -attempt.answers.each_with_index do |qa, counter2|
+                  -correct_answers << counter2 if qa.correct
+                  -your_answer = counter2 if qa.id == attempt.quiz_answer_id
 
-            %p.l-margin-top-small.l-margin-bottom-small
-              -correct_answers = []; your_answer = 0
-              -attempt.answers.each_with_index do |qa, counter2|
-                -correct_answers << counter2 if qa.correct
-                -your_answer = counter2 if qa.id == attempt.quiz_answer_id
+                -if correct_answers.count > 1
+                  %p.text-inline.no-margin-bottom
+                    Correct Answers:
+                    &#160;
+                  -correct_answers.each_with_index do |correct_answer, counter3|
+                    -if counter3 == (correct_answers.count - 1)
+                      %p.text-inline.no-margin-bottom.text-bold{style: "color:#00cc66;"}=(('A'..'Z').to_a[correct_answer].to_s)
+                    -else
+                      %p.text-inline.no-margin-bottom.text-bold{style: "color:#00cc66;"}=(('A'..'Z').to_a[correct_answer].to_s + ' &')
+                -else
+                  %p.text-inline.no-margin-bottom
+                    Correct Answer:
+                    &#160;
+                  %p.text-inline.no-margin-bottom.text-bold{style: "color:#00cc66;"}=(('A'..'Z').to_a[correct_answers.first].to_s)
+                -if(!attempt.try(:correct))
+                  %p.text-inline.no-margin-bottom
+                    ='Your Answer:'
+                    &#160;
+                  %p.text-inline.no-margin-bottom.text-bold=red_or_green_text(attempt.try(:correct),('A'..'Z').to_a[your_answer].to_s)
+                  %h3.step-part-content-quiz.step-part-content-fail
+                    %i.material-icons.icon-bg-round.color-shade-red{"aria-label" => "failed", :role => "img", :style => "margin-left:1px"} close
+                -else
+                  %p.text-inline{style: "visibility: hidden;"}
+                    ='Your Answer:'
+                    &#160;
+                  %p.text-inline.text-bold{style: "visibility: hidden;"}=(('A'..'Z').to_a[your_answer].to_s)
+                  %h3.step-part-content-quiz
+                    %i.material-icons.icon-bg-round.color-shade{"aria-label" => "failed", :role => "img", :style => "margin-left:1px"} check
 
-              -if correct_answers.count > 1
-                %p.text-inline
-                  Correct Answers:
-                  &#160;
-                -correct_answers.each_with_index do |correct_answer, counter3|
-                  -if counter3 == (correct_answers.count - 1)
-                    %p.text-inline.text-bold=(('A'..'Z').to_a[correct_answer].to_s)
-                  -else
-                    %p.text-inline.text-bold=(('A'..'Z').to_a[correct_answer].to_s + ' &')
-              -else
-                %p.text-inline
-                  Correct Answer:
-                  &#160;
-                %p.text-inline.text-bold=(('A'..'Z').to_a[correct_answers.first].to_s)
-              %p.text-inline
-                &#160;
-                &bull;
-                &#160;
-                =' Your Answer:'
-                &#160;
-              %p.text-inline.text-bold=(('A'..'Z').to_a[your_answer].to_s)
-
-
-
-      -@course_step_log.quiz_attempts.sort_by(&:id).each_with_index do |attempt, counter|
-        -if attempt
-          =render partial: 'courses/show_solution', locals: {attempt: attempt, counter: counter}
-
-
-
-    -if @course_step
-      .cme-nav.box-item.question-box
-        .cme-nav
-          =render partial: 'courses/cme_nav', locals: {cme: @course_step}
+          -@course_step_log.quiz_attempts.sort_by(&:id).each_with_index do |attempt, counter|
+            -if attempt
+              =render partial: 'courses/show_solution', locals: {attempt: attempt, counter: counter}
 
 
-  :javascript
 
-    var allSolutions = $('.all_solutions'),
-      summaryButton = $('.btn.answer-correct'),
-      cmeNav = $('.cme-nav'),
-      pass = '#{@pass}';
+        -if @course_step
+          .cme-nav.margin-quiz-btn
+            .cme-nav
+              =render partial: 'courses/cme_nav', locals: {cme: @course_step}
 
-    $( document ).ready(function() {
-      allSolutions.hide();
-      summaryButton.hide();
-      quizFinishEvent();
-    });
 
-    function showSolution() {
-      var id = this.id;
-      $('#results').hide();
-      $("#solutions_" + id).show();
-      summaryButton.show();
-      cmeNav.hide();
-    }
+      :javascript
 
-    summaryButton.click(function() {
-      allSolutions.hide();
-      summaryButton.hide();
-      cmeNav.show();
-      $('#results').show();
-    });
+        var allSolutions = $('.all_solutions'),
+          summaryButton = $('.btn.answer-correct'),
+          cmeNav = $('.cme-nav'),
+          pass = '#{@pass}';
 
-    if(pass == 'Pass') {
-      $("#next-lesson-modal").addClass('d-none');
-      $("#next-lesson-link").removeClass('d-none');
-    }
+        $( document ).ready(function() {
+          allSolutions.hide();
+          summaryButton.hide();
+          quizFinishEvent();
+        });
+
+        function showSolution() {
+          var id = this.id;
+          $('#results').hide();
+          $("#solutions_" + id).show();
+          summaryButton.show();
+          cmeNav.hide();
+        }
+
+        summaryButton.click(function() {
+          allSolutions.hide();
+          summaryButton.hide();
+          cmeNav.show();
+          $('#results').show();
+        });
+
+        if(pass == 'Pass') {
+          $("#next-lesson-modal").addClass('d-none');
+          $("#next-lesson-link").removeClass('d-none');
+        }

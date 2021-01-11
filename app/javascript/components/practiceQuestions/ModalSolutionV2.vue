@@ -11,25 +11,25 @@
                   <div class="modal2-body">
                     <div class="modal-solution-wrapper">
                     <ul class="tabs clearfix" data-tabgroup="first-tab-group">
-                      <li v-for="(solution, index) in solutionContentArray" :key="solution">
-                        <a v-show="solution.kind == 'open'" :href="'#tab'+(index+1)" :class="{ 'active' : index == 0}">
+                      <li v-for="(solution, index) in solutionContentArray" :key="convertObj2Str(solution)">
+                        <a v-if="solution.kind == 'open'" :href="'#tab'+(index+1)" :class="{ 'active' : index == 0}">
                           <i class="material-icons exhibits-icon">create</i>
                           <p v-html="solution.name"></p>
                         </a>
-                        <a v-show="solution.kind == 'spreadsheet'" :href="'#tab'+(index+1)" :class="{ 'active' : index == 0}">
+                        <a v-else :href="'#tab'+(index+1)" :class="{ 'active' : index == 0}">
                           <i class="material-icons exhibits-icon">table_view</i>
                           <p v-html="solution.name"></p>
                         </a>
                       </li>
                     </ul>
                     <section id="first-tab-group" class="tabgroup">
-                      <div v-for="(solution, index) in solutionContentArray" :key="solution" :id="'tab'+(index+1)" class="tabgroup-pad">
-                        <div v-show="solution.kind == 'open'">
+                      <div v-for="(solution, index) in solutionContentArray" :key="convertObj2Str(solution)" :id="'tab'+(index+1)" class="tabgroup-pad">
+                        <div v-if="solution.kind == 'open'">
                           <p v-html="solution.content"></p>
                         </div>
-                        <div v-show="solution.kind == 'spreadsheet'">
+                        <div v-else>
                           <SpreadsheetEditor
-                            :initial-data="solution.content"
+                            :initial-data="convertStr2Obj(solution.content)"
                             :key="solution.id"
                             @spreadsheet-updated="syncSpreadsheetData"
                           />
@@ -77,11 +77,10 @@ export default {
       $('#solutionModalV2').draggable({ handle:'.modal2-header-lg, .draggable-overlay'});
     })
     this.instantiateTabs()
-    this.convertStr2Obj(this.solutionContentArray)
   },
   methods: {
     syncSpreadsheetData(jsonData) {
-      this.solutionContentArray[1].solution.content = { content: { data: jsonData } };
+
     },
     handleChange(value) {
       this.modalIsOpen = value;
@@ -109,12 +108,11 @@ export default {
 
       });
     },
-    convertStr2Obj(arr) {
-      for (var i in arr) {
-        if (arr[i].kind == "spreadsheet") {
-          arr[i].content = JSON.parse(arr[i].content);
-        }
-      }
+    convertObj2Str(obj) {
+      JSON.stringify(obj);
+    },
+    convertStr2Obj(str) {
+      return JSON.parse(str);
     },
   },
   watch: {

@@ -80,7 +80,7 @@
                           = hidden_field_tag :page_uri
                           = hidden_field_tag :page_name
                           = hidden_field_tag :hs_form_id, Rails.application.credentials[Rails.env.to_sym][:hubspot][:form_api][:registration_form]
-                          =f.submit 'Register Now', class: 'btn btn-primary btn-sm', id: 'signUp'
+                          =f.submit 'Register Now', class: 'btn btn-primary btn-sm', id: 'signUp', onclick: "gtag('event', 'registered_user', {'event_category': 'pre-registration', 'event_label': 'register'})"
                           .sk-circle
                             .sk-circle1.sk-child
                             .sk-circle2.sk-child
@@ -143,6 +143,7 @@
   $('input[type="checkbox"]').on('change', function() {
     if($('#communication_approval').prop('checked') == true) {
       $("#hidden_communication_approval").val('true');
+      gtag('event', 'agree_to_communication', {'event_category': 'pre-registration', 'event_label': 'register'})
     } else if($('#communication_approval').prop('checked') == false) {
       $("#hidden_communication_approval").val('false');
     }

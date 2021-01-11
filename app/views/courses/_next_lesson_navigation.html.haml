@@ -1,33 +1,25 @@
--if @course_step.next_element.class.name == 'CourseStep'
-  -if @course_step.course_lesson.free && !@valid_subscription
-    =link_to course_special_link(@course_step.next_element), id: 'practice-ques-next-step' do
-      #practice-ques-next-step.btn.btn-primary.btn-sm.btn-sm-arrow-right
-        =t('views.course_steps.show.next_step')
-  -elsif @course_step.available_on_trial && !@valid_subscription
-    =link_to show_course_url(@course.name_url, @course_step.next_element.course_lesson.course_section.name_url, @course_step.next_element.course_lesson.name_url, @course_step.next_element.name_url), id: 'practice-ques-next-step' do
-      #practice-ques-next-step.btn.btn-primary.btn-sm.btn-sm-arrow-right
-        =t('views.course_steps.show.next_step')
-  -else
-    - permission = @course_step.next_element.available_to_user(current_user, @valid_subscription, @course_log)
-    - if permission[:view]
-      =link_to show_course_url(@course.name_url, @course_step.next_element.course_lesson.course_section.name_url, @course_step.next_element.course_lesson.name_url, @course_step.next_element.name_url), id: 'practice-ques-next-step' do
-        #practice-ques-next-step.btn.btn-primary.btn-sm.btn-sm-arrow-right
-          =t('views.course_steps.show.next_step')
-    - else
-      #next-lesson-link.d-none
-        - if permission[:reason] == 'invalid-subscription'
-          =link_to '#', data: {target: "#invalid-subscription", toggle: 'modal', related: @course_step.next_element.related_course_step&.name}, id: 'practice-ques-next-step' do
-            #practice-ques-next-step.btn.btn-primary.btn-sm.btn-sm-arrow-right
-              =t('views.course_steps.show.next_step')
-        -else
-          =link_to show_course_url(@course.name_url, @course_step.next_element.course_lesson.course_section.name_url, @course_step.next_element.course_lesson.name_url, @course_step.next_element.name_url), id: 'practice-ques-next-step' do
-            #practice-ques-next-step.btn.btn-primary.btn-sm.btn-sm-arrow-right
-              =t('views.course_steps.show.next_step')
-      #next-lesson-modal
-        =link_to '#', data: {target: "##{permission[:reason]}", toggle: 'modal', related: @course_step.next_element.related_course_step&.name}, id: 'practice-ques-next-step' do
-          #practice-ques-next-step.btn.btn-primary.btn-sm.btn-sm-arrow-right
-            =t('views.course_steps.show.next_step')
--elsif !@course_step.course_lesson.free
-  =link_to course_special_link(@course_step.next_element), id: 'practice-ques-next-step' do
-    #practice-ques-next-step.btn.btn-primary.btn-sm.btn-sm-arrow-right
-      =t('views.course_steps.show.completed_section')
+-if @course_step.course_lesson.free && !@valid_subscription
+  =link_to course_special_link(@course_step.next_element), id: 'sidebar-btn-collapse-elem', class: 'mw-0 sidebar-nav-btn-right' do
+    #arrow-collapse.i.material-icons{:style => "font-size:32px;"} keyboard_arrow_right
+-elsif !@course_step.next_element && @course_lesson.next_module
+  =link_to course_special_link(@course_lesson&.next_module&.first_active_cme), class: 'mw-0 sidebar-nav-btn-right' do
+    #arrow-collapse.i.material-icons{:style => "font-size:32px;"} keyboard_arrow_right
+-elsif !@course_step.next_element && !@course_lesson.next_module
+  =link_to navigation_special_link(@course_step), class: 'mw-0 sidebar-nav-btn-right' do
+    #arrow-collapse.i.material-icons{:style => "font-size:32px;"} keyboard_arrow_right
+-else
+  - permission = @course_step.next_element.available_to_user(current_user, @valid_subscription, @course_log)
+  - if permission[:view]
+    =link_to show_course_url(@course.name_url, @course_step.next_element.course_lesson.course_section.name_url, @course_step.next_element.course_lesson.name_url, @course_step.next_element.name_url), id: 'sidebar-btn-collapse-elem', class: 'mw-0 sidebar-nav-btn-right' do
+      #arrow-collapse.i.material-icons{:style => "font-size:32px;"} keyboard_arrow_right
+  - else
+    #next-lesson-link.d-none
+      - if permission[:reason] == 'invalid-subscription'
+        =link_to '#', data: {target: "#invalid-subscription", toggle: 'modal', related: @course_step.next_element.related_course_step&.name}, id: 'sidebar-btn-collapse-elem', class: 'mw-0 sidebar-nav-btn-right' do
+          #arrow-collapse.i.material-icons{:style => "font-size:32px;"} keyboard_arrow_right
+      -else
+        =link_to show_course_url(@course.name_url, @course_step.next_element.course_lesson.course_section.name_url, @course_step.next_element.course_lesson.name_url, @course_step.next_element.name_url), id: 'sidebar-btn-collapse-elem', class: 'mw-0 sidebar-nav-btn-right' do
+          #arrow-collapse.i.material-icons{:style => "font-size:32px;"} keyboard_arrow_right
+    #next-lesson-modal
+      =link_to '#', data: {target: "##{permission[:reason]}", toggle: 'modal', related: @course_step.next_element.related_course_step&.name}, id: 'sidebar-btn-collapse-elem', class: 'mw-0 sidebar-nav-btn-right' do
+        #arrow-collapse.i.material-icons{:style => "font-size:32px;"} keyboard_arrow_right

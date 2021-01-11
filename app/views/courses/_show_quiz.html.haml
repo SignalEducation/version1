@@ -1,92 +1,91 @@
 .row.row-lg#quiz-window{data: {lesson_name: @course_step.name, course_name: @course.name}}
   .col-xl-12
-    -if @course_step.try(:course_quiz).try(:enough_questions?)
-      %h1.h3
-        =@course_step.try(:name).try(:html_safe)
-
-      .box-item.question-box#quiz-contents{style: 'min-height: 645px;'}
-        .quiz-heading.mb-2
+    #course-right-show-elem-notes.course-right-show-content
+      -if @course_step.try(:course_quiz).try(:enough_questions?)
+        .quiz-heading.mb-2.align-quiz-text
           #question-count.p
             Question 1 of 4
-        .progress.mb-5
-          .progress-bar{role: 'progressbar', aria: {valuenow: 0, valuemin: 0, valuemax: 100}, style: 'width: 0%;'}
+          .progress.mb-5
+            .progress-bar{role: 'progressbar', aria: {valuenow: 0, valuemin: 0, valuemax: 100}, style: 'width: 0%;'}
 
-        -@quiz_questions.each do |question|
-          =render partial: 'quiz_questions/show', locals: {question: question, hide_me: true}
+        .course-right-show-frame
+          #step-block.reduce-quiz-text-top
+            -@quiz_questions.each do |question|
+              =render partial: 'quiz_questions/show', locals: {question: question, hide_me: true}
 
-        =form_for @course_step_log, url: course_path(@course_step_log), html: {style: 'display: none;'} do |f|
-          =f.hidden_field :id, value: @course_step_log.try(:id)
-          =f.hidden_field :course_log_id, value: @course_log.try(:id)
-          =f.hidden_field :course_section_log_id, value: @course_section_log.try(:id)
-          =f.hidden_field :course_lesson_log_id, value: @course_lesson_log.try(:id)
-          =f.text_field :user_id
-          =f.text_field :course_lesson_id
-          =f.text_field :course_section_id
-          =f.text_field :course_step_id
-          =f.text_field :time_taken_in_seconds, value: @course_step.try(:estimated_time_in_seconds)
-    -else
-      .row
-        .col-sm-12
-          .well.well-lg
-            Sorry, there are not enough questions to present this quiz
+            =form_for @course_step_log, url: course_path(@course_step_log), html: {style: 'display: none;'} do |f|
+              =f.hidden_field :id, value: @course_step_log.try(:id)
+              =f.hidden_field :course_log_id, value: @course_log.try(:id)
+              =f.hidden_field :course_section_log_id, value: @course_section_log.try(:id)
+              =f.hidden_field :course_lesson_log_id, value: @course_lesson_log.try(:id)
+              =f.text_field :user_id
+              =f.text_field :course_lesson_id
+              =f.text_field :course_section_id
+              =f.text_field :course_step_id
+              =f.text_field :time_taken_in_seconds, value: @course_step.try(:estimated_time_in_seconds)
+      -else
+        .row
+          .col-sm-12
+            .well.well-lg
+              Sorry, there are not enough questions to present this quiz
 
-  :javascript
-    var allQuestionsList = #{@quiz_questions.pluck(:id)},
-        selectionStrategy = '#{@strategy}',
-        numberOfQuestions = #{@number_of_questions},
-        currentQuestion = 1,
-        progressBar = $('.progress-bar'),
-        questionCount = $('.quiz-heading');
+      :javascript
+        var allQuestionsList = #{@quiz_questions.pluck(:id)},
+            selectionStrategy = '#{@strategy}',
+            numberOfQuestions = #{@number_of_questions},
+            currentQuestion = 1,
+            progressBar = $('.progress-bar'),
+            questionCount = $('.quiz-heading');
 
-    function updateProgressBar() {
-      var percentage = (currentQuestion / numberOfQuestions * 100);
-      progressBar.attr('aria-valuemax', numberOfQuestions);
-      progressBar.attr('aria-valuenow', currentQuestion);
-      progressBar.attr('style', 'width: ' + percentage + '%;');
-      progressBar.find('span').text(currentQuestion + ' of ' + numberOfQuestions);
-      questionCount.find('#question-count').text('Question ' + currentQuestion + ' of ' + numberOfQuestions);
-    }
-
-    function askQuestion(questionNumber) {
-      updateProgressBar();
-      $('.question').hide();
-      $('#question_' + allQuestionsList[questionNumber - 1]).fadeIn();
-    }
-
-    //Triggered by onclick event in page
-    function logAnswer(logId, questionId, answerId, answerArray) {
-      $('#answer_' + answerId).prop("onclick", null).off("click"); // remove onclick event after sent.
-      if (currentQuestion <= 1) quizStartEvent();
-
-
-      createQuizAttempts(logId, questionId, answerId, answerArray);
-    }
-
-    function createQuizAttempts(logId, questionId, answerId, answerArray) {
-      $.ajax({
-        url: '#{update_quiz_attempts_courses_path}',
-        method: 'post',
-        dataType: 'json',
-        contentType: 'application/json; charset=utf-8',
-        data: JSON.stringify({'cmeul_id': logId,
-                              'question_id': questionId,
-                              'answer_id': answerId,
-                              'answer_array': answerArray.toString()}),
-        success: function(data,status,xhr){
-          if (currentQuestion < numberOfQuestions) {
-            currentQuestion++;
-            updateProgressBar();
-            askQuestion(currentQuestion);
-          } else {
-            $('.edit_course_step_log').submit();
-          }
-        },
-        error: function(xhr,status,error){
-          console.log(xhr);
+        function updateProgressBar() {
+          var percentage = (currentQuestion / numberOfQuestions * 100);
+          progressBar.attr('aria-valuemax', numberOfQuestions);
+          progressBar.attr('aria-valuenow', currentQuestion);
+          progressBar.attr('style', 'width: ' + percentage + '%;');
+          progressBar.find('span').text(currentQuestion + ' of ' + numberOfQuestions);
+          questionCount.find('#question-count').text('Question ' + currentQuestion + ' of ' + numberOfQuestions);
         }
-      });
-    }
 
-    $(document).on('ready page:load', function() {
-      askQuestion(1); // 1 is the first question
-    });
+        function askQuestion(questionNumber) {
+          updateProgressBar();
+          $('.question').hide();
+          $('#question_' + allQuestionsList[questionNumber - 1]).fadeIn();
+        }
+
+        //Triggered by onclick event in page
+        function logAnswer(logId, questionId, answerId, answerArray) {
+          $('#answer_' + answerId).prop("onclick", null).off("click"); // remove onclick event after sent.
+          if (currentQuestion <= 1) quizStartEvent();
+
+
+          createQuizAttempts(logId, questionId, answerId, answerArray);
+        }
+
+        function createQuizAttempts(logId, questionId, answerId, answerArray) {
+          $.ajax({
+            url: '#{update_quiz_attempts_courses_path}',
+            method: 'post',
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify({'cmeul_id': logId,
+                                  'question_id': questionId,
+                                  'answer_id': answerId,
+                                  'answer_array': answerArray.toString()}),
+            success: function(data,status,xhr){
+              if (currentQuestion < numberOfQuestions) {
+                currentQuestion++;
+                updateProgressBar();
+                askQuestion(currentQuestion);
+              } else {
+                $('.edit_course_step_log').submit();
+              }
+            },
+            error: function(xhr,status,error){
+              console.log(xhr);
+            }
+          });
+        }
+
+        $(document).on('ready page:load', function() {
+          askQuestion(1); // 1 is the first question
+        });

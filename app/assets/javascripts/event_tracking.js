@@ -9,8 +9,8 @@ function videoPlayEvent(logId) {
   playerType = (lessonData.hasOwnProperty('vimeoInitialized'))? 'Vimeo' : 'DaCast';
 
   ahoy.track('Video Play', {'lesson': lessonData.lessonName, 'course': lessonData.courseName, 'log_id': logId, 'player': playerType });
-  dataLayer.push({'event':'videoAction', 'video_name': lessonData.lessonName,
-    'course_name': lessonData.courseName, 'video_action':'Play'});
+  // dataLayer.push({'event':'videoAction', 'video_name': lessonData.lessonName,
+  //   'course_name': lessonData.courseName, 'video_action':'Play'});
 }
 function videoFinishedEvent() {
   let videoLesson = $("#video-player-window"),
@@ -27,8 +27,8 @@ function quizStartEvent() {
     lessonData = quizWindow.data();
 
   ahoy.track('Quiz Start', lessonData);
-  dataLayer.push({'event':'quizAction', 'quiz_name': lessonData.lessonName,
-    'course_name': lessonData.courseName, 'quiz_action':'Start'});
+  // dataLayer.push({'event':'quizAction', 'quiz_name': lessonData.lessonName,
+  //   'course_name': lessonData.courseName, 'quiz_action':'Start'});
 }
 
 function quizFinishEvent() {
@@ -36,9 +36,9 @@ function quizFinishEvent() {
     lessonData = quizResultsWindow.data();
 
   ahoy.track('Quiz Finish', lessonData);
-  dataLayer.push({'event':'quizAction', 'quiz_name': lessonData.lessonName,
-    'course_name': lessonData.courseName, 'quiz_result': lessonData.result,
-    'quiz_action':'Finish'});
+  // dataLayer.push({'event':'quizAction', 'quiz_name': lessonData.lessonName,
+  //   'course_name': lessonData.courseName, 'quiz_result': lessonData.result,
+  //   'quiz_action':'Finish'});
 }
 
 // Notes Events
@@ -47,12 +47,12 @@ function notesStartEvent() {
       lessonData = notesWindow.data();
 
   ahoy.track('Notes Start', lessonData);
-  dataLayer.push({
-    'event': 'notesAction',
-    'notes_name': lessonData.lessonName,
-    'course_name': lessonData.courseName,
-    'notes_action': 'Start'
-  });
+  // dataLayer.push({
+  //   'event': 'notesAction',
+  //   'notes_name': lessonData.lessonName,
+  //   'course_name': lessonData.courseName,
+  //   'notes_action': 'Start'
+  // });
 }
 
 function notesFinishEvent() {
@@ -60,12 +60,12 @@ function notesFinishEvent() {
       lessonData = notesWindow.data();
 
   ahoy.track('notes Finish', lessonData);
-  dataLayer.push({
-    'event': 'notesAction',
-    'notes_name': lessonData.lessonName,
-    'course_name': lessonData.courseName,
-    'notes_action': 'Finish'
-  });
+  // dataLayer.push({
+  //   'event': 'notesAction',
+  //   'notes_name': lessonData.lessonName,
+  //   'course_name': lessonData.courseName,
+  //   'notes_action': 'Finish'
+  // });
 }
 
 // Course Show Page Events
@@ -73,9 +73,9 @@ function courseResourceClick(e) {
   let resourceData = e.dataset;
 
   ahoy.track('Course Resource Click', resourceData);
-  dataLayer.push({'event':'resourceClick', 'resource_name': resourceData.name,
-    'course_name': resourceData.course_name, 'resource_type': resourceData.type,
-    'user_permitted': resourceData.allowed});
+  // dataLayer.push({'event':'resourceClick', 'resource_name': resourceData.name,
+  //   'course_name': resourceData.course_name, 'resource_type': resourceData.type,
+  //   'user_permitted': resourceData.allowed});
 }
 
 function courseTabClick(e) {

@@ -1,7 +1,7 @@
 <!-- eslint-disable -->
 
 <template>
-  <div class="container-fluid spreadsheetwrapper">
+  <div @paste="onPaste" class="container-fluid spreadsheetwrapper">
     <div class="well well-lg controls">
       <FileBar
         @edit-action-called="editActionCalled"
@@ -63,6 +63,7 @@
 </template>
 
 <script>
+
   /* eslint-disable */
   import Vue from 'vue';
   import VueObserveVisibility from 'vue-observe-visibility';
@@ -188,6 +189,9 @@
       },
       paste() {
         this.flex.parent.commandManager().execute({ cmd: 'paste',  sheetName: this.flex.name()});
+      },
+      onPaste(evt) {
+        this._applyFontStyle();
       },
       numberFormatChanged (format) {
         let sel = this.flex.getSelections()[0];
