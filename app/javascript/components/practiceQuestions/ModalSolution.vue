@@ -12,16 +12,16 @@
                   <div class="modal2-body">
                     <div>
                       <h5>Question {{this.indexOfQuestion + 1}}</h5>
-                      <div v-show="solutionContent[this.indexOfQuestion].kind === 'spreadsheet'">
+                      <div v-if="solutionContent[this.indexOfQuestion].kind === 'open'">
+                        <p v-html="solutionContent[this.indexOfQuestion].solution"></p>
+                      </div>
+                      <div v-else>
                         <SpreadsheetEditor
                             :initial-data="solutionContent[this.indexOfQuestion].solution"
                             :key="solutionContent[this.indexOfQuestion].id"
                             @spreadsheet-updated="syncSpreadsheetData"
                         />
 
-                      </div>
-                      <div v-show="solutionContent[this.indexOfQuestion].kind === 'open'">
-                        <p v-html="solutionContent[this.indexOfQuestion].solution"></p>
                       </div>
                   </div>
                 </div>
