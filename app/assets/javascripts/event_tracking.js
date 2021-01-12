@@ -68,6 +68,37 @@ function notesFinishEvent() {
   // });
 }
 
+// Course Show Nav Events
+function titleCourseClick(e) {
+  let data = e.dataset;
+  ahoy.track('Sidebar Title Course Click', data);
+}
+
+function nextCourseClick(e) {
+  let data = e.dataset;
+  ahoy.track('Next Course Step Click', data);
+}
+
+function previousCourseClick(e) {
+  let data = e.dataset;
+  ahoy.track('Previous Course Step Click', data);
+}
+
+function sidebarCourseClick(e) {
+  let data = e.dataset;
+  ahoy.track('Sidebar Course Step Click', data);
+}
+
+function sidebarCollapseClick(e) {
+  let data = e.dataset;
+  ahoy.track('Sidebar Collapse Click', data);
+}
+
+function sidebarNextModuleClick(e) {
+  let data = e.dataset;
+  ahoy.track('Sidebar Next Module Click', data);
+}
+
 // Course Show Page Events
 function courseResourceClick(e) {
   let resourceData = e.dataset;
@@ -126,6 +157,30 @@ $(document).ready(function(){
 
   $(".card.resource-card").on( "click", function() {
     courseResourceClick(this)
+  });
+
+  $("#menu > div > div > h3.sidebar-title").on( "click", function() {
+    titleCourseClick(this)
+  });
+
+  $("#sidebar-right-content > div > header > div > a.sidebar-nav-btn-lefty").on( "click", function() {
+    previousCourseClick(this)
+  });
+
+  $("#sidebar-right-content > div > header > div > a.sidebar-nav-btn-right").on( "click", function() {
+    nextCourseClick(this)
+  });
+
+  $("#step-block > a > .step").on( "click", function() {
+    sidebarCourseClick(this)
+  });
+
+  $("#sidebar-btn-collapse-elem").on( "click", function() {
+    sidebarCollapseClick(this)
+  });
+
+  $("#sidebar-bottom-menu > div > a").on( "click", function() {
+    sidebarNextModuleClick(this)
   });
 
   $("#coursesTabs > li.nav-item").on( "click", function() {

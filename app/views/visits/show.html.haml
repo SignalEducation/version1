@@ -126,3 +126,5 @@
                       %td
                         -if event.name == 'Page View'
                           =event.properties.symbolize_keys[:url]
+                        -else
+                          =event.properties

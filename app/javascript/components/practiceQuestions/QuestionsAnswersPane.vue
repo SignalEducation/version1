@@ -13,7 +13,7 @@
       <p v-html="questionContent.description"></p>
 
       <div class="prac-ques-ans-box">
-        <div v-show="questionContent.kind == 'open'">
+        <div v-if="questionContent.kind == 'open'">
           <TinyEditor
             :field-model.sync="questionContent.answer_content"
             :aditional-toolbar-options="[]"
@@ -23,9 +23,9 @@
           />
         </div>
 
-        <div v-show="questionContent.kind == 'spreadsheet'">
+        <div v-else>
           <spreadsheet-editor
-            :initial-data="questionContent.answer_content"
+            :initial-data="convertStr2Obj(questionContent.answer_content)"
             :key="questionContent.id"
             @spreadsheet-updated="syncSpreadsheetData"
           />
@@ -105,6 +105,9 @@ export default {
     },
     changePage: function(num) {
       this.activePage = num;
+    },
+    convertStr2Obj(str) {
+      return JSON.parse(str);
     },
     nextPage: function(lastQuestion) {
       setTimeout(() => {
