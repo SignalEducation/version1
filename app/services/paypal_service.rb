@@ -32,7 +32,7 @@ class PaypalService
     if payment_id == order.paypal_guid && payment.execute(payer_id: payer_id)
       payment = Payment.find(order.paypal_guid)
       order.update!(paypal_status: payment.state)
-      order.invoice.update!(paid: true, payment_closed:true)
+      order.invoice.update!(paid: true, payment_closed: true, paypal_payment_guid: payment_resources_id(payment))
       order.complete
     else
       order.record_error!
@@ -76,5 +76,9 @@ class PaypalService
         }
       ]
     }
+  end
+
+  def payment_resources_id(payment)
+    payment&.transactions&.last&.related_resources&.last&.sale&.id
   end
 end

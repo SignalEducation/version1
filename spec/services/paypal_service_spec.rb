@@ -14,9 +14,9 @@ describe PaypalService, type: :service do
     }
 
     before :each do
-      allow(PayPal::SDK::REST::DataTypes::Payment).to(
-        receive(:new).and_return(payment_dbl)
-      )
+      allow(PayPal::SDK::REST::DataTypes::Payment).to(receive(:new).and_return(payment_dbl))
+      allow_any_instance_of(PaypalService).to receive(:payment_resources_id).and_return(nil)
+      # allow(PaypalService).to(receive(:payment_resources_id).and_return(nil))
     end
 
     it 'calls CREATE on an instance of Payment and returns the order object' do
@@ -78,10 +78,9 @@ describe PaypalService, type: :service do
     }
 
     before :each do
-      allow(PayPal::SDK::REST::DataTypes::Payment).to(
-        receive(:find).and_return(payment_dbl)
-      )
+      allow(PayPal::SDK::REST::DataTypes::Payment).to(receive(:find).and_return(payment_dbl))
       allow(order).to receive(:execute_order_completion)
+      allow_any_instance_of(PaypalService).to receive(:payment_resources_id).and_return(nil)
     end
 
     it 'ensures the paypal ID matches the paypal_guid of the order' do
@@ -177,4 +176,3 @@ describe PaypalService, type: :service do
     end
   end
 end
-
