@@ -7371,11 +7371,27 @@ button.sub-details[aria-expanded="true"]:before{
   .external-banner {
     border-top: 1px solid #fff;
     border-bottom: 1px solid #fff;
+    min-height: 2.75em;
     p {
       position: relative;
       z-index: 1;
     }
   }
+}
+@media(min-width:2601px) {
+  .course-show-external-banner { width: 250%; margin-left: -75%; }
+}
+@media(min-width:2501px) and (max-width: 2600px) {
+  .course-show-external-banner { width: 220%; margin-left: -60%; }
+}
+@media(min-width:2401px) and (max-width: 2500px) {
+  .course-show-external-banner { width: 175%; margin-left: -35%; }
+}
+@media(min-width:2201px) and (max-width: 2400px) {
+  .course-show-external-banner { width: 170%; margin-left: -35%; }
+}
+@media(min-width:1900px) and (max-width: 2200px) {
+  .course-show-external-banner { width: 150%; margin-left: -25%; }
 }
 @media(min-width:956px) and (max-width: 1050px) {
   .course-show-external-banner { .external-banner { p { font-size: .85rem; } } }
