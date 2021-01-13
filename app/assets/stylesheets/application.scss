@@ -7413,7 +7413,34 @@ button.sub-details[aria-expanded="true"]:before{
     }
   }
 }
-@media(min-width:1501px) and (max-width: 1600px) {
+@media(min-width:2601px) {
+  #sidebar-btn-collapse-elem { left: 14.5%;}
+}
+@media(min-width:2401px) and (max-width: 2600px) {
+  #sidebar-btn-collapse-elem { left: 15.5%;}
+}
+@media(min-width:2201px) and (max-width: 2400px) {
+  #sidebar-btn-collapse-elem { left: 16.5%;}
+}
+@media(min-width:2101px) and (max-width: 2200px) {
+  #sidebar-btn-collapse-elem { left: 17.5%;}
+}
+@media(min-width:2001px) and (max-width: 2100px) {
+  #sidebar-btn-collapse-elem { left: 18.5%;}
+}
+@media(min-width:1851px) and (max-width: 2000px) {
+  #sidebar-btn-collapse-elem { left: 19.5%;}
+}
+@media(min-width:1701px) and (max-width: 1850px) {
+  #sidebar-btn-collapse-elem { left: 21.5%;}
+}
+@media(min-width:1651px) and (max-width: 1700px) {
+  #sidebar-btn-collapse-elem { left: 22.5%;}
+}
+@media(min-width:1551px) and (max-width: 1650px) {
+  #sidebar-btn-collapse-elem { left: 23.5%;}
+}
+@media(min-width:1501px) and (max-width: 1550px) {
   #sidebar-btn-collapse-elem { left: 25%;}
 }
 @media(min-width:1401px) and (max-width: 1500px) {
