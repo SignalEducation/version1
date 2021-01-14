@@ -264,6 +264,7 @@ class Invoice < ApplicationRecord
 
   def send_receipt(account_url)
     return if Rails.env.test?
+
     invoice_url = UrlHelper.instance.subscription_invoices_url(
       id, locale: 'en', format: 'pdf', host: LEARNSIGNAL_HOST
     )
