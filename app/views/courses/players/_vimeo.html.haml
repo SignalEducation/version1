@@ -50,6 +50,8 @@
         success: function(data,status,xhr){
             $("#next-lesson-modal").addClass('d-none');
             $("#next-lesson-link").removeClass('d-none');
+            $("#sidebar-next-lesson-modal").addClass('d-none');
+            $("#sidebar-next-lesson-link").removeClass('d-none');
         },
         error: function(xhr,status,error){
           console.log(xhr);
