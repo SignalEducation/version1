@@ -173,7 +173,7 @@
           gtag('set', { 'user_id': "#{current_user.id}" });
           gtag('event', 'user_type_dimension', {'user_type': "#{current_user.subscriber_type}",
                                               'event_category': "user",
-                                              'event_label': "verify"});
+                                              'event_label': "user_type"});
 
       -if flash[:datalayer_verify]
         :javascript
