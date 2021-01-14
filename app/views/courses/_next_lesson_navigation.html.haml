@@ -13,7 +13,7 @@
     =link_to show_course_url(@course.name_url, @course_step.next_element.course_lesson.course_section.name_url, @course_step.next_element.course_lesson.name_url, @course_step.next_element.name_url), id: 'sidebar-btn-collapse-elem', class: 'mw-0 sidebar-nav-btn-right' do
       #arrow-collapse.i.material-icons{:style => "font-size:32px;"} keyboard_arrow_right
   - else
-    #next-lesson-link.d-none
+    #next-lesson-link.d-none{style: 'z-index: 1;'}
       - if permission[:reason] == 'invalid-subscription'
         =link_to '#', data: {target: "#invalid-subscription", toggle: 'modal', related: @course_step.next_element.related_course_step&.name}, id: 'sidebar-btn-collapse-elem', class: 'mw-0 sidebar-nav-btn-right' do
           #arrow-collapse.i.material-icons{:style => "font-size:32px;"} keyboard_arrow_right

@@ -7371,11 +7371,27 @@ button.sub-details[aria-expanded="true"]:before{
   .external-banner {
     border-top: 1px solid #fff;
     border-bottom: 1px solid #fff;
+    min-height: 2.75em;
     p {
       position: relative;
       z-index: 1;
     }
   }
+}
+@media(min-width:2601px) {
+  .course-show-external-banner { width: 250%; margin-left: -75%; }
+}
+@media(min-width:2501px) and (max-width: 2600px) {
+  .course-show-external-banner { width: 220%; margin-left: -60%; }
+}
+@media(min-width:2401px) and (max-width: 2500px) {
+  .course-show-external-banner { width: 175%; margin-left: -35%; }
+}
+@media(min-width:2201px) and (max-width: 2400px) {
+  .course-show-external-banner { width: 170%; margin-left: -35%; }
+}
+@media(min-width:1900px) and (max-width: 2200px) {
+  .course-show-external-banner { width: 150%; margin-left: -25%; }
 }
 @media(min-width:956px) and (max-width: 1050px) {
   .course-show-external-banner { .external-banner { p { font-size: .85rem; } } }
@@ -7413,7 +7429,34 @@ button.sub-details[aria-expanded="true"]:before{
     }
   }
 }
-@media(min-width:1501px) and (max-width: 1600px) {
+@media(min-width:2601px) {
+  #sidebar-btn-collapse-elem { left: 14.5%;}
+}
+@media(min-width:2401px) and (max-width: 2600px) {
+  #sidebar-btn-collapse-elem { left: 15.5%;}
+}
+@media(min-width:2201px) and (max-width: 2400px) {
+  #sidebar-btn-collapse-elem { left: 16.5%;}
+}
+@media(min-width:2101px) and (max-width: 2200px) {
+  #sidebar-btn-collapse-elem { left: 17.5%;}
+}
+@media(min-width:2001px) and (max-width: 2100px) {
+  #sidebar-btn-collapse-elem { left: 18.5%;}
+}
+@media(min-width:1851px) and (max-width: 2000px) {
+  #sidebar-btn-collapse-elem { left: 19.5%;}
+}
+@media(min-width:1701px) and (max-width: 1850px) {
+  #sidebar-btn-collapse-elem { left: 21.5%;}
+}
+@media(min-width:1651px) and (max-width: 1700px) {
+  #sidebar-btn-collapse-elem { left: 22.5%;}
+}
+@media(min-width:1551px) and (max-width: 1650px) {
+  #sidebar-btn-collapse-elem { left: 23.5%;}
+}
+@media(min-width:1501px) and (max-width: 1550px) {
   #sidebar-btn-collapse-elem { left: 25%;}
 }
 @media(min-width:1401px) and (max-width: 1500px) {

@@ -146,8 +146,9 @@ class Invoice < ApplicationRecord
   def self.build_from_paypal_data(paypal_body)
     inv = Invoice.find_or_initialize_by(paypal_payment_guid: paypal_body['resource']['id'])
     subscription = Subscription.find_by(paypal_subscription_guid: paypal_body['resource']['billing_agreement_id'])
+
     Invoice.transaction do
-      if subscription.user && subscription && subscription.currency
+      if subscription.user && subscription && subscription.currency && subscription.paypal_subscription_guid
         inv.assign_attributes(
           user_id: subscription.user.id,
           subscription_id: subscription.id,
