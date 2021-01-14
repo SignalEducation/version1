@@ -107,7 +107,11 @@ export default {
       this.activePage = num;
     },
     convertStr2Obj(str) {
-      return JSON.parse(str);
+      if (typeof str === 'object' && str !== null) {
+        return str;
+      } else {
+        return JSON.parse(str);
+      }
     },
     nextPage: function(lastQuestion) {
       setTimeout(() => {
