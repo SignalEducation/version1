@@ -39,7 +39,7 @@ sitemap :site do
 
   #Tutor Profile pages
   User.all_tutors.with_course_tutors.where.not(profile_image_file_name: nil).each do |tutor|
-    url profile_url(tutor, locale: 'en'), last_mod: tutor.updated_at, change_freq: 'monthly', priority: 1.0
+    url profile_url(tutor.name_url, locale: 'en'), last_mod: tutor.updated_at, change_freq: 'monthly', priority: 1.0
   end
 
   #Footer pages + other static pages
