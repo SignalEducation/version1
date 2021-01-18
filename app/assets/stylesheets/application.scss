@@ -7177,9 +7177,83 @@ button.sub-details[aria-expanded="true"]:before{
   width: 85%;
   margin-left: 15%;
 }
-#constructed-response-window {
+.cbe-container {
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto
+}
+@media (min-width:576px) {
+  .cbe-container {
+    max-width: 540px
+  }
+}
+@media (min-width:768px) {
+  .cbe-container {
+    max-width: 720px
+  }
+}
+@media (min-width:992px) {
+  .cbe-container {
+    max-width: 960px
+  }
+}
+@media (min-width:1200px) {
+  .cbe-container {
+    max-width: 1180px
+  }
+}
+@media (min-width:1300px) {
+  .cbe-container {
+    max-width: 1280px
+  }
+}
+@media (min-width:1416px) {
+  .cbe-container {
+    max-width: 1450px
+  }
+}
+@media (min-width:1600px) {
+  .cbe-container {
+    max-width: 1600px
+  }
+}
+@media (min-width:1900px) {
+  .cbe-container {
+    max-width: 1800px
+  }
+}
+@media (min-width:2000px) {
+  .cbe-container {
+    max-width: 1900px
+  }
+}
+@media (min-width:2200px) {
+  .cbe-container {
+    max-width: 2200px
+  }
+}
+.constructed-response-window-grown {
+  width: 100%;
+  margin-left: 5%;
+}
+.constructed-response-window-shrunk {
   width: 87%;
   margin-left: 11%;
+}
+#constructed-response-window {
+  .course-right-show-content {
+    padding: 0px;
+    background: transparent;
+    margin-top: -15px;
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-top: 0px;
+  }
+  .start-screen-box {
+    min-height: 70vh;
+  }
   .course-right-show-frame {
     padding: 10px;
     background-color: #343a40;
