@@ -6,7 +6,7 @@ class StudentSignUpsController < ApplicationController
   before_action :create_user_object, only: %i[new sign_in_or_register sign_in_checkout landing]
   before_action :create_user_session_object, only: %i[sign_in_or_register sign_in_checkout landing]
   before_action :layout_variables, only: %i[home landing]
-  layout 'marketing', only: :home
+  layout 'marketing'
 
   def home
     @home_page = HomePage.where(home: true).where(public_url: '/').first
