@@ -369,4 +369,5 @@ Rails.application.routes.draw do
 
   # Catch-all
   get '(:first_element(/:second_element))', to: 'footer_pages#missing_page'
+  match '*path', via: :post, to: proc { [404, {}, ['']] }
 end
