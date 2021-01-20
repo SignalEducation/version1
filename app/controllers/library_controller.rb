@@ -85,7 +85,9 @@ class LibraryController < ApplicationController
   end
 
   def user_contact_form
-    if verify_recaptcha && check_if_params_present
+    if invalid_email_format?(params[:email_address])
+      flash[:error] = 'Invalid email, please try again.'
+    elsif verify_recaptcha && check_if_params_present
       Zendesk::RequestWorker.perform_async(params[:full_name],
                                            params[:email_address],
                                            params[:type],
@@ -102,6 +104,10 @@ class LibraryController < ApplicationController
 
   def check_if_params_present
     return true if params[:full_name].present? && params[:email_address].present? && params[:type].present? && params[:question].present?
+  end
+
+  def invalid_email_format?(email)
+    !email.match(RFC822::EMAIL_REGEXP_WHOLE)
   end
 
   protected
