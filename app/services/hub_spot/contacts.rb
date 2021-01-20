@@ -34,7 +34,9 @@ module HubSpot
       path     = "/contacts/v1/contact/email/#{email}/profile"
       response = service(path, 'get', { propertyMode: 'value_only', showListMemberships: 'false' })
 
-      JSON.parse(response.body)
+      parsed = JSON.parse(response.body) if response.code != '502'
+
+      return parsed if parsed['status'] != 'error'
     end
 
     private
