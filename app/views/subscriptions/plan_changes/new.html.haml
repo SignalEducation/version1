@@ -13,7 +13,7 @@
           -if flash[:success] || flash[:error] || flash[:warning]
             =render partial: 'layouts/flash_messages'
           =form_for(@subscription, url: subscription_plan_changes_path(@subscription), method: :post, html: {class: 'form-horizontal', role: 'form', id: 'upgrade-subscription-form'}) do |f|
-            =f.hidden_field :subscription_plan_id
+            =f.hidden_field :subscription_plan_id, value: @subscription.subscription_plan_id
             =f.hidden_field :use_paypal, value: @subscription.paypal?
             =f.hidden_field :kind, value: :change_plan
             =hidden_field_tag :hidden_coupon_code
@@ -183,6 +183,8 @@
       choosePlan(this);
     });
 
+    check4SubPlanID();
+
     $("#upgrade-subscription-form").submit(function(ev) {
       ev.preventDefault();
       displayError.text('');
@@ -199,6 +201,14 @@
         }
       }
     });
+
+    function check4SubPlanID(){
+      setTimeout(function(){
+        if(!document.getElementById("subscription_subscription_plan_id").value) {
+          $("#changePlan").attr("disabled", true);
+        }
+      }, 500);
+    }
 
     function upgradeStripeSubscription(){
       var form = $('#upgrade-subscription-form');

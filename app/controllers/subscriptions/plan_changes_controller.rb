@@ -13,7 +13,7 @@ module Subscriptions
     end
 
     def new
-      if %w[active canceled-pending pending_cancellation].include?(@subscription.state)
+      if %w[active canceled-pending pending_cancellation].include?(@subscription.state) && SubscriptionPlan.exists?(id: @subscription.subscription_plan_id)
         @card = default_payment_card(@subscription.user_id)
       else
         flash[:warning] = 'There is an issue with your current subscription. This must be resolved before changing plan.'
