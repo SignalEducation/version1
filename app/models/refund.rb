@@ -90,6 +90,6 @@ class Refund < ApplicationRecord
            livemode: stripe_refund[:livemode],
            stripe_refund_data: stripe_refund.to_hash.deep_dup)
   rescue Stripe::InvalidRequestError => e
-    raise Learnsignal::PaymentError, e[:message]
+    raise Learnsignal::PaymentError, e.message
   end
 end
