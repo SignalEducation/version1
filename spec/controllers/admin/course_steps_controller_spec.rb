@@ -48,7 +48,6 @@ describe Admin::CourseStepsController, type: :controller do
   let!(:constructed_response_params)        { course_step_4.attributes.merge({name: 'CR 01', name_url: 'cr_01'}) }
   let!(:update_constructed_response_params) { course_step_4.attributes.merge({name: 'CR 01 - Edited', name_url: 'cr_01'}) }
 
-
   context 'Logged in as a content_management_user: ' do
     before(:each) do
       activate_authlogic
@@ -56,9 +55,13 @@ describe Admin::CourseStepsController, type: :controller do
     end
 
     describe "GET 'show/1'" do
-      it 'should respond OK' do
+      it 'should redirect to edit' do
         get :show, params: { id: course_step_1.id }
-        expect_show_success_with_model('course_step', course_step_1.id)
+        expect(response).to redirect_to(edit_admin_course_step_url(course_step_1.id))
+      end
+      it 'should redirect to main course when no id' do
+        get :show, params: { id: 999999999 }
+        expect(response).to redirect_to(admin_course_url)
       end
     end
 

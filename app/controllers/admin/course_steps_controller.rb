@@ -10,31 +10,36 @@ module Admin
     def show
       # Previewing a Quiz as Content Manager or Admin
       @course_step = CourseStep.find(params[:id])
-      if @course_step.is_quiz
-        @course_step_log = CourseStepLog.new(
-                course_lesson_id: @course_step.course_lesson_id,
-                course_step_id: @course_step.id,
-                user_id: current_user.try(:id),
-                session_guid: current_session_guid
-        )
-        @number_of_questions = @course_step.course_quiz.number_of_questions
-        @number_of_questions.times do
-          @course_step_log.quiz_attempts.build(user_id: current_user.try(:id))
-        end
-        all_ids_random = @course_step.course_quiz.all_ids_random
-        all_ids_ordered = @course_step.course_quiz.all_ids_ordered
-        @strategy = @course_step.course_quiz.question_selection_strategy
+      redirect_to edit_admin_course_step_url(@course_step.id)
+    rescue => e
+      flash[:error] = "Could not find course step with: #{params[:id]}, error: #{e}"
+      redirect_to admin_course_url
 
-        if @strategy == 'random'
-          @all_ids = all_ids_random.sample(@number_of_questions)
-          @quiz_questions = QuizQuestion.includes(:quiz_contents).find(@all_ids)
-        else
-          @all_ids = all_ids_ordered[0..@number_of_questions]
-          @quiz_questions = QuizQuestion.includes(:quiz_contents).find(@all_ids)
-        end
-      end
+      # if @course_step.is_quiz
+      #  @course_step_log = CourseStepLog.new(
+      #          course_lesson_id: @course_step.course_lesson_id,
+      #          course_step_id: @course_step.id,
+      #          user_id: current_user.try(:id),
+      #          session_guid: current_session_guid
+      #  )
+      #  @number_of_questions = @course_step.course_quiz.number_of_questions
+      #  @number_of_questions.times do
+      #    @course_step_log.quiz_attempts.build(user_id: current_user.try(:id))
+      #  end
+      #  all_ids_random = @course_step.course_quiz.all_ids_random
+      #  all_ids_ordered = @course_step.course_quiz.all_ids_ordered
+      #  @strategy = @course_step.course_quiz.question_selection_strategy
 
-      @demo_mode = true
+      #  if @strategy == 'random'
+      #    @all_ids = all_ids_random.sample(@number_of_questions)
+      #    @quiz_questions = QuizQuestion.includes(:quiz_contents).find(@all_ids)
+      #  else
+      #    @all_ids = all_ids_ordered[0..@number_of_questions]
+      #    @quiz_questions = QuizQuestion.includes(:quiz_contents).find(@all_ids)
+      #  end
+      # end
+
+      # @demo_mode = true
     end
 
     def new
