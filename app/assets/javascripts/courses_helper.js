@@ -34,6 +34,9 @@ function collapseFunc(isOpen) {
       if (document.getElementById("#courses-show-external-banner") != null) {
         document.getElementById("#courses-show-external-banner").classList.toggle("course-show-external-banner-open");
       }
+      if (document.getElementById("constructed-response-window") != null) {
+        document.getElementById("constructed-response-window").classList.toggle("constructed-response-window-shrunk");
+      }
       isOpen = false;
     } else {
       if (document.getElementById("console-wrapper-sidebar") != null) {
@@ -68,6 +71,9 @@ function collapseFunc(isOpen) {
       }
       if (document.getElementById("#courses-show-external-banner") != null) {
         document.getElementById("#courses-show-external-banner").classList.toggle("course-show-external-banner-open");
+      }
+      if (document.getElementById("constructed-response-window") != null) {
+        document.getElementById("constructed-response-window").classList.toggle("constructed-response-window-shrunk");
       }
       isOpen = true;
     }
