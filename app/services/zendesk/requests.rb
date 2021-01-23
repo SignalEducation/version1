@@ -15,6 +15,8 @@ module Zendesk
 
     def create
       zendesk_api.requests.create!(parser_request_data)
+    rescue ZendeskAPI::Error::RecordInvalid => e
+      Rails.logger.error e.message
     end
 
     private
