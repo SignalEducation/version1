@@ -13,8 +13,13 @@ class OrdersController < ApplicationController
       elsif params[:exam_body_id]
         currency_id = user_currency_id
         exam_body = ExamBody.find(params[:exam_body_id])
-        @product = Product.for_group(exam_body.group.id).where(product_type: :lifetime_access).includes(:currency).in_currency(currency_id).all_active.all_in_order.first
+        @product = Product.for_group(exam_body&.group&.id).where(product_type: :lifetime_access).includes(:currency).in_currency(currency_id).all_active.all_in_order.first
       end
+
+    if @product.nil?
+      flash[:warning] = 'Product not found, please contact support.'
+      redirect_to student_dashboard_url and return
+    end
 
     @existing_order = current_user.orders.for_product(@product.id).where(state: :completed).last
     if @existing_order && %w[lifetime_access course_access].include?(@existing_order.product.product_type)
