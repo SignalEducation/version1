@@ -10,7 +10,8 @@
         <div id="rightPaneTopUnderline" class="right-pane-underline"></div>
       </ul>
 
-      <p v-html="questionContent.description"></p>
+      <p v-if="totalQuestions > 1" v-html="questionContent.description"></p>
+      <p v-else v-html="questionContent.description" class="practice-ques-single-question"></p>
 
       <div class="prac-ques-ans-box">
         <div v-if="questionContent.kind == 'open'">
