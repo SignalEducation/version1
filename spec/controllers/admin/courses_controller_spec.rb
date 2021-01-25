@@ -176,7 +176,7 @@ describe Admin::CoursesController, type: :controller do
         end
 
         it 'should return a not valid response' do
-          allow_any_instance_of(Accredible::Groups).to receive(:details).and_return(status: :error)
+          allow_any_instance_of(Accredible::Groups).to receive(:details).and_return(status: 500)
           post :check_accredible_group, params: { group_id: '1234' }
 
           expect(response.status).to eq(500)

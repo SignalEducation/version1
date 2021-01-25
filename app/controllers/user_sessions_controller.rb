@@ -10,7 +10,9 @@ class UserSessionsController < ApplicationController
     seo_title_maker('Log in to Start Studying Today | LearnSignal',
                     'Log in to your ACCA or CPD courses to access topic-by-topic tuition modules, explore online learning resources and kick-start your study today.',
                     false)
-    render 'user_sessions/new'
+    respond_to do |format|
+      format.html { render 'user_sessions/new' }
+    end
   end
 
   def create

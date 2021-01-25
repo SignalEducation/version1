@@ -21,7 +21,7 @@ function validateCoupon() {
   const couponCode = $('#coupon_code');
   const planId = $("input[name='plans']:checked").val();
 
-  if (couponCode.val() != "") {
+  if (couponCode.val() != "" && typeof planId !== 'undefined') {
     $.ajax({
       url: '/coupon_validation',
 
@@ -48,6 +48,10 @@ function validateCoupon() {
         console.log(xhr);
       }
     });
+  }
+
+  if (typeof planId == 'undefined') {
+    displayInvalidCouponClasses('You need to choose a plan to apply a coupon.');
   }
 }
 

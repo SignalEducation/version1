@@ -1458,6 +1458,7 @@ en:
         credit_card: Credit/Debit Card
         coupon_code: Coupon Code
         remember_cancel_anytime: Remember, you can cancel at anytime
+        invalid_type: Invalid subscription type. Please contact our support team.
 
       upgrade_complete:
         h1: Thank you for subscribing
@@ -1767,6 +1768,7 @@ en:
 
 
     user_accounts:
+      back_to_account: Back to account
       account_show:
         h1: Account Details
 

@@ -21,6 +21,8 @@ class SubscriptionsController < ApplicationController
   end
 
   def create
+    valid_subscription_type?(params['payment-options'])
+
     @subscription        = Subscription.new(subscription_params)
     subscription_service = SubscriptionService.new(@subscription)
     subscription_service.check_valid_subscription?(params)
@@ -182,6 +184,12 @@ class SubscriptionsController < ApplicationController
     when 'pending'
       @subscription.mark_pending!
     end
+  end
+
+  def valid_subscription_type?(type)
+    return if %w[stripe paypal].include?(type)
+
+    raise Learnsignal::SubscriptionError, t('views.subscriptions.new_subscription.invalid_type')
   end
 
   def set_variables
