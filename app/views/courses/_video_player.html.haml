@@ -9,5 +9,6 @@
     -error_message << "User: #{current_user.id}: #{current_user.name}"
     -Rails.logger.error error_message
     -Airbrake::AirbrakeLogger.new(logger).error error_message
+    -Appsignal.send_error(Exception.new(error_message))
 -else
   =render partial: 'courses/players/dacast', locals: { cme: cme }

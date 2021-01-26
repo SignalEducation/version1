@@ -166,6 +166,7 @@ class Course < ApplicationRecord
     new_course
   rescue ActiveRecord::RecordInvalid => e
     Airbrake.notify(e)
+    Appsignal.send_error(e)
     e
   end
 

@@ -15,6 +15,7 @@ module HubSpot
 
       return response if response.code == '200'
 
+      Appsignal.send_error(Exception.new(response.body), {}, 'services')
       Airbrake::AirbrakeLogger.new(Logger.new(STDOUT)).error response.body
     end
 
@@ -27,6 +28,7 @@ module HubSpot
 
       return response if response.code == '202'
 
+      Appsignal.send_error(Exception.new(response.body), {}, 'services')
       Airbrake::AirbrakeLogger.new(Logger.new(STDOUT)).error response.body
     end
 

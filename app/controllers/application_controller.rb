@@ -48,8 +48,9 @@ class ApplicationController < ActionController::Base
     super
   end
 
-  def log_in_airbrake(e)
-    Airbrake.notify(e)
+  def log_in_airbrake(error)
+    Airbrake.notify(error)
+    Appsignal.send_error(error)
     true
   end
 
@@ -238,7 +239,8 @@ class ApplicationController < ActionController::Base
   def vimeo_as_main?
     SystemSetting.find_by(environment: Rails.env).settings['vimeo_as_main_player?'].to_bool
   rescue NoMethodError => e
-    Airbrake::AirbrakeLogger.new(logger).error e.message
+    Airbrake::AirbrakeLogger.new(logger).error(e.message)
+    Appsignal.send_error(e)
     true
   end
 

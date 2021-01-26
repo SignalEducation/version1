@@ -109,7 +109,8 @@ class SubscriptionManagementController < ApplicationController
       stripe_cancellation(subscription)
     end
   rescue Learnsignal::SubscriptionError => e
-    Airbrake::AirbrakeLogger.new(logger).error e.message
+    Airbrake::AirbrakeLogger.new(logger).error(e.message)
+    Appsignal.send_error(e)
     false
   end
 
