@@ -1,7 +1,7 @@
 <template>
     <div>
       <button @click="modalIsOpen = !modalIsOpen; updateZindex(); resetModalDims()" href="#solutionModalV2" class="btn btn-settings solution-btn-title" data-backdrop="false" data-toggle="modal">Solution</button>
-      <div @click="updateZindex()" id="solutionModalV2" class="modal2-solution fade resizemove-sol-v2 " v-show="modalIsOpen">
+      <div @click="updateZindex()" id="solutionModalV2" class="modal2-solution fade resizemove-sol" v-show="modalIsOpen">
           <div class="modal2-dialog">
               <div class="modal2-content">
                   <div class="modal2-header-lg">
@@ -90,7 +90,7 @@ export default {
     },
     resetModalDims() {
       $('#solutionModalV2').css('width', '60em');
-      $('#solutionModalV2').css('height', '37em');
+      $('#solutionModalV2').css('height', '40em');
     },
     instantiateTabs() {
       $('.tabgroup > div').hide();

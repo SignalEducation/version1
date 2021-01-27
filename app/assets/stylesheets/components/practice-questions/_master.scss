@@ -228,7 +228,7 @@ button2.btn-settings:active {
   border-radius: 10px;
   border: 6px solid #000032;
   box-shadow: 0 0 0 1px hsl(0, 0%, 80%), 0 0 0 2px hsl(0, 0%, 90%);
-  overflow-y: auto;
+  overflow: hidden;
 }
 .modal2-calc {
   overflow: hidden;
@@ -246,6 +246,7 @@ button2.btn-settings:active {
   background-color: #ffffff;
   z-index: 1030;
   left: 30px;
+  top: -50px;
   padding-right: 0 !important;
   padding-left: 0 !important;
   position: absolute !important;
@@ -254,7 +255,7 @@ button2.btn-settings:active {
   border-radius: 10px;
   border: 5px solid #000032;
   box-shadow: 0 0 0 1px hsl(0, 0%, 80%), 0 0 0 2px hsl(0, 0%, 90%);
-  overflow-y: auto;
+  overflow: hidden;
 }
 .modal2-text-editor {
   background-color: #f5f8fa;
@@ -268,7 +269,7 @@ button2.btn-settings:active {
   border-radius: 10px;
   border: 5px solid #000032;
   box-shadow: 0 0 0 1px hsl(0, 0%, 80%), 0 0 0 2px hsl(0, 0%, 90%);
-  overflow-y: auto;
+  overflow: hidden;
 }
 .modal2-help {
   background-color: #f5f8fa;
@@ -277,11 +278,11 @@ button2.btn-settings:active {
   padding-left: 0 !important;
   position: absolute !important;
   width: 60em;
-  height: 37em;
+  height: 40em;
   border-radius: 10px;
   border: 5px solid #000032;
   box-shadow: 0 0 0 1px hsl(0, 0%, 80%), 0 0 0 2px hsl(0, 0%, 90%);
-  overflow-y: auto;
+  overflow-y: hidden;
 }
 .modal2-dialog {
     margin-right: 0;
@@ -294,6 +295,14 @@ button2.btn-settings:active {
   background-color:#000032;
   color:white;
   position: fixed;
+  z-index: 100;
+  width: 36.5em;
+}
+.modal2-header-std {
+  height: 45px;
+  padding: 20px;
+  background-color:#000032;
+  color:white;
   z-index: 100;
   width: 36.5em;
 }
@@ -440,17 +449,20 @@ button2.btn-settings:active {
   }
 }
 .modal-help {
-  top: 70px;
+  top: -50px;
 }
 #solutionModal {
   padding-left: 0;
 }
 .exhibits-modals {
-  top: 17px;
+  top: -30px;
   left: 155px;
+  .pdf-viewer {
+    height: 1200px;
+  }
 }
 .text-editor-modal-sm {
-  top: 55px;
+  top: 25px;
 }
 .outsidelastpage {
   .submit-btn-title {
@@ -458,7 +470,6 @@ button2.btn-settings:active {
     cursor: not-allowed;
   }
 }
-
 #helpModal {
   .pdf-viewer .scrolling-page {
     margin-top: 4em;
@@ -476,6 +487,9 @@ button2.btn-settings:active {
 .resizemove {
   resize: both;
   overflow: auto;
+}
+.resizemove-sol {
+  resize: both;
 }
 
 
@@ -516,6 +530,11 @@ button2.btn-settings:active {
  }
 }
 
+.modal-inner-scroll {
+  overflow: auto;
+  height: 500px;
+}
+
 .practice-question-V2 {
   display: flex;
   justify-content: center;
@@ -547,9 +566,6 @@ button2.btn-settings:active {
   .pdf-preview-toggle > a.icon > svg {
     position: initial !important;
     margin-top: -7px;
-  }
-  .pdf-zoom > a.icon > svg {
-    margin-left: -15px;
   }
   arrow {
     color: #000032;
@@ -676,7 +692,11 @@ button2.btn-settings:active {
     overflow: hidden;
   }
   .modal2-dialog {
-    overflow: auto;
+    overflow: hidden;
+  }
+  .modal2-body {
+    overflow-y: auto;
+    width: 100%;
   }
   .modal-close-solution {
     position: relative;
@@ -747,7 +767,7 @@ button2.btn-settings:active {
   .tabgroup {
     background-color: #f7f7f7;
     margin-top: 4px;
-    height: 28.9em;
+    height: 32em;
   }
   .tabgroup-pad {
     padding:30px;
