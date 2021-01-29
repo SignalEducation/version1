@@ -4,14 +4,14 @@
             <div class="circle"><span class="icon arrow"></span></div>
             <span class="button-text"><i class="material-icons exhibits-icon">assignment</i><p v-html="requirementsObj.name"></p></span>
         </button>
-        <div @click="updateZindex()" :id="'requirementsModal'+ requirementsInd" class="modal2-solution fade resizemove exhibits-modals" v-show="modalIsOpen">
+        <div @click="updateZindex()" :id="'requirementsModal'+ requirementsInd" class="modal2-solution fade resizemove-sol exhibits-modals" v-show="modalIsOpen">
           <div class="modal2-dialog">
               <div class="modal2-content">
                 <button @click="modalIsOpen = !modalIsOpen" type="button" class="close modal-close modal-close-solution" data-dismiss="modal" aria-hidden="true">&times;</button>
                   <div class="modal2-header-lg">
                       <h4 v-html="requirementsObj.name" class="modal2-title"></h4>
                   </div>
-                  <div class="modal2-body">
+                  <div class="modal2-body modal-inner-scroll">
                     <br>
                     <div>
                       <p v-html="requirementsObj.description"></p>

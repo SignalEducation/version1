@@ -4,14 +4,14 @@
             <div class="circle"><span class="icon arrow"></span></div>
             <span class="button-text"><i class="material-icons exhibits-icon">create</i><p>Word Processor</p></span>
         </button>
-        <div @click="updateZindex()" id="textEditorModal" class="modal2-text-editor fade resizemove text-editor-modal-sm" v-show="modalIsOpen">
+        <div @click="updateZindex()" id="textEditorModal" class="modal2-text-editor fade resizemove-sol text-editor-modal-sm" v-show="modalIsOpen">
           <div class="modal2-dialog">
               <div class="modal2-content">
                 <button @click="modalIsOpen = !modalIsOpen; updateResponse();" type="button" class="close modal-close modal-close-solution" data-dismiss="modal" aria-hidden="true">&times;</button>
                   <div class="modal2-header-lg">
                       <h4 class="modal2-title">Word Processor</h4>
                   </div>
-                  <div class="modal2-body">
+                  <div class="modal2-body modal-inner-scroll">
                     <br>
                     <div>
                         <TinyEditor
@@ -23,6 +23,7 @@
                 </div>
               </div>
           </div>
+          <div class="draggable-overlay"></div>
         </div>
     </div>
 </template>
@@ -59,7 +60,7 @@ export default {
   },
   mounted() {
     this.$nextTick(function () {
-        $('#textEditorModal').draggable({ handle:'.modal2-header-lg'});
+        $('#textEditorModal').draggable({ handle:'.modal2-header-lg, .draggable-overlay'});
     })
     this.updateResponse()
   },

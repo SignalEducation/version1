@@ -5,12 +5,12 @@
             <div class="modal2-dialog">
                 <div class="modal2-content">
                   <button @click="modalIsOpen = !modalIsOpen" type="button" class="close modal-close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <div class="modal2-header">
+                    <div class="modal2-header-std">
                         <h4 class="modal2-title">Scratch Pad</h4>
 
                     </div>
                     <div class="modal2-body">
-                      <div class="modal2-margin-top">
+                      <div>
                       <editor
                         :api-key="apiKey"
                         :init="{
