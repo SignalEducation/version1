@@ -46,7 +46,7 @@
                           =step.type_name
                         %td
                           =link_to t('views.general.edit'), edit_admin_course_step_path(step.id), class: 'btn btn-xs btn-primary'
-                          =link_to t('views.course_steps.show.preview'), show_course_url(step.course_lesson.course.name_url, step.course_lesson.name_url, step.name_url, ), class: 'btn btn-xs btn-orange', target: '_blank'
+                          =link_to t('views.course_steps.show.preview'), show_course_url(step.course_lesson.course.name_url, step.course_lesson.course_section.name_url, step.course_lesson.name_url, step.name_url), class: 'btn btn-xs btn-orange', target: '_blank'
                           -unless step.active
                             =link_to 'Activate', new_content_activation_url(type: step.class, id: step.id), class: 'btn btn-green btn-xs'
                           -if step.destroyable?
