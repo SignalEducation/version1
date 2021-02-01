@@ -413,7 +413,7 @@ button2.btn-settings:active {
     }
   }
 }
-.exhibits-spread-sheet {
+.spreadsheetwrapper {
   .btn-group {
     width: 60%;
   }
@@ -423,7 +423,18 @@ button2.btn-settings:active {
       height: 2em;
     }
   }
+  .btn-row:nth-child(3) {
+    .btn-group {
+      width: 60%;
+      height: 3.5em;
+      .form-control {
+        padding:0;
+        font-size: 15px;
+      }
+    }
+  }
 }
+
 .prac-ques-ans-box {
   padding:0;
   .container-fluid {
