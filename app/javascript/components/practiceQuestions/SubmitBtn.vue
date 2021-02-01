@@ -71,7 +71,7 @@ export default {
       this.updateCurrentAnswer();
     },
     navigateToNextStep() {
-      $("#practice-ques-next-step")[0].click();
+      $(".practice-ques-next-step")[0].click();
     },
     cancelNavigation() {
       this.stayHere = true;
@@ -105,7 +105,7 @@ export default {
             setTimeout(() => {
               this.timerCount--;
                 if (this.timerCount == 0 && !this.stayHere) {
-                  $("#practice-ques-next-step")[0].click();
+                  $(".practice-ques-next-step")[0].click();
                 }
             }, 1000);
         }
