@@ -3,6 +3,7 @@
 class UserPasswordsController < ApplicationController
   before_action :logged_out_required, except: [:manager_resend_email]
   before_action :get_variables
+  layout 'marketing', only: %i[new]
 
   def new
     seo_title_maker('Forgot Your LearnSignal Password | LearnSignal',
