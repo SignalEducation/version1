@@ -305,6 +305,18 @@ button2.btn-settings:active {
   color:white;
   z-index: 100;
   width: 36.5em;
+  cursor: grab;
+  &:active {
+    cursor: grabbing;
+  }
+}
+#scratchPadModal, #calcModal {
+  .modal2-body {
+    cursor: grab;
+    &:active {
+      cursor: grabbing;
+    }
+  }
 }
 .modal2-header-lg {
   height: 45px;
