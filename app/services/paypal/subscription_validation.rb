@@ -65,7 +65,7 @@ module Paypal
       when 'Cancelled'
         check_cancellation_status
       else
-        Airbrake.notify("PAYPAL SYNC ERROR: Weird PayPal state for subscription #{@subscription.id}")
+        notify_error_monitors
       end
     end
 
@@ -103,11 +103,18 @@ module Paypal
       update_paypal_status(@agreement.state)
       update_subscription_state(@agreement.state) if update_needed?(@agreement.state)
     rescue StateMachines::InvalidTransition => e
-      log_to_airbrake(e.message)
+      log_to_airbrake(e)
     end
 
-    def log_to_airbrake(message)
-      Airbrake.notify("PAYPAL SYNC ERROR: Subscription #{@subscription.id}: #{message}")
+    def log_to_airbrake(error)
+      Appsignal.send_error(error)
+      Airbrake.notify("PAYPAL SYNC ERROR: Subscription #{@subscription.id}: #{error.message}")
+    end
+
+    def notify_error_monitors
+      error_msg = "PAYPAL SYNC ERROR: Weird PayPal state for subscription #{@subscription.id}"
+      Appsignal.send_error(Exception.new(error_msg))
+      Airbrake.notify(error_msg)
     end
   end
 end

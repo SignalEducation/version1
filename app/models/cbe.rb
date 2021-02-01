@@ -61,6 +61,7 @@ class Cbe < ApplicationRecord
     new_cbe
   rescue ActiveRecord::RecordInvalid => e
     Airbrake.notify(e)
+    Appsignal.send_error(e)
     e
   end
 
