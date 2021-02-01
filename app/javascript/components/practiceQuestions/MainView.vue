@@ -38,7 +38,7 @@
           />
         </span>
         <span v-else>
-          <ScenarioPane :content="practiceQuestion.content" />
+          <ScenarioPane :content="practiceQuestion.content" class="practice-ques-single-question" />
         </span>
       </splitpanes>
         <HelpBtn :helpPdf="practiceQuestion.document.url" />
