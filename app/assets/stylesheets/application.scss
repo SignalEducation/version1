@@ -6719,7 +6719,7 @@ button.sub-details[aria-expanded="true"]:before{
   display: none;
 }
 
-@media (max-width: 751px) and (max-width:992px) {
+@media (max-width:1023px) {
   #small-screen-overlay {
     display: block;
   }
@@ -6731,28 +6731,11 @@ button.sub-details[aria-expanded="true"]:before{
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding-right: 2em;
+    padding-left: 2em;
     .btn.btn-sm.btn-sm-arrow-left {
       width: 60%;
-      margin-top: 1em;
-    }
-  }
-}
-
-@media (max-width:750px) {
-  #small-screen-overlay {
-    display: block;
-  }
-  .small-screen-overlay-text {
-    position: relative;
-    top: 45%;
-    width: 100%;
-    color: #000032;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    .btn.btn-sm.btn-sm-arrow-left {
-      width: 60%;
-      margin-top: 1em;
+      margin-top: 2em;
     }
   }
 }
@@ -7180,7 +7163,7 @@ button.sub-details[aria-expanded="true"]:before{
   width: 85%;
   margin-left: 15%;
 }
-.cbe-container {
+.courses-container {
   width: 100%;
   padding-right: 15px;
   padding-left: 15px;
@@ -7188,52 +7171,62 @@ button.sub-details[aria-expanded="true"]:before{
   margin-left: auto
 }
 @media (min-width:576px) {
-  .cbe-container {
+  .courses-container {
     max-width: 540px
   }
 }
 @media (min-width:768px) {
-  .cbe-container {
+  .courses-container {
     max-width: 720px
   }
 }
 @media (min-width:992px) {
-  .cbe-container {
+  .courses-container {
     max-width: 960px
   }
 }
+@media (min-width:1080px) {
+  .courses-container {
+    max-width: 1030px
+  }
+}
 @media (min-width:1200px) {
-  .cbe-container {
-    max-width: 1180px
+  .courses-container {
+    max-width: 1150px
   }
 }
 @media (min-width:1300px) {
-  .cbe-container {
-    max-width: 1280px
+  .courses-container {
+    max-width: 1250px
   }
 }
 @media (min-width:1416px) {
-  .cbe-container {
-    max-width: 1450px
+  .courses-container {
+    max-width: 1380px
+  }
+}
+@media (min-width:1500px) {
+  .courses-container {
+    max-width: 1460px
   }
 }
 @media (min-width:1600px) {
-  .cbe-container {
+  .courses-container {
     max-width: 1600px
   }
 }
 @media (min-width:1900px) {
-  .cbe-container {
+  .courses-container {
     max-width: 1800px
   }
 }
 @media (min-width:2000px) {
-  .cbe-container {
+  .courses-container {
     max-width: 1900px
   }
 }
 @media (min-width:2200px) {
-  .cbe-container {
+  .courses-container {
     max-width: 2200px
   }
 }
