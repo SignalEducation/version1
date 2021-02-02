@@ -30,7 +30,7 @@ module Admin
       flash[:success] = 'Product successfully updated'
       redirect_to admin_order_path(@order)
     rescue => e
-      Airbrake::AirbrakeLogger.new(logger).error e.message
+      notify_error_monitors(e)
 
       flash[:error] = 'Could not update an order'
       redirect_to admin_orders_path
@@ -38,10 +38,16 @@ module Admin
 
     private
 
+    def notify_error_monitors(error)
+      Airbrake::AirbrakeLogger.new(logger).error error.message
+      Appsignal.send_error(error)
+    end
+
     def set_order
       @order = Order.find(params[:id])
     rescue ActiveRecord::RecordNotFound => e
       Airbrake::AirbrakeLogger.new(logger).error e.message
+      Appsignal.send_error(e)
     end
   end
 end

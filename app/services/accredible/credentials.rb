@@ -28,7 +28,11 @@ module Accredible
     def service(path, method, query = nil)
       response = response(path: path, method: method, query: query)
 
-      Airbrake::AirbrakeLogger.new(Logger.new(STDOUT)).error response.body if response.code != '200'
+      if response.code != '200'
+        Appsignal.send_error(Exception.new(response.body), {}, 'services')
+        Airbrake::AirbrakeLogger.new(Logger.new(STDOUT)).error response.body
+      end
+
       JSON.parse(response.body).merge(status: response.code).with_indifferent_access
     end
   end

@@ -1,7 +1,7 @@
 #fade-overlay.load-overlay-blank
 %main.sidebar-right-main
   %article#sidebar-right-content.courses.bg-gray5
-    .cbe-container
+    .courses-container
       %header
         .d-flex.flex-wrap.flex-sm-nowrap.justify-content-between.py-4.py-md-5
           -if @course_step && (@course_step.is_video? || @course_step.is_note? || @course_step.is_quiz? || @course_step.is_practice_question? || @course_step.is_constructed_response?)

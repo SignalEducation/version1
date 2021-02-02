@@ -1,7 +1,7 @@
 <template>
     <div>
       <button @click="modalIsOpen = !modalIsOpen; updateZindex(); resetModalDims()" href="#solutionModal" class="btn btn-settings solution-btn-title" data-backdrop="false" data-toggle="modal">Solution</button>
-      <div @click="updateZindex()" id="solutionModal" class="modal2-solution fade resizemove" v-show="modalIsOpen">
+      <div @click="updateZindex()" id="solutionModal" class="modal2-solution fade resizemove-sol" v-show="modalIsOpen">
           <div class="modal2-dialog">
               <div class="modal2-content">
                 <button @click="modalIsOpen = !modalIsOpen" type="button" class="close modal-close modal-close-solution" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -9,8 +9,8 @@
                       <h4 class="modal2-title">Solution</h4>
 
                   </div>
-                  <div class="modal2-body">
-                    <div>
+                  <div id="modal2-body-id" class="modal2-body" style="overflow-y:scroll">
+                    <div id="modal-solution-v1-inner-content">
                       <h5>Question {{this.indexOfQuestion + 1}}</h5>
                       <div v-if="solutionContent[this.indexOfQuestion].kind === 'open'">
                         <p v-html="solutionContent[this.indexOfQuestion].solution"></p>
@@ -69,6 +69,7 @@ export default {
     this.$nextTick(function () {
         $('#solutionModal').draggable({ handle:'.modal2-header-lg, .draggable-overlay'});
     })
+    this.getModalInnerHeight();
   },
   methods: {
     syncSpreadsheetData(jsonData) {
@@ -83,10 +84,20 @@ export default {
     },
     updateZindex() {
       eventBus.$emit("z-index-click", "solutionModal");
+      this.getModalInnerHeight();
     },
     resetModalDims() {
       $('#solutionModal').css('width', '60em');
       $('#solutionModal').css('height', '37em');
+    },
+    getModalInnerHeight() {
+      let elem = $("#modal-solution-v1-inner-content").height();
+      console.log(`height: ${(elem/2)+20}`);
+      if (elem<100) {
+        document.getElementById('modal2-body-id').style.height = '485px';
+      } else {
+        document.getElementById('modal2-body-id').style.height = `${(elem/2)+20}px`;
+      }
     },
   },
   watch: {

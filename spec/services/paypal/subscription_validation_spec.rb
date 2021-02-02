@@ -329,7 +329,7 @@ describe Paypal::SubscriptionValidation, type: :service do
     it 'calls #notify on Airbrake' do
       expect(Airbrake).to receive(:notify)
 
-      good_instance.send(:log_to_airbrake, 'test message')
+      good_instance.send(:log_to_airbrake, Exception.new('test message'))
     end
   end
 end

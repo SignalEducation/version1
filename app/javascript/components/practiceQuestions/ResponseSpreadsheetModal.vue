@@ -4,14 +4,14 @@
             <div class="circle"><span class="icon arrow"></span></div>
             <span class="button-text"><i class="material-icons exhibits-icon">table_view</i><p>Spreadsheet</p></span>
         </button>
-        <div @click="updateZindex()" id="spreadsheetModal" class="modal2-solution fade resizemove exhibits-modals" v-show="modalIsOpen">
+        <div @click="updateZindex()" id="spreadsheetModal" class="modal2-solution fade resizemove-sol exhibits-modals" v-show="modalIsOpen">
           <div class="modal2-dialog">
               <div class="modal2-content">
                 <button @click="modalIsOpen = !modalIsOpen; updateResponse();" type="button" class="close modal-close modal-close-solution" data-dismiss="modal" aria-hidden="true">&times;</button>
                   <div class="modal2-header-lg">
                       <h4 class="modal2-title">Spreadsheet</h4>
                   </div>
-                  <div class="modal2-body">
+                  <div class="modal2-body modal-inner-scroll">
                     <br>
                     <SpreadsheetEditor
                         :initial-data="responseObj.content"
@@ -22,6 +22,7 @@
                 </div>
               </div>
           </div>
+          <div class="draggable-overlay"></div>
         </div>
     </div>
 </template>
@@ -58,7 +59,7 @@ export default {
   },
   mounted() {
     this.$nextTick(function () {
-        $('#spreadsheetModal').draggable({ handle:'.modal2-header-lg'});
+        $('#spreadsheetModal').draggable({ handle:'.modal2-header-lg, .draggable-overlay'});
     })
     //this.convertStr2Obj(this.responseObj)
     this.updateResponse()
