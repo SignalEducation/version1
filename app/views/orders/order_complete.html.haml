@@ -37,22 +37,22 @@
       content_category: "#{@product&.product_type.humanize}"
     });
 
-    dataLayer.push({
-      'ecommerce': {
-        'purchase': {
-          'actionField': {
-            'id': "#{@product&.id}",
-            'revenue': "#{@product&.price}"
-          },
-          'products': [{
-            'name': "#{@product&.name}",
-            'price': "#{@product&.price}",
-            'brand': "#{@product&.product_type}",
-            'category': "#{@product&.product_type.humanize}",
-            'quantity': 1
-            }]
-        }
-      },
-    'event':'ecomSuccess'}
-    );
+    //dataLayer.push({
+    //  'ecommerce': {
+    //    'purchase': {
+    //      'actionField': {
+    //        'id': "#{@product&.id}",
+    //        'revenue': "#{@product&.price}"
+    //      },
+    //      'products': [{
+    //        'name': "#{@product&.name}",
+    //        'price': "#{@product&.price}",
+    //        'brand': "#{@product&.product_type}",
+    //        'category': "#{@product&.product_type.humanize}",
+    //        'quantity': 1
+    //        }]
+    //    }
+     // },
+    //'event':'ecomSuccess'}
+    //);
   });

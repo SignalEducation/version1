@@ -85,22 +85,22 @@
 
   function addToCart(currency, name, id, price, body) {
     var selectedPlan = $("input[name='plans']:checked");
-    dataLayer.push({
-      'event': 'addToCart',
-      'ecommerce': {
-        'currencyCode': currency,
-        'add': {
-            'products': [{
-            'name': name,
-            'id': id,
-            'price': price,
-            'brand': body,
-            'category': 'Exam Papers',
-            'quantity': 1
-            }]
-        }
-      }
-    });
+    //dataLayer.push({
+    //  'event': 'addToCart',
+    //  'ecommerce': {
+    //    'currencyCode': currency,
+    //    'add': {
+    //        'products': [{
+    //        'name': name,
+    //        'id': id,
+    //        'price': price,
+    //        'brand': body,
+    //        'category': 'Exam Papers',
+    //        'quantity': 1
+    //        }]
+    //    }
+    //  }
+    //});
 
     fbq('track', 'AddToCart', {
       value: price,
