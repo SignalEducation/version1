@@ -27,6 +27,13 @@ module ApplicationHelper
     classes
   end
 
+  def app_eval_controller_action(controller_name, action_name)
+    classes = ['']
+    classes = ['page-light'] if controller_name == 'student_sign_ups' && action_name != 'new'
+    classes << 'page-gray' if controller_name == 'courses' || action_name == 'account_verified'
+    classes
+  end
+
   def alt_video_player(video_player)
     'dacast-player' if video_player == 'dacast'
   end

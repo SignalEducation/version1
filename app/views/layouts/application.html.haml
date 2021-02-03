@@ -75,7 +75,7 @@
           =yield
 
   - else
-    %body{class: (controller_name == 'student_sign_ups' && action_name != 'new') ? 'page-light' : (action_name == 'account_verified') ? 'page-gray' : ''}
+    %body{:class => app_eval_controller_action(controller_name, action_name) }
       -if controller_name == 'courses' || controller_name == 'course_steps' || controller_name == 'preview_course_steps' || controller_name == 'content_activations'
         %script{src: 'https://kendo.cdn.telerik.com/2018.2.516/js/jszip.min.js'}
         %script{src: 'https://kendo.cdn.telerik.com/2018.2.516/js/kendo.all.min.js'}
