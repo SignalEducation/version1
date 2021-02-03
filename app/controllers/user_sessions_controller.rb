@@ -4,6 +4,7 @@ class UserSessionsController < ApplicationController
   before_action :logged_out_required, only: %i[new create]
   before_action :logged_in_required,  only: :destroy
   before_action :check_user_group, only: :create
+  layout 'marketing', only: %i[new]
 
   def new
     @user_session = UserSession.new
