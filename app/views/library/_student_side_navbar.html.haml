@@ -15,7 +15,7 @@
                 .step{data: {course_step: step.name}, :class => sidepanel_border_radius(@course_step_index,index,@course_lesson.active_children.length.to_i) }
                   .step-part
                     %div
-                      %i.material-icons.icon-bg-round{"aria-label" => "failed", :role => "img", :style => "background-color: #000032;\n    color: #ffffff;\n    padding: 0em 0.4em 1.2em 0em;\n    border-radius: 5px;\n    width: 100%;"}
+                      %i.material-icons.icon-bg-round.side-nav-material-icons
                         -if @course_log
                           %span{class: @course_log && @course_log.course_step_logs && @course_log.course_step_logs.map(&:course_step_id).include?(step.id) ? (@course_log.course_step_logs.all_completed.map(&:course_step_id).include?(step.id) ? 'small-dot' : 'small-dot-alt') : 'small-dot-neutral'}
                         -else
@@ -72,7 +72,7 @@
                 .step{data: {course_step: step.name}, class: sidepanel_border_radius(@course_step_index,index,@course_lesson.active_children.length.to_i) }
                   .step-part
                     %div
-                      %i.material-icons.icon-bg-round{"aria-label" => "failed", :role => "img", :style => "background-color: #000032;\n    color: #ffffff;\n    padding: 0em 0.4em 1.2em 0em;\n    border-radius: 5px;\n    width: 100%;"}
+                      %i.material-icons.icon-bg-round.side-nav-material-icons
                         -if @course_log
                           %span{class: @course_log && @course_log.course_step_logs && @course_log.course_step_logs.map(&:course_step_id).include?(step.id) ? (@course_log.course_step_logs.all_completed.map(&:course_step_id).include?(step.id) ? 'small-dot' : 'small-dot-alt') : 'small-dot-neutral'}
                         -else
