@@ -52,24 +52,24 @@
       content_category: "Subscription"
     });
 
-    dataLayer.push({
-      'ecommerce': {
-        'purchase': {
-          'actionField': {
-            'id': "#{@subscription&.id}",
-            'revenue': "#{@subscription&.subscription_plan&.price}"
-          },
-          'products': [{
-            'name': "#{@subscription&.subscription_plan&.name}",
-            'id': "#{@subscription&.subscription_plan&.id}",
-            'price': "#{@subscription&.subscription_plan&.price}",
-            'brand': "#{@subscription&.subscription_plan&.exam_body&.name}",
-            'subscription_interval': "#{@subscription&.subscription_plan&.interval_name}",
-            'category': "Subscription",
-            'quantity': 1
-            }]
-        }
-      },
-    'event':'ecomSuccess'}
-    );
+    //dataLayer.push({
+    //  'ecommerce': {
+    //    'purchase': {
+    //      'actionField': {
+    //        'id': "#{@subscription&.id}",
+    //        'revenue': "#{@subscription&.subscription_plan&.price}"
+    //      },
+    //      'products': [{
+    //        'name': "#{@subscription&.subscription_plan&.name}",
+    //        'id': "#{@subscription&.subscription_plan&.id}",
+    //        'price': "#{@subscription&.subscription_plan&.price}",
+    //        'brand': "#{@subscription&.subscription_plan&.exam_body&.name}",
+    //        'subscription_interval': "#{@subscription&.subscription_plan&.interval_name}",
+    //        'category': "Subscription",
+    //        'quantity': 1
+    //        }]
+    //    }
+    //  },
+    //'event':'ecomSuccess'}
+    //);
   });
