@@ -1,3 +1,9 @@
+/ Disable widget to send data to google analitics
+:javascript
+  window.zESettings = {
+      analytics: false
+  };
+
 / Start of learnsignal Zendesk Widget script
 %script#ze-snippet{:src => "https://static.zdassets.com/ekr/snippet.js?key=#{Rails.application.credentials[Rails.env.to_sym][:zendesk][:project_key]}"} :cdata
 / End of learnsignal Zendesk Widget script

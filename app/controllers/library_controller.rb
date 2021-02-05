@@ -3,6 +3,7 @@
 class LibraryController < ApplicationController
   before_action :check_course_available, :get_course_products_and_resources,
                 only: %i[course_show course_preview]
+  layout 'marketing'
 
   def index
     @groups = Group.all_active.with_active_body.all_in_order

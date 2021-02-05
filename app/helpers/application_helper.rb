@@ -38,11 +38,11 @@ module ApplicationHelper
   end
 
   def number_in_local_currency(amount, currency)
-    number_to_currency(amount, unit: currency.leading_symbol, separator: I18n.t('views.general.numbers.decimal_separator'), delimiter: I18n.t('views.general.numbers.decimal_separator'), precision: 2)
+    number_to_currency(amount, unit: currency.leading_symbol, separator: I18n.t('views.general.numbers.decimal_separator'), delimiter: I18n.t('views.general.numbers.thousands_separator'), precision: 2)
   end
 
   def number_in_local_currency_no_precision(amount, currency)
-    number_to_currency(amount, unit: currency.leading_symbol, separator: I18n.t('views.general.numbers.decimal_separator'), delimiter: I18n.t('views.general.numbers.decimal_separator'), precision: 0)
+    number_to_currency(amount, unit: currency.leading_symbol, separator: I18n.t('views.general.numbers.decimal_separator'), delimiter: I18n.t('views.general.numbers.thousands_separator'), precision: 0)
   end
 
   def sanitizer(some_text)
