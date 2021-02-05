@@ -20,7 +20,7 @@
     =stylesheet_pack_tag 'cbe_main'
     -# CBE VueJS include
     =render partial: 'layouts/global_site_tag'
-
+    =render partial: 'layouts/google_tag_manager'
 
     %script{type: 'text/javascript', src: 'https://js.stripe.com/v3/'}
 
@@ -79,6 +79,9 @@
       -if controller_name == 'courses' || controller_name == 'course_steps' || controller_name == 'preview_course_steps' || controller_name == 'content_activations'
         %script{src: 'https://kendo.cdn.telerik.com/2018.2.516/js/jszip.min.js'}
         %script{src: 'https://kendo.cdn.telerik.com/2018.2.516/js/kendo.all.min.js'}
+
+      %noscript
+        %iframe{src: '//www.googletagmanager.com/ns.html?id=GTM-5SC76S', height: 0, width: 0, style: 'display:none;visibility:hidden'}
 
       =render partial: 'layouts/facebook_tracking_code'
       -if @layout == 'standard'
