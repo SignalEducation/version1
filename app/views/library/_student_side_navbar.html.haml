@@ -111,3 +111,14 @@
           =link_to navigation_special_link(@course_step), class: 'btn btn-secondary btn-sm btn-sm-arrow-right mb-3 mb-sm-0', data: {module: @course_lesson&.next_module&.name} do
             Next Module
 
+:javascript
+  $(document).ready(function(){
+
+   setTimeout(function(){
+     if (screen.width <= 768) {
+      var divA = document.getElementById('course-right-show-elem-notes').offsetHeight;
+      var divB = document.getElementById('sidebar-wrapper-student-responsive').offsetHeight;
+      document.getElementById('console-wrapper-sidebar').style.height = String(divA + divB) + 'px'
+     }
+    }, 100);
+  });
