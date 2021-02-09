@@ -7645,6 +7645,13 @@ button.sub-details[aria-expanded="true"]:before{
   display: none;
 }
 @media(max-width:768px) {
+  .courses-container {
+    height: 100%;
+  }
+  #notes-window {
+    width: 105%;
+    margin-left: 1%;
+  }
   .course-show-external-banner { .external-banner { p { width: 85%; } } }
   .menu-title {
     width: 100%;
@@ -7787,6 +7794,7 @@ button.sub-details[aria-expanded="true"]:before{
   }
   .sidebar-right-main {
     grid-row: 1;
+    background-color: #F5F8FA;
   }
   .sidebar-btn-collapse {
     position: initial;
@@ -7795,6 +7803,9 @@ button.sub-details[aria-expanded="true"]:before{
     grid-row: 2;
     display: block;
     padding-top: 3em;
+    background-image: -webkit-linear-gradient(bottom, #ffffff 10%, #f5f8fa 50%);
+    overflow-y: hidden;
+    height: 105%;
   }
   .course-right-show-content {
     margin-top: 0;
