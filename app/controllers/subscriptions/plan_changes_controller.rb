@@ -46,6 +46,11 @@ module Subscriptions
       kind                = params[:subscription][:kind]
       coupon              = params[:hidden_coupon_code]
       plan_id             = params[:subscription][:subscription_plan_id]
+
+      !coupon_is_valid(coupon, plan_id) ? render_coupon_error(@subscription.id) : ''
+
+      return unless coupon_is_valid(coupon, plan_id)
+
       sub_service         = StripeSubscriptionService.new(@subscription)
       @subscription, data = sub_service.change_plan(coupon, plan_id)
 
@@ -55,8 +60,7 @@ module Subscriptions
         @subscription.update(kind: kind)
         render 'subscriptions/create'
       else
-        render json: { subscription_id: @subscription.id,
-                       error: data[:error_message] }, status: data[:status]
+        render json: { subscription_id: @subscription.id, error: data[:error_message] }, status: data[:status]
       end
     end
 
@@ -79,6 +83,14 @@ module Subscriptions
 
     def set_subscription
       @subscription = Subscription.find_by(id: params[:subscription_id])
+    end
+
+    def coupon_is_valid(coupon_id, plan_id)
+      return true if Coupon.get_and_verify(coupon_id, plan_id) || coupon_id.empty?
+    end
+
+    def render_coupon_error(sub_id)
+      render json: { subscription_id: sub_id, error: "Coupon can't be applied to the selected plan" }, status: :bad_request
     end
   end
 end
