@@ -161,7 +161,7 @@ describe OrdersController, type: :controller do
         expect(flash[:success]).not_to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(order_complete_url(product_id: order_3.product_id))
+        expect(response).to redirect_to(order_complete_url(product_id: order_3.product_id, order_id: order_3.id))
       end
 
       it 'should return an error' do
@@ -175,7 +175,7 @@ describe OrdersController, type: :controller do
 
     describe "GET 'order_complete'" do
       it 'should respond OK' do
-        get :order_complete, params: { product_id: product_1.id }
+        get :order_complete, params: { order_id: order_3.id, product_id: product_1.id }
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
