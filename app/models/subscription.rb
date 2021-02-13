@@ -80,7 +80,7 @@ class Subscription < ApplicationRecord
   after_create :create_subscription_payment_card, if: :stripe_token # If new card details
   after_create :update_subscription_status, if: :stripe_token
   after_create :update_coupon_count
-  after_save :update_hub_spot_data
+  after_save :update_hub_spot_data, :update_segment_user
 
   # scopes
   scope :all_in_order,             -> { order(:user_id, :id) }
@@ -478,6 +478,12 @@ class Subscription < ApplicationRecord
     return if Rails.env.test?
 
     HubSpotContactWorker.perform_async(user_id)
+  end
+
+  def update_segment_user
+    return if Rails.env.test?
+
+    SegmentService.new.identify_user(user)
   end
 
   def subscription_change_allowable
