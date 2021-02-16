@@ -108,7 +108,7 @@ export default {
       this.activePage = num;
     },
     convertStr2Obj(str) {
-      if (typeof str === 'object' && str !== null) {
+      if ((typeof str === 'object' && str !== null) || jQuery.isEmptyObject(str)) {
         return str;
       } else {
         return JSON.parse(str);
@@ -147,14 +147,14 @@ export default {
         return new Promise((resolve) => {
           resolve(pageArr);
         }).then((data) => {
-          let origDataLength;
-          let userChangedDataLength;
+          let origDataLength = {};
+          let userChangedDataLength = {};
           if (data.kind == 'spreadsheet') {
-            origDataLength =  Object.keys(data.content.content.data.data.dataTable).length;
-            userChangedDataLength = Object.keys(data.answer_content.content.data.data.dataTable).length;
+            if (data.content.content) { origDataLength =  Object.keys(data.content.content.data.data.dataTable).length; }
+            if (data.answer_content.content) { origDataLength =  Object.keys(data.answer_content.content.data.data.dataTable).length; }
           } else {
-            origDataLength = data.content.length;
-            userChangedDataLength = data.answer_content.length;
+            if (data.content) { origDataLength = data.content.length; }
+            if (data.answer_content) { userChangedDataLength = data.answer_content.length; }
           }
           if (origDataLength != userChangedDataLength) {
             this.fillArr[index] = 1;
