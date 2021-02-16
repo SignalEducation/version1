@@ -68,6 +68,26 @@ module ApplicationHelper
     content_tag(:span, content, class: myclasses, style: mystyle)
   end
 
+  def image_optimizer(img)
+    image_reg = %r{[/.](gif|jpg|jpeg|tiff|png)}
+    opt_img = img.split(image_reg)[0] + '-mob.' + img.split(image_reg)[1]
+
+    return image_url(img) if verify_user_device == 'desktop' || !asset_exists?(opt_img)
+
+    image_url(opt_img)
+  end
+
+  def verify_user_device
+    return 'tablet' if request.user_agent.match?(/(tablet|ipad)|(android(?!.*mobile))/i)
+    return 'mobile' if request.user_agent.match?(/Mobile|mobile/)
+
+    'desktop'
+  end
+
+  def asset_exists?(path)
+    (Rails.application.assets.find_asset path).present?
+  end
+
   def seconds_to_time(seconds)
     if seconds > 3600
       Time.at(seconds).utc.strftime('%H:%M:%S')
