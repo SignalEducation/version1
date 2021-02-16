@@ -52,24 +52,20 @@
       content_category: "Subscription"
     });
 
-    dataLayer.push({
-      'ecommerce': {
-        'purchase': {
-          'actionField': {
-            'id': "#{@subscription&.id}",
-            'revenue': "#{@subscription&.subscription_plan&.price}"
-          },
-          'products': [{
-            'name': "#{@subscription&.subscription_plan&.name}",
-            'id': "#{@subscription&.subscription_plan&.id}",
-            'price': "#{@subscription&.subscription_plan&.price}",
-            'brand': "#{@subscription&.subscription_plan&.exam_body&.name}",
-            'subscription_interval': "#{@subscription&.subscription_plan&.interval_name}",
-            'category': "Subscription",
-            'quantity': 1
-          }]
-        }
-      },
-    'event':'ecomSuccess'}
-    );
+    gtag('event', 'purchase', {
+      "transaction_id": "#{@subscription&.id}",
+      "affiliation": "subscription",
+      "value": "#{@subscription&.subscription_plan&.price}",
+      "currency": "#{@subscription&.subscription_plan&.currency&.iso_code}",
+      "items": [
+        {
+          "id": "#{@subscription&.subscription_plan&.id}",
+          "name": "#{@subscription&.subscription_plan&.name}",
+          "brand": "Subscription",
+          "category": "#{@subscription&.subscription_plan&.interval_name}",
+          "quantity": 1,
+          "price": "#{@subscription&.subscription_plan&.price}"
+        },
+      ]
+    });
   });
