@@ -55,6 +55,7 @@ module Subscriptions
       @subscription, data = sub_service.change_plan(coupon, plan_id)
 
       if data[:status] == :ok
+        data[:completion_guid] = @subscription.completion_guid
         retrieved_subscription = StripeSubscriptionService.new(@subscription).retrieve_subscription
         @subscription.un_cancel if retrieved_subscription[:cancel_at_period_end]
         @subscription.update(kind: kind)

@@ -168,6 +168,7 @@
     var displayCardError = $('#card-errors');
     let clientSecret, subscriptionId;
     let statusArray = ['active', 'succeeded'];
+    let current_completion_guid = '';
     displayError.text('');
     displayCardError.text('');
     var stripe = Stripe('#{ENV['LEARNSIGNAL_V3_STRIPE_PUBLIC_KEY']}');
@@ -215,11 +216,12 @@
         data: $(form).serialize(),
         dataType: 'json',
         success: function(data, status, xhr){
+          current_completion_guid = data.completion_guid
           if (['incomplete', 'past_due'].includes(data.status)) {
-            handleStripeAction(data.client_secret, data.subscription_id)
+            handleStripeAction(data.client_secret, data.subscription_id, current_completion_guid)
           } else if(data.status == 'active') {
-            // TODO: This url is incorrect as @subscription is the old sub not the new sub
-            window.location.replace("#{personal_upgrade_complete_url(@subscription.completion_guid)}");
+            const upgrade_url = '#{personal_upgrade_complete_url()}/' + current_completion_guid;
+            window.location.replace(upgrade_url);
           }
         },
         error: function(request, status, error){
@@ -232,7 +234,7 @@
       });
     }
 
-    function handleStripeAction(client_secret, subscription_id){
+    function handleStripeAction(client_secret, subscription_id, completion_guid){
       let intentStatus = '';
       stripe.handleCardPayment(client_secret).then(function(result) {
         if (result.error) {
@@ -251,8 +253,8 @@
             dataType: 'json',
             success: function(data,status,xhr){
               if ($.inArray(intentStatus, statusArray) !== -1){
-                // TODO: This url is incorrect as @subscription is the old sub not the new sub
-                window.location.replace("#{personal_upgrade_complete_url(@subscription.completion_guid)}");
+                const upgrade_url = '#{personal_upgrade_complete_url()}/' + completion_guid;
+                window.location.replace(upgrade_url);
               }
             },
             error: function(xhr,status,error){
@@ -299,8 +301,12 @@
             dataType: 'json',
             success: function(data,status,xhr){
               if( $.inArray(intentStatus, statusArray) !== -1){
-                // TODO: This url is incorrect as @subscription is the old sub not the new sub
-                window.location.replace("#{personal_upgrade_complete_url(@subscription.completion_guid)}");
+                if( current_completion_guid == ''){
+                  window.location.replace("#{personal_upgrade_complete_url(@subscription.completion_guid)}");
+                } else {
+                  const upgrade_url = '#{personal_upgrade_complete_url()}/' + current_completion_guid;
+                  window.location.replace(upgrade_url);
+                }
               }
             },
             error: function(xhr,status,error){
