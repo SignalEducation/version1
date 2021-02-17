@@ -50,6 +50,7 @@ gem 'remotipart' # enables file upload in forms that work using AJAX
 gem 'remodal-rails'
 gem 'rails_real_favicon'
 gem 'sass-rails', '~> 5.0' # Use SCSS for stylesheets
+gem 'analytics-ruby', '~> 2.0.0', :require => 'segment/analytics'
 gem 'sidekiq', require: %w(sidekiq sidekiq/web)
 # background processor for tasks that can be run 'later' or take too long
 # Requires Redis NoSQL datastore

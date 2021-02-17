@@ -143,6 +143,7 @@ class User < ApplicationRecord
   after_create :create_referral_code_record
   after_update :update_stripe_customer
   after_save :update_hub_spot_data
+  after_save :create_segment_user
   after_destroy :delete_stripe_customer
 
   # scopes
@@ -663,6 +664,12 @@ class User < ApplicationRecord
              consent: terms_and_conditions }
 
     HubSpotFormContactsWorker.perform_async(data)
+  end
+
+  def create_segment_user
+    return if saved_changes.include?(:last_request_at)
+
+    SegmentService.new.identify_user(self)
   end
 
   def update_stripe_customer
