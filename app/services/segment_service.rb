@@ -10,7 +10,7 @@ class SegmentService
     )
   rescue StandardError => e
     Rails.logger.error "SegmentService#create_user - #{e.inspect}"
-    log_in_airbrake("Segment: Create User #{user.id}: #{e.message}")
+    ApplicationController.log_in_airbrake("Segment: Create User #{user.id}: #{e.message}")
   end
 
   # PRIVATE ====================================================================
