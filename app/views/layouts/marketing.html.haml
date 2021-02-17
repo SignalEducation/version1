@@ -106,6 +106,10 @@
     :javascript
       gtag('event', 'visits_website', {'event_category':  "pre-registration", 'event_label':  "learnsignal"});
 
+    -if flash[:just_signed_in]
+      :javascript
+        gtag('event', 'logged_in_user', {'event_category': 'pre-registration', 'event_label': 'login'})
+
     -unless controller_name == 'home_pages'
       %script{type: 'text/javascript'} try{Typekit.load();}catch(e){}
     -if !current_user || current_user&.student_user?

@@ -105,7 +105,7 @@
       -if local_assigns.has_key?(:btn)
         =f.submit btn, class: 'btn btn-primary btn-sm', id: 'signUp'
       -else
-        =f.submit 'Register Now', class: 'btn btn-primary btn-sm', id: 'signUp', onclick: "gtag('event', 'registered_user', {'event_category': 'pre-registration', 'event_label': 'register'})"
+        =f.submit 'Register Now', class: 'btn btn-primary btn-sm', id: 'signUp'
       .sk-circle
         .sk-circle1.sk-child
         .sk-circle2.sk-child
