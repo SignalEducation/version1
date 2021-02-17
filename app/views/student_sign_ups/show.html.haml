@@ -25,4 +25,4 @@
                     %p Check your inbox now
 
 :javascript
-  //dataLayer.push({'event':'registration', 'user_id':"#{flash[:datalayer_id]}", 'user_plan':'Basic Plan', 'plan_type':"#{flash[:datalayer_body]}"});
+  gtag('event', 'registered_user', {'event_category': 'pre-registration', 'event_label': 'register'})

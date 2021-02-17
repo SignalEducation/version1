@@ -183,6 +183,10 @@
       -if flash[:datalayer_verify]
         :javascript
           gtag('event', 'verified_user', {'event_category': "pre-registration", 'event_label': "verify"});
+      -if flash[:just_signed_in]
+        :javascript
+          gtag('event', 'logged_in_user', {'event_category': 'pre-registration', 'event_label': 'login'})
+
       <!-- Mathjax -->
       -if @mathjax_required && !controller_name == 'home_pages'
         %script{type: 'text/x-mathjax-config'}
