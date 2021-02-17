@@ -59,7 +59,7 @@ class Order < ApplicationRecord
   before_create :assign_random_guid
   before_create :generate_invoice
   before_destroy :check_dependencies
-  after_save :update_hub_spot_data
+  after_save :update_hub_spot_data, :update_segment_user
 
   # scopes
   scope :all_in_order,        -> { order(:product_id) }
@@ -247,5 +247,11 @@ class Order < ApplicationRecord
     return if Rails.env.test?
 
     HubSpotContactWorker.perform_async(user_id) if product.lifetime_access? && completed?
+  end
+
+  def update_segment_user
+    return if Rails.env.test?
+
+    SegmentService.new.identify_user(user)
   end
 end

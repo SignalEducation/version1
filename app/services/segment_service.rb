@@ -1,0 +1,38 @@
+# frozen_string_literal: true
+
+class SegmentService
+  def identify_user(user)
+    return unless user.email_verified && user.user_group == UserGroup.student_group
+
+    Analytics.identify(
+      user_id: user.id,
+      traits: user_properties(user)
+    )
+  rescue StandardError => e
+    Rails.logger.error "SegmentService#create_user - #{e.inspect}"
+    log_in_airbrake("Segment: Create User #{user.id}: #{e.message}")
+  end
+
+  # PRIVATE ====================================================================
+
+  private
+
+  def user_properties(user)
+    {
+      name: user.full_name,
+      email: user.email,
+      first_name: user.first_name,
+      last_name: user.last_name,
+      created_at: user.created_at.to_time.iso8601,
+      user_group: user.user_group.name,
+      stripe_customer_id: user.stripe_customer_id,
+      email_verified: user.email_verified,
+      email_verified_at: user.email_verified_at.to_time.iso8601,
+      preferred_exam_body: user.preferred_exam_body.name,
+      date_of_birth: user.date_of_birth,
+      video_player_preference: user.video_player,
+      currency: user.currency.name,
+      onboarding_status: user.onboarding_state
+    }
+  end
+end

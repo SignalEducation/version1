@@ -27,6 +27,7 @@ class UserSessionsController < ApplicationController
       set_current_visit(@user_session.user)
       enrollment, flash_message = handle_course_enrollment(@user_session.user, params[:course_id]) if params[:course_id] && !params[:course_id].blank?
       flash[:error] = nil
+      flash[:just_signed_in] = true
 
       if flash[:plan_guid]
         redirect_to new_subscription_url(plan_guid: flash[:plan_guid], exam_body_id: flash[:exam_body], login: true)
@@ -40,6 +41,7 @@ class UserSessionsController < ApplicationController
       else
         redirect_to student_dashboard_url, flash: { just_signed_in: true }
       end
+      SegmentService.new.identify_user(@user_session.user)
     elsif flash[:plan_guid] || flash[:product_id]
       set_session_errors(@user_session)
       redirect_back(fallback_location: sign_in_url)

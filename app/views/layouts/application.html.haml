@@ -21,6 +21,8 @@
     -# CBE VueJS include
     =render partial: 'layouts/google_tag_manager'
     =render partial: 'layouts/global_site_tag'
+    -if current_user&.email_verified && current_user&.user_group == UserGroup.student_group
+      =render partial: 'layouts/segment_tracking_code'
 
     %script{type: 'text/javascript', src: 'https://js.stripe.com/v3/'}
 
