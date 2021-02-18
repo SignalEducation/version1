@@ -106,6 +106,58 @@ RSpec.describe ApplicationHelper, type: :helper do
     end
   end
 
+  describe '#image_optimizer' do
+    context 'when on a desktop' do
+      it 'passes the original large resolution image' do
+        allow_any_instance_of(ApplicationHelper).to receive(:verify_user_device).and_return('desktop')
+        expect(image_optimizer('/images/red-background.png')).to eq('/images/red-background.png')
+      end
+    end
+
+    context 'when on a mobile and mobile image exists' do
+      it 'passes the optimized version of image' do
+        allow_any_instance_of(ApplicationHelper).to receive(:verify_user_device).and_return('mobile')
+        allow_any_instance_of(ApplicationHelper).to receive(:asset_exists?).and_return(true)
+        expect(image_optimizer('/images/red-background.png')).to eq('/images/red-background-mob.png')
+      end
+    end
+
+    context 'when on a mobile and mobile image does not exist' do
+      it 'passes the original large resolution image' do
+        allow_any_instance_of(ApplicationHelper).to receive(:verify_user_device).and_return('mobile')
+        allow_any_instance_of(ApplicationHelper).to receive(:asset_exists?).and_return(false)
+        expect(image_optimizer('/images/red-background.png')).to eq('/images/red-background.png')
+      end
+    end
+  end
+
+  describe '#verify_user_device' do
+    it 'returns Desktop' do
+      allow(request).to receive(:user_agent).and_return('desktop')
+      expect(verify_user_device).to eq('desktop')
+    end
+
+    it 'returns Tablet' do
+      allow(request).to receive(:user_agent).and_return('tablet')
+      expect(verify_user_device).to eq('tablet')
+    end
+
+    it 'returns Mobile' do
+      allow(request).to receive(:user_agent).and_return('mobile')
+      expect(verify_user_device).to eq('mobile')
+    end
+  end
+
+  describe '#asset_exists?' do
+    it 'returns true for existing asset' do
+      expect(asset_exists?('red-background-mob.png')).to eq(true)
+    end
+
+    it 'returns false for non existing asset' do
+      expect(asset_exists?('fake-image-not-real-00000-mob.png')).to eq(false)
+    end
+  end
+
   describe '#seconds_to_time' do
     context 'less then 3600 seconds' do
       it 'return seconds formated to minutes:seconds' do
