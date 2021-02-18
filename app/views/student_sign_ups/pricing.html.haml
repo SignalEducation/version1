@@ -26,7 +26,7 @@
                         %p.pb-0.mb-0.text-white
                           Most Popular
                       .hero-section-tutor-card{style: 'border-top-left-radius: 0; border-top-right-radius: 0;'}
-                        =link_to '', subscription_checkout_special_link(plan.exam_body_id, plan.guid, params[:login]), class: 'hero-section-show-link-window', onclick: "addToCart('#{plan.currency.iso_code}', '#{plan.name}', '#{plan.id}', '#{plan.price}', '#{plan.exam_body.name}', '#{plan.interval_name}'); gtag('event', 'clicks_plan', {'event_category': 'pre-registration', 'event_label': #{plan.interval_name}});"
+                        =link_to '', subscription_checkout_special_link(plan.exam_body_id, plan.guid, params[:login]), class: 'hero-section-show-link-window', onclick: "addToCart('#{plan.currency.iso_code}', '#{plan.name}', '#{plan.id}', '#{plan.price}', '#{plan.exam_body.name}', '#{plan.interval_name}');"
                         .py-4.pb-0
                           .h3
                             =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
@@ -58,7 +58,7 @@
 
                   -else
                     .card.text-center.mb-4.hero-section-tutor-card.mt-4
-                      =link_to '', subscription_checkout_special_link(plan.exam_body_id, plan.guid, params[:login]), class: 'hero-section-show-link-window', onclick: "addToCart('#{plan.currency.iso_code}', '#{plan.name}', '#{plan.id}', '#{plan.price}', '#{plan.exam_body.name}', '#{plan.interval_name}'); gtag('event', 'clicks_plan', {'event_category': 'pre-registration', 'event_label': #{plan.interval_name}});"
+                      =link_to '', subscription_checkout_special_link(plan.exam_body_id, plan.guid, params[:login]), class: 'hero-section-show-link-window', onclick: "addToCart('#{plan.currency.iso_code}', '#{plan.name}', '#{plan.id}', '#{plan.price}', '#{plan.exam_body.name}', '#{plan.interval_name}');"
                       .py-4.pb-0
                         .h3
                           =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
@@ -93,7 +93,7 @@
                 -name = product.name_by_type
                 .col-sm-6.col-lg-3
                   .card.text-center.mb-4.hero-section-tutor-card.mt-4
-                    = link_to '', link, class: 'hero-section-show-link-window', onclick: "addToCart('#{product.currency.iso_code}', '#{product.price}', '#{product.name}', '#{product.id}', '#{product.price}', '#{name}'); gtag('event', 'clicks_plan', {'event_category': 'pre-registration', 'event_label': #{name}});"
+                    = link_to '', link, class: 'hero-section-show-link-window', onclick: "addToCart('#{product.currency.iso_code}', '#{product.price}', '#{product.name}', '#{product.id}', '#{product.price}', '#{name}');"
                     .py-4
                       .h3
                         Lifetime Membership
@@ -142,7 +142,7 @@
                                 %p.pb-0.mb-0.text-white
                                   Most Popular
                               .hero-section-tutor-card{style: 'border-top-left-radius: 0; border-top-right-radius: 0;'}
-                                =link_to '', subscription_checkout_special_link(plan.exam_body_id, plan.guid, params[:login]), class: 'hero-section-show-link-window', onclick: "addToCart('#{plan.currency.iso_code}', '#{plan.name}', '#{plan.id}', '#{plan.price}', '#{plan.exam_body.name}', '#{plan.interval_name}'); gtag('event', 'clicks_plan', {'event_category': 'pre-registration', 'event_label': #{plan.interval_name}});"
+                                =link_to '', subscription_checkout_special_link(plan.exam_body_id, plan.guid, params[:login]), class: 'hero-section-show-link-window', onclick: "addToCart('#{plan.currency.iso_code}', '#{plan.name}', '#{plan.id}', '#{plan.price}', '#{plan.exam_body.name}', '#{plan.interval_name}');"
                                 .py-4.pb-0
                                   .h3
                                     =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
@@ -174,7 +174,7 @@
 
                           -else
                             .card.text-center.mb-4.hero-section-tutor-card.mt-4
-                              =link_to '', subscription_checkout_special_link(plan.exam_body_id, plan.guid, params[:login]), class: 'hero-section-show-link-window', onclick: "addToCart('#{plan.currency.iso_code}', '#{plan.name}', '#{plan.id}', '#{plan.price}', '#{plan.exam_body.name}', '#{plan.interval_name}'); gtag('event', 'clicks_plan', {'event_category': 'pre-registration', 'event_label': #{plan.interval_name}});"
+                              =link_to '', subscription_checkout_special_link(plan.exam_body_id, plan.guid, params[:login]), class: 'hero-section-show-link-window', onclick: "addToCart('#{plan.currency.iso_code}', '#{plan.name}', '#{plan.id}', '#{plan.price}', '#{plan.exam_body.name}', '#{plan.interval_name}');"
                               .py-4.pb-0
                                 .h3
                                   =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
@@ -209,7 +209,7 @@
                         -name = product.name_by_type
                         .col-sm-6.col-lg-3
                           .card.text-center.mb-4.hero-section-tutor-card.mt-4
-                            = link_to '', link, class: 'hero-section-show-link-window', onclick: "addToCart('#{product.currency.iso_code}', '#{product.price}', '#{product.name}', '#{product.id}', '#{product.price}', '#{name}'); gtag('event', 'clicks_plan', {'event_category': 'pre-registration', 'event_label': #{name}});"
+                            = link_to '', link, class: 'hero-section-show-link-window', onclick: "addToCart('#{product.currency.iso_code}', '#{product.price}', '#{product.name}', '#{product.id}', '#{product.price}', '#{name}');"
                             .py-4
                               .h3
                                 Lifetime Membership
@@ -306,22 +306,7 @@
 
 :javascript
   function addToCart(currency, plan_name, plan_id, price, brand, interval_name) {
-    //dataLayer.push({
-    //  'event': 'addToCart',
-    //  'ecommerce': {
-    //    'currencyCode': currency,
-    //    'add': {
-    //      'products': [{
-    //        'name': plan_name,
-    //        'id': plan_id,
-    //        'price': price,
-    //        'brand': brand,
-    //        'category': 'Subscription',
-    //        'quantity': 1
-    //        }]
-    //    }
-    //  }
-    //});
+    gtag('event', 'clicks_plan', {'event_category': 'pre-registration', 'event_label': interval_name});
 
     fbq('track', 'AddToCart', {
       value: price,
