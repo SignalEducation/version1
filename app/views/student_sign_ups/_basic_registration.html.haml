@@ -1,6 +1,6 @@
 =render partial: 'layouts/external_navbar'
 %main
-  .container-bg.home-hero-alt-4{style: @home_page&.background_image.present? ? "background-image: url(#{image_url(@home_page.background_image)});" : ''}
+  .container-bg.home-hero-alt-4{style: @home_page&.background_image.present? ? "background-image: url(#{image_optimizer(@home_page.background_image)});" : ''}
     .container
       %article.home-hero.home-hero-basic-registration
         .row.justify-content-between
