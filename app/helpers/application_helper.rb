@@ -85,6 +85,7 @@ module ApplicationHelper
   end
 
   def asset_exists?(path)
+    return false
     (Rails.application.assets.find_asset path).present?
   end
 
