@@ -86,6 +86,11 @@ describe Admin::CourseStepsController, type: :controller do
         get :edit, params: { id: course_step_4.id }
         expect_edit_success_with_model('course_step', course_step_4.id)
       end
+
+      it 'should respond OK with course_step_6 - practice question' do
+        get :edit, params: { id: course_step_6.id }
+        expect_edit_success_with_model('course_step', course_step_6.id)
+      end
     end
 
     describe "POST 'create'" do
