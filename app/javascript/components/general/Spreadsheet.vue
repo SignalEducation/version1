@@ -26,6 +26,7 @@ export default {
   },
   mounted() {
     try {
+      this.hiddenFormData = JSON.stringify(JSON.parse(this.$parent.content));
       this.spreadsheetData = JSON.parse(this.$parent.content);
     } catch (error) {
       console.log(error)

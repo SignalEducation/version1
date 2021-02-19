@@ -32,7 +32,6 @@ json.questions practice_question.questions.order(:sorting_order) do |question|
   end
 end
 
-
-  json.partial! 'responses', locals: { practice_question: practice_question, course_step_log_id: step_log.id }
-  json.partial! 'exhibits', locals: { practice_question: practice_question }
-  json.partial! 'solutions', locals: { practice_question: practice_question }
+json.partial! 'responses', locals: { practice_question: practice_question, course_step_log_id: step_log.id }
+json.partial! 'exhibits', locals: { practice_question: practice_question }
+json.partial! 'solutions', locals: { practice_question: practice_question }
