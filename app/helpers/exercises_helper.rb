@@ -24,4 +24,14 @@ module ExercisesHelper
 
     "(#{student_score}/#{total_scores})"
   end
+
+  def exercise_due_date(exercise)
+    return '-' if exercise.submitted_on.nil?
+
+    if exercise.autocorrected_cbe?
+      exercise.submitted_on&.strftime('%d/%m/%y %H:%m')
+    else
+      (exercise.submitted_on + 3.days)&.strftime('%d/%m/%y %H:%m')
+    end
+  end
 end
