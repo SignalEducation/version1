@@ -78,8 +78,8 @@ module ApplicationHelper
   end
 
   def verify_user_device
-    return 'tablet' if request.user_agent.match?(/(tablet|ipad)|(android(?!.*mobile))/i)
-    return 'mobile' if request.user_agent.match?(/Mobile|mobile/)
+    return 'tablet' if request.user_agent&.match?(/(tablet|ipad)|(android(?!.*mobile))/i)
+    return 'mobile' if request.user_agent&.match?(/Mobile|mobile/)
 
     'desktop'
   end
