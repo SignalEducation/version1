@@ -25,7 +25,8 @@
 require 'rails_helper'
 
 RSpec.describe Exercise, type: :model do
-  let(:exercise) { build(:exercise) }
+  let(:exercise)     { build(:exercise) }
+  let(:cbe_user_log) { build(:cbe_user_log, :with_questions) }
 
   describe 'Should Respond' do
     it { should respond_to(:product_id) }
@@ -111,5 +112,27 @@ RSpec.describe Exercise, type: :model do
         Exercise.bulk_create(csv_data, 1)
       end
     end
+  end
+
+  describe 'intance methods' do
+    describe '#autocorrected_cbe?' do
+      before do
+        allow(exercise).to receive(:cbe_user_log).and_return(cbe_user_log)
+        allow_any_instance_of(Array).to receive(:exclude?).and_return(true)
+      end
+
+      it 'returns true as autocorrected_cbe' do
+        expect(exercise.autocorrected_cbe?).to be(true)
+      end
+    end
+  end
+
+
+  def autocorrected_cbe?
+    return false if cbe_user_log.nil?
+
+    questions_kind = cbe_user_log.questions.map { |q| q.cbe_question.kind }.uniq
+
+    questions_kind.exclude?('open') && questions_kind.exclude?('spreadsheet')
   end
 end
