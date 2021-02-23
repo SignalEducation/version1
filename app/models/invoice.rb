@@ -81,6 +81,7 @@ class Invoice < ApplicationRecord
   scope :all_in_order,     -> { order(user_id: :asc, id: :desc) }
   scope :subscriptions,    -> { where.not(subscription_id: nil) }
   scope :orders,           -> { where.not(order_id: nil) }
+  scope :valids,           -> { where('subscription_id IS NOT NULL OR order_id IS NOT NULL') }
   scope :from_year_start,  -> { where("DATE(created_at) >= ?", Date.today.beginning_of_year) }
   scope :from_yesterday,   -> { where("DATE(created_at) = ?", Date.today - 1) }
 
