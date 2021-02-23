@@ -53,7 +53,7 @@
           </div>
         </pane>
         <pane>
-          <section v-html="scenarioData.content" />
+          <section class="cbe-content-template" v-html="scenarioData.content" />
         </pane>
       </splitpanes>
     </div>
