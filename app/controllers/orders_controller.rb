@@ -77,7 +77,9 @@ class OrdersController < ApplicationController
       flash[:success] =
         I18n.t('controllers.orders.create.flash.mock_exam_success')
       if @order.product.lifetime_access?
-        redirect_to order_complete_url(product_id: @order.product_id, order_id: @order.id)
+        redirect_to order_complete_url(product_id: @order.product_id,
+                                       product_type: @order.product.url_by_type,
+                                       order_id: @order.id)
       else
         redirect_to user_exercises_path(current_user)
       end

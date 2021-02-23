@@ -179,5 +179,21 @@ describe Product do
         end
       end
     end
+
+    describe '.url_by_type' do
+      context 'for lifetime Products' do
+        it 'returns the name of the CBE' do
+          allow_any_instance_of(Product).to receive(:lifetime_access?).and_return(true)
+
+          expect(order_product.url_by_type).to eq('lifetime')
+        end
+      end
+
+      context 'for non lifetime Procucts' do
+        it 'returns the name of the Product (if there is no MockExam)' do
+          expect(order_product.url_by_type).to eq(order_product.product_type)
+        end
+      end
+    end
   end
 end

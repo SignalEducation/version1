@@ -281,7 +281,7 @@ Rails.application.routes.draw do
       end
     end
     get 'orders/:exam_body_id/lifetime-membership', to: 'orders#new'
-    get 'order_complete/:order_id/product/:product_id', to: 'orders#order_complete', as: :order_complete
+    get 'order_complete/:order_id/:product_type/:product_id', to: 'orders#order_complete', as: :order_complete
     resources :quiz_questions, except: [:index], concerns: :supports_reordering
     resources :refunds
     resources :vat_codes
