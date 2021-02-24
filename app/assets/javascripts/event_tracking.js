@@ -3,69 +3,66 @@
 ////////////////////////////////////////////////
 
 // Video Player Events
-function videoPlayEvent(logId) {
+function videoPlayEvent() {
   let videoLesson = $("#video-player-window"),
-  lessonData = videoLesson.data(),
-  playerType = (lessonData.hasOwnProperty('vimeoInitialized'))? 'Vimeo' : 'DaCast';
+    stepData = videoLesson.data(),
+    playerType = (stepData.hasOwnProperty('vimeoInitialized'))? 'Vimeo' : 'DaCast',
+    videoData = { 'type': 'Video', 'player': playerType, autoplay: 'tbc' };
+  let properties = $.extend({}, stepData, videoData);
 
-  ahoy.track('Video Play', {'lesson': lessonData.lessonName, 'course': lessonData.courseName, 'log_id': logId, 'player': playerType });
-  // dataLayer.push({'event':'videoAction', 'video_name': lessonData.lessonName,
-  //   'course_name': lessonData.courseName, 'video_action':'Play'});
+  analytics.track('Course Step Started', properties);
 }
 function videoFinishedEvent() {
   let videoLesson = $("#video-player-window"),
-  lessonData = videoLesson.data(),
-  playerType = (lessonData.hasOwnProperty('vimeoInitialized'))? 'Vimeo' : 'DaCast';
+    stepData = videoLesson.data(),
+    playerType = (stepData.hasOwnProperty('vimeoInitialized'))? 'Vimeo' : 'DaCast',
+    videoData = { 'type': 'Video', 'player': playerType, autoplay: 'tbc' };
+  let properties = $.extend({}, stepData, videoData);
 
-  ahoy.track('Video Finished', {'lesson': lessonData.lessonName, 'course': lessonData.courseName,
-    'log_id': logId, 'player': playerType });
+  analytics.track('Course Step Completed', properties);
 }
 
 // Quiz Events
 function quizStartEvent() {
   let quizWindow = $("#quiz-window"),
-    lessonData = quizWindow.data();
+    lessonData = quizWindow.data(),
+    quizData = { 'type': 'Quiz' };
+  let properties = $.extend({}, lessonData, quizData);
 
-  ahoy.track('Quiz Start', lessonData);
-  // dataLayer.push({'event':'quizAction', 'quiz_name': lessonData.lessonName,
-  //   'course_name': lessonData.courseName, 'quiz_action':'Start'});
+  analytics.track('Course Step Started', properties);
 }
 
 function quizFinishEvent() {
   let quizResultsWindow = $("#quiz-results-window"),
-    lessonData = quizResultsWindow.data();
+    properties = quizResultsWindow.data();
 
-  ahoy.track('Quiz Finish', lessonData);
-  // dataLayer.push({'event':'quizAction', 'quiz_name': lessonData.lessonName,
-  //   'course_name': lessonData.courseName, 'quiz_result': lessonData.result,
-  //   'quiz_action':'Finish'});
+  analytics.track('Course Step Completed', properties);
 }
 
 // Notes Events
 function notesStartEvent() {
   let notesWindow = $("#notes-window"),
-      lessonData = notesWindow.data();
+      lessonData = notesWindow.data(),
+      noteData = { 'type': 'Note' };
+  let properties = $.extend({}, lessonData, noteData);
 
-  ahoy.track('Notes Start', lessonData);
-  // dataLayer.push({
-  //   'event': 'notesAction',
-  //   'notes_name': lessonData.lessonName,
-  //   'course_name': lessonData.courseName,
-  //   'notes_action': 'Start'
-  // });
+  analytics.track('Course Step Started', properties);
 }
 
 function notesFinishEvent() {
   let notesWindow = $("#notes-window"),
-      lessonData = notesWindow.data();
+    lessonData = notesWindow.data(),
+    noteData = { 'type': 'Note' };
+  let properties = $.extend({}, lessonData, noteData);
 
-  ahoy.track('notes Finish', lessonData);
-  // dataLayer.push({
-  //   'event': 'notesAction',
-  //   'notes_name': lessonData.lessonName,
-  //   'course_name': lessonData.courseName,
-  //   'notes_action': 'Finish'
-  // });
+  analytics.track('Course Step Completed', properties);
+}
+
+function notesDownloadEvent() {
+  let notesWindow = $("#notes-window"),
+    properties = notesWindow.data();
+
+  analytics.track('Course Step Note Downloaded', properties);
 }
 
 // Course Show Nav Events
@@ -139,11 +136,35 @@ function subscriptionCreation(e) {
   ahoy.track('Create Subscription', {'status': status, 'id': id});
 }
 
-function onBoardingClick(e) {
+function onBoardingStartClick(e) {
   let data = e.dataset;
-  ahoy.track('Onboarding Click', data);
+  analytics.track('Get Started Clicked', data);
 }
 
+function onBoardingLevelClick(e) {
+  let data = e.dataset;
+  analytics.track('Onboarding Level Clicked', data);
+}
+
+function onBoardingCourseClick(e) {
+  let data = e.dataset;
+  analytics.track('Onboarding Course Clicked', data);
+}
+
+function onBoardingBackClick(e) {
+  let data = e.dataset;
+  analytics.track('Onboarding Back Button Clicked', data);
+}
+
+function onboardingExitEvent(e) {
+  let properties = e.dataset;
+  analytics.track('Onboarding Exit', properties);
+}
+
+function onboardingCTAClicked(e) {
+  let properties = e.dataset;
+  analytics.track('Onboarding CTA Clicked', properties);
+}
 
 ////////////////////////////////////////////////
 // Listeners
@@ -152,15 +173,12 @@ function onBoardingClick(e) {
 
 $(document).ready(function(){
 
-  // Track all page loads
-  ahoy.track('Page View', { url: document.URL, title: document.title, referer: document.referrer, flash: $('#flash_message').text() });
-
-  $(".card.resource-card").on( "click", function() {
-    courseResourceClick(this)
+  $("#menu > div > div > h3.sidebar-title").on( "click", function() {
+    onboardingExitEvent(this)
   });
 
-  $("#menu > div > div > h3.sidebar-title").on( "click", function() {
-    titleCourseClick(this)
+  $("#sidebar-bottom-menu > div > a").on( "click", function() {
+    onboardingExitEvent(this)
   });
 
   $("#sidebar-right-content > div > header > div > a.sidebar-nav-btn-lefty").on( "click", function() {
@@ -179,10 +197,6 @@ $(document).ready(function(){
     sidebarCollapseClick(this)
   });
 
-  $("#sidebar-bottom-menu > div > a").on( "click", function() {
-    sidebarNextModuleClick(this)
-  });
-
   $("#coursesTabs > li.nav-item").on( "click", function() {
     courseTabClick(this)
   });
@@ -195,8 +209,24 @@ $(document).ready(function(){
     courseLessonClick(this)
   });
 
-  $(".onboarding-select").on( "click", function() {
-    onBoardingClick(this)
+  $(".onboarding-get-start").on( "click", function() {
+    onBoardingStartClick(this)
+  });
+
+  $(".onboarding-level").on( "click", function() {
+    onBoardingLevelClick(this)
+  });
+
+  $(".onboarding-course").on( "click", function() {
+    onBoardingCourseClick(this)
+  });
+
+  $(".onboarding-back-button").on( "click", function() {
+    onBoardingBackClick(this)
+  });
+
+  $(".upgrade-arrow").on( "click", function() {
+    onboardingCTAClicked(this)
   });
 
 });

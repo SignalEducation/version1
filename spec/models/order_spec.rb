@@ -263,6 +263,7 @@ describe Order do
   it { should respond_to(:destroyable?) }
   it { should respond_to(:mock_exam) }
   it { should respond_to(:stripe_client_secret) }
+  it { should respond_to(:payment_provider) }
 
   describe 'confirm_payment_intent' do
     let(:order) { create(:order) }
@@ -282,6 +283,14 @@ describe Order do
 
     it 'return exam body name' do
       expect(order.exam_body_name).to eq(order.product.group.exam_body.name)
+    end
+  end
+
+  describe 'exam_body_id' do
+    let(:order) { build(:order) }
+
+    it 'return exam body id' do
+      expect(order.exam_body_id).to eq(order.product.group.exam_body.id)
     end
   end
 end

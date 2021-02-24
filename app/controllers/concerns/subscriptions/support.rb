@@ -22,7 +22,7 @@ module Subscriptions
       # return a default plan if filters are empty in params
       return default_plan if (params.keys & filters).empty?
 
-      @plans.filter_from_params(params.slice(:prioritise_plan_frequency, :subscription_plan_id,:plan_guid)).first
+      @plans.filter_from_params(params.slice(:prioritise_plan_frequency, :subscription_plan_id, :plan_guid)).first
     end
 
     private

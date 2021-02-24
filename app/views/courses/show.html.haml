@@ -49,7 +49,7 @@
             .good-job
               %i.fa.fa-thumbs-o-up{"aria-hidden" => "true"}
               %h1 Good Job!
-              =link_to "Upgrade Now ", pricing_url(current_user&.preferred_exam_body&.group&.name_url), class: "btn btn-primary upgrade-arrow"
+              =link_to "Upgrade Now ", pricing_url(current_user&.preferred_exam_body&.group&.name_url), class: "btn btn-primary upgrade-arrow", data: {step_id: @course_step.id, step_name: @course_step.name, module_id: @course_lesson.id, module_name: @course_lesson.name, course_id: @course.id, course_name: @course.name, exam_body_id: @group.exam_body.id, exam_body_name: @group.exam_body.name, time_triggered: @course_step.vid_end_seconds}
 
 - if current_user
   =render partial: 'library/subscription_restriction_modal'
