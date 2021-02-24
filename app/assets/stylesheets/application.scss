@@ -6699,6 +6699,16 @@ button.sub-details[aria-expanded="true"]:before{
   z-index: 1;
 }
 
+#questionTabsContent > div > div.col-sm-12 {
+  .tab-content {
+    .textLayer {
+      position: inherit;
+      opacity: 0.75;
+      line-height: 1.5;
+    }
+  }
+}
+
 .load-overlay {
   z-index: 1030;
   position: fixed;

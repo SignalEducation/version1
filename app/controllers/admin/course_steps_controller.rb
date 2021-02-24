@@ -72,6 +72,7 @@ module Admin
           @course_step.course_quiz.add_an_empty_question
           @quiz_questions = @course_step&.course_quiz&.quiz_questions&.sort_by { |q| q.sorting_order || 0 }
         elsif @course_step.is_practice_question
+          @course_step&.course_practice_question&.questions&.sort_by { |q| q.sorting_order || 0 }
           @course_step.course_practice_question.questions.build
         elsif @course_step.is_video
           @course_step.build_video_resource unless @course_step.video_resource

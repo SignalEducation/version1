@@ -47,4 +47,20 @@ describe ExercisesHelper, type: :helper do
       expect(cbe_section_score(questions)).to eq("(#{student_score}/#{total_scores})")
     end
   end
+
+  describe '#exercise_due_date' do
+    describe 'finished exercises' do
+      before { cbe_user_log.update(status: 'finished') }
+
+      it 'due date exercise' do
+        expect(exercise_due_date(cbe_exercise)).to eq(cbe_exercise.submitted_on&.strftime('%d/%m/%y %H:%m'))
+      end
+    end
+
+    describe 'unfinished exercises' do
+      it 'due date exercise' do
+        expect(exercise_due_date(cbe_exercise)).to eq('-')
+      end
+    end
+  end
 end

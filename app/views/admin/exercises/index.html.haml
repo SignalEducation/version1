@@ -41,7 +41,7 @@
                     %td=exercise.user.email
                     %td=exercise.product.name
                     %td=exercise.state
-                    %td=exercise.submitted_on ? (exercise.submitted_on + 3.days)&.strftime('%d/%m/%y %H:%m') : '-'
+                    %td=exercise_due_date(exercise)
                     %td=exercise.corrected_on&.strftime('%d/%m/%y %H:%m')
                     %td=exercise.returned_on&.strftime('%d/%m/%y %H:%m')
                     %td
