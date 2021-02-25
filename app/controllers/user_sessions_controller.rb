@@ -77,6 +77,9 @@ class UserSessionsController < ApplicationController
   end
 
   def check_user_group
+    return unless params[:user_session]
+    return if params[:user_session].values.any? &:empty?
+
     user = User.find_by(email: params[:user_session][:email])
     return unless user&.blocked_user?
 
