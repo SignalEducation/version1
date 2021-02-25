@@ -50,10 +50,20 @@ describe ExercisesHelper, type: :helper do
 
   describe '#exercise_due_date' do
     describe 'finished exercises' do
-      before { cbe_user_log.update(status: 'finished') }
+      before do
+        allow_any_instance_of(Exercise).to receive(:cbe_user_log).and_return(cbe_user_log)
+        cbe_exercise.cbe_user_log.questions << questions
+        cbe_user_log.update(status: 'finished')
+      end
 
-      it 'due date exercise' do
+      it 'autocorrected due date exercise' do
+        allow_any_instance_of(Cbe::Question).to receive(:kind).and_return('multiple_choice')
         expect(exercise_due_date(cbe_exercise)).to eq(cbe_exercise.submitted_on&.strftime('%d/%m/%y %H:%m'))
+      end
+
+      it 'not autocorrected due date exercise' do
+        allow_any_instance_of(Cbe::Question).to receive(:kind).and_return('open')
+        expect(exercise_due_date(cbe_exercise)).to eq((cbe_exercise.submitted_on + 3.days)&.strftime('%d/%m/%y %H:%m'))
       end
     end
 
