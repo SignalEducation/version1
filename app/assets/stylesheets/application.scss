@@ -6690,15 +6690,12 @@ button.sub-details[aria-expanded="true"]:before{
 .plan-card-link:hover .text-orange, .plan-card-link.hover .text-orange {
   color: #fd7e14 !important;
 }
-
 #pane_0 > div > div.exhibits > div:nth-child(2) > div > div > div.content {
   height: 600px;
 }
-
 #cbe-nav-header {
   z-index: 1;
 }
-
 #questionTabsContent > div > div.col-sm-12 {
   .tab-content {
     .textLayer {
@@ -6708,7 +6705,9 @@ button.sub-details[aria-expanded="true"]:before{
     }
   }
 }
-
+.cbe-content-template {
+  padding-top: 1em;
+}
 .load-overlay {
   z-index: 1030;
   position: fixed;
@@ -7924,5 +7923,8 @@ button.sub-details[aria-expanded="true"]:before{
       padding-right: 0;
       padding-left: 0;
     }
+  }
+  .cbe-content-template {
+    padding-top: 4.5em;
   }
 }
