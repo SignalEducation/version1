@@ -6703,6 +6703,9 @@ button.sub-details[aria-expanded="true"]:before{
       opacity: 0.75;
       line-height: 1.5;
     }
+    .titlebar {
+      display: block;
+    }
   }
 }
 .cbe-content-template {

@@ -14,7 +14,7 @@
           v-html="questionData.scenario.content"
         />
         <span>
-          <section v-html="questionData.content" />
+          <section class="cbe-content-template" v-html="questionData.content" />
 
           <QuestionAnswers
             :answers-data="questionData.answers"
