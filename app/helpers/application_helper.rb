@@ -85,8 +85,11 @@ module ApplicationHelper
   end
 
   def asset_exists?(path)
-    return false
-    (Rails.application.assets.find_asset path).present?
+    if Rails.configuration.assets.compile
+      Rails.application.precompiled_assets.include? path
+    else
+      (Rails.application.assets.find_asset path).present?
+    end
   end
 
   def seconds_to_time(seconds)
