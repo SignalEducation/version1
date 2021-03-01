@@ -75,7 +75,7 @@
                                 %span{class: invoice.status == 'Paid' ? 'text-success' : 'text-danger'}
                                   =invoice.status
                               %td
-                                -if (subscription.pending_3d_secure? && invoice.requires_3d_secure) || invoice.status == 'Past Due'
+                                -if ((subscription.pending_3d_secure? && invoice.requires_3d_secure) || (invoice.status == 'Past Due' && invoice.requires_3d_secure))
                                   =link_to show_invoice_url(invoice.sca_verification_guid) do
                                     .btn.btn-primary.btn-xs
                                       =invoice.requires_3d_secure ? 'Authenticate' : 'Confirm Payment'
