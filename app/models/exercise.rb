@@ -150,6 +150,8 @@ class Exercise < ApplicationRecord
 
     questions_kind = cbe_user_log.questions.map { |q| q.cbe_question.kind }.uniq
 
+    return false if questions_kind.empty?
+
     questions_kind.exclude?('open') && questions_kind.exclude?('spreadsheet')
   end
 
