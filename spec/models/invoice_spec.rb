@@ -100,6 +100,7 @@ describe Invoice do
   it { expect(Invoice).to respond_to(:all_in_order) }
   it { expect(Invoice).to respond_to(:subscriptions) }
   it { expect(Invoice).to respond_to(:orders) }
+  it { expect(Invoice).to respond_to(:valids) }
 
   # class methods
   it { expect(Invoice).to respond_to(:to_csv) }

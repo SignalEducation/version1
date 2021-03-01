@@ -7,7 +7,7 @@ class InvoicesController < ApplicationController
   before_action :set_invoice, except: :index
 
   def index
-    @invoices = current_user.invoices.order(created_at: :desc)
+    @invoices = current_user.invoices.valids.order(created_at: :desc)
   end
 
   def show
