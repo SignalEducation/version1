@@ -2,7 +2,7 @@
   .col-xl-12
     #course-right-show-elem-vid.course-right-show-content
       .course-right-show-frame
-        #video-player-window.video-player-window{:class => alt_video_player(current_user.video_player), data: {lesson_name: @course_step.name, course_name: @course.name}}
+        #video-player-window.video-player-window{:class => alt_video_player(current_user.video_player), data: {step_id: @course_step.id, step_name: @course_step.name, module_id: @course_lesson.id, module_name: @course_lesson.name, course_id: @course.id, course_name: @course.name, exam_body_id: @group.exam_body.id, exam_body_name: @group.exam_body.name, onboarding: current_user&.onboarding_process&.active&.to_s, free_lesson: @course_lesson.free.to_s, order: @index_order }}
           =render partial: 'courses/video_player', locals: { cme: @course_step }
 
     .pt-5.pb-5

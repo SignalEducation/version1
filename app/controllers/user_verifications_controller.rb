@@ -16,6 +16,7 @@ class UserVerificationsController < ApplicationController
       set_current_visit(@user)
       flash[:datalayer_verify] = true
 
+      SegmentService.new.track_verification_event(@user)
       if @user.preferred_exam_body&.group
         redirect_to registration_onboarding_url(@user.preferred_exam_body.group.name_url)
       else

@@ -163,15 +163,15 @@ class SubscriptionsController < ApplicationController
   end
 
   def get_relevant_subscription_plans
-    country  = IpAddress.get_country(request.remote_ip) || current_user.country
-    currency = current_user.get_currency(country)
+    country   = IpAddress.get_country(request.remote_ip) || current_user.country
+    @currency = current_user.get_currency(country)
 
     if params[:plan_guid]
       SubscriptionPlan.includes(:exam_body, :currency).
-        get_related_plans(current_user, currency, params[:exam_body_id], params[:plan_guid])
+        get_related_plans(current_user, @currency, params[:exam_body_id], params[:plan_guid])
     else
       SubscriptionPlan.includes(:exam_body, :currency).
-        get_relevant(current_user, currency, params[:exam_body_id])
+        get_relevant(current_user, @currency, params[:exam_body_id])
     end
   end
 
@@ -193,6 +193,7 @@ class SubscriptionsController < ApplicationController
   end
 
   def set_variables
+    @exam_body    = ExamBody.find(params[:exam_body_id])
     @plans        = get_relevant_subscription_plans
     @kind         = current_user.subscriptions.for_exam_body(params[:exam_body_id]).where(state: %w[canceled cancelled]).empty? ? :new_subscription : :reactivation
     @subscription = Subscription.new(user_id: current_user.id,

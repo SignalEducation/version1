@@ -20,6 +20,7 @@ export default {
       userId: this.$parent.userId,
       courseId: this.$parent.courseId,
       stepLogId: this.$parent.stepLogId,
+      eventFired: false,
     };
   },
   methods: {
@@ -31,9 +32,10 @@ export default {
         notesStartEvent();
       }
 
-      if (current == total) {
+      if ((current == total) && (!this.eventFired)) {
         this.updateCourseStepLog();
         notesFinishEvent();
+        this.eventFired = true;
       }
     },
 

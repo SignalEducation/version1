@@ -3,7 +3,7 @@
     #menu
       .menu-title
         %div
-          %h3.sidebar-title{data: {course: @course.name, module: @course_lesson.name}}
+          %h3.sidebar-title{data: {destination_url: navigation_special_link(@course_step), type: 'Breadcrumbs'}}
             = link_to @course.name, navigation_special_link(@course_step), title: @course.name
             = succeed @course_lesson.name do
               %i.material-icons.color-shade{"aria-label" => "failed", :role => "img", :style => "position: relative;top: 6px;"} arrow_right
@@ -52,7 +52,7 @@
   #sidebar-bottom-menu
     .bottom-menu
       -if @course_lesson.next_module
-        =link_to course_special_link(@course_lesson&.next_module&.first_active_cme), class: 'btn btn-secondary btn-sm btn-sm-arrow-right mb-3 mb-sm-0', data: {module: @course_lesson&.next_module&.name} do
+        =link_to course_special_link(@course_lesson&.next_module&.first_active_cme), class: 'btn btn-secondary btn-sm btn-sm-arrow-right mb-3 mb-sm-0', data: {destination_url: course_special_link(@course_lesson&.next_module&.first_active_cme), type: 'Next Module'} do
           Next Module
 
 #sidebar-wrapper-student-responsive.text-center
@@ -60,7 +60,7 @@
     #menu
       .menu-title
         %div
-          %h3.sidebar-title{data: {course: @course.name, module: @course_lesson.name}}
+          %h3.sidebar-title{data: {destination_url: navigation_special_link(@course_step), type: 'Breadcrumbs'}}
             = link_to @course.name, navigation_special_link(@course_step), title: @course.name
             = succeed @course_lesson.name do
               %i.material-icons.color-shade{"aria-label" => "failed", :role => "img", :style => "position: relative;top: 6px;"} arrow_right
@@ -108,8 +108,9 @@
           =@course_lesson.active_children.count
           Steps
         .bottom-menu
-          =link_to navigation_special_link(@course_step), class: 'btn btn-secondary btn-sm btn-sm-arrow-right mb-3 mb-sm-0', data: {module: @course_lesson&.next_module&.name} do
-            Next Module
+          -if @course_lesson.next_module
+            =link_to course_special_link(@course_lesson&.next_module&.first_active_cme), class: 'btn btn-secondary btn-sm btn-sm-arrow-right mb-3 mb-sm-0', data: {destination_url: navigation_special_link(@course_step), type: 'Next Module'} do
+              Next Module
 
 :javascript
   $(document).ready(function(){
