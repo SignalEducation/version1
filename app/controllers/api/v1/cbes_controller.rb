@@ -34,7 +34,7 @@ module Api
       private
 
       def set_cbe
-        @cbe = ::Cbe.find(params[:id])
+        @cbe = ::Cbe.includes(:scenarios).find(params[:id])
       end
 
       def cbe_params

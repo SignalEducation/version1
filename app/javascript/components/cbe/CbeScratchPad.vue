@@ -56,7 +56,8 @@ export default {
   data() {
     return {
       apiKey: "6lr2e49pkvekjoocwhblfmatskmhek3h3ae8f4cbpfw3u3vw",
-      modalIsOpen: false
+      lastTimeUpdated: new Date(),
+      modalIsOpen: false,
     };
   },
   created() {
@@ -73,6 +74,14 @@ export default {
     hide (event) {
       $('.latent-modal').removeClass('active-modal');
       this.$modal.hide("modal-"+this.componentType+"-"+this.componentName);
+    },
+    "userCbeData.scratch_pad"(newValue, oldValue){
+      const dateNow = new Date();
+      // Update answers data if last update is more then 10 seconds OR new value is bigger then 20 characters.
+      if (dateNow - this.lastTimeUpdated > 10000 || (newValue.length - oldValue.length > 20)) {
+        this.lastTimeUpdated = dateNow;
+        eventBus.$emit("update-question-answer", newValue);
+      }
     },
   },
 };

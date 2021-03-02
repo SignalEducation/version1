@@ -155,7 +155,6 @@ describe Admin::CoursesController, type: :controller do
     end
 
     describe '#clone' do
-
       context 'clone subject course' do
         it 'should duplicate subject course' do
           allow(controller).to receive(:current_user).and_return(content_management_user)

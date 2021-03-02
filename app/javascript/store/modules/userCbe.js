@@ -6,6 +6,9 @@ const state = {
     user_id: null,
     cbe_id: null,
     exercise_id: null,
+    user_agreement: false,
+    current_state: null,
+    scratch_pad: null,
     questions: {},
     responses: {},
     status: "",
@@ -83,6 +86,20 @@ const mutations = {
   setUserLog(state, data) {
     state.user_cbe_data.status = data.status;
     state.user_cbe_data.user_log_id = data.id;
+    state.user_cbe_data.user_agreement = data.agreed;
+    state.user_cbe_data.current_state = data.current_state;
+    state.user_cbe_data.scratch_pad = data.scratch_pad;
+    if(data.pages_state !== null){
+      state.user_cbe_data.exam_pages = data.pages_state;
+    }
+
+    data.user_questions.forEach(question => {
+      state.user_cbe_data.questions[question.cbe_question_id] = question;
+    });
+
+    data.user_responses.forEach(response => {
+      state.user_cbe_data.responses[response.cbe_response_option_id] = response;
+    });
   },
   setAnswerData(state, question) {
     state.user_cbe_data.questions[question.id] = question;

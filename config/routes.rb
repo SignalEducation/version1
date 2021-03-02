@@ -40,7 +40,10 @@ Rails.application.routes.draw do
 
           resources :introduction_pages, only: %i[index create update destroy]
           resources :resources, only: %i[index create update destroy]
-          resources :users_log, only: %i[index show create update]
+          resources :users_log, only: %i[index show create update] do
+            post 'user_agreement'
+            post 'current_state'
+          end
           resources :scenarios, only: :show
           resources :users_answer, only: :show
           resources :users_response, only: :show

@@ -93,6 +93,7 @@ export default {
   },
   data() {
     return {
+      lastTimeUpdated: new Date(),
       showModal: this.responseOptionModal,
       responseOption: this.getInitialValue(),
       multipleResponseOption: this.getInitialMultipleValue(
@@ -101,12 +102,12 @@ export default {
     };
   },
   watch: {
-    responseOption(newValue) {
-      this.syncResponsesData(newValue);
+    responseOption(newValue, oldValue) {
+      this.syncResponsesData(newValue, oldValue);
     },
     multipleResponseOption: {
-      handler(newValue) {
-        this.syncResponsesData(newValue);
+      handler(newValue, oldValue) {
+        this.syncResponsesData(newValue, oldValue);
       },
       deep: true,
     },
@@ -165,14 +166,22 @@ export default {
 
       return responses;
     },
-    syncResponsesData(newValue) {
-      this.$store.dispatch("userCbe/recordResponse", {
+    syncResponsesData(newValue, oldValue) {
+      const dateNow = new Date();
+      const data = {
         id: this.responseOptionId,
         cbe_response_option_id: this.responseOptionId,
         content: {
           data: newValue,
         },
-      });
+      }
+
+      this.$store.dispatch("userCbe/recordResponse", data);
+      // Update answers data if last update is more then 10 seconds OR new value is bigger then 20 characters.
+      if (dateNow - this.lastTimeUpdated > 10000 || (newValue.length - oldValue.length > 20)) {
+        this.lastTimeUpdated = dateNow;
+        eventBus.$emit("update-question-answer", data);
+      }
     },
     show () {
       this.$modal.show("modal-"+this.responseOptionType+"-"+this.responseOptionName);
