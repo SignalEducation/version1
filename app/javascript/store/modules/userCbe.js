@@ -83,6 +83,14 @@ const mutations = {
   setUserLog(state, data) {
     state.user_cbe_data.status = data.status;
     state.user_cbe_data.user_log_id = data.id;
+
+    data.user_questions.forEach(question => {
+      state.user_cbe_data.questions[question.cbe_question_id] = question;
+    });
+
+    data.user_responses.forEach(response => {
+      state.user_cbe_data.responses[response.cbe_response_option_id] = response;
+    });
   },
   setAnswerData(state, question) {
     state.user_cbe_data.questions[question.id] = question;

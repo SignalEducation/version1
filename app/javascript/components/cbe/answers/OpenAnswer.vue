@@ -11,11 +11,13 @@
   </section>
 </template>
 <script>
+import EventBus from "../EventBus.vue";
 import TinyEditor from "../../TinyEditor.vue";
 
 export default {
   components: {
-    TinyEditor
+    EventBus,
+    TinyEditor,
   },
   props: {
     questionId: {
@@ -30,7 +32,7 @@ export default {
   },
   watch: {
     question(newValue) {
-      this.$store.dispatch("userCbe/recordAnswer", {
+      let data = {
         id: this.questionId,
         score: 0,
         correct: null,
@@ -40,7 +42,10 @@ export default {
             text: newValue,
           },
         }]
-      });
+      }
+
+      EventBus.$emit("update-question-answer", data);
+      this.$store.dispatch("userCbe/recordAnswer", data);
     }
   },
   methods: {
