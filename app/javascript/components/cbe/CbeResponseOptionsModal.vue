@@ -184,6 +184,9 @@ export default {
         eventBus.$emit("update-question-answer", data);
       }
     },
+    show () {
+      this.$modal.show("cbe-response-modal-"+this.responseOptionType+"-"+this.responseOptionId);
+    },
     hide () {
       this.$modal.hide("cbe-response-modal-"+this.responseOptionType+"-"+this.responseOptionId);
     }
