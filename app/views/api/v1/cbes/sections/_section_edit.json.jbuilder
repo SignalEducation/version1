@@ -13,11 +13,11 @@ json.scenarios section.scenarios.active do |scenario|
 end
 
 if section.random
-  json.questions section.questions.active.without_scenario.shuffle do |question|
+  json.questions section.questions.includes(:answers).active.without_scenario.shuffle do |question|
     json.partial! 'api/v1/cbes/questions/question', locals: { question: question }
   end
 else
-  json.questions section.questions.active.without_scenario.order(:sorting_order) do |question|
+  json.questions section.questions.includes(:answers).active.without_scenario.order(:sorting_order) do |question|
     json.partial! 'api/v1/cbes/questions/question', locals: { question: question }
   end
 end

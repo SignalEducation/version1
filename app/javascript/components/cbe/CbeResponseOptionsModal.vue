@@ -93,6 +93,7 @@ export default {
   },
   data() {
     return {
+      lastTimeUpdated: new Date(),
       showModal: this.responseOptionModal,
       responseOption: this.getInitialValue(),
       multipleResponseOption: this.getInitialMultipleValue(
@@ -166,6 +167,7 @@ export default {
       return responses;
     },
     syncResponsesData(newValue) {
+      const dateNow = new Date();
       const data = {
         id: this.responseOptionId,
         cbe_response_option_id: this.responseOptionId,
@@ -174,16 +176,13 @@ export default {
         },
       }
 
-      eventBus.$emit("update-question-answer", data);
       this.$store.dispatch("userCbe/recordResponse", data);
-    },
-    show () {
-      this.$modal.show("cbe-response-modal-"+this.responseOptionType+"-"+this.responseOptionId);
 
-    },
-    show () {
-      this.$modal.show("cbe-response-modal-"+this.responseOptionType+"-"+this.responseOptionId);
-
+      // Update answers data if last update is more then 10 seconds.
+      if (dateNow - this.lastTimeUpdated > 10000) {
+        this.lastTimeUpdated = dateNow;
+        eventBus.$emit("update-question-answer", data);
+      }
     },
     hide () {
       this.$modal.hide("cbe-response-modal-"+this.responseOptionType+"-"+this.responseOptionId);

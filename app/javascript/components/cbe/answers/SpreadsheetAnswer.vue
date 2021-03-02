@@ -31,10 +31,12 @@ export default {
   data() {
     return {
       answer: this.getPrepopulatedAnswer(),
+      lastTimeUpdated: new Date(),
     };
   },
   methods: {
     syncSpreadsheetData(jsonData) {
+      const dateNow = new Date();
       let data = {
         id: this.questionId,
         score: 0,
@@ -47,8 +49,14 @@ export default {
         }],
       }
 
-      EventBus.$emit("update-question-answer", data);
       this.$store.dispatch('userCbe/recordAnswer', data);
+
+      // Update answers data if last update is more then 10 seconds.
+      if (dateNow - this.lastTimeUpdated > 10000) {
+        this.lastTimeUpdated = dateNow;
+        EventBus.$emit("update-question-answer", data);
+      }
+
     },
     getPrepopulatedAnswer() {
       const initialValue = this.$store.state.userCbe.user_cbe_data.questions[this.questionId];
