@@ -87,6 +87,8 @@ module ApplicationHelper
   def asset_exists?(path)
     if Rails.configuration.assets.compile
       Rails.application.precompiled_assets.include? path
+    elsif Rails.env.production? || Rails.env.staging?
+      Rails.application.assets_manifest.assets[path].present?
     else
       (Rails.application.assets.find_asset path).present?
     end
