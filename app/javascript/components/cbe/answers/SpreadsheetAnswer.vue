@@ -10,10 +10,12 @@
 </template>
 
 <script>
+import EventBus from "../EventBus.vue";
 import SpreadsheetEditor from '../../SpreadsheetEditor/SpreadsheetEditor.vue';
 
 export default {
   components: {
+    EventBus,
     SpreadsheetEditor,
   },
   props: {
@@ -33,7 +35,7 @@ export default {
   },
   methods: {
     syncSpreadsheetData(jsonData) {
-      this.$store.dispatch('userCbe/recordAnswer', {
+      let data = {
         id: this.questionId,
         score: 0,
         correct: null,
@@ -43,7 +45,10 @@ export default {
             data: jsonData,
           },
         }],
-      });
+      }
+
+      EventBus.$emit("update-question-answer", data);
+      this.$store.dispatch('userCbe/recordAnswer', data);
     },
     getPrepopulatedAnswer() {
       const initialValue = this.$store.state.userCbe.user_cbe_data.questions[this.questionId];

@@ -166,13 +166,16 @@ export default {
       return responses;
     },
     syncResponsesData(newValue) {
-      this.$store.dispatch("userCbe/recordResponse", {
+      const data = {
         id: this.responseOptionId,
         cbe_response_option_id: this.responseOptionId,
         content: {
           data: newValue,
         },
-      });
+      }
+
+      eventBus.$emit("update-question-answer", data);
+      this.$store.dispatch("userCbe/recordResponse", data);
     },
     show () {
       this.$modal.show("cbe-response-modal-"+this.responseOptionType+"-"+this.responseOptionId);

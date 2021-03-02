@@ -35,7 +35,8 @@ RSpec.describe 'Api::V1::Cbe::UsersLogController', type: :request do
                                                             score
                                                             user
                                                             cbe
-                                                            user_questions])
+                                                            user_questions
+                                                            user_responses])
       end
     end
 
@@ -74,7 +75,8 @@ RSpec.describe 'Api::V1::Cbe::UsersLogController', type: :request do
                                                   score
                                                   user
                                                   cbe
-                                                  user_questions])
+                                                  user_questions
+                                                  user_responses])
       end
     end
   end
@@ -102,7 +104,8 @@ RSpec.describe 'Api::V1::Cbe::UsersLogController', type: :request do
                                                   score
                                                   user
                                                   cbe
-                                                  user_questions])
+                                                  user_questions
+                                                  user_responses])
       end
     end
 
@@ -148,7 +151,8 @@ RSpec.describe 'Api::V1::Cbe::UsersLogController', type: :request do
                                                   score
                                                   user
                                                   cbe
-                                                  user_questions])
+                                                  user_questions
+                                                  user_responses])
       end
     end
 

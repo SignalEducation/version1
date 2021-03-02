@@ -20,7 +20,12 @@
 </template>
 
 <script>
+import EventBus from "../EventBus.vue";
+
 export default {
+  components: {
+    EventBus,
+  },
   props: {
     answersData: {
       type: Array,
@@ -42,7 +47,10 @@ export default {
   },
   watch: {
     question(newValue) {
-      this.$store.dispatch("userCbe/recordAnswer", this.getQuestionFormated(newValue));
+      let data = this.getQuestionFormated(newValue)
+
+      EventBus.$emit("update-question-answer", data);
+      this.$store.dispatch("userCbe/recordAnswer", data);
     }
   },
   methods: {
@@ -74,7 +82,7 @@ export default {
       const questions = [];
 
       question.answers_attributes.filter(answers_attributes => {
-        questions.push({ id: question.id, cbe_question_id: this.questionId, answers_attributes })
+        questions.push({ id: question.cbe_question_id, cbe_question_id: this.questionId, answers_attributes })
       });
 
       return questions;

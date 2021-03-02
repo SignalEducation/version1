@@ -56,12 +56,14 @@
 import axios from "axios";
 import { mapGetters } from "vuex";
 import CbeResources from "./CbeResources.vue";
+import eventBus from "./EventBus.vue";
 import NavBar from "./NavBar.vue";
 import NavPagination from "./NavPagination.vue";
 
 export default {
   components: {
     CbeResources,
+    eventBus,
     NavBar,
     NavPagination,
   },
@@ -72,6 +74,7 @@ export default {
       exerciseId: this.$parent.exercise_id,
       exhModalStatus: null,
       navModalStatus: null,
+      lastTimeUpdated: new Date(),
     };
   },
   computed: {
@@ -81,6 +84,17 @@ export default {
     ...mapGetters("userCbe", {
       user_cbe_data: "userCbeData",
     }),
+  },
+  created() {
+    eventBus.$on("update-question-answer",()=>{
+      const dateNow = new Date();
+
+      // Update answers data if last update is more then 10 seconds.
+      if ((dateNow - this.lastTimeUpdated) > 10000  ) {
+        this.lastTimeUpdated = dateNow;
+        this.submitUnfinishedExam();
+      }
+    })
   },
   watch: {
     cbe_data: {
@@ -102,6 +116,29 @@ export default {
     cbeLoaded({cbeId: this.cbe_id, cbeName: this.$parent.cbe_name, productId: this.$parent.product_id, productName: this.$parent.product_name, courseId: this.$parent.course_id, courseName: this.$parent.course_name, examBodyId: this.$parent.exam_body_id, examBodyName: this.$parent.exam_body_name });
   },
   methods: {
+    submitUnfinishedExam() {
+      const countQuestions = Object.keys(this.user_cbe_data.questions).length
+      const countResponses = Object.keys(this.user_cbe_data.responses).length
+
+      if(countQuestions != 0 || countResponses != 0){
+        let data = this.formatedData();
+        data.status = "started";
+
+        if(data.questions_attributes.length > 0 || data.responses_attributes.length > 0){
+          axios
+          .patch(
+            `/api/v1/cbes/${this.cbe_id}/users_log/${this.user_cbe_data.user_log_id}`,
+            {
+              cbe_user_log: data,
+            }
+          )
+          .then((response) => {
+            console.log('Unfinished saved.');
+          })
+          .catch((error) => {});
+        }
+      }
+    },
     submitExam() {
       this.loader = this.$loading.show({
         loader: "dots",

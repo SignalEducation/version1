@@ -11,7 +11,12 @@
 </template>
 
 <script>
+import EventBus from "../EventBus.vue";
+
 export default {
+  components: {
+    EventBus,
+  },
   props: {
     answerData: {
       type: Object,
@@ -37,7 +42,7 @@ export default {
     question(newValue) {
       this.compareValues(newValue);
 
-      this.$store.dispatch("userCbe/recordAnswer", {
+      let data = {
         id: this.questionId,
         score: this.answerScore,
         correct:this.answerCorrect,
@@ -49,7 +54,10 @@ export default {
             correct: this.answerCorrect
           }
         }]
-      });
+      }
+
+      EventBus.$emit("update-question-answer", data);
+      this.$store.dispatch("userCbe/recordAnswer", data);
     }
   },
   methods: {
