@@ -68,4 +68,18 @@
         },
       ]
     });
+
+    analytics.page('Payment Complete', {
+      exam_body_id: "#{@subscription&.subscription_plan&.exam_body&.id}",
+      exam_body_name: "#{@subscription&.subscription_plan&.exam_body&.name}",
+      onboarding: "#{current_user&.onboarding_process&.active&.to_s}",
+      type: "Subscription",
+      currency: "#{@subscription&.subscription_plan&.currency&.iso_code}",
+      plan_interval: "#{@subscription&.subscription_plan&.payment_frequency_in_months}",
+      plan_interval_name: "#{@subscription&.subscription_plan&.interval_name}",
+      price: "#{@subscription&.subscription_plan&.price}",
+      country: "#{current_user&.country&.name}",
+      payment_provider: "#{@subscription&.subscription_type}"
+    });
+
   });

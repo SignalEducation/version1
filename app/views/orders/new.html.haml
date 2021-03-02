@@ -88,6 +88,8 @@
   let productId = "#{@order.product.id}";
   let productPrice = "#{@order.product.price}";
   let productBody = "#{@order.exam_body_name}";
+  let productBodyId = "#{@order.exam_body_id}";
+  let productType = "#{@order.product&.product_type}";
   let searchParams = new URLSearchParams(window.location.search);
 
   function checkout1() {
@@ -309,4 +311,15 @@
     }
 
     $('#pay-with-card').click(); // To open the stripe card section on page load
+
+    analytics.page('Payment', {
+      exam_body_id: productBodyId,
+      exam_body_name: productBody,
+      onboarding: "#{current_user&.onboarding_process&.active&.to_s}",
+      currency: currencyIso,
+      product_id: productId,
+      product_price: productPrice,
+      product_name: productName,
+      product_type: productType
+    });
   });

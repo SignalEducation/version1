@@ -90,6 +90,10 @@ class Product < ApplicationRecord
     end
   end
 
+  def url_by_type
+    lifetime_access? ? 'lifetime' : product_type
+  end
+
   # class methods
   def self.search(search)
     search.present? ? where('name ILIKE ?', "%#{search}%") : all

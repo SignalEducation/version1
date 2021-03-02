@@ -191,7 +191,7 @@ class StudentSignUpsController < ApplicationController
     @exam_bodies = ExamBody.all_active.all_in_order
     @group = Group.find_by(name_url: params[:group_name_url])
     country = IpAddress.get_country(request.remote_ip) || Country.find_by(name: 'United Kingdom')
-    currency =
+    @currency =
       if current_user
         current_user.get_currency(country)
       else
@@ -199,13 +199,14 @@ class StudentSignUpsController < ApplicationController
       end
 
     if @group
+      @exam_body = @group.exam_body
       @subscription_plans = SubscriptionPlan.where(subscription_plan_category_id: nil, exam_body_id: @group.exam_body_id).
-                              includes(:currency).in_currency(currency.id).all_active.all_in_display_order
-      @products = Product.for_group(@group.id).where(product_type: :lifetime_access).includes(:currency).in_currency(currency.id).all_active
+                              includes(:currency).in_currency(@currency.id).all_active.all_in_display_order
+      @products = Product.for_group(@group.id).where(product_type: :lifetime_access).includes(:currency).in_currency(@currency.id).all_active
     else
       @subscription_plans = SubscriptionPlan.where(subscription_plan_category_id: nil).
-                              includes(:currency).in_currency(currency.id).all_active.all_in_display_order
-      @products = Product.where(product_type: :lifetime_access).includes(:currency).in_currency(currency.id).all_active
+                              includes(:currency).in_currency(@currency.id).all_active.all_in_display_order
+      @products = Product.where(product_type: :lifetime_access).includes(:currency).in_currency(@currency.id).all_active
     end
 
     seo_title_maker(@group&.exam_body&.pricing_seo_title ? "#{@group&.exam_body&.pricing_seo_title} | LearnSignal" : "#{@group&.name} Tuition Plans | LearnSignal",

@@ -199,6 +199,13 @@ class Order < ApplicationRecord
     stripe_payment_intent_id.present? || stripe_payment_method_id.present?
   end
 
+  def payment_provider
+    return 'stripe' if stripe?
+    return 'paypal' if paypal?
+
+    'unknown'
+  end
+
   def generate_invoice
     invoice_params = { user_id: user_id, currency_id: product.currency_id,
                        sub_total: product.price, total: product.price,
@@ -215,6 +222,12 @@ class Order < ApplicationRecord
     return product.cbe.course.exam_body.name if product.cbe?
 
     product.group.exam_body.name
+  end
+
+  def exam_body_id
+    return product.cbe.course.exam_body.id if product.cbe?
+
+    product.group.exam_body.id
   end
 
   protected

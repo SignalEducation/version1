@@ -37,20 +37,33 @@
       content_category: "#{@product&.product_type.humanize}"
     });
 
-    gtag('event', 'purchase', {
-      "transaction_id": "#{@order&.id}",
-      "affiliation": "products",
-      "value": "#{@product&.price}",
-      "currency": "#{@product&.currency&.iso_code}",
-      "items": [
-        {
-          "id": "#{@product&.id}",
-          "name": "#{@product&.name}",
-          "brand": "#{@product&.product_type}",
-          "category": "#{@product&.product_type.humanize}",
-          "quantity": 1,
-          "price": "#{@product&.price}"
-        },
-      ]
+    if("#{@product&.url_by_type}" == "lifetime") {
+      gtag('event', 'purchase', {
+        "transaction_id": "#{@order&.id}",
+        "affiliation": "products",
+        "value": "#{@product&.price}",
+        "currency": "#{@product&.currency&.iso_code}",
+        "items": [
+          {
+            "id": "#{@product&.id}",
+            "name": "#{@product&.name}",
+            "brand": "#{@product&.product_type}",
+            "category": "#{@product&.product_type.humanize}",
+            "quantity": 1,
+            "price": "#{@product&.price}"
+          },
+        ]
+      });
+    }
+
+    analytics.page('Payment Complete', {
+      exam_body_id: "#{@product&.group&.exam_body&.id}",
+      exam_body_name: "#{@product&.group&.exam_body&.name}",
+      onboarding: "#{current_user&.onboarding_process&.active&.to_s}",
+      type: "Product",
+      currency: "#{@product&.currency&.iso_code}",
+      price: "#{@product&.price}",
+      country: "#{current_user&.country&.name}",
+      payment_provider: "#{@order&.payment_provider}"
     });
   });

@@ -149,8 +149,13 @@ RSpec.describe ApplicationHelper, type: :helper do
   end
 
   describe '#asset_exists?' do
-    # TODO, put it back when fix the asset error.
-    xit 'returns true for existing asset' do
+    it 'returns true for existing precompiled asset' do
+      Rails.configuration.assets.compile = true
+      expect(asset_exists?('red-background-mob.png')).to eq(true)
+    end
+
+    it 'returns true if asset exists but has not been precompiled' do
+      Rails.configuration.assets.compile = nil
       expect(asset_exists?('red-background-mob.png')).to eq(true)
     end
 

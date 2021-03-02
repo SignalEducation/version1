@@ -13,6 +13,7 @@ class CoursesController < ApplicationController
     @course_lesson_log = @course_section_log.course_lesson_logs.where(course_lesson_id: @course_lesson.id).last if @course_section_log
     @group = @course.group
     @course_step_index = @course_lesson.active_children.find_index { |item| item.name == @course_step.name } + 1
+    @index_order = @course_step_index.to_s + '/' + @course_lesson.active_children.count.to_s
 
     if @course_step.is_quiz
       set_up_quiz
@@ -36,9 +37,12 @@ class CoursesController < ApplicationController
       course_pass_rate = @course_step.course_lesson.course.quiz_pass_rate || 75
       pass_rate        = @course_step.course_lesson.free ? 25 : course_pass_rate
       percentage_score = @course_step_log.quiz_score_actual || 0
+      quiz_attempts = @course_step_log.quiz_attempts
 
       @pass = percentage_score >= pass_rate ? 'Pass' : 'Fail'
       @course_step_index = @course_lesson.active_children.find_index { |item| item.name == @course_step.name } + 1
+      @index_order = @course_step_index.to_s + '/' + @course_lesson.active_children.count.to_s
+      @quiz_score = quiz_attempts.where(correct: true).count.to_s + '/' + quiz_attempts.count.to_s
 
       if @course_lesson && @course_step && @course_step_log
         render :show

@@ -11,6 +11,7 @@
   let updateFreeLesson = #{@course_lesson.free ? 0.30 : 0.90};
   let completionPercent = #{@course_lesson.free ? 0.30 : 0.90};
   let logId = '';
+  let updateFired = false;
   let options = {
     id: "#{cme.course_video.vimeo_guid}",
     frameborder: 0,
@@ -39,7 +40,8 @@
       updateBtnCount = data.duration - data.seconds < eovCounter ? true : false;
       showUpgradeBtn(updateBtnCount);
     }
-    if (data.percent >= completionPercent) {
+    if ((data.percent >= completionPercent) && (updateFired === false)) {
+      updateFired = true;
       $.ajax({
         headers: { 'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') },
         url: '#{video_watched_data_courses_path}',
@@ -52,6 +54,7 @@
             $("#next-lesson-link").removeClass('d-none');
             $("#sidebar-next-lesson-modal").addClass('d-none');
             $("#sidebar-next-lesson-link").removeClass('d-none');
+            videoFinishedEvent();
         },
         error: function(xhr,status,error){
           console.log(xhr);
@@ -60,7 +63,6 @@
       if(freeLesson === 'false' && video_cme_id != lastLessonStep) {
         player.off('timeupdate', timeUpdate);
       }
-      videoFinishedEvent(logId);
     }
   };
 

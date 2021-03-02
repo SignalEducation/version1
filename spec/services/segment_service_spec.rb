@@ -17,6 +17,17 @@ describe SegmentService, type: :service do
       end
 
     end
+
+    describe '#track_verification_event' do
+      let(:user) { create(:user) }
+
+      it 'creates the user on Segment' do
+        SegmentService.new.track_verification_event(user)
+
+        subject.track_verification_event(user)
+      end
+
+    end
   end
 
 end

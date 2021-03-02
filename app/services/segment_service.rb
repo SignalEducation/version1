@@ -6,18 +6,30 @@ class SegmentService
 
     Analytics.identify(
       user_id: user.id,
-      traits: user_properties(user)
+      traits: user_traits(user)
     )
   rescue StandardError => e
     Rails.logger.error "SegmentService#create_user - #{e.inspect}"
-    #ApplicationController.log_in_airbrake("Segment: Create User #{user.id}: #{e.message}")
+    # ApplicationController.log_in_airbrake("Segment: Create User #{user.id}: #{e.message}")
+  end
+
+  def track_verification_event(user)
+    return unless user.email_verified && user.user_group == UserGroup.student_group
+
+    Analytics.track(
+      user_id: user.id,
+      event: 'Email Verification',
+      properties: verification_properties(user)
+    )
+  rescue StandardError => e
+    Rails.logger.error "SegmentService#track_verification_event - #{e.inspect}"
   end
 
   # PRIVATE ====================================================================
 
   private
 
-  def user_properties(user)
+  def user_traits(user)
     {
       name: user.full_name,
       email: user.email,
@@ -33,6 +45,14 @@ class SegmentService
       video_player_preference: user.video_player,
       currency: user.currency.name,
       onboarding_status: user.onboarding_state
+    }
+  end
+
+  def verification_properties(user)
+    {
+      email_verified_at: user.email_verified_at.to_time.iso8601,
+      exam_body_id: user.preferred_exam_body_id,
+      exam_body_name: user.preferred_exam_body.name
     }
   end
 end
