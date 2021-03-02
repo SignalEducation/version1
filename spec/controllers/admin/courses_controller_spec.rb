@@ -76,6 +76,11 @@ describe Admin::CoursesController, type: :controller do
         get :show, params: { id: course_2.id }
         expect_show_success_with_model('course', course_2.id)
       end
+
+      it 'should go back to admin courses index' do
+        get :show, params: { id: 999999999999 }
+        expect(response).to redirect_to(admin_courses_path)
+      end
     end
 
     describe "GET 'new'" do
