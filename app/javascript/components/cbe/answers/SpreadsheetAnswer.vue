@@ -10,10 +10,12 @@
 </template>
 
 <script>
+import EventBus from "../EventBus.vue";
 import SpreadsheetEditor from '../../SpreadsheetEditor/SpreadsheetEditor.vue';
 
 export default {
   components: {
+    EventBus,
     SpreadsheetEditor,
   },
   props: {
@@ -29,11 +31,13 @@ export default {
   data() {
     return {
       answer: this.getPrepopulatedAnswer(),
+      lastTimeUpdated: new Date(),
     };
   },
   methods: {
     syncSpreadsheetData(jsonData) {
-      this.$store.dispatch('userCbe/recordAnswer', {
+      const dateNow = new Date();
+      let data = {
         id: this.questionId,
         score: 0,
         correct: null,
@@ -43,7 +47,16 @@ export default {
             data: jsonData,
           },
         }],
-      });
+      }
+
+      this.$store.dispatch('userCbe/recordAnswer', data);
+
+      // Update answers data if last update is more then 10 seconds.
+      if (dateNow - this.lastTimeUpdated > 10000) {
+        this.lastTimeUpdated = dateNow;
+        EventBus.$emit("update-question-answer", data);
+      }
+
     },
     getPrepopulatedAnswer() {
       const initialValue = this.$store.state.userCbe.user_cbe_data.questions[this.questionId];

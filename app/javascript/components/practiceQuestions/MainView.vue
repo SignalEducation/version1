@@ -63,38 +63,37 @@
 
 <script>
 import axios from "axios";
-import { mapGetters } from "vuex";
-import SubmitBtn from "../../components/practiceQuestions/SubmitBtn.vue";
-import SubmitBtnV2 from "../../components/practiceQuestions/SubmitBtnV2.vue";
-import HelpBtn from "../../components/practiceQuestions/HelpBtn.vue";
-import Splitpanes from "splitpanes";
-import ScenarioPane from "./ScenarioPane.vue";
-import QuestionsAnswersPane from "./QuestionsAnswersPane.vue";
+import CloseAllModals from "./CloseAllModals.vue";
+import eventBus from "../cbe/EventBus.vue";
 import ExhibitsRequirementsPane from "./ExhibitsRequirementsPane.vue";
+import HelpBtn from "../../components/practiceQuestions/HelpBtn.vue";
 import ModalCalculator from "./ModalCalculator.vue";
 import ModalScratchPad from "./ModalScratchPad.vue";
 import ModalSolution from "./ModalSolution.vue";
 import ModalSolutionV2 from "./ModalSolutionV2.vue";
-import CloseAllModals from "./CloseAllModals.vue";
 import QuestionAnswers from "../../components/cbe/QuestionAnswers.vue";
-import eventBus from "../cbe/EventBus.vue";
+import QuestionsAnswersPane from "./QuestionsAnswersPane.vue";
+import ScenarioPane from "./ScenarioPane.vue";
+import Splitpanes from "splitpanes";
+import SubmitBtn from "../../components/practiceQuestions/SubmitBtn.vue";
+import SubmitBtnV2 from "../../components/practiceQuestions/SubmitBtnV2.vue";
 
 export default {
   components: {
-    SubmitBtn,
-    SubmitBtnV2,
-    HelpBtn,
-    Splitpanes,
-    ScenarioPane,
-    QuestionsAnswersPane,
+    CloseAllModals,
+    eventBus,
     ExhibitsRequirementsPane,
+    HelpBtn,
     ModalCalculator,
     ModalScratchPad,
     ModalSolution,
     ModalSolutionV2,
-    CloseAllModals,
     QuestionAnswers,
-    eventBus,
+    QuestionsAnswersPane,
+    ScenarioPane,
+    Splitpanes,
+    SubmitBtn,
+    SubmitBtnV2,
   },
   data() {
     return {
