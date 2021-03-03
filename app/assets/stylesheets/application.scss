@@ -3146,6 +3146,40 @@ cite {
 .tab-content {
   padding-bottom: 1rem
 }
+.dash-tooltip {
+  position: absolute;
+  right: 5%;
+  top: -5%;
+  display: flex !important;
+  padding: .3em;
+  border: 1px solid #e1e8ed;
+  border-radius: 5px;
+  background-color: #ffffff;
+  i {
+    font-size: .5em;
+    color: #e1e8ed;
+  }
+}
+.dash-tooltip:focus {
+  outline: none;
+}
+.dash-tooltip-overlay {
+  display: none;
+  width: 100%;
+  height: 105%;
+  background-color: #303538;
+  position: absolute;
+  top: -1.55em;
+  left: 0;
+  z-index: 1;
+  border-radius: 2px;
+  opacity: 0.95;
+  p {
+    color: #e1e8ed;
+    font-size: .75em;
+    padding: 2em;
+  }
+}
 .navbar {
   -webkit-box-pack: center;
   -webkit-justify-content: center;
