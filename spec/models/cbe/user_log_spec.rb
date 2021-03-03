@@ -72,6 +72,10 @@ RSpec.describe Cbe::UserLog, type: :model do
       expect(cbe_user_log.sections_in_user_log).to be_empty
     end
 
+    it '.scenarios_in_user_log' do
+      expect(cbe_user_log.scenarios_in_user_log).to be_empty
+    end
+
     it 'update_exercise_status' do
       private_cbe_user_log.questions.map { |q| q.cbe_question.update(kind: 'multiple_choice') }
       private_cbe_user_log.update(status: 'finished')
