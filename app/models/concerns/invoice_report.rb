@@ -121,7 +121,7 @@ module InvoiceReport
 
   def hubspot_get_contact
     @hubspot_get_contact ||= HubSpot::Contacts.new.search(user_email)
-    return nil if @hubspot_get_contact['status'] == 'error'
+    return nil if @hubspot_get_contact.nil? || @hubspot_get_contact['status'] == 'error'
 
     @hubspot_get_contact
   end
