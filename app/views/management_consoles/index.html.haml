@@ -8,367 +8,192 @@
   %section.pb-3
     %nav.graph-nav
       %ul.nav.nav-tabs{id: 'graphTabs', role: 'tablist'}
-        %li.nav-item
-          %a#tab-2018.nav-link{"aria-controls" => "2018", "aria-selected" => "false", "data-toggle" => "tab", :href => "#tab-1", :role => "tab"}
-            2018
-        %li.nav-item
-          %a#tab-2019.nav-link{"aria-controls" => "2019", "aria-selected" => "false", "data-toggle" => "tab", :href => "#tab-2", :role => "tab"}
-            2019
-        %li.nav-item
-          %a#tab-2020.nav-link.active{"aria-controls" => "2020", "aria-selected" => "true", "data-toggle" => "tab", :href => "#tab-3", :role => "tab"}
-            2020
-
+        - @year_arr.each_with_index do |year, index|
+          %li.nav-item
+            %a.nav-link{:id => "tab-#{year}", :class => ("active" if index == (@year_arr.length - 1)), "aria-controls" => "#{year}", "aria-selected" => "false", "data-toggle" => "tab", :href => "#tab-#{index+1}", :role => "tab"}
+              =year
 
     #graphTabsContent.tab-content
-      .tab-pane{id: 'tab-1', class: "", "aria-labelledby" => 'tab-2018', :role => 'tabpanel'}
-        .box-item
-          %h3 2018
-          .row
-            .col-sm-12
-              .row
-                .col-sm-3
-                  .stats-box
-                    .stats-box-inner
-                      .h3
-                        - leads = @january_users18.count.to_f
-                        - members = @january_users18.paid_that_month(Date.new(2018, 1)).count.to_f
-                        =((members/leads) * 100).round(2).to_s + '%'
-                      .p
-                        January
-                .col-sm-3
-                  .stats-box
-                    .stats-box-inner
-                      .h3
-                        - leads = @february_users18.count.to_f
-                        - members = @february_users18.paid_that_month(Date.new(2018, 2)).count.to_f
-                        =((members/leads) * 100).round(2).to_s + '%'
-                      .p
-                        February
-                .col-sm-3
-                  .stats-box
-                    .stats-box-inner
-                      .h3
-                        - leads = @march_users18.count.to_f
-                        - members = @march_users18.paid_that_month(Date.new(2018, 3)).count.to_f
-                        =((members/leads) * 100).round(2).to_s + '%'
-                      .p
-                        March
-                .col-sm-3
-                  .stats-box
-                    .stats-box-inner
-                      .h3
-                        - leads = @april_users18.count.to_f
-                        - members = @april_users18.paid_that_month(Date.new(2018, 4)).count.to_f
-                        =((members/leads) * 100).round(2).to_s + '%'
-                      .p
-                        April
-              .row
-                .col-sm-3
-                  .stats-box
-                    .stats-box-inner
-                      .h3
-                        - leads = @may_users18.count.to_f
-                        - members = @may_users18.paid_that_month(Date.new(2018, 5)).count.to_f
-                        =((members/leads) * 100).round(2).to_s + '%'
-                      .p
-                        May
-                .col-sm-3
-                  .stats-box
-                    .stats-box-inner
-                      .h3
-                        - leads = @june_users18.count.to_f
-                        - members = @june_users18.paid_that_month(Date.new(2018, 6)).count.to_f
-                        =((members/leads) * 100).round(2).to_s + '%'
-                      .p
-                        June
-                .col-sm-3
-                  .stats-box
-                    .stats-box-inner
-                      .h3
-                        - leads = @july_users18.count.to_f
-                        - members = @july_users18.paid_that_month(Date.new(2018, 7)).count.to_f
-                        =((members/leads) * 100).round(2).to_s + '%'
-                      .p
-                        July
+      - @year_arr.each_with_index do |year, index|
+        .tab-pane{id: "tab-#{index+1}", :class => ("active show " if index == (@year_arr.length - 1)), "aria-labelledby" => "tab-#{index+1}", :role => 'tabpanel'}
+          .box-item
+            %h3
+              =year
+            .row
+              .col-sm-12
+                .row
+                  .col-lg-6
+                    %canvas{:id => "chart-1-#{year}", :height => "200", :width => "200"}
+                  .col-lg-6
+                    %canvas{:id => "chart-2-#{year}", :height => "200", :width => "200"}
+                %br
+                .row
+                  - if index == (@year_arr.length - 1)
+                    - year_str = ""
+                    - months_var = @months_to_date
+                  - else
+                    - year_str = "#{year % 100}"
+                    - months_var = @all_months
+                  - months_var.each_with_index do |month, index|
+                    .col-sm-3
+                      .stats-box
+                        .stats-box-inner
+                          .h3
+                            - leads = instance_variable_get("@#{month[0].downcase}_users#{year_str}").count.to_f
+                            - members = instance_variable_get("@#{month[0].downcase}_users#{year_str}").paid_that_month(Date.new(year, month[1])).count.to_f
+                            =((members/leads) * 100).round(2).to_s + '%'
+                          .p{:id => "leads-#{month[0].downcase}-#{year}", :style => "display:none"}
+                            =leads
+                          .p{:id => "members-#{month[0].downcase}-#{year}", :style => "display:none"}
+                            =members
+                          .p
+                            =month[0]
 
-                .col-sm-3
-                  .stats-box
-                    .stats-box-inner
-                      .h3
-                        - leads = @august_users18.count.to_f
-                        - members = @august_users18.paid_that_month(Date.new(2018, 8)).count.to_f
-                        =((members/leads) * 100).round(2).to_s + '%'
-                      .p
-                        August
-                .col-sm-3
-                  .stats-box
-                    .stats-box-inner
-                      .h3
-                        - leads = @september_users18.count.to_f
-                        - members = @september_users18.paid_that_month(Date.new(2018, 9)).count.to_f
-                        =((members/leads) * 100).round(2).to_s + '%'
-                      .p
-                        September
-                .col-sm-3
-                  .stats-box
-                    .stats-box-inner
-                      .h3
-                        - leads = @october_users18.count.to_f
-                        - members = @october_users18.paid_that_month(Date.new(2018, 10)).count.to_f
-                        =((members/leads) * 100).round(2).to_s + '%'
-                      .p
-                        October
-                .col-sm-3
-                  .stats-box
-                    .stats-box-inner
-                      .h3
-                        - leads = @november_users18.count.to_f
-                        - members = @november_users18.paid_that_month(Date.new(2018, 11)).count.to_f
-                        =((members/leads) * 100).round(2).to_s + '%'
-                      .p
-                        November
-                .col-sm-3
-                  .stats-box
-                    .stats-box-inner
-                      .h3
-                        - leads = @december_users18.count.to_f
-                        - members = @december_users18.paid_that_month(Date.new(2018, 12)).count.to_f
-                        =((members/leads) * 100).round(2).to_s + '%'
-                      .p
-                        December
+    :javascript
 
+      var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+      var years = '#{@year_arr}'.replace(/[\[\]']+/g,'').split(", ");
+      var chartArr = ['1', '2'];
+      years.forEach(function(year){
+        var leads_per_month = [];
+        var members_per_month = [];
+        var conversion_rate = [];
+        months.forEach(function(month) {
+          if(document.getElementById('leads-' + month.toLowerCase() + '-' + year)) {
+            leads_per_month.push(parseInt(document.getElementById('leads-' + month.toLowerCase() + '-' + year).innerText));
+            members_per_month.push(parseInt(document.getElementById('members-' + month.toLowerCase() + '-' + year).innerText));
+            conversion_rate.push(Math.round(((parseInt(document.getElementById('members-' + month.toLowerCase() + '-' + year).innerText)/parseInt(document.getElementById('leads-' + month.toLowerCase() + '-' + year).innerText))*100+ Number.EPSILON) * 100) / 100);
+          }
+        });
+        leads_per_month = leads_per_month.filter( Number );
+        members_per_month = members_per_month.filter( Number );
+        conversion_rate = conversion_rate.filter( Number );
+        chartArr.forEach(function(chartInd) {
+          switch(chartInd) {
+            case '1':
+              getChartData('Monthly Conversion Rate', 'horizontalBar', chartInd, year, conversion_rate, months, 'Conversion Rate (%)', ['rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 1)'],'%');
+              break;
+            case '2':
+              getMixedChartData('Evolution of Members vs Evolution of Leads', chartInd, year, leads_per_month, members_per_month, months, '# of Leads', '# of Members', ['rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 1)'],'');
+              break;
+            default:
+              getChartData('Monthly Conversion Rate', 'horizontalBar', chartInd, year, conversion_rate, months, 'Conversion Rate (%)', ['rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 1)'],'%');
+          }
+        });
+      });
 
+      function getChartData(chart_title, chartType, chartIndex, year, eval_per_month, months, chart_legend, chart_colors, percent_show) {
+        var ctx = document.getElementById('chart-' + chartIndex + '-' + year);
+        var myChart = new Chart(ctx, {
+            type: chartType,
+            data: {
+                labels: months,
+                datasets: [{
+                    label: chart_legend,
+                    data: eval_per_month,
+                    backgroundColor: chart_colors[0],
+                    borderColor: chart_colors[1],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: chart_title
+                },
+                legend: {
+                    display: true,
+                    position: 'bottom',
+                },
+                tooltips: {
+                  callbacks: {
+                    label: function(tooltipItem, data) {
+                      return data['labels'][tooltipItem['index']] + ': ' + data['datasets'][0]['data'][tooltipItem['index']] + percent_show;
+                    }
+                  }
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+      }
 
-      .tab-pane{id: 'tab-2', class: "", "aria-labelledby" => 'tab-2019', :role => 'tabpanel'}
-        .box-item
-          %h3 2019
-          .row
-            .col-sm-12
-              .row
-                .col-sm-3
-                  .stats-box
-                    .stats-box-inner
-                      .h3
-                        - leads = @january_users19.count.to_f
-                        - members = @january_users19.paid_that_month(Date.new(2019, 1)).count.to_f
-                        =((members/leads) * 100).round(2).to_s + '%'
-                      .p
-                        January
-                .col-sm-3
-                  .stats-box
-                    .stats-box-inner
-                      .h3
-                        - leads = @february_users19.count.to_f
-                        - members = @february_users19.paid_that_month(Date.new(2019, 2)).count.to_f
-                        =((members/leads) * 100).round(2).to_s + '%'
-                      .p
-                        February
-                .col-sm-3
-                  .stats-box
-                    .stats-box-inner
-                      .h3
-                        - leads = @march_users19.count.to_f
-                        - members = @march_users19.paid_that_month(Date.new(2019, 3)).count.to_f
-                        =((members/leads) * 100).round(2).to_s + '%'
-                      .p
-                        March
-                .col-sm-3
-                  .stats-box
-                    .stats-box-inner
-                      .h3
-                        - leads = @april_users19.count.to_f
-                        - members = @april_users19.paid_that_month(Date.new(2019, 4)).count.to_f
-                        =((members/leads) * 100).round(2).to_s + '%'
-                      .p
-                        April
-              .row
-                .col-sm-3
-                  .stats-box
-                    .stats-box-inner
-                      .h3
-                        - leads = @may_users19.count.to_f
-                        - members = @may_users19.paid_that_month(Date.new(2019, 5)).count.to_f
-                        =((members/leads) * 100).round(2).to_s + '%'
-                      .p
-                        May
-                .col-sm-3
-                  .stats-box
-                    .stats-box-inner
-                      .h3
-                        - leads = @june_users19.count.to_f
-                        - members = @june_users19.paid_that_month(Date.new(2019, 6)).count.to_f
-                        =((members/leads) * 100).round(2).to_s + '%'
-                      .p
-                        June
-                .col-sm-3
-                  .stats-box
-                    .stats-box-inner
-                      .h3
-                        - leads = @july_users19.count.to_f
-                        - members = @july_users19.paid_that_month(Date.new(2019, 7)).count.to_f
-                        =((members/leads) * 100).round(2).to_s + '%'
-                      .p
-                        July
+      function getMixedChartData(chart_title, chartIndex, year, eval_per_month1, eval_per_month2, months, chart_legend1, chart_legend2, chart_colors, percent_show) {
+        var ctx = document.getElementById('chart-' + chartIndex + '-' + year);
+        var max_val_1 = Math.max.apply(null, eval_per_month1);
+        var max_val_2 = Math.max.apply(null, eval_per_month2);
+        var chart_axis1 = chart_legend1.replace('# of ','');
+        var chart_axis2 = chart_legend2.replace('# of ','');
 
-                .col-sm-3
-                  .stats-box
-                    .stats-box-inner
-                      .h3
-                        - leads = @august_users19.count.to_f
-                        - members = @august_users19.paid_that_month(Date.new(2019, 8)).count.to_f
-                        =((members/leads) * 100).round(2).to_s + '%'
-                      .p
-                        August
-                .col-sm-3
-                  .stats-box
-                    .stats-box-inner
-                      .h3
-                        - leads = @september_users19.count.to_f
-                        - members = @september_users19.paid_that_month(Date.new(2019, 9)).count.to_f
-                        =((members/leads) * 100).round(2).to_s + '%'
-                      .p
-                        September
-                .col-sm-3
-                  .stats-box
-                    .stats-box-inner
-                      .h3
-                        - leads = @october_users19.count.to_f
-                        - members = @october_users19.paid_that_month(Date.new(2019, 10)).count.to_f
-                        =((members/leads) * 100).round(2).to_s + '%'
-                      .p
-                        October
-                .col-sm-3
-                  .stats-box
-                    .stats-box-inner
-                      .h3
-                        - leads = @november_users19.count.to_f
-                        - members = @november_users19.paid_that_month(Date.new(2019, 11)).count.to_f
-                        =((members/leads) * 100).round(2).to_s + '%'
-                      .p
-                        November
-                .col-sm-3
-                  .stats-box
-                    .stats-box-inner
-                      .h3
-                        - leads = @december_users19.count.to_f
-                        - members = @december_users19.paid_that_month(Date.new(2019, 12)).count.to_f
-                        =((members/leads) * 100).round(2).to_s + '%'
-                      .p
-                        December
-
-      .tab-pane{id: 'tab-3', class: 'active show ', "aria-labelledby" => 'tab-2020', :role => 'tabpanel'}
-        .box-item
-          %h3 2020
-          .row
-            .col-sm-12
-              .row
-                .col-sm-3
-                  .stats-box
-                    .stats-box-inner
-                      .h3
-                        - leads = @january_users.count.to_f
-                        - members = @january_users.paid_that_month(Date.new(2020, 1)).count.to_f
-                        =((members/leads) * 100).round(2).to_s + '%'
-                      .p
-                        January
-                .col-sm-3
-                  .stats-box
-                    .stats-box-inner
-                      .h3
-                        - leads = @february_users.count.to_f
-                        - members = @february_users.paid_that_month(Date.new(2020, 2)).count.to_f
-                        =((members/leads) * 100).round(2).to_s + '%'
-                      .p
-                        February
-                .col-sm-3
-                  .stats-box
-                    .stats-box-inner
-                      .h3
-                        - leads = @march_users.count.to_f
-                        - members = @march_users.paid_that_month(Date.new(2020, 3)).count.to_f
-                        =((members/leads) * 100).round(2).to_s + '%'
-                      .p
-                        March
-                .col-sm-3
-                  .stats-box
-                    .stats-box-inner
-                      .h3
-                        - leads = @april_users.count.to_f
-                        - members = @april_users.paid_that_month(Date.new(2020, 4)).count.to_f
-                        =((members/leads) * 100).round(2).to_s + '%'
-                      .p
-                        April
-              .row
-                .col-sm-3
-                  .stats-box
-                    .stats-box-inner
-                      .h3
-                        - leads = @may_users.count.to_f
-                        - members = @may_users.paid_that_month(Date.new(2020, 5)).count.to_f
-                        =((members/leads) * 100).round(2).to_s + '%'
-                      .p
-                        May
-                .col-sm-3
-                  .stats-box
-                    .stats-box-inner
-                      .h3
-                        - leads = @june_users.count.to_f
-                        - members = @june_users.paid_that_month(Date.new(2020, 6)).count.to_f
-                        =((members/leads) * 100).round(2).to_s + '%'
-                      .p
-                        June
-                .col-sm-3
-                  .stats-box
-                    .stats-box-inner
-                      .h3
-                        - leads = @july_users.count.to_f
-                        - members = @july_users.paid_that_month(Date.new(2020, 7)).count.to_f
-                        =((members/leads) * 100).round(2).to_s + '%'
-                      .p
-                        July
-
-                .col-sm-3
-                  .stats-box
-                    .stats-box-inner
-                      .h3
-                        - leads = @august_users.count.to_f
-                        - members = @august_users.paid_that_month(Date.new(2020, 8)).count.to_f
-                        =((members/leads) * 100).round(2).to_s + '%'
-                      .p
-                        August
-                .col-sm-3
-                  .stats-box
-                    .stats-box-inner
-                      .h3
-                        - leads = @september_users.count.to_f
-                        - members = @september_users.paid_that_month(Date.new(2020, 9)).count.to_f
-                        =((members/leads) * 100).round(2).to_s + '%'
-                      .p
-                        September
-                .col-sm-3
-                  .stats-box
-                    .stats-box-inner
-                      .h3
-                        - leads = @october_users.count.to_f
-                        - members = @october_users.paid_that_month(Date.new(2020, 10)).count.to_f
-                        =((members/leads) * 100).round(2).to_s + '%'
-                      .p
-                        October
-                .col-sm-3
-                  .stats-box
-                    .stats-box-inner
-                      .h3
-                        - leads = @november_users.count.to_f
-                        - members = @november_users.paid_that_month(Date.new(2020, 11)).count.to_f
-                        =((members/leads) * 100).round(2).to_s + '%'
-                      .p
-                        November
-                .col-sm-3
-                  .stats-box
-                    .stats-box-inner
-                      .h3
-                        - leads = @december_users.count.to_f
-                        - members = @december_users.paid_that_month(Date.new(2020, 12)).count.to_f
-                        =((members/leads) * 100).round(2).to_s + '%'
-                      .p
-                        December
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: months,
+              datasets: [{
+                  label: chart_legend1,
+                  type: "line",
+                  borderColor: "#8e5ea2",
+                  data: eval_per_month2,
+                  yAxisID: "id1-line",
+                  backgroundColor: 'rgba(153, 102, 255, 0.1)',
+                  fill: true
+                }, {
+                  label: chart_legend2,
+                  type: "bar",
+                  yAxisID: "id2-bar",
+                  data: eval_per_month1,
+                  backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                  borderColor: 'rgba(75, 192, 192, 1)',
+                  borderWidth: 1
+                }
+              ]
+            },
+            options: {
+              title: {
+                display: true,
+                text: chart_title
+              },
+              scales: {
+                yAxes: [{
+                    display: true,
+                    id: "id2-bar",
+                    position: 'left',
+                    ticks: {
+                      suggestedMin: 0,
+                      suggestedMax: max_val_1
+                    },
+                    scaleLabel: {
+                      display: true,
+                      beginAtZero: true,
+                      labelString: chart_axis2
+                    },
+                  },{
+                    display: true,
+                    position: 'right',
+                    gridLines: {
+                        display: false
+                    },
+                    ticks: {
+                      suggestedMin: 0,
+                      suggestedMax: max_val_2
+                    },
+                    scaleLabel: {
+                      display: true,
+                      beginAtZero: true,
+                      labelString: chart_axis1
+                    },
+                    id: "id1-line"
+                }]
+              },
+              legend: {
+                display: true,
+                position: 'bottom'
+              }
+            }
+        });
+      }
