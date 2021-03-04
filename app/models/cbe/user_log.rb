@@ -53,7 +53,7 @@ class Cbe
     end
 
     def scenarios_in_user_log
-      cbe.scenarios
+      cbe.scenarios.select(&:active)
     end
 
     def exhibits?
