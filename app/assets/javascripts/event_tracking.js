@@ -10,7 +10,9 @@ function videoPlayEvent() {
     videoData = { 'type': 'Video', 'player': playerType, autoplay: 'tbc' };
   let properties = $.extend({}, stepData, videoData);
 
-  analytics.track('Course Step Started', properties);
+  if (typeof analytics !== 'undefined') {
+    analytics.track('Course Step Started', properties);
+  }
 }
 function videoFinishedEvent() {
   let videoLesson = $("#video-player-window"),
@@ -19,7 +21,9 @@ function videoFinishedEvent() {
     videoData = { 'type': 'Video', 'player': playerType, autoplay: 'tbc' };
   let properties = $.extend({}, stepData, videoData);
 
-  analytics.track('Course Step Completed', properties);
+  if (typeof analytics !== 'undefined') {
+    analytics.track('Course Step Completed', properties);
+  }
 }
 
 // Quiz Events
@@ -29,14 +33,18 @@ function quizStartEvent() {
     quizData = { 'type': 'Quiz' };
   let properties = $.extend({}, lessonData, quizData);
 
-  analytics.track('Course Step Started', properties);
+  if (typeof analytics !== 'undefined') {
+    analytics.track('Course Step Started', properties);
+  }
 }
 
 function quizFinishEvent() {
   let quizResultsWindow = $("#quiz-results-window"),
     properties = quizResultsWindow.data();
 
-  analytics.track('Course Step Completed', properties);
+  if (typeof analytics !== 'undefined') {
+    analytics.track('Course Step Completed', properties);
+  }
 }
 
 // Notes Events
@@ -46,7 +54,9 @@ function notesStartEvent() {
       noteData = { 'type': 'Note' };
   let properties = $.extend({}, lessonData, noteData);
 
-  analytics.track('Course Step Started', properties);
+  if (typeof analytics !== 'undefined') {
+    analytics.track('Course Step Started', properties);
+  }
 }
 
 function notesFinishEvent() {
@@ -55,14 +65,18 @@ function notesFinishEvent() {
     noteData = { 'type': 'Note' };
   let properties = $.extend({}, lessonData, noteData);
 
-  analytics.track('Course Step Completed', properties);
+  if (typeof analytics !== 'undefined') {
+    analytics.track('Course Step Completed', properties);
+  }
 }
 
 function notesDownloadEvent() {
   let notesWindow = $("#notes-window"),
     properties = notesWindow.data();
 
-  analytics.track('Course Step Note Downloaded', properties);
+  if (typeof analytics !== 'undefined') {
+    analytics.track('Course Step Note Downloaded', properties);
+  }
 }
 
 // Course Show Nav Events
@@ -138,32 +152,44 @@ function subscriptionCreation(e) {
 
 function onBoardingStartClick(e) {
   let data = e.dataset;
-  analytics.track('Get Started Clicked', data);
+  if (typeof analytics !== 'undefined') {
+    analytics.track('Get Started Clicked', data);
+  }
 }
 
 function onBoardingLevelClick(e) {
   let data = e.dataset;
-  analytics.track('Onboarding Level Clicked', data);
+  if (typeof analytics !== 'undefined') {
+    analytics.track('Onboarding Level Clicked', data);
+  }
 }
 
 function onBoardingCourseClick(e) {
   let data = e.dataset;
-  analytics.track('Onboarding Course Clicked', data);
+  if (typeof analytics !== 'undefined') {
+    analytics.track('Onboarding Course Clicked', data);
+  }
 }
 
 function onBoardingBackClick(e) {
   let data = e.dataset;
-  analytics.track('Onboarding Back Button Clicked', data);
+  if (typeof analytics !== 'undefined') {
+    analytics.track('Onboarding Back Button Clicked', data);
+  }
 }
 
 function onboardingExitEvent(e) {
   let properties = e.dataset;
-  analytics.track('Onboarding Exit', properties);
+  if (typeof analytics !== 'undefined') {
+    analytics.track('Onboarding Exit', properties);
+  }
 }
 
 function onboardingCTAClicked(e) {
   let properties = e.dataset;
-  analytics.track('Onboarding CTA Clicked', properties);
+  if (typeof analytics !== 'undefined') {
+    analytics.track('Onboarding CTA Clicked', properties);
+  }
 }
 
 ////////////////////////////////////////////////
