@@ -139,7 +139,7 @@
     $.ajax({
       url: "#{user_update_hubspot_path(current_user.id)}",
       method: 'post',
-      data: JSON.stringify({'custom_data': {'onboarding_course': this.dataset.name } } ),
+      data: JSON.stringify({'custom_data': {'onboarding_course': this.dataset.courseName } } ),
       contentType: 'application/json',
       success: function(data,status,xhr){
         console.log(xhr)
