@@ -80,6 +80,7 @@ jobs:
                               --out ./test_results/rspec/rspec.xml \
                               --format progress \
                               --color \
+                              --exclude-pattern "spec/features/users/onboarding_spec.rb" \
                               $(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
 
       # upload test coverage reporter

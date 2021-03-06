@@ -23,8 +23,8 @@ FactoryBot.define do
     highlight_colour               { 'MyString' }
     sorting_order                  { 1 }
     icon_label                     { 'MyString' }
-    onboarding_course_heading      { 'Welcome Message' }
-    onboarding_course_subheading   { 'Welcome Message' }
+    onboarding_course_heading      { Faker::Movies::LordOfTheRings.character }
+    onboarding_course_subheading   { Faker::Movies::LordOfTheRings.quote }
     group
 
     trait :active do
