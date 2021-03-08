@@ -23,7 +23,11 @@ module Admin
         end
     end
 
-    def show; end
+    def show
+      return if @course
+
+      redirect_to admin_courses_path
+    end
 
     def new
       @course = Course.new(sorting_order: 1)
