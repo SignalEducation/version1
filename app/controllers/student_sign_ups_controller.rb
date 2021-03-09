@@ -69,7 +69,11 @@ class StudentSignUpsController < ApplicationController
 
         referral_code = ReferralCode.find_by(code: request.params[:ref_code]) if params[:ref_code]
         drop_referral_code_cookie(referral_code) if params[:ref_code] && referral_code
-        # This is for sticky sub plans
+        # Added respond block to stop the missing template errors with image, text, json types
+        respond_to do |format|
+          format.html
+          format.all { redirect_to(missing_page_url) }
+        end
       end
 
       seo_title_maker(@home_page.seo_title, @home_page.seo_description, @home_page.seo_no_index)
