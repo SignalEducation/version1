@@ -53,9 +53,8 @@
       %meta{name: 'robots', content: 'noindex'}
     =render 'application/favicon'
 
-    -if Rails.env.production?
+    -if Rails.env.production? && controller_name != 'cbes'
       =render partial: 'layouts/cookie_banner'
-
 
   - if controller_name == 'cbes'
     %body.page-light
