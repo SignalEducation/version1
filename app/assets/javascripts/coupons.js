@@ -1,4 +1,8 @@
 $(document).on('ready', function () {
+  $('#coupon_code').on('focus', function (e) {
+    couponFieldFocus(analyticsData);
+  });
+
   $('#coupon_code').on('input', function (e) {
     validateCoupon();
   });
@@ -10,6 +14,7 @@ $(document).on('ready', function () {
       $('#coupon_code').removeClass("coupon-success");
       $('.invalid-code').hide();
     }
+    couponFieldExit(analyticsData);
   });
 });
 
@@ -27,6 +32,7 @@ function validateCoupon() {
 
       dataType: 'json',
       method: 'POST',
+      async: false,
       contentType: "application/json; charset=utf-8",
       data: JSON.stringify({
         'coupon_code': couponCode.val(),
@@ -36,10 +42,13 @@ function validateCoupon() {
         const validCoupon = data.valid;
 
         if (validCoupon === false) {
+          analyticsData.valid_coupon_present = false;
           displayInvalidCouponClasses(data.reason);
         } else if (validCoupon === true) {
+          analyticsData.valid_coupon_present = true;
           displayValidCouponClasses(data.discounted_price);
         } else {
+          analyticsData.valid_coupon_present = false;
           removeCouponClasses();
         }
 

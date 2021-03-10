@@ -136,18 +136,73 @@ function courseLessonClick(e) {
 }
 
 // Payment Checkout Page Events
-function planOptionSelect(e) {
-  ahoy.track('Subscription Plan Select', e);
+function showAllPlans(data) {
+  if (typeof analytics !== 'undefined') {
+    analytics.track('Payment Page - Show All Plans Clicked', data);
+  }
 }
 
-function providerOptionSelect(e) {
-  ahoy.track('Payment Provider Select', e);
+function planOptionSelect(data) {
+  if (typeof analytics !== 'undefined') {
+    analytics.track('Payment Page - Plan Changed', data);
+  }
 }
 
-function subscriptionCreation(e) {
-  let status = e.status,
-    id = e.subscription_id;
-  ahoy.track('Create Subscription', {'status': status, 'id': id});
+function providerOptionSelect(data, type) {
+  if (typeof analytics !== 'undefined') {
+    switch (type) {
+      case 'paypal':
+        analytics.track('PayPal Form Area Clicked', data);
+        break;
+      case 'stripe':
+        analytics.track('Stripe Form Area Clicked', data);
+        break;
+      default:
+        analytics.track('PayPal Form Area Clicked', data);
+    }
+  }
+}
+
+function stripeFormFocus(data) {
+  if (typeof analytics !== 'undefined') {
+    analytics.track('Payment Page - Card Field Clicked', data);
+  }
+}
+
+function couponFieldFocus(data) {
+  if (typeof analytics !== 'undefined') {
+    analytics.track('Payment Page - Coupon Field Clicked', data);
+  }
+}
+
+function couponFieldExit(data) {
+  if (typeof analytics !== 'undefined') {
+    analytics.track('Payment Page - Coupon Entered', data);
+  }
+}
+
+function stripeSubmit(data) {
+  if (typeof analytics !== 'undefined') {
+    let provider = {provider: 'Stripe'};
+    let properties = $.extend({}, data, provider);
+
+    analytics.track('Payment Page - Payment Initiated', properties);
+  }
+}
+
+function paypalSubmit(data) {
+  if (typeof analytics !== 'undefined') {
+    let provider = {provider: 'PayPal'};
+    let properties = $.extend({}, data, provider);
+
+    analytics.track('Payment Page - Payment Initiated', properties);
+  }
+}
+
+function zendeskClick() {
+  if (typeof analytics !== 'undefined') {
+    analytics.track('Customer Service Icon Clicked');
+  }
 }
 
 function onBoardingStartClick(e) {
@@ -254,5 +309,18 @@ $(document).ready(function(){
   $(".upgrade-arrow").on( "click", function() {
     onboardingCTAClicked(this)
   });
+
+  // Zendesk Customer Support Open Event
+  var waitForZopim = setInterval(function () {
+    if (window.$zopim === undefined || window.$zopim.livechat === undefined) {
+      return;
+    }
+    $zopim(function() {
+      $zopim.livechat.window.onShow(function(callback) {
+        zendeskClick();
+      });
+    });
+    clearInterval(waitForZopim);
+  }, 100);
 
 });
