@@ -15,7 +15,7 @@
         </span>
       </div>
     </div>
-    <div class="questions">
+    <div class="questions" v-on:click="refreshSheetLayout()">
       <splitpanes class="practice-question-theme" :style="{ height: '70vh' }">
         <span v-if="practiceQuestion.kind == 'standard'">
           <ScenarioPane :content="practiceQuestion.content" />
@@ -210,6 +210,9 @@ export default {
         container: this.fullPage ? null : this.$refs.formContainer,
       });
     },
+    refreshSheetLayout() {
+      window.dispatchEvent(new Event('resize'));
+    }
   },
 };
 </script>
