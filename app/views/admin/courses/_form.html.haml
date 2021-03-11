@@ -152,25 +152,26 @@
 
 
     $('#course_accredible_group_id').blur(function() {
-      $.ajax({
-        url: '#{admin_check_accredible_group_path}',
-        method: 'post',
-        dataType: 'json',
-        contentType: 'application/json; charset=utf-8',
-        data: JSON.stringify({ 'group_id': this.value }),
-        success: function(data,status,xhr){
-          $('.accredible_group_check_return').html("#{t('views.courses.form.accredible_group_id')}")
-          $('.accredible_group_check_return').removeAttr('style');
-        },
-        error: function(xhr,status,error){
-          $('.accredible_group_check_return').html(
-            "#{t('views.courses.form.accredible_group_id')} *" + error
-          )
-          $('.accredible_group_check_return').css('color', 'red');
-        }
-      });
+      if (this.value) {
+        $.ajax({
+          url: '#{admin_check_accredible_group_path}',
+          method: 'post',
+          dataType: 'json',
+          contentType: 'application/json; charset=utf-8',
+          data: JSON.stringify({ 'group_id': this.value }),
+          success: function(data,status,xhr){
+            $('.accredible_group_check_return').html("#{t('views.courses.form.accredible_group_id')}")
+            $('.accredible_group_check_return').removeAttr('style');
+          },
+          error: function(xhr,status,error){
+            $('.accredible_group_check_return').html(
+              "#{t('views.courses.form.accredible_group_id')} *" + error
+            )
+            $('.accredible_group_check_return').css('color', 'red');
+          }
+        });
+      }
     });
-
 
     $('#course_exam_body_id').change(function() {
       show_accredible_group();
