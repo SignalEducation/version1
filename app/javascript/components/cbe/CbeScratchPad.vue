@@ -1,36 +1,33 @@
 <template>
-  <div id="cbe-modals">
-    <b-nav-text
-      class="scratch-pad-icon"
-      @click="modalIsOpen = !modalIsOpen"
+  <div class="non-resizable-modal">
+    <section
+      class="components-sidebar-links scratch-pad-icon"
+      @click="show($event)"
     >
-      Scratch Pad
-    </b-nav-text>
-
-    <VueWindow
-      v-if="modalIsOpen"
-      :window-header="'Scratch Pad'"
-      :window-width="700"
-      :window-height="300"
-      :window-is-open="modalIsOpen"
-      @updateWindowClose="handleChange"
+      {{ componentName }}
+    </section>
+    <VueModal
+      :componentName="componentName"
+      :componentType="componentType"
+      :mainColor="'#000032'"
+      :textColor="'#ffffff'"
+      :componentHeight="350"
+      :componentWidth="550"
     >
-      <div
-        slot="body"
-      >
-        <editor
-          v-model="userCbeData.scratch_pad"
-          :api-key="apiKey"
-          :init="{
-            branding: false,
-            menubar: false,
-            statusbar: false,
-            resize: false,
-            toolbar: ['cut copy paste undo redo']
-          }"
-        />
-      </div>
-    </VueWindow>
+    <div slot="body">
+      <editor
+        v-model="userCbeData.scratch_pad"
+        :api-key="apiKey"
+        :init="{
+          branding: false,
+          menubar: false,
+          statusbar: false,
+          resize: false,
+          toolbar: ['cut copy paste undo redo']
+        }"
+      />
+    </div>
+    </VueModal>
   </div>
 </template>
 
@@ -38,15 +35,23 @@
 
 import Editor from "@tinymce/tinymce-vue";
 import eventBus from "./EventBus.vue";
-import VueWindow from '../VueWindow.vue'
+import VueModal from '../VueModal.vue'
 
 export default {
   components: {
     Editor,
-    VueWindow,
+    VueModal,
   },
   props: {
     userCbeData: Object,
+    componentType: {
+      type: String,
+      default: "nav",
+    },
+    componentName: {
+      type: String,
+      default: "Scratch Pad",
+    },
   },
   data() {
     return {
@@ -60,16 +65,14 @@ export default {
     })
   },
   methods: {
-    handleChange(value) {
-      this.modalIsOpen = value
-    }
-  },
-  watch: {
-    modalStatus(status) {
-      this.modalIsOpen = status;
+    show (event) {
+      this.$modal.show("modal-"+this.componentType+"-"+this.componentName);
+      $('.components-sidebar .components div').removeClass('active-modal');
+      eventBus.$emit("update-modal-z-index", `modal-${this.componentType}-${this.componentName}`);
     },
-    modalIsOpen(value) {
-      this.$emit("update-close-all", this.modalIsOpen);
+    hide (event) {
+      $('.latent-modal').removeClass('active-modal');
+      this.$modal.hide("modal-"+this.componentType+"-"+this.componentName);
     },
   },
 };

@@ -216,7 +216,7 @@ button.flagged{
       }
       .page-item .page-link {
         font-size: 14px;
-        line-height: 1.6;
+        line-height: 1.8;
       }
       li.page-item.disabled {
         display: none;
@@ -254,6 +254,7 @@ button.flagged{
     background-repeat: no-repeat;
     padding: 0 0 0 25px;
     background-size: 20% 90%;
+    margin-left: 1em;
   }
   .calculator-icon:hover {
     background-image: asset-url('cbe-calc-icon-green.png');
@@ -265,6 +266,7 @@ button.flagged{
     background-repeat: no-repeat;
     padding: 0 0 0 25px;
     background-size: 20% 90%;
+    margin-left: 1em;
   }
   .scratch-pad-icon:hover {
     background-image: asset-url('scratch-pad-icon-green.png');
@@ -518,6 +520,25 @@ button.flagged{
     cursor: pointer;
   }
 
+  .components-sidebar-links {
+    font-family: Arial !important;
+    font-size: 13.3px;
+    font-weight: bold;
+    color: #000;
+    display: block;
+    line-height: 20px;
+    background-color: #f2f2f2;
+    border: 1px solid #DCDDDD;
+    padding: 8px;
+    padding-left: 5px;
+    width: 330px;
+    margin-bottom: 4px;
+  }
+
+  .components-sidebar-links:hover {
+    color: red;
+    cursor: pointer;
+  }
   .window {
     .content{
       background: white;
