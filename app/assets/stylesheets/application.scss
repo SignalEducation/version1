@@ -5730,6 +5730,19 @@ a.list-group-item {
   }
 }
 
+#resourceTabs {
+  padding-top: 35px;
+  .pdf-viewer {
+    width: 92%;
+    left: 4%;
+    height: 1500px;
+    header {
+      position: initial;
+      margin-top: -2.2em;
+    }
+  }
+}
+
 @media print {
   .pdf-document {
     position: static;
@@ -6777,8 +6790,8 @@ button.sub-details[aria-expanded="true"]:before{
 .active-modal-section {
   visibility: hidden;
 }
-.present-modal {
-  position: relative;
+.latent-modal {
+  padding: 35px;
   z-index: 500;
 }
 #viewerContainer {
@@ -6804,7 +6817,7 @@ button.sub-details[aria-expanded="true"]:before{
 .vue-modal-resizer.clicked::after {
   border-bottom: 15px solid #00b67b !important;
 }
-.cbe-content {
+.cbe-content, .cbe-content-navbar {
   .vm--overlay, .vm--container {
     width: 0;
     height: 0;
