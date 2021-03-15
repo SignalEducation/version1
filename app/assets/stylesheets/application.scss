@@ -6708,6 +6708,12 @@ button.sub-details[aria-expanded="true"]:before{
     }
   }
 }
+.cbe-content {
+  .vm--overlay, .vm--container {
+    width: 0;
+    height: 0;
+  }
+}
 .cbe-content-template {
   padding-top: 1em;
 }
