@@ -2,22 +2,18 @@
   <div>
     <section
       class="exhibits-sidebar-links requirement-icon"
-      @click="showModal = !showModal"
+      @click="show()"
     >
       {{ `${requirementName} (${requirementScore} marks)` }}
     </section>
-    <VueWindow
-      :window-header="requirementName"
-      :window-width="700"
-      :window-is-open="showModal"
-      :isResizable="true"
-      :closeButton="true"
-      @updateWindowClose="handleChange"
-    >
-      <div slot="body">
+    <modal :name="`cbe-requirements-modal-${requirementName}-${requirementScore}`" draggable=".window-header" scrollable=true resizable=true clickToClose=false>
+      <div class="window-header">DRAG ME HERE</div>
+        This is my first modal
+      <button @click="hide()">CLOSE</button>
+      <div>
         <span v-html="requirementContent"></span>
       </div>
-    </VueWindow>
+    </modal>
   </div>
 </template>
 
@@ -61,6 +57,12 @@ export default {
     handleChange(value) {
       this.showModal = value;
     },
+    show () {
+      this.$modal.show("cbe-requirements-modal-"+this.requirementName+"-"+this.requirementScore);
+    },
+    hide () {
+      this.$modal.hide("cbe-requirements-modal-"+this.requirementName+"-"+this.requirementScore);
+    }
   },
 };
 </script>

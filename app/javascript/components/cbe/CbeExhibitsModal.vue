@@ -2,19 +2,14 @@
   <div>
     <section
       class="exhibits-sidebar-links exhibit-icon"
-      @click="showModal = !showModal"
+      @click="show()"
     >
       {{ exhibitName }}
     </section>
-    <VueWindow
-      :window-header="exhibitName"
-      :window-width="810"
-      :window-is-open="showModal"
-      :isResizable="true"
-      :closeButton="true"
-      @updateWindowClose="handleChange"
-    >
-      <div slot="body">
+    <modal :name="`cbe-exhibits-modal-${exhibitType}-${exhibitName}`" draggable=".window-header" scrollable=true resizable=true clickToClose=false>
+      <div class="window-header">DRAG ME HERE</div>
+      <button @click="hide()">CLOSE</button>
+      <div>
         <SpreadsheetEditor
           v-if="exhibitType === 'spreadsheet'"
           :initial-data="exhibitSpreadsheetData"
@@ -66,7 +61,7 @@
           </pdf>
         </div>
       </div>
-    </VueWindow>
+    </modal>
   </div>
 </template>
 
@@ -194,6 +189,12 @@ export default {
     findPos(obj) {
       return obj.offsetTop;
     },
+    show () {
+      this.$modal.show("cbe-exhibits-modal-"+this.exhibitType+"-"+this.exhibitName);
+    },
+    hide () {
+      this.$modal.hide("cbe-exhibits-modal-"+this.exhibitType+"-"+this.exhibitName);
+    }
   },
 };
 </script>

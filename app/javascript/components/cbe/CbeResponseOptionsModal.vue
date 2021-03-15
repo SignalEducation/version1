@@ -2,20 +2,16 @@
   <div>
     <section
       :class="`exhibits-sidebar-links ${responseOptionType}-icon`"
-      @click="showModal = !showModal"
+      @click="show()"
     >
       {{ responseOptionFType }}
     </section>
 
-    <VueWindow
-      :window-header="responseOptionFType"
-      :window-width="920"
-      :window-is-open="showModal"
-      :isResizable="true"
-      :closeButton="true"
-      @updateWindowClose="handleChange"
-    >
-      <div slot="body">
+    <modal :name="`cbe-response-modal-${responseOptionType}-${responseOptionId}`" draggable=".window-header" scrollable=true resizable=true clickToClose=false>
+      <div class="window-header">DRAG ME HERE</div>
+        This is my first modal
+      <button @click="hide()">CLOSE</button>
+      <div>
         <TinyEditor
           v-if="responseOptionType === 'open'"
           :field-model.sync="responseOption"
@@ -53,7 +49,7 @@
           @spreadsheet-updated="syncResponsesData"
         />
       </div>
-    </VueWindow>
+    </modal>
   </div>
 </template>
 
@@ -120,6 +116,9 @@ export default {
       this.showModal = status;
     });
   },
+  mounted() {
+    this.hide();
+  },
   methods: {
     handleChange(value) {
       this.showModal = value;
@@ -175,6 +174,13 @@ export default {
         },
       });
     },
+    show () {
+      this.$modal.show("cbe-response-modal-"+this.responseOptionType+"-"+this.responseOptionId);
+
+    },
+    hide () {
+      this.$modal.hide("cbe-response-modal-"+this.responseOptionType+"-"+this.responseOptionId);
+    }
   },
 };
 </script>
