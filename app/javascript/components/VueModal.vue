@@ -1,69 +1,62 @@
 <template>
-  <div>
-    <section @click="show($event)" class="exhibits-sidebar-links exhibit-icon">
-      {{ exhibitName }}
-    </section>
-    <div class="present-modal">
-      <modal :name="`cbe-exhibits-modal-${exhibitType}-${exhibitName}`" draggable=".window-header" :scrollable="true" :resizable="false" :clickToClose="false">
-        <div @click="makeActiveHeader($event)" class="window-header" :style="{ 'background-color':mainColor }">
-          <p :style="{ 'color':textColor }">{{ exhibitName }}</p>
-          <button @click="hide($event)" :style="{ 'color':textColor }" type="button" class="close modal-close modal-close-solution" data-dismiss="modal" aria-hidden="true">&times;</button>
-        </div>
-        <div @click="makeActiveBody($event)">
-          <SpreadsheetEditor
-            v-if="exhibitType === 'spreadsheet'"
-            :initial-data="exhibitSpreadsheetData"
-          />
+    <modal :name="`vue-modal-${modalType}-${modalName}`" draggable=".window-header" scrollable=true resizable=true clickToClose=false>
+      <div class="window-header" :style="{ 'background-color':mainColor }">
+        <p :style="{ 'color':textColor }">{{ modalName }}</p>
+        <button @click="hide()" :style="{ 'color':textColor }" type="button" class="close modal-close modal-close-solution" data-dismiss="modal" aria-hidden="true">&times;</button>
+      </div>
+      <div>
+        <SpreadsheetEditor
+          v-if="modalType === 'spreadsheet'"
+          :initial-data="exhibitSpreadsheetData"
+        />
 
-          <div id="pdfvuer" v-if="exhibitType === 'pdf'">
-            <div
-              id="buttons"
-              class="ui grey three item inverted bottom fixed menu transition hidden"
-            >
-              <a class="item" @click="page > 1 ? page-- : 1">
-                <i class="left chevron icon"></i>
-                Back
-              </a>
-              <a class="ui active item">
-                {{ page }} / {{ numPages ? numPages : "∞" }}
-              </a>
-              <a class="item" @click="page < numPages ? page++ : 1">
-                Forward
-                <i class="right chevron icon"></i>
-              </a>
-            </div>
-            <div
-              id="buttons"
-              class="ui grey three item inverted bottom fixed menu transition hidden"
-            >
-              <a class="item" @click="scale -= scale > 0.2 ? 0.1 : 0">
-                <i class="left chevron icon" />
-                Zoom -
-              </a>
-              <a class="ui active item"> {{ formattedZoom }} % </a>
-              <a class="item" @click="scale += scale < 2 ? 0.1 : 0">
-                Zoom +
-                <i class="right chevron icon" />
-              </a>
-            </div>
-            <pdf
-              :src="pdfdata"
-              v-for="i in numPages"
-              :key="i"
-              :id="i"
-              :page="i"
-              :scale.sync="scale"
-              style="width:100%;margin:0px auto;"
-            >
-              <template slot="loading">
-                loading content here...
-              </template>
-            </pdf>
+        <div id="pdfvuer" v-if="modalType === 'pdf'">
+          <div
+            id="buttons"
+            class="ui grey three item inverted bottom fixed menu transition hidden"
+          >
+            <a class="item" @click="page > 1 ? page-- : 1">
+              <i class="left chevron icon"></i>
+              Back
+            </a>
+            <a class="ui active item">
+              {{ page }} / {{ numPages ? numPages : "∞" }}
+            </a>
+            <a class="item" @click="page < numPages ? page++ : 1">
+              Forward
+              <i class="right chevron icon"></i>
+            </a>
           </div>
+          <div
+            id="buttons"
+            class="ui grey three item inverted bottom fixed menu transition hidden"
+          >
+            <a class="item" @click="scale -= scale > 0.2 ? 0.1 : 0">
+              <i class="left chevron icon" />
+              Zoom -
+            </a>
+            <a class="ui active item"> {{ formattedZoom }} % </a>
+            <a class="item" @click="scale += scale < 2 ? 0.1 : 0">
+              Zoom +
+              <i class="right chevron icon" />
+            </a>
+          </div>
+          <pdf
+            :src="pdfdata"
+            v-for="i in numPages"
+            :key="i"
+            :id="i"
+            :page="i"
+            :scale.sync="scale"
+            style="width:100%;margin:20px auto;"
+          >
+            <template slot="loading">
+              loading content here...
+            </template>
+          </pdf>
         </div>
-      </modal>
-    </div>
-  </div>
+      </div>
+    </modal>
 </template>
 
 <script>
@@ -79,11 +72,11 @@ export default {
     VueWindow,
   },
   props: {
-    exhibitType: {
+    modalType: {
       type: String,
       default: "",
     },
-    exhibitName: {
+    modalName: {
       type: String,
       default: "",
     },
@@ -198,22 +191,12 @@ export default {
     findPos(obj) {
       return obj.offsetTop;
     },
-    show (event) {
-      this.$modal.show("cbe-exhibits-modal-"+this.exhibitType+"-"+this.exhibitName);
-      $('.exhibits-sidebar .exhibits div').removeClass('active-modal');
+    show () {
+      this.$modal.show("vue-modal-"+this.modalType+"-"+this.modalName);
     },
-    hide (event) {
-      $('.present-modal').removeClass('active-modal');
-      this.$modal.hide("cbe-exhibits-modal-"+this.exhibitType+"-"+this.exhibitName);
-    },
-    makeActiveHeader(event) {
-      $('.exhibits-sidebar .exhibits div').removeClass('active-modal');
-      event.target.parentElement.parentElement.parentElement.parentElement.classList.add('active-modal');
-    },
-    makeActiveBody(event) {
-      $('.exhibits-sidebar .exhibits div').removeClass('active-modal');
-      event.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.classList.add('active-modal');
-    },
+    hide () {
+      this.$modal.hide("vue-modal-"+this.modalType+"-"+this.modalName);
+    }
   },
 };
 </script>
