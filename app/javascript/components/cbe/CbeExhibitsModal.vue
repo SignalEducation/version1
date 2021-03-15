@@ -172,15 +172,17 @@ export default {
           stickyNav();
         };
 
-        // Get the offset position of the navbar
-        var sticky = $("#buttons")[0].offsetTop;
+        if($("#buttons").length) {
+          var sticky = $("#buttons")[0].offsetTop;
+        }
 
-        // Add the sticky class to the self.$refs.nav when you reach its scroll position. Remove "sticky" when you leave the scroll position
         function stickyNav() {
-          if (window.pageYOffset >= sticky) {
-            $("#buttons")[0].classList.remove("hidden");
-          } else {
-            $("#buttons")[0].classList.add("hidden");
+          if($("#buttons").length) {
+            if (window.pageYOffset >= sticky) {
+              $("#buttons")[0].classList.remove("hidden");
+            } else {
+              $("#buttons")[0].classList.add("hidden");
+            }
           }
         }
 
@@ -208,6 +210,7 @@ export default {
     show (event) {
       this.$modal.show("modal-"+this.componentType+"-"+this.componentName);
       $('.components-sidebar .components div').removeClass('active-modal');
+      eventBus.$emit("update-modal-z-index", `modal-${this.componentType}-${this.componentName}`);
     },
     hide (event) {
       $('.latent-modal').removeClass('active-modal');

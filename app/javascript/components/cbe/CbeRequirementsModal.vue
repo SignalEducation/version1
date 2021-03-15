@@ -8,7 +8,6 @@
         :componentType="componentType"
         :componentName="componentName"
         :componentModal="componentModal"
-        :componentContentData="componentContentData"
         :componentIcon="componentIcon"
         :componentHeight="450"
         :componentWidth="800"
@@ -23,13 +22,11 @@
 
 <script>
 import eventBus from "../cbe/EventBus.vue";
-import pdfvuer from "pdfvuer";
 import SpreadsheetEditor from "../SpreadsheetEditor/SpreadsheetEditor.vue";
 import VueModal from "../VueModal.vue";
 
 export default {
   components: {
-    pdf: pdfvuer,
     SpreadsheetEditor,
     VueModal
   },
@@ -47,12 +44,8 @@ export default {
       default: false,
     },
     componentContentData: {
-      type: Object,
-      default: () => ({}),
-    },
-    currentFile: {
-      type: Object,
-      default: () => ({}),
+      type: String,
+      default: "",
     },
     componentIcon: {
       type: String,
@@ -114,67 +107,14 @@ export default {
       this.showModal = value;
       this.$emit("updateWindowClose", value);
     },
-    getPdf() {
-      var self = this;
-      self.pdfdata = pdfvuer.createLoadingTask(self.currentFile.url);
-      self.pdfdata.then((pdf) => {
-        self.numPages = pdf.numPages;
-        window.onscroll = function() {
-          changePage();
-          stickyNav();
-        };
-
-        // Get the offset position of the navbar
-        var sticky = $("#buttons")[0].offsetTop;
-
-        // Add the sticky class to the self.$refs.nav when you reach its scroll position. Remove "sticky" when you leave the scroll position
-        function stickyNav() {
-          if (window.pageYOffset >= sticky) {
-            $("#buttons")[0].classList.remove("hidden");
-          } else {
-            $("#buttons")[0].classList.add("hidden");
-          }
-        }
-
-        function changePage() {
-          var i = 1,
-            count = Number(pdf.numPages);
-          do {
-            if (
-              window.pageYOffset >= self.findPos(document.getElementById(i)) &&
-              window.pageYOffset <= self.findPos(document.getElementById(i + 1))
-            ) {
-              self.page = i;
-            }
-            i++;
-          } while (i < count);
-          if (window.pageYOffset >= self.findPos(document.getElementById(i))) {
-            self.page = i;
-          }
-        }
-      });
-    },
-    findPos(obj) {
-      return obj.offsetTop;
-    },
     show (event) {
       this.$modal.show("modal-"+this.componentType+"-"+this.componentName);
       $('.components-sidebar .components div').removeClass('active-modal');
+      eventBus.$emit("update-modal-z-index", `modal-${this.componentType}-${this.componentName}`);
     },
     hide (event) {
       $('.latent-modal').removeClass('active-modal');
       this.$modal.hide("modal-"+this.componentType+"-"+this.componentName);
-    },
-    makeActiveHeader(event) {
-      $('.components-sidebar .components div').removeClass('active-modal');
-      event.target.parentElement.parentElement.parentElement.parentElement.classList.add('active-modal');
-    },
-    makeActiveBody(event) {
-      $('.components-sidebar .components div').removeClass('active-modal');
-      event.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.classList.add('active-modal');
-    },
-    show () {
-      this.$modal.show("cbe-requirements-modal-"+this.requirementName+"-"+this.requirementScore);
     },
     hide () {
       this.$modal.hide("cbe-requirements-modal-"+this.requirementName+"-"+this.requirementScore);

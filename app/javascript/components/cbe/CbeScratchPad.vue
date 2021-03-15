@@ -1,18 +1,18 @@
 <template>
-  <div>
+  <div class="non-resizable-modal">
     <section
       class="components-sidebar-links scratch-pad-icon"
       @click="show($event)"
     >
-      Scratch Pad
+      {{ componentName }}
     </section>
     <VueModal
       :componentName="componentName"
       :componentType="componentType"
       :mainColor="'#000032'"
       :textColor="'#ffffff'"
-      :height="450"
-      :width="350"
+      :componentHeight="350"
+      :componentWidth="550"
     >
     <div slot="body">
       <editor
@@ -65,20 +65,11 @@ export default {
       this.modalIsOpen = status;
     })
   },
-  watch: {
-    "userCbeData.scratch_pad"(newValue){
-      const dateNow = new Date();
-       // Update answers data if last update is more then 10 seconds.
-      if (dateNow - this.lastTimeUpdated > 10000) {
-        this.lastTimeUpdated = dateNow;
-        eventBus.$emit("update-question-answer", newValue);
-      }
-    },
-  },
   methods: {
     show (event) {
       this.$modal.show("modal-"+this.componentType+"-"+this.componentName);
       $('.components-sidebar .components div').removeClass('active-modal');
+      eventBus.$emit("update-modal-z-index", `modal-${this.componentType}-${this.componentName}`);
     },
     hide (event) {
       $('.latent-modal').removeClass('active-modal');

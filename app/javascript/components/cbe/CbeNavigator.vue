@@ -54,6 +54,7 @@ export default {
     show (event) {
       this.$modal.show("modal-"+this.componentType+"-"+this.componentName);
       $('.components-sidebar .components div').removeClass('active-modal');
+      eventBus.$emit("update-modal-z-index", `modal-${this.componentType}-${this.componentName}`);
     },
     hide (event) {
       $('.latent-modal').removeClass('active-modal');

@@ -1,10 +1,10 @@
 <template>
-  <div>
+  <div class="non-resizable-modal">
     <section
       class="components-sidebar-links calculator-icon"
       @click="show($event)"
     >
-      Calculator
+      {{ componentName }}
     </section>
 
       <VueModal
@@ -12,8 +12,8 @@
         :componentType="componentType"
         :mainColor="'#000032'"
         :textColor="'#ffffff'"
-        :height="450"
-        :width="350"
+        :componentHeight="450"
+        :componentWidth="550"
       >
       <div slot="body">
         <Calculator />
@@ -35,7 +35,7 @@ export default {
   props: {
     componentType: {
       type: String,
-      default: "",
+      default: "nav",
     },
     componentName: {
       type: String,
@@ -51,6 +51,7 @@ export default {
     show (event) {
       this.$modal.show("modal-"+this.componentType+"-"+this.componentName);
       $('.components-sidebar .components div').removeClass('active-modal');
+      eventBus.$emit("update-modal-z-index", `modal-${this.componentType}-${this.componentName}`);
     },
     hide (event) {
       $('.latent-modal').removeClass('active-modal');
