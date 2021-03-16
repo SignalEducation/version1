@@ -23,28 +23,33 @@
               .input-group.input-group-lg
                 =f.text_field :label, placeholder: t('views.vat_codes.form.label_placeholder'), class: 'form-control'
 
-        .row.pt-4
-          .col-sm-12
-            -#if f.object.id.nil?
-            =f.fields_for :vat_rates do |rate|
-              .form-group
-                =rate.label :percentage_rate, t('views.vat_rates.form.percentage_rate')
-                .input-group.input-group-lg
-                  =rate.text_field :percentage_rate, placeholder: t('views.vat_rates.form.percentage_rate_placeholder'), class: 'form-control'
-              .form-group
-                =rate.label :effective_from, t('views.vat_rates.form.effective_from')
-                .input-group.input-group-lg
-                  =rate.text_field :effective_from, placeholder: t('views.vat_rates.form.effective_from_placeholder'), class: 'form-control date', data: {'date-format' => 'YYYY-MM-DD'}, id: 'datetimepicker1'
+  %hr/
+  %h2='Vat Rates'
+  =f.fields_for :vat_rates do |rate|
+    .box-item.form-box
+      .row.pt-4
+        .col-sm-12
+          -if rate.object.new_record?
+            %h3='New Vat Rate'
+          -else
+            %h3="Edit Vat Rate - ##{rate.object.id}"
+          .form-group
+            =rate.label :percentage_rate, t('views.vat_rates.form.percentage_rate')
+            .input-group.input-group-lg
+              =rate.text_field :percentage_rate, placeholder: t('views.vat_rates.form.percentage_rate_placeholder'), class: 'form-control'
+          .form-group
+            =rate.label :effective_from, t('views.vat_rates.form.effective_from')
+            .input-group.input-group-lg
+              =rate.text_field :effective_from, placeholder: t('views.vat_rates.form.effective_from_placeholder'), class: 'form-control date', data: {'date-format' => 'YYYY-MM-DD'}, id: "datetimepicker#{rate.object.id}"
+
+    :javascript
+      $(function () {
+        $("#datetimepicker#{rate.object.id}").datetimepicker();
+      });
+
+  .row.pt-4
+    .col-md-12
+      =f.submit t('views.general.save'), class: 'btn btn-primary'
+      =link_to t('views.general.cancel'), vat_codes_path, class: 'btn btn-secondary'
 
 
-    .row.pt-4
-      .col-md-12
-        =f.submit t('views.general.save'), class: 'btn btn-primary'
-        =link_to t('views.general.cancel'), vat_codes_path, class: 'btn btn-secondary'
-
-
-:javascript
-
-  $(function () {
-    $('#datetimepicker1').datetimepicker();
-  });
