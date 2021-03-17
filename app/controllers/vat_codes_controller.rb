@@ -19,7 +19,9 @@ class VatCodesController < ApplicationController
     @vat_code.vat_rates.build
   end
 
-  def edit; end
+  def edit
+    @vat_code.vat_rates.build
+  end
 
   def create
     @vat_code = VatCode.new(allowed_params)

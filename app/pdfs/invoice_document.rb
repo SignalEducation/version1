@@ -8,7 +8,7 @@ class InvoiceDocument < Prawn::Document
   def initialize(invoice)
     super(top_margin: 70)
     @invoice  = invoice
-    @vat_rate = invoice.vat_rate ? @invoice.vat_rate.percentage_rate.to_s + '%' : '0%'
+    @vat_rate = invoice.vat_rate ? @invoice.vat_rate.percentage_rate.to_s + '%' : 'Na'
 
     logo
     render_headers
