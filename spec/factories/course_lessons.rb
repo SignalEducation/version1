@@ -42,6 +42,13 @@ FactoryBot.define do
     seo_description           { 'Lorem Ipsum' }
     seo_no_index              { false }
 
+    factory :free_course_lesson do
+      active              { true }
+      free                { true }
+      sequence(:name)     { |n| "Free Lesson #{n}" }
+      sequence(:name_url) { |n| "free-lesson-#{n}" }
+    end
+
     factory :active_course_lesson do
       active { true }
     end

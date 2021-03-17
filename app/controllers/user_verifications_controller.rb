@@ -4,7 +4,7 @@ class UserVerificationsController < ApplicationController
   before_action :get_variables
 
   def update
-    ip_country = IpAddress.get_country(request.remote_ip)
+    ip_country = IpAddress.get_country(request.remote_ip) unless Rails.env.test?
     country    = ip_country || Country.find_by(name: 'United Kingdom')
     @user      = User.get_and_verify(params[:email_verification_code], country&.id)
 
@@ -16,8 +16,9 @@ class UserVerificationsController < ApplicationController
       set_current_visit(@user)
       flash[:datalayer_verify] = true
 
-      SegmentService.new.track_verification_event(@user)
+      SegmentService.new.track_verification_event(@user) unless Rails.env.test?
       if @user.preferred_exam_body&.group
+        # Redirect to account_verified method below
         redirect_to registration_onboarding_url(@user.preferred_exam_body.group.name_url)
       else
         flash[:success] = 'Thank you! Your email is now verified'
