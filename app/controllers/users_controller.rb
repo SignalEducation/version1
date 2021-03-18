@@ -168,6 +168,8 @@ class UsersController < ApplicationController
   end
 
   def update_hubspot
+    return if Rails.env.test?
+
     response =
       HubSpot::Contacts.new.batch_create(
         Array(params[:user_id]),

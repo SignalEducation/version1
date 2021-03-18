@@ -13,10 +13,7 @@ module Accredible
     def service(path, method)
       response = response(path: path, method: method)
 
-      if response.code != '200'
-        Airbrake::AirbrakeLogger.new(Logger.new(STDOUT)).error response.body
-        Appsignal.send_error(Exception.new(response.body), {}, 'services')
-      end
+      return { error: response.body, status: response.code } if response.code != '200'
 
       JSON.parse(response.body).merge(status: response.code).with_indifferent_access
     end

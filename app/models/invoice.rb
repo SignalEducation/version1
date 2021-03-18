@@ -324,8 +324,8 @@ class Invoice < ApplicationRecord
     return unless country&.vat_codes&.any?
 
     vat_code = country.vat_codes.first
-    vat_rate_id = VatRate.find_by(vat_code_id: vat_code.id).try(:id)
-    update_attribute(:vat_rate_id, vat_rate_id) if vat_rate_id
+    vat_rate = VatRate.where(vat_code_id: vat_code.id)&.all_in_order&.last
+    update_attribute(:vat_rate, vat_rate) if vat_rate
   end
 
   def set_issued_at
