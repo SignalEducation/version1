@@ -51,6 +51,7 @@ export default {
     return {
       modalIsOpen: false,
       indexOfQuestion: 0,
+      lastTimeUpdated: new Date(),
     };
   },
   created() {
@@ -75,6 +76,15 @@ export default {
       $('#textEditorModal').css('width', '60em');
       $('#textEditorModal').css('height', '30em');
     },
+    autoUpdateResponse: function(){
+      const dateNow = new Date();
+
+      // Update response data if last update is more then 10 seconds.
+      if ((dateNow - this.lastTimeUpdated) > 10000  ) {
+        this.lastTimeUpdated = dateNow;
+        this.updateResponse();
+      }
+    },
     updateResponse() {
       if (this.responseObj.content !== "") {
         eventBus.$emit("show-submit-v2-btn", true);
@@ -94,6 +104,12 @@ export default {
     modalIsOpen(value) {
       this.$emit("update-close-all", this.modalIsOpen);
     },
+    "responseObj.content": {
+       handler() {
+        this.autoUpdateResponse();
+       },
+      deep: true
+    }
   },
 };
 </script>

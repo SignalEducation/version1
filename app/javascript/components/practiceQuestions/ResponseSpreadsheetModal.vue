@@ -50,6 +50,7 @@ export default {
     return {
       modalIsOpen: false,
       indexOfQuestion: 0,
+      lastTimeUpdated: new Date(),
     };
   },
   created() {
@@ -82,6 +83,15 @@ export default {
       $('#spreadsheetModal').css('width', '60em');
       $('#spreadsheetModal').css('height', '37em');
     },
+    autoUpdateResponse: function(){
+      const dateNow = new Date();
+
+      // Update response data if last update is more then 10 seconds.
+      if ((dateNow - this.lastTimeUpdated) > 10000  ) {
+        this.lastTimeUpdated = dateNow;
+        this.updateResponse();
+      }
+    },
     updateResponse() {
       eventBus.$emit("update-user-response");
     },
@@ -93,6 +103,12 @@ export default {
     modalIsOpen(value) {
       this.$emit("update-close-all", this.modalIsOpen);
     },
+    "responseObj.content": {
+       handler() {
+        this.autoUpdateResponse();
+       },
+      deep: true
+    }
   },
 };
 </script>

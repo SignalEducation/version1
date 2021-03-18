@@ -81,6 +81,7 @@ export default {
       isActive: true,
       questionContent: null,
       fillArr: null,
+      lastTimeUpdated: new Date(),
     };
   },
   mounted() {
@@ -129,6 +130,15 @@ export default {
     syncSpreadsheetData(jsonData) {
       this.questionContent.answer_content = { content: { data: jsonData } };
     },
+    autoUpdateAnswer: function(){
+      const dateNow = new Date();
+
+      // Update answers data if last update is more then 10 seconds.
+      if ((dateNow - this.lastTimeUpdated) > 10000  ) {
+        this.lastTimeUpdated = dateNow;
+        this.updateCurrentAnswer();
+      }
+    },
     updateCurrentAnswer: function() {
       axios
         .patch(
@@ -173,6 +183,8 @@ export default {
     },
     "questionContent.answer_content": {
        handler() {
+        this.autoUpdateAnswer();
+
         this.updateSubmitBtn(this.questionContentArray).then((response) => {
           if (response) {
             eventBus.$emit("active-solution-index", [this.fillArr.every(item => item === 1), this.activePage - 1]);
