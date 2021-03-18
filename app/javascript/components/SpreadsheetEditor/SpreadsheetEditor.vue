@@ -109,6 +109,8 @@
     computed: {
       spreadsheetData: function() {
         if (this.initialData.content && this.initialData.content.data && this.initialData.content.data.data) {
+          if (typeof(this.initialData.content.data.data.dataTable) !== 'undefined') { this.row_data = Object.keys(this.initialData.content.data.data.dataTable).length + 4 }
+          if (typeof(this.initialData.content.data.columns) !== 'undefined') { this.col_data = Object.keys(this.initialData.content.data.columns).length + 1 }
           return this.initialData.content.data;
         } else {
           return null;
@@ -116,7 +118,8 @@
       }
     },
     created() {
-
+      let row_data = null;
+      let col_data = null;
     },
     data() {
       return {
@@ -209,6 +212,11 @@
           spread.suspendPaint();
           this.flex.setDataSource(this.flex.fromJSON(JSON.parse(JSON.stringify(this.spreadsheetData))));
           spread.resumePaint();
+          this.row_data ? this.flex.setRowCount(this.row_data, GC.Spread.Sheets.SheetArea.viewport) : this.flex.setRowCount(this.flex.getRowCount(), GC.Spread.Sheets.SheetArea.viewport);
+          this.col_data ? this.flex.setColumnCount(this.col_data, GC.Spread.Sheets.SheetArea.viewport) : this.flex.setColumnCount(this.flex.getColumnCount(), GC.Spread.Sheets.SheetArea.viewport);
+        } else {
+          this.flex.setRowCount(20, GC.Spread.Sheets.SheetArea.viewport);
+          this.flex.setColumnCount(5, GC.Spread.Sheets.SheetArea.viewport);
         }
         for (var i = 0; i < this.flex.getRowCount(); i++) {
           this.flex.autoFitRow(i);
