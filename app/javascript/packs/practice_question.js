@@ -16,7 +16,8 @@ new Vue({
   el: element,
     data: {
       practiceQuestionId: data.practiceQuestionId,
-      stepLogId: data.stepLogId
+      stepLogId: data.stepLogId,
+      stepLogs: JSON.parse(data.stepLogs)
     },
     render: h => h(component)
   });

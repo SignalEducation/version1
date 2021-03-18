@@ -51,6 +51,7 @@ export default {
     return {
       modalIsOpen: false,
       indexOfQuestion: 0,
+      lastTimeUpdated: new Date(),
     };
   },
   created() {
@@ -94,6 +95,18 @@ export default {
     modalIsOpen(value) {
       this.$emit("update-close-all", this.modalIsOpen);
     },
+    "responseObj.content": {
+      handler(newValue, oldValue) {
+        const dateNow = new Date();
+
+        // Update response data if last update is more then 10 seconds OR new value is bigger then 20 characters.
+        if (dateNow - this.lastTimeUpdated > 10000 || (newValue.length - oldValue.length > 20)) {
+          this.lastTimeUpdated = dateNow;
+          this.updateResponse();
+        }
+      },
+      deep: true
+    }
   },
 };
 </script>

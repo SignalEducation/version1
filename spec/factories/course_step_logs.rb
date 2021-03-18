@@ -47,7 +47,6 @@ FactoryBot.define do
     count_of_questions_correct { 1 }
     course_log_id { 1 }
 
-
     factory :quiz_cmeul do
       is_quiz { true }
     end
@@ -58,6 +57,10 @@ FactoryBot.define do
 
     factory :cr_cmeul do
       is_constructed_response { true }
+    end
+
+    trait :practice_question do
+      is_practice_question { true }
     end
 
     trait :skip_validate do

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_20_112149) do
+ActiveRecord::Schema.define(version: 2021_05_06_073029) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -446,9 +446,9 @@ ActiveRecord::Schema.define(version: 2021_04_20_112149) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer "cme_count", default: 0
-    t.datetime "destroyed_at"
-    t.string "seo_description"
+    t.string "seo_description", limit: 255
     t.boolean "seo_no_index", default: false
+    t.datetime "destroyed_at"
     t.integer "number_of_questions", default: 0
     t.integer "course_id"
     t.float "video_duration", default: 0.0
@@ -640,9 +640,9 @@ ActiveRecord::Schema.define(version: 2021_04_20_112149) do
     t.boolean "is_video", default: false, null: false
     t.boolean "is_quiz", default: false, null: false
     t.boolean "active", default: true, null: false
-    t.datetime "destroyed_at"
-    t.string "seo_description"
+    t.string "seo_description", limit: 255
     t.boolean "seo_no_index", default: false
+    t.datetime "destroyed_at"
     t.integer "number_of_questions", default: 0
     t.float "duration", default: 0.0
     t.string "temporary_label"
@@ -1181,6 +1181,7 @@ ActiveRecord::Schema.define(version: 2021_04_20_112149) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "course_step_log_id"
+    t.boolean "current", default: false
     t.index ["course_step_log_id"], name: "index_practice_question_answers_on_course_step_log_id"
     t.index ["practice_question_question_id"], name: "index_pq_answers_on_practice_question_question_id"
   end

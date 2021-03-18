@@ -20,6 +20,9 @@ require 'rails_helper'
 require 'concerns/archivable_spec.rb'
 
 describe CoursePracticeQuestion do
+  let(:practice_question_attributes) { attributes_for(:course_practice_question) }
+  let(:practice_question_with_questions_attributes) { attributes_for(:course_practice_question, :with_questions) }
+
   describe 'relationships' do
     it { should belong_to(:course_step) }
     it { should have_many(:questions) }
@@ -40,5 +43,17 @@ describe CoursePracticeQuestion do
 
   describe 'Concern' do
     it_behaves_like 'archivable'
+  end
+
+  describe 'Methods' do
+    describe '#question_is_blank?' do
+      context 'should return true' do
+        it { expect(described_class.question_is_blank?(practice_question_attributes)).to be_truthy }
+      end
+
+      context 'should return false' do
+        it { expect(described_class.question_is_blank?(practice_question_with_questions_attributes[:questions].first)).to be_falsey }
+      end
+    end
   end
 end

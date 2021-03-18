@@ -20,6 +20,7 @@ require 'rails_helper'
 require 'concerns/archivable_spec.rb'
 
 describe CourseNote do
+  let(:note) { build(:course_note) }
   describe 'relationships' do
     it { should belong_to(:course_step) }
   end
@@ -45,5 +46,27 @@ describe CourseNote do
 
   describe 'Concern' do
     it_behaves_like 'archivable'
+  end
+
+  describe 'Methods' do
+    describe '.destroyable?' do
+      context 'always return true' do
+        it { expect(note).to be_destroyable }
+      end
+    end
+
+    describe '.type' do
+      context 'web link' do
+        before { allow_any_instance_of(described_class).to receive(:web_url).and_return(true) }
+
+        it { expect(note.type).to eq('External Link') }
+      end
+
+      context 'file upload' do
+        before { allow_any_instance_of(described_class).to receive(:web_url).and_return(false) }
+
+        it { expect(note.type).to eq('File Upload') }
+      end
+    end
   end
 end
