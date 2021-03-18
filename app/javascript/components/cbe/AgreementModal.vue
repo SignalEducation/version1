@@ -5,7 +5,7 @@
       :componentName="componentName"
       :window-is-open="true"
       :componentModal="true"
-      :componentHeight="250"
+      :componentHeight="270"
       :componentWidth="500"
       :mainColor="'transparent'"
     >
