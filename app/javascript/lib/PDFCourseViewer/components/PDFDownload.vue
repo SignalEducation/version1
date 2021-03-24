@@ -16,6 +16,9 @@ export default {
     fileName: {
       type: String,
     },
+    fileType: {
+      type: String,
+    },
     fileDownload: {
       type: Boolean,
     },
@@ -24,10 +27,10 @@ export default {
     downloadFile() {
       let link      = document.createElement("a");
       link.href     = this.fileUrl;
-      link.target   = '_blank'
+      link.target   = '_blank';
       link.download = this.fileName;
       link.click();
-      notesDownloadEvent();
+      notesDownloadEvent(this.fileType);
     },
   },
 }

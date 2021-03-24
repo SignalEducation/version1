@@ -372,15 +372,15 @@
 
     // Segment Analytics
     analytics.page('Payment', {
-      exam_body_id: "#{@exam_body&.id}",
-      exam_body_name: "#{@exam_body&.name}",
+      examBodyId: "#{@exam_body&.id}",
+      examBodyName: "#{@exam_body&.name}",
       onboarding: "#{current_user&.onboarding_process&.active&.to_s}",
       currency: "#{@currency&.iso_code}",
-      subscription_plan_options: "#{@plans.map(&:id)}",
-      sub_plan_names: "#{@plans.map(&:interval_name)}",
-      sub_plan_guid: "#{params[:plan_guid]}",
-      selected_sub_plan_name: preSelectedPlan.attr('data-name'),
-      selected_sub_plan_price: preSelectedPlan.attr('data-price'),
+      subscriptionPlanOptions: "#{@plans.map(&:id)}",
+      subPlanNames: "#{@plans.map(&:interval_name)}",
+      subPlanGuid: "#{params[:plan_guid]}",
+      selectedSubPlanName: preSelectedPlan.attr('data-name'),
+      selectedSubPlanPrice: preSelectedPlan.attr('data-price'),
       banner: "#{@banner.present?}"
     });
 

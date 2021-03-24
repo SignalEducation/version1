@@ -88,6 +88,7 @@ class Exercise < ApplicationRecord
     after_transition correcting: :returned do |exercise, _transition|
       exercise.update(returned_on: Time.zone.now)
       exercise.correction_returned_email
+      exercise.segment_correction_returned_event
     end
   end
 
@@ -143,6 +144,12 @@ class Exercise < ApplicationRecord
         product_name: product.name_by_type
       }
     )
+  end
+
+  def segment_correction_returned_event
+    return if Rails.env.test?
+
+    SegmentService.new.track_correction_returned_event(self) unless autocorrected_cbe?
   end
 
   def autocorrected_cbe?

@@ -73,7 +73,7 @@ class CourseResource < ApplicationRecord
   end
 
   def type
-    external_url&.blank? ? 'File' : 'Link'
+    external_url&.blank? ? 'PDF File' : 'Link'
   end
 
   protected

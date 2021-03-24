@@ -17,6 +17,7 @@ export default {
       pdfFileName: this.$parent.fileName,
       pdfFileUrl: this.$parent.fileUrl,
       pdfFileDownload: this.$parent.fileDownload,
+      pdfFileType: 'note',
       userId: this.$parent.userId,
       courseId: this.$parent.courseId,
       stepLogId: this.$parent.stepLogId,

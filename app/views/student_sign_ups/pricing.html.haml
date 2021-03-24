@@ -327,11 +327,11 @@
 
   $( document ).ready(function() {
     analytics.page('Pricing', {
-      exam_body_id: "#{@exam_body&.id}",
-      exam_body_name: "#{@exam_body&.name}",
+      examBodyId: "#{@exam_body&.id}",
+      examBodyName: "#{@exam_body&.name}",
       onboarding: "#{current_user&.onboarding_process&.active&.to_s}",
       currency: "#{@currency&.iso_code}",
-      subscription_plan_options: "#{@subscription_plans.map(&:id)}",
-      product_options: "#{@products.map(&:id)}"
+      subscriptionPlanOptions: "#{@subscription_plans.map(&:id)}",
+      productOptions: "#{@products.map(&:id)}"
     });
   });

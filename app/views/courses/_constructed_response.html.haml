@@ -132,7 +132,7 @@
                                       =flagged_for_review(question_attempt.flagged_for_review)
 
                           .final-submission.text-center
-                            =link_to submit_constructed_response_user_log_url(@course_step_log.id) do
+                            =link_to submit_constructed_response_user_log_url(@course_step_log.id), onclick: 'constructedResponseCompleted();' do
                               .btn.btn-primary.btn-secondary
                                 ='Submit Constructed Response'
 
