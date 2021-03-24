@@ -47,10 +47,24 @@ describe RefundsController, type: :controller do
 
     describe "GET 'show'" do
       it 'should see refund' do
+        user = UserSession.find.record
+        user.id = refund.user_id
+        allow(controller).to receive(:current_user).and_return(user)
         allow(refund).to receive(:id).and_return(1)
 
         get :show, params: { id: 1 }
         expect_show_success_with_model('refund', refund.id)
+      end
+
+      it 'should redirect to main page if user id is incorrect' do
+        user = UserSession.find.record
+        user.id = 999999999
+        allow(controller).to receive(:current_user).and_return(user)
+        allow(refund).to receive(:id).and_return(1)
+
+        get :show, params: { id: 1 }
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(root_url)
       end
     end
 

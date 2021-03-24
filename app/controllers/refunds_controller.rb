@@ -9,6 +9,13 @@ class RefundsController < ApplicationController
 
   def show
     @refund = Refund.find(params[:id])
+    return if @refund && @refund.user_id == current_user.id
+
+    redirect_to root_url
+  rescue ActiveRecord::RecordNotFound => e
+    Airbrake::AirbrakeLogger.new(logger).error e.message
+    Appsignal.send_error(e)
+    redirect_to root_url
   end
 
   def new
