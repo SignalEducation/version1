@@ -220,7 +220,7 @@ class MandrillClient
         { 'name' => 'FNAME', 'content' => user.first_name },
         { 'name' => 'LNAME', 'content' => user.last_name },
         { 'name' => 'COMPANY', 'content' => 'Signal Education' },
-        { 'name' => 'COMPANYURL', 'content' => 'https://learnsignal.com' }
+        { 'name' => 'COMPANYURL', 'content' => 'https://learnsignal-production-clone.eu-west-1.elasticbeanstalk.com' }
       ],
       'merge_vars' => [
         # { 'rcpt' => 'some.email@example.com',

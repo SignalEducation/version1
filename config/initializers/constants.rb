@@ -10,5 +10,5 @@ LEARNSIGNAL_HOST =
   when 'staging', 'test'
     'https://staging.learnsignal.com'
   when 'production'
-    'https://learnsignal.com'
+    'https://learnsignal-production-clone.eu-west-1.elasticbeanstalk.com/'
   end
