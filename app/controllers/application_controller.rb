@@ -7,7 +7,7 @@ require 'will_paginate/array'
 class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
-  protect_from_forgery with: :reset_session, prepend: true
+  # protect_from_forgery with: :null_session, prepend: true
   before_action :authenticate_if_staging
   before_action :set_locale        # not for Api::
   before_action :set_session_stuff # not for Api::
