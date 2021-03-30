@@ -102,4 +102,12 @@ describe OrdersHelper, type: :helper do
       end
     end
   end
+
+  describe 'order is currently cancelled' do
+    let(:order) { build_stubbed(:order, state: 'cancelled') }
+
+    it 'returns true if order is cancelled' do
+      expect(order_cancelled_status?(order)).to be_truthy
+    end
+  end
 end

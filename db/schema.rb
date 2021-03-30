@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_13_095345) do
+ActiveRecord::Schema.define(version: 2021_03_31_140015) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -1144,6 +1144,8 @@ ActiveRecord::Schema.define(version: 2020_12_13_095345) do
     t.string "stripe_payment_method_id"
     t.string "stripe_payment_intent_id"
     t.uuid "ahoy_visit_id"
+    t.text "cancellation_note"
+    t.bigint "cancelled_by_id"
     t.index ["ahoy_visit_id"], name: "index_orders_on_ahoy_visit_id"
     t.index ["course_id"], name: "index_orders_on_course_id"
     t.index ["mock_exam_id"], name: "index_orders_on_mock_exam_id"
