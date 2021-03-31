@@ -45,7 +45,7 @@
                       %p.mb-4 Select your preferred method of payment
                       .form-group.form-group-expandable
                         .custom-control.custom-radio
-                          %input#pay-with-card.custom-control-input.style-radio{ name: 'payment-options', type: 'radio', value: 'stripe' }
+                          %input#pay-with-card.custom-control-input.style-radio{ name: 'payment-options', type: 'radio', value: 'stripe', checked: true }
                           %label.custom-control-label{ for: 'pay-with-card' }
                             %span.custom-label-info
                               %span.h3.m-0
@@ -99,11 +99,14 @@
   let plan_id = '1';
   let searchParams = new URLSearchParams(window.location.search);
   let preSelectedPlan = $("input[name='plans']:checked");
-  let analyticsData = {exam_body_id: "#{@exam_body&.id}", exam_body_name: "#{@exam_body&.name}", onboarding: "#{current_user&.onboarding_process&.active&.to_s}", subscription_plan_options: "#{@plans.map(&:id)}", sub_plan_names: "#{@plans.map(&:interval_name)}", selected_sub_plan_guid: "#{params[:plan_guid]}", selected_sub_plan_name: preSelectedPlan.attr('data-name'), selected_sub_plan_price: preSelectedPlan.attr('data-price'), currency_iso_code: "#{@currency&.iso_code}", valid_coupon_present: $('#coupon_code').hasClass("coupon-success")};
+  let planNames = [];
+  let planElements = $("input[name='plans']");
+  planElements.each(function(){ planNames.push(this.id); });
+  let analyticsData = {exam_body_id: "#{@exam_body&.id}", exam_body_name: "#{@exam_body&.name}", onboarding: "#{current_user&.onboarding_process&.active&.to_s}", subscription_plan_options: "#{@plans.map(&:id)}", sub_plan_names: planNames, selected_sub_plan_guid: "#{params[:plan_guid]}", selected_sub_plan_name: preSelectedPlan.attr('data-name'), selected_sub_plan_price: preSelectedPlan.attr('data-price'), currency_iso_code: "#{@currency&.iso_code}", valid_coupon_present: $('#coupon_code').hasClass("coupon-success")};
 
   function addToCart() {
     let selectedPlan = $("input[name='plans']:checked");
-    let planData = {exam_body_id: "#{@exam_body&.id}", exam_body_name: "#{@exam_body&.name}", onboarding: "#{current_user&.onboarding_process&.active&.to_s}", subscription_plan_options: "#{@plans.map(&:id)}", sub_plan_names: "#{@plans.map(&:interval_name)}", selected_sub_plan_guid: selectedPlan.attr('data-guid'), selected_sub_plan_name: selectedPlan.attr('data-name'), selected_sub_plan_price: selectedPlan.attr('data-price'), currency_iso_code: "#{@currency&.iso_code}", valid_coupon_present: $('#coupon_code').hasClass("coupon-success")};
+    let planData = {exam_body_id: "#{@exam_body&.id}", exam_body_name: "#{@exam_body&.name}", onboarding: "#{current_user&.onboarding_process&.active&.to_s}", subscription_plan_options: "#{@plans.map(&:id)}", sub_plan_names: planNames, selected_sub_plan_guid: selectedPlan.attr('data-guid'), selected_sub_plan_name: selectedPlan.attr('data-name'), selected_sub_plan_price: selectedPlan.attr('data-price'), currency_iso_code: "#{@currency&.iso_code}", valid_coupon_present: $('#coupon_code').hasClass("coupon-success")};
     planOptionSelect(planData);
 
     fbq('track', 'AddToCart', {
@@ -169,15 +172,17 @@
     $('.invalid-code').hide();
     $('.discounted-price').hide();
 
+    $('#pay-with-card').closest('.custom-control').siblings('.payment-details').slideDown();
+    $('#pay-with-paypal').closest('.custom-control').siblings('.payment-details').slideUp();
+    selectPaymentMethod($('.form-group-expandable').val(), false);
+
     $('.form-group-expandable').on('change', '.custom-control-input[type="radio"][name="payment-options"]', function() {
       $(this).closest('.card').find('.custom-control-input[type="radio"]').closest('.custom-control').siblings('.payment-details').slideUp();
       if ($(this).is(':checked')) {
         $(this).closest('.custom-control').siblings('.payment-details').slideDown();
-        selectPaymentMethod($(this).val())
+        selectPaymentMethod($(this).val(), true);
       }
     });
-
-    $('#pay-with-card').click(); // To open the stripe card section on page load
 
     $('#all-plans').collapse({
       toggle: false
@@ -192,8 +197,10 @@
       });
     });
 
-    function selectPaymentMethod(paymentType) {
-      providerOptionSelect(analyticsData, paymentType);
+    function selectPaymentMethod(paymentType, click) {
+      if (click === true) {
+        providerOptionSelect(analyticsData, paymentType);
+      }
       switch(paymentType) {
         case 'paypal':
           $('#subscription_use_paypal').val(true);
