@@ -44,7 +44,7 @@
                     %p.mb-4 Select your preferred method of payment
                     .form-group.form-group-expandable
                       .custom-control.custom-radio
-                        %input#pay-with-card.custom-control-input.style-radio{:name => "payment-options", :type => "radio", :value => 'stripe'}
+                        %input#pay-with-card.custom-control-input.style-radio{:name => "payment-options", :type => "radio", :value => 'stripe', checked: true}
                         %label.custom-control-label{:for => "pay-with-card"}
                           %span.custom-label-info
                             %span.h3.m-0
@@ -90,23 +90,28 @@
   let productBody = "#{@order.exam_body_name}";
   let productBodyId = "#{@order.exam_body_id}";
   let productType = "#{@order.product&.product_type}";
-  let analyticsData = {exam_body_id: productBodyId, exam_body_name: productBody, onboarding: "#{current_user&.onboarding_process&.active&.to_s}", product_id: productId, product_name: productName, product_price: productPrice, currency_iso_code: currencyIso;
+  let analyticsData = {exam_body_id: productBodyId, exam_body_name: productBody, onboarding: "#{current_user&.onboarding_process&.active&.to_s}", product_id: productId, product_name: productName, product_price: productPrice, currency_iso_code: currencyIso};
 
   $(document).on('ready', function() {
+
+    $('#pay-with-card').closest('.custom-control').siblings('.payment-details').slideDown();
+    $('#pay-with-paypal').closest('.custom-control').siblings('.payment-details').slideUp();
+    selectPaymentMethod($('.form-group-expandable').val(), false);
 
     $('.form-group-expandable').on('change', '.custom-control-input[type="radio"][name="payment-options"]', function() {
       $(this).closest('.card').find('.custom-control-input[type="radio"]').closest('.custom-control').siblings('.payment-details').slideUp();
       if ($(this).is(':checked')) {
         $(this).closest('.custom-control').siblings('.payment-details').slideDown();
-        selectPaymentMethod($(this).val());
+        selectPaymentMethod($(this).val(), true);
         $('#stripe_terms_and_conditions').prop('required', true);
         $('#paypal_terms_and_conditions').prop('required', true);
       }
     });
-    //$('.form-group-expandable .custom-control-input[type="radio"]:checked').closest('.custom-control').siblings('.payment-details').show();
 
-    function selectPaymentMethod(paymentType) {
-      providerOptionSelect(analyticsData, paymentType);
+    function selectPaymentMethod(paymentType, click) {
+      if (click === true) {
+        providerOptionSelect(analyticsData, paymentType);
+      }
       switch(paymentType) {
         case 'paypal':
           $('#order_use_paypal').val(true);
@@ -261,7 +266,6 @@
       $(".spinning-loading").hide();
     }
 
-    $('#pay-with-card').click(); // To open the stripe card section on page load
 
     analytics.page('Payment', {
       exam_body_id: productBodyId,
