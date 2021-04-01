@@ -7,7 +7,7 @@ Rails.application.routes.draw do
 
   # Enable /sidekiq for admin users only
   require 'admin_constraint'
-  mount Sidekiq::Web => '/sidekiq', constraints: AdminConstraint.new
+  mount Sidekiq::Web, at: '/sidekiq', constraints: AdminConstraint.new
   mount Blazer::Engine, at: 'blazer'
   mount Split::Dashboard, at: 'split', constraints: AdminConstraint.new
 
@@ -57,7 +57,7 @@ Rails.application.routes.draw do
   end
 
   # all standard, user-facing "resources" go inside this scope
-  scope '(:locale)', locale: /en/ do # /en\nl\pl/
+  scope "(:locale)", locale: /en/ do
     get '404' => redirect('404-page')
 
     namespace :admin do

@@ -1,5 +1,3 @@
-=javascript_include_tag 'coupons'
-
 %main
   %article.bg-gray5
     .container
@@ -47,7 +45,7 @@
                       %p.mb-4 Select your preferred method of payment
                       .form-group.form-group-expandable
                         .custom-control.custom-radio
-                          %input#pay-with-card.custom-control-input.style-radio{ name: 'payment-options', type: 'radio', value: 'stripe' }
+                          %input#pay-with-card.custom-control-input.style-radio{ name: 'payment-options', type: 'radio', value: 'stripe', checked: true }
                           %label.custom-control-label{ for: 'pay-with-card' }
                             %span.custom-label-info
                               %span.h3.m-0
@@ -100,10 +98,15 @@
 :javascript
   let plan_id = '1';
   let searchParams = new URLSearchParams(window.location.search);
+  let preSelectedPlan = $("input[name='plans']:checked");
+  let planNames = [];
+  let planElements = $("input[name='plans']");
+  planElements.each(function(){ planNames.push(this.id); });
+  let analyticsData = {exam_body_id: "#{@exam_body&.id}", exam_body_name: "#{@exam_body&.name}", onboarding: "#{current_user&.onboarding_process&.active&.to_s}", subscription_plan_options: "#{@plans.map(&:id)}", sub_plan_names: planNames, selected_sub_plan_guid: "#{params[:plan_guid]}", selected_sub_plan_name: preSelectedPlan.attr('data-name'), selected_sub_plan_price: preSelectedPlan.attr('data-price'), currency_iso_code: "#{@currency&.iso_code}", valid_coupon_present: $('#coupon_code').hasClass("coupon-success")};
 
   function addToCart() {
     let selectedPlan = $("input[name='plans']:checked");
-    let planData = {name: selectedPlan.attr('data-name'), id: selectedPlan.attr('value'), body: selectedPlan.attr('data-body'), frequency: selectedPlan.attr('data-frequency')};
+    let planData = {exam_body_id: "#{@exam_body&.id}", exam_body_name: "#{@exam_body&.name}", onboarding: "#{current_user&.onboarding_process&.active&.to_s}", subscription_plan_options: "#{@plans.map(&:id)}", sub_plan_names: planNames, selected_sub_plan_guid: selectedPlan.attr('data-guid'), selected_sub_plan_name: selectedPlan.attr('data-name'), selected_sub_plan_price: selectedPlan.attr('data-price'), currency_iso_code: "#{@currency&.iso_code}", valid_coupon_present: $('#coupon_code').hasClass("coupon-success")};
     planOptionSelect(planData);
 
     fbq('track', 'AddToCart', {
@@ -123,31 +126,6 @@
     });
   }
 
-  function checkout1() {
-    var selectedPlan = $("input[name='plans']:checked");
-    // dataLayer.push({ 'event': 'checkout',
-    //   'ecommerce': {
-    //     'checkout': {
-    //       'actionField': {'step': 1, 'option': 'Logged In'},
-    //       'products': [{
-    //         'name': selectedPlan.attr('data-name'),
-    //         'id': selectedPlan.attr('value'),
-    //         'price': selectedPlan.attr('data-price'),
-    //         'brand': selectedPlan.attr('data-body'),
-    //         'category': 'Subscription',
-    //         'quantity': 1
-    //       }]
-    //     }
-    //   }
-    // });
-  }
-
-  function checkout2(type) {
-    var selectedPlan = $("input[name='plans']:checked");
-    var convertType = (type === "stripe") ? "Credit Card" : "PayPal";
-    providerOptionSelect(convertType);
-  }
-
   function intervalSummary(frequency) {
     switch (frequency) {
       case '1':
@@ -161,11 +139,11 @@
     }
   }
 
-  function choosePlan(selectedPlan) {
+  function choosePlan(selectedPlan, pageLoad) {
     $('#subscription_subscription_plan_id').val(selectedPlan);
     updateCheckoutTotal();
     plan_id = selectedPlan;
-    if (searchParams.has('plan_guid') === false) {
+    if (pageLoad === false) {
       addToCart();
     }
   }
@@ -179,7 +157,7 @@
 
   function initializePlan() {
     var selectedPlan = $("input[name='plans']:checked").val();
-    choosePlan(selectedPlan);
+    choosePlan(selectedPlan, true);
   }
 
   $(document).on('ready', function() {
@@ -187,29 +165,24 @@
 
     $('input[type=radio][name=plans]').bind('change', function(event) {
       event.preventDefault();
-      choosePlan($(this).val());
       validateCoupon();
+      choosePlan($(this).val(), false);
     });
     $(".spinning-loading").hide();
     $('.invalid-code').hide();
     $('.discounted-price').hide();
-    if (searchParams.has('login') === true) {
-      checkoutOption('Log In');
-    } else if (searchParams.has('registered') === true) {
-      checkoutOption('Registration');
-    } else {
-      checkout1();
-    }
+
+    $('#pay-with-card').closest('.custom-control').siblings('.payment-details').slideDown();
+    $('#pay-with-paypal').closest('.custom-control').siblings('.payment-details').slideUp();
+    selectPaymentMethod($('.form-group-expandable').val(), false);
 
     $('.form-group-expandable').on('change', '.custom-control-input[type="radio"][name="payment-options"]', function() {
       $(this).closest('.card').find('.custom-control-input[type="radio"]').closest('.custom-control').siblings('.payment-details').slideUp();
       if ($(this).is(':checked')) {
         $(this).closest('.custom-control').siblings('.payment-details').slideDown();
-        selectPaymentMethod($(this).val())
+        selectPaymentMethod($(this).val(), true);
       }
     });
-
-    $('#pay-with-card').click(); // To open the stripe card section on page load
 
     $('#all-plans').collapse({
       toggle: false
@@ -224,8 +197,10 @@
       });
     });
 
-    function selectPaymentMethod(paymentType) {
-      checkout2(paymentType);
+    function selectPaymentMethod(paymentType, click) {
+      if (click === true) {
+        providerOptionSelect(analyticsData, paymentType);
+      }
       switch(paymentType) {
         case 'paypal':
           $('#subscription_use_paypal').val(true);
@@ -271,9 +246,14 @@
       }
     });
 
+    cardElement.on('focus', function() {
+      stripeFormFocus(analyticsData);
+    });
+
     var paypalButton = document.getElementById('paypal_submit');
 
     paypalButton.addEventListener('click', function(ev) {
+      paypalSubmit(analyticsData);
       $('#plans-options').prop('disabled', true);
       $('#card_submit').prop('disabled', true);
       $('#paypal_submit').prop('disabled', true);
@@ -298,6 +278,7 @@
       $(".spinner-message").html("Please wait...");
       $(".spinning-loading").show();
       $('#hidden_coupon_code').val($('#coupon_code').val());
+      stripeSubmit(analyticsData);
 
       if ($('#subscription_use_paypal').val() === 'true') {
         document.getElementById('upgrade-form').submit();
@@ -389,13 +370,22 @@
     }
 
 
+    // Segment Analytics
     analytics.page('Payment', {
       exam_body_id: "#{@exam_body&.id}",
       exam_body_name: "#{@exam_body&.name}",
       onboarding: "#{current_user&.onboarding_process&.active&.to_s}",
       currency: "#{@currency&.iso_code}",
       subscription_plan_options: "#{@plans.map(&:id)}",
-      sub_plan_guid: "#{params[:plan_guid]}"
+      sub_plan_names: "#{@plans.map(&:interval_name)}",
+      sub_plan_guid: "#{params[:plan_guid]}",
+      selected_sub_plan_name: preSelectedPlan.attr('data-name'),
+      selected_sub_plan_price: preSelectedPlan.attr('data-price'),
+      banner: "#{@banner.present?}"
+    });
+
+    $("#show_all_plans").on( "click", function() {
+      showAllPlans(analyticsData);
     });
 
   })

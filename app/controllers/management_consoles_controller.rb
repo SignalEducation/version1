@@ -12,45 +12,8 @@ class ManagementConsolesController < ApplicationController
 
   def index
     @verified_users = User.where(email_verified: true)
-
-    @january_users18 = @verified_users.where('users.created_at > ? AND users.created_at < ?', Date.new(2018, 1).beginning_of_month, Date.new(2018, 1).end_of_month)
-    @february_users18 = @verified_users.where('users.created_at > ? AND users.created_at < ?', Date.new(2018, 2).beginning_of_month, Date.new(2018, 2).end_of_month)
-    @march_users18 = @verified_users.where('users.created_at > ? AND users.created_at < ?', Date.new(2018, 3).beginning_of_month, Date.new(2018, 3).end_of_month)
-    @april_users18 = @verified_users.where('users.created_at > ? AND users.created_at < ?', Date.new(2018, 4).beginning_of_month, Date.new(2018, 4).end_of_month)
-    @may_users18 = @verified_users.where('users.created_at > ? AND users.created_at < ?', Date.new(2018, 5).beginning_of_month, Date.new(2018, 5).end_of_month)
-    @june_users18 = @verified_users.where('users.created_at > ? AND users.created_at < ?', Date.new(2018, 6).beginning_of_month, Date.new(2018, 6).end_of_month)
-    @july_users18 = @verified_users.where('users.created_at > ? AND users.created_at < ?', Date.new(2018, 7).beginning_of_month, Date.new(2018, 7).end_of_month)
-    @august_users18 = @verified_users.where('users.created_at > ? AND users.created_at < ?', Date.new(2018, 8).beginning_of_month, Date.new(2018, 8).end_of_month)
-    @september_users18 = @verified_users.where('users.created_at > ? AND users.created_at < ?', Date.new(2018, 9).beginning_of_month, Date.new(2018, 9).end_of_month)
-    @october_users18 = @verified_users.where('users.created_at > ? AND users.created_at < ?', Date.new(2018, 10).beginning_of_month, Date.new(2018, 10).end_of_month)
-    @november_users18 = @verified_users.where('users.created_at > ? AND users.created_at < ?', Date.new(2018, 11).beginning_of_month, Date.new(2018, 11).end_of_month)
-    @december_users18 = @verified_users.where('users.created_at > ? AND users.created_at < ?', Date.new(2018, 12).beginning_of_month, Date.new(2018, 12).end_of_month)
-
-    @january_users19 = @verified_users.where('users.created_at > ? AND users.created_at < ?', Date.new(2019, 1).beginning_of_month, Date.new(2019, 1).end_of_month)
-    @february_users19 = @verified_users.where('users.created_at > ? AND users.created_at < ?', Date.new(2019, 2).beginning_of_month, Date.new(2019, 2).end_of_month)
-    @march_users19 = @verified_users.where('users.created_at > ? AND users.created_at < ?', Date.new(2019, 3).beginning_of_month, Date.new(2019, 3).end_of_month)
-    @april_users19 = @verified_users.where('users.created_at > ? AND users.created_at < ?', Date.new(2019, 4).beginning_of_month, Date.new(2019, 4).end_of_month)
-    @may_users19 = @verified_users.where('users.created_at > ? AND users.created_at < ?', Date.new(2019, 5).beginning_of_month, Date.new(2019, 5).end_of_month)
-    @june_users19 = @verified_users.where('users.created_at > ? AND users.created_at < ?', Date.new(2019, 6).beginning_of_month, Date.new(2019, 6).end_of_month)
-    @july_users19 = @verified_users.where('users.created_at > ? AND users.created_at < ?', Date.new(2019, 7).beginning_of_month, Date.new(2019, 7).end_of_month)
-    @august_users19 = @verified_users.where('users.created_at > ? AND users.created_at < ?', Date.new(2019, 8).beginning_of_month, Date.new(2019, 8).end_of_month)
-    @september_users19 = @verified_users.where('users.created_at > ? AND users.created_at < ?', Date.new(2019, 9).beginning_of_month, Date.new(2019, 9).end_of_month)
-    @october_users19 = @verified_users.where('users.created_at > ? AND users.created_at < ?', Date.new(2019, 10).beginning_of_month, Date.new(2019, 10).end_of_month)
-    @november_users19 = @verified_users.where('users.created_at > ? AND users.created_at < ?', Date.new(2019, 11).beginning_of_month, Date.new(2019, 11).end_of_month)
-    @december_users19 = @verified_users.where('users.created_at > ? AND users.created_at < ?', Date.new(2019, 12).beginning_of_month, Date.new(2019, 12).end_of_month)
-
-    @january_users = @verified_users.where('users.created_at > ? AND users.created_at < ?', Date.new(2020, 1).beginning_of_month, Date.new(2020, 1).end_of_month)
-    @february_users = @verified_users.where('users.created_at > ? AND users.created_at < ?', Date.new(2020, 2).beginning_of_month, Date.new(2020, 2).end_of_month)
-    @march_users = @verified_users.where('users.created_at > ? AND users.created_at < ?', Date.new(2020, 3).beginning_of_month, Date.new(2020, 3).end_of_month)
-    @april_users = @verified_users.where('users.created_at > ? AND users.created_at < ?', Date.new(2020, 4).beginning_of_month, Date.new(2020, 4).end_of_month)
-    @may_users = @verified_users.where('users.created_at > ? AND users.created_at < ?', Date.new(2020, 5).beginning_of_month, Date.new(2020, 5).end_of_month)
-    @june_users = @verified_users.where('users.created_at > ? AND users.created_at < ?', Date.new(2020, 6).beginning_of_month, Date.new(2020, 6).end_of_month)
-    @july_users = @verified_users.where('users.created_at > ? AND users.created_at < ?', Date.new(2020, 7).beginning_of_month, Date.new(2020, 7).end_of_month)
-    @august_users = @verified_users.where('users.created_at > ? AND users.created_at < ?', Date.new(2020, 8).beginning_of_month, Date.new(2020, 8).end_of_month)
-    @september_users = @verified_users.where('users.created_at > ? AND users.created_at < ?', Date.new(2020, 9).beginning_of_month, Date.new(2020, 9).end_of_month)
-    @october_users = @verified_users.where('users.created_at > ? AND users.created_at < ?', Date.new(2020, 10).beginning_of_month, Date.new(2020, 10).end_of_month)
-    @november_users = @verified_users.where('users.created_at > ? AND users.created_at < ?', Date.new(2020, 11).beginning_of_month, Date.new(2020, 11).end_of_month)
-    @december_users = @verified_users.where('users.created_at > ? AND users.created_at < ?', Date.new(2020, 12).beginning_of_month, Date.new(2020, 12).end_of_month)
+    total_years_of_data_to_show = 4
+    define_year_month_instance_vars(total_years_of_data_to_show)
   end
 
   def system_requirements
@@ -59,5 +22,30 @@ class ManagementConsolesController < ApplicationController
 
   def public_resources
     @faq_sections = FaqSection.paginate(per_page: 50, page: params[:page]).all_in_order
+  end
+
+  private
+
+  def year_months(last_month)
+    months = [['-', '']]
+    (1..last_month).each { |m| months << [Date::MONTHNAMES[m], m] }
+    months.drop(1)
+  end
+
+  def define_year_month_instance_vars(years_back)
+    @months_to_date = year_months(Time.zone.today.month)
+    @all_months = year_months(12)
+    year_arr = []
+    Array.new(years_back) do |i|
+      year_4_digit = Time.zone.today.year - i
+      year_2_digit = ((Time.zone.today + 6).year - i) % 100
+      year_arr << year_4_digit
+      if i < 1
+        @months_to_date.map { |month, index| instance_variable_set("@#{month.downcase}_users", @verified_users.where('users.created_at > ? AND users.created_at < ?', Date.new(year_4_digit, index).beginning_of_month, Date.new(year_4_digit, index).end_of_month)) }
+      else
+        @all_months.map { |month, index| instance_variable_set("@#{month.downcase}_users#{year_2_digit}", @verified_users.where('users.created_at > ? AND users.created_at < ?', Date.new(year_4_digit, index).beginning_of_month, Date.new(year_4_digit, index).end_of_month)) }
+      end
+      @year_arr = year_arr.reverse
+    end
   end
 end

@@ -193,11 +193,16 @@ class SubscriptionsController < ApplicationController
   end
 
   def set_variables
-    @exam_body    = ExamBody.find(params[:exam_body_id])
-    @plans        = get_relevant_subscription_plans
-    @kind         = current_user.subscriptions.for_exam_body(params[:exam_body_id]).where(state: %w[canceled cancelled]).empty? ? :new_subscription : :reactivation
-    @subscription = Subscription.new(user_id: current_user.id,
-                                     subscription_plan_id: filtered_plan&.id)
+    if params[:exam_body_id].present?
+      @exam_body    = ExamBody.find(params[:exam_body_id])
+      @plans        = get_relevant_subscription_plans
+      @kind         = current_user.subscriptions.for_exam_body(params[:exam_body_id]).where(state: %w[canceled cancelled]).empty? ? :new_subscription : :reactivation
+      @subscription = Subscription.new(user_id: current_user.id,
+                                       subscription_plan_id: filtered_plan&.id)
+    else
+      flash[:error] = 'Invalid request, please contact us for assistance!' if flash[:error].nil?
+      redirect_to account_url(anchor: 'account-info')
+    end
   end
 
   def set_flash

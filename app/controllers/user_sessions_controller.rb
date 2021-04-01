@@ -62,6 +62,8 @@ class UserSessionsController < ApplicationController
   protected
 
   def user_session_params
+    return if params[:user_session].nil?
+
     params.require(:user_session).permit(:email, :password)
   end
 
