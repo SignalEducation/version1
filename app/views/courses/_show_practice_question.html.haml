@@ -1,4 +1,6 @@
-.row.row-lg#practice-question-window
+.row.row-lg#practice-question-window{data: {step_id: @course_step.id, step_name: @course_step.name, module_id: @course_lesson.id, module_name: @course_lesson.name, course_id: @course.id,
+             course_name: @course.name, exam_body_id: @group.exam_body.id, exam_body_name: @group.exam_body.name, onboarding: current_user&.onboarding_process&.active&.to_s, free_lesson: @course_lesson.free.to_s,
+              order: @index_order, previous_completion_count: 'tbc', practice_question_question_count: @course_step&.course_practice_question&.questions&.count }}
   .col-xl-12
     %h1.h4
       #fade-overlay.load-overlay-blank
@@ -15,7 +17,7 @@
 
   :javascript
     collapseFunc();
-
+    practiceQuestionStarted();
     setTimeout(
       function(){
         var x = document.getElementById("fade-overlay");

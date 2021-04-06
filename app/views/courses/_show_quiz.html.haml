@@ -1,4 +1,8 @@
-.row.row-lg#quiz-window{data: {step_id: @course_step.id, step_name: @course_step.name, module_id: @course_lesson.id, module_name: @course_lesson.name, course_id: @course.id, course_name: @course.name, exam_body_id: @group.exam_body.id, exam_body_name: @group.exam_body.name, onboarding: current_user&.onboarding_process&.active&.to_s, free_lesson: @course_lesson.free.to_s, order: @index_order }}
+.row.row-lg#quiz-window{data: {step_id: @course_step.id, step_name: @course_step.name, module_id: @course_lesson.id, module_name: @course_lesson.name,
+ course_id: @course.id, course_name: @course.name, exam_body_id: @group.exam_body.id, exam_body_name: @group.exam_body.name,
+  onboarding: current_user&.onboarding_process&.active&.to_s, free_lesson: @course_lesson.free.to_s, order: @index_order,
+  quiz_question_count: @course_step.course_quiz.quiz_questions.count, quiz_questions_asked: @number_of_questions,
+   selction_strategy: @strategy, estimated_time_in_seconds: @course_step.estimated_time_in_seconds, previous_completion_count: 'tbc', previous_best_score: 'tbc', previously_passed: 'tbc' }}
   .col-xl-12
     #course-right-show-elem-notes.course-right-show-content
       -if @course_step.try(:course_quiz).try(:enough_questions?)

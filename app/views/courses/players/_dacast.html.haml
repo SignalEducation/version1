@@ -31,7 +31,7 @@
                               'set_id': exam_track_id }),
         success: function(data,status,xhr){
           log_id = data.video_log_id;
-          videoPlayEvent();
+          videoPlayEvent(false);
         },
         error: function(xhr,status,error){
           console.log(xhr);
@@ -65,7 +65,7 @@
         $("#next-lesson-link").removeClass('d-none');
         $("#sidebar-next-lesson-modal").addClass('d-none');
         $("#sidebar-next-lesson-link").removeClass('d-none');
-        videoFinishedEvent();
+        videoFinishedEvent(false, "Na");
       },
       error: function(xhr,status,error){
         console.log(xhr);

@@ -12,7 +12,7 @@ class EnrollmentsController < ApplicationController
     @enrollment.active = true
 
     if @enrollment.save
-      ahoy.track 'Course Enrol', course: @enrollment.course.name, sitting: @enrollment.exam_sitting.name, exam_date: @enrollment.enrollment_date
+      SegmentService.new.track_course_enrolment_event(@enrollment, params[:course_log_id].present?) unless Rails.env.test?
       flash[:success] = "Thank you. You have successfully enrolled in #{@enrollment&.course&.name}"
     else
       flash[:error] = t('controllers.enrollments.create.flash.error')

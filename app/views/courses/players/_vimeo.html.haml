@@ -17,7 +17,8 @@
     frameborder: 0,
     webkitAllowFullScreen: true,
     mozallowfullscreen: true,
-    allowFullScreen: true
+    allowFullScreen: true,
+    autoplay: freeLesson
   };
 
   let player = new Vimeo.Player('video-player-window', options);
@@ -36,6 +37,15 @@
   let timeUpdate = function(data) {
     var eovCounter = data.duration - parseInt(endStepVidTime)/100;
     var updateBtnCount = false;
+    let vimeoRate = 1;
+
+    player.getPlaybackRate().then(function(playbackRate) {
+        vimeoRate = playbackRate
+    }).catch(function(error) {
+        console.log('Could not determine Playback Rate')
+    });
+
+
     if(freeLesson === 'true' && video_cme_id == lastLessonStep) {
       updateBtnCount = data.duration - data.seconds < eovCounter ? true : false;
       showUpgradeBtn(updateBtnCount);
@@ -54,7 +64,7 @@
             $("#next-lesson-link").removeClass('d-none');
             $("#sidebar-next-lesson-modal").addClass('d-none');
             $("#sidebar-next-lesson-link").removeClass('d-none');
-            videoFinishedEvent();
+            videoFinishedEvent(freeLesson, vimeoRate);
         },
         error: function(xhr,status,error){
           console.log(xhr);
@@ -78,7 +88,7 @@
         contentType: "application/json; charset=utf-8",
         success: function(data,status,xhr){
           logId = data.video_log_id;
-          videoPlayEvent(logId);
+          videoPlayEvent(freeLesson);
         },
         error: function(xhr,status,error){
           console.log(xhr);
@@ -88,12 +98,46 @@
     }
   };
 
+  //When the user selects a specific time
+  let onResume = function(data) {
+    videoPlayerResumed(data);
+  };
+
+  //When the user selects a specific time
+  let onPause = function(data) {
+    videoPlayerPaused(data);
+  };
+
+  //When the user selects a specific time
+  let timeSeeked = function(data) {
+    videoPlayerSeeked(data);
+  };
+
+  //When the user adjusts the volume
+  let volumeChange = function(data) {
+    videoVolumeChange(data);
+  };
+
+  //When the user adjusts the playback speed
+  let playbackRateChange = function(data) {
+    videoPlaybackRateChange(data);
+  };
+
+  //When the user adjusts the volume
+  let fullScreenChange = function(data) {
+    videoFullScreenChange(data);
+  };
+
+  //When the user adjusts the volume
+  let qualityChange = function(data) {
+    videoQualityChange(data);
+  };
+
   player.on('play', onPlay);
+  player.on('pause', onPause);
   player.on('timeupdate', timeUpdate);
-
-
-  $( document ).ready(function() {
-    if ( freeLesson === 'true') {
-      player.play();
-    }
-  });
+  player.on('seeked', timeSeeked);
+  player.on('volumechange', volumeChange);
+  player.on('playbackratechange', playbackRateChange);
+  player.on('fullscreenchange', fullScreenChange);
+  player.on('qualitychange', qualityChange);

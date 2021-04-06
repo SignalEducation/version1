@@ -52,8 +52,15 @@ document.addEventListener('DOMContentLoaded', () => {
       el: cbeFront,
       data: {
         cbe_id: cbeFront.dataset.id,
+        cbe_name: cbeFront.dataset.cbeName,
         user_id: cbeFront.dataset.userId,
         exercise_id: cbeFront.dataset.exerciseId,
+        product_name: cbeFront.dataset.productName,
+        product_id: cbeFront.dataset.productId,
+        course_name: cbeFront.dataset.courseName,
+        course_id: cbeFront.dataset.courseId,
+        exam_body_name: cbeFront.dataset.examBodyName,
+        exam_body_id: cbeFront.dataset.examBodyNameId,
       },
       render: (h) => h(CbeHome),
     }))();

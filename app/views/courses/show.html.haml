@@ -33,7 +33,10 @@
           -elsif @course_step.try(:is_practice_question)
             =render partial: 'courses/show_practice_question', locals: { practice_question: @course_step.course_practice_question, step_log_id:  @course_step_log.id }
           -elsif @course_step.try(:is_constructed_response)
-            =render partial: 'courses/constructed_response_start'
+            #constructed-response-start-screen{data: {step_id: @course_step.id, step_name: @course_step.name, module_id: @course_lesson.id, module_name: @course_lesson.name, course_id: @course.id,
+             course_name: @course.name, exam_body_id: @group.exam_body.id, exam_body_name: @group.exam_body.name, onboarding: current_user&.onboarding_process&.active&.to_s, free_lesson: @course_lesson.free.to_s,
+              order: @index_order, previous_completion_count: 'tbc', cr_question_count: @course_step&.constructed_response&.scenario&.scenario_questions&.count }}
+              =render partial: 'courses/constructed_response_start'
           -else
             %h2 Course module element - type unknown
             -Rails.logger.error "views/courses/show - unknown CME type. CME: #{@course_step.inspect}."

@@ -57,13 +57,16 @@
     }
 
     analytics.page('Payment Complete', {
-      exam_body_id: "#{@product&.group&.exam_body&.id}",
-      exam_body_name: "#{@product&.group&.exam_body&.name}",
+      examBodyId: "#{@product&.group&.exam_body&.id}",
+      examBodyName: "#{@product&.group&.exam_body&.name}",
       onboarding: "#{current_user&.onboarding_process&.active&.to_s}",
       type: "Product",
       currency: "#{@product&.currency&.iso_code}",
       price: "#{@product&.price}",
       country: "#{current_user&.country&.name}",
-      payment_provider: "#{@order&.payment_provider}"
+      productType: "#{@product&.product_type.humanize}",
+      productName: "#{@product&.name}",
+      productId: "#{@product&.id}",
+      paymentProvider: "#{@order&.payment_provider}"
     });
   });

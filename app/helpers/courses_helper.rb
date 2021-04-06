@@ -35,13 +35,13 @@ module CoursesHelper
 
   # VUEJS component
   def internal_pdf_link(resource)
-    viewer = "<div class='pdf-files-elements' data-file-id='#{resource.id}' data-file-name='#{resource.name}' data-file-url='#{resource.file_upload.url}' data-file-download='#{resource.download_available}'></div>"
+    viewer = "<div class='pdf-files-elements' data-file-id='#{resource&.id}' data-file-name='#{resource&.name}' data-file-url='#{resource&.file_upload&.url}' data-file-download='#{resource&.download_available}' data-course-name='#{resource&.course&.name}' data-course-id='#{resource&.course_id}' data-exam-body-id='#{resource&.course&.exam_body_id}' data-exam-body-name='#{resource&.course&.exam_body&.name}'></div>"
     viewer.html_safe
   end
 
   def external_pdf_link(resource)
     content_tag(:div, class: 'col-sm-6') do
-      content_tag(:div, class: 'card card-horizontal card-horizontal-sm flex-row resource-card', data: { resource_name: resource.name, course_name: resource.course.name, resource_type: resource.type, allowed: 'true' }) do
+      content_tag(:div, class: 'card card-horizontal card-horizontal-sm flex-row resource-card', data: { resource_name: resource.name, resource_id: resource.id, course_name: resource.course.name, course_id: resource.course_id, exam_body_name: resource.course.exam_body.name, exam_body_id: resource.course.exam_body_id, resource_type: resource.type, allowed: true }) do
         content_tag(:div, class: 'card-header bg-white d-flex align-items-center justify-content-center') do
           content_tag(:i, '', class: 'budicon-files-download')
         end +

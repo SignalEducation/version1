@@ -105,7 +105,7 @@ describe CourseResource do
       end
 
       context 'internal file' do
-        it { expect(course_resource_2.type).to eq('File') }
+        it { expect(course_resource_2.type).to eq('PDF File') }
       end
     end
 
