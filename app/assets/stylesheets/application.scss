@@ -5391,6 +5391,7 @@ a.list-group-item {
 }
 
 .side-nav-material-icons {
+  vertical-align: baseline;
   background-color: #000032;
   color: #ffffff;
   padding: 0em 0.4em 1.2em 0em;
@@ -6980,6 +6981,7 @@ button.sub-details[aria-expanded="true"]:before{
     background-color: #00B67B;
     border-radius: 1px;
     display: inline-block;
+    vertical-align: baseline;
     position: relative;
     top: 35%;
     left: 85%;
@@ -6990,6 +6992,7 @@ button.sub-details[aria-expanded="true"]:before{
     background-color: #B6003B;
     border-radius: 1px;
     display: inline-block;
+    vertical-align: baseline;
     position: relative;
     top: 35%;
     left: 85%;
@@ -7000,6 +7003,7 @@ button.sub-details[aria-expanded="true"]:before{
     background-color: #ffffff;
     border-radius: 1px;
     display: inline-block;
+    vertical-align: baseline;
     position: relative;
     top: 35%;
     left: 85%;
