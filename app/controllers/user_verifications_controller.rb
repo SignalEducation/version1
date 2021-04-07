@@ -2,6 +2,7 @@
 
 class UserVerificationsController < ApplicationController
   before_action :get_variables
+  before_action :set_verify_flash, only: :update
 
   def update
     ip_country = IpAddress.get_country(request.remote_ip) unless Rails.env.test?
@@ -14,7 +15,6 @@ class UserVerificationsController < ApplicationController
     elsif @user
       UserSession.create(@user)
       set_current_visit(@user)
-      flash[:datalayer_verify] = true
 
       SegmentService.new.track_verification_event(@user) unless Rails.env.test?
       if @user.preferred_exam_body&.group
@@ -86,5 +86,12 @@ class UserVerificationsController < ApplicationController
     @subscription_plan_categories = SubscriptionPlanCategory.all_in_order
     @courses = Course.all_active.all_in_order
     @groups = Group.all_active.all_in_order
+  end
+
+  def set_verify_flash
+    user = User.find_by(email_verification_code: params[:email_verification_code])
+    return if user&.email_verified_at
+
+    flash[:datalayer_verify] = true
   end
 end
