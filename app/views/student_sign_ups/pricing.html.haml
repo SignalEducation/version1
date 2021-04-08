@@ -332,6 +332,8 @@
       onboarding: "#{current_user&.onboarding_process&.active&.to_s}",
       currency: "#{@currency&.iso_code}",
       subscriptionPlanOptions: "#{@subscription_plans.map(&:id)}",
-      productOptions: "#{@products.map(&:id)}"
+      subPlanNames: "#{@subscription_plans.map(&:interval_name)}",
+      productOptions: "#{@products.map(&:id)}",
+      productNames: "#{@products.map(&:name)}"
     });
   });
