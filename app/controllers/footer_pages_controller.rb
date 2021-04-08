@@ -100,6 +100,8 @@ class FooterPagesController < ApplicationController
 
   def user_currency_id
     if current_user
+      return current_user.currency_id if current_user.currency_locked?
+
       country = IpAddress.get_country(request.remote_ip) || current_user.country
       currency = current_user.get_currency(country)
       currency_id = currency.id
