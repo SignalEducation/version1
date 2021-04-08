@@ -1745,9 +1745,11 @@ textarea.form-control {
 .alert-error .alert-link {
   color: #fff
 }
-
-
-
+.resource-modal-window {
+  position: fixed;
+  top: 30%;
+  left: -10%;
+}
 .modal-dialog {
   position: relative;
   width: auto;

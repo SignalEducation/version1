@@ -1,6 +1,9 @@
 <template>
-  <div id="cbe-modals" class="col-sm-6">
-    <div class="card card-horizontal card-horizontal-sm flex-row"  @click="modalOpen">
+  <div id="cbe-modals" class="col-sm-6" :style="{ zIndex: modalPos }">
+    <div
+      class="card card-horizontal card-horizontal-sm flex-row"
+      @click="modalIsOpen = !modalIsOpen; zPos()"
+    >
       <div
         class="card-header bg-white d-flex align-items-center justify-content-center"
       >
@@ -14,35 +17,35 @@
         </h5>
       </a>
     </div>
-
-    <div ref="resourcesModal" class="modal" v-show="modalIsOpen">
-      <div class="modal-content resources-modal">
-        <div class="modal-header bg-cbe-gray">
-          <span class="title help-icon">
-            {{ this.pdfFileName }}
-          </span>
-
-          <span class="close" @click="modalIsOpen = false">
-            &times;
-          </span>
-        </div>
-
-        <div class="modal-internal-content">
-          <div id="resourceTabs">
-            <PDFCourseViewer :file-url="pdfFileUrl" :file-download="pdfFileDownload" :file-type="pdfFileType" @update-pages="updateViewedPages"/>
-          </div>
+    <VueWindow
+      v-if="modalIsOpen"
+      :window-header="pdfFileName"
+      :window-width="700"
+      :window-height="300"
+      :isResizable="true"
+      :window-is-open="modalIsOpen"
+      @updateWindowClose="handleChange"
+      class="resource-modal-window"
+    >
+      <div
+        slot="body"
+      >
+        <div id="resourceTabs">
+          <PDFCourseViewer :file-url="pdfFileUrl" :file-download="pdfFileDownload" :file-type="pdfFileType" @update-pages="updateViewedPages"/>
         </div>
       </div>
-    </div>
+    </VueWindow>
   </div>
 </template>
 
 <script>
 import PDFCourseViewer from "../../lib/PDFCourseViewer/index.vue";
+import VueWindow from 'components/VueWindow.vue'
 
 export default {
   components: {
-    PDFCourseViewer
+    PDFCourseViewer,
+    VueWindow
   },
   data() {
     return {
@@ -54,6 +57,8 @@ export default {
       fileType: 'PDF File',
       allowed: true,
       modalIsOpen: false,
+      modalPos: 1,
+      modalIndex: this.$parent.modalIndex,
       pdfCourseName: this.$parent.courseName,
       pdfCourseId: this.$parent.courseId,
       pdfExamBodyName: this.$parent.examBodyName,
@@ -68,6 +73,13 @@ export default {
     modalOpen(data) {
       this.modalIsOpen = true;
       courseResourceClick({preferredExamBodyId: this.preferredExamBodyId, preferredExamBody: this.preferredExamBodyName, banner: this.banner, onboarding: this.onboarding, resourceName: this.pdfFileName, resourceId: this.pdfFileId, courseName: this.pdfCourseName, courseId: this.pdfCourseId, examBodyName: this.pdfExamBodyName, examBodyId: this.pdfExamBodyId, resourceType: this.fileType, allowDownloadFile: this.allowed});
+    },
+    zPos() {
+      this.modalPos = 2;
+    },
+    handleChange(value) {
+      this.modalPos = 1;
+      this.modalIsOpen = value
     },
     updateViewedPages(data) {
       const total   = data.totalPages;
