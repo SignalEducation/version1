@@ -60,7 +60,7 @@
       examBodyId: "#{@product&.group&.exam_body&.id}",
       examBodyName: "#{@product&.group&.exam_body&.name}",
       onboarding: "#{current_user&.onboarding_process&.active&.to_s}",
-      type: "Product",
+      paymentType: "Product",
       currency: "#{@product&.currency&.iso_code}",
       price: "#{@product&.price}",
       country: "#{current_user&.country&.name}",
