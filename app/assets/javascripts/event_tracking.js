@@ -7,7 +7,7 @@ function videoPlayEvent(autoPlay) {
   let videoLesson = $("#video-player-window"),
     stepData = videoLesson.data(),
     playerType = (stepData.hasOwnProperty('vimeoInitialized'))? 'Vimeo' : 'DaCast',
-    videoData = { 'type': 'Video', 'player': playerType, 'autoPlay': autoPlay };
+    videoData = { 'stepType': 'Video', 'player': playerType, 'autoPlay': autoPlay };
   let properties = $.extend({}, stepData, videoData);
 
   if (typeof analytics !== 'undefined') {
@@ -18,7 +18,7 @@ function videoFinishedEvent(autoPlay, playbackRate) {
   let videoLesson = $("#video-player-window"),
     stepData = videoLesson.data(),
     playerType = (stepData.hasOwnProperty('vimeoInitialized'))? 'Vimeo' : 'DaCast',
-    videoData = { 'type': 'Video', 'player': playerType, 'playBackRate': playbackRate , 'autoPlay': autoPlay };
+    videoData = { 'stepType': 'Video', 'player': playerType, 'playBackRate': playbackRate , 'autoPlay': autoPlay };
   let properties = $.extend({}, stepData, videoData);
 
   if (typeof analytics !== 'undefined') {
@@ -30,7 +30,7 @@ function videoFinishedEvent(autoPlay, playbackRate) {
 function quizStartEvent() {
   let quizWindow = $("#quiz-window"),
     lessonData = quizWindow.data(),
-    quizData = { 'type': 'Quiz' };
+    quizData = { 'stepType': 'Quiz' };
   let properties = $.extend({}, lessonData, quizData);
 
   if (typeof analytics !== 'undefined') {
@@ -51,7 +51,7 @@ function quizFinishEvent() {
 function notesStartEvent() {
   let notesWindow = $("#notes-window"),
       lessonData = notesWindow.data(),
-      noteData = { 'type': 'Note' };
+      noteData = { 'stepType': 'Note' };
   let properties = $.extend({}, lessonData, noteData);
 
   if (typeof analytics !== 'undefined') {
@@ -62,7 +62,7 @@ function notesStartEvent() {
 function notesFinishEvent() {
   let notesWindow = $("#notes-window"),
     lessonData = notesWindow.data(),
-    noteData = { 'type': 'Note' };
+    noteData = { 'stepType': 'Note' };
   let properties = $.extend({}, lessonData, noteData);
 
   if (typeof analytics !== 'undefined') {
@@ -98,7 +98,7 @@ function constructedResponseStartLoaded() {
 function constructedResponseStarted() {
   let crWindow = $("#constructed-response-area"),
     properties = crWindow.data(),
-    type = { 'type': 'ConstructedResponse' };
+    type = { 'stepType': 'ConstructedResponse' };
   let data = $.extend({}, properties, type);
 
   if (typeof analytics !== 'undefined') {
@@ -109,7 +109,7 @@ function constructedResponseStarted() {
 function constructedResponseCompleted() {
   let crWindow = $("#constructed-response-area"),
     properties = crWindow.data(),
-    type = { 'type': 'ConstructedResponse' };
+    type = { 'stepType': 'ConstructedResponse' };
   let data = $.extend({}, properties, type);
 
   if (typeof analytics !== 'undefined') {
@@ -120,7 +120,7 @@ function constructedResponseCompleted() {
 function practiceQuestionStarted() {
   let pqWindow = $("#practice-question-window"),
     properties = pqWindow.data(),
-    type = { 'type': 'PracticeQuestion' };
+    type = { 'stepType': 'PracticeQuestion' };
   let data = $.extend({}, properties, type);
 
   if (typeof analytics !== 'undefined') {
@@ -131,7 +131,7 @@ function practiceQuestionStarted() {
 function practiceQuestionCompleted() {
   let pqWindow = $("#practice-question-window"),
     properties = pqWindow.data(),
-    type = { 'type': 'PracticeQuestion' };
+    type = { 'stepType': 'PracticeQuestion' };
   let data = $.extend({}, properties, type);
 
   if (typeof analytics !== 'undefined') {
@@ -176,7 +176,7 @@ function videoPlayerSeeked(playerData) {
 function videoVolumeChange(playerData) {
   let videoLesson = $("#video-player-window"),
     stepData = videoLesson.data(),
-    videoData = { 'type': 'Volume Change', 'player': 'Vimeo', playerData };
+    videoData = { 'changeType': 'Volume Change', 'player': 'Vimeo', playerData };
   let properties = $.extend({}, stepData, videoData);
 
   if (typeof analytics !== 'undefined') {
@@ -187,7 +187,7 @@ function videoVolumeChange(playerData) {
 function videoPlaybackRateChange(playerData) {
   let videoLesson = $("#video-player-window"),
     stepData = videoLesson.data(),
-    videoData = { 'type': 'Playback Rate Change', 'player': 'Vimeo', playerData };
+    videoData = { 'changeType': 'Playback Rate Change', 'player': 'Vimeo', playerData };
   let properties = $.extend({}, stepData, videoData);
 
   if (typeof analytics !== 'undefined') {
@@ -198,7 +198,7 @@ function videoPlaybackRateChange(playerData) {
 function videoFullScreenChange(playerData) {
   let videoLesson = $("#video-player-window"),
     stepData = videoLesson.data(),
-    videoData = { 'type': 'Fullscreen Change', 'player': 'Vimeo', playerData };
+    videoData = { 'changeType': 'Fullscreen Change', 'player': 'Vimeo', playerData };
   let properties = $.extend({}, stepData, videoData);
 
   if (typeof analytics !== 'undefined') {
@@ -209,7 +209,7 @@ function videoFullScreenChange(playerData) {
 function videoQualityChange(playerData) {
   let videoLesson = $("#video-player-window"),
     stepData = videoLesson.data(),
-    videoData = { 'type': 'Volume Change', 'player': 'Vimeo', playerData };
+    videoData = { 'changeType': 'Volume Change', 'player': 'Vimeo', playerData };
   let properties = $.extend({}, stepData, videoData);
 
   if (typeof analytics !== 'undefined') {
@@ -328,7 +328,7 @@ function couponFieldExit(data) {
 
 function stripeSubmit(data) {
   if (typeof analytics !== 'undefined') {
-    let provider = {provider: 'Stripe'};
+    let provider = {paymentProvider: 'stripe'};
     let properties = $.extend({}, data, provider);
 
     analytics.track('Payment Page - Payment Initiated', properties);
@@ -337,7 +337,7 @@ function stripeSubmit(data) {
 
 function paypalSubmit(data) {
   if (typeof analytics !== 'undefined') {
-    let provider = {provider: 'PayPal'};
+    let provider = {paymentProvider: 'payPal'};
     let properties = $.extend({}, data, provider);
 
     analytics.track('Payment Page - Payment Initiated', properties);

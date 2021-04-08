@@ -73,7 +73,7 @@
       examBodyId: "#{@subscription&.subscription_plan&.exam_body&.id}",
       examBodyName: "#{@subscription&.subscription_plan&.exam_body&.name}",
       onboarding: "#{current_user&.onboarding_process&.active&.to_s}",
-      type: "Subscription",
+      paymentType: "Subscription",
       currency: "#{@subscription&.subscription_plan&.currency&.iso_code}",
       planInterval: "#{@subscription&.subscription_plan&.payment_frequency_in_months}",
       planIntervalName: "#{@subscription&.subscription_plan&.interval_name}",
