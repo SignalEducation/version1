@@ -98,6 +98,7 @@ class LibraryController < ApplicationController
     else
       flash[:error] = 'Your submission was not successful. Please try again.'
     end
+
     redirect_to request.referer || root_url
   end
 
@@ -108,7 +109,7 @@ class LibraryController < ApplicationController
   end
 
   def invalid_email_format?(email)
-    !email.match(RFC822::EMAIL_REGEXP_WHOLE)
+    email.ascii_only? || !email.match(RFC822::EMAIL_REGEXP_WHOLE)
   end
 
   protected
