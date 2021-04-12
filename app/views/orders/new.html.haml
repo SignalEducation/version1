@@ -268,13 +268,13 @@
 
 
     analytics.page('Payment', {
-      exam_body_id: productBodyId,
-      exam_body_name: productBody,
+      examBodyId: productBodyId,
+      examBodyName: productBody,
       onboarding: "#{current_user&.onboarding_process&.active&.to_s}",
       currency: currencyIso,
-      product_id: productId,
-      product_price: productPrice,
-      product_name: productName,
-      product_type: productType
+      productId: productId,
+      productPrice: productPrice,
+      productName: productName,
+      productType: productType
     });
   });

@@ -9,12 +9,14 @@
 
       -if @exercise.product.mock_exam?
         %section.pb-md-6.pb-5
-          .forgot-password-section
-            =link_to "Download #{@exercise.product.mock_exam.name}", @exercise.product.mock_exam.file.url, target: '_blank', class: 'btn btn-primary btn-sm'
+          .forgot-password-section#exercise-download-window{data: { product_name: @exercise&.product&.mock_exam&.name, product_id: @exercise.product_id, course_name: @exercise&.product&.course&.name,
+           course_id: @exercise&.product&.course_id, exam_body_name: @exercise&.product&.course&.exam_body&.name, exam_body_id: @exercise&.product&.course&.exam_body_id}}
+            =link_to "Download #{@exercise.product.mock_exam.name}", @exercise.product.mock_exam.file.url, target: '_blank', class: 'btn btn-primary btn-sm', id: 'exercise-file-download'
 
       %section.pb-md-6.pb-5
         .forgot-password-section
-          .form-box
+          .form-box#exercise-upload-window{data: { product_name: @exercise&.product&.mock_exam&.name, product_id: @exercise.product_id, course_name: @exercise&.product&.course&.name,
+           course_id: @exercise&.product&.course_id, exam_body_name: @exercise&.product&.course&.exam_body&.name, exam_body_id: @exercise&.product&.course&.exam_body_id}}
             %h2=@exercise.product.name
             -if @exercise.product.mock_exam?
               %p
@@ -47,3 +49,9 @@
                         =f.file_field :submission, class: 'form-control'
               .pt-3
                 =f.submit 'Upload Submission', class: 'btn btn-primary btn-sm'
+
+:javascript
+
+  $(document).on('submit','form.edit_exercise',function(){
+    exerciseSubmissionUpload();
+  });

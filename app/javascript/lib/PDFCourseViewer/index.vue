@@ -30,6 +30,7 @@
         :file-download="fileDownload"
         :file-name="fileName"
         :file-url="fileUrl"
+        :file-type="fileUrl"
         class="toolbarButton"
       />
 
@@ -104,7 +105,10 @@ export default {
       type: String,
       default: '',
     },
-
+    fileType: {
+      type: String,
+      default: '',
+    },
     fileDownload: {
       type: Boolean,
       default: false,

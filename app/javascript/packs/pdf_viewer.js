@@ -10,10 +10,14 @@ new Vue({
   el: element,
     data: {
       fileUrl: data.fileUrl,
+      fileId: data.fileId,
       fileName: data.fileName,
       fileDownload: (data.fileDownload == 'true'),
       courseId: data.courseId,
-      stepLogId: data.stepLogId
+      stepLogId: data.stepLogId,
+      courseName: data.courseName,
+      examBodyId: data.examBodyId,
+      examBodyName: data.examBodyName
     },
     render: h => h(component)
   });

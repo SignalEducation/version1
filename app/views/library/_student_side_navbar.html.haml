@@ -3,7 +3,7 @@
     #menu
       .menu-title
         %div
-          %h3.sidebar-title{data: {destination_url: navigation_special_link(@course_step), type: 'Breadcrumbs'}}
+          %h3.sidebar-title{data: {destination_url: navigation_special_link(@course_step), exit_type: 'Breadcrumbs'}}
             = link_to @course.name, navigation_special_link(@course_step), title: @course.name
             = succeed @course_lesson.name do
               %i.material-icons.color-shade{"aria-label" => "failed", :role => "img", :style => "position: relative;top: 6px;"} arrow_right
@@ -60,7 +60,7 @@
     #menu
       .menu-title
         %div
-          %h3.sidebar-title{data: {destination_url: navigation_special_link(@course_step), type: 'Breadcrumbs'}}
+          %h3.sidebar-title{data: {destination_url: navigation_special_link(@course_step), exit_type: 'Breadcrumbs'}}
             = link_to @course.name, navigation_special_link(@course_step), title: @course.name
             = succeed @course_lesson.name do
               %i.material-icons.color-shade{"aria-label" => "failed", :role => "img", :style => "position: relative;top: 6px;"} arrow_right

@@ -7,7 +7,7 @@ class OrdersReportWorker
 
   def perform(period, date_interval, email)
     date     = format_date_period(date_interval)
-    orders   = Order.where(created_at: date)
+    orders   = Order.where(created_at: date, state: 'completed')
     csv_data = orders.to_csv
 
     send_to_email(csv_data, period, email)

@@ -1,6 +1,6 @@
 <template>
   <div id="cbe-modals" class="col-sm-6">
-    <div class="card card-horizontal card-horizontal-sm flex-row"  @click="modalIsOpen = !modalIsOpen">
+    <div class="card card-horizontal card-horizontal-sm flex-row"  @click="modalOpen">
       <div
         class="card-header bg-white d-flex align-items-center justify-content-center"
       >
@@ -29,7 +29,7 @@
 
         <div class="modal-internal-content">
           <div id="resourceTabs">
-            <PDFCourseViewer :file-url="pdfFileUrl" :file-download="pdfFileDownload" />
+            <PDFCourseViewer :file-url="pdfFileUrl" :file-download="pdfFileDownload" :file-type="pdfFileType" @update-pages="updateViewedPages"/>
           </div>
         </div>
       </div>
@@ -47,10 +47,34 @@ export default {
   data() {
     return {
       pdfFileName: this.$parent.fileName,
+      pdfFileId: this.$parent.fileId,
       pdfFileUrl: this.$parent.fileUrl,
       pdfFileDownload: this.$parent.fileDownload,
-      modalIsOpen: false
+      pdfFileType: 'resource',
+      fileType: 'PDF File',
+      allowed: true,
+      modalIsOpen: false,
+      pdfCourseName: this.$parent.courseName,
+      pdfCourseId: this.$parent.courseId,
+      pdfExamBodyName: this.$parent.examBodyName,
+      pdfExamBodyId: this.$parent.examBodyId
     };
+  },
+  methods: {
+    modalOpen(data) {
+      this.modalIsOpen = true;
+      courseResourceClick({resourceName: this.pdfFileName, resourceId: this.pdfFileId, courseName: this.pdfCourseName, courseId: this.pdfCourseId, examBodyName: this.pdfExamBodyName, examBodyId: this.pdfExamBodyId, resourceType: this.fileType, allowDownloadFile: this.allowed});
+    },
+    updateViewedPages(data) {
+      const total   = data.totalPages;
+      const current = data.currentPage;
+
+      if ((current == total) && (!this.eventFired)) {
+        courseResourceCompleted({resourceName: this.pdfFileName, resourceId: this.pdfFileId, courseName: this.pdfCourseName, courseId: this.pdfCourseId, examBodyName: this.pdfExamBodyName, examBodyId: this.pdfExamBodyId, resourceType: this.fileType, allowDownloadFile: this.allowed});
+        this.eventFired = true;
+      }
+    },
+
   }
 };
 </script>
