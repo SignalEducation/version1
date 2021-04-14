@@ -63,6 +63,9 @@ document.addEventListener('DOMContentLoaded', () => {
         course_id: cbeFront.dataset.courseId,
         exam_body_name: cbeFront.dataset.examBodyName,
         exam_body_id: cbeFront.dataset.examBodyNameId,
+        preferred_exam_body_name: cbeFront.dataset.preferredExamBodyName,
+        preferred_exam_body_id: cbeFront.dataset.preferredExamBodyId,
+        onboarding: cbeFront.dataset.onboarding
       },
       render: (h) => h(CbeHome),
     }))();
