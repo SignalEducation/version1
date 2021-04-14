@@ -69,16 +69,25 @@
       ]
     });
 
+    let banner = "#{@banner.present?.to_s}";
+    let preferredExamBodyId = "#{current_user&.preferred_exam_body_id}";
+    let preferredExamBody = "#{current_user&.preferred_exam_body&.name}";
+    let onboarding = "#{current_user&.analytics_onboarding_valid?.to_s}";
+
     analytics.page('Payment Complete', {
+      preferredExamBodyId: preferredExamBodyId,
+      preferredExamBody:preferredExamBody ,
+      banner: banner,
+      onboarding: onboarding,
       examBodyId: "#{@subscription&.subscription_plan&.exam_body&.id}",
       examBodyName: "#{@subscription&.subscription_plan&.exam_body&.name}",
-      onboarding: "#{current_user&.onboarding_process&.active&.to_s}",
-      paymentType: "Subscription",
+      country: "#{current_user&.country&.name}",
       currency: "#{@subscription&.subscription_plan&.currency&.iso_code}",
+      paymentType: "Subscription",
+      subscriptionType: "#{@subscription&.kind.humanize}",
       planInterval: "#{@subscription&.subscription_plan&.payment_frequency_in_months}",
       planIntervalName: "#{@subscription&.subscription_plan&.interval_name}",
       price: "#{@subscription&.subscription_plan&.price}",
-      country: "#{current_user&.country&.name}",
       paymentProvider: "#{@subscription&.subscription_type}"
     });
 
