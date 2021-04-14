@@ -346,8 +346,8 @@ class User < ApplicationRecord
 
   def currency_locked?
     subscriptions.where.not(stripe_guid: nil).any? ||
-        orders.where.not(stripe_customer_id: nil).any? ||
-        subscription_payment_cards.any?
+      orders.where.not(stripe_customer_id: nil).any? ||
+      subscription_payment_cards.any?
   end
 
   def name

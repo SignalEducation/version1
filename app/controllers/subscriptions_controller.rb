@@ -163,8 +163,13 @@ class SubscriptionsController < ApplicationController
   end
 
   def get_relevant_subscription_plans
-    country   = IpAddress.get_country(request.remote_ip) || current_user.country
-    @currency = current_user.get_currency(country)
+    @currency =
+      if current_user.currency_locked?
+        current_user.currency_id
+      else
+        country = IpAddress.get_country(request.remote_ip) || current_user.country
+        current_user.get_currency(country)
+      end
 
     if params[:plan_guid]
       SubscriptionPlan.includes(:exam_body, :currency).
