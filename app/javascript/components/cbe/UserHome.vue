@@ -86,15 +86,15 @@ export default {
     }),
   },
   created() {
-    eventBus.$on("update-question-answer",()=>{
+    eventBus.$on("update-question-answer", () => {
       const dateNow = new Date();
 
       // Update answers data if last update is more then 10 seconds.
-      if ((dateNow - this.lastTimeUpdated) > 10000  ) {
+      if (dateNow - this.lastTimeUpdated > 10000) {
         this.lastTimeUpdated = dateNow;
         this.submitUnfinishedExam();
       }
-    })
+    });
   },
   watch: {
     cbe_data: {
@@ -105,6 +105,8 @@ export default {
           exercise_id: this.exerciseId,
           cbe_data: this.cbe_data,
         });
+
+        this.createUserLog();
       },
     },
     $route(to) {
@@ -113,29 +115,58 @@ export default {
   },
   mounted() {
     this.$store.dispatch("cbe/getCbe", this.cbe_id);
-    cbeLoaded({cbeId: this.cbe_id, cbeName: this.$parent.cbe_name, productId: this.$parent.product_id, productName: this.$parent.product_name, courseId: this.$parent.course_id, courseName: this.$parent.course_name, examBodyId: this.$parent.exam_body_id, examBodyName: this.$parent.exam_body_name });
+    cbeLoaded({
+      cbeId: this.cbe_id,
+      cbeName: this.$parent.cbe_name,
+      productId: this.$parent.product_id,
+      productName: this.$parent.product_name,
+      courseId: this.$parent.course_id,
+      courseName: this.$parent.course_name,
+      examBodyId: this.$parent.exam_body_id,
+      examBodyName: this.$parent.exam_body_name,
+    });
   },
   methods: {
-    submitUnfinishedExam() {
-      const countQuestions = Object.keys(this.user_cbe_data.questions).length
-      const countResponses = Object.keys(this.user_cbe_data.responses).length
+    createUserLog() {
+      console.log("CREATING A CBE USER LOG");
+      const data = {};
+      data.cbe_id = this.user_cbe_data.cbe_id;
+      data.user_id = this.user_cbe_data.user_id;
+      data.exercise_id = this.user_cbe_data.exercise_id;
 
-      if(countQuestions != 0 || countResponses != 0){
+      axios
+        .post(`/api/v1/cbes/${this.user_cbe_data.cbe_id}/users_log`, {
+          cbe_user_log: data,
+        })
+        .then((response) => {
+          this.$store.dispatch("userCbe/recordUserLog", response.data);
+        })
+        .catch((error) => {});
+      console.log("CBE USER LOG CREATED");
+    },
+    submitUnfinishedExam() {
+      const countQuestions = Object.keys(this.user_cbe_data.questions).length;
+      const countResponses = Object.keys(this.user_cbe_data.responses).length;
+
+      if (countQuestions != 0 || countResponses != 0) {
         let data = this.formatedData();
         data.status = "started";
 
-        if(data.questions_attributes.length > 0 || data.responses_attributes.length > 0){
+        if (
+          data.questions_attributes.length > 0 ||
+          data.responses_attributes.length > 0
+        ) {
           axios
-          .patch(
-            `/api/v1/cbes/${this.cbe_id}/users_log/${this.user_cbe_data.user_log_id}`,
-            {
-              cbe_user_log: data,
-            }
-          )
-          .then((response) => {
-            console.log('Unfinished saved.');
-          })
-          .catch((error) => {});
+            .patch(
+              `/api/v1/cbes/${this.cbe_id}/users_log/${this.user_cbe_data.user_log_id}`,
+              {
+                cbe_user_log: data,
+              }
+            )
+            .then((response) => {
+              console.log("Unfinished saved.");
+            })
+            .catch((error) => {});
         }
       }
     },
@@ -150,6 +181,7 @@ export default {
         .patch(
           `/api/v1/cbes/${this.cbe_id}/users_log/${this.user_cbe_data.user_log_id}`,
           {
+            id: this.user_cbe_data.user_log_id,
             cbe_user_log: this.formatedData(),
           }
         )
@@ -158,7 +190,16 @@ export default {
         })
         .catch((error) => {});
 
-      cbeSubmitted({cbeId: this.cbe_id, cbeName: this.$parent.cbe_name, productId: this.$parent.product_id, productName: this.$parent.product_name, courseId: this.$parent.course_id, courseName: this.$parent.course_name, examBodyId: this.$parent.exam_body_id, examBodyName: this.$parent.exam_body_name });
+      cbeSubmitted({
+        cbeId: this.cbe_id,
+        cbeName: this.$parent.cbe_name,
+        productId: this.$parent.product_id,
+        productName: this.$parent.product_name,
+        courseId: this.$parent.course_id,
+        courseName: this.$parent.course_name,
+        examBodyId: this.$parent.exam_body_id,
+        examBodyName: this.$parent.exam_body_name,
+      });
     },
     formatedData() {
       const data = {};

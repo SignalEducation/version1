@@ -51,25 +51,6 @@ export default {
     }),
   },
   methods: {
-    createUserLog() {
-      axios
-        .post(`/api/v1/cbes/${this.userCbeData.cbe_id}/users_log`, {
-          cbe_user_log: this.formatedData(),
-        })
-        .then(response => {
-          this.$store.dispatch('userCbe/recordUserLog', response.data);
-          this.nextAction();
-        })
-        .catch(error => {});
-    },
-    formatedData() {
-      const data = {};
-      data.cbe_id = this.userCbeData.cbe_id;
-      data.user_id = this.userCbeData.user_id;
-      data.exercise_id = this.userCbeData.exercise_id;
-
-      return data;
-    },
     acceptAgreement(accepted) {
       const navLinks = document.getElementsByClassName('page-item');
       for (const link of navLinks) {
@@ -77,13 +58,34 @@ export default {
       }
 
       if (accepted) {
-        this.createUserLog();
-        cbeStarted({cbeId: this.$parent.$parent.cbe_id, cbeName: this.$parent.$parent.$parent.cbe_name, productId: this.$parent.$parent.$parent.product_id, productName: this.$parent.$parent.$parent.product_name, courseId: this.$parent.$parent.$parent.course_id, courseName: this.$parent.$parent.$parent.course_name, examBodyId: this.$parent.$parent.$parent.exam_body_id, examBodyName: this.$parent.$parent.$parent.exam_body_name });
+        this.userCbeData.user_agreement = true;
+        this.updateAgreedOnUserLog();
       } else {
         window.location.href = `${this.userCbeData.cbe_id}`;
       }
 
       this.toggleResetModal();
+    },
+    updateAgreedOnUserLog() {
+      console.log("Update CBE USER LOG");
+      const data   = {};
+      data.agreed  = this.userCbeData.user_agreement;
+
+      axios
+        .post(
+          `/api/v1/cbes/${this.userCbeData.cbe_id}/users_log/${this.userCbeData.user_log_id}/user_agreement`,
+          {
+            id: this.userCbeData.user_log_id,
+            cbe_user_log: data,
+          }
+        )
+        .then((response) => {
+          console.log("Cbe agreed by user.");
+          this.nextAction();
+          cbeStarted({cbeId: this.$parent.$parent.cbe_id, cbeName: this.$parent.$parent.$parent.cbe_name, productId: this.$parent.$parent.$parent.product_id, productName: this.$parent.$parent.$parent.product_name, courseId: this.$parent.$parent.$parent.course_id, courseName: this.$parent.$parent.$parent.course_name, examBodyId: this.$parent.$parent.$parent.exam_body_id, examBodyName: this.$parent.$parent.$parent.exam_body_name });
+        })
+        .catch((error) => {});
+      console.log("CBE USER LOG CREATED");
     },
     toggleResetModal() {
       this.agreementModalIsOpen = !this.agreementModalIsOpen;

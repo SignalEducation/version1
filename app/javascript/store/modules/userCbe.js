@@ -6,6 +6,7 @@ const state = {
     user_id: null,
     cbe_id: null,
     exercise_id: null,
+    user_agreement: false,
     questions: {},
     responses: {},
     status: "",
@@ -83,6 +84,7 @@ const mutations = {
   setUserLog(state, data) {
     state.user_cbe_data.status = data.status;
     state.user_cbe_data.user_log_id = data.id;
+    state.user_cbe_data.user_agreement = data.agreed;
 
     data.user_questions.forEach(question => {
       state.user_cbe_data.questions[question.cbe_question_id] = question;

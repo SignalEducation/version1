@@ -4,7 +4,7 @@ module Api
   module V1
     module Cbes
       class UsersLogController < Api::V1::ApplicationController
-        before_action :set_user_log, only: %i[show update]
+        before_action :set_user_log, only: %i[show update user_agreement]
 
         def index
           @users_log = ::Cbe::UserLog.all
@@ -30,6 +30,13 @@ module Api
           render json: { errors: @user_log.errors }, status: :unprocessable_entity
         end
 
+        def user_agreement
+          binding.pry
+          return if @user_log.update(permitted_params)
+
+          render json: { errors: @user_log.errors }, status: :unprocessable_entity
+        end
+
         private
 
         def set_user_log
@@ -38,7 +45,7 @@ module Api
 
         def permitted_params
           params.require(:cbe_user_log).permit(
-            :status, :created_at, :updated_at, :cbe_id, :user_id, :exercise_id,
+            :status, :created_at, :updated_at, :cbe_id, :user_id, :exercise_id, :agreed,
             responses_attributes: [
               :cbe_response_option_id,
               content: {}

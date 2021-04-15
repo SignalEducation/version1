@@ -3,6 +3,7 @@
 json.id     user_log.id
 json.status user_log.status
 json.score  user_log.score
+json.agreed user_log.agreed
 
 json.user do
   json.id   user_log.user.id
