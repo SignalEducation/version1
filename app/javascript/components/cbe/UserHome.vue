@@ -10,6 +10,7 @@
     <div class="cbe-content">
       <router-view
         :id="$route.path"
+        :key="$route.path"
         :gio-status="exhModalStatus"
         @update-close-all="exhModalStatus = $event"
       />
@@ -74,7 +75,6 @@ export default {
       exerciseId: this.$parent.exercise_id,
       exhModalStatus: null,
       navModalStatus: null,
-      lastTimeUpdated: new Date(),
     };
   },
   computed: {
@@ -87,13 +87,7 @@ export default {
   },
   created() {
     eventBus.$on("update-question-answer", () => {
-      const dateNow = new Date();
-
-      // Update answers data if last update is more then 10 seconds.
-      if (dateNow - this.lastTimeUpdated > 10000) {
-        this.lastTimeUpdated = dateNow;
-        this.submitUnfinishedExam();
-      }
+      this.submitUnfinishedExam();
     });
   },
   watch: {
@@ -140,6 +134,10 @@ export default {
         })
         .then((response) => {
           this.$store.dispatch("userCbe/recordUserLog", response.data);
+          console.log(this.$route.path);
+          this.$router.push(response.data.current_state);
+          console.log(this.$route.path);
+
         })
         .catch((error) => {});
       console.log("CBE USER LOG CREATED");
@@ -181,7 +179,6 @@ export default {
         .patch(
           `/api/v1/cbes/${this.cbe_id}/users_log/${this.user_cbe_data.user_log_id}`,
           {
-            id: this.user_cbe_data.user_log_id,
             cbe_user_log: this.formatedData(),
           }
         )

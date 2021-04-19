@@ -55,12 +55,12 @@ export default {
     }else{
       this.agreementModalIsOpen = true
       this.nextAction = next;
+      const navLinks = document.getElementsByClassName('page-item');
+      for (const link of navLinks) {
+        link.style.display = 'none';
+      }
     }
 
-    const navLinks = document.getElementsByClassName('page-item');
-    for (const link of navLinks) {
-      link.style.display = 'none';
-    }
   },
   methods: {
     showLoading() {

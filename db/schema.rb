@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_15_080924) do
+ActiveRecord::Schema.define(version: 2021_04_16_095230) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -223,6 +223,7 @@ ActiveRecord::Schema.define(version: 2021_04_15_080924) do
     t.bigint "exercise_id"
     t.text "educator_comment"
     t.boolean "agreed", default: false
+    t.string "current_state"
     t.index ["cbe_id"], name: "index_cbe_user_logs_on_cbe_id"
     t.index ["exercise_id"], name: "index_cbe_user_logs_on_exercise_id"
     t.index ["user_id"], name: "index_cbe_user_logs_on_user_id"

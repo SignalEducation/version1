@@ -67,7 +67,6 @@ export default {
       this.toggleResetModal();
     },
     updateAgreedOnUserLog() {
-      console.log("Update CBE USER LOG");
       const data   = {};
       data.agreed  = this.userCbeData.user_agreement;
 
@@ -80,12 +79,10 @@ export default {
           }
         )
         .then((response) => {
-          console.log("Cbe agreed by user.");
           this.nextAction();
           cbeStarted({cbeId: this.$parent.$parent.cbe_id, cbeName: this.$parent.$parent.$parent.cbe_name, productId: this.$parent.$parent.$parent.product_id, productName: this.$parent.$parent.$parent.product_name, courseId: this.$parent.$parent.$parent.course_id, courseName: this.$parent.$parent.$parent.course_name, examBodyId: this.$parent.$parent.$parent.exam_body_id, examBodyName: this.$parent.$parent.$parent.exam_body_name });
         })
         .catch((error) => {});
-      console.log("CBE USER LOG CREATED");
     },
     toggleResetModal() {
       this.agreementModalIsOpen = !this.agreementModalIsOpen;

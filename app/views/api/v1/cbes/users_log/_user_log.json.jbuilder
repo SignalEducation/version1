@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
-json.id     user_log.id
-json.status user_log.status
-json.score  user_log.score
-json.agreed user_log.agreed
+json.id            user_log.id
+json.status        user_log.status
+json.score         user_log.score
+json.agreed        user_log.agreed
+json.current_state user_log.current_state
 
 json.user do
   json.id   user_log.user.id

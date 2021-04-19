@@ -22,7 +22,9 @@
 </template>
 
 <script>
+import axios from 'axios';
 import CbeNavigator from './CbeNavigator.vue'
+import { mapGetters } from 'vuex';
 
 export default {
   components: {
@@ -32,6 +34,9 @@ export default {
     links: function () {
       return this.generateObjectLinks();
     },
+    ...mapGetters('userCbe', {
+      userCbeData: 'userCbeData',
+    }),
   },
   data() {
     return {
@@ -53,6 +58,8 @@ export default {
       } else {
         this.pageLimit = 1;
       }
+
+      this.updateCurrentState(to.path);
     },
   },
   methods: {
@@ -68,7 +75,6 @@ export default {
 
       return object_link;
     },
-
     mapObject(object_link, object, type){
       if (object != null){
         object.filter(item => {
@@ -93,9 +99,30 @@ export default {
 
       return object_link
     },
-
     updateNavModal(value) {
       this.$emit("update-close-all", value);
+    },
+    updateCurrentState(current_state) {
+      const data   = {};
+      data.current_state  = current_state;
+
+      if(this.userCbeData.cbe_id !== null){
+        axios
+          .post(
+            `/api/v1/cbes/${this.userCbeData.cbe_id}/users_log/${this.userCbeData.user_log_id}/current_state`,
+            {
+              id: this.userCbeData.user_log_id,
+              cbe_user_log: data,
+            }
+          )
+          .then((response) => {
+            // this.userCbeData.current_state = current_state;
+          })
+          .catch((error) => {});
+      }
+    },
+    toggleResetModal() {
+      this.agreementModalIsOpen = !this.agreementModalIsOpen;
     },
   }
 };
