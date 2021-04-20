@@ -33,6 +33,8 @@ RSpec.describe 'Api::V1::Cbe::UsersLogController', type: :request do
         expect(body.map(&:keys).uniq).to contain_exactly(%w[id
                                                             status
                                                             score
+                                                            agreed
+                                                            current_state
                                                             user
                                                             cbe
                                                             user_questions
@@ -73,6 +75,8 @@ RSpec.describe 'Api::V1::Cbe::UsersLogController', type: :request do
         expect([body.keys]).to contain_exactly(%w[id
                                                   status
                                                   score
+                                                  agreed
+                                                  current_state
                                                   user
                                                   cbe
                                                   user_questions
@@ -102,6 +106,8 @@ RSpec.describe 'Api::V1::Cbe::UsersLogController', type: :request do
         expect([body.keys]).to contain_exactly(%w[id
                                                   status
                                                   score
+                                                  agreed
+                                                  current_state
                                                   user
                                                   cbe
                                                   user_questions
@@ -149,6 +155,8 @@ RSpec.describe 'Api::V1::Cbe::UsersLogController', type: :request do
         expect([body.keys]).to contain_exactly(%w[id
                                                   status
                                                   score
+                                                  agreed
+                                                  current_state
                                                   user
                                                   cbe
                                                   user_questions

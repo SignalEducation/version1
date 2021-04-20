@@ -122,7 +122,6 @@ export default {
   },
   methods: {
     createUserLog() {
-      console.log("CREATING A CBE USER LOG");
       const data = {};
       data.cbe_id = this.user_cbe_data.cbe_id;
       data.user_id = this.user_cbe_data.user_id;
@@ -134,13 +133,12 @@ export default {
         })
         .then((response) => {
           this.$store.dispatch("userCbe/recordUserLog", response.data);
-          console.log(this.$route.path);
-          this.$router.push(response.data.current_state);
-          console.log(this.$route.path);
+          // this.$router.push(response.data.current_state);
 
         })
-        .catch((error) => {});
-      console.log("CBE USER LOG CREATED");
+        .catch((error) => {
+          console.log(error);
+        });
     },
     submitUnfinishedExam() {
       const countQuestions = Object.keys(this.user_cbe_data.questions).length;

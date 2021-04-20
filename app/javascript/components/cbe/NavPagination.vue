@@ -24,6 +24,7 @@
 <script>
 import axios from 'axios';
 import CbeNavigator from './CbeNavigator.vue'
+import eventBus from "./EventBus.vue";
 import { mapGetters } from 'vuex';
 
 export default {
@@ -57,9 +58,12 @@ export default {
         this.pageLimit = 0;
       } else {
         this.pageLimit = 1;
+        this.updateCurrentState(to.path);
+        console.log(to.path);
+        console.log('Update current state');
       }
 
-      this.updateCurrentState(to.path);
+      this.updateAnswersData(from.name);
     },
   },
   methods: {
@@ -119,6 +123,11 @@ export default {
             // this.userCbeData.current_state = current_state;
           })
           .catch((error) => {});
+      }
+    },
+    updateAnswersData(from) {
+      if (from === 'questions') {
+       eventBus.$emit("update-question-answer");
       }
     },
     toggleResetModal() {
