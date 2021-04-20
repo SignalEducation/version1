@@ -81,10 +81,6 @@ export default {
       type: [Number, String],
       required: true
     },
-    gioStatus: {
-      type: Boolean,
-      default: null
-    },
   },
   data() {
     return {

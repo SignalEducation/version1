@@ -177,12 +177,13 @@ export default {
         },
       }
 
+      this.$store.dispatch("userCbe/recordResponse", data);
+
       // Update answers data if last update is more then 10 seconds.
       if (dateNow - this.lastTimeUpdated > 10000) {
         this.lastTimeUpdated = dateNow;
         eventBus.$emit("update-question-answer", data);
       }
-      this.$store.dispatch("userCbe/recordResponse", data);
     },
   },
 };

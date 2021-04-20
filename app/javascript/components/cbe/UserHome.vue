@@ -10,8 +10,6 @@
     <div class="cbe-content">
       <router-view
         :id="$route.path"
-        :key="$route.path"
-        :gio-status="exhModalStatus"
         @update-close-all="exhModalStatus = $event"
       />
     </div>
@@ -133,7 +131,7 @@ export default {
         })
         .then((response) => {
           this.$store.dispatch("userCbe/recordUserLog", response.data);
-          // this.$router.push(response.data.current_state);
+          this.$router.push(response.data.current_state);
 
         })
         .catch((error) => {

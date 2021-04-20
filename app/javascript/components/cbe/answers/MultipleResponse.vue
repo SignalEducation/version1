@@ -49,8 +49,8 @@ export default {
     question(newValue) {
       let data = this.getQuestionFormated(newValue)
 
-      EventBus.$emit("update-question-answer", data);
       this.$store.dispatch("userCbe/recordAnswer", data);
+      EventBus.$emit("update-question-answer", data);
     }
   },
   methods: {

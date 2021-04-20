@@ -59,8 +59,6 @@ export default {
       } else {
         this.pageLimit = 1;
         this.updateCurrentState(to.path);
-        console.log(to.path);
-        console.log('Update current state');
       }
 
       this.updateAnswersData(from.name);
@@ -127,7 +125,7 @@ export default {
     },
     updateAnswersData(from) {
       if (from === 'questions') {
-       eventBus.$emit("update-question-answer");
+        eventBus.$emit("update-question-answer");
       }
     },
     toggleResetModal() {
