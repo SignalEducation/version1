@@ -58,6 +58,7 @@ export default {
     question(newValue) {
       EventBus.$emit("update-question-answer", newValue);
       this.$store.dispatch('userCbe/recordAnswer', newValue);
+      EventBus.$emit("update-question-answer", newValue);
     },
   },
   methods: {

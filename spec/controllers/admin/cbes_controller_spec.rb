@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'mandrill_client'
 require 'rails_helper'
 
 RSpec.describe Admin::CbesController, type: :controller do
@@ -46,10 +47,26 @@ RSpec.describe Admin::CbesController, type: :controller do
   end
 
   describe '#clone' do
+    before do
+      allow_any_instance_of(MandrillClient).to receive(:successfully_cbe_clone_email).and_return(true)
+      allow_any_instance_of(MandrillClient).to receive(:failed_cbe_clone_email).and_return(true)
+    end
+
     context 'clone cbe' do
       it 'should duplicate cbe' do
         allow(controller).to receive(:current_user).and_return(user)
-        allow(CbeCloneWorker).to receive(:perform_async).and_return(true)
+
+        post :clone, params: { id: cbe_resource.cbe.id }
+
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(admin_cbes_path)
+        expect(flash[:success]).to be_present
+        expect(flash[:success]).to eq('CBE is cloning now, you will receive an email when finished.')
+      end
+
+      it 'should duplicate cbe' do
+        expect_any_instance_of(Cbe).to receive(:update!).and_raise(ActiveRecord::RecordInvalid)
+        allow(controller).to receive(:current_user).and_return(user)
 
         post :clone, params: { id: cbe_resource.cbe.id }
 

@@ -56,8 +56,8 @@ export default {
         }]
       }
 
-      EventBus.$emit("update-question-answer", data);
       this.$store.dispatch("userCbe/recordAnswer", data);
+      EventBus.$emit("update-question-answer", data);
     }
   },
   methods: {
