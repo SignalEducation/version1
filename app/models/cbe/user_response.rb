@@ -24,8 +24,6 @@ class Cbe
                                      inverse_of: :user_responses
 
     # scopes
-    scope :by_scenario, lambda { |scenario_id|
-      includes(cbe_response_option: :scenario).where(cbe_scenarios: { id: scenario_id })
-    }
+    scope :by_scenario, ->(sc_id) { includes(cbe_response_option: :scenario).where(cbe_scenarios: { id: sc_id }) }
   end
 end
