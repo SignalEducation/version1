@@ -1,21 +1,5 @@
 <template>
   <div>
-<<<<<<< HEAD
-    <section
-      class="exhibits-sidebar-links exhibit-icon"
-      @click="show()"
-    >
-      {{ exhibitName }}
-    </section>
-    <modal :name="`cbe-exhibits-modal-${exhibitType}-${exhibitName}`" draggable=".window-header" scrollable=true resizable=true clickToClose=false>
-      <div class="window-header">DRAG ME HERE</div>
-      <button @click="hide()">CLOSE</button>
-      <div>
-        <SpreadsheetEditor
-          v-if="exhibitType === 'spreadsheet'"
-          :initial-data="exhibitSpreadsheetData"
-        />
-=======
     <section @click="show($event)" class="exhibits-sidebar-links exhibit-icon">
       {{ exhibitName }}
     </section>
@@ -30,7 +14,6 @@
             v-if="exhibitType === 'spreadsheet'"
             :initial-data="exhibitSpreadsheetData"
           />
->>>>>>> install and test new modal plugin
 
           <div id="pdfvuer" v-if="exhibitType === 'pdf'">
             <div
@@ -78,13 +61,8 @@
             </pdf>
           </div>
         </div>
-<<<<<<< HEAD
-      </div>
-    </modal>
-=======
       </modal>
     </div>
->>>>>>> install and test new modal plugin
   </div>
 </template>
 
