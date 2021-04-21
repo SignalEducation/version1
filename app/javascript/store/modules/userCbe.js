@@ -8,6 +8,7 @@ const state = {
     exercise_id: null,
     user_agreement: false,
     current_state: null,
+    scratch_pad: null,
     questions: {},
     responses: {},
     status: "",
@@ -87,6 +88,8 @@ const mutations = {
     state.user_cbe_data.user_log_id = data.id;
     state.user_cbe_data.user_agreement = data.agreed;
     state.user_cbe_data.current_state = data.current_state;
+    state.user_cbe_data.scratch_pad = data.scratch_pad;
+    state.user_cbe_data.exam_pages = data.pages_state;
 
     data.user_questions.forEach(question => {
       state.user_cbe_data.questions[question.cbe_question_id] = question;

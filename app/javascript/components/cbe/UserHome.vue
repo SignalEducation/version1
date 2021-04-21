@@ -30,8 +30,8 @@
           <b-navbar-nav
             v-if="
               $route.name == 'review' &&
-              user_cbe_data.status !== 'corrected' &&
-              user_cbe_data.status !== 'finished'
+                user_cbe_data.status !== 'corrected' &&
+                user_cbe_data.status !== 'finished'
             "
           >
             <b-nav-text class="arrow-right-icon" @click="submitExam"
@@ -101,6 +101,12 @@ export default {
         this.createUserLog();
       },
     },
+    "user_cbe_data.exam_pages": {
+      handler() {
+        this.submitUnfinishedExam();
+      },
+     deep: true
+    },
     $route(to) {
       this.updateExamPageState(to);
     },
@@ -132,7 +138,6 @@ export default {
         .then((response) => {
           this.$store.dispatch("userCbe/recordUserLog", response.data);
           this.$router.push(response.data.current_state);
-
         })
         .catch((error) => {
           console.log(error);
@@ -210,6 +215,8 @@ export default {
       data.status = "finished";
       data.cbe_id = this.user_cbe_data.cbe_id;
       data.user_id = this.user_cbe_data.user_id;
+      data.scratch_pad = this.user_cbe_data.scratch_pad;
+      data.pages_state = this.user_cbe_data.exam_pages;
       data.exercise_id = this.user_cbe_data.exercise_id;
       data.questions_attributes = [].concat.apply([], questions);
       data.responses_attributes = [].concat.apply([], responses);

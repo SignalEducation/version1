@@ -54,8 +54,16 @@ module Api
 
         def permitted_params
           params.require(:cbe_user_log).permit(
-            :status, :created_at, :updated_at, :cbe_id,
-            :user_id, :exercise_id, :agreed, :current_state,
+            :status, :created_at, :updated_at, :cbe_id, :user_id,
+            :exercise_id, :agreed, :current_state, :scratch_pad,
+            pages_state: [
+              :description,
+              :state,
+              :flagged,
+              :type,
+              :param,
+              :page
+            ],
             responses_attributes: [
               :cbe_response_option_id,
               content: {}
