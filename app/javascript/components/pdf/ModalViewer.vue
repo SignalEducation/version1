@@ -63,14 +63,14 @@ export default {
   methods: {
     modalOpen(data) {
       this.modalIsOpen = true;
-      courseResourceClick({resourceName: this.pdfFileName, resourceId: this.pdfFileId, courseName: this.pdfCourseName, courseId: this.pdfCourseId, examBodyName: this.pdfExamBodyName, examBodyId: this.pdfExamBodyId, type: this.fileType, allowed: this.allowed});
+      courseResourceClick({resourceName: this.pdfFileName, resourceId: this.pdfFileId, courseName: this.pdfCourseName, courseId: this.pdfCourseId, examBodyName: this.pdfExamBodyName, examBodyId: this.pdfExamBodyId, resourceType: this.fileType, allowDownloadFile: this.allowed});
     },
     updateViewedPages(data) {
       const total   = data.totalPages;
       const current = data.currentPage;
 
       if ((current == total) && (!this.eventFired)) {
-        courseResourceCompleted({resourceName: this.pdfFileName, resourceId: this.pdfFileId, courseName: this.pdfCourseName, courseId: this.pdfCourseId, examBodyName: this.pdfExamBodyName, examBodyId: this.pdfExamBodyId, type: this.fileType, allowed: this.allowed});
+        courseResourceCompleted({resourceName: this.pdfFileName, resourceId: this.pdfFileId, courseName: this.pdfCourseName, courseId: this.pdfCourseId, examBodyName: this.pdfExamBodyName, examBodyId: this.pdfExamBodyId, resourceType: this.fileType, allowDownloadFile: this.allowed});
         this.eventFired = true;
       }
     },

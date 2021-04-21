@@ -1745,9 +1745,18 @@ textarea.form-control {
 .alert-error .alert-link {
   color: #fff
 }
-
-
-
+.window-header {
+  cursor: grab;
+  height: 2.5em;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  p { padding: 0.75em 1em 0 1em; font-weight: bold !important;}
+  .modal-close { top: .5rem; font-size: 1.15em;}
+  button:focus { outline: none; }
+  .close { opacity: 1 }
+}
+.window-header:active { cursor: grabbing; }
 .modal-dialog {
   position: relative;
   width: auto;
@@ -6751,6 +6760,49 @@ button.sub-details[aria-expanded="true"]:before{
       display: block;
     }
   }
+}
+.vm--modal {
+  overflow-y: auto !important;
+  min-width: 300px !important;
+  min-height: 300px !important;
+  resize: both;
+}
+.vm--modal::-webkit-resizer {
+  border-bottom: 15px solid #595959 !important;
+  border-left: 15px solid transparent !important;
+}
+.active-modal {
+  z-index: 999 !important;
+}
+.active-modal-section {
+  visibility: hidden;
+}
+.present-modal {
+  position: relative;
+  z-index: 500;
+}
+#viewerContainer {
+  .page {
+    margin: auto;
+  }
+	.textLayer {
+    position: initial;
+    margin-top: -1em;
+  }
+}
+.vue-modal-resizer {
+  position: sticky !important;
+  float: right !important;
+  width: 17px !important;
+  height: 17px !important;
+}
+.vue-modal-resizer::after {
+  border-bottom: 15px solid #595959 !important;
+  border-left: 15px solid transparent !important;
+  right: 4px !important;
+}
+.vue-modal-resizer.clicked::after {
+  border-bottom: 15px solid #00b67b !important;
 }
 .cbe-content {
   .vm--overlay, .vm--container {

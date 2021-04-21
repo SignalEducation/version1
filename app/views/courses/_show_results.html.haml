@@ -1,7 +1,8 @@
 .row.row-lg#quiz-results-window{data: {step_id: @course_step.id, step_name: @course_step.name, module_id: @course_lesson.id, module_name: @course_lesson.name,
- course_id: @course.id, course_name: @course.name, exam_body_id: @group.exam_body.id, exam_body_name: @group.exam_body.name,
-  onboarding: current_user&.onboarding_process&.active&.to_s, free_lesson: @course_lesson.free.to_s, quiz_result: @pass, quiz_score: @quiz_score, order: @index_order,
-  selction_strategy: @course_step.course_quiz.question_selection_strategy, estimated_time_in_seconds: @course_step.estimated_time_in_seconds, previous_completion_count: 'tbc', previous_best_score: 'tbc', previously_passed: 'tbc' }}
+ course_id: @course.id, course_name: @course.name, section_id: @course_lesson&.course_section_id, section_name: @course_lesson&.course_section&.name,
+  exam_body_id: @group.exam_body.id, exam_body_name: @group.exam_body.name, onboarding: current_user&.onboarding_process&.active&.to_s, free_lesson: @course_lesson.free.to_s,
+   quiz_result: @pass, quiz_score: @quiz_score, order: @index_order, quiz_question_count: @course_step.course_quiz.quiz_questions.count, quiz_questions_asked: @number_of_questions,
+    selction_strategy: @course_step.course_quiz.question_selection_strategy, estimated_time_in_seconds: @course_step.estimated_time_in_seconds, previous_completion_count: 'tbc', previous_best_score: 'tbc', previously_passed: 'tbc' }}
   .col-xl-12
     #course-right-show-elem-notes.course-right-show-content
       .course-right-show-frame
