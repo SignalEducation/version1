@@ -35,6 +35,8 @@ RSpec.describe 'Api::V1::Cbe::UsersLogController', type: :request do
                                                             score
                                                             agreed
                                                             current_state
+                                                            scratch_pad
+                                                            pages_state
                                                             user
                                                             cbe
                                                             user_questions
@@ -77,6 +79,8 @@ RSpec.describe 'Api::V1::Cbe::UsersLogController', type: :request do
                                                   score
                                                   agreed
                                                   current_state
+                                                  scratch_pad
+                                                  pages_state
                                                   user
                                                   cbe
                                                   user_questions
@@ -108,6 +112,8 @@ RSpec.describe 'Api::V1::Cbe::UsersLogController', type: :request do
                                                   score
                                                   agreed
                                                   current_state
+                                                  scratch_pad
+                                                  pages_state
                                                   user
                                                   cbe
                                                   user_questions
@@ -157,6 +163,8 @@ RSpec.describe 'Api::V1::Cbe::UsersLogController', type: :request do
                                                   score
                                                   agreed
                                                   current_state
+                                                  scratch_pad
+                                                  pages_state
                                                   user
                                                   cbe
                                                   user_questions
