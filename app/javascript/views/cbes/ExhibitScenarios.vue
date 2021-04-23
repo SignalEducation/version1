@@ -78,12 +78,8 @@ export default {
   },
   props: {
     id: {
-      type: Number,
+      type: [Number, String],
       required: true
-    },
-    gioStatus: {
-      type: Boolean,
-      default: null
     },
   },
   data() {
@@ -97,7 +93,7 @@ export default {
     }),
     scenarioData() {
       let cbeScenario = {};
-      const scenarioId = this.id;
+      const scenarioId = parseInt(this.id);
 
       if(this.cbeData !== null && scenarioId!== null) {
         cbeScenario = this.cbeData.scenarios.find(function(element) {

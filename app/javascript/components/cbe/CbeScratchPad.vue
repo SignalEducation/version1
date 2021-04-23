@@ -51,7 +51,8 @@ export default {
   data() {
     return {
       apiKey: "6lr2e49pkvekjoocwhblfmatskmhek3h3ae8f4cbpfw3u3vw",
-      modalIsOpen: false
+      lastTimeUpdated: new Date(),
+      modalIsOpen: false,
     };
   },
   created() {
@@ -70,6 +71,14 @@ export default {
     },
     modalIsOpen(value) {
       this.$emit("update-close-all", this.modalIsOpen);
+    },
+    "userCbeData.scratch_pad"(newValue){
+      const dateNow = new Date();
+       // Update answers data if last update is more then 10 seconds.
+      if (dateNow - this.lastTimeUpdated > 10000) {
+        this.lastTimeUpdated = dateNow;
+        eventBus.$emit("update-question-answer", newValue);
+      }
     },
   },
 };

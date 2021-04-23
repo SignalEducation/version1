@@ -35,7 +35,7 @@ json.scenarios cbe.scenarios do |scenario|
   json.partial! 'api/v1/cbes/scenarios/scenario', locals: { scenario: scenario }
 end
 
-json.questions cbe.questions.order(:sorting_order) do |question|
+json.questions cbe.questions.includes(:scenario, :answers).order(:sorting_order) do |question|
   json.partial! 'api/v1/cbes/questions/question', locals: { question: question }
 end
 

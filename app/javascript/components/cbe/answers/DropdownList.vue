@@ -23,7 +23,12 @@
   </section>
 </template>
 <script>
+import EventBus from "../EventBus.vue";
+
 export default {
+  components: {
+    EventBus,
+  },
   props: {
     answersData: {
       type: Array,
@@ -45,16 +50,22 @@ export default {
   },
   watch: {
     question(newValue) {
-      this.$store.dispatch("userCbe/recordAnswer", newValue);
+      if (newValue != null) {
+        this.$store.dispatch("userCbe/recordAnswer", newValue);
+        EventBus.$emit("update-question-answer", newValue);
+      }
     }
   },
   methods: {
     getPickedValue() {
-      const initialValue = this.$store.state.userCbe.user_cbe_data.questions[
+      let initialValue = this.$store.state.userCbe.user_cbe_data.questions[
         this.questionId
       ];
 
-      if (initialValue != null) { return initialValue; }
+      if (initialValue != null) {
+        initialValue.id = initialValue.cbe_question_id
+        return initialValue;
+      }
 
       return [];
     },
