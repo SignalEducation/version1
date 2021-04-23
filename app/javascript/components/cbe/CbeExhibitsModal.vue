@@ -1,107 +1,118 @@
 <template>
   <div>
-    <section
-      class="exhibits-sidebar-links exhibit-icon"
-      @click="showModal = !showModal"
-    >
-      {{ exhibitName }}
+    <section @click="show($event)" class="components-sidebar-links" :class="componentIcon">
+      {{ componentName }}
     </section>
-    <VueWindow
-      :window-header="exhibitName"
-      :window-width="810"
-      :window-is-open="showModal"
-      :isResizable="true"
-      :closeButton="true"
-      @updateWindowClose="handleChange"
-    >
-      <div slot="body">
-        <SpreadsheetEditor
-          v-if="exhibitType === 'spreadsheet'"
-          :initial-data="exhibitSpreadsheetData"
-        />
-
-        <div id="pdfvuer" v-if="exhibitType === 'pdf'">
-          <div
-            id="buttons"
-            class="ui grey three item inverted bottom fixed menu transition hidden"
-          >
-            <a class="item" @click="page > 1 ? page-- : 1">
-              <i class="left chevron icon"></i>
-              Back
-            </a>
-            <a class="ui active item">
-              {{ page }} / {{ numPages ? numPages : "∞" }}
-            </a>
-            <a class="item" @click="page < numPages ? page++ : 1">
-              Forward
-              <i class="right chevron icon"></i>
-            </a>
+    <div>
+      <VueModal
+        :componentType="componentType"
+        :componentName="componentName"
+        :componentModal="componentModal"
+        :componentContentData="componentContentData"
+        :componentIcon="componentIcon"
+        :height="450"
+        :width="800"
+      >
+        <div slot="body">
+          <SpreadsheetEditor
+            v-if="componentType === 'spreadsheet'"
+            :initial-data="componentContentData"
+          />
+          <div id="pdfvuer" v-else-if="componentType === 'pdf'">
+            <div
+              id="buttons"
+              class="ui grey three item inverted bottom fixed menu transition hidden"
+            >
+              <a class="item" @click="page > 1 ? page-- : 1">
+                <i class="left chevron icon"></i>
+                Back
+              </a>
+              <a class="ui active item">
+                {{ page }} / {{ numPages ? numPages : "∞" }}
+              </a>
+              <a class="item" @click="page < numPages ? page++ : 1">
+                Forward
+                <i class="right chevron icon"></i>
+              </a>
+            </div>
+            <div
+              id="buttons"
+              class="ui grey three item inverted bottom fixed menu transition hidden"
+            >
+              <a class="item" @click="scale -= scale > 0.2 ? 0.1 : 0">
+                <i class="left chevron icon" />
+                Zoom -
+              </a>
+              <a class="ui active item"> {{ formattedZoom }} % </a>
+              <a class="item" @click="scale += scale < 2 ? 0.1 : 0">
+                Zoom +
+                <i class="right chevron icon" />
+              </a>
+            </div>
+            <pdf
+              :src="pdfdata"
+              v-for="i in numPages"
+              :key="i"
+              :id="i"
+              :page="i"
+              :scale.sync="scale"
+              style="width:100%;margin:0px auto;"
+            >
+              <template slot="loading">
+                loading content here...
+              </template>
+            </pdf>
           </div>
-          <div
-            id="buttons"
-            class="ui grey three item inverted bottom fixed menu transition hidden"
-          >
-            <a class="item" @click="scale -= scale > 0.2 ? 0.1 : 0">
-              <i class="left chevron icon" />
-              Zoom -
-            </a>
-            <a class="ui active item"> {{ formattedZoom }} % </a>
-            <a class="item" @click="scale += scale < 2 ? 0.1 : 0">
-              Zoom +
-              <i class="right chevron icon" />
-            </a>
-          </div>
-          <pdf
-            :src="pdfdata"
-            v-for="i in numPages"
-            :key="i"
-            :id="i"
-            :page="i"
-            :scale.sync="scale"
-            style="width:100%;margin:20px auto;"
-          >
-            <template slot="loading">
-              loading content here...
-            </template>
-          </pdf>
         </div>
-      </div>
-    </VueWindow>
+      </VueModal>
+    </div>
   </div>
 </template>
 
 <script>
-import eventBus from "./EventBus.vue";
+import eventBus from "../cbe/EventBus.vue";
 import pdfvuer from "pdfvuer";
-import VueWindow from "../VueWindow.vue";
 import SpreadsheetEditor from "../SpreadsheetEditor/SpreadsheetEditor.vue";
+import VueModal from "../VueModal.vue";
 
 export default {
   components: {
     pdf: pdfvuer,
     SpreadsheetEditor,
-    VueWindow,
+    VueModal
   },
   props: {
-    exhibitType: {
+    componentType: {
       type: String,
       default: "",
     },
-    exhibitName: {
+    componentName: {
       type: String,
       default: "",
     },
-    exhibitModal: {
+    componentModal: {
       type: Boolean,
       default: false,
     },
-    exhibitSpreadsheetData: {
+    componentContentData: {
       type: Object,
       default: () => ({}),
     },
     currentFile: {
       type: Object,
       default: () => ({}),
+    },
+    componentIcon: {
+      type: String,
+      default: "",
+    },
+    mainColor: {
+      type: String,
+      default: "#F2F2F2",
+    },
+    textColor: {
+      type: String,
+      default: "#000000",
     },
   },
   data() {
@@ -111,7 +122,7 @@ export default {
       pdfdata: null,
       errors: [],
       scale: "page-width",
-      showModal: this.exhibitModal,
+      showModal: this.componentModal,
     };
   },
   computed: {
@@ -193,6 +204,14 @@ export default {
     },
     findPos(obj) {
       return obj.offsetTop;
+    },
+    show (event) {
+      this.$modal.show("modal-"+this.componentType+"-"+this.componentName);
+      $('.components-sidebar .components div').removeClass('active-modal');
+    },
+    hide (event) {
+      $('.latent-modal').removeClass('active-modal');
+      this.$modal.hide("modal-"+this.componentType+"-"+this.componentName);
     },
   },
 };

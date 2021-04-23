@@ -1,6 +1,7 @@
 <template>
   <section id="student-cbe" class="cbe-section">
     <NavBar
+      class="cbe-content-navbar"
       :logo="cbe_data.name"
       :title="cbe_data.name"
       :user-cbe-data="user_cbe_data"

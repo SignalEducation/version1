@@ -2,71 +2,71 @@
   <div>
     <section
       :class="`exhibits-sidebar-links ${responseOptionType}-icon`"
-      @click="showModal = !showModal"
+      @click="show()"
     >
-      {{ responseOptionFType }}
+      {{ responseOptionName }}
     </section>
+    <div>
+      <VueModal
+        :componentType="responseOptionType"
+        :componentName="responseOptionName"
+        :componentModal="responseOptionModal"
+        :componentHeight="450"
+        :componentWidth="800"
+      >
+        <div slot="body">
+          <TinyEditor
+            v-if="responseOptionType === 'open'"
+            :field-model.sync="responseOption"
+            :aditional-toolbar-options="[]"
+            :editor-height="1200"
+          />
 
-    <VueWindow
-      :window-header="responseOptionFType"
-      :window-width="920"
-      :window-is-open="showModal"
-      :isResizable="true"
-      :closeButton="true"
-      @updateWindowClose="handleChange"
-    >
-      <div slot="body">
-        <TinyEditor
-          v-if="responseOptionType === 'open'"
-          :field-model.sync="responseOption"
-          :aditional-toolbar-options="[]"
-          :editor-height="1200"
-        />
+          <div
+            class="multiple-editors"
+            v-if="responseOptionType === 'multiple_open'"
+          >
+            <div v-for="(response, index) in multipleResponseOption" :key="index">
+              <div class="slide-headers">Slide {{ index + 1 }}</div>
+              <TinyEditor
+                :field-model.sync="response.speaker"
+                :aditional-toolbar-options="[]"
+                :editor-height="520"
+              />
 
-        <div
-          class="multiple-editors"
-          v-if="responseOptionType === 'multiple_open'"
-        >
-          <div v-for="(response, index) in multipleResponseOption" :key="index">
-            <div class="slide-headers">Slide {{ index + 1 }}</div>
-            <TinyEditor
-              :field-model.sync="response.speaker"
-              :aditional-toolbar-options="[]"
-              :editor-height="520"
-            />
-
-            <div class="slide-headers">
-              Slide {{ index + 1 }}: Speaker Notes
+              <div class="slide-headers">
+                Slide {{ index + 1 }}: Speaker Notes
+              </div>
+              <TinyEditor
+                :field-model.sync="response.notes"
+                :aditional-toolbar-options="[]"
+                :editor-height="520"
+              />
             </div>
-            <TinyEditor
-              :field-model.sync="response.notes"
-              :aditional-toolbar-options="[]"
-              :editor-height="520"
-            />
           </div>
-        </div>
 
-        <SpreadsheetEditor
-          v-if="responseOptionType === 'spreadsheet'"
-          :initial-data="responseOption"
-          :initialWidth="920"
-          @spreadsheet-updated="syncResponsesData"
-        />
-      </div>
-    </VueWindow>
+          <SpreadsheetEditor
+            v-if="responseOptionType === 'spreadsheet'"
+            :initial-data="responseOption"
+            :initialWidth="920"
+            @spreadsheet-updated="syncResponsesData"
+          />
+        </div>
+      </VueModal>
+    </div>
   </div>
 </template>
 
 <script>
 import eventBus from "./EventBus.vue";
-import VueWindow from "../VueWindow.vue";
+import VueModal from "../VueModal.vue";
 import SpreadsheetEditor from "../SpreadsheetEditor/SpreadsheetEditor.vue";
 import TinyEditor from "../TinyEditor.vue";
 
 export default {
   components: {
     SpreadsheetEditor,
-    VueWindow,
+    VueModal,
     TinyEditor,
   },
   props: {
@@ -75,10 +75,6 @@ export default {
       default: null,
     },
     responseOptionType: {
-      type: String,
-      default: "",
-    },
-    responseOptionFType: {
       type: String,
       default: "",
     },
@@ -120,6 +116,9 @@ export default {
     eventBus.$on("close-modal", (status) => {
       this.showModal = status;
     });
+  },
+  mounted() {
+    this.hide();
   },
   methods: {
     handleChange(value) {
@@ -185,6 +184,12 @@ export default {
         eventBus.$emit("update-question-answer", data);
       }
     },
+    show () {
+      this.$modal.show("modal-"+this.responseOptionType+"-"+this.responseOptionName);
+    },
+    hide () {
+      this.$modal.hide("modal-"+this.responseOptionType+"-"+this.responseOptionName);
+    }
   },
 };
 </script>
