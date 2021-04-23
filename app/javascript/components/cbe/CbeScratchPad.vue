@@ -65,6 +65,16 @@ export default {
       this.modalIsOpen = status;
     })
   },
+  watch: {
+    "userCbeData.scratch_pad"(newValue){
+      const dateNow = new Date();
+       // Update answers data if last update is more then 10 seconds.
+      if (dateNow - this.lastTimeUpdated > 10000) {
+        this.lastTimeUpdated = dateNow;
+        eventBus.$emit("update-question-answer", newValue);
+      }
+    },
+  },
   methods: {
     show (event) {
       this.$modal.show("modal-"+this.componentType+"-"+this.componentName);
@@ -73,14 +83,6 @@ export default {
     hide (event) {
       $('.latent-modal').removeClass('active-modal');
       this.$modal.hide("modal-"+this.componentType+"-"+this.componentName);
-    },
-    "userCbeData.scratch_pad"(newValue){
-      const dateNow = new Date();
-       // Update answers data if last update is more then 10 seconds.
-      if (dateNow - this.lastTimeUpdated > 10000) {
-        this.lastTimeUpdated = dateNow;
-        eventBus.$emit("update-question-answer", newValue);
-      }
     },
   },
 };
