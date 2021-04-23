@@ -1,42 +1,46 @@
 <template>
-  <div id="cbe-modals">
-    <b-nav-text
-      class="calculator-icon"
-      @click="modalIsOpen = !modalIsOpen"
+  <div>
+    <section
+      class="components-sidebar-links calculator-icon"
+      @click="show($event)"
     >
       Calculator
-    </b-nav-text>
+    </section>
 
-    <VueWindow
-      :window-header="'Calculator'"
-      :window-width="520"
-      :window-height="370"
-      :window-is-open="modalIsOpen"
-      @updateWindowClose="handleChange"
-    >
-      <div
-        slot="body"
+      <VueModal
+        :componentName="componentName"
+        :componentType="componentType"
+        :mainColor="'#000032'"
+        :textColor="'#ffffff'"
+        :height="450"
+        :width="350"
       >
+      <div slot="body">
         <Calculator />
       </div>
-    </VueWindow>
+      </VueModal>
   </div>
 </template>
 
 <script>
 import Calculator from '../Calculator.vue';
 import eventBus from "./EventBus.vue";
-import VueWindow from '../VueWindow.vue'
+import VueModal from '../VueModal.vue';
 
 export default {
   components: {
     Calculator,
-    VueWindow,
+    VueModal
   },
-  data() {
-    return {
-      modalIsOpen: false,
-    };
+  props: {
+    componentType: {
+      type: String,
+      default: "",
+    },
+    componentName: {
+      type: String,
+      default: "Calculator",
+    },
   },
   created() {
     eventBus.$on("close-modal",(status)=>{
@@ -44,17 +48,15 @@ export default {
     })
   },
   methods: {
-    handleChange(value) {
-      this.modalIsOpen = value;
-    }
-  },
-  watch: {
-    modalStatus(status) {
-      this.modalIsOpen = status;
+    show (event) {
+      this.$modal.show("modal-"+this.componentType+"-"+this.componentName);
+      $('.components-sidebar .components div').removeClass('active-modal');
     },
-    modalIsOpen(value) {
-      this.$emit("update-close-all", this.modalIsOpen);
+    hide (event) {
+      $('.latent-modal').removeClass('active-modal');
+      this.$modal.hide("modal-"+this.componentType+"-"+this.componentName);
     },
   },
+
 };
 </script>

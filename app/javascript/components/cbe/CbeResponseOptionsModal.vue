@@ -4,65 +4,69 @@
       :class="`exhibits-sidebar-links ${responseOptionType}-icon`"
       @click="show()"
     >
-      {{ responseOptionFType }}
+      {{ responseOptionName }}
     </section>
+    <div>
+      <VueModal
+        :componentType="responseOptionType"
+        :componentName="responseOptionName"
+        :componentModal="responseOptionModal"
+        :componentHeight="450"
+        :componentWidth="800"
+      >
+        <div slot="body">
+          <TinyEditor
+            v-if="responseOptionType === 'open'"
+            :field-model.sync="responseOption"
+            :aditional-toolbar-options="[]"
+            :editor-height="1200"
+          />
 
-    <modal :name="`cbe-response-modal-${responseOptionType}-${responseOptionId}`" draggable=".window-header" scrollable=true resizable=true clickToClose=false>
-      <div class="window-header">DRAG ME HERE</div>
-        This is my first modal
-      <button @click="hide()">CLOSE</button>
-      <div>
-        <TinyEditor
-          v-if="responseOptionType === 'open'"
-          :field-model.sync="responseOption"
-          :aditional-toolbar-options="[]"
-          :editor-height="1200"
-        />
+          <div
+            class="multiple-editors"
+            v-if="responseOptionType === 'multiple_open'"
+          >
+            <div v-for="(response, index) in multipleResponseOption" :key="index">
+              <div class="slide-headers">Slide {{ index + 1 }}</div>
+              <TinyEditor
+                :field-model.sync="response.speaker"
+                :aditional-toolbar-options="[]"
+                :editor-height="520"
+              />
 
-        <div
-          class="multiple-editors"
-          v-if="responseOptionType === 'multiple_open'"
-        >
-          <div v-for="(response, index) in multipleResponseOption" :key="index">
-            <div class="slide-headers">Slide {{ index + 1 }}</div>
-            <TinyEditor
-              :field-model.sync="response.speaker"
-              :aditional-toolbar-options="[]"
-              :editor-height="520"
-            />
-
-            <div class="slide-headers">
-              Slide {{ index + 1 }}: Speaker Notes
+              <div class="slide-headers">
+                Slide {{ index + 1 }}: Speaker Notes
+              </div>
+              <TinyEditor
+                :field-model.sync="response.notes"
+                :aditional-toolbar-options="[]"
+                :editor-height="520"
+              />
             </div>
-            <TinyEditor
-              :field-model.sync="response.notes"
-              :aditional-toolbar-options="[]"
-              :editor-height="520"
-            />
           </div>
-        </div>
 
-        <SpreadsheetEditor
-          v-if="responseOptionType === 'spreadsheet'"
-          :initial-data="responseOption"
-          :initialWidth="920"
-          @spreadsheet-updated="syncResponsesData"
-        />
-      </div>
-    </modal>
+          <SpreadsheetEditor
+            v-if="responseOptionType === 'spreadsheet'"
+            :initial-data="responseOption"
+            :initialWidth="920"
+            @spreadsheet-updated="syncResponsesData"
+          />
+        </div>
+      </VueModal>
+    </div>
   </div>
 </template>
 
 <script>
 import eventBus from "./EventBus.vue";
-import VueWindow from "../VueWindow.vue";
+import VueModal from "../VueModal.vue";
 import SpreadsheetEditor from "../SpreadsheetEditor/SpreadsheetEditor.vue";
 import TinyEditor from "../TinyEditor.vue";
 
 export default {
   components: {
     SpreadsheetEditor,
-    VueWindow,
+    VueModal,
     TinyEditor,
   },
   props: {
@@ -71,10 +75,6 @@ export default {
       default: null,
     },
     responseOptionType: {
-      type: String,
-      default: "",
-    },
-    responseOptionFType: {
       type: String,
       default: "",
     },
@@ -185,10 +185,10 @@ export default {
       }
     },
     show () {
-      this.$modal.show("cbe-response-modal-"+this.responseOptionType+"-"+this.responseOptionId);
+      this.$modal.show("modal-"+this.responseOptionType+"-"+this.responseOptionName);
     },
     hide () {
-      this.$modal.hide("cbe-response-modal-"+this.responseOptionType+"-"+this.responseOptionId);
+      this.$modal.hide("modal-"+this.responseOptionType+"-"+this.responseOptionName);
     }
   },
 };

@@ -1,21 +1,24 @@
 <template>
   <div>
-    <section @click="show($event)" class="exhibits-sidebar-links exhibit-icon">
-      {{ exhibitName }}
+    <section @click="show($event)" class="components-sidebar-links" :class="componentIcon">
+      {{ componentName }}
     </section>
-    <div class="present-modal">
-      <modal :name="`cbe-exhibits-modal-${exhibitType}-${exhibitName}`" draggable=".window-header" :scrollable="true" :resizable="false" :clickToClose="false">
-        <div @click="makeActiveHeader($event)" class="window-header" :style="{ 'background-color':mainColor }">
-          <p :style="{ 'color':textColor }">{{ exhibitName }}</p>
-          <button @click="hide($event)" :style="{ 'color':textColor }" type="button" class="close modal-close modal-close-solution" data-dismiss="modal" aria-hidden="true">&times;</button>
-        </div>
-        <div @click="makeActiveBody($event)">
+    <div>
+      <VueModal
+        :componentType="componentType"
+        :componentName="componentName"
+        :componentModal="componentModal"
+        :componentContentData="componentContentData"
+        :componentIcon="componentIcon"
+        :height="450"
+        :width="800"
+      >
+        <div slot="body">
           <SpreadsheetEditor
-            v-if="exhibitType === 'spreadsheet'"
-            :initial-data="exhibitSpreadsheetData"
+            v-if="componentType === 'spreadsheet'"
+            :initial-data="componentContentData"
           />
-
-          <div id="pdfvuer" v-if="exhibitType === 'pdf'">
+          <div id="pdfvuer" v-else-if="componentType === 'pdf'">
             <div
               id="buttons"
               class="ui grey three item inverted bottom fixed menu transition hidden"
@@ -61,43 +64,47 @@
             </pdf>
           </div>
         </div>
-      </modal>
+      </VueModal>
     </div>
   </div>
 </template>
 
 <script>
-import eventBus from "./EventBus.vue";
+import eventBus from "../cbe/EventBus.vue";
 import pdfvuer from "pdfvuer";
-import VueWindow from "../VueWindow.vue";
 import SpreadsheetEditor from "../SpreadsheetEditor/SpreadsheetEditor.vue";
+import VueModal from "../VueModal.vue";
 
 export default {
   components: {
     pdf: pdfvuer,
     SpreadsheetEditor,
-    VueWindow,
+    VueModal
   },
   props: {
-    exhibitType: {
+    componentType: {
       type: String,
       default: "",
     },
-    exhibitName: {
+    componentName: {
       type: String,
       default: "",
     },
-    exhibitModal: {
+    componentModal: {
       type: Boolean,
       default: false,
     },
-    exhibitSpreadsheetData: {
+    componentContentData: {
       type: Object,
       default: () => ({}),
     },
     currentFile: {
       type: Object,
       default: () => ({}),
+    },
+    componentIcon: {
+      type: String,
+      default: "",
     },
     mainColor: {
       type: String,
@@ -115,7 +122,7 @@ export default {
       pdfdata: null,
       errors: [],
       scale: "page-width",
-      showModal: this.exhibitModal,
+      showModal: this.componentModal,
     };
   },
   computed: {
@@ -199,20 +206,12 @@ export default {
       return obj.offsetTop;
     },
     show (event) {
-      this.$modal.show("cbe-exhibits-modal-"+this.exhibitType+"-"+this.exhibitName);
-      $('.exhibits-sidebar .exhibits div').removeClass('active-modal');
+      this.$modal.show("modal-"+this.componentType+"-"+this.componentName);
+      $('.components-sidebar .components div').removeClass('active-modal');
     },
     hide (event) {
-      $('.present-modal').removeClass('active-modal');
-      this.$modal.hide("cbe-exhibits-modal-"+this.exhibitType+"-"+this.exhibitName);
-    },
-    makeActiveHeader(event) {
-      $('.exhibits-sidebar .exhibits div').removeClass('active-modal');
-      event.target.parentElement.parentElement.parentElement.parentElement.classList.add('active-modal');
-    },
-    makeActiveBody(event) {
-      $('.exhibits-sidebar .exhibits div').removeClass('active-modal');
-      event.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.classList.add('active-modal');
+      $('.latent-modal').removeClass('active-modal');
+      this.$modal.hide("modal-"+this.componentType+"-"+this.componentName);
     },
   },
 };
