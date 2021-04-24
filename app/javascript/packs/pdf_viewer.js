@@ -17,7 +17,11 @@ new Vue({
       stepLogId: data.stepLogId,
       courseName: data.courseName,
       examBodyId: data.examBodyId,
-      examBodyName: data.examBodyName
+      examBodyName: data.examBodyName,
+      preferredExamBodyId: data.preferredExamBodyId,
+      preferredExamBodyName: data.preferredExamBodyName,
+      banner: data.banner,
+      onboarding: data.onboarding
     },
     render: h => h(component)
   });

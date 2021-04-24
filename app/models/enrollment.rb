@@ -170,24 +170,22 @@ class Enrollment < ApplicationRecord
   protected
 
   def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
+    return if destroyable?
+
+    errors.add(:base, I18n.t('models.general.dependencies_exist'))
+    false
   end
 
   def deactivate_siblings
-    if self.sibling_enrollments.any?
-      self.sibling_enrollments.each do |enrollment|
-        enrollment.update_attribute(:active, false)
-      end
+    return unless sibling_enrollments.any?
+
+    sibling_enrollments.each do |enrollment|
+      enrollment.update_attribute(:active, false)
     end
   end
 
   def create_course_log
-    course_log = CourseLog.create!(user_id: self.user_id,
-                                                           session_guid: self.user.try(:session_guid),
-                                                           course_id: self.course_id)
+    course_log = CourseLog.create!(user_id: user_id, session_guid: user.try(:session_guid), course_id: course_id)
     self.course_log_id = course_log.id
   end
 
@@ -196,9 +194,9 @@ class Enrollment < ApplicationRecord
   end
 
   def create_expiration_worker
-    if self.computer_based_exam && self.exam_date
-      EnrollmentExpirationWorker.perform_at(self.exam_date.to_datetime + 23.hours, self.id) unless Rails.env.test?
-    end
+    return unless computer_based_exam && exam_date
+
+    EnrollmentExpirationWorker.perform_at(exam_date.to_datetime + 23.hours, id) unless Rails.env.test?
   end
 
 end

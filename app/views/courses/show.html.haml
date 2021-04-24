@@ -35,7 +35,8 @@
           -elsif @course_step.try(:is_constructed_response)
             #constructed-response-start-screen{data: {step_id: @course_step.id, step_name: @course_step.name, module_id: @course_lesson.id, module_name: @course_lesson.name, course_id: @course.id,
              course_name: @course.name, section_id: @course_lesson&.course_section_id, section_name: @course_lesson&.course_section&.name, exam_body_id: @group.exam_body.id, exam_body_name: @group.exam_body.name,
-              onboarding: current_user&.onboarding_process&.active&.to_s, free_lesson: @course_lesson.free.to_s, order: @index_order, previous_completion_count: 'tbc',
+              preferred_exam_body_id: current_user&.preferred_exam_body_id, preferred_exam_body: current_user&.preferred_exam_body&.name, banner: @banner.present?.to_s,
+               onboarding: current_user&.analytics_onboarding_valid?.to_s, free_lesson: @course_lesson.free.to_s, step_order: @index_order, previous_completion_count: @previous_completion_count,
                cr_question_count: @course_step&.constructed_response&.scenario&.scenario_questions&.count }}
               =render partial: 'courses/constructed_response_start'
           -else
@@ -53,9 +54,11 @@
             .good-job
               %i.fa.fa-thumbs-o-up{"aria-hidden" => "true"}
               %h1 Good Job!
-              =link_to "Upgrade Now ", pricing_url(current_user&.preferred_exam_body&.group&.name_url), class: "btn btn-primary upgrade-arrow", data: {step_id: @course_step.id, step_name: @course_step.name, module_id: @course_lesson.id,
-               module_name: @course_lesson.name, course_id: @course.id, course_name: @course.name, section_id: @course_lesson&.course_section_id, section_name: @course_lesson&.course_section&.name, exam_body_id: @group.exam_body.id, exam_body_name: @group.exam_body.name,
-                time_triggered: @course_step.vid_end_seconds}
+              =link_to "Upgrade Now ", pricing_url(current_user&.preferred_exam_body&.group&.name_url), class: "btn btn-primary upgrade-arrow",
+               data: {step_id: @course_step.id, step_name: @course_step.name, module_id: @course_lesson.id, module_name: @course_lesson.name, course_id: @course.id,
+                course_name: @course.name, section_id: @course_lesson&.course_section_id, section_name: @course_lesson&.course_section&.name,
+                 exam_body_id: @group.exam_body.id, exam_body_name: @group.exam_body.name, time_triggered: @course_step.vid_end_seconds, preferred_exam_body_id: current_user&.preferred_exam_body_id,
+                  preferred_exam_body: current_user&.preferred_exam_body&.name, banner: @banner.present?.to_s, onboarding: current_user&.analytics_onboarding_valid?.to_s}
 
 - if current_user
   =render partial: 'library/subscription_restriction_modal'
@@ -72,3 +75,5 @@
     function openZendesk() {
       $zopim.livechat.window.show()
     }
+
+    courseStepLoaded("#{@course_step&.type_name}");

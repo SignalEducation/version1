@@ -80,7 +80,6 @@
                     .faq-answer-expanded.d-none
                       =faq.answer_text.html_safe
 
-
 :javascript
 
   let currencyIso = "#{@order.product.currency.iso_code}";
@@ -267,14 +266,25 @@
     }
 
 
+    let banner = "#{@banner.present?.to_s}";
+    let preferredExamBodyId = "#{current_user&.preferred_exam_body_id}";
+    let preferredExamBody = "#{current_user&.preferred_exam_body&.name}";
+    let onboarding = "#{current_user&.analytics_onboarding_valid?.to_s}";
+
     analytics.page('Payment', {
+      preferredExamBodyId: preferredExamBodyId,
+      preferredExamBody:preferredExamBody ,
+      banner: banner,
+      onboarding: onboarding,
       examBodyId: productBodyId,
       examBodyName: productBody,
-      onboarding: "#{current_user&.onboarding_process&.active&.to_s}",
       currency: currencyIso,
+      country: "#{current_user&.country&.name}",
       productId: productId,
       productPrice: productPrice,
       productName: productName,
-      productType: productType
+      productType: productType,
+      paymentType: "Product"
     });
   });
+

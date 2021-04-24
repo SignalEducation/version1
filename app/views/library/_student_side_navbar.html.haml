@@ -3,7 +3,12 @@
     #menu
       .menu-title
         %div
-          %h3.sidebar-title{data: {destination_url: navigation_special_link(@course_step), exit_type: 'Breadcrumbs'}}
+          %h3.sidebar-title{data: {destination_url: navigation_special_link(@course_step), exit_type: 'Breadcrumbs',
+           step_id: @course_step.id, step_name: @course_step.name, module_id: @course_lesson.id, module_name: @course_lesson.name, course_id: @course.id,
+             course_name: @course.name, section_id: @course_lesson&.course_section_id, section_name: @course_lesson&.course_section&.name,
+              exam_body_id: @group&.exam_body&.id, exam_body_name: @group&.exam_body&.name,
+                preferred_exam_body_id: current_user&.preferred_exam_body_id, preferred_exam_body: current_user&.preferred_exam_body&.name,
+             banner: @banner.present?.to_s, onboarding: current_user&.analytics_onboarding_valid?.to_s}}
             = link_to @course.name, navigation_special_link(@course_step), title: @course.name
             = succeed @course_lesson.name do
               %i.material-icons.color-shade{"aria-label" => "failed", :role => "img", :style => "position: relative;top: 6px;"} arrow_right
