@@ -630,6 +630,24 @@ class User < ApplicationRecord
     end
   end
 
+  def analytics_onboarding_state
+    if !onboarding_process
+      'Not Started'
+    elsif onboarding_process&.content_remaining?
+      'Active'
+    elsif !onboarding_process&.content_remaining?
+      'Complete'
+    end
+  end
+
+  def analytics_onboarding_valid
+    onboarding_process&.content_remaining?
+  end
+
+  def analytics_onboarding_valid?
+    analytics_onboarding_state == 'Active'
+  end
+
   def preferred_group_id
     Group.find_by(exam_body_id: preferred_exam_body_id)
   end

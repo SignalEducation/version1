@@ -16,7 +16,7 @@ class UserVerificationsController < ApplicationController
       UserSession.create(@user)
       set_current_visit(@user)
 
-      SegmentService.new.track_verification_event(@user) unless Rails.env.test?
+      SegmentService.new.track_verification_event(@user) if flash[:datalayer_verify] || !Rails.env.test?
       if @user.preferred_exam_body&.group
         # Redirect to account_verified method below
         redirect_to registration_onboarding_url(@user.preferred_exam_body.group.name_url)

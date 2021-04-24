@@ -30,7 +30,7 @@
         :file-download="fileDownload"
         :file-name="fileName"
         :file-url="fileUrl"
-        :file-type="fileUrl"
+        :file-type="fileType"
         class="toolbarButton"
       />
 
