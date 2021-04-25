@@ -645,7 +645,13 @@ class User < ApplicationRecord
   end
 
   def analytics_onboarding_valid?
-    analytics_onboarding_state == 'Active'
+    if onboarding_process
+      analytics_onboarding_state == 'Active'
+    else
+      # This is to ensure that the first course step analytics events (loaded & started)
+      # have onboarding set to true because the OnboardingProcess record does not exist yet
+      course_step_logs.none?
+    end
   end
 
   def preferred_group_id

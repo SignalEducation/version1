@@ -29,11 +29,13 @@ function courseStepLoaded(type) {
 function videoStepLoaded() {
   let videoLesson = $("#video-player-window"),
     stepData = videoLesson.data(),
-    playerType = (stepData.hasOwnProperty('vimeoInitialized'))? 'Vimeo' : 'DaCast',
+    playerType = (typeof player !== 'undefined')? 'Vimeo' : 'DaCast',
     videoData = { 'stepType': 'Video', 'player': playerType};
   let properties = $.extend({}, stepData, videoData);
 
-  analytics.track('Course Step Loaded', properties);
+  if (typeof analytics !== 'undefined') {
+    analytics.track('Course Step Loaded', properties);
+  }
 }
 
 function quizStepLoaded() {
@@ -42,7 +44,9 @@ function quizStepLoaded() {
     quizData = { 'stepType': 'Quiz' };
   let properties = $.extend({}, lessonData, quizData);
 
-  analytics.track('Course Step Loaded', properties);
+  if (typeof analytics !== 'undefined') {
+    analytics.track('Course Step Loaded', properties);
+  }
 }
 
 function noteStepLoaded() {
@@ -51,7 +55,9 @@ function noteStepLoaded() {
     noteData = { 'stepType': 'Note'};
   let properties = $.extend({}, lessonData, noteData);
 
-  analytics.track('Course Step Loaded', properties);
+  if (typeof analytics !== 'undefined') {
+    analytics.track('Course Step Loaded', properties);
+  }
 }
 
 function constructedResponseLoaded() {
@@ -78,7 +84,7 @@ function practiceQuestionStepLoaded() {
 function videoPlayEvent() {
   let videoLesson = $("#video-player-window"),
     stepData = videoLesson.data(),
-    playerType = (stepData.hasOwnProperty('vimeoInitialized'))? 'Vimeo' : 'DaCast',
+    playerType = (typeof player !== 'undefined')? 'Vimeo' : 'DaCast',
     videoData = { 'stepType': 'Video', 'player': playerType };
   let properties = $.extend({}, stepData, videoData);
 
@@ -90,7 +96,7 @@ function videoPlayEvent() {
 function videoFinishedEvent(autoPlay, playbackRate) {
   let videoLesson = $("#video-player-window"),
     stepData = videoLesson.data(),
-    playerType = (stepData.hasOwnProperty('vimeoInitialized'))? 'Vimeo' : 'DaCast',
+    playerType = (typeof player !== 'undefined')? 'Vimeo' : 'DaCast',
     videoData = { 'stepType': 'Video', 'player': playerType, 'playBackRate': playbackRate , 'autoPlay': autoPlay };
   let properties = $.extend({}, stepData, videoData);
 
