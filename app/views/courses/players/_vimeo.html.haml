@@ -88,7 +88,7 @@
         contentType: "application/json; charset=utf-8",
         success: function(data,status,xhr){
           logId = data.video_log_id;
-          videoPlayEvent(freeLesson);
+          videoPlayEvent();
         },
         error: function(xhr,status,error){
           console.log(xhr);

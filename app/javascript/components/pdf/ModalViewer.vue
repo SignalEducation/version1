@@ -57,20 +57,24 @@ export default {
       pdfCourseName: this.$parent.courseName,
       pdfCourseId: this.$parent.courseId,
       pdfExamBodyName: this.$parent.examBodyName,
-      pdfExamBodyId: this.$parent.examBodyId
+      pdfExamBodyId: this.$parent.examBodyId,
+      preferredExamBodyId: this.$parent.preferredExamBodyId,
+      preferredExamBodyName: this.$parent.preferredExamBodyName,
+      banner: this.$parent.banner,
+      onboarding: this.$parent.onboarding
     };
   },
   methods: {
     modalOpen(data) {
       this.modalIsOpen = true;
-      courseResourceClick({resourceName: this.pdfFileName, resourceId: this.pdfFileId, courseName: this.pdfCourseName, courseId: this.pdfCourseId, examBodyName: this.pdfExamBodyName, examBodyId: this.pdfExamBodyId, resourceType: this.fileType, allowDownloadFile: this.allowed});
+      courseResourceClick({preferredExamBodyId: this.preferredExamBodyId, preferredExamBody: this.preferredExamBodyName, banner: this.banner, onboarding: this.onboarding, resourceName: this.pdfFileName, resourceId: this.pdfFileId, courseName: this.pdfCourseName, courseId: this.pdfCourseId, examBodyName: this.pdfExamBodyName, examBodyId: this.pdfExamBodyId, resourceType: this.fileType, allowDownloadFile: this.allowed});
     },
     updateViewedPages(data) {
       const total   = data.totalPages;
       const current = data.currentPage;
 
       if ((current == total) && (!this.eventFired)) {
-        courseResourceCompleted({resourceName: this.pdfFileName, resourceId: this.pdfFileId, courseName: this.pdfCourseName, courseId: this.pdfCourseId, examBodyName: this.pdfExamBodyName, examBodyId: this.pdfExamBodyId, resourceType: this.fileType, allowDownloadFile: this.allowed});
+        courseResourceCompleted({preferredExamBodyId: this.preferredExamBodyId, preferredExamBody: this.preferredExamBodyName, banner: this.banner, onboarding: this.onboarding, resourceName: this.pdfFileName, resourceId: this.pdfFileId, courseName: this.pdfCourseName, courseId: this.pdfCourseId, examBodyName: this.pdfExamBodyName, examBodyId: this.pdfExamBodyId, resourceType: this.fileType, allowDownloadFile: this.allowed});
         this.eventFired = true;
       }
     },

@@ -21,7 +21,7 @@
               -@subscription_plans.each do |plan|
                 .col-sm-6.col-lg-3
                   -if plan.most_popular
-                    .card.text-center.mb-4{style: 'border-radius: 24px;'}
+                    .card.plan.text-center.mb-4{style: 'border-radius: 24px;', id: plan.interval_name}
                       .most-popular-banner
                         %p.pb-0.mb-0.text-white
                           Most Popular
@@ -57,7 +57,7 @@
                                 Cancel Anytime
 
                   -else
-                    .card.text-center.mb-4.hero-section-tutor-card.mt-4
+                    .card.plan.text-center.mb-4.hero-section-tutor-card.mt-4{id: plan.interval_name}
                       =link_to '', subscription_checkout_special_link(plan.exam_body_id, plan.guid, params[:login]), class: 'hero-section-show-link-window', onclick: "addToCart('#{plan.currency.iso_code}', '#{plan.name}', '#{plan.id}', '#{plan.price}', '#{plan.exam_body.name}', '#{plan.interval_name}');"
                       .py-4.pb-0
                         .h3
@@ -92,7 +92,7 @@
                 -link = product_link(product, current_user, params[:login])
                 -name = product.name_by_type
                 .col-sm-6.col-lg-3
-                  .card.text-center.mb-4.hero-section-tutor-card.mt-4
+                  .card.product.text-center.mb-4.hero-section-tutor-card.mt-4{id: product.product_type}
                     = link_to '', link, class: 'hero-section-show-link-window', onclick: "addToCart('#{product.currency.iso_code}', '#{product.price}', '#{product.name}', '#{product.id}', '#{product.price}', '#{name}');"
                     .py-4
                       .h3
@@ -137,7 +137,7 @@
                       -@subscription_plans.where(exam_body_id: exam_body.id).each do |plan|
                         .col-sm-6.col-lg-3
                           -if plan.most_popular
-                            .card.text-center.mb-4{style: 'border-radius: 24px;'}
+                            .card.plan.text-center.mb-4{style: 'border-radius: 24px;', id: plan.interval_name}
                               .most-popular-banner
                                 %p.pb-0.mb-0.text-white
                                   Most Popular
@@ -173,7 +173,7 @@
                                         Cancel Anytime
 
                           -else
-                            .card.text-center.mb-4.hero-section-tutor-card.mt-4
+                            .card.plan.text-center.mb-4.hero-section-tutor-card.mt-4{id: plan.interval_name}
                               =link_to '', subscription_checkout_special_link(plan.exam_body_id, plan.guid, params[:login]), class: 'hero-section-show-link-window', onclick: "addToCart('#{plan.currency.iso_code}', '#{plan.name}', '#{plan.id}', '#{plan.price}', '#{plan.exam_body.name}', '#{plan.interval_name}');"
                               .py-4.pb-0
                                 .h3
@@ -208,7 +208,7 @@
                         -link = product_link(product, current_user, params[:login])
                         -name = product.name_by_type
                         .col-sm-6.col-lg-3
-                          .card.text-center.mb-4.hero-section-tutor-card.mt-4
+                          .card.product.text-center.mb-4.hero-section-tutor-card.mt-4{id: product.product_type}
                             = link_to '', link, class: 'hero-section-show-link-window', onclick: "addToCart('#{product.currency.iso_code}', '#{product.price}', '#{product.name}', '#{product.id}', '#{product.price}', '#{name}');"
                             .py-4
                               .h3
@@ -326,14 +326,28 @@
   }
 
   $( document ).ready(function() {
-    analytics.page('Pricing', {
+    let banner = "#{@banner.present?.to_s}";
+    let preferredExamBodyId = "#{current_user&.preferred_exam_body_id}";
+    let preferredExamBody = "#{current_user&.preferred_exam_body&.name}";
+    let onboarding = "#{current_user&.analytics_onboarding_valid?.to_s}";
+    let planNames = [];
+    let productNames = [];
+    let planElements = $(".card.plan");
+    planElements.each(function(){ planNames.push(this.id); });
+    let productElements = $(".card.product");
+    productElements.each(function(){ productNames.push(this.id); });
+
+    analytics.page("#{@group&.name} " + 'Pricing', {
+      preferredExamBodyId: preferredExamBodyId,
+      preferredExamBody:preferredExamBody ,
+      banner: banner,
+      onboarding: onboarding,
       examBodyId: "#{@exam_body&.id}",
       examBodyName: "#{@exam_body&.name}",
-      onboarding: "#{current_user&.onboarding_process&.active&.to_s}",
       currency: "#{@currency&.iso_code}",
       subscriptionPlanOptions: "#{@subscription_plans.map(&:id)}",
-      subPlanNames: "#{@subscription_plans.map(&:interval_name)}",
+      subPlanNames: planNames,
       productOptions: "#{@products.map(&:id)}",
-      productNames: "#{@products.map(&:name)}"
+      productNames: productNames
     });
   });

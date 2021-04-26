@@ -8,7 +8,7 @@
         %p.p-hero.px-lg-6
           We’re delighted you’ve decided to study with us. Let’s get started.
       .pt-5.text-center
-        %btn.btn.btn-primary.onboarding-get-start{onclick: 'showLevelSelection(); return false;', data: { exam_body_id: @group&.exam_body&.id, exam_body_name: @group&.exam_body&.name }}
+        %btn.btn.btn-primary.onboarding-get-start{onclick: 'showLevelSelection(); return false;', data: { exam_body_id: @group&.exam_body&.id, exam_body_name: @group&.exam_body&.name, preferred_exam_body_id: current_user&.preferred_exam_body_id, preferred_exam_body: current_user&.preferred_exam_body&.name, banner: 'false', onboarding: current_user&.analytics_onboarding_valid?.to_s }}
           Get started
 
     .container-bg.mt-7
@@ -48,7 +48,7 @@
                 .row
                   -@levels.each do |level|
                     .col-12.col-md-8.offset-md-2
-                      .card.card-horizontal.card-horizontal-xs.flex-row.onboarding-card.onboarding-level{onclick: "showCourses(#{level.id}); return false;", data: { level_id: level.id, level_name: level.name, exam_body_id: @group&.exam_body&.id, exam_body_name: @group&.exam_body&.name }}
+                      .card.card-horizontal.card-horizontal-xs.flex-row.onboarding-card.onboarding-level{onclick: "showCourses(#{level.id}); return false;", data: { level_id: level.id, level_name: level.name, exam_body_id: @group&.exam_body&.id, exam_body_name: @group&.exam_body&.name, preferred_exam_body_id: current_user&.preferred_exam_body_id, preferred_exam_body: current_user&.preferred_exam_body&.name, banner: 'false', onboarding: current_user&.analytics_onboarding_valid?.to_s }}
                         .card-header.white-header.d-flex.justify-content-center.align-items-center
                           %i{"aria-label" => level.icon_label, :role => "img", class: level.icon_label, style: "color: #{level.highlight_colour};"}
                         .card-body.d-flex.flex-column.justify-content-center
@@ -57,7 +57,7 @@
                               =level.name
 
             .py-2.text-center
-              %btn.btn.btn-secondary.btn-sm.btn-sm-arrow-left.onboarding-back-button{onclick: 'showStartScreen(); return false;', data: { exam_body_id: @group&.exam_body&.id, exam_body_name: @group&.exam_body&.name }}
+              %btn.btn.btn-secondary.btn-sm.btn-sm-arrow-left.onboarding-back-button{onclick: 'showStartScreen(); return false;', data: { exam_body_id: @group&.exam_body&.id, exam_body_name: @group&.exam_body&.name, preferred_exam_body_id: current_user&.preferred_exam_body_id, preferred_exam_body: current_user&.preferred_exam_body&.name, banner: 'false', onboarding: current_user&.analytics_onboarding_valid?.to_s }}
                 Go Back
 
 
@@ -78,7 +78,7 @@
                   .row.row-lg
                     -level.courses.all_active.all_in_order.each do |course|
                       .col-12.col-md-6
-                        =link_to course_special_link(course.first_active_cme), class: 'card card-horizontal flex-row card-mint onboarding-course course-link', data: { course_id: course.id, course_name: course.name, level_id: level.id, level_name: level.name, exam_body_id: @group&.exam_body&.id, exam_body_name: @group&.exam_body&.name } do
+                        =link_to course_special_link(course.first_active_cme), class: 'card card-horizontal flex-row card-mint onboarding-course course-link', data: { course_id: course.id, course_name: course.name, level_id: level.id, level_name: level.name, exam_body_id: @group&.exam_body&.id, exam_body_name: @group&.exam_body&.name, preferred_exam_body_id: current_user&.preferred_exam_body_id, preferred_exam_body: current_user&.preferred_exam_body&.name, banner: 'false', onboarding: current_user&.analytics_onboarding_valid?.to_s } do
                           .card-header.d-flex.justify-content-center.align-items-center
                             %i{"aria-label" => course.icon_label, :role => "img", class: course.icon_label ? course.icon_label : 'budicon-office-bag-c', style: "color: #{course.highlight_colour};"}
                           .card-body.d-flex.flex-column.justify-content-center
@@ -87,7 +87,7 @@
                                 =course.name
 
                 .py-2.text-center
-                  %btn.btn.btn-secondary.btn-sm.btn-sm-arrow-left.onboarding-back-button{onclick: 'showLevelSelection(); return false;', data: { level_id: level.id, level_name: level.name, exam_body_id: @group&.exam_body&.id, exam_body_name: @group&.exam_body&.name }}
+                  %btn.btn.btn-secondary.btn-sm.btn-sm-arrow-left.onboarding-back-button{onclick: 'showLevelSelection(); return false;', data: { level_id: level.id, level_name: level.name, exam_body_id: @group&.exam_body&.id, exam_body_name: @group&.exam_body&.name, preferred_exam_body_id: current_user&.preferred_exam_body_id, preferred_exam_body: current_user&.preferred_exam_body&.name, banner: 'false', onboarding: current_user&.analytics_onboarding_valid?.to_s }}
                     Go Back
 
   - else
@@ -104,7 +104,7 @@
               .row.row-lg
                 -@group.courses.all_active.all_in_order.each do |course|
                   .col-12.col-md-6
-                    =link_to course_special_link(course.first_active_cme), class: 'card card-horizontal flex-row card-mint onboarding-course course-link', data: { course_id: course.id, course_name: course.name, exam_body_id: @group&.exam_body&.id, exam_body_name: @group&.exam_body&.name } do
+                    =link_to course_special_link(course.first_active_cme), class: 'card card-horizontal flex-row card-mint onboarding-course course-link', data: { course_id: course.id, course_name: course.name, exam_body_id: @group&.exam_body&.id, exam_body_name: @group&.exam_body&.name, preferred_exam_body_id: current_user&.preferred_exam_body_id, preferred_exam_body: current_user&.preferred_exam_body&.name, banner: 'false', onboarding: current_user&.analytics_onboarding_valid?.to_s } do
                       .card-header.d-flex.justify-content-center.align-items-center
                         %i{"aria-label" => course.icon_label, :role => "img", class: course.icon_label ? course.icon_label : 'budicon-office-bag-c', style: "color: #{course.highlight_colour};"}
                       .card-body.d-flex.flex-column.justify-content-center
@@ -113,7 +113,7 @@
                             =course.name
 
             .py-2.text-center
-              %btn.btn.btn-secondary.btn-sm.btn-sm-arrow-left.onboarding-back-button{onclick: 'showStartScreen(); return false;', data: { exam_body_id: @group&.exam_body&.id, exam_body_name: @group&.exam_body&.name }}
+              %btn.btn.btn-secondary.btn-sm.btn-sm-arrow-left.onboarding-back-button{onclick: 'showStartScreen(); return false;', data: { exam_body_id: @group&.exam_body&.id, exam_body_name: @group&.exam_body&.name, preferred_exam_body_id: current_user&.preferred_exam_body_id, preferred_exam_body: current_user&.preferred_exam_body&.name, banner: 'false', onboarding: current_user&.analytics_onboarding_valid?.to_s }}
                 Go Back
 
 :javascript

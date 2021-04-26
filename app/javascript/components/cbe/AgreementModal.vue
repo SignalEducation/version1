@@ -1,46 +1,58 @@
 <template>
-  <VueWindow
-    v-if="agreementModalIsOpen"
-    :window-header="'Ready to begin?'"
-    :window-is-open="true"
-    @close="toggleResetModal()"
-  >
-    <p
-      slot="body"
-      v-html="cbe_data.agreement_content"
-    />
-
-    <div slot="footer">
-      <b-button
-        @click="acceptAgreement(true)"
-      >
-        Yes
-      </b-button>
-      <b-button
-        @click="acceptAgreement(false)"
-      >
-        No
-      </b-button>
+<div class="non-resizable-modal">
+  <VueModal
+      :componentType="componentType"
+      :componentName="componentName"
+      :window-is-open="true"
+      :componentModal="true"
+      :componentHeight="250"
+      :componentWidth="500"
+      :mainColor="'transparent'"
+    >
+    <div slot="body">
+      <p v-html="cbe_data.agreement_content" />
+      <div class="agreement-modal-btns">
+        <b-button @click="acceptAgreement(true)">
+          Yes
+        </b-button>
+        <b-button @click="acceptAgreement(false)">
+          No
+        </b-button>
+      </div>
     </div>
-  </VueWindow>
+  </VueModal>
+  </div>
 </template>
 
 <script>
 import axios from 'axios';
 import { mapGetters } from 'vuex';
-import VueWindow from '../VueWindow.vue'
+import VueModal from '../VueModal.vue';
+import eventBus from '../cbe/EventBus.vue';
 
 export default {
   components: {
-    VueWindow,
+    VueModal,
+    eventBus
   },
   props: {
     nextAction: Function,
+    componentType: {
+      type: String,
+      default: "nav",
+    },
+    componentName: {
+      type: String,
+      default: "Ready to Begin?",
+    },
   },
   data() {
     return {
       agreementModalIsOpen: true,
     };
+  },
+  mounted() {
+    this.show();
   },
   computed: {
     ...mapGetters('cbe', {
@@ -86,6 +98,14 @@ export default {
     },
     toggleResetModal() {
       this.agreementModalIsOpen = !this.agreementModalIsOpen;
+    },
+    show () {
+      this.$modal.show("modal-"+this.componentType+"-"+this.componentName);
+      $('.components-sidebar .components div').removeClass('active-modal');
+    },
+    hide () {
+      $('.latent-modal').removeClass('active-modal');
+      this.$modal.hide("modal-"+this.componentType+"-"+this.componentName);
     },
   },
 };

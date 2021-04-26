@@ -1,10 +1,10 @@
 <template>
-  <modal :name="`modal-${componentType}-${componentName}`" draggable=".window-header" :height="componentHeight" :width="componentWidth">
-    <div @click="makeActiveHeader($event)" class="window-header" :style="{ 'background-color':mainColor }">
+  <modal :id="normId" class="latent-modal" :name="`modal-${componentType}-${componentName}`" draggable=".window-header" :height="componentHeight" :width="componentWidth">
+    <div @click="makeActive(normId)" class="window-header latent-modal-header" :style="{ 'background-color':mainColor }">
       <p :style="{ 'color':textColor }">{{ componentName }}</p>
-      <button @click="hide($event)" :style="{ 'color':textColor }" type="button" class="close modal-close modal-close-solution" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <button @click="hide()" :style="{ 'color':textColor }" type="button" class="close modal-close modal-close-solution" data-dismiss="modal" aria-hidden="true">&times;</button>
     </div>
-    <div @click="makeActiveBody($event)" class="latent-modal">
+    <div @click="makeActive(normId)" class="vue-modal-body">
       <slot name="body" />
     </div>
   </modal>
@@ -71,6 +71,7 @@ export default {
       scale: "page-width",
       showModal: this.componentModal,
       isOpen: false,
+      normId: this.normalizeId(`modal-${this.componentType}-${this.componentName}`)
     };
   },
   computed: {
@@ -94,9 +95,14 @@ export default {
   created() {
     eventBus.$on("close-modal", (status) => {
       this.showModal = status;
+      this.$modal.hide("modal-"+this.componentType+"-"+this.componentName);
+    });
+    eventBus.$on("update-modal-z-index", (current_mod) => {
+      this.makeActive(this.normalizeId(current_mod));
     });
   },
   mounted() {
+
   },
   methods: {
     handleChange(value) {
@@ -110,17 +116,17 @@ export default {
       this.$modal.show("modal-"+this.componentType+"-"+this.componentName);
       $('.components-sidebar .components div').removeClass('active-modal');
     },
-    hide (event) {
+    hide () {
       $('.latent-modal').removeClass('active-modal');
       this.$modal.hide("modal-"+this.componentType+"-"+this.componentName);
     },
-    makeActiveHeader(event) {
-      $('.components-sidebar .components div').removeClass('active-modal');
-      event.target.parentElement.parentElement.parentElement.parentElement.classList.add('active-modal');
+    normalizeId (id) {
+      var str = id.replace(/[!?()@#$%^&*]/g, "");
+      return str.replace(/\s+/g, '-').toLowerCase();
     },
-    makeActiveBody(event) {
-      $('.components-sidebar .components div').removeClass('active-modal');
-      event.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.classList.add('active-modal');
+    makeActive(id) {
+      $('.latent-modal').removeClass('active-modal');
+      $("#"+id).addClass("active-modal");
     },
   },
 };

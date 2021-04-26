@@ -187,6 +187,9 @@ export default {
     show () {
       this.$modal.show("modal-"+this.responseOptionType+"-"+this.responseOptionName);
     },
+    show () {
+      this.$modal.show("modal-"+this.responseOptionType+"-"+this.responseOptionName);
+    },
     hide () {
       this.$modal.hide("modal-"+this.responseOptionType+"-"+this.responseOptionName);
     }
