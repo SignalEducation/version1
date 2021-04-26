@@ -165,7 +165,7 @@ class SubscriptionsController < ApplicationController
   def get_relevant_subscription_plans
     @currency =
       if current_user.currency_locked?
-        current_user.currency_id
+        current_user.currency
       else
         country = IpAddress.get_country(request.remote_ip) || current_user.country
         current_user.get_currency(country)
