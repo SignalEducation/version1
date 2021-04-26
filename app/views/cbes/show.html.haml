@@ -4,9 +4,12 @@
                          exercise_id: @exercise_id,
                          cbe_name: @cbe.name,
                          introduction_id: @introduction_page_id,
-                         product_name: @product.name,
-                         product_id: @product.id,
+                         product_name: @product&.name,
+                         product_id: @product&.id,
                          course_name: @course.name,
                          course_id: @course.id,
                          exam_body_name: @exam_body.name,
-                         exam_body_id: @exam_body.id } }
+                         exam_body_id: @exam_body.id,
+                         preferred_exam_body_name: current_user&.preferred_exam_body&.name,
+                         preferred_exam_body_id: current_user&.preferred_exam_body_id,
+                         onboarding: current_user&.analytics_onboarding_valid?.to_s } }

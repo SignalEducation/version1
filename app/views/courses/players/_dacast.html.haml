@@ -31,7 +31,7 @@
                               'set_id': exam_track_id }),
         success: function(data,status,xhr){
           log_id = data.video_log_id;
-          videoPlayEvent(false);
+          videoPlayEvent();
         },
         error: function(xhr,status,error){
           console.log(xhr);

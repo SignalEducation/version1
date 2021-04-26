@@ -14,6 +14,7 @@ class CoursesController < ApplicationController
     @group = @course.group
     @course_step_index = @course_lesson.active_children.find_index { |item| item.name == @course_step.name } + 1
     @index_order = @course_step_index.to_s + '/' + @course_lesson.active_children.count.to_s
+    @previous_completion_count = @course_lesson_log.course_step_logs.for_user(current_user.id).for_course_step(@course_step.id).all_completed.count if @course_lesson_log&.course_step_logs
 
     if @course_step.is_quiz
       set_up_quiz
@@ -37,12 +38,16 @@ class CoursesController < ApplicationController
       course_pass_rate = @course_step.course_lesson.course.quiz_pass_rate || 75
       pass_rate        = @course_step.course_lesson.free ? 25 : course_pass_rate
       percentage_score = @course_step_log.quiz_score_actual || 0
-      quiz_attempts = @course_step_log.quiz_attempts
 
       @pass = percentage_score >= pass_rate ? 'Pass' : 'Fail'
       @course_step_index = @course_lesson.active_children.find_index { |item| item.name == @course_step.name } + 1
       @index_order = @course_step_index.to_s + '/' + @course_lesson.active_children.count.to_s
-      @quiz_score = quiz_attempts.where(correct: true).count.to_s + '/' + quiz_attempts.count.to_s
+      @quiz_score = @course_step_log.quiz_score_actual.to_s + '%'
+
+      previous_scores = @course_step_log.course_lesson_log&.course_step_logs&.for_user(current_user.id)&.for_course_step(@course_step.id)&.all_completed&.map(&:quiz_score_actual)
+      @previous_best_score = previous_scores.any? ? previous_scores.max.to_s + '%' : nil
+      previous_passes = @course_step_log.course_lesson_log&.course_step_logs&.for_user(current_user.id)&.for_course_step(@course_step.id)&.all_completed&.map(&:quiz_result)
+      @previously_passed = previous_passes.include?('passed').to_s
 
       if @course_lesson && @course_step && @course_step_log
         render :show
@@ -264,6 +269,11 @@ class CoursesController < ApplicationController
       else
         @course_step.course_quiz.quiz_questions.all_in_order.includes(:quiz_contents).take(@number_of_questions)
       end
+
+    previous_scores = @course_step_log.course_lesson_log&.course_step_logs&.for_user(current_user.id)&.for_course_step(@course_step.id)&.all_completed&.map(&:quiz_score_actual)
+    @previous_best_score = previous_scores.any? ? previous_scores.max.to_s + '%' : nil
+    previous_passes = @course_step_log.course_lesson_log&.course_step_logs&.for_user(current_user.id)&.for_course_step(@course_step.id)&.all_completed&.map(&:quiz_result)
+    @previously_passed = previous_passes.include?('passed').to_s
   end
 
   def set_up_notes

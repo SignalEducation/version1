@@ -29,12 +29,13 @@ module Archivable
   def destroy
     Rails.logger.debug 'DEBUG: Archivable#destroy: activated'
     # Assumes the model has a "destroyed_at" attribute.
+    time              = Time.now.to_i
     self.destroyed_at = proc { Time.zone.now }.call
-    self.active       = false                   if respond_to?(:active)
-    self.live         = false                   if respond_to?(:live)
-    self.name         = "#{name}-destroyed"     if respond_to?(:name)
-    self.name_url     = "#{name_url}-destroyed" if respond_to?(:name_url)
-    destroyable_children.map(&:destroy)         if respond_to?(:destroyable_children)
+    self.active       = false                           if respond_to?(:active)
+    self.live         = false                           if respond_to?(:live)
+    self.name         = "#{name}-destroyed-#{time}"     if respond_to?(:name)
+    self.name_url     = "#{name_url}-destroyed-#{time}" if respond_to?(:name_url)
+    destroyable_children.map(&:destroy)                 if respond_to?(:destroyable_children)
     save
   end
 

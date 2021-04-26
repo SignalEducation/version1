@@ -346,8 +346,8 @@ class User < ApplicationRecord
 
   def currency_locked?
     subscriptions.where.not(stripe_guid: nil).any? ||
-        orders.where.not(stripe_customer_id: nil).any? ||
-        subscription_payment_cards.any?
+      orders.where.not(stripe_customer_id: nil).any? ||
+      subscription_payment_cards.any?
   end
 
   def name
@@ -627,6 +627,30 @@ class User < ApplicationRecord
       'Active'
     elsif !onboarding_process&.active
       'Complete'
+    end
+  end
+
+  def analytics_onboarding_state
+    if !onboarding_process
+      'Not Started'
+    elsif onboarding_process&.content_remaining?
+      'Active'
+    elsif !onboarding_process&.content_remaining?
+      'Complete'
+    end
+  end
+
+  def analytics_onboarding_valid
+    onboarding_process&.content_remaining?
+  end
+
+  def analytics_onboarding_valid?
+    if onboarding_process
+      analytics_onboarding_state == 'Active'
+    else
+      # This is to ensure that the first course step analytics events (loaded & started)
+      # have onboarding set to true because the OnboardingProcess record does not exist yet
+      course_step_logs.none?
     end
   end
 
