@@ -74,7 +74,7 @@
               - @course_resources.each do |resource|
                 - if current_user
                   - if @valid_subscription
-                    =pdf_viewer(resource)
+                    =pdf_viewer(resource, @banner.present?.to_s, current_user)
                   - else
                     - permission = resource.available_to_user(current_user, @valid_subscription)
                     - if  permission[:view]
