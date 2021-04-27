@@ -42,9 +42,7 @@
 
   %body{class: (controller_name == 'student_sign_ups' && action_name != 'new') ? 'page-light' : (action_name == 'account_verified') ? 'page-gray' : ''}
 
-    %noscript
-      %iframe{src: '//www.googletagmanager.com/ns.html?id=GTM-5SC76S', height: 0, width: 0, style: 'display:none;visibility:hidden'}
-
+    =render partial: 'layouts/google_tag_manager_body'
     =render partial: 'layouts/facebook_tracking_code'
     -if @layout == 'standard'
       -if @navbar
