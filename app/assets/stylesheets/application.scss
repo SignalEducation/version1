@@ -7170,6 +7170,29 @@ button.sub-details[aria-expanded="true"]:before{
 #next-lesson-modal {
   z-index: 1;
 }
+.cancellation-form-center {
+  display: flex;
+  justify-content: center;
+  textarea {
+    width: 85%;
+  }
+}
+.cancellation-form-header {
+  justify-content: end;
+}
+.cancellation-form-product-type {
+  margin-left: .35em;
+  color: #00b67b;
+}
+.cancellation-form-btn {
+  color: #00b67b;
+}
+.cancellation-form-btn:hover {
+  color: #ffffff;
+}
+#attempt_order_cancellation {
+  margin-left: 1.5em;
+}
 .practice-ques-navigation {
   .sidebar-nav-btn-left {
     width: 1em;

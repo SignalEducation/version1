@@ -1,0 +1,28 @@
+.modal.fade{id: 'confirm-order-cancellation-modal', tabindex: '-1', role: 'dialog', 'aria-labelledby': 'confirmOrderCancellationModal', 'aria-hidden': 'true'}
+  .modal-dialog{role: 'document'}
+    .modal-content
+      %button.btn.btn-icon.modal-close{'data-dismiss': 'modal'}
+        %i.material-icons.ml-1{'aria-hidden': 'true'}
+          close
+      .modal-header.cancellation-form-header
+        %h4{id: 'confirmOrderCancellationModal'}
+          Cancel Order of
+          %h4{class: 'cancellation-form-product-type'}#{@product.product_type}
+
+      .modal-body
+        .row
+        .col-md-12
+          =render partial: 'layouts/error_messages', locals: {thing: @order, message: t('views.users.upgrade_subscription.error_panel_caption')}
+          .modal-body
+            =render partial: 'layouts/error_messages', locals: {thing: @order, message: t('views.users.upgrade_subscription.error_panel_caption')}
+
+      .row.l-margin-top{style: 'text-align: left;'}
+        =form_for @order, url: order_management_cancel_order_path(@order.id), method: :post, html: { id: 'attempt_order_cancellation', class: 'input-group-lg' } do |f|
+          =f.hidden_field(:cancelled_by_id, value: current_user.id)
+          .form-group.cancellation-reason#cancellation-order-reason-error
+            =f.label :cancellation_note, 'Why does the student want to cancel the order?', class: 'block-label h5'
+            #cancellation-order-note.cancellation-form-center
+              =f.text_area :cancellation_note, cols:2, rows:7, class:'form-control', placeholder:'Please state reason for cancelling'
+          .row.l-margin-top.cancellation-form-center
+            .btn.btn-secondary.btn-xs
+              =f.submit 'Cancel Order', id: 'confirm_cancellation_button', class: 'btn btn-red full-width l-margin-bottom cancellation-form-btn', data: { confirm: "Are you sure you want to permanently delete the order of #{@product.product_type} for #{@user.full_name}?" }
