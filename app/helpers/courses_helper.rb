@@ -5,10 +5,6 @@ module CoursesHelper
     exam_tracks && completed_ids.include?(course_lesson.id) ? 'completed' : ''
   end
 
-  def free_lesson_status(free_course_steps, completed_ids)
-    completed_ids && free_course_steps.sort == completed_ids.uniq.sort ? 'completed' : ''
-  end
-
   def course_element_user_log_status(log)
     return '' if log.nil?
 
