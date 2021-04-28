@@ -16,11 +16,12 @@
               <CbeExhibitsModal
                 v-for="exhibit in scenarioData.exhibits"
                 :key="exhibit.id"
-                :exhibitType="exhibit.kind"
-                :exhibitName="exhibit.name"
-                :exhibitModal="exhibit.modal"
+                :componentType="exhibit.kind"
+                :componentName="exhibit.name"
+                :componentModal="exhibit.modal"
                 :currentFile="exhibit.document"
-                :exhibitSpreadsheetData="exhibit.content"
+                :componentContentData="exhibit.content"
+                :componentIcon="'exhibit-icon'"
               />
             </div>
 
@@ -29,11 +30,11 @@
               <CbeRequirementsModal
                 v-for="requirement in scenarioData.requirements"
                 :key="requirement.id"
-                :requirementModal="requirement.modal"
-                :requirementScore="requirement.score"
-                :requirementName="requirement.name"
-                :requirementContent="requirement.content"
-                :requirementType="requirement.kind"
+                :componentModal="requirement.modal"
+                :componentName="requirement.name + ' (' + requirement.score + ' marks)'"
+                :componentContentData="requirement.content"
+                :componentType="requirement.kind"
+                :componentIcon="'requirement-icon'"
               />
             </div>
 
@@ -43,9 +44,8 @@
                 v-for="response_option in scenarioData.response_options"
                 :key="response_option.id"
                 :responseOptionId="response_option.id"
-                :responseOptionName="response_option.name"
+                :responseOptionName="response_option.kind_formatted"
                 :responseOptionType="response_option.kind"
-                :responseOptionFType="response_option.kind_formatted"
                 :responseOptionQuantity="response_option.quantity"
                 :responseOptionModal="response_option.modal"
               />
@@ -64,6 +64,7 @@
 import { mapGetters } from 'vuex';
 import Splitpanes from 'splitpanes';
 import Pane from 'splitpanes';
+import VueModal from '../../components/VueModal.vue';
 import CbeExhibitsModal from '../../components/cbe/CbeExhibitsModal.vue';
 import CbeRequirementsModal from '../../components/cbe/CbeRequirementsModal.vue';
 import CbeResponseOptionsModal from '../../components/cbe/CbeResponseOptionsModal.vue';
@@ -72,6 +73,7 @@ export default {
   components: {
     Splitpanes,
     Pane,
+    VueModal,
     CbeExhibitsModal,
     CbeRequirementsModal,
     CbeResponseOptionsModal,

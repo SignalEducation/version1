@@ -1745,9 +1745,18 @@ textarea.form-control {
 .alert-error .alert-link {
   color: #fff
 }
-
-
-
+.window-header {
+  cursor: grab;
+  height: 2.5em;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  p { padding: 0.75em 1em 0 1em; font-weight: bold !important;}
+  .modal-close { top: .5rem; font-size: 1.15em;}
+  button:focus { outline: none; }
+  .close { opacity: 1 }
+}
+.window-header:active { cursor: grabbing; }
 .modal-dialog {
   position: relative;
   width: auto;
@@ -5720,6 +5729,19 @@ a.list-group-item {
   }
 }
 
+#resourceTabs {
+  padding-top: 35px;
+  .pdf-viewer {
+    width: 92%;
+    left: 4%;
+    height: 1500px;
+    header {
+      position: initial;
+      margin-top: -2.2em;
+    }
+  }
+}
+
 @media print {
   .pdf-document {
     position: static;
@@ -6736,9 +6758,6 @@ button.sub-details[aria-expanded="true"]:before{
 #pane_0 > div > div.exhibits > div:nth-child(2) > div > div > div.content {
   height: 600px;
 }
-#cbe-nav-header {
-  z-index: 1;
-}
 #questionTabsContent > div > div.col-sm-12 {
   .tab-content {
     .textLayer {
@@ -6750,6 +6769,75 @@ button.sub-details[aria-expanded="true"]:before{
       display: block;
     }
   }
+}
+.vm--modal {
+  overflow-y: auto !important;
+  min-width: 300px !important;
+  min-height: 250px !important;
+  resize: both;
+}
+.vm--modal::-webkit-resizer {
+  border-bottom: 15px solid #595959 !important;
+  border-left: 15px solid transparent !important;
+}
+.latent-modal {
+  position: relative;
+  z-index: 1100;
+}
+.vue-modal-body{
+  padding: 35px;
+}
+.active-modal {
+  z-index: 1200 !important;
+}
+.active-modal-section {
+  visibility: hidden;
+}
+.non-resizable-modal {
+  .vm--modal {
+    resize: none;
+  }
+}
+.agreement-modal-btns {
+  margin-top: 2em;
+  display: flex;
+  justify-content: space-evenly;
+  padding: 0 2.5em 0 2.5em;
+  .btn {
+    width:8em;
+  }
+}
+#viewerContainer {
+  .page {
+    margin: auto;
+  }
+	.textLayer {
+    position: initial;
+    margin-top: -1em;
+  }
+}
+.vue-modal-resizer {
+  position: sticky !important;
+  float: right !important;
+  width: 17px !important;
+  height: 17px !important;
+}
+.vue-modal-resizer::after {
+  border-bottom: 15px solid #595959 !important;
+  border-left: 15px solid transparent !important;
+  right: 4px !important;
+}
+.vue-modal-resizer.clicked::after {
+  border-bottom: 15px solid #00b67b !important;
+}
+.cbe-content, .cbe-content-navbar {
+  .vm--overlay, .vm--container {
+    width: 0;
+    height: 0;
+  }
+}
+.cbe-content-navbar {
+  z-index:1100;
 }
 .cbe-content-template {
   padding-top: 1em;
