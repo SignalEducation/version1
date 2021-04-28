@@ -40,7 +40,7 @@ export default {
   },
   props: {
     id: {
-      type: Number,
+      type: [Number, String],
       required: true
     }
   },
@@ -55,7 +55,7 @@ export default {
     }),
     questionData() {
       let cbeQuestion = {};
-      const questionId = this.id;
+      const questionId = parseInt(this.id);
 
       if(this.cbeData !== null && questionId!== null) {
         cbeQuestion = this.cbeData.questions.find(function(element) {

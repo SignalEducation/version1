@@ -116,7 +116,6 @@
               %btn.btn.btn-secondary.btn-sm.btn-sm-arrow-left.onboarding-back-button{onclick: 'showStartScreen(); return false;', data: { exam_body_id: @group&.exam_body&.id, exam_body_name: @group&.exam_body&.name, preferred_exam_body_id: current_user&.preferred_exam_body_id, preferred_exam_body: current_user&.preferred_exam_body&.name, banner: 'false', onboarding: current_user&.analytics_onboarding_valid?.to_s }}
                 Go Back
 
-
 :javascript
   function showLevelSelection() {
     $("#start-screen").addClass('d-none');

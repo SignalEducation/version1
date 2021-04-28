@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'mandrill_client'
+
 class CbeCloneWorker
   include Sidekiq::Worker
 
@@ -14,7 +16,7 @@ class CbeCloneWorker
     if cloned.is_a?(Cbe)
       send_successfully_email(user, url + "/#{cloned.id}", cbe_name)
     else
-      send_failed_email(user, url, cbe_name, cloned.message)
+      send_failed_email(user, url, cbe_name, "Error in clone cbe ##{cbe_id}")
     end
   end
 
