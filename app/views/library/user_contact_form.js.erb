@@ -1,0 +1,7 @@
+$('.flash-messages').html("<%= j render(:partial => 'layouts/flash_messages') %>");
+
+<% if flash[:modal_success].present? %>
+  document.getElementById("user_contact_form").reset();
+<% end %>
+
+$('.alert').delay(3000).fadeOut(400);

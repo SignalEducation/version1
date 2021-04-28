@@ -87,18 +87,21 @@ class LibraryController < ApplicationController
 
   def user_contact_form
     if invalid_email_format?(params[:email_address])
-      flash[:error] = 'Invalid email, please try again.'
+      flash[:modal_error] = 'Invalid email, please try again.'
     elsif verify_recaptcha && check_if_params_present
       Zendesk::RequestWorker.perform_async(params[:full_name],
                                            params[:email_address],
                                            params[:type],
                                            params[:question])
 
-      flash[:success] = 'Thank you! Your submission was successful. We will contact you shortly.'
+      flash[:modal_success] = 'Thank you! Your submission was successful. We will contact you shortly.'
     else
-      flash[:error] = 'Your submission was not successful. Please try again.'
+      flash[:modal_error] = 'Your submission was not successful. Please try again.'
     end
-    redirect_to request.referer || root_url
+
+    respond_to do |format|
+      format.js
+    end
   end
 
   private

@@ -10,7 +10,9 @@
           =ticket_type
 
       .modal-body
-        =form_tag(user_contact_form_path, {class: 'form py-2', role: 'form', name: 'user_contact_form'}) do
+        .row.col-sm-12.flash-messages
+
+        =form_tag(user_contact_form_path, { class: 'form py-2', role: 'form', name: 'user_contact_form', id: 'user_contact_form', remote: true }) do
           =hidden_field_tag :type, ticket_type
           .row
             .col-sm-6
@@ -32,4 +34,4 @@
             =recaptcha_tags
 
           .pt-2
-            =submit_tag 'Submit', class: 'btn btn-primary btn-sm'
+            =submit_tag 'Submit', class: 'btn btn-primary btn-sm', id: 'contact_form_btn', data: { disable_with: "Please wait..." }

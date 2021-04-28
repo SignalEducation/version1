@@ -14,3 +14,9 @@
   -elsif flash[:error]
     .alert.alert-error
       =flash[:error]
+  -elsif flash[:modal_success]
+    .alert.alert-success
+      =flash[:modal_success]
+  -elsif flash[:modal_error]
+    .alert.alert-error
+      =flash[:modal_error]
