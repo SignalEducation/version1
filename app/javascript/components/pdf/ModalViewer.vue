@@ -1,6 +1,6 @@
 <template>
   <div id="cbe-modals" class="col-sm-6">
-    <div class="card card-horizontal card-horizontal-sm flex-row"  @click="modalOpen">
+    <div class="card card-horizontal card-horizontal-sm flex-row" @click="show('modal-'+componentType+'-'+pdfFileName)">
       <div
         class="card-header bg-white d-flex align-items-center justify-content-center"
       >
@@ -8,41 +8,54 @@
           <i aria-label class="budicon-files-download" role="img"></i>
         </div>
       </div>
-      <a href="#" class="card-body d-flex align-items-center pl-1">
+      <a class="card-body d-flex align-items-center pl-1">
         <h5 class="m-0 text-truncate text-gray2">
           {{ this.pdfFileName }}
         </h5>
       </a>
     </div>
-
-    <div ref="resourcesModal" class="modal" v-show="modalIsOpen">
-      <div class="modal-content resources-modal">
-        <div class="modal-header bg-cbe-gray">
-          <span class="title help-icon">
-            {{ this.pdfFileName }}
-          </span>
-
-          <span class="close" @click="modalIsOpen = false">
-            &times;
-          </span>
-        </div>
-
-        <div class="modal-internal-content">
-          <div id="resourceTabs">
-            <PDFCourseViewer :file-url="pdfFileUrl" :file-download="pdfFileDownload" :file-type="pdfFileType" @update-pages="updateViewedPages"/>
-          </div>
+    <VueModal
+      :componentType="componentType"
+      :componentName="this.pdfFileName"
+      :componentModal="componentModal"
+      :componentHeight="550"
+      :componentWidth="850"
+    >
+    <div slot="body">
+      <div class="modal-internal-content">
+        <div id="resourceTabs">
+          <PDFCourseViewer :file-url="pdfFileUrl" :file-download="pdfFileDownload" :file-type="pdfFileType" @update-pages="updateViewedPages"/>
         </div>
       </div>
     </div>
+  </VueModal>
   </div>
 </template>
 
 <script>
 import PDFCourseViewer from "../../lib/PDFCourseViewer/index.vue";
+import VueModal from "../VueModal.vue";
+import eventBus from "../cbe/EventBus.vue";
 
 export default {
   components: {
-    PDFCourseViewer
+    PDFCourseViewer,
+    VueModal,
+    eventBus
+  },
+  props: {
+    componentType: {
+      type: String,
+      default: "resources",
+    },
+    componentName: {
+      type: String,
+      default: "",
+    },
+    componentModal: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -77,6 +90,17 @@ export default {
         courseResourceCompleted({preferredExamBodyId: this.preferredExamBodyId, preferredExamBody: this.preferredExamBodyName, banner: this.banner, onboarding: this.onboarding, resourceName: this.pdfFileName, resourceId: this.pdfFileId, courseName: this.pdfCourseName, courseId: this.pdfCourseId, examBodyName: this.pdfExamBodyName, examBodyId: this.pdfExamBodyId, resourceType: this.fileType, allowDownloadFile: this.allowed});
         this.eventFired = true;
       }
+    },
+    show (modalId) {
+      this.$modal.show("modal-"+this.componentType+"-"+this.pdfFileName);
+      $('.components-sidebar .components div').removeClass('active-modal');
+      setTimeout(() => {
+        eventBus.$emit("update-modal-z-index", modalId);
+      }, 100);
+    },
+    hide () {
+      $('.latent-modal').removeClass('active-modal');
+      this.$modal.hide("modal-"+this.componentType+"-"+this.pdfFileName);
     },
 
   }
