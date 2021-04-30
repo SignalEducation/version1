@@ -1,30 +1,31 @@
 <template>
     <div>
-        <button @click="modalIsOpen = !modalIsOpen; updateZindex(); resetModalDims()" href="#textEditorModal" class="learn-more" data-backdrop="false" data-toggle="modal">
+        <button @click="show()" class="learn-more components-sidebar-links">
             <div class="circle"><span class="icon arrow"></span></div>
             <span class="button-text"><i class="material-icons exhibits-icon">create</i><p>Word Processor</p></span>
         </button>
-        <div @click="updateZindex()" id="textEditorModal" class="modal2-text-editor fade resizemove-sol text-editor-modal-sm" v-show="modalIsOpen">
+        <VueModal
+          :componentType="componentType"
+          :componentName="componentName"
+          :componentModal="componentModal"
+        >
+        <div slot="body">
           <div class="modal2-dialog">
-              <div class="modal2-content">
-                <button @click="modalIsOpen = !modalIsOpen; updateResponse();" type="button" class="close modal-close modal-close-solution" data-dismiss="modal" aria-hidden="true">&times;</button>
-                  <div class="modal2-header-lg">
-                      <h4 class="modal2-title">Word Processor</h4>
-                  </div>
-                  <div class="modal2-body modal-inner-scroll">
-                    <br>
-                    <div>
-                        <TinyEditor
-                            :field-model.sync="responseObj.content"
-                            :aditional-toolbar-options="['fullscreen code image']"
-                            :editor-id="'introPagesEditor' + responseObj.id"
-                        />
-                    </div>
+            <div class="modal2-content">
+              <div class="modal2-body modal-inner-scroll">
+                <br>
+                <div>
+                    <TinyEditor
+                        :field-model.sync="responseObj.content"
+                        :aditional-toolbar-options="['fullscreen code image']"
+                        :editor-id="'introPagesEditor' + responseObj.id"
+                    />
                 </div>
               </div>
+            </div>
           </div>
-          <div class="draggable-overlay"></div>
         </div>
+      </VueModal>
     </div>
 </template>
 
@@ -32,12 +33,14 @@
 import eventBus from "../cbe/EventBus.vue";
 import PDFViewer from "../../lib/PDFViewer/index.vue";
 import TinyEditor from '../TinyEditor.vue';
+import VueModal from "../VueModal.vue";
 
 export default {
   components: {
     eventBus,
     PDFViewer,
     TinyEditor,
+    VueModal
   },
   props: {
     responseObj: {
@@ -45,6 +48,18 @@ export default {
     },
     responseInd: {
       type: Number,
+    },
+    componentType: {
+      type: String,
+      default: "practice-question",
+    },
+    componentName: {
+      type: String,
+      default: "Word Processor",
+    },
+    componentModal: {
+      type: Boolean,
+      default: true,
     },
   },
   data() {
@@ -69,13 +84,6 @@ export default {
     handleChange(value) {
       this.modalIsOpen = value;
     },
-    updateZindex() {
-      eventBus.$emit("z-index-click", 'textEditorModal');
-    },
-    resetModalDims() {
-      $('#textEditorModal').css('width', '60em');
-      $('#textEditorModal').css('height', '30em');
-    },
     updateResponse() {
       if (this.responseObj.content !== "") {
         eventBus.$emit("show-submit-v2-btn", true);
@@ -86,6 +94,15 @@ export default {
         eventBus.$emit("active-solution-index-v2", false);
         eventBus.$emit("update-user-response");
       }
+    },
+    show () {
+      this.$modal.show("modal-"+this.componentType+"-"+this.componentName);
+      $('.components-sidebar .components div').removeClass('active-modal');
+      eventBus.$emit("update-modal-z-index", `modal-${this.componentType}-${this.componentName}`);
+    },
+    hide () {
+      $('.latent-modal').removeClass('active-modal');
+      this.$modal.hide("modal-"+this.componentType+"-"+this.componentName);
     },
   },
   watch: {

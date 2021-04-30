@@ -1,22 +1,21 @@
 <template>
     <div>
-        <button @click="modalIsOpen = !modalIsOpen; updateZindex(); resetModalDims()" href="#helpModal" class="btn btn-settings help-btn-title" title="Help" data-backdrop="false" data-toggle="modal"></button>
-        <div @click="updateZindex()" id="helpModal" class="modal2-help modal-help fade resizemove-sol" v-show="modalIsOpen">
-            <div class="modal2-dialog">
-                <div class="modal2-content">
-                  <button @click="modalIsOpen = !modalIsOpen" type="button" class="close modal-close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <div id="helpheader" class="modal2-header-lg">
-                        <h4 class="modal2-title">Help</h4>
-                    </div>
-                    <div class="modal2-body">
-                      <div>
-                        <PDFViewer :active=true :file-url="helpPdf" />
-                      </div>
-                    </div>
-                </div>
-            </div>
-          <div class="draggable-overlay"></div>
+        <button @click="show()" class="btn btn-settings help-btn-title components-sidebar-links" title="Help" data-backdrop="false" data-toggle="modal"></button>
+        <VueModal
+          :componentType="componentType"
+          :componentName="componentName"
+          :componentModal="componentModal"
+          :mainColor="'rgba(24, 24, 66, 0.95)'"
+          :textColor="'#ffffff'"
+          :componentWidth="1000"
+          :componentHeight="750"
+        >
+        <div slot="body">
+          <div>
+            <PDFViewer :active=true :file-url="helpPdf" class="pq-modal-pdf" />
+          </div>
         </div>
+      </VueModal>
     </div>
 </template>
 
@@ -24,11 +23,13 @@
 
 import PDFViewer from "../../lib/PDFViewer/index.vue";
 import eventBus from "../cbe/EventBus.vue";
+import VueModal from "../VueModal.vue";
 
 export default {
   components: {
     PDFViewer,
-    eventBus
+    eventBus,
+    VueModal
   },
   data() {
     return {
@@ -36,7 +37,19 @@ export default {
     };
   },
   props: {
-    helpPdf: String
+    helpPdf: String,
+    componentType: {
+      type: String,
+      default: "navbar",
+    },
+    componentName: {
+      type: String,
+      default: "Help",
+    },
+    componentModal: {
+      type: Boolean,
+      default: true,
+    },
   },
   created() {
     eventBus.$on("close-modal",(status)=>{
@@ -52,12 +65,14 @@ export default {
     handleChange(value) {
       this.modalIsOpen = value;
     },
-    updateZindex() {
-      eventBus.$emit('z-index-click', 'helpModal');
+    show () {
+      this.$modal.show("modal-"+this.componentType+"-"+this.componentName);
+      $('.components-sidebar .components div').removeClass('active-modal');
+      eventBus.$emit("update-modal-z-index", `modal-${this.componentType}-${this.componentName}`);
     },
-    resetModalDims() {
-      $('#helpModal').css('width', '60em');
-      $('#helpModal').css('height', '40em');
+    hide () {
+      $('.latent-modal').removeClass('active-modal');
+      this.$modal.hide("modal-"+this.componentType+"-"+this.componentName);
     },
   },
   watch: {

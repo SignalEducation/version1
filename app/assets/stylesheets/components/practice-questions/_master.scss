@@ -191,6 +191,12 @@
   }
 }
 
+.practice-question-left-pane {
+  .window-header {
+    .modal-close { top: -3rem }
+  }
+}
+
 .practice-question-theme {
   .splitpanes__splitter {
     background-color: #000032 !important;
@@ -201,10 +207,14 @@
     background-color: #ffffff!important;
     height: 70vh;
   }
-
   .splitpanes--vertical {
     margin-bottom: 2rem;
     background-color: #ffffff;
+  }
+  .vm--overlay { display: none }
+  .vm--container {
+    width: 0;
+    height: 0;
   }
 }
 
@@ -215,7 +225,7 @@ button2.btn-settings {
   background-color: #337ab7;
   color: white;
 }
-button2.btn-settings:active {
+button2.btn-settings:active-sol {
   color: white;
 }
 .modal2 {
@@ -306,14 +316,14 @@ button2.btn-settings:active {
   z-index: 100;
   width: 36.5em;
   cursor: grab;
-  &:active {
+  &:active-sol {
     cursor: grabbing;
   }
 }
 #scratchPadModal, #calcModal {
   .modal2-body {
     cursor: grab;
-    &:active {
+    &:active-sol {
       cursor: grabbing;
     }
   }
@@ -326,7 +336,7 @@ button2.btn-settings:active {
   z-index: 100;
   width: 100%;
   cursor: grab;
-  &:active {
+  &:active-sol {
     cursor: grabbing;
   }
 }
@@ -350,37 +360,7 @@ button2.btn-settings:active {
   margin-top: 3em;
 }
 .side-bar-nav {
-  .modal-close {
-    width: 31px;
-    height: 31px;
-    background: rgba(255,255,255,1);
-    opacity: 1;
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
-    border-bottom-left-radius: 20px;
-    border-bottom-right-radius: 20px;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    overflow: hidden;
-    top: .3rem;
-    z-index: 101;
-  }
-  .modal-close-solution {
-    top: .4rem;
-  }
-  button.modal-close:hover {
-    background-color: #000032;
-    color: #ffffff;
-    border: 3px solid #ffffff;
-    opacity: 1;
-  }
 
-  button.modal-close:not(:disabled):not(.disabled):hover {
-    opacity: 1;
-  }
-
-  button.modal-close:focus {
-    outline: none;
-  }
 }
 
 .modal2-body {
@@ -422,6 +402,11 @@ button2.btn-settings:active {
     margin-left: -5em;
     .top-btns-left-pane-spc {
       margin-right: 2em;
+    }
+    .vm--overlay { display: none }
+    .vm--container {
+      width: 0;
+      height: 0;
     }
   }
 }
@@ -770,7 +755,7 @@ button2.btn-settings:active {
         color:  rgba(24, 24, 66, 0.95);
         font-weight: bold;
       }
-      &.active {
+      &.active-sol {
         background: rgba(24, 24, 66, 0.95);
         color: #ffffff;
         font-weight: 400;
@@ -810,7 +795,7 @@ button2.btn-settings:active {
   bottom: 0;
   z-index: 1;
   cursor: grab;
-  &:active {
+  &:active-sol {
     cursor: grabbing;
   }
 }
@@ -822,11 +807,10 @@ button2.btn-settings:active {
   bottom: 0;
   z-index: 1;
   cursor: grab;
-  &:active {
+  &:active-sol {
     cursor: grabbing;
   }
 }
-
 .aselect {
   width: 280px;
   margin: 20px auto;
@@ -906,5 +890,19 @@ button2.btn-settings:active {
   }
   .visible {
     visibility: visible;
+  }
+}
+.sol-open-size {
+  height: 100%;
+}
+.sol-spreadsheet-size {
+  background-color: #f7f7f7;
+}
+.pq-modal-pdf {
+  z-index: 0;
+  .pdf-viewer__document {
+    left: 0 !important;
+    width: 100% !important;
+    padding: 0 10px 0 10px !important;
   }
 }

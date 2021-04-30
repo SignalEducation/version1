@@ -1,45 +1,44 @@
 <template>
     <div>
-      <button @click="modalIsOpen = !modalIsOpen; updateZindex(); resetModalDims()" href="#solutionModal" class="btn btn-settings solution-btn-title" data-backdrop="false" data-toggle="modal">Solution</button>
-      <div @click="updateZindex()" id="solutionModal" class="modal2-solution fade resizemove-sol" v-show="modalIsOpen">
-          <div class="modal2-dialog">
-              <div class="modal2-content">
-                <button @click="modalIsOpen = !modalIsOpen" type="button" class="close modal-close modal-close-solution" data-dismiss="modal" aria-hidden="true">&times;</button>
-                  <div class="modal2-header-lg">
-                      <h4 class="modal2-title">Solution</h4>
+      <button id="modal-solution-v1" @click="show('modal-solution-v1')" href="#solutionModal" class="btn btn-settings solution-btn-title components-sidebar-links">Solution</button>
+      <button v-if="loading" class="btn btn-settings solution-btn-title"><div class="vue-loader vue-loader-alt"></div></button>
+        <VueModal
+          :componentType="componentType"
+          :componentName="componentName"
+          :componentModal="componentModal"
+          :mainColor="'rgba(24, 24, 66, 0.95)'"
+          :textColor="'#ffffff'"
+        >
+        <div slot="body">
+          <div id="modal-solution-v1-inner-content">
+            <h5>Question {{this.indexOfQuestion + 1}}</h5>
+            <div v-if="solutionContent[this.indexOfQuestion].kind === 'open'">
+              <p v-html="solutionContent[this.indexOfQuestion].solution"></p>
+            </div>
+            <div v-else>
+              <SpreadsheetEditor
+                  :initial-data="solutionContent[this.indexOfQuestion].solution"
+                  :key="solutionContent[this.indexOfQuestion].id"
+                  @spreadsheet-updated="syncSpreadsheetData"
+              />
 
-                  </div>
-                  <div id="modal2-body-id" class="modal2-body" style="overflow-y:scroll">
-                    <div id="modal-solution-v1-inner-content">
-                      <h5>Question {{this.indexOfQuestion + 1}}</h5>
-                      <div v-if="solutionContent[this.indexOfQuestion].kind === 'open'">
-                        <p v-html="solutionContent[this.indexOfQuestion].solution"></p>
-                      </div>
-                      <div v-else>
-                        <SpreadsheetEditor
-                            :initial-data="solutionContent[this.indexOfQuestion].solution"
-                            :key="solutionContent[this.indexOfQuestion].id"
-                            @spreadsheet-updated="syncSpreadsheetData"
-                        />
-
-                      </div>
-                  </div>
-                </div>
-              </div>
-          </div>
-          <div class="draggable-overlay"></div>
+            </div>
         </div>
+        </div>
+      </VueModal>
     </div>
 </template>
 
 <script>
 import eventBus from "../cbe/EventBus.vue";
 import SpreadsheetEditor from "../SpreadsheetEditor/SpreadsheetEditor.vue";
+import VueModal from "../VueModal.vue";
 
 export default {
   components: {
     eventBus,
     SpreadsheetEditor,
+    VueModal
   },
   props: {
     solutionTitle: {
@@ -48,12 +47,25 @@ export default {
     solutionContent: {
       type: [Object, Array],
     },
+    componentType: {
+      type: String,
+      default: "practice-question",
+    },
+    componentName: {
+      type: String,
+      default: "Solution",
+    },
+    componentModal: {
+      type: Boolean,
+      default: true,
+    },
   },
   data() {
     return {
       modalIsOpen: false,
       indexOfQuestion: 0,
       solutionObj: null,
+      loading: false
     };
   },
   async created() {
@@ -82,14 +94,6 @@ export default {
     handleChange(value) {
       this.modalIsOpen = value;
     },
-    updateZindex() {
-      eventBus.$emit("z-index-click", "solutionModal");
-      this.getModalInnerHeight();
-    },
-    resetModalDims() {
-      $('#solutionModal').css('width', '60em');
-      $('#solutionModal').css('height', '37em');
-    },
     getModalInnerHeight() {
       let elem = $("#modal-solution-v1-inner-content").height();
       console.log(`height: ${(elem/2)+20}`);
@@ -98,6 +102,21 @@ export default {
       } else {
         document.getElementById('modal2-body-id').style.height = `${(elem/2)+20}px`;
       }
+    },
+    show (id) {
+      this.loading = true;
+      $("#"+id).css("display","none");
+      setTimeout(() => {
+        this.loading = false;
+        $("#"+id).css("display","block");
+        this.$modal.show("modal-"+this.componentType+"-"+this.componentName);
+        $('.components-sidebar .components div').removeClass('active-modal');
+        eventBus.$emit("update-modal-z-index", `modal-${this.componentType}-${this.componentName}`);
+      }, 10);
+    },
+    hide () {
+      $('.latent-modal').removeClass('active-modal');
+      this.$modal.hide("modal-"+this.componentType+"-"+this.componentName);
     },
   },
   watch: {

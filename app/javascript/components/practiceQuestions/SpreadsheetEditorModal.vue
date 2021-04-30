@@ -81,13 +81,6 @@ export default {
     handleChange(value) {
       this.modalIsOpen = value;
     },
-    updateZindex() {
-      eventBus.$emit("z-index-click", "spreadsheetModal");
-    },
-    resetModalDims() {
-      $('#spreadsheetModal').css('width', '60em');
-      $('#spreadsheetModal').css('height', '37em');
-    },
   },
   watch: {
     modalStatus(status) {
