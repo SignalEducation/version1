@@ -336,14 +336,6 @@ function courseResourceClick(properties) {
   }
 }
 
-function courseResourceExternalClick() {
-  let properties = $("#resource-card");
-
-  if (typeof analytics !== 'undefined') {
-    analytics.track('Course Resource Clicked', properties);
-  }
-}
-
 function courseResourceCompleted(properties) {
   if (typeof analytics !== 'undefined') {
     analytics.track('Course Resource Completed', properties);
@@ -519,7 +511,7 @@ $(document).ready(function(){
   });
 
   $(".resource-card").on( "click", function() {
-    courseResourceExternalClick()
+    courseResourceClick(this.dataset)
   });
 
 });
