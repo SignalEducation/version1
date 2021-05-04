@@ -8,7 +8,11 @@
 
     gtag('config', 'UA-185199057-2', {
       'custom_map': {'dimension1': 'user_type'}
+    },
+    {
+      'send_page_view': false
     });
+
 -elsif Rails.env.production?
   %script{:async => "", :src => "https://www.googletagmanager.com/gtag/js?id=UA-141784351-1"}
   :javascript
@@ -18,6 +22,9 @@
 
     gtag('config', 'UA-141784351-1', {
       'custom_map': {'dimension4': 'user_type'}
+    },
+    {
+      'send_page_view': false
     });
 -else
   :javascript
