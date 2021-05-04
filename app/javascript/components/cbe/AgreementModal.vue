@@ -1,46 +1,58 @@
 <template>
-  <VueWindow
-    v-if="agreementModalIsOpen"
-    :window-header="'Ready to begin?'"
-    :window-is-open="true"
-    @close="toggleResetModal()"
-  >
-    <p
-      slot="body"
-      v-html="cbe_data.agreement_content"
-    />
-
-    <div slot="footer">
-      <b-button
-        @click="acceptAgreement(true)"
-      >
-        Yes
-      </b-button>
-      <b-button
-        @click="acceptAgreement(false)"
-      >
-        No
-      </b-button>
+<div class="non-resizable-modal">
+  <VueModal
+      :componentType="componentType"
+      :componentName="componentName"
+      :window-is-open="true"
+      :componentModal="true"
+      :componentHeight="250"
+      :componentWidth="500"
+      :mainColor="'transparent'"
+    >
+    <div slot="body">
+      <p v-html="cbe_data.agreement_content" />
+      <div class="agreement-modal-btns">
+        <b-button @click="acceptAgreement(true)">
+          Yes
+        </b-button>
+        <b-button @click="acceptAgreement(false)">
+          No
+        </b-button>
+      </div>
     </div>
-  </VueWindow>
+  </VueModal>
+  </div>
 </template>
 
 <script>
 import axios from 'axios';
 import { mapGetters } from 'vuex';
-import VueWindow from '../VueWindow.vue'
+import VueModal from '../VueModal.vue';
+import eventBus from '../cbe/EventBus.vue';
 
 export default {
   components: {
-    VueWindow,
+    VueModal,
+    eventBus
   },
   props: {
     nextAction: Function,
+    componentType: {
+      type: String,
+      default: "nav",
+    },
+    componentName: {
+      type: String,
+      default: "Ready to Begin?",
+    },
   },
   data() {
     return {
       agreementModalIsOpen: true,
     };
+  },
+  mounted() {
+    this.show();
   },
   computed: {
     ...mapGetters('cbe', {
@@ -51,25 +63,6 @@ export default {
     }),
   },
   methods: {
-    createUserLog() {
-      axios
-        .post(`/api/v1/cbes/${this.userCbeData.cbe_id}/users_log`, {
-          cbe_user_log: this.formatedData(),
-        })
-        .then(response => {
-          this.$store.dispatch('userCbe/recordUserLog', response.data);
-          this.nextAction();
-        })
-        .catch(error => {});
-    },
-    formatedData() {
-      const data = {};
-      data.cbe_id = this.userCbeData.cbe_id;
-      data.user_id = this.userCbeData.user_id;
-      data.exercise_id = this.userCbeData.exercise_id;
-
-      return data;
-    },
     acceptAgreement(accepted) {
       const navLinks = document.getElementsByClassName('page-item');
       for (const link of navLinks) {
@@ -77,16 +70,42 @@ export default {
       }
 
       if (accepted) {
-        this.createUserLog();
-        cbeStarted({preferredExamBodyId: this.$parent.preferred_exam_body_id, preferredExamBody: this.$parent.preferred_exam_body_name, banner: 'false', onboarding: this.$parent.onboarding, cbeId: this.$parent.$parent.cbe_id, cbeName: this.$parent.$parent.$parent.cbe_name, productId: this.$parent.$parent.$parent.product_id, productName: this.$parent.$parent.$parent.product_name, courseId: this.$parent.$parent.$parent.course_id, courseName: this.$parent.$parent.$parent.course_name, examBodyId: this.$parent.$parent.$parent.exam_body_id, examBodyName: this.$parent.$parent.$parent.exam_body_name });
+        this.userCbeData.user_agreement = true;
+        this.updateAgreedOnUserLog();
       } else {
         window.location.href = `${this.userCbeData.cbe_id}`;
       }
 
       this.toggleResetModal();
     },
+    updateAgreedOnUserLog() {
+      const data   = {};
+      data.agreed  = this.userCbeData.user_agreement;
+
+      axios
+        .post(
+          `/api/v1/cbes/${this.userCbeData.cbe_id}/users_log/${this.userCbeData.user_log_id}/user_agreement`,
+          {
+            id: this.userCbeData.user_log_id,
+            cbe_user_log: data,
+          }
+        )
+        .then((response) => {
+          this.nextAction();
+          cbeStarted({cbeId: this.$parent.$parent.cbe_id, cbeName: this.$parent.$parent.$parent.cbe_name, productId: this.$parent.$parent.$parent.product_id, productName: this.$parent.$parent.$parent.product_name, courseId: this.$parent.$parent.$parent.course_id, courseName: this.$parent.$parent.$parent.course_name, examBodyId: this.$parent.$parent.$parent.exam_body_id, examBodyName: this.$parent.$parent.$parent.exam_body_name });
+        })
+        .catch((error) => {});
+    },
     toggleResetModal() {
       this.agreementModalIsOpen = !this.agreementModalIsOpen;
+    },
+    show () {
+      this.$modal.show("modal-"+this.componentType+"-"+this.componentName);
+      $('.components-sidebar .components div').removeClass('active-modal');
+    },
+    hide () {
+      $('.latent-modal').removeClass('active-modal');
+      this.$modal.hide("modal-"+this.componentType+"-"+this.componentName);
     },
   },
 };

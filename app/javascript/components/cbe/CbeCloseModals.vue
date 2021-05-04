@@ -34,7 +34,7 @@ export default {
       handler() {
         this.mapFlags();
       },
-     deep: true
+      deep: true
     }
   },
   created() {

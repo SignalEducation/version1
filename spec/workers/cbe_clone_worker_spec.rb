@@ -21,8 +21,16 @@ RSpec.describe CbeCloneWorker do
   end
 
   subject { CbeCloneWorker }
+  context 'Success' do
+    it 'Event Importer job is processed in importers queue.' do
+      expect { subject.perform_async(cbe.id, user.id, Faker::Internet.slug) }.to change(subject.jobs, :size).by(1)
+    end
+  end
 
-  it 'Event Importer job is processed in importers queue.' do
-    expect { subject.perform_async(cbe.id, user.id, Faker::Internet.slug) }.to change(subject.jobs, :size).by(1)
+  context 'Failed' do
+    it 'Event Importer job is processed in importers queue.' do
+      allow_any_instance_of(Cbe).to receive(:is_a?).and_return(false)
+      expect { subject.perform_async(cbe.id, user.id, Faker::Internet.slug) }.to change(subject.jobs, :size).by(1)
+    end
   end
 end

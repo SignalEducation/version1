@@ -20,6 +20,8 @@
 #  paypal_guid               :string
 #  paypal_status             :string
 #  state                     :string
+#  cancelled_by_id           :bigint
+#  cancellation_note         :text
 #  stripe_payment_method_id  :string
 #  stripe_payment_intent_id  :string
 #  ahoy_visit_id             :uuid

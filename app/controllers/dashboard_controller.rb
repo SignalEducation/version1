@@ -8,6 +8,7 @@ class DashboardController < ApplicationController
     @default_group = current_user&.preferred_exam_body&.group || Group.all_active.first
     @enrollments = current_user.valid_enrollments_in_sitting_order
     @sculs = current_user.course_logs.includes(:enrollments).where(enrollments: { id: nil })
+    @cancelled_orders_id = filter_cancelled_orders(current_user&.orders)
   end
 
   protected
@@ -15,5 +16,9 @@ class DashboardController < ApplicationController
   def get_variables
     @courses = Course.all_active.all_in_order
     seo_title_maker('Dashboard', 'Progress through all your courses will be recorded here.', false)
+  end
+
+  def filter_cancelled_orders(user_orders)
+    (user_orders.map { |order| order.state == 'cancelled' ? order.id : nil }).compact
   end
 end

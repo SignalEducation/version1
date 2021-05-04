@@ -1,6 +1,7 @@
 <template>
   <section id="student-cbe" class="cbe-section">
     <NavBar
+      class="cbe-content-navbar"
       :logo="cbe_data.name"
       :title="cbe_data.name"
       :user-cbe-data="user_cbe_data"
@@ -10,7 +11,6 @@
     <div class="cbe-content">
       <router-view
         :id="$route.path"
-        :gio-status="exhModalStatus"
         @update-close-all="exhModalStatus = $event"
       />
     </div>
@@ -31,8 +31,8 @@
           <b-navbar-nav
             v-if="
               $route.name == 'review' &&
-              user_cbe_data.status !== 'corrected' &&
-              user_cbe_data.status !== 'finished'
+                user_cbe_data.status !== 'corrected' &&
+                user_cbe_data.status !== 'finished'
             "
           >
             <b-nav-text class="arrow-right-icon" @click="submitExam"
@@ -56,12 +56,14 @@
 import axios from "axios";
 import { mapGetters } from "vuex";
 import CbeResources from "./CbeResources.vue";
+import eventBus from "./EventBus.vue";
 import NavBar from "./NavBar.vue";
 import NavPagination from "./NavPagination.vue";
 
 export default {
   components: {
     CbeResources,
+    eventBus,
     NavBar,
     NavPagination,
   },
@@ -82,6 +84,11 @@ export default {
       user_cbe_data: "userCbeData",
     }),
   },
+  created() {
+    eventBus.$on("update-question-answer", () => {
+      this.submitUnfinishedExam();
+    });
+  },
   watch: {
     cbe_data: {
       handler() {
@@ -91,7 +98,15 @@ export default {
           exercise_id: this.exerciseId,
           cbe_data: this.cbe_data,
         });
+
+        this.createUserLog();
       },
+    },
+    "user_cbe_data.exam_pages": {
+      handler() {
+        this.submitUnfinishedExam();
+      },
+      deep: true,
     },
     $route(to) {
       this.updateExamPageState(to);
@@ -99,11 +114,56 @@ export default {
   },
   mounted() {
     this.$store.dispatch("cbe/getCbe", this.cbe_id);
-    cbeLoaded({preferredExamBodyId: this.$parent.preferred_exam_body_id, preferredExamBody: this.$parent.preferred_exam_body_name, banner: 'false', onboarding: this.$parent.onboarding,
-      cbeId: this.cbe_id, cbeName: this.$parent.cbe_name, productId: this.$parent.product_id, productName: this.$parent.product_name, courseId: this.$parent.course_id,
-      courseName: this.$parent.course_name, examBodyId: this.$parent.exam_body_id, examBodyName: this.$parent.exam_body_name });
+    cbeLoaded({
+      preferredExamBodyId: this.$parent.preferred_exam_body_id,
+      preferredExamBody: this.$parent.preferred_exam_body_name,
+      banner: "false",
+      onboarding: this.$parent.onboarding,
+      cbeId: this.cbe_id,
+      cbeName: this.$parent.cbe_name,
+      productId: this.$parent.product_id,
+      productName: this.$parent.product_name,
+      courseId: this.$parent.course_id,
+      courseName: this.$parent.course_name,
+      examBodyId: this.$parent.exam_body_id,
+      examBodyName: this.$parent.exam_body_name,
+    });
   },
   methods: {
+    createUserLog() {
+      const data = {};
+      data.cbe_id = this.user_cbe_data.cbe_id;
+      data.user_id = this.user_cbe_data.user_id;
+      data.exercise_id = this.user_cbe_data.exercise_id;
+
+      axios
+        .post(`/api/v1/cbes/${this.user_cbe_data.cbe_id}/users_log`, {
+          cbe_user_log: data,
+        })
+        .then((response) => {
+          this.$store.dispatch("userCbe/recordUserLog", response.data);
+          this.$router.push(response.data.current_state);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    submitUnfinishedExam() {
+      let data = this.formatedData();
+      data.status = "started";
+
+      axios
+        .patch(
+          `/api/v1/cbes/${this.cbe_id}/users_log/${this.user_cbe_data.user_log_id}`,
+          {
+            cbe_user_log: data,
+          }
+        )
+        .then((response) => {
+          console.log("Unfinished saved.");
+        })
+        .catch((error) => {});
+    },
     submitExam() {
       this.loader = this.$loading.show({
         loader: "dots",
@@ -111,11 +171,14 @@ export default {
         container: this.fullPage ? null : this.$refs.formContainer,
       });
 
+      data = this.formatedData();
+      data.status = "finished";
+
       axios
         .patch(
           `/api/v1/cbes/${this.cbe_id}/users_log/${this.user_cbe_data.user_log_id}`,
           {
-            cbe_user_log: this.formatedData(),
+            cbe_user_log: data,
           }
         )
         .then((response) => {
@@ -123,7 +186,20 @@ export default {
         })
         .catch((error) => {});
 
-      cbeSubmitted({preferredExamBodyId: this.$parent.preferred_exam_body_id, preferredExamBody: this.$parent.preferred_exam_body_name, banner: 'false', onboarding: this.$parent.onboarding, cbeId: this.cbe_id, cbeName: this.$parent.cbe_name, productId: this.$parent.product_id, productName: this.$parent.product_name, courseId: this.$parent.course_id, courseName: this.$parent.course_name, examBodyId: this.$parent.exam_body_id, examBodyName: this.$parent.exam_body_name });
+      cbeSubmitted({
+        preferredExamBodyId: this.$parent.preferred_exam_body_id,
+        preferredExamBody: this.$parent.preferred_exam_body_name,
+        banner: "false",
+        onboarding: this.$parent.onboarding,
+        cbeId: this.cbe_id,
+        cbeName: this.$parent.cbe_name,
+        productId: this.$parent.product_id,
+        productName: this.$parent.product_name,
+        courseId: this.$parent.course_id,
+        courseName: this.$parent.course_name,
+        examBodyId: this.$parent.exam_body_id,
+        examBodyName: this.$parent.exam_body_name,
+      });
     },
     formatedData() {
       const data = {};
@@ -138,9 +214,10 @@ export default {
         delete responses[i].id;
       }
 
-      data.status = "finished";
       data.cbe_id = this.user_cbe_data.cbe_id;
       data.user_id = this.user_cbe_data.user_id;
+      data.scratch_pad = this.user_cbe_data.scratch_pad;
+      data.pages_state = this.user_cbe_data.exam_pages;
       data.exercise_id = this.user_cbe_data.exercise_id;
       data.questions_attributes = [].concat.apply([], questions);
       data.responses_attributes = [].concat.apply([], responses);

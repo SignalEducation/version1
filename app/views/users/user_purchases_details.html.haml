@@ -30,6 +30,8 @@
                 %th
                   =t('views.invoices.form.line_total_inc_vat')
                 %th
+                  Active
+                %th
             %tbody
               -@orders.each do |order|
                 %tr
@@ -42,10 +44,20 @@
                   %td
                     =number_in_local_currency(order.product.price, order.product.currency)
                   %td
+                    - if order.state == 'cancelled'
+                      =tick_or_cross(false)
+                    - else
+                      =tick_or_cross(true)
+                  %td
+                    .pull-right
                     -if order.product && order.product.mock_exam
                       =link_to order.product.mock_exam.file.url, target: '_blank' do
-                        .btn.btn-secondary.btn-xs
-                          View
+                        .btn.btn-primary.btn-xs
+                          PDF
+                    =link_to order_management_url(order.id), style: 'padding-left: 5px;' do
+                      .btn.btn-secondary.btn-xs
+                        View
+
     .row
       .col-md-12
         .box-item.table-box#invoices-panel

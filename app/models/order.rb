@@ -22,6 +22,8 @@
 #  paypal_guid               :string
 #  paypal_status             :string
 #  state                     :string
+#  cancellation_note         :text
+#  cancelled_by_id           :bigint
 #  stripe_payment_method_id  :string
 #  stripe_payment_intent_id  :string
 #  ahoy_visit_id             :uuid
@@ -70,7 +72,8 @@ class Order < ApplicationRecord
   scope :all_for_course,      ->(course_id)  { where(course_id: course_id) }
   scope :all_for_product,     ->(product_id) { where(product_id: product_id) }
   scope :all_for_user,        ->(user_id)    { where(user_id: user_id) }
-  scope :all_valid,           -> { where(state: completed) }
+  scope :all_valid,           -> { where(state: 'completed') }
+  scope :cancelled,           -> { where(state: 'cancelled') }
 
   scope :cbe_by_user, lambda { |user_id, cbe_id|
     joins(:product).
@@ -85,7 +88,7 @@ class Order < ApplicationRecord
 
   state_machine initial: :pending do
     event :complete do
-      transition %i[pending errored] => :completed
+      transition %i[pending errored cancelled] => :completed
     end
 
     event :mark_pending do
@@ -102,6 +105,10 @@ class Order < ApplicationRecord
 
     event :record_error do
       transition pending: :errored
+    end
+
+    event :cancel do
+      transition all => :cancelled
     end
 
     after_transition all => :completed do |order, _transition|

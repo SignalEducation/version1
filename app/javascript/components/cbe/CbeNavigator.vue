@@ -1,39 +1,33 @@
 <template>
   <div id="cbe-modals">
-    <b-nav-text
-      class="navigation-icon"
-      ref="myBtn"
-      v-on:click="modalIsOpen = !modalIsOpen"
-      >Navigator</b-nav-text
+    <section
+      class="components-sidebar-links navigation-icon"
+      @click="show($event)"
     >
-
-    <div ref="myModal" class="modal" v-show="modalIsOpen">
-      <div class="modal-content">
-        <div class="modal-header bg-cbe-gray">
-          <span class="title navigation-icon">
-            Navigator - select a question to go to it
-          </span>
-
-          <span class="close" v-on:click="modalIsOpen = !modalIsOpen">
-            &times;
-          </span>
-        </div>
-
-        <div class="modal-internal-content">
-          <CbeReview :cbe_id="cbeId" />
-        </div>
-      </div>
+      Navigator
+    </section>
+    <VueModal
+      :componentName="componentName"
+      :componentType="componentType"
+      :height="450"
+      :width="350"
+    >
+    <div slot="body">
+      <CbeReview :cbe_id="cbeId" />
     </div>
+    </VueModal>
   </div>
 </template>
 
 <script>
 import CbeReview from "../../views/cbes/Review.vue";
 import eventBus from "./EventBus.vue";
+import VueModal from "../VueModal.vue";
 
 export default {
   components: {
-    CbeReview
+    CbeReview,
+    VueModal
   },
   data() {
     return {
@@ -42,11 +36,30 @@ export default {
   },
   props: {
     cbeId: Number,
+    componentType: {
+      type: String,
+      default: "nav",
+    },
+    componentName: {
+      type: String,
+      default: "Navigator",
+    },
   },
   created() {
     eventBus.$on("close-modal",(status)=>{
       this.modalIsOpen = status;
     })
+  },
+  methods: {
+    show (event) {
+      this.$modal.show("modal-"+this.componentType+"-"+this.componentName);
+      $('.components-sidebar .components div').removeClass('active-modal');
+      eventBus.$emit("update-modal-z-index", `modal-${this.componentType}-${this.componentName}`);
+    },
+    hide (event) {
+      $('.latent-modal').removeClass('active-modal');
+      this.$modal.hide("modal-"+this.componentType+"-"+this.componentName);
+    },
   },
 };
 </script>

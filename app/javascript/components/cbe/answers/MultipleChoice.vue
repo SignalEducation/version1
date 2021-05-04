@@ -29,7 +29,12 @@
 </template>
 
 <script>
+import EventBus from "../EventBus.vue";
+
 export default {
+  components: {
+    EventBus,
+  },
   props: {
     answersData: {
       type: Array,
@@ -52,6 +57,7 @@ export default {
   watch: {
     question(newValue) {
       this.$store.dispatch('userCbe/recordAnswer', newValue);
+      EventBus.$emit("update-question-answer", newValue);
     },
   },
   methods: {
@@ -60,6 +66,7 @@ export default {
         this.questionId
       ];
       if (initialValue != null) {
+        initialValue.id = initialValue.cbe_question_id
         return initialValue;
       }
 

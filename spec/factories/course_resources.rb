@@ -22,9 +22,16 @@
 
 FactoryBot.define do
   factory :course_resource do
-    name { "MyString" }
-    course_id { 1 }
-    description { "MyText" }
-  end
+    sequence(:name) { |n| "Resource #{n}" }
+    description     { Faker::Lorem.sentence }
+    association     :course
 
+    trait :file_uploaded do
+      file_upload  { File.new(Rails.root.join('spec/support/fixtures/file.pdf')) }
+    end
+
+    trait :external_link do
+      external_url { Faker::Internet.slug }
+    end
+  end
 end
