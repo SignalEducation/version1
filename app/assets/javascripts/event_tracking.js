@@ -288,7 +288,8 @@ function videoQualityChange(playerData) {
 }
 
 function exerciseFileDownload() {
-  let properties = $("#exercise-download-window");
+  const edWindow = $("#exercise-download-window");
+  let properties = edWindow.data();
 
   if (typeof analytics !== 'undefined') {
     analytics.track('Exercise File Downloaded', properties);
@@ -296,7 +297,8 @@ function exerciseFileDownload() {
 }
 
 function exerciseSubmissionUpload() {
-  let properties = $("#exercise-upload-window");
+  const euWindow = $("#exercise-upload-window");
+  let properties = euWindow.data();
 
   if (typeof analytics !== 'undefined') {
     analytics.track('Exercise Submission Uploaded', properties);
@@ -304,7 +306,8 @@ function exerciseSubmissionUpload() {
 }
 
 function exerciseResultsDownload() {
-  let properties = $("#exercise-results-window");
+  const erWindow = $("#exercise-results-window");
+  let properties = erWindow.data();
 
   if (typeof analytics !== 'undefined') {
     analytics.track('Exercise Results Downloaded', properties);
