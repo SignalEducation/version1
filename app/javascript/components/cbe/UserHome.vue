@@ -171,7 +171,7 @@ export default {
         container: this.fullPage ? null : this.$refs.formContainer,
       });
 
-      data = this.formatedData();
+      let data = this.formatedData();
       data.status = "finished";
 
       axios
