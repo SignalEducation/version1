@@ -1,7 +1,7 @@
 <template>
   <div>
-    <section @click="show($event)" class="components-sidebar-links" :class="componentIcon">
-      {{ componentName }}
+    <section :id="'cbe-exhibit-modal-'+componentInd" @click="show('cbe-exhibit-modal-'+componentInd)" class="components-sidebar-links" :class="componentIcon">
+      <div>{{ componentName }}<button v-if="loading" class="vue-loader vue-loader-cbe"></button></div>
     </section>
     <div>
       <VueModal
@@ -90,6 +90,10 @@ export default {
       type: String,
       default: "",
     },
+    componentInd: {
+      type: String,
+      default: "",
+    },
     componentModal: {
       type: Boolean,
       default: false,
@@ -123,6 +127,7 @@ export default {
       errors: [],
       scale: "page-width",
       showModal: this.componentModal,
+      loading: false
     };
   },
   computed: {
@@ -207,10 +212,14 @@ export default {
     findPos(obj) {
       return obj.offsetTop;
     },
-    show (event) {
+    show (id) {
+      this.loading = true;
+      setTimeout(() => {
+      this.loading = false;
       this.$modal.show("modal-"+this.componentType+"-"+this.componentName);
       $('.components-sidebar .components div').removeClass('active-modal');
       eventBus.$emit("update-modal-z-index", `modal-${this.componentType}-${this.componentName}`);
+      }, 10);
     },
     hide (event) {
       $('.latent-modal').removeClass('active-modal');
