@@ -37,7 +37,7 @@
       content_category: "#{@product&.product_type.humanize}"
     });
 
-    if("#{@product&.url_by_type}" == "lifetime") {
+    if("#{@product&.url_by_type}" === "lifetime" && "#{@subscriptions.any?}" === "false") {
       gtag('event', 'purchase', {
         "transaction_id": "#{@order&.id}",
         "affiliation": "products",
