@@ -1,5 +1,14 @@
 <template>
   <section v-if="!isFetching">
+    <div class="nav-practice-questions">
+      <span>
+        <PreviousAttempts
+          :stepLogId="stepLogId"
+          :previousAttempts="previousStepLogs"
+          class="practice-ques-single-question"
+        />
+      </span>
+    </div>
     <div class="top-btns-prac-ques">
       <div class="top-btns-left-pane">
         <ModalCalculator class="top-btns-left-pane-spc" />
@@ -23,13 +32,6 @@
         </span>
       </div>
     </div>
-    <span>
-      <PreviousAttempts
-        :stepLogId="stepLogId"
-        :previousAttempts="previousStepLogs"
-        class="practice-ques-single-question"
-      />
-    </span>
     <div class="questions" v-on:click="refreshSheetLayout()">
       <splitpanes
         class="practice-question-theme"

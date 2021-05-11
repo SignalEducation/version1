@@ -1,19 +1,22 @@
 <template>
   <section>
-    <div class="practice-question-V2" style="padding:15px;">
-      <div class="practice-question-section">
-        <div class="practice-question-v2-title">Previous Attempts</div>
-        <span v-for="(log) in previousAttempts" :key="log.id">
-          <span class="practice-question-left-pane">
-            <button @click="updateCourseStepLog(log.id)" class="learn-more">
-              <div class="circle"><span class="icon arrow"></span></div>
-              <span class="button-text">
-                <i class="material-icons exhibits-icon">schedule</i>
+    <div class="aselect" :data-value="value" :data-list="previousAttempts">
+      <div class="selector" @click="toggle()">
+          <div class="label">
+            <span>
+              <i class="material-icons exhibits-icon">schedule</i>
+              <p>{{ value.created }}</p>
+            </span>
+          </div>
+      <div class="arrow" :class="{ expanded : visible }"></div>
+          <div :class="{ hidden : !visible, visible }">
+              <ul>
+                <li :class="{ current : log === value }" :key="log.id" v-for="log in previousAttempts" @click="select(log)">
+                  <i class="material-icons exhibits-icon">schedule</i>
                   <p>{{ log.created }}</p>
-                </span>
-            </button>
-          </span>
-        </span>
+                </li>
+              </ul>
+          </div>
       </div>
     </div>
   </section>
@@ -40,6 +43,13 @@ export default {
   components: {
     eventBus,
   },
+  name: 'aselect',
+  data() {
+    return {
+      value: { created: 'Previous Attempts' },
+      visible: false
+    };
+  },
   props: {
     stepLogId: {
       type: [String, Number],
@@ -65,6 +75,13 @@ export default {
     updateCourseStepLog: function(log_id) {
       eventBus.$emit("update-course_step-log", log_id);
     },
+    toggle() {
+      this.visible = !this.visible;
+    },
+    select(option) {
+      this.value = option;
+      this.updateCourseStepLog(option.id);
+    }
   },
 };
 </script>
