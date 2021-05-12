@@ -437,6 +437,12 @@ class Subscription < ApplicationRecord
     'unknown'
   end
 
+  def coupon_data
+    return unless coupon_id
+
+    { code: coupon.code, price_discounted: coupon.price_discounted(subscription_plan_id) }
+  end
+
   protected
 
   def create_subscription_payment_card
