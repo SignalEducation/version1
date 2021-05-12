@@ -92,9 +92,10 @@ class OrdersController < ApplicationController
   end
 
   def order_complete
-    @order        = Order.find_by(id: params[:order_id])
-    @product      = Product.find_by(id: params[:product_id])
-    @studies_link =
+    @order          = Order.find_by(id: params[:order_id])
+    @product        = Product.find_by(id: params[:product_id])
+    @subscriptions  = Subscription.where(user_id: @order.user_id).not_pending
+    @studies_link   =
       if @product&.lifetime_access?
         student_dashboard_url
       elsif @product&.course_access?

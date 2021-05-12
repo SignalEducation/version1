@@ -6,17 +6,19 @@
           Exercise Submission
         %p.p-hero.px-lg-8
           Submit a PDF of your exercise or mock exam below for correction.
-
+      - course = @exercise&.product.mock_exam? ? @exercise&.product&.mock_exam&.course : @exercise&.product&.course
       -if @exercise.product.mock_exam?
         %section.pb-md-6.pb-5
-          .forgot-password-section#exercise-download-window{data: { product_name: @exercise&.product&.mock_exam&.name, product_id: @exercise.product_id, course_name: @exercise&.product&.course&.name,
-           course_id: @exercise&.product&.course_id, exam_body_name: @exercise&.product&.course&.exam_body&.name, exam_body_id: @exercise&.product&.course&.exam_body_id}}
+          .forgot-password-section#exercise-download-window{data: { product_name: @exercise&.product&.mock_exam&.name, product_id: @exercise.product_id, course_name: course&.name,
+           course_id: course&.id, exam_body_name: course&.exam_body&.name, exam_body_id: course&.exam_body_id,
+           preferred_exam_body_id: @exercise.user&.preferred_exam_body_id, preferred_exam_body: @exercise.user&.preferred_exam_body&.name, banner: @banner, onboarding: @exercise.user&.analytics_onboarding_valid?.to_s}}
             =link_to "Download #{@exercise.product.mock_exam.name}", @exercise.product.mock_exam.file.url, target: '_blank', class: 'btn btn-primary btn-sm', id: 'exercise-file-download'
 
       %section.pb-md-6.pb-5
         .forgot-password-section
-          .form-box#exercise-upload-window{data: { product_name: @exercise&.product&.mock_exam&.name, product_id: @exercise.product_id, course_name: @exercise&.product&.course&.name,
-           course_id: @exercise&.product&.course_id, exam_body_name: @exercise&.product&.course&.exam_body&.name, exam_body_id: @exercise&.product&.course&.exam_body_id}}
+          .form-box#exercise-upload-window{data: { product_name: @exercise&.product&.mock_exam&.name, product_id: @exercise.product_id, course_name: course&.name,
+           course_id: course&.id, exam_body_name: course&.exam_body&.name, exam_body_id: course&.exam_body_id,
+           preferred_exam_body_id: @exercise.user&.preferred_exam_body_id, preferred_exam_body: @exercise.user&.preferred_exam_body&.name, banner: @banner, onboarding: @exercise.user&.analytics_onboarding_valid?.to_s}}
             %h2=@exercise.product.name
             -if @exercise.product.mock_exam?
               %p
@@ -51,7 +53,6 @@
                 =f.submit 'Upload Submission', class: 'btn btn-primary btn-sm'
 
 :javascript
-
   $(document).on('submit','form.edit_exercise',function(){
     exerciseSubmissionUpload();
   });
