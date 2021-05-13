@@ -66,7 +66,7 @@ GEM
     annotate (3.1.0)
       activerecord (>= 3.2, < 7.0)
       rake (>= 10.4, < 14.0)
-    appsignal (2.11.0)
+    appsignal (2.11.9)
       rack
     arel (9.0.0)
     ast (2.4.0)
@@ -267,7 +267,9 @@ GEM
     mime-types (3.2.2)
       mime-types-data (~> 3.2015)
     mime-types-data (3.2018.0812)
-    mimemagic (0.3.3)
+    mimemagic (0.3.10)
+      nokogiri (~> 1)
+      rake
     mini_mime (1.0.2)
     mini_portile2 (2.4.0)
     mini_racer (0.2.9)
@@ -592,7 +594,7 @@ DEPENDENCIES
   airbrake (~> 9.5)
   analytics-ruby (~> 2.0.0)
   annotate
-  appsignal
+  appsignal (~> 2.11.0)
   authlogic (~> 6.1.0)
   aws-sdk-s3 (~> 1)
   better_errors
