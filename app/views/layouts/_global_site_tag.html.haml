@@ -1,8 +1,5 @@
--if Rails.env.development?
-  :javascript
-    gtag = function (){};
+// Global site tag (gtag.js) - Google Analytics
 -if Rails.env.staging?
-  // Global site tag (gtag.js) - Google Analytics
   %script{:async => "", :src => "https://www.googletagmanager.com/gtag/js?id=UA-185199057-2"}
   :javascript
     window.dataLayer = window.dataLayer || [];
@@ -10,11 +7,11 @@
     gtag('js', new Date());
 
     gtag('config', 'UA-185199057-2', {
+      'send_page_view': false,
       'custom_map': {'dimension1': 'user_type'}
     });
 
--if Rails.env.production?
-  // Global site tag (gtag.js) - Google Analytics
+-elsif Rails.env.production?
   %script{:async => "", :src => "https://www.googletagmanager.com/gtag/js?id=UA-141784351-1"}
   :javascript
     window.dataLayer = window.dataLayer || [];
@@ -22,5 +19,10 @@
     gtag('js', new Date());
 
     gtag('config', 'UA-141784351-1', {
+      'send_page_view': false,
       'custom_map': {'dimension4': 'user_type'}
     });
+-else
+  :javascript
+    gtag = function (){};
+// End Global site tag (gtag.js) - Google Analytics

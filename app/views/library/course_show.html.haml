@@ -74,14 +74,17 @@
               - @course_resources.each do |resource|
                 - if current_user
                   - if @valid_subscription
-                    =pdf_viewer(resource)
+                    =pdf_viewer(resource, @banner.present?.to_s, current_user)
                   - else
                     - permission = resource.available_to_user(current_user, @valid_subscription)
                     - if  permission[:view]
-                      =pdf_viewer(resource)
+                      =pdf_viewer(resource, @banner.present?.to_s, current_user)
                     - else
                       .col-sm-6
-                        %a.card.card-horizontal.card-horizontal-sm.flex-row.resource-card{data: {target: "##{permission[:reason]}", toggle: 'modal', resource_name: resource.name, resource_id: resource.id, course_name: resource.course.name, course_id: resource.course_id, exam_body_name: resource.course.exam_body.name, exam_body_id: resource.course.exam_body_id, resource_type: resource.type, allowed: 'false'}, href: '#'}
+                        %a.card.card-horizontal.card-horizontal-sm.flex-row.resource-card{data: {target: "##{permission[:reason]}", toggle: 'modal', resource_name: resource.name, resource_id: resource.id,
+                         course_name: resource.course.name, course_id: resource.course_id, exam_body_name: resource.course.exam_body.name, exam_body_id: resource.course.exam_body_id, resource_type: resource.type,
+                          preferred_exam_body_id: current_user&.preferred_exam_body_id, preferred_exam_body: current_user&.preferred_exam_body&.name, banner: @banner.present?.to_s, onboarding: current_user&.analytics_onboarding_valid?.to_s,
+                          allowed: 'false'}, href: '#'}
                           .card-header.bg-white.d-flex.align-items-center.justify-content-center
                             %i.budicon-files-download{"aria-label" => "", :role => "img"}
                           .card-body.d-flex.align-items-center.pl-1
@@ -89,7 +92,9 @@
                               =resource.name
                 - else
                   .col-sm-6
-                    %a.card.card-horizontal.card-horizontal-sm.flex-row.resource-card{data: {target: '#account-required', toggle: 'modal', href: '#', resource_name: resource.name, resource_id: resource.id, course_name: resource.course.name, course_id: resource.course_id, exam_body_name: resource.course.exam_body.name, exam_body_id: resource.course.exam_body_id, resource_type: resource.type, allowed: 'false'}}
+                    %a.card.card-horizontal.card-horizontal-sm.flex-row.resource-card{data: {target: '#account-required', toggle: 'modal', href: '#', resource_name: resource.name, resource_id: resource.id,
+                     preferred_exam_body_id: current_user&.preferred_exam_body_id, preferred_exam_body: current_user&.preferred_exam_body&.name, banner: @banner.present?.to_s, onboarding: current_user&.analytics_onboarding_valid?.to_s,
+                     course_name: resource.course.name, course_id: resource.course_id, exam_body_name: resource.course.exam_body.name, exam_body_id: resource.course.exam_body_id, resource_type: resource.type, allowed: 'false'}}
                       .card-header.bg-white.d-flex.align-items-center.justify-content-center
                         %i.budicon-files-download{"aria-label" => "", :role => "img"}
                       .card-body.d-flex.align-items-center.pl-1

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_13_095345) do
+ActiveRecord::Schema.define(version: 2021_04_20_112149) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -222,6 +222,10 @@ ActiveRecord::Schema.define(version: 2020_12_13_095345) do
     t.bigint "user_id"
     t.bigint "exercise_id"
     t.text "educator_comment"
+    t.boolean "agreed", default: false
+    t.string "current_state"
+    t.text "scratch_pad"
+    t.json "pages_state"
     t.index ["cbe_id"], name: "index_cbe_user_logs_on_cbe_id"
     t.index ["exercise_id"], name: "index_cbe_user_logs_on_exercise_id"
     t.index ["user_id"], name: "index_cbe_user_logs_on_user_id"
@@ -442,9 +446,9 @@ ActiveRecord::Schema.define(version: 2020_12_13_095345) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer "cme_count", default: 0
-    t.string "seo_description", limit: 255
-    t.boolean "seo_no_index", default: false
     t.datetime "destroyed_at"
+    t.string "seo_description"
+    t.boolean "seo_no_index", default: false
     t.integer "number_of_questions", default: 0
     t.integer "course_id"
     t.float "video_duration", default: 0.0
@@ -636,9 +640,9 @@ ActiveRecord::Schema.define(version: 2020_12_13_095345) do
     t.boolean "is_video", default: false, null: false
     t.boolean "is_quiz", default: false, null: false
     t.boolean "active", default: true, null: false
-    t.string "seo_description", limit: 255
-    t.boolean "seo_no_index", default: false
     t.datetime "destroyed_at"
+    t.string "seo_description"
+    t.boolean "seo_no_index", default: false
     t.integer "number_of_questions", default: 0
     t.float "duration", default: 0.0
     t.string "temporary_label"
@@ -1144,6 +1148,8 @@ ActiveRecord::Schema.define(version: 2020_12_13_095345) do
     t.string "stripe_payment_method_id"
     t.string "stripe_payment_intent_id"
     t.uuid "ahoy_visit_id"
+    t.text "cancellation_note"
+    t.bigint "cancelled_by_id"
     t.index ["ahoy_visit_id"], name: "index_orders_on_ahoy_visit_id"
     t.index ["course_id"], name: "index_orders_on_course_id"
     t.index ["mock_exam_id"], name: "index_orders_on_mock_exam_id"
@@ -1423,16 +1429,6 @@ ActiveRecord::Schema.define(version: 2020_12_13_095345) do
     t.datetime "updated_at", null: false
     t.datetime "destroyed_at"
     t.index ["constructed_response_id"], name: "index_scenarios_on_constructed_response_id"
-  end
-
-  create_table "solutions", force: :cascade do |t|
-    t.string "name"
-    t.integer "practice_question_id"
-    t.integer "sorting_order"
-    t.json "content"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "kind"
   end
 
   create_table "stripe_api_events", id: :serial, force: :cascade do |t|

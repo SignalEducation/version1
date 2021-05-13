@@ -2,22 +2,101 @@
 // Functions
 ////////////////////////////////////////////////
 
-// Video Player Events
-function videoPlayEvent(autoPlay) {
+function courseStepLoaded(type) {
+  if (typeof analytics !== 'undefined') {
+    switch (type) {
+      case 'Video':
+        videoStepLoaded();
+        break;
+      case 'Quiz':
+        quizStepLoaded();
+        break;
+      case 'Notes':
+        noteStepLoaded();
+        break;
+      case 'Practice Questions':
+        practiceQuestionStepLoaded();
+        break;
+      case 'Constructed Response':
+        constructedResponseLoaded();
+        break;
+      default:
+        analytics.track('Course Step Loaded');
+    }
+  }
+}
+
+function videoStepLoaded() {
   let videoLesson = $("#video-player-window"),
     stepData = videoLesson.data(),
-    playerType = (stepData.hasOwnProperty('vimeoInitialized'))? 'Vimeo' : 'DaCast',
-    videoData = { 'stepType': 'Video', 'player': playerType, 'autoPlay': autoPlay };
+    playerType = (typeof player !== 'undefined')? 'Vimeo' : 'DaCast',
+    videoData = { 'stepType': 'Video', 'player': playerType};
+  let properties = $.extend({}, stepData, videoData);
+
+  if (typeof analytics !== 'undefined') {
+    analytics.track('Course Step Loaded', properties);
+  }
+}
+
+function quizStepLoaded() {
+  let quizWindow = $("#quiz-window"),
+    lessonData = quizWindow.data(),
+    quizData = { 'stepType': 'Quiz' };
+  let properties = $.extend({}, lessonData, quizData);
+
+  if (typeof analytics !== 'undefined') {
+    analytics.track('Course Step Loaded', properties);
+  }
+}
+
+function noteStepLoaded() {
+  let notesWindow = $("#notes-window"),
+    lessonData = notesWindow.data(),
+    noteData = { 'stepType': 'Note'};
+  let properties = $.extend({}, lessonData, noteData);
+
+  if (typeof analytics !== 'undefined') {
+    analytics.track('Course Step Loaded', properties);
+  }
+}
+
+function constructedResponseLoaded() {
+  let crWindow = $("#constructed-response-start-screen"),
+    properties = crWindow.data();
+
+  if (typeof analytics !== 'undefined') {
+    analytics.track('Course Step Loaded', properties);
+  }
+}
+
+function practiceQuestionStepLoaded() {
+  let pqWindow = $("#practice-question-window"),
+    properties = pqWindow.data(),
+    type = { 'stepType': 'PracticeQuestion' };
+  let data = $.extend({}, properties, type);
+
+  if (typeof analytics !== 'undefined') {
+    analytics.track('Course Step Loaded', data);
+  }
+}
+
+// Video Player Events
+function videoPlayEvent() {
+  let videoLesson = $("#video-player-window"),
+    stepData = videoLesson.data(),
+    playerType = (typeof player !== 'undefined')? 'Vimeo' : 'DaCast',
+    videoData = { 'stepType': 'Video', 'player': playerType };
   let properties = $.extend({}, stepData, videoData);
 
   if (typeof analytics !== 'undefined') {
     analytics.track('Course Step Started', properties);
   }
 }
+
 function videoFinishedEvent(autoPlay, playbackRate) {
   let videoLesson = $("#video-player-window"),
     stepData = videoLesson.data(),
-    playerType = (stepData.hasOwnProperty('vimeoInitialized'))? 'Vimeo' : 'DaCast',
+    playerType = (typeof player !== 'undefined')? 'Vimeo' : 'DaCast',
     videoData = { 'stepType': 'Video', 'player': playerType, 'playBackRate': playbackRate , 'autoPlay': autoPlay };
   let properties = $.extend({}, stepData, videoData);
 
@@ -48,10 +127,10 @@ function quizFinishEvent() {
 }
 
 // Notes Events
-function notesStartEvent() {
+function notesStartEvent(pageCount) {
   let notesWindow = $("#notes-window"),
       lessonData = notesWindow.data(),
-      noteData = { 'stepType': 'Note' };
+      noteData = { 'stepType': 'Note', notesPageCount: pageCount};
   let properties = $.extend({}, lessonData, noteData);
 
   if (typeof analytics !== 'undefined') {
@@ -59,10 +138,10 @@ function notesStartEvent() {
   }
 }
 
-function notesFinishEvent() {
+function notesFinishEvent(pageCount) {
   let notesWindow = $("#notes-window"),
     lessonData = notesWindow.data(),
-    noteData = { 'stepType': 'Note' };
+    noteData = { 'stepType': 'Note', notesPageCount: pageCount };
   let properties = $.extend({}, lessonData, noteData);
 
   if (typeof analytics !== 'undefined') {
@@ -83,15 +162,6 @@ function notesDownloadEvent(type) {
 
       analytics.track('Course Resource Downloaded', properties);
     }
-  }
-}
-
-function constructedResponseStartLoaded() {
-  let crWindow = $("#constructed-response-start-screen"),
-    properties = crWindow.data();
-
-  if (typeof analytics !== 'undefined') {
-    analytics.track('Constructed Response Start Loaded', properties);
   }
 }
 
@@ -209,7 +279,7 @@ function videoFullScreenChange(playerData) {
 function videoQualityChange(playerData) {
   let videoLesson = $("#video-player-window"),
     stepData = videoLesson.data(),
-    videoData = { 'changeType': 'Volume Change', 'player': 'Vimeo', playerData };
+    videoData = { 'changeType': 'Playback Quality Change', 'player': 'Vimeo', playerData };
   let properties = $.extend({}, stepData, videoData);
 
   if (typeof analytics !== 'undefined') {
@@ -218,7 +288,8 @@ function videoQualityChange(playerData) {
 }
 
 function exerciseFileDownload() {
-  let properties = $("#exercise-download-window");
+  const edWindow = $("#exercise-download-window");
+  let properties = edWindow.data();
 
   if (typeof analytics !== 'undefined') {
     analytics.track('Exercise File Downloaded', properties);
@@ -226,7 +297,8 @@ function exerciseFileDownload() {
 }
 
 function exerciseSubmissionUpload() {
-  let properties = $("#exercise-upload-window");
+  const euWindow = $("#exercise-upload-window");
+  let properties = euWindow.data();
 
   if (typeof analytics !== 'undefined') {
     analytics.track('Exercise Submission Uploaded', properties);
@@ -234,7 +306,8 @@ function exerciseSubmissionUpload() {
 }
 
 function exerciseResultsDownload() {
-  let properties = $("#exercise-results-window");
+  const erWindow = $("#exercise-results-window");
+  let properties = erWindow.data();
 
   if (typeof analytics !== 'undefined') {
     analytics.track('Exercise Results Downloaded', properties);
@@ -261,14 +334,6 @@ function cbeSubmitted(data) {
 
 // Course Show Page Events
 function courseResourceClick(properties) {
-  if (typeof analytics !== 'undefined') {
-    analytics.track('Course Resource Clicked', properties);
-  }
-}
-
-function courseResourceExternalClick() {
-  let properties = $("#resource-card");
-
   if (typeof analytics !== 'undefined') {
     analytics.track('Course Resource Clicked', properties);
   }
@@ -449,7 +514,7 @@ $(document).ready(function(){
   });
 
   $(".resource-card").on( "click", function() {
-    courseResourceExternalClick()
+    courseResourceClick(this.dataset)
   });
 
 });

@@ -6,6 +6,7 @@ import fullscreen from "vue-fullscreen";
 import store from '../store';
 import router from '../router';
 import * as VueWindow from '@hscmap/vue-window';
+import VModal from 'vue-js-modal';
 import Loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
 // ##### CBE #####
@@ -24,6 +25,7 @@ Vue.use(BootstrapVue);
 Vue.use(fullscreen);
 Vue.use(Loading);
 Vue.use(VueWindow);
+Vue.use(VModal);
 
 const mountCbeElement = (element, theComponent) =>
   new Vue({
@@ -61,6 +63,9 @@ document.addEventListener('DOMContentLoaded', () => {
         course_id: cbeFront.dataset.courseId,
         exam_body_name: cbeFront.dataset.examBodyName,
         exam_body_id: cbeFront.dataset.examBodyNameId,
+        preferred_exam_body_name: cbeFront.dataset.preferredExamBodyName,
+        preferred_exam_body_id: cbeFront.dataset.preferredExamBodyId,
+        onboarding: cbeFront.dataset.onboarding
       },
       render: (h) => h(CbeHome),
     }))();

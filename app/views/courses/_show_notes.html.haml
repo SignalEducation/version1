@@ -1,7 +1,9 @@
 .row.row-lg#notes-window{data: {step_id: @course_step.id, step_name: @course_step.name, module_id: @course_lesson.id, module_name: @course_lesson.name,
  course_id: @course.id, course_name: @course.name, exam_body_id: @group.exam_body.id, exam_body_name: @group.exam_body.name,
-  onboarding: current_user&.onboarding_process&.active&.to_s, free_lesson: @course_lesson.free.to_s, order: @index_order,
-  estimated_time_in_seconds: @course_step.estimated_time_in_seconds, allow_download_file: notes.download_available.to_s, notes_page_count: 'tbc', previous_completion_count: 'tbc' }}
+  preferred_exam_body_id: current_user&.preferred_exam_body_id, preferred_exam_body: current_user&.preferred_exam_body&.name, banner: @banner.present?.to_s,
+   onboarding: current_user&.analytics_onboarding_valid?.to_s, free_lesson: @course_lesson.free.to_s, step_order: @index_order,
+    estimated_time_in_seconds: @course_step.estimated_time_in_seconds, allow_download_file: notes.download_available.to_s,
+     previous_completion_count: @previous_completion_count }}
   .col-xl-12
     #course-right-show-elem-notes.course-right-show-content
       .course-right-show-frame

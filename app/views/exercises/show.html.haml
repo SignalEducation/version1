@@ -60,8 +60,10 @@
                     %span=humanize_datetime_full(@exercise.submitted_on)
 
                 .col-md-4.text-md-right
+                  - course = @exercise&.product.mock_exam? ? @exercise&.product&.mock_exam&.course : @exercise&.product&.course
                   -if @exercise.submission.present?
-                    =link_to 'Download Submission', @exercise.submission.url, class: 'btn btn-primary btn-sm', target: '_blank', id: 'exercise-file-download'
+                    %section#exercise-download-window{data: { product_name: @exercise&.product&.mock_exam&.name, product_id: @exercise.product_id, course_name: course&.name, course_id: course&.id, exam_body_name: course&.exam_body&.name, exam_body_id: course&.exam_body_id, preferred_exam_body_id: @exercise.user&.preferred_exam_body_id, preferred_exam_body: @exercise.user&.preferred_exam_body&.name, banner: @banner, onboarding: @exercise.user&.analytics_onboarding_valid?.to_s}}
+                      =link_to 'Download Submission', @exercise.submission.url, class: 'btn btn-primary btn-sm', target: '_blank', id: 'exercise-file-download'
                   -if @exercise.correction.present?
-                    .pt-3
+                    .pt-3#exercise-results-window{data: { product_name: @exercise&.product&.mock_exam&.name, product_id: @exercise.product_id, course_name: course&.name, course_id: course&.id, exam_body_name: course&.exam_body&.name, exam_body_id: course&.exam_body_id, preferred_exam_body_id: @exercise.user&.preferred_exam_body_id, preferred_exam_body: @exercise.user&.preferred_exam_body&.name, banner: @banner, onboarding: @exercise.user&.analytics_onboarding_valid?.to_s}}
                       =link_to 'Download Response', @exercise.correction.url, class: 'btn btn-primary btn-sm', target: '_blank', id: 'exercise-results-download'

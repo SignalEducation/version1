@@ -40,7 +40,10 @@ Rails.application.routes.draw do
 
           resources :introduction_pages, only: %i[index create update destroy]
           resources :resources, only: %i[index create update destroy]
-          resources :users_log, only: %i[index show create update]
+          resources :users_log, only: %i[index show create update] do
+            post 'user_agreement'
+            post 'current_state'
+          end
           resources :scenarios, only: :show
           resources :users_answer, only: :show
           resources :users_response, only: :show
@@ -158,12 +161,19 @@ Rails.application.routes.draw do
 
     resources :subscription_management do
       get '/invoice/:invoice_id',            action: :invoice,                 as: :invoice
+      get '/order/:order_id',                action: :order,                   as: :order
       get '/pdf_invoice/:invoice_id',        action: :pdf_invoice,             as: :pdf_invoice
       get '/invoice/:invoice_id/charge/:id', action: :charge,                  as: :invoice_charge
       get '/cancellation',                   action: :cancellation,            as: :admin_cancellations
       post '/cancel',                        action: :cancel_subscription,     as: :cancel_subscription
       put '/un_cancel',                      action: :un_cancel_subscription,  as: :un_cancel_subscription
       put '/reactivate',                     action: :reactivate_subscription, as: :reactivate_subscription
+    end
+
+    resources :order_management do
+      get '/order/:id',                      action: :order,                               as: :order
+      post '/cancel',                        action: :cancel_order,                        as: :cancel_order
+      put '/un_cancel',                      action: :un_cancel_order,                     as: :un_cancel_order
     end
 
     resources :subscription_payment_cards, only: %i[create update destroy]

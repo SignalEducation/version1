@@ -50,13 +50,17 @@ export default {
     this.closeLoading();
   },
   beforeRouteLeave (to, from, next) {
-    this.agreementModalIsOpen = true
-    this.nextAction = next;
-
-    const navLinks = document.getElementsByClassName('page-item');
-    for (const link of navLinks) {
-      link.style.display = 'none';
+    if (this.user_cbe_data.user_agreement == true){
+      next();
+    }else{
+      this.agreementModalIsOpen = true
+      this.nextAction = next;
+      const navLinks = document.getElementsByClassName('page-item');
+      for (const link of navLinks) {
+        link.style.display = 'none';
+      }
     }
+
   },
   methods: {
     showLoading() {

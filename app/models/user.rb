@@ -630,6 +630,30 @@ class User < ApplicationRecord
     end
   end
 
+  def analytics_onboarding_state
+    if !onboarding_process
+      'Not Started'
+    elsif onboarding_process&.content_remaining?
+      'Active'
+    elsif !onboarding_process&.content_remaining?
+      'Complete'
+    end
+  end
+
+  def analytics_onboarding_valid
+    onboarding_process&.content_remaining?
+  end
+
+  def analytics_onboarding_valid?
+    if onboarding_process
+      analytics_onboarding_state == 'Active'
+    else
+      # This is to ensure that the first course step analytics events (loaded & started)
+      # have onboarding set to true because the OnboardingProcess record does not exist yet
+      course_step_logs.none?
+    end
+  end
+
   def preferred_group_id
     Group.find_by(exam_body_id: preferred_exam_body_id)
   end

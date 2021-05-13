@@ -1,46 +1,49 @@
 <template>
   <div id="cbe-modals">
-    <b-nav-text
-      class="help-icon"
-      @click="modalIsOpen = !modalIsOpen"
+    <section
+      class="components-sidebar-links help-icon"
+      @click="show($event)"
     >
       Help
-    </b-nav-text>
+    </section>
 
-    <div ref="resourcesModal" class="modal" v-show="modalIsOpen">
-      <div class="modal-content resources-modal">
-        <div class="modal-header bg-cbe-gray">
-          <span class="title help-icon">
-            Help
-          </span>
-
-          <span class="close" @click="modalIsOpen = !modalIsOpen">
-            &times;
-          </span>
-        </div>
-
-        <div class="modal-internal-content">
-          <CbeResourceTabs
-            :files="fileArray"
-            :active="modalIsOpen"
-          />
-        </div>
-      </div>
+    <VueModal
+      :componentName="componentName"
+      :componentType="componentType"
+      :componentHeight="550"
+      :componentWidth="1100"
+    >
+    <div slot="body">
+      <CbeResourceTabs
+        :files="fileArray"
+        :active="true"
+      />
     </div>
+    </VueModal>
   </div>
 </template>
 
 <script>
 import CbeResourceTabs from "./CbeResourceTabs.vue";
+import VueModal from "../VueModal.vue";
 
 export default {
   components: {
     CbeResourceTabs,
+    VueModal
   },
   props: {
     cbe_data: {
       type: Object,
       default: () => ({}),
+    },
+    componentType: {
+      type: String,
+      default: "nav",
+    },
+    componentName: {
+      type: String,
+      default: "Help",
     },
   },
   data() {
@@ -54,6 +57,17 @@ export default {
         return [];
       }
       return this.cbe_data.resources.map((resource) => ({id: resource.id, sorting_order: resource.sorting_order, title: resource.name, url: resource.file.url}))
+    },
+  },
+  methods: {
+    show (event) {
+      this.$modal.show("modal-"+this.componentType+"-"+this.componentName);
+      $('.components-sidebar .components div').removeClass('active-modal');
+      eventBus.$emit("update-modal-z-index", `modal-${this.componentType}-${this.componentName}`);
+    },
+    hide (event) {
+      $('.latent-modal').removeClass('active-modal');
+      this.$modal.hide("modal-"+this.componentType+"-"+this.componentName);
     },
   },
 };

@@ -1,6 +1,6 @@
 <template>
   <div class="course-notes-reader">
-    <PDFCourseViewer :file-name="pdfFileName" :file-url="pdfFileUrl"  :file-download="pdfFileDownload" @update-pages="updateNotesPages" />
+    <PDFCourseViewer :file-name="pdfFileName" :file-url="pdfFileUrl"  :file-download="pdfFileDownload" :file-type="pdfFileType" @update-pages="updateNotesPages" />
   </div>
 </template>
 
@@ -30,12 +30,12 @@ export default {
       const current = data.currentPage;
 
       if (current == 1) {
-        notesStartEvent();
+        notesStartEvent(data.totalPages);
       }
 
       if ((current == total) && (!this.eventFired)) {
         this.updateCourseStepLog();
-        notesFinishEvent();
+        notesFinishEvent(data.totalPages);
         this.eventFired = true;
       }
     },

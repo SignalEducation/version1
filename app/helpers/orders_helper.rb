@@ -47,6 +47,10 @@ module OrdersHelper
     end
   end
 
+  def order_cancelled_status?(order)
+    order.cancelled?
+  end
+
   private
 
   def exercise_path_by_state(exercise)

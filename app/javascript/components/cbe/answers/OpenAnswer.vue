@@ -11,11 +11,13 @@
   </section>
 </template>
 <script>
+import EventBus from "../EventBus.vue";
 import TinyEditor from "../../TinyEditor.vue";
 
 export default {
   components: {
-    TinyEditor
+    EventBus,
+    TinyEditor,
   },
   props: {
     questionId: {
@@ -26,11 +28,13 @@ export default {
   data() {
     return {
       question: this.getPickedValue(),
+      lastTimeUpdated: new Date(),
     };
   },
   watch: {
-    question(newValue) {
-      this.$store.dispatch("userCbe/recordAnswer", {
+    question(newValue, oldValue) {
+      const dateNow = new Date();
+      let data = {
         id: this.questionId,
         score: 0,
         correct: null,
@@ -40,7 +44,15 @@ export default {
             text: newValue,
           },
         }]
-      });
+      }
+
+      this.$store.dispatch("userCbe/recordAnswer", data);
+
+      // Update answers data if last update is more then 10 seconds OR new value is bigger then 20 characters.
+      if (dateNow - this.lastTimeUpdated > 10000 || (newValue.length - oldValue.length > 20)) {
+        this.lastTimeUpdated = dateNow;
+        EventBus.$emit("update-question-answer", data);
+      }
     }
   },
   methods: {

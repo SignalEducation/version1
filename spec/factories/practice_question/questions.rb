@@ -17,6 +17,7 @@
 FactoryBot.define do
   factory :practice_question_questions, class: ::PracticeQuestion::Question do
     kind     { ::PracticeQuestion::Question.kinds.keys.sample }
+    name     { { text: Faker::Lorem.word } }
     content  { { text: Faker::Lorem.sentence } }
     solution { { text: Faker::Lorem.sentence } }
     sequence(:sorting_order)

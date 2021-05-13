@@ -2,7 +2,7 @@
 -if Rails.env.staging?
   %noscript
     %iframe{src: '//www.googletagmanager.com/ns.html?id=GTM-5FSHL9J', height: 0, width: 0, style: 'display:none;visibility:hidden'}
--else
+-elsif Rails.env.production?
   %noscript
     %iframe{src: '//www.googletagmanager.com/ns.html?id=GTM-5SC76S', height: 0, width: 0, style: 'display:none;visibility:hidden'}
 -# End Google Tag Manager Body
