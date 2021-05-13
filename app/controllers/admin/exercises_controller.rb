@@ -66,7 +66,13 @@ module Admin
 
     # CBE Exercise
     def correct_cbe
-      @exercise      = Exercise.includes(cbe_user_log: [questions: [:cbe_question]]).find(params[:id])
+      @exercise = Exercise.includes(cbe_user_log: [questions: [:cbe_question]]).find(params[:id])
+
+      if @exercise.pending?
+        flash[:error] = I18n.t('controllers.exercises.correction.flash.pending_cbe')
+        redirect_to(admin_exercises_path) && return
+      end
+
       @cbe_user_log  = @exercise.cbe_user_log
       @cbe           = @cbe_user_log.cbe
       @total_score   = @cbe.total_score
