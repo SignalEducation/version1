@@ -24,6 +24,40 @@ export default {
   components: {
     VueModal
   },
+  props: {
+    componentType: {
+      type: String,
+      default: "",
+    },
+    componentName: {
+      type: String,
+      default: "",
+    },
+    componentModal: {
+      type: Boolean,
+      default: false,
+    },
+    componentSpreadsheetData: {
+      type: Object,
+      default: () => ({}),
+    },
+    currentFile: {
+      type: Object,
+      default: () => ({}),
+    },
+    componentIcon: {
+      type: String,
+      default: "",
+    },
+    mainColor: {
+      type: String,
+      default: "#F2F2F2",
+    },
+    textColor: {
+      type: String,
+      default: "#000000",
+    },
+  },
   data() {
     return {
       cbeId: this.$parent.cbeId,
