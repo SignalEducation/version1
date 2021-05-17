@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class CoursesController < ApplicationController
+  include ApplicationHelper
+
   skip_before_action :verify_authenticity_token, only: %i[create_video_user_log video_watched_data]
   before_action :logged_in_required
   before_action :student_sidebar_layout
@@ -294,18 +296,38 @@ class CoursesController < ApplicationController
   end
 
   def set_up_practice_question
-    @course_step_log = CourseStepLog.find_or_create_by(course_step_id: @course_step.id,
-                                                       course_lesson_id: @course_step.course_lesson_id,
-                                                       course_section_id: @course_step.course_lesson.course_section_id,
-                                                       course_id: @course_step.course_lesson.course_id,
-                                                       course_log_id: @course_log.try(:id),
-                                                       course_section_log_id: @course_section_log.try(:id),
-                                                       course_lesson_log_id: @course_lesson_log.try(:id),
-                                                       is_practice_question: true,
-                                                       user_id: current_user.try(:id))
+    course_step_logs_practice_question
 
     @course_step_log.update(session_guid: current_session_guid)
     @course_step_log.build_practice_question_answers
+    @course_step_logs = @course_step_logs.map { |l| { id: l.id, created: timer_datetime(l.created_at) } }
+    @course_step_logs.delete({ id: @course_step_log.id, created: timer_datetime(@course_step_log.created_at) })
+    @course_step_logs << ({ id: @course_step_log.id, created: 'Current attempt' })
+  end
+
+  def course_step_logs_practice_question
+    course_step_log_params = { course_step_id: @course_step.id,
+                               course_lesson_id: @course_step.course_lesson_id,
+                               course_section_id: @course_step.course_lesson.course_section_id,
+                               course_id: @course_step.course_lesson.course_id,
+                               course_log_id: @course_log.try(:id),
+                               course_section_log_id: @course_section_log.try(:id),
+                               course_lesson_log_id: @course_lesson_log.try(:id),
+                               is_practice_question: true,
+                               user_id: current_user.try(:id) }
+
+    @course_step_logs = CourseStepLog.where(course_step_log_params)
+    @course_step_log =
+      if @course_step_logs.present?
+        @course_step_logs.last
+      else
+        CourseStepLog.find_or_create_by(course_step_log_params)
+      end
+
+    return if @course_step_log.element_completed == false
+
+    @course_step_log = @course_step_log.dup
+    @course_step_log.element_completed = false
   end
 
   def set_up_constructed_response_start_screen

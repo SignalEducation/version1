@@ -81,6 +81,7 @@ export default {
       isActive: true,
       questionContent: null,
       fillArr: null,
+      lastTimeUpdated: new Date(),
     };
   },
   mounted() {
@@ -93,6 +94,8 @@ export default {
         eventBus.$emit("show-submit-btn", this.fillArr.every(item => item === 1));
       }
     });
+
+    this.questionContentArray.forEach((question, index) => { if (question.current === true) this.activePage = index + 1; });
   },
   async created() {
     this.questionContent = this.questionContentArray[this.activePage - 1];
@@ -118,16 +121,27 @@ export default {
       setTimeout(() => {
         document.getElementById("rightPaneTopUnderline").style.display = "none";
       }, 500);
+
       if (this.activePage < lastQuestion) this.activePage++;
     },
     prevPage: function() {
       setTimeout(() => {
         document.getElementById("rightPaneTopUnderline").style.display = "none";
       }, 500);
+
       if (this.activePage > 1) this.activePage--;
     },
     syncSpreadsheetData(jsonData) {
       this.questionContent.answer_content = { content: { data: jsonData } };
+    },
+    autoUpdateAnswer: function(newValue, oldValue){
+      const dateNow = new Date();
+
+      // Update response data if last update is more then 10 seconds OR new value is bigger then 20 characters.
+        if (dateNow - this.lastTimeUpdated > 10000 || (newValue.length - oldValue.length > 20)) {
+        this.lastTimeUpdated = dateNow;
+        this.updateCurrentAnswer();
+      }
     },
     updateCurrentAnswer: function() {
       axios
@@ -167,12 +181,16 @@ export default {
     },
   },
   watch: {
-    activePage: function(newVal, oldVal) {
+    activePage: function() {
       this.questionContent = this.questionContentArray[this.activePage - 1];
+      this.questionContentArray.map(question => question.current = false);
+      this.questionContent.current = true;
       this.updateCurrentAnswer();
     },
     "questionContent.answer_content": {
-       handler() {
+       handler(newValue, oldValue) {
+        this.autoUpdateAnswer(newValue, oldValue);
+
         this.updateSubmitBtn(this.questionContentArray).then((response) => {
           if (response) {
             eventBus.$emit("active-solution-index", [this.fillArr.every(item => item === 1), this.activePage - 1]);

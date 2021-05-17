@@ -38,7 +38,8 @@ module Api
         @course_step_log.update(element_completed: true) if params[:status] == 'submited'
 
         answers.each do |answer|
-          PracticeQuestion::Answer.find(answer[:answer_id]).update(content: answer[:answer_content])
+          PracticeQuestion::Answer.find(answer[:answer_id]).update(content: answer[:answer_content],
+                                                                   current: answer[:current])
         end
       end
 
