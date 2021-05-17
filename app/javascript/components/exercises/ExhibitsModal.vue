@@ -2,7 +2,7 @@
   <section class="outside-modals">
     <div class="exhibits-sidebar">
       <div class="exhibits" v-if="scenarioData">
-        <VueModal
+        <CbeExhibitsModal
           v-for="exhibit in scenarioData.exhibits"
           :key="exhibit.id"
           :componentType="exhibit.kind"
@@ -18,11 +18,11 @@
 
 <script>
 import axios from "axios";
-import VueModal from "../../components/VueModal.vue";
+import CbeExhibitsModal from "../../components/cbe/CbeExhibitsModal.vue";
 
 export default {
   components: {
-    VueModal
+    CbeExhibitsModal,
   },
   data() {
     return {
