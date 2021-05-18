@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :cbe_user_question, class: Cbe::UserQuestion do
-    score            { Faker::Number.decimal(l_digits: 1, r_digits: 2) }
+    score            { Faker::Number.between(from: 1.0, to: 10.0) }
     correct          { Faker::Boolean.boolean }
     educator_comment { Faker::Lorem.sentence }
 

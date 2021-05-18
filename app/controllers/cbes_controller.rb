@@ -6,12 +6,12 @@ class CbesController < ApplicationController
   before_action :exercise_access?
 
   def show
+    @cbe                  = Cbe.find(params[:id])
+    @product              = @cbe.product
+    @course               = @cbe.course
+    @exam_body            = @cbe.course.exam_body
     @exercise_id          = params[:exercise_id]
     @introduction_page_id = Cbe::IntroductionPage.select(:id).where(cbe_id: params[:id]).order(:sorting_order).first.id
-    @cbe = Cbe.find(params[:id])
-    @product = @cbe.product
-    @course = @cbe.course
-    @exam_body = @cbe.course.exam_body
   end
 
   private

@@ -5,6 +5,7 @@
         <label for="sectionName">Name</label>
         <div class="input-group input-group-lg">
           <input
+            id="sectionName"
             v-model="name"
             :class="'form-control ' + {error: shouldAppendErrorClass($v.name), valid: shouldAppendValidClass($v.name)}"
             placeholder="Name"
@@ -118,7 +119,7 @@
     </div>
 
     <div class="col-sm-12">
-      <div class="form-group">
+      <div class="form-group section-content-field">
         <label for="sectionContent">Cover Page Content</label>
         <TinyEditor
           :class="{error: shouldAppendErrorClass($v.content), valid: shouldAppendValidClass($v.content)}"

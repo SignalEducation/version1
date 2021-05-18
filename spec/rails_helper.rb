@@ -1,4 +1,5 @@
 ENV['RAILS_ENV'] ||= 'test'
+
 require 'simplecov'
 SimpleCov.start do
   add_filter 'lib/admin_constraint.rb'
@@ -20,6 +21,7 @@ require 'paperclip/matchers'
 require 'sidekiq/testing'
 require 'simplecov'
 require 'spec_helper'
+# require 'support/asset_precompile' # precompile assets in js tests.
 require 'support/database_cleaner' # configuration of database_cleaner
 require 'support/dry_specs'       # our handy way of doing lots of repetitive tests
 require 'support/feature_specs'   # shortcuts for our feature tests

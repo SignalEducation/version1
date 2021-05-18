@@ -8,14 +8,14 @@
           <!-- TODO(Giordano), duplicated code here
                find a way to change just classes instead to repeat all block again -->
           <div v-if="!$v.answer.required || !$v.answer.isUnique">
-            <input v-model="answer" class="form-control answers-input" placeholder="Add the answer text here..." />
-            <button class="btn button" type="submit" disabled="true">
+            <input v-model="answer" id="multipleChoiseAnswer" class="form-control answers-input" placeholder="Add the answer text here..." />
+            <button class="btn button" id="multipleChoiseBtnAddAnswer" type="submit" disabled="true">
               <i class="glyphicon glyphicon-plus"></i>
             </button>
           </div>
           <div v-else>
-            <input v-model="answer" class="form-control answers-input" placeholder="Add the answer text here..." />
-            <button class="btn btn-secondary button" type="submit">
+            <input v-model="answer" class="form-control answers-input" id="multipleChoiseAnswer" placeholder="Add the answer text here..." />
+            <button class="btn btn-secondary button" id="multipleChoiseBtnAddAnswer" type="submit">
               <i class="glyphicon glyphicon-plus"></i>
             </button>
           </div>
