@@ -1,22 +1,20 @@
 <template>
-    <div>
-        <button @click="modalIsOpen = !modalIsOpen; updateZindex()" href="#calcModal" class="btn btn-settings calculator-icon-no-title" title="Calculator" data-backdrop="false" data-toggle="modal"></button>
-        <div @click="updateZindex()" id="calcModal" class="modal2-calc fade" v-show="modalIsOpen">
-            <div class="modal2-dialog">
-                <div class="modal2-content">
-                  <button @click="modalIsOpen = !modalIsOpen" type="button" class="close modal-close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <div class="modal2-header-std">
-                        <h4 class="modal2-title">Calculator</h4>
-
-                    </div>
-                    <div class="modal2-body">
-                      <div>
-                        <Calculator />
-                      </div>
-                    </div>
-                </div>
-            </div>
+    <div class="non-resizable-modal">
+      <button @click="show()" class="btn btn-settings calculator-icon-no-title components-sidebar-links" title="Calculator"></button>
+        <VueModal
+          :componentType="componentType"
+          :componentName="componentName"
+          :componentModal="componentModal"
+          :mainColor="'rgba(24, 24, 66, 0.95)'"
+          :textColor="'#ffffff'"
+          :componentWidth="600"
+        >
+        <div slot="body">
+          <div>
+            <Calculator />
+          </div>
         </div>
+      </VueModal>
     </div>
 </template>
 
@@ -24,11 +22,27 @@
 
 import Calculator from '../Calculator.vue';
 import eventBus from "../cbe/EventBus.vue";
+import VueModal from "../VueModal.vue";
 
 export default {
   components: {
     Calculator,
-    eventBus
+    eventBus,
+    VueModal
+  },
+  props: {
+    componentType: {
+      type: String,
+      default: "navbar",
+    },
+    componentName: {
+      type: String,
+      default: "Calculator",
+    },
+    componentModal: {
+      type: Boolean,
+      default: true,
+    },
   },
   data() {
     return {
@@ -49,9 +63,15 @@ export default {
     handleChange(value) {
       this.modalIsOpen = value;
     },
-    updateZindex() {
-      eventBus.$emit('z-index-click', 'calcModal');
-    }
+    show () {
+      this.$modal.show("modal-"+this.componentType+"-"+this.componentName);
+      $('.components-sidebar .components div').removeClass('active-modal');
+      eventBus.$emit("update-modal-z-index", `modal-${this.componentType}-${this.componentName}`);
+    },
+    hide () {
+      $('.latent-modal').removeClass('active-modal');
+      this.$modal.hide("modal-"+this.componentType+"-"+this.componentName);
+    },
   },
   watch: {
     modalStatus(status) {

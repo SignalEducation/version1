@@ -1747,7 +1747,7 @@ textarea.form-control {
 }
 .window-header {
   cursor: grab;
-  height: 2.5em;
+  height: 3em;
   position: sticky;
   top: 0;
   z-index: 1;
@@ -5681,7 +5681,6 @@ a.list-group-item {
     height: 90%;
     left: 10px;
   }
-
   .pdf-viewer__document.preview-enabled {
     width: 84%;
     left: 15%;
@@ -8085,4 +8084,47 @@ button.sub-details[aria-expanded="true"]:before{
   .cbe-content-template {
     padding-top: 4.5em;
   }
+}
+.vue-loader{
+  position: absolute;
+  top: 50%;   left: 50%;
+  transform: translate(-50%,-50%);
+  width: 50px;  height: 50px;
+  border: 3px solid #fff;
+  border-color: #00B67B transparent #00B67B transparent;
+  border-radius: 50%;
+  animation: animate 2s infinite linear;
+}
+.vue-loader::before,.vue-loader::after{
+  content: '';
+  position: absolute;
+  top: 50%;   left: 50%;
+  transform: translate(-50%,-50%);
+  border: 3px solid #fff;
+  border-radius: 50%;
+  animation: animate 1.8s infinite linear;
+}
+.vue-loader::before{
+  width: 60%;  height: 60%;
+  border-color: #00B67B transparent #00B67B transparent;
+}
+.vue-loader::after{
+  width: 30%;  height: 30%;
+  border-color: #00B67B transparent #00B67B transparent;
+  animation-duration: 1.5s;
+}
+
+@keyframes animate{
+  0%{
+      transform: translate(-50%,-50%) rotate(0deg);
+  }
+  100%{
+      transform: translate(-50%,-50%) rotate(360deg);
+  }
+}
+.vue-loader-alt {
+  position: relative;
+  width: 30px;
+  height: 30px;
+  top: 14px;
 }

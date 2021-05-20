@@ -1,26 +1,34 @@
 <template>
     <div>
-        <button @click="modalIsOpen = !modalIsOpen; updateZindex(); resetModalDims()" :href="'#requirementsModal'+ requirementsInd" class="learn-more" data-backdrop="false" data-toggle="modal">
+        <button :id="'requirementsModal'+ requirementsInd" @click="show('requirementsModal'+ requirementsInd)" class="learn-more components-sidebar-links">
             <div class="circle"><span class="icon arrow"></span></div>
             <span class="button-text"><i class="material-icons exhibits-icon">assignment</i><p v-html="requirementsObj.name"></p></span>
         </button>
-        <div @click="updateZindex()" :id="'requirementsModal'+ requirementsInd" class="modal2-solution fade resizemove-sol exhibits-modals" v-show="modalIsOpen">
+        <button v-if="loading" class="vue-loader"></button>
+        <VueModal
+          :componentType="componentType"
+          :componentName="requirementsObj.name"
+          :componentModal="componentModal"
+        >
+        <div slot="body">
           <div class="modal2-dialog">
               <div class="modal2-content">
-                <button @click="modalIsOpen = !modalIsOpen" type="button" class="close modal-close modal-close-solution" data-dismiss="modal" aria-hidden="true">&times;</button>
-                  <div class="modal2-header-lg">
-                      <h4 v-html="requirementsObj.name" class="modal2-title"></h4>
-                  </div>
-                  <div class="modal2-body modal-inner-scroll">
-                    <br>
-                    <div>
-                      <p v-html="requirementsObj.description"></p>
-                    </div>
+                <div v-if="requirementsObj.kind == 'open'">
+                  <p v-html="requirementsObj.description"></p>
+                </div>
+                <div v-else>
+                  <p v-html="requirementsObj.description"></p>
+                  <br>
+                  <SpreadsheetEditor
+                    :initial-data="requirementsObj.content"
+                    :key="requirementsObj.id"
+                    @spreadsheet-updated="syncSpreadsheetData"
+                  />
                 </div>
               </div>
           </div>
-          <div class="draggable-overlay-text"></div>
         </div>
+      </VueModal>
     </div>
 </template>
 
@@ -28,12 +36,14 @@
 import eventBus from "../cbe/EventBus.vue";
 import SpreadsheetEditor from "../SpreadsheetEditor/SpreadsheetEditor.vue";
 import PDFViewer from "../../lib/PDFViewer/index.vue";
+import VueModal from "../VueModal.vue";
 
 export default {
   components: {
     eventBus,
     SpreadsheetEditor,
     PDFViewer,
+    VueModal
   },
   props: {
     requirementsObj: {
@@ -42,12 +52,25 @@ export default {
     requirementsInd: {
       type: Number,
     },
+    componentType: {
+      type: String,
+      default: "practice-question",
+    },
+    componentName: {
+      type: String,
+      default: "",
+    },
+    componentModal: {
+      type: Boolean,
+      default: true,
+    },
   },
   data() {
     return {
       modalIsOpen: false,
       indexOfQuestion: 0,
       solutionObj: null,
+      loading: false
     };
   },
   created() {
@@ -77,6 +100,25 @@ export default {
     resetModalDims() {
       $('#requirementsModal'+this.requirementsInd).css('width', '60em');
       $('#requirementsModal'+this.requirementsInd).css('height', '37em');
+    },
+    show (id) {
+      this.loading = true;
+      $("#"+id).css("display","none");
+      setTimeout(() => {
+        this.loading = false;
+        $("#"+id).css("display","block");
+        this.$modal.show("modal-"+this.componentType+"-"+this.requirementsObj.name);
+        $('.components-sidebar .components div').removeClass('active-modal');
+        eventBus.$emit("update-modal-z-index", `modal-${this.componentType}-${this.requirementsObj.name}`);
+      }, 10);
+    },
+    hide () {
+      $('.latent-modal').removeClass('active-modal');
+      this.$modal.hide("modal-"+this.componentType+"-"+this.requirementsObj.name);
+    },
+    convertStr2Obj(str) {
+      console.log('str: ', str);
+      return JSON.parse(str);
     },
   },
   watch: {
