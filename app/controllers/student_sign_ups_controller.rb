@@ -75,7 +75,6 @@ class StudentSignUpsController < ApplicationController
           format.all { redirect_to(missing_page_url) }
         end
       end
-
       seo_title_maker(@home_page.seo_title, @home_page.seo_description, @home_page.seo_no_index)
     else
       redirect_to root_url
@@ -224,7 +223,7 @@ class StudentSignUpsController < ApplicationController
     params.require(:user).permit(
       :email, :first_name, :last_name, :preferred_exam_body_id, :country_id,
       :locale, :password, :password_confirmation, :terms_and_conditions,
-      :communication_approval
+      :communication_approval, :home_page_id
     )
   end
 

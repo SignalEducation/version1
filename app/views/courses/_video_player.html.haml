@@ -1,6 +1,6 @@
 -if @vimeo_as_main
   -if cme.course_video.vimeo_guid && current_user.video_player && current_user.country&.iso_code != 'CN'
-    =render partial: "courses/players/#{current_user.video_player}", locals: { cme: cme }
+    =render partial: "courses/players/#{current_user.video_player}", locals: { cme: cme, responsive: responsive, autoPlay: autoPlay }
   -elsif cme.course_video.dacast_id
     =render partial: 'courses/players/dacast', locals: { cme: cme }
   -else

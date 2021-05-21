@@ -34,6 +34,10 @@
 #  stats_content                 :text
 #  course_description            :text
 #  header_description            :text
+#  onboarding_welcome_heading    :string
+#  onboarding_welcome_subheading :text
+#  onboarding_level_heading      :string
+#  onboarding_level_subheading   :text
 #
 
 class HomePage < ApplicationRecord
@@ -53,19 +57,17 @@ class HomePage < ApplicationRecord
   has_many :blog_posts
   has_many :external_banners
   has_many :student_testimonials
+  has_many :users
 
   accepts_nested_attributes_for :blog_posts, reject_if: lambda { |attributes| blog_nested_resource_is_blank?(attributes) }, allow_destroy: true
   accepts_nested_attributes_for :external_banners, reject_if: lambda { |attributes| banner_nested_resource_is_blank?(attributes) }, allow_destroy: true
   accepts_nested_attributes_for :student_testimonials, reject_if: lambda { |attributes| student_testimonial_nested_resource_is_blank?(attributes) }, allow_destroy: true
 
   # validation
-  validates :name, presence: true, length: {maximum: 255}, uniqueness: true
-  validates :seo_title, presence: true, length: {maximum: 255}, uniqueness: true
-  validates :seo_description, presence: true, length: {maximum: 255}
-  validates :public_url, presence: true, length: {maximum: 255},
-            uniqueness: true
-
-  #validate :group_xor_course, unless: :home
+  validates :name, presence: true, length: { maximum: 255 }, uniqueness: true
+  validates :seo_title, presence: true, length: { maximum: 255 }, uniqueness: true
+  validates :seo_description, presence: true, length: { maximum: 255 }
+  validates :public_url, presence: true, length: { maximum: 255 }, uniqueness: true
 
 
   # callbacks
@@ -81,7 +83,7 @@ class HomePage < ApplicationRecord
 
   # instance methods
   def destroyable?
-    true unless self.home
+    true unless home
   end
 
   def default_home_page
@@ -111,15 +113,9 @@ class HomePage < ApplicationRecord
   end
 
   def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
-  end
+    return if destroyable?
 
-  def group_xor_course
-    unless group_id.blank? ^ course_id.blank?
-      errors.add(:base, 'Select a Group or a Course, not both')
-    end
+    errors.add(:base, I18n.t('models.general.dependencies_exist'))
+    false
   end
 end

@@ -1,0 +1,20 @@
+.modal.fade{id: 'welcome-video-modal', tabindex: '-1', role: 'dialog', 'aria-labelledby': 'welcomeVideoModal', 'aria-hidden': 'true'}
+  .modal-dialog.modal-lg{role: 'document'}
+    .modal-content
+      %button.btn.btn-icon.modal-close{'data-dismiss': 'modal'}
+        %i.material-icons.ml-1{'aria-hidden': 'true'}
+          close
+      .modal-header.mb-3
+        %h3{id: 'welcomeVideoModal'}
+          =@welcome_video&.name
+      .modal-body
+        #video-player-window
+          =render partial: 'courses/video_player', locals: { cme: @welcome_video, responsive: true, autoPlay: true }
+
+:javascript
+  $(document).ready(function(){
+    $('#welcome-video-modal').modal('show');
+  });
+  $('#welcome-video-modal').on('hidden.bs.modal', function (e) {
+    player.pause()
+  })

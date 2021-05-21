@@ -34,16 +34,24 @@
 #  stats_content                 :text
 #  course_description            :text
 #  header_description            :text
+#  onboarding_welcome_heading    :string
+#  onboarding_welcome_subheading :text
+#  onboarding_level_heading      :string
+#  onboarding_level_subheading   :text
 #
 
 FactoryBot.define do
   factory :home_page do
-    sequence(:name)       { |n| "homepage-#{n}" }
-    sequence(:seo_title)  { |n| "title-#{n}" }
-    seo_description       { 'Seo Description' }
-    group_id              { 1 }
-    course_id             { nil }
-    sequence(:public_url) { |n| "abc#{n}" }
+    sequence(:name)                { |n| "homepage-#{n}" }
+    sequence(:seo_title)           { |n| "title-#{n}" }
+    seo_description                { 'Seo Description' }
+    group_id                       { 1 }
+    course_id                      { nil }
+    sequence(:public_url)          { |n| "abc#{n}" }
+    onboarding_welcome_heading     { 'Welcome Heading' }
+    onboarding_welcome_subheading  { 'Welcome Subheading' }
+    onboarding_level_heading       { 'Level Heading' }
+    onboarding_level_subheading    { 'Level Subheading' }
 
     factory :home do
       public_url { '/' }
