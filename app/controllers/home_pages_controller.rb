@@ -79,6 +79,8 @@ class HomePagesController < ApplicationController
                                       :footer_option, :video_guid, :header_h3,
                                       :background_image, :usp_section, :stats_content,
                                       :header_description, :course_description,
+                                      :onboarding_welcome_heading, :onboarding_welcome_subheading,
+                                      :onboarding_level_heading, :onboarding_level_subheading,
                                       blog_posts_attributes: [:id, :home_page_id,
                                                               :title, :description,
                                                               :url, :_destroy,

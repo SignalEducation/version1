@@ -137,6 +137,29 @@
               =f.label :course_description, t('views.home_pages.form.course_description')
               .input-group.input-group-lg
                 =f.text_area :course_description, as: :summernote, rows: 5, class: 'form-control', id: 'course_description_editor'
+  .box-item.form-box
+    .row
+      .col-sm-12
+        .h2
+          Onboarding Content
+        .row
+          .col-sm-12
+            .form-group
+              =f.label :onboarding_welcome_heading, t('views.home_pages.form.onboarding_welcome_heading')
+              .input-group.input-group-lg
+                =f.text_field :onboarding_welcome_heading, placeholder: t('views.home_pages.form.onboarding_welcome_heading_placeholder'), class: 'form-control'
+            .form-group
+              =f.label :onboarding_welcome_subheading, t('views.home_pages.form.onboarding_welcome_subheading')
+              .input-group.input-group-lg
+                =f.text_area :onboarding_welcome_subheading, as: :summernote, rows: 5, class: 'form-control', id: 'onboarding_welcome_subheading_editor'
+            .form-group
+              =f.label :onboarding_level_heading, t('views.home_pages.form.onboarding_level_heading')
+              .input-group.input-group-lg
+                =f.text_field :onboarding_level_heading, placeholder: t('views.home_pages.form.onboarding_level_heading_placeholder'), class: 'form-control'
+            .form-group
+              =f.label :onboarding_level_subheading, t('views.home_pages.form.onboarding_level_subheading')
+              .input-group.input-group-lg
+                =f.text_area :onboarding_level_subheading, as: :summernote, rows: 5, class: 'form-control', id: 'onboarding_level_subheading_editor'
 
 
   =render partial: 'fields_for_student_testimonials', locals: {f: f}
@@ -156,6 +179,14 @@
     height: 150
   });
   $('#course_description_editor').summernote({
+    disableDragAndDrop: true,
+    height: 150
+  });
+  $('#onboarding_welcome_subheading_editor').summernote({
+    disableDragAndDrop: true,
+    height: 150
+  });
+  $('#onboarding_level_subheading_editor').summernote({
     disableDragAndDrop: true,
     height: 150
   });

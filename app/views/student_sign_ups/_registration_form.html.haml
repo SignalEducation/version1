@@ -2,6 +2,7 @@
   =f.hidden_field :locale, value: (params[:locale] || 'en')
   =f.hidden_field :terms_and_conditions, id: 'hidden_term_and_conditions'
   =f.hidden_field :communication_approval, id: 'hidden_communication_approval'
+  =f.hidden_field :home_page_id, value: @home_page&.id
   -if @exam_body
     =f.hidden_field :preferred_exam_body_id, id: 'hidden_preferred_exam_body_id', value: @exam_body.id
 

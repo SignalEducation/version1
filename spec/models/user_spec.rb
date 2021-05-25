@@ -96,6 +96,7 @@ describe User do
   it { should have_one(:referred_signup) }
   it { should belong_to(:subscription_plan_category) }
   it { should belong_to(:currency) }
+  it { should belong_to(:home_page) }
 
   # validation
   context 'test uniqueness validation' do

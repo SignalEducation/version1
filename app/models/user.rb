@@ -83,6 +83,7 @@ class User < ApplicationRecord
   belongs_to :preferred_exam_body, class_name: 'ExamBody', optional: true
   belongs_to :subscription_plan_category, optional: true
   belongs_to :user_group
+  belongs_to :home_page, optional: true
 
   has_one :referral_code, dependent: :destroy
   has_one :referred_signup, dependent: :destroy

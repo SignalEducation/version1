@@ -55,7 +55,9 @@ class LibraryController < ApplicationController
 
     if @course && @exam_body.active && !@course.preview
       if current_user
+        @vimeo_as_main        = vimeo_as_main?
         @free_lesson          = @course.free_lesson
+        @welcome_video        = @course.free_lesson.first_active_cme if @exam_body.new_onboarding && current_user.course_logs.empty?
         @valid_subscription   = current_user.active_subscriptions_for_exam_body(@exam_body.id).all_valid.first
         @course_log           = current_user.course_logs.for_course(@course.id).all_in_order.last
 
