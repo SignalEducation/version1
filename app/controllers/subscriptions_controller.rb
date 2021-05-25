@@ -71,7 +71,7 @@ class SubscriptionsController < ApplicationController
 
     @subscription.update(completion_guid: nil)
     coupon_data       = @subscription.coupon_data
-    @coupon_code      = coupon_data.present? ? coupon_data[:code]&.round(2) : ''
+    @coupon_code      = coupon_data.present? ? coupon_data[:code] : ''
     @price_discounted = coupon_data.present? ? coupon_data[:price_discounted]&.round(2) : ''
 
     ab_finished("#{@subscription&.subscription_plan&.exam_body&.group&.name_url}_pricing_link")
