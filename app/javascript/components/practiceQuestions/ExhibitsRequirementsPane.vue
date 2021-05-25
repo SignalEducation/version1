@@ -29,7 +29,6 @@
 </template>
 
 <script>
-
 function rightPaneScrolling() {
   let isScrolling;
   if (document.getElementById("rightPaneTopUnderline") != null) {

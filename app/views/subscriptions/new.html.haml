@@ -23,6 +23,8 @@
             =f.hidden_field :stripe_token
             =f.hidden_field :use_paypal, value: false
             =f.hidden_field :kind, value: @kind
+            =f.hidden_field :coupon_id, value: nil
+            =hidden_field_tag :discounted_price
             =hidden_field_tag :hidden_coupon_code
 
             .bg-gray5
@@ -107,9 +109,9 @@
   let preferredExamBody = "#{current_user&.preferred_exam_body&.name}";
   let onboarding = "#{current_user&.analytics_onboarding_valid?.to_s}";
 
-  let analyticsData = {preferred_exam_body_id: preferredExamBodyId, preferred_exam_body: preferredExamBody, banner: banner, onboarding: onboarding, exam_body_id: "#{@exam_body&.id}", exam_body_name: "#{@exam_body&.name}",
-   subscription_plan_options: "#{@plans.map(&:id)}", sub_plan_names: planNames, selected_sub_plan_guid: "#{params[:plan_guid]}", selected_sub_plan_name: preSelectedPlan.attr('data-name'), selected_sub_plan_price: preSelectedPlan.attr('data-price'),
-    currency: "#{@currency&.iso_code}", country: "#{current_user&.country&.name}", valid_coupon_present: $('#coupon_code').hasClass("coupon-success")};
+  let analyticsData = { preferred_exam_body_id: preferredExamBodyId, preferred_exam_body: preferredExamBody, banner: banner, onboarding: onboarding, exam_body_id: "#{@exam_body&.id}", exam_body_name: "#{@exam_body&.name}",
+    subscription_plan_options: "#{@plans.map(&:id)}", sub_plan_names: planNames, selected_sub_plan_guid: "#{params[:plan_guid]}", selected_sub_plan_name: preSelectedPlan.attr('data-name'), selected_sub_plan_price: preSelectedPlan.attr('data-price'),
+    currency: "#{@currency&.iso_code}", country: "#{current_user&.country&.name}", valid_coupon_present: $('#coupon_code').hasClass("coupon-success"), discountedPrice: '', couponCode: '' };
 
   function addToCart() {
     let selectedPlan = $("input[name='plans']:checked");
@@ -304,6 +306,7 @@
 
     function createSubscription(token){
       $('#subscription_stripe_token').val(token.id);
+
       var form = $('#upgrade-form');
 
       $.ajax({
@@ -316,7 +319,6 @@
             handlePayment(data.client_secret, data.subscription_id)
           } else if(data.status == 'active'){
             window.location.replace("#{personal_upgrade_complete_url(@subscription.completion_guid)}");
-            subscriptionCreation(data);
           }
         },
         error: function(request, status, error){
@@ -355,7 +357,6 @@
             success: function(data,status,xhr){
               if( $.inArray(intentStatus, statusArray) !== -1){
                 window.location.replace("#{personal_upgrade_complete_url(@subscription.completion_guid)}");
-                subscriptionCreation(data);
               }
             },
             error: function(xhr,status,error){
@@ -383,6 +384,8 @@
     let preferredExamBodyId = "#{current_user&.preferred_exam_body_id}";
     let preferredExamBody = "#{current_user&.preferred_exam_body&.name}";
     let onboarding = "#{current_user&.analytics_onboarding_valid?.to_s}";
+    let coupon_code = $('#coupon_code').val();
+    let discounted_price = Number($('#discounted_price').val().replace(/[^0-9\.-]+/g,""));
 
     // Segment Analytics
     analytics.page('Payment', {
@@ -401,7 +404,9 @@
       selectedSubPlanPrice: preSelectedPlan.attr('data-price'),
       selectedSubPlanGuid: preSelectedPlan.attr('data-guid'),
       subscriptionType: "#{@kind.to_s}",
-      paymentType: "Subscription"
+      paymentType: "Subscription",
+      discountedPrice: (discounted_price) ? discounted_price : '',
+      couponCode: coupon_code
     });
 
     $("#show_all_plans").on( "click", function() {

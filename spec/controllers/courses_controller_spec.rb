@@ -122,6 +122,28 @@ RSpec.describe CoursesController, type: :controller do
         expect(response.status).to eq(200)
         expect(response).to render_template(:show)
       end
+
+      it 'for Course Practice Question' do
+        get :show, params: { course_name_url: course_1.name_url, course_section_name_url: course_section_1.name_url, course_lesson_name_url: course_lesson_1.name_url, course_step_name_url: course_step_6.name_url }
+
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:show)
+      end
+
+      it 'for Course Practice Question with previous attempts' do
+        allow(CourseStepLog).to receive(:where).and_return([build(:course_step_log, :practice_question, element_completed: true, course_lesson_log_id: 1)])
+        allow_any_instance_of(CourseStepLog).to receive(:build_practice_question_answers).and_return(true)
+        allow_any_instance_of(CourseStepLog).to receive(:created_at).and_return(Time.now)
+
+        get :show, params: { course_name_url: course_1.name_url, course_section_name_url: course_section_1.name_url, course_lesson_name_url: course_lesson_1.name_url, course_step_name_url: course_step_6.name_url }
+
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:show)
+      end
     end
 
     describe 'Post to create with CMEUL data for CMEQ' do

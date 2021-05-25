@@ -215,6 +215,9 @@ en:
       update:
         flash:
           success: Exercise corrections successfully updated
+      correction:
+        flash:
+          pending_cbe: You can't view a pending cbe exercise.
 
     external_banners:
       create:

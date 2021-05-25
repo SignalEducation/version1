@@ -1,33 +1,57 @@
 <template>
   <section v-if="!isFetching">
+    <div class="nav-practice-questions">
+      <span>
+        <PreviousAttempts
+          :stepLogId="stepLogId"
+          :previousAttempts="previousStepLogs"
+          class="practice-ques-single-question"
+        />
+      </span>
+    </div>
     <div class="top-btns-prac-ques">
       <div class="top-btns-left-pane">
         <ModalCalculator class="top-btns-left-pane-spc" />
         <ModalScratchPad />
       </div>
       <div class="top-btns-left-pane">
-        <CloseAllModals v-if="practiceQuestion.kind != 'standard'" class="top-btns-left-pane-spc" />
+        <CloseAllModals
+          v-if="practiceQuestion.kind != 'standard'"
+          class="top-btns-left-pane-spc"
+        />
         <span v-if="practiceQuestion.kind == 'standard'">
-          <ModalSolution :solutionTitle="practiceQuestion.course_step.name" :solutionContent="practiceQuestion.questions" />
+          <ModalSolution
+            :solutionTitle="practiceQuestion.course_step.name"
+            :solutionContent="practiceQuestion.questions"
+          />
         </span>
         <span v-else>
-          <ModalSolutionV2 :solutionContentArray="practiceQuestion.solutions_v2" />
+          <ModalSolutionV2
+            :solutionContentArray="practiceQuestion.solutions_v2"
+          />
         </span>
       </div>
     </div>
     <div class="questions" v-on:click="refreshSheetLayout()">
-      <splitpanes class="practice-question-theme" :style="{ height: '70vh' }">
+      <splitpanes
+        class="practice-question-theme"
+        :style="{ height: '70vh' }"
+        :key="stepLogId"
+      >
         <span v-if="practiceQuestion.kind == 'standard'">
           <ScenarioPane :content="practiceQuestion.content" />
         </span>
         <span v-else>
           <ExhibitsRequirementsPane
+            :key="stepLogId"
             :totalQuestions="practiceQuestion.total_questions"
             :requirementContentArray="practiceQuestion.questions"
             :stepLogId="stepLogId"
             :practiceQuestionId="practiceQuestionId"
             :exhibitContentArray="practiceQuestion.exhibits"
-            :responseContentArray="practiceQuestion.responses" />
+            :responseContentArray="practiceQuestion.responses"
+            :previousAttempts="previousStepLogs"
+          />
         </span>
         <span v-if="practiceQuestion.kind == 'standard'">
           <QuestionsAnswersPane
@@ -38,11 +62,18 @@
           />
         </span>
         <span v-else>
-          <ScenarioPane :content="practiceQuestion.content" class="practice-ques-single-question" />
+          <ScenarioPane
+            :content="practiceQuestion.content"
+            class="practice-ques-single-question"
+          />
         </span>
       </splitpanes>
-        <HelpBtn :helpPdf="practiceQuestion.document.url" />
-      <div v-if="practiceQuestion.kind == 'standard'" :title="dynamicTitle" :class="{ outsidelastpage: outsideLastPage }">
+      <HelpBtn :helpPdf="practiceQuestion.document.url" />
+      <div
+        v-if="practiceQuestion.kind == 'standard'"
+        :title="dynamicTitle"
+        :class="{ outsidelastpage: outsideLastPage }"
+      >
         <SubmitBtn
           :totalQuestions="practiceQuestion.total_questions"
           :questionContentArray="practiceQuestion.questions"
@@ -50,7 +81,11 @@
           :practiceQuestionId="practiceQuestionId"
         />
       </div>
-      <div v-else :title="dynamicTitle" :class="{ outsidelastpage: outsideLastPage }">
+      <div
+        v-else
+        :title="dynamicTitle"
+        :class="{ outsidelastpage: outsideLastPage }"
+      >
         <SubmitBtnV2
           :sendResponseArraytoDB="practiceQuestion.responses"
           :stepLogId="stepLogId"
@@ -71,6 +106,7 @@ import ModalCalculator from "./ModalCalculator.vue";
 import ModalScratchPad from "./ModalScratchPad.vue";
 import ModalSolution from "./ModalSolution.vue";
 import ModalSolutionV2 from "./ModalSolutionV2.vue";
+import PreviousAttempts from "./PreviousAttempts.vue";
 import QuestionAnswers from "../../components/cbe/QuestionAnswers.vue";
 import QuestionsAnswersPane from "./QuestionsAnswersPane.vue";
 import ScenarioPane from "./ScenarioPane.vue";
@@ -88,6 +124,7 @@ export default {
     ModalScratchPad,
     ModalSolution,
     ModalSolutionV2,
+    PreviousAttempts,
     QuestionAnswers,
     QuestionsAnswersPane,
     ScenarioPane,
@@ -98,9 +135,18 @@ export default {
   data() {
     return {
       stepLogId: this.$parent.stepLogId,
+      previousStepLogs: this.$parent.stepLogs,
       practiceQuestionId: this.$parent.practiceQuestionId,
       practiceQuestion: null,
-      zIndexArr: ["calcModal", "scratchPadModal", "solutionModal", "helpModal", "solutionModalV2", "textEditorModal", "spreadsheetModal"],
+      zIndexArr: [
+        "calcModal",
+        "scratchPadModal",
+        "solutionModal",
+        "helpModal",
+        "solutionModalV2",
+        "textEditorModal",
+        "spreadsheetModal",
+      ],
       outsideLastPage: true,
       dynamicTitle: "All answers required before completing",
       lastPageIndex: null,
@@ -111,45 +157,49 @@ export default {
   },
   created() {
     this.loadingPracticeQuestion();
+
     eventBus.$on("z-index-click", (lastClickedModal) => {
       this.zIndexSort(lastClickedModal);
       this.zIndexStyle(this.zIndexArr);
     }),
-    eventBus.$on("update-answer-text",(ans)=>{
-      if (ans.length > 0) {
-        this.latestAnswer = true;
-        this.evaluateAnsText(true);
-      } else {
-        this.evaluateAnsText(false);
-      }
-    }),
-    eventBus.$on("active-solution-index",(showSubmitBtn)=>{
-      if (showSubmitBtn[0]) {
-        this.outsideLastPage = false;
-        this.dynamicTitle = 'Mark as Complete';
-      } else {
-        this.outsideLastPage = true;
-        this.dynamicTitle = 'All answers required before completing';
-      }
-    })
-    eventBus.$on("active-solution-index-v2",(showSubmitBtn)=>{
+      eventBus.$on("update-answer-text", (ans) => {
+        if (ans.length > 0) {
+          this.latestAnswer = true;
+          this.evaluateAnsText(true);
+        } else {
+          this.evaluateAnsText(false);
+        }
+      }),
+      eventBus.$on("active-solution-index", (showSubmitBtn) => {
+        if (showSubmitBtn[0]) {
+          this.outsideLastPage = false;
+          this.dynamicTitle = "Mark as Complete";
+        } else {
+          this.outsideLastPage = true;
+          this.dynamicTitle = "All answers required before completing";
+        }
+      });
+    eventBus.$on("active-solution-index-v2", (showSubmitBtn) => {
       if (showSubmitBtn) {
         this.outsideLastPage = false;
-        this.dynamicTitle = 'Mark as Complete';
+        this.dynamicTitle = "Mark as Complete";
       } else {
         this.outsideLastPage = true;
-        this.dynamicTitle = 'All answers required before completing';
+        this.dynamicTitle = "All answers required before completing";
       }
-    })
+    });
+    eventBus.$on("update-course_step-log", (log_id) => {
+      this.getPracticeQuestion(log_id);
+    });
   },
   mounted() {
-    this.getPracticeQuestion();
+    this.getPracticeQuestion(this.stepLogId);
   },
   methods: {
-    getPracticeQuestion() {
+    getPracticeQuestion(log_id) {
       axios
         .get(
-          `/api/v1/course_step_log/${this.stepLogId}/practice_questions/${this.practiceQuestionId}`
+          `/api/v1/course_step_log/${log_id}/practice_questions/${this.practiceQuestionId}`
         )
         .then((response) => {
           this.practiceQuestion = response.data;
@@ -157,7 +207,12 @@ export default {
           this.loader.hide();
           let fillArr = new Array(this.practiceQuestion.total_questions);
           this.updateAnsArr = fillArr.fill(0);
-          this.zIndexLoadArr(this.practiceQuestion.exhibits,this.practiceQuestion.questions,this.practiceQuestion.responses);
+          this.zIndexLoadArr(
+            this.practiceQuestion.exhibits,
+            this.practiceQuestion.questions,
+            this.practiceQuestion.responses
+          );
+          this.stepLogId = log_id;
         })
         .catch((e) => {});
     },
@@ -180,8 +235,8 @@ export default {
     zIndexStyle(modalArr) {
       for (let index = 0; index < modalArr.length; index++) {
         try {
-          document.getElementById(modalArr[index]).style.zIndex = 1099-index;
-        } catch(e) {}
+          document.getElementById(modalArr[index]).style.zIndex = 1099 - index;
+        } catch (e) {}
       }
     },
     zIndexLoadArr(exh, ques, resp) {
@@ -195,10 +250,10 @@ export default {
     evaluateAnsText(latestAns) {
       if (this.practiceQuestion.total_questions == 1 && latestAns) {
         this.outsideLastPage = false;
-        this.dynamicTitle = 'Mark as Complete';
+        this.dynamicTitle = "Mark as Complete";
       } else {
         this.outsideLastPage = true;
-        this.dynamicTitle = 'All answers required before completing';
+        this.dynamicTitle = "All answers required before completing";
       }
     },
     loadingPracticeQuestion() {
@@ -210,8 +265,8 @@ export default {
       });
     },
     refreshSheetLayout() {
-      window.dispatchEvent(new Event('resize'));
-    }
+      window.dispatchEvent(new Event("resize"));
+    },
   },
 };
 </script>

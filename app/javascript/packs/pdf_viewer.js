@@ -1,9 +1,18 @@
 import Vue from 'vue';
 import fullscreen from 'vue-fullscreen'
+import BootstrapVue from 'bootstrap-vue';
+import VModal from 'vue-js-modal';
+import VueModal from '../components/VueModal.vue';
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
 import ModalViewer from '../components/pdf/ModalViewer.vue';
 import NotesViewer from '../components/pdf/NotesViewer.vue';
 
+Vue.use(BootstrapVue);
 Vue.use(fullscreen)
+Vue.use(Loading);
+Vue.use(VueModal);
+Vue.use(VModal);
 
 const mountViewerElement = (element, data, component) =>
 new Vue({

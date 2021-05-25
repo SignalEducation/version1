@@ -29,6 +29,7 @@ json.questions practice_question.questions.order(:sorting_order) do |question|
   if answer.present?
     json.answer_id      answer.id
     json.answer_content answer.content
+    json.current        answer.current
   end
 end
 

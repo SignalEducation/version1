@@ -22,8 +22,8 @@ module PracticeQuestion
 
     # relationships
     belongs_to :practice_question, class_name: 'CoursePracticeQuestion',
-                                    foreign_key: :practice_question_id,
-                                    inverse_of: :solutions, optional: true
+                                   foreign_key: :practice_question_id,
+                                   inverse_of: :solutions, optional: true
 
     # scopes
     scope :all_in_order, -> { order(:sorting_order, :id) }

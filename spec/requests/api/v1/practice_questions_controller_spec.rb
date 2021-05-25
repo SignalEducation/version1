@@ -132,7 +132,7 @@ RSpec.describe 'Api::V1::PracticeQuestionsController', type: :request do
 
           expect(data['answer_id']).to eq(update_params[:answer_id])
           expect(data['answer_content']['text']).to eq(update_params[:answer_content][:text])
-          expect([data.keys]).to contain_exactly(%w[id name sorting_order kind description content solution practice_question_id answer_id answer_content])
+          expect([data.keys]).to contain_exactly(%w[id name sorting_order kind description content solution practice_question_id answer_id answer_content current])
         end
       end
 

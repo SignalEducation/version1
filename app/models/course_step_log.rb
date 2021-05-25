@@ -167,7 +167,7 @@ class CourseStepLog < ApplicationRecord
         next if practice_question_answers.map(&:practice_question_question_id).include?(question.id)
 
         practice_question_answers.create(content: question.content,
-                                        practice_question_question_id: question.id)
+                                         practice_question_question_id: question.id)
       end
     else
       practice_question_responses.find_or_create_by(kind: :open, practice_question_id: course_step.course_practice_question.id)

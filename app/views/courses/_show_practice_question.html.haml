@@ -15,7 +15,7 @@
     =# VueJS include
     =stylesheet_link_tag 'splitpanes'
     =javascript_pack_tag 'practice_question'
-    #practice-question-viewer{ 'data-practice-question-id': practice_question.id, 'data-step-log-id': step_log_id }
+    #practice-question-viewer{ 'data-practice-question-id': practice_question.id, 'data-step-log-id': step_log_id, 'data-step-logs': @course_step_logs.to_json }
 
   :javascript
     collapseFunc();

@@ -1,0 +1,36 @@
+# frozen_string_literal: true
+
+require 'rails_helper'
+
+RSpec.describe PracticeQuestion::Response, type: :model do
+  describe 'Should Respond' do
+    it { should respond_to(:course_step_log_id) }
+    it { should respond_to(:practice_question_id) }
+    it { should respond_to(:sorting_order) }
+    it { should respond_to(:kind) }
+    it { should respond_to(:content) }
+    it { should respond_to(:created_at) }
+    it { should respond_to(:updated_at) }
+  end
+
+  describe 'Associations' do
+    it { should belong_to(:course_step_log) }
+    it { should belong_to(:practice_question) }
+  end
+
+  describe 'Validations' do
+    it { should validate_presence_of(:practice_question_id) }
+  end
+
+  describe 'Enums' do
+    it { should define_enum_for(:kind).with(open: 0, spreadsheet: 1) }
+  end
+
+  describe 'scopes' do
+    it { expect(described_class).to respond_to(:all_in_order) }
+  end
+
+  it '.destroyable?' do
+    expect(described_class.new.destroyable?).to be_truthy
+  end
+end
