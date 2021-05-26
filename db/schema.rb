@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_21_151133) do
+ActiveRecord::Schema.define(version: 2021_05_24_103851) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -446,9 +446,9 @@ ActiveRecord::Schema.define(version: 2021_05_21_151133) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer "cme_count", default: 0
-    t.string "seo_description", limit: 255
-    t.boolean "seo_no_index", default: false
     t.datetime "destroyed_at"
+    t.string "seo_description"
+    t.boolean "seo_no_index", default: false
     t.integer "number_of_questions", default: 0
     t.integer "course_id"
     t.float "video_duration", default: 0.0
@@ -640,9 +640,9 @@ ActiveRecord::Schema.define(version: 2021_05_21_151133) do
     t.boolean "is_video", default: false, null: false
     t.boolean "is_quiz", default: false, null: false
     t.boolean "active", default: true, null: false
-    t.string "seo_description", limit: 255
-    t.boolean "seo_no_index", default: false
     t.datetime "destroyed_at"
+    t.string "seo_description"
+    t.boolean "seo_no_index", default: false
     t.integer "number_of_questions", default: 0
     t.float "duration", default: 0.0
     t.string "temporary_label"
@@ -1561,6 +1561,7 @@ ActiveRecord::Schema.define(version: 2021_05_21_151133) do
     t.bigint "cancelled_by_id"
     t.integer "kind"
     t.integer "paypal_retry_count", default: 0
+    t.decimal "total_revenue", default: "0.0"
     t.index ["ahoy_visit_id"], name: "index_subscriptions_on_ahoy_visit_id"
     t.index ["cancelled_by_id"], name: "index_subscriptions_on_cancelled_by_id"
     t.index ["changed_from_id"], name: "index_subscriptions_on_changed_from_id"
@@ -1651,6 +1652,8 @@ ActiveRecord::Schema.define(version: 2021_05_21_151133) do
     t.bigint "currency_id"
     t.string "tutor_link"
     t.integer "video_player", default: 0, null: false
+    t.decimal "subscriptions_revenue", default: "0.0"
+    t.decimal "orders_revenue", default: "0.0"
     t.integer "home_page_id"
     t.index ["country_id"], name: "index_users_on_country_id"
     t.index ["currency_id"], name: "index_users_on_currency_id"

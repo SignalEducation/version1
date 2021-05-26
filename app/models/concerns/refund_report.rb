@@ -178,4 +178,16 @@ module RefundReport
 
     hubspot_get_contact['properties']['hs_analytics_source_data_2']['value'] if hubspot_get_contact['properties']['hs_analytics_source_data_2']
   end
+
+  def user_subscriptions_revenue
+    user.subscriptions_revenue
+  end
+
+  def user_orders_revenue
+    user.orders_revenue
+  end
+
+  def user_total_revenue
+    user.total_revenue
+  end
 end

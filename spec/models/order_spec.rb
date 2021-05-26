@@ -266,6 +266,7 @@ describe Order do
   it { should respond_to(:mock_exam) }
   it { should respond_to(:stripe_client_secret) }
   it { should respond_to(:payment_provider) }
+  it { should respond_to(:update_revenue) }
 
   describe 'confirm_payment_intent' do
     let(:order) { create(:order) }
@@ -293,6 +294,29 @@ describe Order do
 
     it 'return exam body id' do
       expect(order.exam_body_id).to eq(order.product.group.exam_body.id)
+    end
+  end
+
+  describe '.update_revenue' do
+    let(:user)  { build(:user) }
+    let(:order) { build(:order, user: user) }
+    let(:value) { Faker::Number.decimal(l_digits: 1, r_digits: 2) }
+
+
+    context 'Increment value' do
+      before { order.update_revenue(:increment!, value) }
+
+      it 'return value updated' do
+        expect(user.orders_revenue).to eq(value)
+      end
+    end
+
+    context 'Decrement value' do
+      before { order.update_revenue(:decrement!, value) }
+
+      it 'return value updated' do
+        expect(user.orders_revenue).to eq(-value)
+      end
     end
   end
 end
