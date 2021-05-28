@@ -70,6 +70,11 @@ FactoryBot.define do
       public_url { '/acca2' }
     end
 
+    factory :landing_page_3 do
+      name       { 'Landing Page 3' }
+      public_url { 'acca-free-lesson' }
+    end
+
     trait :about_us do
       name       { 'About Us' }
       public_url { 'about-us' }
