@@ -1,6 +1,6 @@
 <template>
   <section>
-    <div class="aselect" :data-value="value" :data-list="previousAttempts">
+    <div class="aselect" :data-value="value" :data-list="previousAttempts" v-click-outside="dropDownClose">
       <div class="selector" @click="toggle()">
           <div class="label">
             <span>
@@ -38,6 +38,7 @@ function rightPaneScrolling() {
 
 import axios from "axios";
 import eventBus from "../cbe/EventBus.vue";
+import clickOutside from "../../directives/clickOutside";
 
 export default {
   components: {
@@ -81,6 +82,9 @@ export default {
     select(option) {
       this.value = option;
       this.updateCourseStepLog(option.id);
+    },
+    dropDownClose: function(){
+      this.visible = false;
     }
   },
 };
