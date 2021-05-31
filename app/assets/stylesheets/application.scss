@@ -1927,7 +1927,17 @@ textarea.form-control {
     max-width: 800px
   }
 }
-
+.modal .modal-dialog.upgrade-modal .modal-content {
+  ul.list li {
+    position: relative;
+    margin-bottom: 0;
+    color: $colour-20;
+  }
+  .modal-footer {
+    margin-top: 20px;
+    justify-content: center;
+  }
+}
 .tooltip {
   font-family: OakesGrotesk,sans-serif;
   font-size: .875rem;

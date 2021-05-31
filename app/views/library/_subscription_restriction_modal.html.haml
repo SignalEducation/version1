@@ -1,25 +1,32 @@
 .modal.fade{id: 'invalid-subscription', tabindex: '-1', role: 'dialog', 'aria-labelledby': 'invalidSubscription', 'aria-hidden': 'true'}
-  .modal-dialog{role: 'document'}
+  .modal-dialog.upgrade-modal{role: 'document'}
     .modal-content
       %button.btn.btn-icon.modal-close{'data-dismiss': 'modal'}
         %i.material-icons.ml-1{'aria-hidden': 'true'}
           close
       .modal-header.mb-3
         %h3.text-red{id: 'invalidSubscription'}
-          Valid Subscription Required
+          Upgrade Your Plan
 
       .modal-body
-        %p.mb-4
-          A valid account is required to access that content. Subscribe to a payment plan to access all course materials. Cancel anytime.
+        %p.mb-2
+          Enhance your study experience with these additional resources:
+        %ul.list
+          %li
+            Access all course lectures & materials for every course
+          %li
+            Unlimited 1-1 tutor support
+          %li
+            Practice questions for every exam paper
+          %li
+            Weekly student webinars
+
 
         - if current_user&.subscription_action_required?
           %h5.text-warning
             ='There seems to be problem with your existing subscription. You should resolve this issue first or you may be double charged.'
             =link_to 'Resolve Issue!', account_url(anchor: 'account-info')
-        - else
-          %p.mb-4
-            ="Get unlimited access to all #{@group.name} courses."
 
       .modal-footer
-        =link_to 'Upgrade Now', subscription_checkout_special_link(@group.exam_body_id), class: 'btn btn-primary', title: 'Get Unlimited Access'
+        =link_to 'Yes, upgrade my plan', subscription_checkout_special_link(@group.exam_body_id), class: 'btn btn-primary', title: 'Get Unlimited Access'
 

@@ -4,12 +4,12 @@
     .container
       %header.hero-section{style: 'padding-top: 2rem;'}
         -if @exam_body.new_onboarding && current_user&.home_page&.onboarding_welcome_heading
-          %h1.h1-hero.my-4
-            =current_user.home_page.onboarding_welcome_heading
           %ul.step-bar
             %li.active
             %li
             %li
+          %h1.h1-hero.my-4
+            =current_user.home_page.onboarding_welcome_heading
         -else
           %h1.h1-hero.my-4
             Welcome to learnsignal!
@@ -42,12 +42,12 @@
         .container
           %header.hero-section{style: 'padding-top: 2rem;'}
             -if @exam_body.new_onboarding && current_user&.home_page&.onboarding_level_heading
-              %h1.h2-hero.my-4
-                =current_user.home_page.onboarding_level_heading
               %ul.step-bar
                 %li.active
                 %li.active
                 %li
+              %h1.h2-hero.my-4
+                =current_user.home_page.onboarding_level_heading
             -elsif @group.onboarding_level_heading.present?
               %h1.h2-hero.my-4
                 =@group.onboarding_level_heading
@@ -89,13 +89,13 @@
         .d-none.course-selection-screens{id: "course-selection-screen-#{level.id}"}
           .container
             %header.hero-section{style: 'padding-top: 2rem;'}
-              %h1.h2-hero.my-4
-                =level.onboarding_course_heading
               -if @exam_body.new_onboarding
                 %ul.step-bar
                   %li.active
                   %li.active
                   %li.active
+              %h1.h2-hero.my-4
+                =level.onboarding_course_heading
               %p.p-hero.px-lg-6
                 =level.onboarding_course_subheading
 
