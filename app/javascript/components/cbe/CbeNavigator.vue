@@ -1,5 +1,5 @@
 <template>
-  <div id="cbe-modals">
+  <div id="cbe-modals" class="cbe-navigator-modal">
     <section
       class="components-sidebar-links navigation-icon"
       @click="show($event)"
@@ -16,6 +16,7 @@
       <CbeReview :cbe_id="cbeId" />
     </div>
     </VueModal>
+    <div v-show="activeOverlay" class="ls-overlay" @click="hide()"></div>
   </div>
 </template>
 
@@ -31,7 +32,7 @@ export default {
   },
   data() {
     return {
-      modalIsOpen: false
+      activeOverlay: false
     };
   },
   props: {
@@ -46,17 +47,19 @@ export default {
     },
   },
   created() {
-    eventBus.$on("close-modal",(status)=>{
-      this.modalIsOpen = status;
+    eventBus.$on("close-active-overlay",(status)=>{
+      this.activeOverlay = status;
     })
   },
   methods: {
     show (event) {
       this.$modal.show("modal-"+this.componentType+"-"+this.componentName);
+      this.activeOverlay = true;
       $('.components-sidebar .components div').removeClass('active-modal');
       eventBus.$emit("update-modal-z-index", `modal-${this.componentType}-${this.componentName}`);
     },
     hide (event) {
+      this.activeOverlay = false;
       $('.latent-modal').removeClass('active-modal');
       this.$modal.hide("modal-"+this.componentType+"-"+this.componentName);
     },
