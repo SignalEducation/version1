@@ -1,10 +1,12 @@
 require 'rails_helper'
 
 shared_context 'free_lesson_content' do
-  let!(:exam_body)  { create(:exam_body) }
-  let!(:group)      { create(:group, exam_body: exam_body) }
-  let!(:level_1)    { create(:level, active: true, group_id: group.id) }
-  let!(:course_1)   { create(:active_course, exam_body_id: exam_body.id, group_id: group.id, level_id: level_1.id) }
+  let(:exam_body)       { create(:exam_body, has_sittings: true) }
+  let(:group)           { create(:group, exam_body: exam_body) }
+  let(:level_1)         { create(:level, active: true, group_id: group.id) }
+  let(:course_1)        { create(:active_course, exam_body_id: exam_body.id, group_id: group.id, level_id: level_1.id) }
+  let!(:exam_sitting_1) { create(:exam_sitting, exam_body: exam_body, course: course_1) }
+  let!(:exam_sitting_2) { create(:exam_sitting, exam_body: exam_body, course: course_1, date: (Date.today + 1.year).strftime("%Y-%m-%d")) }
 
   # Course Section
   let!(:course_section_1) { create(:course_section, course: course_1) }
