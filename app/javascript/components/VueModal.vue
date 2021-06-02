@@ -115,6 +115,7 @@ export default {
     },
     hide () {
       $('.latent-modal').removeClass('active-modal');
+      eventBus.$emit("close-active-overlay", false);
       this.$modal.hide("modal-"+this.componentType+"-"+this.componentName);
     },
     normalizeId (id) {
