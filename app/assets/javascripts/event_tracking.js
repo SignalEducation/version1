@@ -443,6 +443,13 @@ function onBoardingBackClick(e) {
   }
 }
 
+function onBoardingSkipClick(e) {
+  let data = e.dataset;
+  if (typeof analytics !== 'undefined') {
+    analytics.track('Onboarding Skip Button Clicked', data);
+  }
+}
+
 function onboardingExitEvent(e) {
   let properties = e.dataset;
   if (typeof analytics !== 'undefined') {
@@ -486,6 +493,10 @@ $(document).ready(function(){
 
   $(".onboarding-back-button").on( "click", function() {
     onBoardingBackClick(this)
+  });
+
+  $(".onboarding-skip-button").on( "click", function() {
+    onBoardingSkipClick(this)
   });
 
   $(".upgrade-arrow").on( "click", function() {

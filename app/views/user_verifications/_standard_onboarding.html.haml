@@ -61,9 +61,9 @@
               -else
                 Select your course so we can guide you on your learning journey
 
-        .container-bg.mt-4
+        .container-bg.mt-2
           .container-md
-            %article.py-4
+            %article.py-2
               %header.pb-sm-4.pb-md-5
                 .row
                   -@levels.each do |level|
@@ -80,7 +80,7 @@
               %btn.btn.btn-secondary.btn-sm.btn-sm-arrow-left.onboarding-back-button{onclick: 'showStartScreen(); return false;', data: { exam_body_id: @group&.exam_body&.id, exam_body_name: @group&.exam_body&.name, preferred_exam_body_id: current_user&.preferred_exam_body_id, preferred_exam_body: current_user&.preferred_exam_body&.name, banner: 'false', onboarding: current_user&.analytics_onboarding_valid?.to_s }}
                 Go Back
               -if @exam_body.new_onboarding
-                =link_to library_special_link(@group), class: 'btn btn-secondary btn-sm btn-sm-arrow-right onboarding-back-button' do
+                =link_to library_special_link(@group), class: 'btn btn-secondary btn-sm btn-sm-arrow-right onboarding-skip-button', data: { exam_body_id: @group&.exam_body&.id, exam_body_name: @group&.exam_body&.name, preferred_exam_body_id: current_user&.preferred_exam_body_id, preferred_exam_body: current_user&.preferred_exam_body&.name, banner: 'false', onboarding: current_user&.analytics_onboarding_valid?.to_s, onboarding_step: 'Level Selection' } do
                   Skip
 
 
@@ -99,9 +99,9 @@
               %p.p-hero.px-lg-6
                 =level.onboarding_course_subheading
 
-          .container-bg.mt-4
+          .container-bg.mt-2
             .container-md
-              %article.py-4
+              %article.py-2
                 %header.pb-sm-4.pb-md-5
                   .row.row-lg
                     -level.courses.all_active.all_in_order.each do |course|
@@ -119,7 +119,7 @@
                   %btn.btn.btn-secondary.btn-sm.btn-sm-arrow-left.onboarding-back-button{onclick: 'showLevelSelection(); return false;', data: { level_id: level.id, level_name: level.name, exam_body_id: @group&.exam_body&.id, exam_body_name: @group&.exam_body&.name, preferred_exam_body_id: current_user&.preferred_exam_body_id, preferred_exam_body: current_user&.preferred_exam_body&.name, banner: 'false', onboarding: current_user&.analytics_onboarding_valid?.to_s }}
                     Go Back
                   -if @exam_body.new_onboarding
-                    =link_to library_special_link(@group), class: 'btn btn-secondary btn-sm btn-sm-arrow-right onboarding-back-button' do
+                    =link_to library_special_link(@group), class: 'btn btn-secondary btn-sm btn-sm-arrow-right onboarding-skip-button', data: { exam_body_id: @group&.exam_body&.id, exam_body_name: @group&.exam_body&.name, preferred_exam_body_id: current_user&.preferred_exam_body_id, preferred_exam_body: current_user&.preferred_exam_body&.name, banner: 'false', onboarding: current_user&.analytics_onboarding_valid?.to_s, onboarding_step: 'Course Selection' } do
                       Skip
 
   - else
@@ -149,7 +149,7 @@
               %btn.btn.btn-secondary.btn-sm.btn-sm-arrow-left.onboarding-back-button{onclick: 'showStartScreen(); return false;', data: { exam_body_id: @group&.exam_body&.id, exam_body_name: @group&.exam_body&.name, preferred_exam_body_id: current_user&.preferred_exam_body_id, preferred_exam_body: current_user&.preferred_exam_body&.name, banner: 'false', onboarding: current_user&.analytics_onboarding_valid?.to_s }}
                 Go Back
               -if @exam_body.new_onboarding
-                =link_to library_special_link(@group), class: 'btn btn-secondary btn-sm btn-sm-arrow-right onboarding-back-button' do
+                =link_to library_special_link(@group), class: 'btn btn-secondary btn-sm btn-sm-arrow-right onboarding-skip-button', data: { exam_body_id: @group&.exam_body&.id, exam_body_name: @group&.exam_body&.name, preferred_exam_body_id: current_user&.preferred_exam_body_id, preferred_exam_body: current_user&.preferred_exam_body&.name, banner: 'false', onboarding: current_user&.analytics_onboarding_valid?.to_s, onboarding_step: 'Course Selection' } do
                   Skip
 
 :javascript
