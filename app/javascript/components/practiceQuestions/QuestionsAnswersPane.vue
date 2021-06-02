@@ -134,11 +134,10 @@ export default {
     syncSpreadsheetData(jsonData) {
       this.questionContent.answer_content = { content: { data: jsonData } };
     },
-    autoUpdateAnswer: function(newValue, oldValue){
+    autoUpdateAnswer: function(newValue, oldValue = {}){
       const dateNow = new Date();
-
       // Update response data if last update is more then 10 seconds OR new value is bigger then 20 characters.
-        if (dateNow - this.lastTimeUpdated > 10000 || (newValue.length - oldValue.length > 20)) {
+      if (dateNow - this.lastTimeUpdated > 10000 || (newValue.length - oldValue.length > 20)) {
         this.lastTimeUpdated = dateNow;
         this.updateCurrentAnswer();
       }
