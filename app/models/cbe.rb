@@ -80,6 +80,6 @@ class Cbe < ApplicationRecord
   end
 
   def total_score
-    exhibit_scenario? ? requirements.map(&:score).sum : questions.map(&:score).sum
+    exhibit_scenario? ? requirements.map(&:score).sum : questions.where(active: true).map(&:score).sum
   end
 end
