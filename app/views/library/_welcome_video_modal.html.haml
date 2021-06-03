@@ -9,6 +9,10 @@
           =@welcome_video&.name
       .modal-body
         #video-player-window
+          .loading-dots
+            .loading-dots--dot
+            .loading-dots--dot.load-dots-mg
+            .loading-dots--dot.load-dots-mg
           =render partial: 'courses/video_player', locals: { cme: @welcome_video, responsive: true, autoPlay: true }
 
 :javascript
