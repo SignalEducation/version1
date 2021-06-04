@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 class StudentSignUpsController < ApplicationController
-  before_action :check_logged_in_status, except: %i[landing group pricing]
+  before_action :check_logged_in_status, except: %i[landing group pricing new_landing]
   before_action :get_variables
-  before_action :create_user_object, only: %i[new sign_in_or_register sign_in_checkout landing]
+  before_action :create_user_object, only: %i[new sign_in_or_register sign_in_checkout landing new_landing]
   before_action :create_user_session_object, only: %i[sign_in_or_register sign_in_checkout landing]
-  before_action :layout_variables, only: %i[home landing]
+  before_action :layout_variables, only: %i[home landing new_landing]
   layout 'marketing'
 
   def home
@@ -215,6 +215,30 @@ class StudentSignUpsController < ApplicationController
     seo_title_maker(@group&.exam_body&.pricing_seo_title ? "#{@group&.exam_body&.pricing_seo_title} | LearnSignal" : "#{@group&.name} Tuition Plans | LearnSignal",
                     @group&.exam_body&.pricing_seo_description ? @group&.exam_body&.pricing_seo_description : "Achieve your #{@group&.name} learning goals with a learnsignal subscription plan and enjoy professional courses delivered online so that you can study on a schedule that suits you.",
                     false)
+  end
+
+  def new_landing
+    @home_page = HomePage.find_by(public_url: 'acca-free-lesson')
+    @group = @home_page.group
+    @exam_body = @group.exam_body
+    @currency_id =
+      if current_user&.currency_id
+        current_user.currency_id
+      else
+        ip_country = IpAddress.get_country(request.remote_ip)
+        country = ip_country || Country.find_by(name: 'United Kingdom')
+        country.currency_id
+      end
+
+    flash[:exam_body] = @exam_body.id if @exam_body
+    respond_to do |format|
+      format.html
+      format.all { redirect_to(missing_page_url) }
+    end
+
+    seo_title_maker(@home_page.seo_title, @home_page.seo_description, @home_page.seo_no_index)
+    @footer = 'white'
+    @form_type = 'Landing Page Contact'
   end
 
   private

@@ -81,6 +81,7 @@ class HomePagesController < ApplicationController
                                       :header_description, :course_description,
                                       :onboarding_welcome_heading, :onboarding_welcome_subheading,
                                       :onboarding_level_heading, :onboarding_level_subheading,
+                                      :temp_layout,
                                       blog_posts_attributes: [:id, :home_page_id,
                                                               :title, :description,
                                                               :url, :_destroy,
