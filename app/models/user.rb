@@ -277,7 +277,8 @@ class User < ApplicationRecord
     csv   = CSV.new(csv_content)
 
     csv.each do |row|
-      user = new(email: row[0], first_name: row[1], last_name: row[2])
+      exam_body = ExamBody.find_by(name: row[3])
+      user = new(email: row[0], first_name: row[1], last_name: row[2], preferred_exam_body: exam_body)
       user.valid?
 
       users << user
@@ -293,7 +294,7 @@ class User < ApplicationRecord
         user = User.find_by(email: v['email'])
         next if user
 
-        CsvImportUserCreationWorker.perform_async(v['email'], v['first_name'], v['last_name'], user_group_id, root_url)
+        CsvImportUserCreationWorker.perform_async(v['email'], v['first_name'], v['last_name'], v['preferred_exam_body_id'], user_group_id, root_url)
         new_users << v['email']
       end
     end
@@ -301,14 +302,14 @@ class User < ApplicationRecord
     new_users
   end
 
-  def self.create_csv_user(email, first_name, last_name, user_group_id, root_url)
+  def self.create_csv_user(email, first_name, last_name, preferred_exam_body_id, user_group_id, root_url)
     country = Country.find(78) || Country.find(name: 'United Kingdom').last
     password = SecureRandom.hex(5)
     verification_code = ApplicationController::generate_random_code(20)
     time_now = Proc.new{Time.now}.call
     user_group = UserGroup.find(user_group_id)
 
-    user = User.new(email: email, first_name: first_name, last_name: last_name)
+    user = User.new(email: email, first_name: first_name, last_name: last_name, preferred_exam_body_id: preferred_exam_body_id)
 
     user.assign_attributes(password: password, password_confirmation: password,
                            country_id: country.id, password_change_required: true,
