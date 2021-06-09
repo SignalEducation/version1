@@ -4,7 +4,7 @@
       <p :style="{ 'color':textColor }">{{ componentName }}</p>
       <button @click="hide()" :style="{ 'color':textColor }" type="button" class="close modal-close modal-close-solution" data-dismiss="modal" aria-hidden="true">&times;</button>
     </div>
-    <div @click="makeActive(normId)" class="vue-modal-body">
+    <div v-resize:debounce="onResize" @click="makeActive(normId)" class="vue-modal-body">
       <slot name="body" />
     </div>
   </modal>
@@ -14,8 +14,12 @@
 import eventBus from "./cbe/EventBus.vue";
 import pdfvuer from "pdfvuer";
 import SpreadsheetEditor from "./SpreadsheetEditor/SpreadsheetEditor.vue";
+import resize from 'vue-resize-directive';
 
 export default {
+  directives: {
+    resize,
+  },
   components: {
     pdf: pdfvuer,
     SpreadsheetEditor,
@@ -125,6 +129,9 @@ export default {
     makeActive(id) {
       $('.latent-modal').removeClass('active-modal');
       $("#"+id).addClass("active-modal");
+    },
+    onResize() {
+      eventBus.$emit("refresh-spreadsheet-cells", true);
     },
   },
 };
