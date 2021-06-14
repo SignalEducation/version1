@@ -1827,6 +1827,27 @@ textarea.form-control {
 .modal-content.pricing {
   background-color: #f5f8fa;
   border-radius: 12px;
+  height: auto;
+  width: 150%;
+  margin-left: -15%;
+  .modal-body {
+    max-width: 100%;
+    .row {
+      justify-content: center;
+    }
+  }
+}
+#pricing-modal {
+  .modal-dialog {
+    height: 100%;
+  }
+  .hero-section-show-link-window {
+    height: 100%;
+  }
+  .sub-pricing-btn {
+    position: relative;
+    z-index: 2;
+  }
 }
 .modal-backdrop {
   position: fixed;
@@ -3725,7 +3746,10 @@ cite {
 .img-thumbnail {
   border: 0 none;
   max-width: 100%;
-  height: auto
+  height: auto;
+  top: 0;
+  width: 100%;
+  margin-left: 0;
 }
 .img-thumbnail-sm {
   width: 4.25rem;
@@ -4294,6 +4318,10 @@ a.card:hover .card-title .card-explanation {
 @media (max-width:768px) {
   .logo-acca-landscape {
     max-width: 8rem;
+  }
+  .modal-content.pricing {
+    width: 100%;
+    margin-left: 0;
   }
 }
 .header-section {
