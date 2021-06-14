@@ -13,10 +13,12 @@ module HubSpot
 
       response = service(path, 'post', properties: user_properties)
 
-      return response if response.code == '200'
+      if response.code != '200'
+        Appsignal.send_error(Exception.new(response.body), {}, 'services')
+        Airbrake::AirbrakeLogger.new(Logger.new(STDOUT)).error response.body
+      end
 
-      Appsignal.send_error(Exception.new(response.body), {}, 'services')
-      Airbrake::AirbrakeLogger.new(Logger.new(STDOUT)).error response.body
+      response
     end
 
     def batch_create(users_ids, custom_data = {})
@@ -26,10 +28,12 @@ module HubSpot
 
       response = service(path, 'post', users_properties)
 
-      return response if response.code == '202'
+      if response.code != '202'
+        Appsignal.send_error(Exception.new(response.body), {}, 'services')
+        Airbrake::AirbrakeLogger.new(Logger.new(STDOUT)).error response.body
+      end
 
-      Appsignal.send_error(Exception.new(response.body), {}, 'services')
-      Airbrake::AirbrakeLogger.new(Logger.new(STDOUT)).error response.body
+      response
     end
 
     def search(email)
