@@ -37,7 +37,7 @@ class UserVerificationsController < ApplicationController
 
     if current_user && @group&.active && @group&.exam_body&.active
       seo_title_maker("Welcome to learnsignal #{@group.name}", @group.seo_description, nil)
-
+      @exam_body   = @group.exam_body
       @levels      = @group.levels.all_active
       @courses     = @group.courses.all_active.where(on_welcome_page: true)
       ip_country   = IpAddress.get_country(request.remote_ip)

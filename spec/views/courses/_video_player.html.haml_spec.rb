@@ -16,7 +16,7 @@ RSpec.describe 'rendering locals in a partial' do
     it 'shows as default players' do
       @vimeo_as_main = true
       stub_template 'courses/players/_vimeo.html.erb' => 'Vimeo partial - <%= cme.id %>'
-      render partial: 'courses/video_player', locals: { cme: vimeo_module, current_user: gb_user }
+      render partial: 'courses/video_player', locals: { cme: vimeo_module, responsive: false, autoPlay: false, current_user: gb_user }
       expect(response).to render_template(partial: 'courses/players/_vimeo')
     end
   end
@@ -34,14 +34,14 @@ RSpec.describe 'rendering locals in a partial' do
     it 'if it is a user has vimeo as video_player' do
       @vimeo_as_main = true
       stub_template 'courses/players/_vimeo.html.erb' => 'Vimeo partial - <%= cme.id %>'
-      render partial: 'courses/video_player', locals: { cme: vimeo_module, current_user: vimeo_user }
+      render partial: 'courses/video_player', locals: { cme: vimeo_module, responsive: false, autoPlay: false, current_user: vimeo_user }
       expect(response).to render_template(partial: 'courses/players/_vimeo')
     end
 
     it 'if it is a user has dacast as video_player' do
       @vimeo_as_main = true
       stub_template 'courses/players/_dacast.html.erb' => 'Dacast partial - <%= cme.id %>'
-      render partial: 'courses/video_player', locals: { cme: vimeo_module, current_user: dacast_user }
+      render partial: 'courses/video_player', locals: { cme: vimeo_module, responsive: false, autoPlay: false, current_user: dacast_user }
       expect(response).to render_template(partial: 'courses/players/_dacast')
     end
   end

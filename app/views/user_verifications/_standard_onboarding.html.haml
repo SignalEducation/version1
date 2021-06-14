@@ -3,15 +3,26 @@
   %article#start-screen
     .container
       %header.hero-section{style: 'padding-top: 2rem;'}
-        %h1.h1-hero.my-4
-          Welcome to learnsignal!
+        -if @exam_body.new_onboarding && current_user&.home_page&.onboarding_welcome_heading
+          %ul.step-bar
+            %li.active
+            %li
+            %li
+          %h1.h1-hero.my-4
+            =current_user.home_page.onboarding_welcome_heading
+        -else
+          %h1.h1-hero.my-4
+            Welcome to learnsignal!
         %p.p-hero.px-lg-6
-          We’re delighted you’ve decided to study with us. Let’s get started.
-      .pt-5.text-center
+          -if @exam_body.new_onboarding && current_user&.home_page&.onboarding_welcome_subheading
+            =current_user.home_page.onboarding_welcome_subheading.html_safe
+          -else
+            We’re delighted you’ve decided to study with us. Let’s get started.
+      .pt-2.text-center
         %btn.btn.btn-primary.onboarding-get-start{onclick: 'showLevelSelection(); return false;', data: { exam_body_id: @group&.exam_body&.id, exam_body_name: @group&.exam_body&.name, preferred_exam_body_id: current_user&.preferred_exam_body_id, preferred_exam_body: current_user&.preferred_exam_body&.name, banner: 'false', onboarding: current_user&.analytics_onboarding_valid?.to_s }}
           Get started
 
-    .container-bg.mt-7
+    .container-bg.mt-5
       .container
         %article.py-4
           %header.pb-sm-4.pb-md-5
@@ -30,20 +41,29 @@
       .d-none#level-selection-screen
         .container
           %header.hero-section{style: 'padding-top: 2rem;'}
-            %h1.h2-hero.my-4
-              -if @group.onboarding_level_heading.present?
+            -if @exam_body.new_onboarding && current_user&.home_page&.onboarding_level_heading
+              %ul.step-bar
+                %li.active
+                %li.active
+                %li
+              %h1.h2-hero.my-4
+                =current_user.home_page.onboarding_level_heading
+            -elsif @group.onboarding_level_heading.present?
+              %h1.h2-hero.my-4
                 =@group.onboarding_level_heading
-              -else
-                What level are you doing?
+            -else
+              What level are you doing?
             %p.p-hero.px-lg-6
-              -if @group.onboarding_level_subheading.present?
+              -if @exam_body.new_onboarding && current_user&.home_page&.onboarding_level_subheading
+                =current_user.home_page.onboarding_level_subheading.html_safe
+              -elsif @group.onboarding_level_subheading.present?
                 =@group.onboarding_level_subheading
               -else
                 Select your course so we can guide you on your learning journey
 
-        .container-bg.mt-4
+        .container-bg.mt-2
           .container-md
-            %article.py-4
+            %article.py-2
               %header.pb-sm-4.pb-md-5
                 .row
                   -@levels.each do |level|
@@ -59,6 +79,9 @@
             .py-2.text-center
               %btn.btn.btn-secondary.btn-sm.btn-sm-arrow-left.onboarding-back-button{onclick: 'showStartScreen(); return false;', data: { exam_body_id: @group&.exam_body&.id, exam_body_name: @group&.exam_body&.name, preferred_exam_body_id: current_user&.preferred_exam_body_id, preferred_exam_body: current_user&.preferred_exam_body&.name, banner: 'false', onboarding: current_user&.analytics_onboarding_valid?.to_s }}
                 Go Back
+              -if @exam_body.new_onboarding
+                =link_to library_special_link(@group), class: 'btn btn-secondary btn-sm btn-sm-arrow-right onboarding-skip-button', data: { exam_body_id: @group&.exam_body&.id, exam_body_name: @group&.exam_body&.name, preferred_exam_body_id: current_user&.preferred_exam_body_id, preferred_exam_body: current_user&.preferred_exam_body&.name, banner: 'false', onboarding: current_user&.analytics_onboarding_valid?.to_s, onboarding_step: 'Level Selection' } do
+                  Skip
 
 
 
@@ -66,19 +89,25 @@
         .d-none.course-selection-screens{id: "course-selection-screen-#{level.id}"}
           .container
             %header.hero-section{style: 'padding-top: 2rem;'}
+              -if @exam_body.new_onboarding
+                %ul.step-bar
+                  %li.active
+                  %li.active
+                  %li.active
               %h1.h2-hero.my-4
                 =level.onboarding_course_heading
               %p.p-hero.px-lg-6
                 =level.onboarding_course_subheading
 
-          .container-bg.mt-4
+          .container-bg.mt-2
             .container-md
-              %article.py-4
+              %article.py-2
                 %header.pb-sm-4.pb-md-5
                   .row.row-lg
                     -level.courses.all_active.all_in_order.each do |course|
                       .col-12.col-md-6
-                        =link_to course_special_link(course.first_active_cme), class: 'card card-horizontal flex-row card-mint onboarding-course course-link', data: { course_id: course.id, course_name: course.name, level_id: level.id, level_name: level.name, exam_body_id: @group&.exam_body&.id, exam_body_name: @group&.exam_body&.name, preferred_exam_body_id: current_user&.preferred_exam_body_id, preferred_exam_body: current_user&.preferred_exam_body&.name, banner: 'false', onboarding: current_user&.analytics_onboarding_valid?.to_s } do
+                        - link = @exam_body.new_onboarding ? course_special_link(course) : course_special_link(course.first_active_cme)
+                        =link_to link, class: 'card card-horizontal flex-row card-mint onboarding-course course-link', data: { course_id: course.id, course_name: course.name, level_id: level.id, level_name: level.name, exam_body_id: @group&.exam_body&.id, exam_body_name: @group&.exam_body&.name, preferred_exam_body_id: current_user&.preferred_exam_body_id, preferred_exam_body: current_user&.preferred_exam_body&.name, banner: 'false', onboarding: current_user&.analytics_onboarding_valid?.to_s } do
                           .card-header.d-flex.justify-content-center.align-items-center
                             %i{"aria-label" => course.icon_label, :role => "img", class: course.icon_label ? course.icon_label : 'budicon-office-bag-c', style: "color: #{course.highlight_colour};"}
                           .card-body.d-flex.flex-column.justify-content-center
@@ -89,6 +118,9 @@
                 .py-2.text-center
                   %btn.btn.btn-secondary.btn-sm.btn-sm-arrow-left.onboarding-back-button{onclick: 'showLevelSelection(); return false;', data: { level_id: level.id, level_name: level.name, exam_body_id: @group&.exam_body&.id, exam_body_name: @group&.exam_body&.name, preferred_exam_body_id: current_user&.preferred_exam_body_id, preferred_exam_body: current_user&.preferred_exam_body&.name, banner: 'false', onboarding: current_user&.analytics_onboarding_valid?.to_s }}
                     Go Back
+                  -if @exam_body.new_onboarding
+                    =link_to library_special_link(@group), class: 'btn btn-secondary btn-sm btn-sm-arrow-right onboarding-skip-button', data: { exam_body_id: @group&.exam_body&.id, exam_body_name: @group&.exam_body&.name, preferred_exam_body_id: current_user&.preferred_exam_body_id, preferred_exam_body: current_user&.preferred_exam_body&.name, banner: 'false', onboarding: current_user&.analytics_onboarding_valid?.to_s, onboarding_step: 'Course Selection' } do
+                      Skip
 
   - else
     .d-none.course-selection-screens{id: "fallback-course-selection-screen"}
@@ -104,7 +136,8 @@
               .row.row-lg
                 -@group.courses.all_active.all_in_order.each do |course|
                   .col-12.col-md-6
-                    =link_to course_special_link(course.first_active_cme), class: 'card card-horizontal flex-row card-mint onboarding-course course-link', data: { course_id: course.id, course_name: course.name, exam_body_id: @group&.exam_body&.id, exam_body_name: @group&.exam_body&.name, preferred_exam_body_id: current_user&.preferred_exam_body_id, preferred_exam_body: current_user&.preferred_exam_body&.name, banner: 'false', onboarding: current_user&.analytics_onboarding_valid?.to_s } do
+                    - link = @exam_body.new_onboarding ? course_special_link(course) : course_special_link(course.first_active_cme)
+                    =link_to link, class: 'card card-horizontal flex-row card-mint onboarding-course course-link', data: { course_id: course.id, course_name: course.name, exam_body_id: @group&.exam_body&.id, exam_body_name: @group&.exam_body&.name, preferred_exam_body_id: current_user&.preferred_exam_body_id, preferred_exam_body: current_user&.preferred_exam_body&.name, banner: 'false', onboarding: current_user&.analytics_onboarding_valid?.to_s } do
                       .card-header.d-flex.justify-content-center.align-items-center
                         %i{"aria-label" => course.icon_label, :role => "img", class: course.icon_label ? course.icon_label : 'budicon-office-bag-c', style: "color: #{course.highlight_colour};"}
                       .card-body.d-flex.flex-column.justify-content-center
@@ -115,6 +148,9 @@
             .py-2.text-center
               %btn.btn.btn-secondary.btn-sm.btn-sm-arrow-left.onboarding-back-button{onclick: 'showStartScreen(); return false;', data: { exam_body_id: @group&.exam_body&.id, exam_body_name: @group&.exam_body&.name, preferred_exam_body_id: current_user&.preferred_exam_body_id, preferred_exam_body: current_user&.preferred_exam_body&.name, banner: 'false', onboarding: current_user&.analytics_onboarding_valid?.to_s }}
                 Go Back
+              -if @exam_body.new_onboarding
+                =link_to library_special_link(@group), class: 'btn btn-secondary btn-sm btn-sm-arrow-right onboarding-skip-button', data: { exam_body_id: @group&.exam_body&.id, exam_body_name: @group&.exam_body&.name, preferred_exam_body_id: current_user&.preferred_exam_body_id, preferred_exam_body: current_user&.preferred_exam_body&.name, banner: 'false', onboarding: current_user&.analytics_onboarding_valid?.to_s, onboarding_step: 'Course Selection' } do
+                  Skip
 
 :javascript
   function showLevelSelection() {

@@ -151,7 +151,8 @@ class CourseLessonLog < ApplicationRecord
        user&.standard_student_user? &&
        user&.course_lesson_logs&.count <= 1 &&
        !user&.viewable_subscriptions&.any? &&
-       !user&.onboarding_process
+       !user&.onboarding_process &&
+       !user&.preferred_exam_body&.new_onboarding
 
       OnboardingProcess.create!(user_id: user_id, course_lesson_log_id: id)
     end

@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 class StudentSignUpsController < ApplicationController
-  before_action :check_logged_in_status, except: %i[landing group pricing]
+  before_action :check_logged_in_status, except: %i[landing group pricing new_landing]
   before_action :get_variables
-  before_action :create_user_object, only: %i[new sign_in_or_register sign_in_checkout landing]
+  before_action :create_user_object, only: %i[new sign_in_or_register sign_in_checkout landing new_landing]
   before_action :create_user_session_object, only: %i[sign_in_or_register sign_in_checkout landing]
-  before_action :layout_variables, only: %i[home landing]
+  before_action :layout_variables, only: %i[home landing new_landing]
   layout 'marketing'
 
   def home
@@ -75,7 +75,6 @@ class StudentSignUpsController < ApplicationController
           format.all { redirect_to(missing_page_url) }
         end
       end
-
       seo_title_maker(@home_page.seo_title, @home_page.seo_description, @home_page.seo_no_index)
     else
       redirect_to root_url
@@ -218,13 +217,37 @@ class StudentSignUpsController < ApplicationController
                     false)
   end
 
+  def new_landing
+    @home_page = HomePage.find_by(public_url: 'acca-free-lesson')
+    @group = @home_page.group
+    @exam_body = @group.exam_body
+    @currency_id =
+      if current_user&.currency_id
+        current_user.currency_id
+      else
+        ip_country = IpAddress.get_country(request.remote_ip)
+        country = ip_country || Country.find_by(name: 'United Kingdom')
+        country.currency_id
+      end
+
+    flash[:exam_body] = @exam_body.id if @exam_body
+    respond_to do |format|
+      format.html
+      format.all { redirect_to(missing_page_url) }
+    end
+
+    seo_title_maker(@home_page.seo_title, @home_page.seo_description, @home_page.seo_no_index)
+    @footer = 'white'
+    @form_type = 'Landing Page Contact'
+  end
+
   private
 
   def student_allowed_params
     params.require(:user).permit(
       :email, :first_name, :last_name, :preferred_exam_body_id, :country_id,
       :locale, :password, :password_confirmation, :terms_and_conditions,
-      :communication_approval
+      :communication_approval, :home_page_id
     )
   end
 

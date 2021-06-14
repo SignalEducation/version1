@@ -52,6 +52,47 @@ describe 'User Onboarding process', type: :feature, js: true do
     end
   end
 
+  context 'User visits the new onboarding page' do
+    let!(:user_group) { create(:student_user_group) }
+    let!(:home_page)  { create(:home_page) }
+    let!(:student)    { create(:inactive_student_user, preferred_exam_body: exam_body, user_group: user_group, home_page: home_page) }
+
+    scenario 'Loading onboarding page' do
+      exam_body.update(new_onboarding: true)
+      visit user_verification_path(email_verification_code: student.email_verification_code,
+                                   group_url: group.name_url)
+      sleep(3)
+
+      find('#start-screen').should have_content(home_page.onboarding_welcome_heading)
+
+      # Welcome Page
+      expect(page).to have_content(home_page.onboarding_welcome_heading)
+      expect(page).to have_content(home_page.onboarding_welcome_subheading)
+      expect(page).to have_content('Get started')
+      find('.onboarding-get-start').click
+
+      # Level Selection Page
+      expect(page).to have_content(home_page.onboarding_level_heading)
+      expect(page).to have_content(home_page.onboarding_level_subheading)
+      expect(page).to have_content(level_1.name)
+      find('.onboarding-level').click
+
+      # Course Selection Page
+      expect(page).to have_content(level_1.onboarding_course_heading)
+      expect(page).to have_content(level_1.onboarding_course_subheading)
+      find('.course-link').click
+
+      # Course Page - Modal Video
+      expect(page).to have_content(course_1.name)
+      expect(page).to have_content(course_lesson_1.name)
+      sleep(3)
+      within('.modal') do
+        expect(page).to have_content(course_step_1.name)
+      end
+
+    end
+  end
+
   context 'User visits the root page' do
     let(:group)      { create(:group) }
     let(:user_group) { create(:student_user_group) }

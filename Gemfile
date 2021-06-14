@@ -11,7 +11,7 @@ gem 'puma', '~> 3.12.4'
 gem 'airbrake', '~> 9.5'
 gem 'authlogic', '~> 6.1.0'
 gem 'ahoy_matey', '>= 3.0.0' # visit tracking
-gem 'appsignal'
+gem 'appsignal', '~> 2.11.0'
 gem 'uuidtools', '~> 2.1', '>= 2.1.5'
 gem 'blazer', '~> 2.1'
 gem 'scrypt' # S-Crypt for Authlogic

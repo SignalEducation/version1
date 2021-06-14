@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_06_073029) do
+ActiveRecord::Schema.define(version: 2021_05_21_151133) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -782,6 +782,7 @@ ActiveRecord::Schema.define(version: 2021_05_06_073029) do
     t.string "pricing_seo_title"
     t.string "pricing_seo_description"
     t.string "hubspot_property"
+    t.boolean "new_onboarding", default: false, null: false
     t.index ["name"], name: "index_exam_bodies_on_name"
   end
 
@@ -960,6 +961,10 @@ ActiveRecord::Schema.define(version: 2021_05_06_073029) do
     t.text "stats_content"
     t.text "course_description"
     t.text "header_description"
+    t.string "onboarding_welcome_heading"
+    t.text "onboarding_welcome_subheading"
+    t.string "onboarding_level_heading"
+    t.text "onboarding_level_subheading"
     t.index ["course_id"], name: "index_home_pages_on_course_id"
     t.index ["group_id"], name: "index_home_pages_on_group_id"
     t.index ["public_url"], name: "index_home_pages_on_public_url"
@@ -1646,6 +1651,7 @@ ActiveRecord::Schema.define(version: 2021_05_06_073029) do
     t.bigint "currency_id"
     t.string "tutor_link"
     t.integer "video_player", default: 0, null: false
+    t.integer "home_page_id"
     t.index ["country_id"], name: "index_users_on_country_id"
     t.index ["currency_id"], name: "index_users_on_currency_id"
     t.index ["preferred_exam_body_id"], name: "index_users_on_preferred_exam_body_id"

@@ -5,11 +5,12 @@
   let course_log_id = "#{@course_log.try(:id) || ''}";
   let section_log_id = "#{@course_section_log.try(:id) || ''}";
   let exam_track_id = "#{@course_lesson_log.try(:id) || ''}";
-  let freeLesson = "#{@course_lesson.free}";
-  let lastLessonStep = "#{@course_lesson.course_steps.all_in_order.all_active.last.id}";
+  let freeLesson = "#{@course_lesson&.free || autoPlay}";
+  let lastLessonStep = "#{@course_lesson&.course_steps&.all_in_order&.all_active&.last&.id}";
   let endStepVidTime = "#{cme.vid_end_seconds || ''}";
-  let updateFreeLesson = #{@course_lesson.free ? 0.30 : 0.90};
-  let completionPercent = #{@course_lesson.free ? 0.30 : 0.90};
+  let updateFreeLesson = #{@course_lesson&.free ? 0.30 : 0.90};
+  let completionPercent = #{@course_lesson&.free ? 0.30 : 0.90};
+  let responsive = "#{responsive}";
   let logId = '';
   let updateFired = false;
   let options = {
@@ -18,7 +19,8 @@
     webkitAllowFullScreen: true,
     mozallowfullscreen: true,
     allowFullScreen: true,
-    autoplay: freeLesson
+    autoplay: freeLesson,
+    responsive: responsive
   };
 
   let player = new Vimeo.Player('video-player-window', options);
