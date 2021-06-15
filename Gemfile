@@ -8,10 +8,10 @@ gem 'rails', '5.2.2'
 gem 'puma', '~> 3.12.4'
 
 # Core gems - common to all environments
-gem 'airbrake', '~> 9.5'
+gem 'airbrake'
 gem 'authlogic', '~> 6.1.0'
 gem 'ahoy_matey', '>= 3.0.0' # visit tracking
-gem 'appsignal', '~> 2.11.0'
+gem 'appsignal', '~> 2.0.0'
 gem 'uuidtools', '~> 2.1', '>= 2.1.5'
 gem 'blazer', '~> 2.1'
 gem 'scrypt' # S-Crypt for Authlogic
