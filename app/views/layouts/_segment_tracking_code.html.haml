@@ -2,19 +2,19 @@
   let segmentKey = "#{Rails.application.credentials[Rails.env.to_sym][:segment][:client_key]}";
   let justLoggedIn = "#{flash[:just_signed_in]}";
   let justVerified = "#{flash[:datalayer_verify]}";
-  let banner = "#{@banner.present?.to_s}";
-  let preferredExamBodyId = "#{current_user&.preferred_exam_body_id}";
-  let preferredExamBody = "#{current_user&.preferred_exam_body&.name}";
-  let onboarding = "#{current_user&.analytics_onboarding_valid?.to_s}";
+  let siteBanner = "#{@banner.present?.to_s}";
+  let prefExamBodyId = "#{current_user&.preferred_exam_body_id}";
+  let prefExamBody = "#{current_user&.preferred_exam_body&.name}";
+  let ob = "#{current_user&.analytics_onboarding_valid?.to_s}";
 
   !function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","once","off","on","addSourceMiddleware","addIntegrationMiddleware","setAnonymousId","addDestinationMiddleware"];analytics.factory=function(e){return function(){var t=Array.prototype.slice.call(arguments);t.unshift(e);analytics.push(t);return analytics}};for(var e=0;e<analytics.methods.length;e++){var key=analytics.methods[e];analytics[key]=analytics.factory(key)}analytics.load=function(key,e){var t=document.createElement("script");t.type="text/javascript";t.async=!0;t.src="https://cdn.segment.com/analytics.js/v1/" + key + "/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(t,n);analytics._loadOptions=e};analytics.SNIPPET_VERSION="4.13.1";
     analytics.load(segmentKey);
 
     analytics.page( {
-      preferredExamBodyId: preferredExamBodyId,
-      preferredExamBody: preferredExamBody,
-      onboarding: onboarding,
-      banner: banner
+      preferredExamBodyId: prefExamBodyId,
+      preferredExamBody: prefExamBody,
+      onboarding: ob,
+      banner: siteBanner
     });
 
     if ((justLoggedIn === 'true') || (justVerified === 'true')) {
