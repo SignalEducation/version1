@@ -28,5 +28,9 @@ FactoryBot.define do
     product
     user
     order
+
+    trait :submission_uploaded do
+      submission  { File.new(Rails.root.join('spec/support/fixtures/file.pdf')) }
+    end
   end
 end

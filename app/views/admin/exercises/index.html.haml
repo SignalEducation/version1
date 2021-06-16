@@ -57,13 +57,12 @@
 
           .row
             .col-sm
-              .search-container
-                -if @user
-                  =link_to "Assign Exercise to  #{@user.name}", new_admin_user_exercise_path(@user), class: 'btn btn-primary'
-                -else
-                  =link_to 'Generate Daily Summary', generate_daily_summary_admin_exercises_path, class: 'btn btn-primary'
-                  =link_to '#', {"data-target" => "#csv-upload-modal", "data-toggle" => "modal", :href => "#"} do
-                    .btn.btn-primary.btn-sm
-                      Bulk Assign Exercises
+              -if @user
+                =link_to "Assign Exercise to  #{@user.name}", new_admin_user_exercise_path(@user), class: 'btn btn-primary'
+              -else
+                =link_to 'Generate Daily Summary', generate_daily_summary_admin_exercises_path, class: 'btn btn-primary'
+                =link_to '#', {"data-target" => "#csv-upload-modal", "data-toggle" => "modal", :href => "#"} do
+                  .btn.btn-primary.btn-sm
+                    Bulk Assign Exercises
 
 =render partial: 'csv_import_modal'
