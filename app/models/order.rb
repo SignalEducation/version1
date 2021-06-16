@@ -138,9 +138,9 @@ class Order < ApplicationRecord
                     card_country user_country hubspot_source hubspot_source_1 hubspot_source_2 first_visit_source
                     first_visit_utm_campaign first_visit_medium first_visit_date first_visit_referring_domain
                     first_visit_landing_page first_visit_referrer
-
                     order_id order_created name product_name stripe_id paypal_guid state
-                    product_type leading_symbol price user_country card_country]
+                    product_type leading_symbol price user_country card_country
+                    user_subscriptions_revenue user_orders_revenue user_total_revenue]
 
     CSV.generate(options) do |csv|
       csv << attributes
@@ -235,6 +235,11 @@ class Order < ApplicationRecord
     return product.cbe.course.exam_body.id if product.cbe?
 
     product.group.exam_body.id
+  end
+
+  # kind -> increment! || decrement!
+  def update_revenue(kind, value)
+    user.send(kind, :orders_revenue, value)
   end
 
   protected

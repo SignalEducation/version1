@@ -659,6 +659,10 @@ class User < ApplicationRecord
     Group.find_by(exam_body_id: preferred_exam_body_id)
   end
 
+  def total_revenue
+    subscriptions_revenue + orders_revenue
+  end
+
   private
 
   def add_guid
