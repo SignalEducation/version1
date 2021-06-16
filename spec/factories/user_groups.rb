@@ -24,19 +24,19 @@
 
 FactoryBot.define do
   factory :user_group do
-    sequence(:name)                      { |n| "User Group #{n}" }
-    description                          { 'Lorem ipsum' }
-    tutor                                 { false }
-    system_requirements_access            { false }
-    content_management_access             { false }
-    stripe_management_access              { false }
-    user_management_access                { false }
-    developer_access                      { false }
-    marketing_resources_access            { false }
-    user_group_management_access          { false }
-    student_user                          { false }
-    trial_or_sub_required                 { false }
-    blocked_user                          { false }
+    sequence(:name)              { |n| "User Group #{n}" }
+    description                  { 'Lorem ipsum' }
+    tutor                        { false }
+    system_requirements_access   { false }
+    content_management_access    { false }
+    stripe_management_access     { false }
+    user_management_access       { false }
+    developer_access             { false }
+    marketing_resources_access   { false }
+    user_group_management_access { false }
+    student_user                 { false }
+    trial_or_sub_required        { false }
+    blocked_user                 { false }
 
     factory :student_user_group do
       name { 'Individual Student Group' }
@@ -58,22 +58,22 @@ FactoryBot.define do
 
     factory :system_requirements_user_group do
       name { 'System Requirements User Group' }
-      system_requirements_access                { true }
+      system_requirements_access { true }
     end
 
     factory :content_management_user_group do
       name { 'Content Management User Group' }
-      content_management_access                { true }
+      content_management_access { true }
     end
 
     factory :stripe_management_user_group do
       name { 'Stripe Management User Group' }
-      stripe_management_access                { true }
+      stripe_management_access { true }
     end
 
     factory :user_management_user_group do
       name { 'User Management User Group' }
-      user_management_access                { true }
+      user_management_access { true }
     end
 
     factory :developers_user_group do
@@ -88,28 +88,28 @@ FactoryBot.define do
 
     factory :marketing_manager_user_group do
       name { 'Marketing Manager User Group' }
-      marketing_resources_access                { true }
+      marketing_resources_access { true }
     end
 
     factory :user_group_manager_user_group do
       name { 'User Group Manager' }
-      user_group_management_access                { true }
+      user_group_management_access { true }
     end
 
     factory :admin_user_group do
       name { 'Site Admin Group' }
-      system_requirements_access            { true }
-      content_management_access             { true }
-      stripe_management_access              { true }
-      user_management_access                { true }
-      developer_access                      { false }
-      user_group_management_access          { true }
-      site_admin                            { true }
+      system_requirements_access   { true }
+      content_management_access    { true }
+      stripe_management_access     { true }
+      user_management_access       { true }
+      developer_access             { false }
+      user_group_management_access { true }
+      site_admin                   { true }
     end
 
     factory :blocked_user_group do
       name { 'Blocked Users User Group' }
-      blocked_user                { true }
+      blocked_user { true }
     end
   end
 end

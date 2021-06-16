@@ -13,9 +13,9 @@ module Admin
       @cbes = Cbe.all.order(created_at: :desc)
     end
 
-    def show; end
-
     def new; end
+
+    def show; end
 
     def clone
       CbeCloneWorker.perform_async(@cbe.id, current_user.id, admin_cbes_path)
