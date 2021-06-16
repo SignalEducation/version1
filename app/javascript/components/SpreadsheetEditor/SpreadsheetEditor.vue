@@ -208,6 +208,7 @@
         const fbx = new GC.Spread.Sheets.FormulaTextBox.FormulaTextBox(this.$refs.fbxRef);
         fbx.workbook(spread);
         this.flex = spread.getSheet(0);
+        this.flex.options.clipBoardOptions = GC.Spread.Sheets.ClipboardPasteOptions.values;
         if (this.spreadsheetData) {
           spread.suspendPaint();
           this.flex.setDataSource(this.flex.fromJSON(JSON.parse(JSON.stringify(this.spreadsheetData))));
