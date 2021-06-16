@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="solutionContent[this.indexOfQuestion]">
       <button id="modal-solution-v1" @click="show('modal-solution-v1')" href="#solutionModal" class="btn btn-settings solution-btn-title components-sidebar-links">Solution</button>
       <button v-if="loading" class="btn btn-settings solution-btn-title"><div class="vue-loader vue-loader-alt"></div></button>
         <VueModal
