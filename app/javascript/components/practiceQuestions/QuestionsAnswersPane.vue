@@ -26,6 +26,7 @@
 
         <div v-else>
           <spreadsheet-editor
+            :style="{ minWidth: this.spreadSheetWidth }"
             :initial-data="convertStr2Obj(questionContent.answer_content)"
             :key="questionContent.id"
             @spreadsheet-updated="syncSpreadsheetData"
@@ -82,6 +83,7 @@ export default {
       questionContent: null,
       fillArr: null,
       lastTimeUpdated: new Date(),
+      spreadSheetWidth: '800px'
     };
   },
   mounted() {
@@ -99,6 +101,9 @@ export default {
   },
   async created() {
     this.questionContent = this.questionContentArray[this.activePage - 1];
+    eventBus.$on("splitpane-resize", (splitWidth) => {
+      this.spreadSheetWidth = splitWidth;
+    })
   },
   methods: {
     handleChange(value) {
