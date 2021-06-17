@@ -67,6 +67,7 @@
   /* eslint-disable */
   import Vue from 'vue';
   import VueObserveVisibility from 'vue-observe-visibility';
+
   Vue.use(VueObserveVisibility);
 
   const licenseKey = () => {
@@ -85,6 +86,7 @@
   import CopyPasteBar from './components/CopyPasteBar.vue';
   import FormatBar from './components/FormatBar.vue';
   import FileBar from './components/FileBar.vue';
+  import eventBus from "../cbe/EventBus.vue";
 
   import './SpreadsheetEditor.scss';
 
@@ -95,6 +97,7 @@
       CopyPasteBar,
       FileBar,
       FormatBar,
+      eventBus
     },
     props: {
       initialData: {
@@ -225,6 +228,9 @@
         for (var i = 0; i < this.flex.getColumnCount(); i++) {
           this.flex.autoFitColumn(i);
         }
+        eventBus.$on("refresh-spreadsheet-cells", (status) => {
+          if(status) spread.refresh()
+        });
       },
       fontSizeChanged(value) {
         let sel = this.flex.getSelections()[0];
