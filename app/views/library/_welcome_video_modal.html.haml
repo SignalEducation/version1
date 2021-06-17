@@ -20,9 +20,9 @@
     let playedFired = false;
     let completedUpdateFired = false;
 
-    let welcomeOnLoad = function(data) {
+    $(document).ready(function(){
       updateHubSpotContact({'onboarding_course': "#{@course.name}", 'welcome_video': 'Not Started'})
-    };
+    });
 
     let welcomeOnPlay = function(data) {
       if (playedFired === false) {
@@ -35,17 +35,16 @@
       // trigger completed if video time was more than 50%
       if (data.percent >= 0.50 && completedUpdateFired === false) {
         completedUpdateFired = true;
-        updateHubSpotContact({'welcome_video': 'Completed'})
+        updateHubSpotContact({'onboarding_course': "#{@course.name}", 'welcome_video': 'Completed'})
       }
     };
 
     let welcomeOnEnd = function(data) {
-      updateHubSpotContact({'welcome_video': 'Completed'})
+      updateHubSpotContact({'onboarding_course': "#{@course.name}", 'welcome_video': 'Completed'})
     };
 
 
     function updateHubSpotContact(properties) {
-      console.log(properties)
       $.ajax({
         url: "#{user_update_hubspot_path(current_user.id)}",
         method: 'post',
@@ -66,9 +65,8 @@
 
     $('#welcome-video-modal').on('hidden.bs.modal', function (e) {
       player.pause()
-    })
+    });
 
-    player.on('bufferstart', welcomeOnLoad)
     player.on('timeupdate', welcomeOnUpdate);
     player.on('play', welcomeOnPlay);
     player.on('ended', welcomeOnEnd);
