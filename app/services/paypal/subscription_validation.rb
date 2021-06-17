@@ -77,6 +77,7 @@ module Paypal
                 end.any?
 
       PaypalSubscriptionsService.new(@subscription).cancel_billing_agreement_immediately
+      notify_cancellation_slack(@subscription)
     end
 
     def check_suspended_status
@@ -115,6 +116,18 @@ module Paypal
       error_msg = "PAYPAL SYNC ERROR: Weird PayPal state for subscription #{@subscription.id}"
       Appsignal.send_error(Exception.new(error_msg))
       Airbrake.notify(error_msg)
+    end
+
+    def notify_cancellation_slack(subscription)
+      slack          = SlackService.new
+      message_params = [{ fallback: "Paypay cron job cancelled subscription ##{subscription.id}.",
+                          title: "Paypay cron job cancelled subscription ##{subscription.id}.",
+                          title_link: "https://learnsignal.com/en/subscription_management/#{subscription.id}",
+                          color: '#7CD197',
+                          footer: 'PayPal',
+                          ts: subscription.cancelled_at }]
+
+      slack.notify_channel('payments', message_params, icon_emoji: 'rotating_light') if Rails.env.production?
     end
   end
 end
