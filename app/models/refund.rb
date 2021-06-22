@@ -45,6 +45,7 @@ class Refund < ApplicationRecord
   # callbacks
   before_destroy :check_dependencies
   after_create :create_on_stripe
+  after_save :update_total_revenue
 
   # scopes
   scope :all_in_order, -> { order(:stripe_guid) }
@@ -58,7 +59,8 @@ class Refund < ApplicationRecord
                     first_visit_date first_visit_referring_domain first_visit_landing_page
                     first_visit_referrer refund_id refunded_on refund_status stripe_id refund_amount
                     inv_total inv_created invoice_type sub_status sub_type first_visit
-                    first_visit_search_keyword first_visit_country]
+                    first_visit_search_keyword first_visit_country user_subscriptions_revenue
+                    user_orders_revenue user_total_revenue]
 
     CSV.generate(options) do |csv|
       csv << attributes
@@ -71,6 +73,12 @@ class Refund < ApplicationRecord
   # instance methods
   def destroyable?
     false
+  end
+
+  def update_total_revenue
+    return if subscription_id.nil?
+
+    subscription.update_revenue(:decrement!, amount)
   end
 
   protected

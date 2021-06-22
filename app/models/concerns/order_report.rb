@@ -118,4 +118,16 @@ module OrderReport
   def hubspot_source_1; end
 
   def hubspot_source_2; end
+
+  def user_subscriptions_revenue
+    user.subscriptions_revenue
+  end
+
+  def user_orders_revenue
+    user.orders_revenue
+  end
+
+  def user_total_revenue
+    user.total_revenue
+  end
 end

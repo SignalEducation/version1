@@ -12,10 +12,12 @@ module HubSpot
 
       response = service(path, body)
 
-      return response if response.code == '200'
+      if response.code != '200'
+        Appsignal.send_error(Exception.new(response.body), {}, 'services')
+        Airbrake::AirbrakeLogger.new(Logger.new(STDOUT)).error response.body
+      end
 
-      Appsignal.send_error(Exception.new(response.body), {}, 'services')
-      Airbrake::AirbrakeLogger.new(Logger.new(STDOUT)).error response.body
+      response
     end
 
     private

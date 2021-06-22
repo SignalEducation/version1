@@ -118,6 +118,14 @@ class StripeApiEvent < ApplicationRecord
         "#{payload}.")
       log_process_error('Livemode incorrect')
     end
+  rescue => e
+    Rails.logger.error("ERROR: StripeApiEvent#sync_data_from_stripe: #{e.inspect}.")
+    assign_attributes(error: true, error_message: "Error: #{e.inspect}.")
+    if Rails.env.production?
+      SlackService.new.notify_channel('payments',
+                                      webhook_failed_notification(e, webhook_object[:id]),
+                                      icon_emoji: 'rotating_light')
+    end
   end
 
   def sync_data_from_stripe
@@ -130,6 +138,11 @@ class StripeApiEvent < ApplicationRecord
   rescue Stripe::StripeError => e
     Rails.logger.error("ERROR: StripeApiEvent#sync_data_from_stripe: #{e.inspect}.")
     assign_attributes(error: true, error_message: "Error: #{e.inspect}.")
+    if Rails.env.production?
+      SlackService.new.notify_channel('payments',
+                                      webhook_failed_notification(e, guid),
+                                      icon_emoji: 'rotating_light')
+    end
   end
 
   protected
@@ -290,5 +303,14 @@ class StripeApiEvent < ApplicationRecord
   def log_process_error(error_message)
     Rails.logger.error "DEBUG: Stripe event processing error: #{error_message}"
     update!(processed: false, error_message: error_message, error: true)
+    webhook_failed_notification(error_message, 'general')
+  end
+
+  def webhook_failed_notification(error, stripe_event_id)
+    [{ fallback: "Stripe webhook ##{stripe_event_id} have failed.",
+       title: "Stripe webhook ##{stripe_event_id} have failed.\nError: #{error.inspect}",
+       title_link: "https://dashboard.stripe.com/events/#{stripe_event_id}",
+       color: '#7CD197',
+       footer: 'Stripe' }]
   end
 end

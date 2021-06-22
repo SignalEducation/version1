@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="solutionContent[this.indexOfQuestion]">
       <button id="modal-solution-v1" @click="show('modal-solution-v1')" href="#solutionModal" class="btn btn-settings solution-btn-title components-sidebar-links">Solution</button>
       <button v-if="loading" class="btn btn-settings solution-btn-title"><div class="vue-loader vue-loader-alt"></div></button>
         <VueModal
@@ -81,7 +81,6 @@ export default {
     this.$nextTick(function () {
         $('#solutionModal').draggable({ handle:'.modal2-header-lg, .draggable-overlay'});
     })
-    this.getModalInnerHeight();
   },
   methods: {
     syncSpreadsheetData(jsonData) {
@@ -93,15 +92,6 @@ export default {
     },
     handleChange(value) {
       this.modalIsOpen = value;
-    },
-    getModalInnerHeight() {
-      let elem = $("#modal-solution-v1-inner-content").height();
-      console.log(`height: ${(elem/2)+20}`);
-      if (elem<100) {
-        document.getElementById('modal2-body-id').style.height = '485px';
-      } else {
-        document.getElementById('modal2-body-id').style.height = `${(elem/2)+20}px`;
-      }
     },
     show (id) {
       this.loading = true;

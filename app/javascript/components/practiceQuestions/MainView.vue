@@ -37,6 +37,7 @@
         class="practice-question-theme"
         :style="{ height: '70vh' }"
         :key="stepLogId"
+        @resize="splitResize()"
       >
         <span v-if="practiceQuestion.kind == 'standard'">
           <ScenarioPane :content="practiceQuestion.content" />
@@ -266,6 +267,10 @@ export default {
     },
     refreshSheetLayout() {
       window.dispatchEvent(new Event("resize"));
+    },
+    splitResize() { 
+      var updatedWidth = Number($("#pane_1").width()) + 5;
+      eventBus.$emit('splitpane-resize', updatedWidth.toString()  + "px")
     },
   },
 };

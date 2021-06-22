@@ -19,7 +19,7 @@ FactoryBot.define do
   factory :cbe_requirements, class: Cbe::Requirement do
     name     { Faker::Lorem.word }
     kind     { Cbe::Requirement.kinds.keys.sample }
-    score    { Faker::Number.decimal(l_digits: 1, r_digits: 2) }
+    score    { Faker::Number.between(from: 1.0, to: 10.0) }
     content  { Faker::Lorem.sentence }
     solution { Faker::Lorem.sentence }
     sequence(:sorting_order)

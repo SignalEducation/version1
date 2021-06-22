@@ -25,12 +25,15 @@
                     %th
                       Last Name
                     %th
+                      Preferred Exam Body
+                    %th
                       Errors
                 %tbody
                   -@users.each_with_index do |user, idx|
                     =hidden_field_tag "csvdata[#{idx}][email]",      user.email
                     =hidden_field_tag "csvdata[#{idx}][first_name]", user.first_name
                     =hidden_field_tag "csvdata[#{idx}][last_name]",  user.first_name
+                    =hidden_field_tag "csvdata[#{idx}][preferred_exam_body_id]", user.preferred_exam_body_id
 
                     - errors = preview_csv_user_errors(user.errors)
                     %tr{id: "csvdata-#{idx}"}
@@ -40,6 +43,8 @@
                         =user.first_name
                       %td
                         =user.last_name
+                      %td
+                        =user.preferred_exam_body&.name
                       %td
                         =errors.map { |e| "<p style= 'color: #dc3545;'>#{e}</p>" }.join("\n").html_safe
 

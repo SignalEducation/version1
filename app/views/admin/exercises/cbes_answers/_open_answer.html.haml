@@ -5,7 +5,7 @@
     .row
       -if question_kind == 'open'
         %div{ id: "questionContent-#{question.answers.first.id}" }
-        =text_area_tag(:question_content, question.answers.first.content['text'], id: "#{question.answers.first.id}-editor", as: 'summernote')
+        =text_area_tag(:question_content, question.answers.first.content['text'], id: "#{question.answers.first.id}-question-editor", as: 'summernote')
         -# TODO, change this to our vue text editor component
         -# I needed to remove because vue component is not showing
         -# when have more then one question.
@@ -34,20 +34,20 @@
           .form-group
             .input-group.input-group-lg
               =label_tag :educator_comment, 'Comment (optional)'
-              =text_area_tag(:educator_comment, question.educator_comment, id: "#{question.id}-editor", as: 'summernote')
+              =text_area_tag(:educator_comment, question.educator_comment, id: "#{question.id}-answer-editor", as: 'summernote')
       .row.pt-5
         .col-sm-6
-          =submit_tag("Update", class: 'btn btn-primary')
+          =submit_tag("Update", class: 'btn btn-primary', id: "update_question_score_btn_#{question.id}")
           %div{:id => "#{question.id}-response"}
 
 
 :javascript
-  $("##{question.id}-editor").summernote({
+  $("##{question.id}-question-editor").summernote({
     disableDragAndDrop: true,
     height: 150
   });
 
-   $("##{question.answers.first.id}-editor").summernote({
+   $("##{question.answers.first.id}-answer-editor").summernote({
     disableDragAndDrop: true,
     height: 150
   });

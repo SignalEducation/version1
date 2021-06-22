@@ -97,6 +97,7 @@ describe PaypalWebhook do
           before :each do
             @sub_double = double(paypal_status: 'Active', paypal_subscription_guid: nil)
             allow(invoice).to receive(:subscription).and_return(@sub_double)
+            allow_any_instance_of(Invoice).to receive(:update_total_revenue).and_return(true)
           end
 
           it 'does not update the subscription object' do
@@ -110,6 +111,7 @@ describe PaypalWebhook do
           before :each do
             @sub_double = double(paypal_status: 'Pending', paypal_subscription_guid: nil)
             allow(invoice).to receive(:subscription).and_return(@sub_double)
+            allow_any_instance_of(Invoice).to receive(:update_total_revenue).and_return(true)
           end
 
           it 'updates the paypal_status of the subscription to Active' do

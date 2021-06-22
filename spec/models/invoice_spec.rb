@@ -86,13 +86,14 @@ describe Invoice do
   it { should validate_length_of(:object_type).is_at_most(255) }
   it { should validate_length_of(:charge_guid).is_at_most(255) }
   it { should validate_length_of(:subscription_guid).is_at_most(255) }
+
   ## validation of strip_invoice
   before { allow(subject).to receive(:strip_invoice?).and_return(true) }
   it { should validate_presence_of(:subscription_id) }
   it { should validate_presence_of(:number_of_users) }
 
-
   # callbacks
+  it { should callback(:update_total_revenue).before(:save) }
   it { should callback(:check_dependencies).before(:destroy) }
   it { should callback(:set_vat_rate).after(:create) }
 
@@ -110,6 +111,7 @@ describe Invoice do
   it { should respond_to(:destroyable?) }
   it { should respond_to(:status) }
   it { should respond_to(:update_from_stripe) }
+  it { should respond_to(:update_total_revenue) }
 
   describe 'Concern' do
     it_behaves_like 'invoice_report'
@@ -369,6 +371,38 @@ describe Invoice do
                                                             'first_visit_date',
                                                             'first_visit_referring_domain',
                                                             'first_visit_landing_page') }
+    end
+  end
+
+  describe '.update_total_revenue' do
+    before(:each) do
+      allow_any_instance_of(Invoice).to receive(:status).and_return('Paid')
+    end
+
+    let(:user)                  { create(:user) }
+    let(:subscription)          { create(:subscription, user: user) }
+    let(:order)                 { create(:order, user: user) }
+    let!(:order_invoice)        { create(:invoice, user: user, order: order) }
+    let!(:subscription_invoice) { create(:invoice, user: user, subscription: subscription) }
+
+    context 'Subscription invoices' do
+      it 'update user total_revenue from subscription invoices' do
+        expect { subscription_invoice.update_total_revenue }.to change { user.total_revenue }.from(0).to(subscription_invoice.total)
+      end
+
+      it 'update user subscriptions_revenue from subscription invoices' do
+        expect { subscription_invoice.update_total_revenue }.to change { user.subscriptions_revenue }.from(0).to(subscription_invoice.total)
+      end
+    end
+
+    context 'Order invoices' do
+      it 'update user total_revenue from subscription invoices' do
+        expect { order_invoice.update_total_revenue }.to change { user.total_revenue }.from(0).to(order_invoice.total)
+      end
+
+      it 'update user orders_revenue from subscription invoices' do
+        expect { order_invoice.update_total_revenue }.to change { user.orders_revenue }.from(0).to(order_invoice.total)
+      end
     end
   end
 end

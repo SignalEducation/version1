@@ -443,6 +443,12 @@ class Subscription < ApplicationRecord
     { code: coupon.code, price_discounted: coupon.price_discounted(subscription_plan_id) }
   end
 
+  # kind -> increment! || decrement!
+  def update_revenue(kind, value)
+    send(kind, :total_revenue, value)
+    user.send(kind, :subscriptions_revenue, value)
+  end
+
   protected
 
   def create_subscription_payment_card

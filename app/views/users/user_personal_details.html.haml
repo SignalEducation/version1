@@ -96,4 +96,20 @@
                 -if @user.email_verified
                   =humanize_datetime(@user.email_verified_at)
 
+            .col-sm-6
+              .h3
+                Subscriptions Total Revenue
+              .h6
+                =number_in_local_currency(@user.subscriptions_revenue, @user.currency)
 
+            .col-sm-6
+              .h3
+                Orders Total Revenue
+              .h6
+                =number_in_local_currency(@user.orders_revenue, @user.currency)
+
+            .col-sm-6
+              .h3
+                Total Revenue
+              .h6
+                =number_in_local_currency(@user.total_revenue, @user.currency)

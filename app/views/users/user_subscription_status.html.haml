@@ -27,6 +27,8 @@
                   %th
                     Provider
                   %th
+                    Revenue
+                  %th
 
               %tbody
                 -@subscriptions.each do |subscription|
@@ -41,6 +43,8 @@
                       =subscription.state.camelcase
                     %td
                       =subscription.stripe? ? 'Stripe' : 'PayPal'
+                    %td
+                      =number_in_local_currency(subscription.total_revenue, subscription.subscription_plan.currency)
                     %td
                       =link_to subscription_management_url(subscription) do
                         .btn.btn-secondary.btn-xs
