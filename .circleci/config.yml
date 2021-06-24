@@ -55,7 +55,10 @@ jobs:
           paths:
             - ~/.cache/yarn
 
-      - run: bundle exec rake webpacker:compile
+      - run:
+          name: Webpacker compile
+          command: bundle exec rake webpacker:compile
+          no_output_timeout: 30m
 
       - run:
           name: Wait for DB
