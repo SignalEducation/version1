@@ -56,6 +56,7 @@ class Group < ApplicationRecord
   validates_attachment_content_type :background_image, content_type: /\Aimage\/.*\Z/
 
   # callbacks
+  before_save :filter_disclaimer_text
   before_destroy :check_dependencies
 
   # scopes
@@ -104,4 +105,9 @@ class Group < ApplicationRecord
     attributes['name'].blank? && attributes['name_url'].blank?
   end
 
+  def filter_disclaimer_text
+    return unless attributes['disclaimer'].blank? || attributes['disclaimer'] == '<p><br></p>'
+
+    self.disclaimer = nil
+  end
 end

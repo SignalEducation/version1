@@ -904,6 +904,8 @@ en:
         seo_description_placeholder: SEO Description
         short_description: Short Description
         short_description_placeholder: Subheading Tagline
+        disclaimer: Disclaimer
+        disclaimer_placeholder: Disclaimer text
         onboarding_level_heading: Onboarding Heading
         onboarding_level_heading_placeholder: Onboarding Heading
         onboarding_level_subheading: Onboarding Sub-Heading
