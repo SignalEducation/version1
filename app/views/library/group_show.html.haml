@@ -1,7 +1,7 @@
 %main
   %article.library-group-show.bg-white.py-5.py-lg-6
     .container
-      %header.hero-section.hero-section-revisions{style: "background-image: url(#{@group.background_image.url});", title: "#{@group.name} Courses banner"}
+      %header.hero-section.hero-section-revisions{style: "background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(#{@group.background_image.url});", title: "#{@group.name} Courses banner"}
         %h1.h1-hero.mb-3.text-white
           =@group.name
           ='Courses'
