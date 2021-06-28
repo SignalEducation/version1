@@ -72,8 +72,8 @@ class GroupsController < ApplicationController
     params.require(:group).permit(:name, :name_url, :active, :sorting_order,
                                   :description, :image, :background_image,
                                   :background_colour, :exam_body_id,
-                                  :seo_title, :seo_description,
-                                  :short_description, :onboarding_level_heading,
-                                  :onboarding_level_subheading, :tab_view)
+                                  :seo_title, :seo_description, :short_description,
+                                  :onboarding_level_heading, :onboarding_level_subheading,
+                                  :tab_view, :disclaimer)
   end
 end

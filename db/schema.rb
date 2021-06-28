@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_24_103851) do
+ActiveRecord::Schema.define(version: 2021_06_24_111626) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -918,6 +918,7 @@ ActiveRecord::Schema.define(version: 2021_05_24_103851) do
     t.text "onboarding_level_subheading"
     t.string "onboarding_level_heading"
     t.boolean "tab_view", default: false, null: false
+    t.text "disclaimer"
     t.index ["exam_body_id"], name: "index_groups_on_exam_body_id"
     t.index ["name"], name: "index_groups_on_name"
   end
