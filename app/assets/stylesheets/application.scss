@@ -8282,3 +8282,7 @@ button.sub-details[aria-expanded="true"]:before{
 .step-bar li.active + li:after {
   background-color: $primary;
 }
+.partner-logos {
+  display: flex;
+  justify-content: center;
+}
