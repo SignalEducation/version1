@@ -211,6 +211,7 @@ describe Paypal::SubscriptionValidation, type: :service do
 
     it 'returns nil if there are no scheduled workers' do
       allow_any_instance_of(Sidekiq::ScheduledSet).to receive(:select).and_return([1])
+      allow_any_instance_of(SlackService).to receive(:notify_channel).and_return(false)
 
       expect(target_instance.send(:check_scheduled_cancellation_worker)).to be nil
     end
