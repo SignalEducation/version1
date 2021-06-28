@@ -6833,6 +6833,11 @@ button.sub-details[aria-expanded="true"]:before{
 .vue-modal-body{
   padding: 35px;
 }
+#modal-navbar-calculator, #modal-nav-calculator {
+  .vue-modal-body {
+    position: static !important;
+  }
+}
 .active-modal {
   z-index: 1200 !important;
 }
@@ -8218,7 +8223,6 @@ button.sub-details[aria-expanded="true"]:before{
   height: 30px;
   top: 14px;
 }
-
 .step-bar {
   counter-reset: step;
 }
@@ -8269,7 +8273,6 @@ button.sub-details[aria-expanded="true"]:before{
     z-index : -1;
   }
 }
-
 .step-bar li:first-child:after {
   content: none;
 }
