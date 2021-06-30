@@ -39,6 +39,8 @@
 
     -if Rails.env.production?
       =render partial: 'layouts/cookie_banner'
+    -if Rails.env.staging?
+      =render partial: 'layouts/cookie_banner_staging'
 
   %body{class: (controller_name == 'student_sign_ups' && action_name != 'new') ? 'page-light' : (action_name == 'account_verified') ? 'page-gray' : ''}
 
