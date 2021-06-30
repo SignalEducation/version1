@@ -14,7 +14,6 @@
     =javascript_include_tag 'application', modernizr: :true
 
     =render partial: 'layouts/google_tag_manager'
-    =render partial: 'layouts/global_site_tag'
     -if current_user&.email_verified
       =render partial: 'layouts/segment_tracking_code'
 
@@ -37,8 +36,7 @@
       %meta{name: 'robots', content: 'noindex'}
     =render 'application/favicon'
 
-    -if Rails.env.production?
-      =render partial: 'layouts/cookie_banner'
+    =render partial: 'layouts/cookie_banner'
 
   %body{class: (controller_name == 'student_sign_ups' && action_name != 'new') ? 'page-light' : (action_name == 'account_verified') ? 'page-gray' : ''}
 

@@ -20,7 +20,6 @@
     =stylesheet_pack_tag 'cbe_main'
     -# CBE VueJS include
     =render partial: 'layouts/google_tag_manager'
-    =render partial: 'layouts/global_site_tag'
     -if current_user&.email_verified
       =render partial: 'layouts/segment_tracking_code'
 
@@ -53,7 +52,7 @@
       %meta{name: 'robots', content: 'noindex'}
     =render 'application/favicon'
 
-    -if Rails.env.production? && controller_name != 'cbes'
+    -unless controller_name == 'cbes'
       =render partial: 'layouts/cookie_banner'
 
   - if controller_name == 'cbes'
