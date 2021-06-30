@@ -60,9 +60,10 @@
                       =@admin_user&.email
             .col-sm-3
               -if order_cancelled_status?(@order)
-                =link_to 'Reactivate Order', order_management_un_cancel_order_url(@order.id), method: :put, class: 'btn btn-primary mb-3', data: {confirm: 'Are you sure you want to reactivate this order?'}
+                #admin-reactivate-order
+                  =link_to 'Reactivate Order', order_management_un_cancel_order_url(@order.id), method: :put, class: 'btn btn-primary mb-3', data: {confirm: 'Are you sure you want to reactivate this order?'}
               - else
-                .btn.btn-primary.mb-3{data: {target: '#confirm-order-cancellation-modal', toggle: 'modal', href: '#'}}
+                .btn.btn-primary.mb-3#admin-cancel-order{data: {target: '#confirm-order-cancellation-modal', toggle: 'modal', href: '#'}}
                   Cancel Order
 
 =render partial: 'confirm_cancellation_modal'
