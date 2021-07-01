@@ -52,7 +52,7 @@ class CoursePracticeQuestion < ApplicationRecord
   validates_attachment_presence :document
   validates_attachment_content_type :document, content_type: %w[application/pdf]
 
-  accepts_nested_attributes_for :questions
+  accepts_nested_attributes_for :questions, reject_if: proc { |a| a[:name].blank? }
 
   def duplicate
     new_cme_practice_question = deep_clone include: [
