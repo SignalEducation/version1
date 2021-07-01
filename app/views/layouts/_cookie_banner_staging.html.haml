@@ -14,6 +14,11 @@
         dataLayer.push({
           'event': 'iubenda_accept_consent_given'
         });
+        console.log('Consent Event on Google Tag Manager');
+        var hubspot_accept = document.getElementById("hs-eu-confirmation-button");
+        console.log('Hubspot accept button: ', hubspot_accept);
+        hubspot_accept.click();
+        console.log('Consent Event on Hubspot');
       },
       onConsentRejected: function() {
         console.log('Consent Rejected On Load');
