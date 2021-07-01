@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-json.id                       cbe.id
-json.name                     cbe.name
-json.title                    cbe.title
-json.content                  cbe.content
-json.agreement_content        cbe.agreement_content
-json.active                   cbe.active
-json.score                    cbe.score
-json.course_id        cbe.course.id
+json.id                cbe.id
+json.name              cbe.name
+json.title             cbe.title
+json.content           cbe.content
+json.agreement_content cbe.agreement_content
+json.active            cbe.active
+json.score             cbe.score
+json.course_id         cbe.course.id
 
 json.introduction_pages cbe.introduction_pages.order(:sorting_order) do |page|
   json.id            page.id
