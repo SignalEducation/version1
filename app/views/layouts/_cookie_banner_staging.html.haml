@@ -19,6 +19,14 @@
         console.log('Hubspot accept button: ', hubspot_accept);
         hubspot_accept.click();
         console.log('Consent Event on Hubspot');
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-185199057-2', {
+          'send_page_view': false,
+          'custom_map': {'dimension1': 'user_type'}
+        });
+        console.log('GTag');
       },
       onConsentRejected: function() {
         console.log('Consent Rejected On Load');

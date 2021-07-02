@@ -1,15 +1,6 @@
 // Global site tag (gtag.js) - Google Analytics
 -if Rails.env.staging?
   %script{:async => "", :src => "https://www.googletagmanager.com/gtag/js?id=UA-185199057-2"}
-  :javascript
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'UA-185199057-2', {
-      'send_page_view': false,
-      'custom_map': {'dimension1': 'user_type'}
-    });
 
 -elsif Rails.env.production?
   %script{:async => "", :src => "https://www.googletagmanager.com/gtag/js?id=UA-141784351-1"}
