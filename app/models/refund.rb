@@ -78,7 +78,7 @@ class Refund < ApplicationRecord
   def update_total_revenue
     return if subscription_id.nil?
 
-    subscription.update_revenue(:decrement!, amount)
+    subscription.update_revenue(:decrement!, (amount.to_f / 100))
   end
 
   protected
