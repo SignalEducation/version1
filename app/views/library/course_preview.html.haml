@@ -43,7 +43,7 @@
                 - course_section.course_lessons.all_active.all_in_order.each_with_index do |course_lesson, counter|
                   .card.card-collapse.mb-4
 
-                    %a.btn.btn-text.btn-collapse.w-100.text-left{data: {target: '#course-preview', toggle: 'modal', href: '#'}}
+                    %a.btn.btn-text.btn-collapse.w-100.text-left{data: {target: '#contact-form-modal', toggle: 'modal', href: '#'}}
                       .lesson-item.w-100
                         %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
                           lock_outline
@@ -59,7 +59,7 @@
 
             .col-xl-4.mb-5
               %aside
-                %a.btn.btn-secondary.btn-sm.mb-5{"data-target" => "#ask-a-tutor-modal", "data-toggle" => "modal", :href => "#"}
+                .btn.btn-secondary.btn-sm.mb-5{'data-target' => '#contact-form-modal', 'data-toggle' => 'modal', :href => '#'}
                   Ask the Tutor
 
 
@@ -67,4 +67,4 @@
 
 
 -# Modals
-=render partial: 'course_preview_modal'
+=render partial: 'library/user_form_modal', locals: { ticket_type: 'Preview Course Contact Us', form_id: 'contact-form-modal' }
