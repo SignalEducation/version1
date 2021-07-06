@@ -1,10 +1,9 @@
 <template>
     <div>
         <button :id="'requirementsModal'+ requirementsInd" @click="show('requirementsModal'+ requirementsInd)" class="learn-more components-sidebar-links">
-            <div class="circle"><span class="icon arrow"></span></div>
+            <div class="circle"><span v-if="loading" class="vue-loader"></span><span v-if="!loading" class="icon arrow"></span></div>
             <span class="button-text"><i class="material-icons exhibits-icon">assignment</i><p v-html="requirementsObj.name"></p></span>
         </button>
-        <button v-if="loading" class="vue-loader"></button>
         <VueModal
           :componentType="componentType"
           :componentName="requirementsObj.name"
@@ -103,10 +102,8 @@ export default {
     },
     show (id) {
       this.loading = true;
-      $("#"+id).css("display","none");
       setTimeout(() => {
         this.loading = false;
-        $("#"+id).css("display","block");
         this.$modal.show("modal-"+this.componentType+"-"+this.requirementsObj.name);
         $('.components-sidebar .components div').removeClass('active-modal');
         eventBus.$emit("update-modal-z-index", `modal-${this.componentType}-${this.requirementsObj.name}`);

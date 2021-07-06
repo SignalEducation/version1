@@ -2,7 +2,7 @@
 
 class SegmentService
   def identify_user(user)
-    return unless user.email_verified && user.user_group == UserGroup.student_group
+    return unless user.email_verified
 
     segment = Analytics.identify(
       user_id: user.id,
@@ -13,7 +13,7 @@ class SegmentService
   end
 
   def track_verification_event(user)
-    return unless user.email_verified && user.user_group == UserGroup.student_group
+    return unless user.email_verified
 
     segment = Analytics.track(
       user_id: user.id,
@@ -26,7 +26,7 @@ class SegmentService
 
   def track_course_enrolment_event(enrolment, reset_progress, banner)
     user = enrolment.user
-    return unless user.email_verified && user.user_group == UserGroup.student_group
+    return unless user.email_verified
 
     segment = Analytics.track(
       user_id: user.id,
@@ -39,7 +39,7 @@ class SegmentService
 
   def track_enrolment_expiration_event(enrolment)
     user = enrolment.user
-    return unless user.email_verified && user.user_group == UserGroup.student_group
+    return unless user.email_verified
 
     segment = Analytics.track(
       user_id: user.id,
@@ -52,7 +52,7 @@ class SegmentService
 
   def track_correction_returned_event(exercise)
     user = exercise.user
-    return unless user.email_verified && user.user_group == UserGroup.student_group
+    return unless user.email_verified
 
     segment = Analytics.track(
       user_id: user.id,

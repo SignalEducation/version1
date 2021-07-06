@@ -1,10 +1,9 @@
 <template>
     <div>
         <button id="modal-response-spreadsheet" @click="show('modal-response-spreadsheet')" class="learn-more components-sidebar-links">
-            <div class="circle"><span class="icon arrow"></span></div>
+            <div class="circle"><span v-if="loading" class="vue-loader"></span><span v-if="!loading" class="icon arrow"></span></div>
             <span class="button-text"><i class="material-icons exhibits-icon">table_view</i><p>Spreadsheet</p></span>
         </button>
-        <button v-if="loading" class="vue-loader"></button>
         <VueModal
           :componentType="componentType"
           :componentName="componentName"
@@ -96,10 +95,8 @@ export default {
     },
     show (id) {
       this.loading = true;
-      $("#"+id).css("display","none");
       setTimeout(() => {
         this.loading = false;
-        $("#"+id).css("display","block");
         this.$modal.show("modal-"+this.componentType+"-"+this.componentName);
         $('.components-sidebar .components div').removeClass('active-modal');
         eventBus.$emit("update-modal-z-index", `modal-${this.componentType}-${this.componentName}`);

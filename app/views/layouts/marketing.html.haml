@@ -15,7 +15,7 @@
 
     =render partial: 'layouts/google_tag_manager'
     =render partial: 'layouts/global_site_tag'
-    -if current_user&.email_verified && current_user&.user_group == UserGroup.student_group
+    -if current_user&.email_verified
       =render partial: 'layouts/segment_tracking_code'
 
     =yield :head
