@@ -209,7 +209,7 @@
   $('input[type="checkbox"]').on('change', function() {
     if($('#communication_approval').prop('checked') == true) {
       $("#hidden_communication_approval").val('true');
-      gtag('event', 'agree_to_communication', {'event_category': 'pre-registration', 'event_label': 'register'})
+      gtag('event', 'agree_to_communication', {'event_category': 'pre-registration', 'event_label': 'register'});
     } else if($('#communication_approval').prop('checked') == false) {
       $("#hidden_communication_approval").val('false');
     }
