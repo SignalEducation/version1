@@ -36,6 +36,10 @@
       %li
         =link_to 'System Requirements', system_requirements_url
 
+    -if current_user.system_requirements_access?
+      %li
+        =link_to 'Bearer API Keys', admin_bearers_url
+
     -if current_user.marketing_resources_access?
       %li
         =link_to 'External Content', public_resources_url
