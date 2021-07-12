@@ -48,7 +48,7 @@
       name: "#{@subscription&.subscription_plan&.name}",
       brand: "#{@subscription&.subscription_plan&.exam_body&.name}",
       subscription_interval: "#{@subscription&.subscription_plan&.interval_name}",
-      content_category: "Subscription"
+      content_category: "#{@subscription.kind.humanize}"
     });
 
     if ("#{@subscription.kind}" === 'new_subscription') {
