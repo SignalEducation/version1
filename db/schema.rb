@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_24_111626) do
+ActiveRecord::Schema.define(version: 2021_07_09_111805) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -836,6 +836,15 @@ ActiveRecord::Schema.define(version: 2021_06_24_111626) do
     t.index ["order_id"], name: "index_exercises_on_order_id"
     t.index ["product_id"], name: "index_exercises_on_product_id"
     t.index ["user_id"], name: "index_exercises_on_user_id"
+  end
+
+  create_table "external_apps", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "slug", null: false
+    t.string "api_key", null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "external_banners", id: :serial, force: :cascade do |t|

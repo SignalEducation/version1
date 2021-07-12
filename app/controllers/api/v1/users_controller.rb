@@ -2,9 +2,7 @@
 
 module Api
   module V1
-    class UsersController < Api::V1::ApplicationController
-      def show; end
-
+    class UsersController < Api::V1::ApiController
       def create
         user_country = IpAddress.get_country(request.remote_ip, true)
         user_currency = user_country&.currency || Currency.find_by(iso_code: 'GBP')
@@ -24,14 +22,6 @@ module Api
           render json: { message: 'User created.' }, status: :ok
         else
           render json: { errors: user.errors }, status: :unprocessable_entity
-        end
-      end
-
-      def update
-        if @user.update(user_params)
-          render json: { message: 'User updated.' }, status: :ok
-        else
-          render json: { errors: @user.errors }, status: :unprocessable_entity
         end
       end
 
