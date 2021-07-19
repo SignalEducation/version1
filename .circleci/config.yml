@@ -83,7 +83,7 @@ jobs:
                               --out ./test_results/rspec/rspec.xml \
                               --format progress \
                               --color \
-                              --exclude-pattern "**/features/users/onboarding_spec.rb" \
+                              --exclude-pattern "**/features/users/onboarding_spec.rb, **/features/admin/practice_question_spec.rb, **/features/admin/subscription_cancellation_spec.rb" \
 
       # upload test coverage reporter
       - run:
