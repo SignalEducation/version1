@@ -67,6 +67,7 @@
   /* eslint-disable */
   import Vue from 'vue';
   import VueObserveVisibility from 'vue-observe-visibility';
+
   Vue.use(VueObserveVisibility);
 
   const licenseKey = () => {
@@ -85,6 +86,7 @@
   import CopyPasteBar from './components/CopyPasteBar.vue';
   import FormatBar from './components/FormatBar.vue';
   import FileBar from './components/FileBar.vue';
+  import eventBus from "../cbe/EventBus.vue";
 
   import './SpreadsheetEditor.scss';
 
@@ -95,6 +97,7 @@
       CopyPasteBar,
       FileBar,
       FormatBar,
+      eventBus
     },
     props: {
       initialData: {
@@ -109,6 +112,8 @@
     computed: {
       spreadsheetData: function() {
         if (this.initialData.content && this.initialData.content.data && this.initialData.content.data.data) {
+          if (typeof(this.initialData.content.data.data.dataTable) !== 'undefined') { this.row_data = Object.keys(this.initialData.content.data.data.dataTable).length + 4 }
+          if (typeof(this.initialData.content.data.columns) !== 'undefined') { this.col_data = Object.keys(this.initialData.content.data.columns).length + 1 }
           return this.initialData.content.data;
         } else {
           return null;
@@ -116,7 +121,8 @@
       }
     },
     created() {
-
+      let row_data = null;
+      let col_data = null;
     },
     data() {
       return {
@@ -205,10 +211,16 @@
         const fbx = new GC.Spread.Sheets.FormulaTextBox.FormulaTextBox(this.$refs.fbxRef);
         fbx.workbook(spread);
         this.flex = spread.getSheet(0);
+        this.flex.options.clipBoardOptions = GC.Spread.Sheets.ClipboardPasteOptions.values;
         if (this.spreadsheetData) {
           spread.suspendPaint();
           this.flex.setDataSource(this.flex.fromJSON(JSON.parse(JSON.stringify(this.spreadsheetData))));
           spread.resumePaint();
+          this.row_data ? this.flex.setRowCount(this.row_data, GC.Spread.Sheets.SheetArea.viewport) : this.flex.setRowCount(this.flex.getRowCount(), GC.Spread.Sheets.SheetArea.viewport);
+          this.col_data ? this.flex.setColumnCount(this.col_data, GC.Spread.Sheets.SheetArea.viewport) : this.flex.setColumnCount(this.flex.getColumnCount(), GC.Spread.Sheets.SheetArea.viewport);
+        } else {
+          this.flex.setRowCount(25, GC.Spread.Sheets.SheetArea.viewport);
+          this.flex.setColumnCount(5, GC.Spread.Sheets.SheetArea.viewport);
         }
         for (var i = 0; i < this.flex.getRowCount(); i++) {
           this.flex.autoFitRow(i);
@@ -216,6 +228,9 @@
         for (var i = 0; i < this.flex.getColumnCount(); i++) {
           this.flex.autoFitColumn(i);
         }
+        eventBus.$on("refresh-spreadsheet-cells", (status) => {
+          if(status) spread.refresh()
+        });
       },
       fontSizeChanged(value) {
         let sel = this.flex.getSelections()[0];

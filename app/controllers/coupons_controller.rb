@@ -59,7 +59,8 @@ class CouponsController < ApplicationController
       format.json do
         render json: { valid: discount[0],
                        discounted_price: discount[1],
-                       reason: discount[2] }, status: :ok
+                       reason: discount[2],
+                       coupon_id: discount[3] }, status: :ok
       end
     end
   end
@@ -78,6 +79,7 @@ class CouponsController < ApplicationController
   def allowed_params
     params.require(:coupon).permit(:name, :code, :currency_id, :amount_off, :duration, :max_redemptions,
                                    :duration_in_months, :percent_off, :redeem_by, :exam_body_id,
-                                   :monthly_interval, :quarterly_interval, :yearly_interval, :active)
+                                   :monthly_interval, :quarterly_interval, :yearly_interval, :active,
+                                   :discounted_price, :coupon_id)
   end
 end

@@ -55,7 +55,10 @@ jobs:
           paths:
             - ~/.cache/yarn
 
-      - run: bundle exec rake webpacker:compile
+      - run:
+          name: Webpacker compile
+          command: bundle exec rake webpacker:compile
+          no_output_timeout: 30m
 
       - run:
           name: Wait for DB
@@ -80,7 +83,7 @@ jobs:
                               --out ./test_results/rspec/rspec.xml \
                               --format progress \
                               --color \
-                              --exclude-pattern "**/features/users/onboarding_spec.rb" \
+                              --exclude-pattern "**/features/users/onboarding_spec.rb, **/features/admin/practice_question_spec.rb, **/features/admin/subscription_cancellation_spec.rb" \
 
       # upload test coverage reporter
       - run:

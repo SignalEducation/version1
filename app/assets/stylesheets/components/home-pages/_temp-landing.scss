@@ -1,0 +1,121 @@
+.home-hero-alt-bg.temp-landing {
+  margin-bottom: 0;
+  -webkit-background-size: cover;
+  background-size: cover;
+  background-image: asset-url('red-background.png');
+  background-position: 30% 50%;
+  min-height: 800px;
+}
+@media (min-width:992px) {
+  .home-hero-alt-bg.temp-landing {
+    background-position: 60% 50%;
+  }
+}
+@media (min-width:1200px) {
+  .home-hero-alt-bg.temp-landing {
+    background-position: 80% 50%;
+  }
+}
+.h1-hero-temp {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: #fff !important;
+}
+@media (min-width:576px) {
+  .h1-hero-temp {
+    margin-bottom: 2rem;
+    font-size: 2.5rem;
+  }
+}
+@media (min-width:992px) {
+  .h1-hero-temp {
+    margin-bottom: 2rem;
+    font-size: 2.5rem;
+  }
+}
+@media (min-width:1200px) {
+  .h1-hero-temp {
+    margin-bottom: 2rem;
+    font-size: 2.5rem;
+  }
+}
+
+.home-hero.home-hero-temp-landing {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+@media (min-width:576px) {
+  .home-hero.home-hero-temp-landing {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+}
+@media (min-width:992px) {
+  .home-hero.home-hero-temp-landing {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+}
+@media (min-width:1200px) {
+  .home-hero.home-hero-temp-landing {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+}
+
+
+
+.home-hero.home-hero-temp-landing .home-hero-header {
+  padding-top: 0
+}
+@media (min-width:576px) {
+  .home-hero.home-hero-temp-landing .home-hero-header {
+    padding-top: 0;
+    padding-bottom: 1rem
+  }
+}
+@media (min-width:992px) {
+  .home-hero.home-hero-temp-landing .home-hero-header {
+    padding-top: 0;
+    padding-bottom: 5rem
+  }
+}
+@media (min-width:1200px) {
+  .home-hero.home-hero-temp-landing .home-hero-header {
+    padding-top: 0;
+    padding-bottom: 5rem
+  }
+}
+
+.home-hero.home-hero-temp-landing .home-hero-header ul {
+  list-style: none;
+  padding: 0;
+}
+
+.home-hero.home-hero-temp-landing .home-hero-header ul.list li {
+  position: relative;
+  margin-bottom: .5rem;
+  margin-left: 2rem;
+  padding-left: .2em;
+}
+.home-hero.home-hero-temp-landing .home-hero-header ul.list li::before {
+  content: "\f00c"; /* FontAwesome Unicode */
+  font-family: FontAwesome;
+  display: inline-block;
+  margin-left: -1.3em; /* same as padding-left set on li */
+  width: 1.3em; /* same as padding-left set on li */
+  height: 0;
+  top: 0;
+  left: -0.5rem;
+  color: #00b67B;
+}
+
+
+.temp-landing-form .form-group {
+  margin-bottom: .8rem;
+}
+.temp-landing-form .form-control {
+  padding: 1.2rem .75rem;
+}

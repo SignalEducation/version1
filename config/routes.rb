@@ -362,6 +362,7 @@ Rails.application.routes.draw do
     get 'prep_products/:group_name_url', to: 'footer_pages#media_library', as: :exam_products
 
     # HomePages Structure
+    get 'acca-free-lesson',        to: 'student_sign_ups#new_landing', as: :new_landing
     get 'home', to: 'routes#root', as: :home
     get 'course/:name_url', to: 'student_sign_ups#group', as: :group_landing
 

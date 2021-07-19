@@ -1,0 +1,216 @@
+=render partial: 'layouts/external_navbar'
+%main
+  .container-bg.home-hero-alt-bg.temp-landing
+    .container
+      %article.home-hero.home-hero-temp-landing
+        .row.justify-content-between
+          .col-sm-12.col-xl-5
+            %header.home-hero-header
+              %h1.h1-hero-temp
+                Today Only - Free ACCA Course Lesson!
+              %ul.list.text-white.mb-4
+                %li
+                  Get instant access to essential tips for passing your exam.
+                %li
+                  Approved ACCA tuition provider. Trusted by 23,000+ students.
+                %li
+                  Registration is FREE, quick and easy!
+
+              %h3.pt-6.text-white.d-none.d-lg-block
+                Get your FREE course lessons right now ➡️
+
+          .col-xl-6.temp-landing-form
+            =form_for @user, url: create_student_url do |f|
+              =f.hidden_field :locale, value: (params[:locale] || 'en')
+              =f.hidden_field :terms_and_conditions, id: 'hidden_term_and_conditions'
+              =f.hidden_field :communication_approval, id: 'hidden_communication_approval'
+              =f.hidden_field :home_page_id, value: @home_page&.id
+              =f.hidden_field :preferred_exam_body_id, id: 'hidden_preferred_exam_body_id', value: @exam_body.id
+
+              .bg-white.p-2.px-sm-5.pt-sm-4
+                .py-2
+                  %h4.temp-reg-heading.text-center
+                    ='Register and get started right now ⬇️'
+
+                =render partial: 'layouts/error_messages', locals: {thing: @user, message: t('views.home_pages.sign_up_form.error_panel_caption')}
+                %fieldset.pb-3
+                  %legend.sr-only Registration Details
+                  .row
+                    .col-md-6
+                      .form-group
+                        %label.sr-only{:for => "first-name"} First Name
+                        =f.text_field :first_name, placeholder: 'Enter your first name', class: 'form-control', required: true
+                    .col-md-6
+                      .form-group
+                        %label.sr-only{:for => "last-name"} Last Name
+                        =f.text_field :last_name, placeholder: 'Enter your last name', class: 'form-control', required: true
+
+                  .row
+                    .col-md-12
+                      .form-group
+                        %label.sr-only{:for => "email-address"} Your email address
+                        =f.email_field :email, placeholder: 'Enter your email', class: 'form-control', required: true
+
+                  .row
+                    .col-md-6
+                      .form-group
+                        %label.sr-only{:for => "create-pwd"} Create a password
+                        =f.password_field :password, placeholder: t('views.users.form.create_password'), class: 'form-control', required: true
+                    .col-md-6
+                      .form-group
+                        %label.sr-only{:for => "confirm-pwd"} Confirm your password
+                        =f.password_field :password_confirmation, placeholder: t('views.users.form.password_confirmation_placeholder'), class: 'form-control', id: 'user_password_confirmation', required: true
+
+                  %fieldset.mt-3
+                    %legend.sr-only Terms and Conditions checkboxes
+
+                    .custom-control.custom-checkbox.mb-3
+                      %input{type: "checkbox", class: "custom-control-input", id: "terms_and_conditions", required: true, style: 'font-size: .775rem;'}
+                      %label{class: "custom-control-label", for: "terms_and_conditions"}
+                        I agree to learnsignal's
+                        =link_to 'terms and conditions', terms_and_conditions_url, target: '_blank'
+
+                    .custom-control.custom-checkbox.mb-3
+                      %input{type: "checkbox", class: "custom-control-input", id: "communication_approval", required: true, style: 'font-size: .775rem;'}
+                      %label{class: "custom-control-label", for: "communication_approval"}
+                        I agree to receive information from learnsignal about offers, events and competitions by email and text. I agree to learnsignal’s Privacy Policy and understand I can unsubscribe at any time.
+
+                  %p
+                    =recaptcha_tags
+                  .d-flex.justify-content-between.align-items-center.pt-4
+                    = hidden_field_tag :hutk
+                    = hidden_field_tag :page_uri
+                    = hidden_field_tag :page_name
+                    = hidden_field_tag :hs_form_id, Rails.application.credentials[Rails.env.to_sym][:hubspot][:form_api][:registration_form]
+                    -if local_assigns.has_key?(:btn)
+                      =f.submit btn, class: 'btn btn-primary btn-sm', id: 'signUp'
+                    -else
+                      =f.submit 'Register Now', class: 'btn btn-primary btn-sm', id: 'signUp'
+                    .sk-circle
+                      .sk-circle1.sk-child
+                      .sk-circle2.sk-child
+                      .sk-circle3.sk-child
+                      .sk-circle4.sk-child
+                      .sk-circle5.sk-child
+                      .sk-circle6.sk-child
+                      .sk-circle7.sk-child
+                      .sk-circle8.sk-child
+                      .sk-circle9.sk-child
+                      .sk-circle10.sk-child
+                      .sk-circle11.sk-child
+                      .sk-circle12.sk-child
+
+
+  .container-bg.bg-navy
+    .container
+      %article.text-gray3.text-center.py-4.py-sm-5
+        %header.pb-3
+          %h2.h1-mega.text-white.px-3.px-sm-4 Discover the smarter way to study
+          %p.p-hero Learnsignal uses a unique method of learning to provide an easier, more enjoyable and more effective way to learn.
+        .px-4.px-lg-4
+          .row.row-lg
+            .col-sm-6.col-md-4.col-lg-2
+              .pb-4.d-flex.flex-md-column.align-items-center
+                .mr-4.mb-md-4.mx-md-0
+                  %i.budicon-happy-chat{"aria-hidden" => "true"}
+                %p.m-0.text-left.text-md-center 24/7 tutor support
+            .col-sm-6.col-md-4.col-lg-2
+              .pb-4.d-flex.flex-md-column.align-items-center
+                .mr-4.mb-md-4.mx-md-0
+                  %i.budicon-card-slides{"aria-hidden" => "true"}
+                %p.m-0.text-left.text-md-center Topic-by-topic video lectures
+            .col-sm-6.col-md-4.col-lg-2
+              .pb-4.d-flex.flex-md-column.align-items-center
+                .mr-4.mb-md-4.mx-md-0
+                  %i.budicon-doc-marker{"aria-hidden" => "true"}
+                %p.m-0.text-left.text-md-center Expert notes & corrected questions
+            .col-sm-6.col-md-4.col-lg-2
+              .pb-4.d-flex.flex-md-column.align-items-center
+                .mr-4.mb-md-4.mx-md-0
+                  %i.budicon-desktop-smartphone{"aria-hidden" => "true"}
+                %p.m-0.text-left.text-md-center Weekly webinars & podcasts
+            .col-sm-6.col-md-4.col-lg-2
+              .pb-4.d-flex.flex-md-column.align-items-center
+                .mr-4.mb-md-4.mx-md-0
+                  %i.budicon-headline{"aria-hidden" => "true"}
+                %p.m-0.text-left.text-md-center Mock exams
+            .col-sm-6.col-md-4.col-lg-2
+              .pb-4.d-flex.flex-md-column.align-items-center
+                .mr-4.mb-md-4.mx-md-0
+                  %i.budicon-events{"aria-hidden" => "true"}
+                %p.m-0.text-left.text-md-center Exam Bootcamp
+
+  .container
+    %article.py-3.py-6.text-center.text-lg-left
+      %header.sr-only
+        %h2 Testimonial
+      .row.row-lg
+        .col-lg-5
+          =image_tag('testimonial-img.png', class: 'mb-5 mb-lg-0', alt: 'Girl at the laptop')
+        .col-lg-7
+          .d-flex.h-100.align-items-center
+            %blockquote.mb-0.ml-lg-6.mr-lg-6
+              %p.text-gray2
+                "The good thing about learnsignal was the way the lecturers went through question papers. It helped me so much with the technique that I had lacked in my previous paper."
+              %footer
+                %cite.font-weight-semi-bold.text-gray2
+                  Rebecca Nagujja, Ireland
+  =render partial: 'customer_support_section'
+
+
+:javascript
+
+  function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+  }
+
+  $(document).ready(function(){
+    document.getElementById("hutk").value = getCookie("hubspotutk");
+    document.getElementById("page_uri").value = document.URL;
+    document.getElementById("page_name").value = document.title;
+    var img = $('#sign-up-partner-logo');
+    var width = img.width();
+    var height = img.height();
+    if(width > height){
+      img.removeClass('logo-acca');
+      img.addClass('logo-acca-landscape');
+    }
+  });
+
+  $(".sk-circle").hide();
+  $("#new_user").submit(function(ev) {
+    document.getElementById("hutk").value = getCookie("hubspotutk");
+    ev.preventDefault();
+    $(".sk-circle").show();
+    $("#signUp").hide();
+    this.submit();
+  });
+
+  $('input[type="checkbox"]').on('change', function() {
+    if($('#terms_and_conditions').prop('checked') == true) {
+      $("#hidden_term_and_conditions").val('true');
+    } else if($('#terms_and_conditions').prop('checked') == false) {
+      $("#hidden_term_and_conditions").val('false');
+    }
+  });
+
+  $('input[type="checkbox"]').on('change', function() {
+    if($('#communication_approval').prop('checked') == true) {
+      $("#hidden_communication_approval").val('true');
+      gtag('event', 'agree_to_communication', {'event_category': 'pre-registration', 'event_label': 'register'})
+    } else if($('#communication_approval').prop('checked') == false) {
+      $("#hidden_communication_approval").val('false');
+    }
+  });

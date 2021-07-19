@@ -15,6 +15,7 @@ RSpec.describe StudentSignUpsController, type: :controller do
   let!(:home)           { create(:home, group_id: group_1.id) }
   let!(:landing_page_1) { create(:landing_page_1, group_id: group_1.id) }
   let!(:landing_page_2) { create(:landing_page_2, course_id: course_1.id, group_id: nil) }
+  let!(:landing_page_3) { create(:landing_page_3, course_id: course_1.id, group_id: group_1.id) }
   let!(:student_user)   { create(:student_user) }
   let(:gbp)             { create(:gbp) }
   let(:uk)              { create(:uk, currency_id: gbp.id) }
@@ -61,6 +62,16 @@ RSpec.describe StudentSignUpsController, type: :controller do
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
         expect(response).to redirect_to(root_url)
+      end
+    end
+
+    describe "GET 'new_landing'" do
+      it 'should see landing page' do
+        get :new_landing, params: { public_url: landing_page_3.public_url }
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:new_landing)
       end
     end
 
@@ -218,6 +229,15 @@ RSpec.describe StudentSignUpsController, type: :controller do
         expect(flash[:success]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:landing)
+      end
+    end
+
+    describe "GET 'new_landing'" do
+      it 'should see new_landing page' do
+        get :new_landing, params: { public_url: landing_page_3.public_url }
+        expect(flash[:success]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:new_landing)
       end
     end
 

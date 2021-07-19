@@ -7,8 +7,8 @@
   let section_log_id = "#{@course_section_log.try(:id) || ''}";
   let exam_track_id  = "#{@course_lesson_log.try(:id) || ''}";
   let video_id       = "#{ENV['DACAST_PLAYER_KEY']}#{cme.course_video.dacast_id}";
-  let freeLesson     = "#{@course_lesson.free}";
-  let lastLessonStep = "#{@course_lesson.course_steps.all_in_order.all_active.last.id}";
+  let freeLesson     = "#{@course_lesson&.free}";
+  let lastLessonStep = "#{@course_lesson&.course_steps&.all_in_order&.all_active&.last&.id}";
   let endStepVidTime = "#{cme.vid_end_seconds || ''}";
   let myPlayer       = dacast(video_id, 'video-player-window');
 

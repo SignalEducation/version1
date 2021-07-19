@@ -13,9 +13,13 @@
               .search-container.mb-3.float-right
                 =form_tag(admin_search_exercises_url, role: 'form', class: 'form-inline') do
                   =hidden_field_tag :user_id, @user&.id
+                  =hidden_field_tag :sort_by, params[:sort_by]
+                  =hidden_field_tag :sort_direction, params[:sort_direction]
                   =select_tag :state, options_for_select([['Submitted', 'submitted'], ['Correcting', 'correcting'], ['Returned', 'returned'], ['Pending', 'pending'], ['All', 'all']], @filters['state']), class: 'form-control custom-select filter mr-3'
                   =select_tag :product, options_from_collection_for_select(Product.all_active, 'id', 'name', @filters['product']), prompt: 'All Products', class: 'form-control custom-select filter mr-3'
                   =select_tag :corrector, options_from_collection_for_select(User.joins(:user_group).where(user_groups: { exercise_corrections_access: true }), 'id', 'name', @filters['corrector']), prompt: 'All Correctors', class: 'form-control custom-select filter mr-3'
+                  =select_tag :sort_by, options_for_select([['Due On','due_on'], ['Corrected On','corrected_on'], ['Returned On','returned_on']], params[:sort_by]), class: 'form-control custom-select filter mr-3'
+                  =select_tag :sort_direction, options_for_select([['Descending', :desc], ['Ascending', :asc]], params[:sort_direction]), class: 'form-control custom-select filter mr-3'
                   =text_field_tag :search, @filters['search'], class: 'form-control', placeholder: 'Search term'
                   %button{type: "submit", class: 'ml-3'}
                     %i{:role => "img", class: 'budicon-search-list'}
@@ -57,13 +61,12 @@
 
           .row
             .col-sm
-              .search-container
-                -if @user
-                  =link_to "Assign Exercise to  #{@user.name}", new_admin_user_exercise_path(@user), class: 'btn btn-primary'
-                -else
-                  =link_to 'Generate Daily Summary', generate_daily_summary_admin_exercises_path, class: 'btn btn-primary'
-                  =link_to '#', {"data-target" => "#csv-upload-modal", "data-toggle" => "modal", :href => "#"} do
-                    .btn.btn-primary.btn-sm
-                      Bulk Assign Exercises
+              -if @user
+                =link_to "Assign Exercise to  #{@user.name}", new_admin_user_exercise_path(@user), class: 'btn btn-primary'
+              -else
+                =link_to 'Generate Daily Summary', generate_daily_summary_admin_exercises_path, class: 'btn btn-primary'
+                =link_to '#', {"data-target" => "#csv-upload-modal", "data-toggle" => "modal", :href => "#"} do
+                  .btn.btn-primary.btn-sm
+                    Bulk Assign Exercises
 
 =render partial: 'csv_import_modal'

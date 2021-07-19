@@ -2,6 +2,7 @@
   =f.hidden_field :locale, value: (params[:locale] || 'en')
   =f.hidden_field :terms_and_conditions, id: 'hidden_term_and_conditions'
   =f.hidden_field :communication_approval, id: 'hidden_communication_approval'
+  =f.hidden_field :home_page_id, value: @home_page&.id
   -if @exam_body
     =f.hidden_field :preferred_exam_body_id, id: 'hidden_preferred_exam_body_id', value: @exam_body.id
 
@@ -85,7 +86,7 @@
       .custom-control.custom-checkbox.mb-3
         %input{type: "checkbox", class: "custom-control-input", id: "communication_approval", required: true}
         %label{class: "custom-control-label", for: "communication_approval"}
-          I agree to receiving communication from learnsignal
+          I agree to receive information from learnsignal about offers, events and competitions by email and text. I agree to learnsignal’s Privacy Policy and understand I can unsubscribe at any time.
 
       -unless @home_page
         %p.pt-2

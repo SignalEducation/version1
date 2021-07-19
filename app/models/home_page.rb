@@ -34,6 +34,10 @@
 #  stats_content                 :text
 #  course_description            :text
 #  header_description            :text
+#  onboarding_welcome_heading    :string
+#  onboarding_welcome_subheading :text
+#  onboarding_level_heading      :string
+#  onboarding_level_subheading   :text
 #
 
 class HomePage < ApplicationRecord
@@ -41,7 +45,7 @@ class HomePage < ApplicationRecord
   include LearnSignalModelExtras
 
   # Constants
-  LOGO_IMAGES = %w[learning-partner-badge.png acca_approved_white.png acca_approved_red.png ALP_LOGO_(GOLD).png ALP_LOGO_GOLD_REVERSED.png CIMA_logo_small.png AAT_Approved.png CIMA_Registered_Tuition_Provider_RGB.png].freeze
+  LOGO_IMAGES = %w[learning-partner-badge.png acca_approved_white.png acca_approved_red.png ALP_LOGO_(GOLD).png ALP_LOGO_GOLD_REVERSED.png CIMA_logo_small.png AAT_Approved.png CIMA_Registered_Tuition_Provider_RGB.png FRM_logo.png].freeze
   TEMPLATES = %w[default.html.haml basic_registration.html.haml basic_login.html.haml pricing_plans.html.haml preferred_plan.html.haml bootcamp.html.haml podcast.html.haml open_week.html.haml resources.html.haml about_us.html.haml testimonials.html.haml careers.html.haml course_registration.html.haml].freeze
   BG_IMAGES = %w[hero-bg.jpg hero-bg-1.jpg hero-bg-2.jpg hero-bg-3.jpg hero-bg-4.jpg hero-bg-5.jpg hero-bg-6.jpg hero-bg-7.jpg hero-bg-8.jpg black-bg.jpg black-friday-bg.jpg blue-background.png green-background.png alt-black-background.png blue-green-background.png red-background.png course-bg.jpg].freeze
   FOOTER_OPTIONS = %w[white dark].freeze
@@ -53,19 +57,17 @@ class HomePage < ApplicationRecord
   has_many :blog_posts
   has_many :external_banners
   has_many :student_testimonials
+  has_many :users
 
   accepts_nested_attributes_for :blog_posts, reject_if: lambda { |attributes| blog_nested_resource_is_blank?(attributes) }, allow_destroy: true
   accepts_nested_attributes_for :external_banners, reject_if: lambda { |attributes| banner_nested_resource_is_blank?(attributes) }, allow_destroy: true
   accepts_nested_attributes_for :student_testimonials, reject_if: lambda { |attributes| student_testimonial_nested_resource_is_blank?(attributes) }, allow_destroy: true
 
   # validation
-  validates :name, presence: true, length: {maximum: 255}, uniqueness: true
-  validates :seo_title, presence: true, length: {maximum: 255}, uniqueness: true
-  validates :seo_description, presence: true, length: {maximum: 255}
-  validates :public_url, presence: true, length: {maximum: 255},
-            uniqueness: true
-
-  #validate :group_xor_course, unless: :home
+  validates :name, presence: true, length: { maximum: 255 }, uniqueness: true
+  validates :seo_title, presence: true, length: { maximum: 255 }, uniqueness: true
+  validates :seo_description, presence: true, length: { maximum: 255 }
+  validates :public_url, presence: true, length: { maximum: 255 }, uniqueness: true
 
 
   # callbacks
@@ -81,7 +83,7 @@ class HomePage < ApplicationRecord
 
   # instance methods
   def destroyable?
-    true unless self.home
+    true unless home
   end
 
   def default_home_page
@@ -111,15 +113,9 @@ class HomePage < ApplicationRecord
   end
 
   def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
-  end
+    return if destroyable?
 
-  def group_xor_course
-    unless group_id.blank? ^ course_id.blank?
-      errors.add(:base, 'Select a Group or a Course, not both')
-    end
+    errors.add(:base, I18n.t('models.general.dependencies_exist'))
+    false
   end
 end

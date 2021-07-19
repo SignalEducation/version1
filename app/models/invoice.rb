@@ -76,6 +76,7 @@ class Invoice < ApplicationRecord
   after_create :set_vat_rate
   after_create :set_issued_at
   after_create :generate_sca_guid
+  before_save :update_total_revenue, if: :will_save_change_to_paid?
 
   # scopes
   scope :all_in_order,     -> { order(user_id: :asc, id: :desc) }
@@ -179,13 +180,26 @@ class Invoice < ApplicationRecord
     inv
   end
 
+  def user_subscriptions_revenue
+    user.subscriptions_revenue
+  end
+
+  def user_orders_revenue
+    user.orders_revenue
+  end
+
+  def user_total_revenue
+    user.total_revenue
+  end
+
   def self.to_csv(options = {})
     attributes = %w[inv_id invoice_created sub_id sub_created user_email user_created
                     payment_provider sub_stripe_guid sub_paypal_guid sub_exam_body sub_status sub_type
                     invoice_type payment_interval plan_name currency_symbol plan_price sub_total total
                     card_country user_country hubspot_source hubspot_source_1 hubspot_source_2 first_visit_source
                     first_visit_utm_campaign first_visit_medium first_visit_date first_visit_referring_domain
-                    first_visit_landing_page first_visit_referrer]
+                    first_visit_landing_page first_visit_referrer user_subscriptions_revenue
+                    user_orders_revenue user_total_revenue]
 
     CSV.generate(options) do |csv|
       csv << attributes
@@ -314,6 +328,12 @@ class Invoice < ApplicationRecord
     else
       'Other'
     end
+  end
+
+  def update_total_revenue
+    return unless status == 'Paid'
+
+    order_id.present? ? order.update_revenue(:increment!, total) : subscription.update_revenue(:increment!, total)
   end
 
   protected

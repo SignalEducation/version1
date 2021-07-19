@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :cbe_user_log, class: Cbe::UserLog do
-    score { Faker::Number.decimal(l_digits: 2, r_digits: 2) }
+    score { Faker::Number.between(from: 1.0, to: 10.0) }
     user  { build(:user) }
 
     trait :started do

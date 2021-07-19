@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_06_073029) do
+ActiveRecord::Schema.define(version: 2021_06_24_111626) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -446,9 +446,9 @@ ActiveRecord::Schema.define(version: 2021_05_06_073029) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer "cme_count", default: 0
-    t.string "seo_description", limit: 255
-    t.boolean "seo_no_index", default: false
     t.datetime "destroyed_at"
+    t.string "seo_description"
+    t.boolean "seo_no_index", default: false
     t.integer "number_of_questions", default: 0
     t.integer "course_id"
     t.float "video_duration", default: 0.0
@@ -640,9 +640,9 @@ ActiveRecord::Schema.define(version: 2021_05_06_073029) do
     t.boolean "is_video", default: false, null: false
     t.boolean "is_quiz", default: false, null: false
     t.boolean "active", default: true, null: false
-    t.string "seo_description", limit: 255
-    t.boolean "seo_no_index", default: false
     t.datetime "destroyed_at"
+    t.string "seo_description"
+    t.boolean "seo_no_index", default: false
     t.integer "number_of_questions", default: 0
     t.float "duration", default: 0.0
     t.string "temporary_label"
@@ -782,6 +782,7 @@ ActiveRecord::Schema.define(version: 2021_05_06_073029) do
     t.string "pricing_seo_title"
     t.string "pricing_seo_description"
     t.string "hubspot_property"
+    t.boolean "new_onboarding", default: false, null: false
     t.index ["name"], name: "index_exam_bodies_on_name"
   end
 
@@ -917,6 +918,7 @@ ActiveRecord::Schema.define(version: 2021_05_06_073029) do
     t.text "onboarding_level_subheading"
     t.string "onboarding_level_heading"
     t.boolean "tab_view", default: false, null: false
+    t.text "disclaimer"
     t.index ["exam_body_id"], name: "index_groups_on_exam_body_id"
     t.index ["name"], name: "index_groups_on_name"
   end
@@ -960,6 +962,10 @@ ActiveRecord::Schema.define(version: 2021_05_06_073029) do
     t.text "stats_content"
     t.text "course_description"
     t.text "header_description"
+    t.string "onboarding_welcome_heading"
+    t.text "onboarding_welcome_subheading"
+    t.string "onboarding_level_heading"
+    t.text "onboarding_level_subheading"
     t.index ["course_id"], name: "index_home_pages_on_course_id"
     t.index ["group_id"], name: "index_home_pages_on_group_id"
     t.index ["public_url"], name: "index_home_pages_on_public_url"
@@ -1556,6 +1562,7 @@ ActiveRecord::Schema.define(version: 2021_05_06_073029) do
     t.bigint "cancelled_by_id"
     t.integer "kind"
     t.integer "paypal_retry_count", default: 0
+    t.decimal "total_revenue", default: "0.0"
     t.index ["ahoy_visit_id"], name: "index_subscriptions_on_ahoy_visit_id"
     t.index ["cancelled_by_id"], name: "index_subscriptions_on_cancelled_by_id"
     t.index ["changed_from_id"], name: "index_subscriptions_on_changed_from_id"
@@ -1646,6 +1653,9 @@ ActiveRecord::Schema.define(version: 2021_05_06_073029) do
     t.bigint "currency_id"
     t.string "tutor_link"
     t.integer "video_player", default: 0, null: false
+    t.decimal "subscriptions_revenue", default: "0.0"
+    t.decimal "orders_revenue", default: "0.0"
+    t.integer "home_page_id"
     t.index ["country_id"], name: "index_users_on_country_id"
     t.index ["currency_id"], name: "index_users_on_currency_id"
     t.index ["preferred_exam_body_id"], name: "index_users_on_preferred_exam_body_id"

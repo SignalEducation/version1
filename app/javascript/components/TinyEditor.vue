@@ -16,6 +16,7 @@
         images_upload_handler: imageUploadHandler,
         image_advtab: true,
         skin: 'custom',
+        paste_as_text: true
       }"
       @input="$emit('update:fieldModel', localFieldModel)"
     />

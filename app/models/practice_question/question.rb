@@ -33,7 +33,6 @@ module PracticeQuestion
     # validations
     validates :course_practice_question_id, presence: true, on: :update
     validates :name, presence: true
-    validates :solution, presence: true
 
     # callbacks
 

@@ -102,7 +102,7 @@
                     =text_area_tag(:educator_comment, @cbe_user_log.educator_comment, id: "#{@cbe_user_log.id}-editor", as: 'summernote')
             .row.pt-3
               .col-sm-6
-                =submit_tag("Update", class: 'btn btn-primary')
+                =submit_tag("Update", class: 'btn btn-primary', id: 'overall_score_btn')
                 %div{:id => "#{@cbe_user_log.id}-response"}
 
   .row

@@ -96,6 +96,7 @@ describe User do
   it { should have_one(:referred_signup) }
   it { should belong_to(:subscription_plan_category) }
   it { should belong_to(:currency) }
+  it { should belong_to(:home_page) }
 
   # validation
   context 'test uniqueness validation' do
@@ -230,6 +231,7 @@ describe User do
   it { should respond_to(:started_course_step) }
   it { should respond_to(:last_subscription) }
   it { should respond_to(:onboarding_state) }
+  it { should respond_to(:total_revenue) }
 
   describe 'scopes' do
     describe 'all_students' do
@@ -797,6 +799,20 @@ describe User do
         # expect(customer).to receive(:delete).with('cus_12234555')
 
         user.send(:delete_stripe_customer)
+      end
+    end
+
+    describe '#total_revenue' do
+      let(:order_value)        { Faker::Number.decimal(l_digits: 1, r_digits: 2) }
+      let(:subscription_value) { Faker::Number.decimal(l_digits: 1, r_digits: 2) }
+
+      before :each do
+        user.orders_revenue        =  order_value
+        user.subscriptions_revenue =  subscription_value
+      end
+
+      it 'returns the total of orders revenue and subscriptions revenue' do
+        expect(user.total_revenue).to eq(order_value + subscription_value)
       end
     end
   end

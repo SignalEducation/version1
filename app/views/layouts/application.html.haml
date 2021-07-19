@@ -21,7 +21,7 @@
     -# CBE VueJS include
     =render partial: 'layouts/google_tag_manager'
     =render partial: 'layouts/global_site_tag'
-    -if current_user&.email_verified && current_user&.user_group == UserGroup.student_group
+    -if current_user&.email_verified
       =render partial: 'layouts/segment_tracking_code'
 
     %script{type: 'text/javascript', src: 'https://js.stripe.com/v3/'}
@@ -107,6 +107,7 @@
         =yield
 
         -if @footer
+          =render partial: 'layouts/footer_disclaimer' if @group&.disclaimer
           =render partial: 'layouts/footer'
 
       -elsif @layout == 'management'
@@ -145,6 +146,7 @@
         -if flash[:success] || flash[:error] || flash[:warning]
           =render partial: 'layouts/flash_messages'
         =yield
+        =render partial: 'layouts/footer_disclaimer' if @group&.disclaimer
         =render partial: 'layouts/footer'
 
 

@@ -1,10 +1,11 @@
 <template>
   <div>
     <section
+      :id="'cbe-response-modal-'+responseOptionId"
       :class="`exhibits-sidebar-links ${responseOptionType}-icon`"
-      @click="show()"
+      @click="show('cbe-response-modal-'+responseOptionId)"
     >
-      {{ responseOptionName }}
+    <div>{{ responseOptionName }}<button v-if="loading" class="vue-loader vue-loader-cbe"></button></div>
     </section>
     <div>
       <VueModal
@@ -99,6 +100,7 @@ export default {
       multipleResponseOption: this.getInitialMultipleValue(
         this.responseOptionQuantity
       ),
+      loading: false
     };
   },
   watch: {
@@ -183,8 +185,14 @@ export default {
         eventBus.$emit("update-question-answer", data);
       }
     },
-    show () {
-      this.$modal.show("modal-"+this.responseOptionType+"-"+this.responseOptionName);
+    show (id) {
+      this.loading = true;
+      setTimeout(() => {
+        this.loading = false;
+        this.$modal.show("modal-"+this.responseOptionType+"-"+this.responseOptionName);
+        $('.components-sidebar .components div').removeClass('active-modal');
+        eventBus.$emit("update-modal-z-index", `modal-${this.responseOptionType}-${this.responseOptionName}`);
+      }, 10);
     },
     hide () {
       this.$modal.hide("modal-"+this.responseOptionType+"-"+this.responseOptionName);

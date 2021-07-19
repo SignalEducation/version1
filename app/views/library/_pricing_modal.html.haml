@@ -12,7 +12,7 @@
         .row
           - if @course_product
             .col-sm-6.col-md-4
-              .card.text-center.mb-4.hero-section-tutor-card.mt-4{style: 'height: 360px'}
+              .card.text-center.mb-4.hero-section-tutor-card.mt-4
                 = link_to '', product_link(@course_product, current_user, params[:login]), class: 'hero-section-show-link-window'
                 .py-4
                   .h3
@@ -27,11 +27,11 @@
                           =@course_product.savings_label
                         .pt-4.pb-2.col-md-12.hero-section-responsive-view-course
                           %p
-                            = link_to 'Pay Now', product_link(@course_product, current_user, params[:login]), class: 'btn btn-secondary btn-sm'
+                            = link_to 'Pay Now', product_link(@course_product, current_user, params[:login]), class: 'btn btn-secondary btn-sm sub-pricing-btn'
                     -else
                       .pt-5.col-md-12.hero-section-responsive-view-course{style: 'padding-bottom: 3px !important;'}
                         %p
-                          = link_to 'Pay Now', product_link(@course_product, current_user, params[:login]), class: 'btn btn-secondary btn-sm'
+                          = link_to 'Pay Now', product_link(@course_product, current_user, params[:login]), class: 'btn btn-secondary btn-sm sub-pricing-btn'
 
                     .pb-2.col-md-12.hero-section-responsive-view-course
                       %p.small.my-4
@@ -40,7 +40,7 @@
 
           -@subscription_plans.each do |plan|
             .col-sm-6.col-md-4
-              .card.text-center.mb-4.hero-section-tutor-card.mt-4{style: 'height: 360px'}
+              .card.text-center.mb-4.hero-section-tutor-card.mt-4
                 = link_to '', pricing_url(@group.name_url), class: 'hero-section-show-link-window'
                 .py-4
                   .h3
@@ -55,14 +55,14 @@
                           =plan.savings_label
                         .pt-4.pb-2.col-md-12.hero-section-responsive-view-course
                           %p
-                            = link_to 'Subscribe Now', subscription_checkout_special_link(plan.exam_body_id, plan.guid, params[:login]), class: 'btn btn-secondary btn-sm'
+                            = link_to 'Subscribe Now', subscription_checkout_special_link(plan.exam_body_id, plan.guid, params[:login]), class: 'btn btn-secondary btn-sm sub-pricing-btn'
                     -else
                       .pt-4.col-md-12.hero-section-responsive-view-course
                         %p.h5.text-orange.mb-0
                           =plan.savings_label
                         .pt-4.pb-2.col-md-12.hero-section-responsive-view-course
                           %p
-                            = link_to 'Subscribe Now', subscription_checkout_special_link(plan.exam_body_id, plan.guid, params[:login]), class: 'btn btn-secondary btn-sm'
+                            = link_to 'Subscribe Now', subscription_checkout_special_link(plan.exam_body_id, plan.guid, params[:login]), class: 'btn btn-secondary btn-sm sub-pricing-btn'
 
                     .py-2.pb-0.col-md-12.hero-section-responsive-view-course
                       %p.small.mb-0
@@ -87,11 +87,11 @@
                           =@lifetime_product.savings_label
                         .pt-4.pb-2.col-md-12.hero-section-responsive-view-course
                           %p
-                            = link_to 'Pay Now', product_link(@lifetime_product, current_user, params[:login]), class: 'btn btn-secondary btn-sm'
+                            = link_to 'Pay Now', product_link(@lifetime_product, current_user, params[:login]), class: 'btn btn-secondary btn-sm sub-pricing-btn'
                     -else
                       .pt-5.col-md-12.hero-section-responsive-view-course{style: 'padding-bottom: 3px !important;'}
                         %p
-                          = link_to 'Pay Now', product_link(@lifetime_product, current_user, params[:login]), class: 'btn btn-secondary btn-sm'
+                          = link_to 'Pay Now', product_link(@lifetime_product, current_user, params[:login]), class: 'btn btn-secondary btn-sm sub-pricing-btn'
 
                     .pb-2.col-md-12.hero-section-responsive-view-course
                       %p.small.my-4

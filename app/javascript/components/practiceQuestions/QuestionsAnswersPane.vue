@@ -26,6 +26,7 @@
 
         <div v-else>
           <spreadsheet-editor
+            :style="{ minWidth: this.spreadSheetWidth }"
             :initial-data="convertStr2Obj(questionContent.answer_content)"
             :key="questionContent.id"
             @spreadsheet-updated="syncSpreadsheetData"
@@ -82,6 +83,7 @@ export default {
       questionContent: null,
       fillArr: null,
       lastTimeUpdated: new Date(),
+      spreadSheetWidth: '800px'
     };
   },
   mounted() {
@@ -99,6 +101,9 @@ export default {
   },
   async created() {
     this.questionContent = this.questionContentArray[this.activePage - 1];
+    eventBus.$on("splitpane-resize", (splitWidth) => {
+      this.spreadSheetWidth = splitWidth;
+    })
   },
   methods: {
     handleChange(value) {
@@ -134,11 +139,10 @@ export default {
     syncSpreadsheetData(jsonData) {
       this.questionContent.answer_content = { content: { data: jsonData } };
     },
-    autoUpdateAnswer: function(newValue, oldValue){
+    autoUpdateAnswer: function(newValue, oldValue = {}){
       const dateNow = new Date();
-
       // Update response data if last update is more then 10 seconds OR new value is bigger then 20 characters.
-        if (dateNow - this.lastTimeUpdated > 10000 || (newValue.length - oldValue.length > 20)) {
+      if (dateNow - this.lastTimeUpdated > 10000 || (newValue.length - oldValue.length > 20)) {
         this.lastTimeUpdated = dateNow;
         this.updateCurrentAnswer();
       }

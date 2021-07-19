@@ -32,7 +32,6 @@
                   .btn.btn-primary
                     ='Continue Learning'
 
-
 :javascript
   $(document).ready(function(){
     window.uetq = window.uetq || [];
@@ -49,10 +48,12 @@
       name: "#{@subscription&.subscription_plan&.name}",
       brand: "#{@subscription&.subscription_plan&.exam_body&.name}",
       subscription_interval: "#{@subscription&.subscription_plan&.interval_name}",
-      content_category: "Subscription"
+      content_category: "#{@subscription.kind.humanize}"
     });
 
     if ("#{@subscription.kind}" === 'new_subscription') {
+      var price = "#{@discounted_price}"
+
       gtag('event', 'purchase', {
         "transaction_id": "#{@subscription&.id}",
         "affiliation": "subscription",
@@ -65,16 +66,18 @@
             "brand": "Subscription",
             "category": "#{@subscription&.subscription_plan&.interval_name}",
             "quantity": 1,
-            "price": "#{@subscription&.subscription_plan&.price}"
+            "price": price
           },
         ]
       });
     }
 
-    let banner = "#{@banner.present?.to_s}";
+    let banner              = "#{@banner.present?.to_s}";
+    let onboarding          = "#{current_user&.analytics_onboarding_valid?.to_s}";
+    let coupon_code         = "#{@coupon_code}";
+    let discounted_price    = "#{@discounted_price}";
+    let preferredExamBody   = "#{current_user&.preferred_exam_body&.name}";
     let preferredExamBodyId = "#{current_user&.preferred_exam_body_id}";
-    let preferredExamBody = "#{current_user&.preferred_exam_body&.name}";
-    let onboarding = "#{current_user&.analytics_onboarding_valid?.to_s}";
 
     analytics.page('Payment Complete', {
       preferredExamBodyId: preferredExamBodyId,
@@ -90,7 +93,8 @@
       planInterval: "#{@subscription&.subscription_plan&.payment_frequency_in_months}",
       planIntervalName: "#{@subscription&.subscription_plan&.interval_name}",
       price: "#{@subscription&.subscription_plan&.price}",
-      paymentProvider: "#{@subscription&.subscription_type}"
+      paymentProvider: "#{@subscription&.subscription_type}",
+      discountedPrice: discounted_price,
+      couponCode: coupon_code
     });
-
   });

@@ -8,7 +8,7 @@
            preferred_exam_body_id: current_user&.preferred_exam_body_id, preferred_exam_body: current_user&.preferred_exam_body&.name, banner: @banner.present?.to_s, auto_play: @course_lesson.free.to_s,
             onboarding: current_user&.analytics_onboarding_valid?.to_s, free_lesson: @course_lesson&.free&.to_s, step_order: @index_order, previous_completion_count: @previous_completion_count,
              video_length_in_seconds: @course_step&.estimated_time_in_seconds, video_length_in_minutes_seconds: seconds_to_time(@course_step&.estimated_time_in_seconds) }}
-          =render partial: 'courses/video_player', locals: { cme: @course_step }
+          =render partial: 'courses/video_player', locals: { cme: @course_step, responsive: false, autoPlay: false }
 
     .pt-5.pb-5
 

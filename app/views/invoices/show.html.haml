@@ -103,7 +103,7 @@
     - if @invoice.charges.present?
       .row.l-margin-top.l-margin-bottom
         .col-md-12
-          .box-item.table-box#invoices-panel.l-margin-bottom-huge
+          .box-item.table-box.invoice-charges#invoices-panel.l-margin-bottom-huge
             .col-sm-12
               %h2.l-margin-bottom
                 Charges
@@ -138,5 +138,3 @@
                           =tick_or_cross(charge.paid)
                         %td
                           =link_to 'View', subscription_management_invoice_charge_url(@invoice.subscription.id, @invoice.id, charge.id), class: 'btn btn-primary btn-xs'
-
-

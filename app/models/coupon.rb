@@ -83,7 +83,7 @@ class Coupon < ApplicationRecord
         valid = true unless discounted_number.negative?
       end
     end
-    [valid, discounted_price, reason]
+    [valid, discounted_price, reason, coupon&.id]
   end
 
   # Called from Subscriptions#create action
@@ -138,6 +138,16 @@ class Coupon < ApplicationRecord
     return if Rails.env.test?
 
     Stripe::Coupon.update(code, name: name)
+  end
+
+  def price_discounted(plan_id)
+    sub_plan = SubscriptionPlan.find(plan_id)
+
+    if amount_off
+      sub_plan.price.to_f - (amount_off / 100).to_f
+    elsif percent_off
+      sub_plan.price.to_f - ((sub_plan.price.to_f / 100) * percent_off)
+    end
   end
 
   protected

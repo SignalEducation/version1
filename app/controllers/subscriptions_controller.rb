@@ -22,7 +22,6 @@ class SubscriptionsController < ApplicationController
 
   def create
     valid_subscription_type?(params['payment-options'])
-
     @subscription        = Subscription.new(subscription_params)
     subscription_service = SubscriptionService.new(@subscription)
     subscription_service.check_valid_subscription?(params)
@@ -69,7 +68,12 @@ class SubscriptionsController < ApplicationController
   def personal_upgrade_complete
     @subscription = current_user.subscriptions.find_by(completion_guid: params[:completion_guid]) if params[:completion_guid]
     redirect_to account_url(anchor: 'account-info') and return unless @subscription
+
     @subscription.update(completion_guid: nil)
+    coupon_data       = @subscription.coupon_data
+    @coupon_code      = coupon_data.present? ? coupon_data[:code] : ''
+    @discounted_price = coupon_data.present? ? coupon_data[:price_discounted]&.round(2) : ''
+
     ab_finished("#{@subscription&.subscription_plan&.exam_body&.group&.name_url}_pricing_link")
     Rails.logger.info "DataLayer Event: Subscription#personal_upgrade_complete - Subscription: #{@subscription.id} with completion_guid #{params[:completion_guid]}, Revenue: #{@subscription.subscription_plan.price}, PlanName: #{@subscription.subscription_plan.name}, Brand: #{@subscription.subscription_plan.exam_body.name}"
     seo_title_maker('Thank You for Subscribing | LearnSignal',
@@ -219,8 +223,7 @@ class SubscriptionsController < ApplicationController
   def subscription_params
     params.require(:subscription).permit(
       :user_id, :subscription_plan_id, :stripe_token, :terms_and_conditions,
-      :hidden_coupon_code, :use_paypal, :completion_guid, :kind
-    )
+      :hidden_coupon_code, :use_paypal, :completion_guid, :kind, :coupon_id)
   end
 
   def set_subscription

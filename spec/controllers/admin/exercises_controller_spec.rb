@@ -9,6 +9,10 @@ describe Admin::ExercisesController, type: :controller do
   let(:exercise)             { create(:exercise) }
   let(:other_exercise)       { create(:exercise) }
 
+  let!(:exercise_A)           { create(:exercise, state: 'returned', submitted_on: Time.zone.now + 2.days, corrected_on: Time.zone.now + 6.days, returned_on: Time.zone.now + 6.days) }
+  let!(:exercise_B)           { create(:exercise, state: 'returned', submitted_on: Time.zone.now + 4.days, corrected_on: Time.zone.now + 4.days, returned_on: Time.zone.now + 2.days) }
+  let!(:exercise_C)           { create(:exercise, state: 'returned', submitted_on: Time.zone.now + 6.days, corrected_on: Time.zone.now + 2.days, returned_on: Time.zone.now + 4.days) }
+
   context 'Logged in as a normal admin user' do
     before(:each) do
       activate_authlogic
@@ -74,6 +78,39 @@ describe Admin::ExercisesController, type: :controller do
         get :index
         expect(response.status).to eq(200)
         expect(response).to render_template(:index)
+      end
+
+      context 'sort exercises by dates params' do
+        it 'should sort by submitted on ascending when sort_by params equals due_on and sort_direction equals asc' do
+          post :index, params: { sort_by: 'due_on', sort_direction: :asc }
+          expect(response.status).to eq(200)
+          expect(response).to render_template(:index)
+        end
+        it 'should sort by submitted on descending when sort_by params equals due_on and sort_direction equals desc' do
+          post :index, params: { sort_by: 'due_on', sort_direction: :desc }
+          expect(response.status).to eq(200)
+          expect(response).to render_template(:index)
+        end
+        it 'should sort by corrected on ascending when sort_by params equals corrected_on and sort_direction equals asc' do
+          post :index, params: { sort_by: 'corrected_on', sort_direction: :asc }
+          expect(response.status).to eq(200)
+          expect(response).to render_template(:index)
+        end
+        it 'should sort by corrected on descending when sort_by params equals corrected_on and sort_direction equals desc' do
+          post :index, params: { sort_by: 'corrected_on', sort_direction: :desc }
+          expect(response.status).to eq(200)
+          expect(response).to render_template(:index)
+        end
+        it 'should sort by returned on ascending when sort_by params equals returned_on and sort_direction equals asc' do
+          post :index, params: { sort_by: 'returned_on', sort_direction: :asc }
+          expect(response.status).to eq(200)
+          expect(response).to render_template(:index)
+        end
+        it 'should sort by returned on descending when sort_by params equals returned_on and sort_direction equals desc' do
+          post :index, params: { sort_by: 'returned_on', sort_direction: :desc }
+          expect(response.status).to eq(200)
+          expect(response).to render_template(:index)
+        end
       end
     end
 

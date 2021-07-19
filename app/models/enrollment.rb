@@ -163,9 +163,7 @@ class Enrollment < ApplicationRecord
         0
       end
     end
-
   end
-
 
   protected
 
@@ -198,5 +196,4 @@ class Enrollment < ApplicationRecord
 
     EnrollmentExpirationWorker.perform_at(exam_date.to_datetime + 23.hours, id) unless Rails.env.test?
   end
-
 end

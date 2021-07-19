@@ -36,6 +36,11 @@
                   %label
                     =f.check_box :emit_certificate
                     =t('views.exam_bodies.form.emit_certificate')
+              .col-sm-6.my-3
+                .checkbox
+                  %label
+                    =f.check_box :new_onboarding
+                    =t('views.exam_bodies.form.new_onboarding')
           .col-sm-6
             .form-group
               =f.label :landing_page_h1, t('views.exam_bodies.form.landing_page_h1')

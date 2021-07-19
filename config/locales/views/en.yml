@@ -723,6 +723,7 @@ en:
         has_sittings: Has Sittings?
         has_products: Has Products?
         emit_certificate: Emit Certificate?
+        new_onboarding: New Onboarding
         preferred_payment_frequency: Preferred Payment Interval (optional)
         subscription_page_subheading_text: Subscription Payment Subheading
         subscription_page_subheading_text_placeholder: Subscription Payment Subheading
@@ -903,6 +904,8 @@ en:
         seo_description_placeholder: SEO Description
         short_description: Short Description
         short_description_placeholder: Subheading Tagline
+        disclaimer: Disclaimer
+        disclaimer_placeholder: Disclaimer text
         onboarding_level_heading: Onboarding Heading
         onboarding_level_heading_placeholder: Onboarding Heading
         onboarding_level_subheading: Onboarding Sub-Heading
@@ -967,6 +970,12 @@ en:
         stats_content_placeholder: "* seperated values"
         header_description: Header Description
         course_description: Course Description
+        onboarding_welcome_heading: Onboarding Welcome Heading
+        onboarding_welcome_heading_placeholder: Onboarding Welcome Heading
+        onboarding_welcome_subheading: Onboarding Welcome Sub-Heading
+        onboarding_level_heading: Onboarding Level Heading
+        onboarding_level_heading_placeholder: Onboarding Level Heading
+        onboarding_level_subheading: Onboarding Level Sub-Heading
 
       index:
         h1: Landing Pages

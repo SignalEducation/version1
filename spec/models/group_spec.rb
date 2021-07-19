@@ -81,6 +81,7 @@ describe Group do
   it { should_not validate_presence_of(:background_image) }
 
   # callbacks
+  it { should callback(:filter_disclaimer_text).before(:save) }
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes

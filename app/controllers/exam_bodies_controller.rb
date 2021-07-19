@@ -61,7 +61,7 @@ class ExamBodiesController < ApplicationController
       :constructed_response_intro_heading, :constructed_response_intro_text, :logo_image,
       :registration_form_heading, :login_form_heading, :landing_page_h1, :landing_page_paragraph,
       :products_subheading, :products_seo_title, :emit_certificate, :pricing_heading,
-      :pricing_subheading, :pricing_seo_title, :pricing_seo_description
+      :pricing_subheading, :pricing_seo_title, :pricing_seo_description, :new_onboarding
     )
   end
 end

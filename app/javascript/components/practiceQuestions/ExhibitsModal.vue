@@ -1,37 +1,36 @@
 <template>
     <div>
-        <button @click="modalIsOpen = !modalIsOpen; updateZindex(); resetModalDims()" :href="'#exhibitsModal'+ exhibitsInd" class="learn-more" data-backdrop="false" data-toggle="modal">
-            <div class="circle"><span class="icon arrow"></span></div>
-            <span class="button-text"><i class="material-icons exhibits-icon">description</i><p v-html="exhibitsObj.name"></p></span>
+        <button :id="'exhibitsModal'+ exhibitsInd" @click="show('exhibitsModal'+ exhibitsInd)" class="learn-more components-sidebar-links">
+          <div class="circle"><span class="icon arrow"></span></div>
+          <span class="button-text"><i class="material-icons exhibits-icon">description</i><p v-html="exhibitsObj.name"></p></span>
         </button>
-        <div @click="updateZindex()" :id="'exhibitsModal'+ exhibitsInd" class="modal2-solution fade resizemove-sol exhibits-modals" v-show="modalIsOpen">
+        <button v-if="loading" class="vue-loader"></button>
+        <VueModal
+          :componentType="componentType"
+          :componentName="exhibitsObj.name"
+          :componentModal="componentModal"
+        >
+        <div slot="body">
           <div class="modal2-dialog">
               <div class="modal2-content">
-                <button @click="modalIsOpen = !modalIsOpen" type="button" class="close modal-close modal-close-solution" data-dismiss="modal" aria-hidden="true">&times;</button>
-                  <div class="modal2-header-lg">
-                      <h4 v-html="exhibitsObj.name" class="modal2-title"></h4>
-                  </div>
-                  <div class="modal2-body modal-inner-scroll">
-                    <br>
-                    <div v-if="exhibitsObj.kind === 'open'">
-                      <p v-html="exhibitsObj.content"></p>
-                    </div>
-                    <div v-else-if="exhibitsObj.kind === 'spreadsheet'">
-                      <SpreadsheetEditor
-                          :initial-data="convertStr2Obj(exhibitsObj.content)"
-                          :key="exhibitsObj.id"
-                          class="exhibits-spread-sheet"
-                          @spreadsheet-updated="syncSpreadsheetData"
-                      />
-                    </div>
-                    <div v-else>
-                      <PDFViewer :active=true :file-url="exhibitsObj.document" />
-                    </div>
+                <div v-if="exhibitsObj.kind === 'open'">
+                  <p v-html="exhibitsObj.content"></p>
+                </div>
+                <div v-if="exhibitsObj.kind === 'spreadsheet'">
+                  <SpreadsheetEditor
+                      :initial-data="convertStr2Obj(exhibitsObj.content)"
+                      :key="exhibitsObj.id"
+                      class="exhibits-spread-sheet"
+                      @spreadsheet-updated="syncSpreadsheetData"
+                  />
+                </div>
+                <div v-else>
+                  <PDFViewer :active=true :file-url="exhibitsObj.document" class="pq-modal-pdf" />
                 </div>
               </div>
           </div>
-          <div class="draggable-overlay-text"></div>
         </div>
+      </VueModal>
     </div>
 </template>
 
@@ -39,12 +38,14 @@
 import eventBus from "../cbe/EventBus.vue";
 import SpreadsheetEditor from "../SpreadsheetEditor/SpreadsheetEditor.vue";
 import PDFViewer from "../../lib/PDFViewer/index.vue";
+import VueModal from "../VueModal.vue";
 
 export default {
   components: {
     eventBus,
     SpreadsheetEditor,
     PDFViewer,
+    VueModal
   },
   props: {
     exhibitsObj: {
@@ -53,12 +54,25 @@ export default {
     exhibitsInd: {
       type: Number,
     },
+    componentType: {
+      type: String,
+      default: "practice-question",
+    },
+    componentName: {
+      type: String,
+      default: "",
+    },
+    componentModal: {
+      type: Boolean,
+      default: true,
+    },
   },
   data() {
     return {
       modalIsOpen: false,
       indexOfQuestion: 0,
       solutionObj: null,
+      loading: false
     };
   },
   created() {
@@ -82,15 +96,23 @@ export default {
     handleChange(value) {
       this.modalIsOpen = value;
     },
-    updateZindex() {
-      eventBus.$emit("z-index-click", `exhibitsModal${this.exhibitsInd}`);
-    },
-    resetModalDims() {
-      $('#exhibitsModal'+this.exhibitsInd).css('width', '60em');
-      $('#exhibitsModal'+this.exhibitsInd).css('height', '37em');
-    },
     convertStr2Obj(str) {
       return JSON.parse(str);
+    },
+    show (id) {
+      this.loading = true;
+      $("#"+id).css("display","none");
+      setTimeout(() => {
+        this.loading = false;
+        $("#"+id).css("display","block");
+        this.$modal.show("modal-"+this.componentType+"-"+this.exhibitsObj.name);
+        $('.components-sidebar .components div').removeClass('active-modal');
+        eventBus.$emit("update-modal-z-index", `modal-${this.componentType}-${this.exhibitsObj.name}`);
+      }, 10);
+    },
+    hide () {
+      $('.latent-modal').removeClass('active-modal');
+      this.$modal.hide("modal-"+this.componentType+"-"+this.exhibitsObj.name);
     },
   },
   watch: {

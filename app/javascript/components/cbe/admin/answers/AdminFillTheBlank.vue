@@ -6,6 +6,7 @@
       <div class="col-sm-12">
         <input
           v-model="answer"
+          id="fillInTheBlankAnswer"
           class="form-control answers-input"
           placeholder="Add the answer text here..."
         />

@@ -28,6 +28,10 @@
             %label
               =f.check_box :tab_view
               =t('views.groups.form.tab_view')
+        .form-group
+          =f.label :disclaimer, t('views.groups.form.disclaimer')
+          .input-group.input-group-lg
+            =f.text_area :disclaimer, as: :summernote, placeholder: t('views.groups.form.disclaimer_placeholder'), rows: 10, class: 'form-control', id: 'editor'
 
       .col-sm-6
         .form-group
@@ -89,3 +93,10 @@
     .col-sm-12
       =f.submit t('views.general.save'), class: 'btn btn-primary'
       =link_to t('views.general.cancel'), groups_path, class: 'btn btn-secondary'
+
+:javascript
+
+  $('#editor').summernote({
+    disableDragAndDrop: true,
+    height: 300
+  });
