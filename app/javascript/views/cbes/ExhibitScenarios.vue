@@ -16,6 +16,7 @@
               <CbeExhibitsModal
                 v-for="exhibit in scenarioData.exhibits"
                 :key="exhibit.id"
+                :componentInd="exhibit.id"
                 :componentType="exhibit.kind"
                 :componentName="exhibit.name"
                 :componentModal="exhibit.modal"

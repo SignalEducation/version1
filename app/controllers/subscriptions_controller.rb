@@ -72,7 +72,7 @@ class SubscriptionsController < ApplicationController
     @subscription.update(completion_guid: nil)
     coupon_data       = @subscription.coupon_data
     @coupon_code      = coupon_data.present? ? coupon_data[:code] : ''
-    @price_discounted = coupon_data.present? ? coupon_data[:price_discounted]&.round(2) : ''
+    @discounted_price = coupon_data.present? ? coupon_data[:price_discounted]&.round(2) : ''
 
     ab_finished("#{@subscription&.subscription_plan&.exam_body&.group&.name_url}_pricing_link")
     Rails.logger.info "DataLayer Event: Subscription#personal_upgrade_complete - Subscription: #{@subscription.id} with completion_guid #{params[:completion_guid]}, Revenue: #{@subscription.subscription_plan.price}, PlanName: #{@subscription.subscription_plan.name}, Brand: #{@subscription.subscription_plan.exam_body.name}"

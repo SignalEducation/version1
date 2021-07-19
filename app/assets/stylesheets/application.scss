@@ -4424,6 +4424,15 @@ a.card:hover .card-title .card-explanation {
   padding: 0 2rem;
   font-size: .825rem
 }
+.disclaimer-footer {
+  padding: 0;
+  background: #f2f2f2;
+    p, h1, h2, h3, h4, h5 {
+      color: #999999;
+      margin: 0 0 20px 0;
+      font-size: 1.0rem;
+  }
+}
 @media (min-width:576px) {
   .footer {
     padding: 0 0 5rem 0
@@ -6824,6 +6833,11 @@ button.sub-details[aria-expanded="true"]:before{
 .vue-modal-body{
   padding: 35px;
 }
+#modal-navbar-calculator, #modal-nav-calculator {
+  .vue-modal-body {
+    position: static !important;
+  }
+}
 .active-modal {
   z-index: 1200 !important;
 }
@@ -8168,9 +8182,9 @@ button.sub-details[aria-expanded="true"]:before{
 }
 .vue-loader{
   position: absolute;
-  top: 50%;   left: 50%;
+  top: 50%;   left: 6%;
   transform: translate(-50%,-50%);
-  width: 50px;  height: 50px;
+  width: 25px;  height: 25px;
   border: 3px solid #fff;
   border-color: #00B67B transparent #00B67B transparent;
   border-radius: 50%;
@@ -8181,7 +8195,7 @@ button.sub-details[aria-expanded="true"]:before{
   position: absolute;
   top: 50%;   left: 50%;
   transform: translate(-50%,-50%);
-  border: 3px solid #fff;
+  border: 2px solid #fff;
   border-radius: 50%;
   animation: animate 1.8s infinite linear;
 }
@@ -8208,8 +8222,9 @@ button.sub-details[aria-expanded="true"]:before{
   width: 30px;
   height: 30px;
   top: 14px;
+  left: 50%;
+  background-color: transparent;
 }
-
 .step-bar {
   counter-reset: step;
 }
@@ -8260,7 +8275,6 @@ button.sub-details[aria-expanded="true"]:before{
     z-index : -1;
   }
 }
-
 .step-bar li:first-child:after {
   content: none;
 }
@@ -8272,4 +8286,13 @@ button.sub-details[aria-expanded="true"]:before{
 }
 .step-bar li.active + li:after {
   background-color: $primary;
+}
+.partner-logos {
+  display: flex;
+  justify-content: center;
+}
+.vue-loader-cbe {
+  position: relative;
+  left: 10%;
+  top: 6px;
 }

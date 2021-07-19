@@ -18,12 +18,8 @@ module Admin
           @filters[key] = value
         end
 
-        case params[:state]
-        when 'returned', 'all'
-          @exercises = @exercises.order(created_at: :desc)
-        else
-          @exercises = @exercises.order(created_at: :asc)
-        end
+        @exercises = sort_exercises_arr(@exercises, params[:sort_direction])
+
       else
         @exercises = @exercises.with_state(:submitted).order(created_at: :asc)
       end
@@ -163,6 +159,19 @@ module Admin
       params.require(:exercise).permit(
         :correction, :corrector_id, :submission, :product_id, :order_id
       )
+    end
+
+    def sort_exercises_arr(exercises_arr, direction)
+      case params[:sort_by]
+      when 'due_on'
+        exercises_arr.order(submitted_on: direction)
+      when 'corrected_on'
+        exercises_arr.order(corrected_on: direction)
+      when 'returned_on'
+        exercises_arr.order(returned_on: direction)
+      else
+        exercises_arr.order(submitted_on: direction)
+      end
     end
   end
 end
