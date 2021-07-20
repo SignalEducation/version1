@@ -27,7 +27,7 @@ namespace :total_revenue do
 
               user.refunds.each do |refund|
                 Rails.logger.info "======= Update value from refund ##{refund.id} from user ##{user.id}. ========="
-                invoice.update_total_revenue
+                refund.update_total_revenue
               end
             end
           end
