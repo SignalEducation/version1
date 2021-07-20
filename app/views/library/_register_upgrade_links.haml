@@ -5,5 +5,5 @@
   = link_to pricing_url(@group.name_url), class: 'btn btn-primary upgrade' do
     Upgrade Now
 -elsif !user
-  =link_to new_student_url, class: 'btn btn-primary upgrade', onclick: "gtag('event', 'clicks_register_now', {'event_category': 'pre-registration', 'event_label': '#{@course.name}'})" do
+  =link_to new_student_url, class: 'btn btn-primary upgrade', onclick: "gtag('event', 'clicks_register_now', {'event_category': 'pre-registration', 'event_label': '#{@course.name}'});" do
     Register Now

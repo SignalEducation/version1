@@ -124,7 +124,7 @@
                 - @exam_bodies.each_with_index do |exam_body, counter|
                   %li.nav-item{data: {tab_name: exam_body.name}}
                     -# TODO add active to first li
-                    %a{class: "nav-link #{counter == 0 ? 'active' : ''}", id: "#{exam_body.group.name_url}-tab", data: {toggle: 'tab'}, href: "##{exam_body.group.name_url}", aria: {controls: "#{exam_body.group.name_url}", selected: 'false'}, role: 'tab', onclick: "gtag('event', 'clicks_exam_body_price', {'event_category': 'pre-registration', 'event_label': '#{exam_body.name}'});" }
+                    %a{class: "nav-link #{counter == 0 ? 'active' : ''}", id: "#{exam_body.group.name_url}-tab", data: {toggle: 'tab'}, href: "##{exam_body.group.name_url}", aria: {controls: "#{exam_body.group.name_url}", selected: 'false'}, role: 'tab', onclick: "gtag('event', 'clicks_exam_body_price', {'event_category': 'pre-registration', 'event_label': '#{exam_body.name}'});"}
                       =exam_body.name
 
             %section.py-3.py-md-4

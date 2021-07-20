@@ -2,12 +2,10 @@
   %script{:async => "", :src => "https://www.googletagmanager.com/gtag/js?id=UA-141784351-1"}
   :javascript
     const gtag_id = 'UA-141784351-1';
-    const map_dimension = 'dimension4';
 -elsif Rails.env.staging?
   %script{:async => "", :src => "https://www.googletagmanager.com/gtag/js?id=UA-185199057-2"}
   :javascript
     const gtag_id = 'UA-185199057-2';
-    const map_dimension = 'dimension1';
 
 :javascript
   var _iub = _iub || [];
@@ -31,10 +29,7 @@
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
-          gtag('config', gtag_id, {
-            'send_page_view': false,
-            'custom_map': {map_dimension: 'user_type'}
-          });
+          gtag('config', gtag_id, { 'send_page_view': false });
         // Global Site Tag
         } else {
           gtag = function (){};
@@ -44,7 +39,7 @@
         console.log('Consent Rejected On Load');
       }
     },
-    "banner":{ 
+    "banner":{
       "acceptButtonDisplay":true,
       "customizeButtonDisplay":true,
       "acceptButtonColor":"#00b67b",
@@ -54,7 +49,7 @@
       "closeButtonDisplay":false,
       "position":"float-top-center",
       "textColor":"#ffffff",
-      "backgroundColor":"#000032" 
+      "backgroundColor":"#000032"
     }};
 %script{:src => "//cdn.iubenda.com/cs/tcf/stub-v2.js", :type => "text/javascript"}
 %script{:src => "//cdn.iubenda.com/cs/iubenda_cs.js", :type => "text/javascript"}

@@ -31,7 +31,7 @@
 
       .home-hero-cta-section.pt-4.pt-sm-5.py-xl-0
         .pb-3
-          =link_to new_student_url, class: 'btn btn-primary btn-lg', onclick: "gtag('event', 'clicks_join_free', {'event_category': 'pre-registration', 'event_label': 'join_for_free'})" do
+          =link_to new_student_url, class: 'btn btn-primary btn-lg', onclick: "gtag('event', 'clicks_join_free', {'event_category': 'pre-registration', 'event_label': 'join_for_free'});" do
             -if @home_page&.header_h3.present?
               =@home_page.header_h3
             -else

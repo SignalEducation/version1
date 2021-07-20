@@ -155,17 +155,13 @@
 
       -if current_user.nil?
         :javascript
-          gtag('event', 'user_type_dimension', {'user_type': 'Not Registered',
-                                                'event_category': "user",
-                                                'event_label': "user_type"});
-
           var waitForZopim = setInterval(function () {
             if (window.$zopim === undefined || window.$zopim.livechat === undefined) {
               return;
             }
             $zopim(function() {
               $zopim.livechat.window.onShow(function(callback) {
-                gtag('event', 'clicks_support', {'event_category': 'pre-registration', 'event_label': 'support'})
+                gtag('event', 'clicks_support', {'event_category': 'pre-registration', 'event_label': 'support'});
               });
             });
             clearInterval(waitForZopim);
@@ -174,16 +170,14 @@
       -if current_user
         :javascript
           gtag('set', { 'user_id': "#{current_user.id}" });
-          gtag('event', 'user_type_dimension', {'user_type': "#{current_user.subscriber_type}",
-                                              'event_category': "user",
-                                              'event_label': "user_type"});
 
       -if flash[:datalayer_verify]
+        -landing_page = current_user&.home_page&.public_url || 'basic_registration'
         :javascript
-          gtag('event', 'verified_user', {'event_category': "pre-registration", 'event_label': "verify"});
+          gtag('event', 'verified_user', {'event_category': "pre-registration", 'event_label': "#{landing_page}"});
       -if flash[:just_signed_in]
         :javascript
-          gtag('event', 'logged_in_user', {'event_category': 'pre-registration', 'event_label': 'login'})
+          gtag('event', 'logged_in_user', {'event_category': 'pre-registration', 'event_label': 'login'});
 
       <!-- Mathjax -->
       -if @mathjax_required && !controller_name == 'home_pages'
