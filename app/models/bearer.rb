@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
-# Model responsible to external apps management.
+# Model responsible to bearers management.
 #
 # ==== Examples
 #
-# ExternalApp.create(name: 'Learnsignal Front End', slug: 'learnsignal-frontend')
-# => <ExternalApp id: 1, name: "Learnsignal Front End", slug: "learnsignal-frontend", api_key: "some_spi", status: "active">
+# Bearer.create(name: 'Learnsignal Front End', slug: 'learnsignal-frontend')
+# => <Bearer id: 1, name: "Learnsignal Front End", slug: "learnsignal-frontend", api_key: "some_spi", status: "active">
 # playon_subscriber.active? #=> true
 # playon_subscriber.inactive! #=> true
 
-class ExternalApp < ApplicationRecord
+class Beare < ApplicationRecord
   enum status: { inactive: 0, active: 1 }
 
   before_validation :generate_api_key

@@ -1,6 +1,6 @@
-class CreateExternalApps < ActiveRecord::Migration[5.2]
+class CreateBearers < ActiveRecord::Migration[5.2]
   def change
-    create_table :external_apps do |t|
+    create_table :bearers do |t|
       t.string  :name, null: false
       t.string  :slug, null: false
       t.string  :api_key, null: false

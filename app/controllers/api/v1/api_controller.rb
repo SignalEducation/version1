@@ -17,10 +17,8 @@ module Api
       # TODO: Improve return messages
       # cover invalid api key and inactive users.
       def authenticate
-        binding.pry
         authenticate_or_request_with_http_token do |token, _options|
-          binding.pry
-          @requester = ExternalApp.active.find_by(api_key: token)
+          @requester = Bearer.active.find_by(api_key: token)
         end
       end
     end
