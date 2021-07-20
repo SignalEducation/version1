@@ -155,10 +155,6 @@
 
       -if current_user.nil?
         :javascript
-          gtag('event', 'user_type_dimension', {'user_type': 'Not Registered',
-                                                'event_category': "user",
-                                                'event_label': "user_type"});
-
           var waitForZopim = setInterval(function () {
             if (window.$zopim === undefined || window.$zopim.livechat === undefined) {
               return;
@@ -174,9 +170,6 @@
       -if current_user
         :javascript
           gtag('set', { 'user_id': "#{current_user.id}" });
-          gtag('event', 'user_type_dimension', {'user_type': "#{current_user.subscriber_type}",
-                                              'event_category': "user",
-                                              'event_label': "user_type"});
 
       -if flash[:datalayer_verify]
         :javascript
