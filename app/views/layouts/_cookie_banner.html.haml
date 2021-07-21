@@ -1,5 +1,41 @@
+
 :javascript
   var _iub = _iub || [];
-  _iub.csConfiguration = {"countryDetection":true,"consentOnContinuedBrowsing":false,"enableCMP":true,"lang":"en","siteId":481960,"floatingPreferencesButtonDisplay":"bottom-left","cookiePolicyId":7779613, "banner":{ "acceptButtonDisplay":true,"customizeButtonDisplay":true,"acceptButtonColor":"#00b67b","acceptButtonCaptionColor":"white","customizeButtonColor":"#f5f8fa","customizeButtonCaptionColor":"#4D4D4D","closeButtonDisplay":false,"position":"float-top-center","textColor":"#ffffff","backgroundColor":"#000032" }};
+  _iub.csConfiguration = {
+    "countryDetection":true,
+    "consentOnContinuedBrowsing":false,
+    "enableCMP":true,
+    "lang":"en",
+    "siteId":481960,
+    "floatingPreferencesButtonDisplay":"bottom-left",
+    "cookiePolicyId":7779613,
+    "callback": {
+      onConsentGiven: function() {
+        dataLayer.push({
+          'event': 'iubenda_accept_consent_given'
+        });
+        const iub_consent = getCookie_Banner('iubenda_consent');
+        if (!iub_consent || iub_consent == "") {
+          setCookie_Banner('iubenda_consent', true, 100);
+        }
+        var hubspot_accept = document.getElementById("hs-eu-confirmation-button");
+        hubspot_accept.click();
+      },
+      onConsentRejected: function() {
+        console.log('Consent Rejected On Load...');
+      }
+    },
+    "banner":{
+      "acceptButtonDisplay":true,
+      "customizeButtonDisplay":true,
+      "acceptButtonColor":"#00b67b",
+      "acceptButtonCaptionColor":"white",
+      "customizeButtonColor":"#f5f8fa",
+      "customizeButtonCaptionColor":"#4D4D4D",
+      "closeButtonDisplay":false,
+      "position":"float-top-center",
+      "textColor":"#ffffff",
+      "backgroundColor":"#000032"
+  }};
 %script{:src => "//cdn.iubenda.com/cs/tcf/stub-v2.js", :type => "text/javascript"}
 %script{:src => "//cdn.iubenda.com/cs/iubenda_cs.js", :type => "text/javascript"}

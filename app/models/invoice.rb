@@ -333,7 +333,11 @@ class Invoice < ApplicationRecord
   def update_total_revenue
     return unless status == 'Paid'
 
-    order_id.present? ? order.update_revenue(:increment!, total) : subscription.update_revenue(:increment!, total)
+    if order_id.present?
+      order.update_revenue(:increment!, total)
+    elsif subscription_id.present?
+      subscription.update_revenue(:increment!, total)
+    end
   end
 
   protected

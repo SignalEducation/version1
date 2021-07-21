@@ -14,7 +14,6 @@
     =javascript_include_tag 'application', modernizr: :true
 
     =render partial: 'layouts/google_tag_manager'
-    =render partial: 'layouts/global_site_tag'
     -if current_user&.email_verified
       =render partial: 'layouts/segment_tracking_code'
 
@@ -37,8 +36,8 @@
       %meta{name: 'robots', content: 'noindex'}
     =render 'application/favicon'
 
-    -if Rails.env.production?
-      =render partial: 'layouts/cookie_banner'
+    =render partial: 'layouts/cookie_banner'
+    =render partial: 'layouts/global_site_tag'
 
   %body{class: (controller_name == 'student_sign_ups' && action_name != 'new') ? 'page-light' : (action_name == 'account_verified') ? 'page-gray' : ''}
 
@@ -79,10 +78,6 @@
     =render partial: 'layouts/bing_tracking_code'
     -if current_user.nil?
       :javascript
-        gtag('event', 'user_type_dimension', {'user_type': 'Not Registered',
-                                              'event_category':  "user",
-                                              'event_label':  "user_type"});
-
         var waitForZopim = setInterval(function () {
           if (window.$zopim === undefined || window.$zopim.livechat === undefined) {
             return;
@@ -99,16 +94,13 @@
     -if current_user
       :javascript
         gtag('set', { 'user_id': "#{current_user.id}" });
-        gtag('event', 'user_type_dimension', {'user_type':  "#{current_user.subscriber_type}",
-                                              'event_category':  "user",
-                                              'event_label':  "user_type"});
 
     :javascript
       gtag('event', 'visits_website', {'event_category':  "pre-registration", 'event_label':  "learnsignal"});
 
     -if flash[:just_signed_in]
       :javascript
-        gtag('event', 'logged_in_user', {'event_category': 'pre-registration', 'event_label': 'login'})
+        gtag('event', 'logged_in_user', {'event_category': 'pre-registration', 'event_label': 'login'});
 
     -unless controller_name == 'home_pages'
       %script{type: 'text/javascript'} try{Typekit.load();}catch(e){}

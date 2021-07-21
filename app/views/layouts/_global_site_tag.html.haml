@@ -1,5 +1,5 @@
 // Global site tag (gtag.js) - Google Analytics
--if Rails.env.staging?
+-if Rails.env.staging? && (cookies[:iubenda_consent].present? || current_user&.terms_and_conditions)
   %script{:async => "", :src => "https://www.googletagmanager.com/gtag/js?id=UA-185199057-2"}
   :javascript
     window.dataLayer = window.dataLayer || [];
@@ -11,7 +11,7 @@
       'custom_map': {'dimension1': 'user_type'}
     });
 
--elsif Rails.env.production?
+-elsif Rails.env.production? && (cookies[:iubenda_consent].present? || current_user&.terms_and_conditions)
   %script{:async => "", :src => "https://www.googletagmanager.com/gtag/js?id=UA-141784351-1"}
   :javascript
     window.dataLayer = window.dataLayer || [];
