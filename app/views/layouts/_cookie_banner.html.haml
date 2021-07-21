@@ -1,14 +1,5 @@
--if Rails.env.production? && (cookies[:iubenda_consent].blank? || current_user&.terms_and_conditions)
-  %script{:async => "", :src => "https://www.googletagmanager.com/gtag/js?id=UA-141784351-1"}
-  :javascript
-    const gtag_id = 'UA-141784351-1';
--elsif Rails.env.staging? && (cookies[:iubenda_consent].blank? || current_user&.terms_and_conditions)
-  %script{:async => "", :src => "https://www.googletagmanager.com/gtag/js?id=UA-185199057-2"}
-  :javascript
-    const gtag_id = 'UA-185199057-2';
 
 :javascript
-  gtag = function (){};
   var _iub = _iub || [];
   _iub.csConfiguration = {
     "countryDetection":true,
@@ -29,13 +20,6 @@
         }
         var hubspot_accept = document.getElementById("hs-eu-confirmation-button");
         hubspot_accept.click();
-        if(gtag_id) {
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          +
-          gtag('js', new Date());
-          gtag('config', gtag_id, { 'send_page_view': false });
-        }
       },
       onConsentRejected: function() {
         console.log('Consent Rejected On Load...');
