@@ -54,7 +54,7 @@
 
     -unless controller_name == 'cbes'
       =render partial: 'layouts/cookie_banner'
-
+    =render partial: 'layouts/global_site_tag'
   - if controller_name == 'cbes'
     %body.page-light
       -if @layout == 'management'

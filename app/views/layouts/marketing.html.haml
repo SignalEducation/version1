@@ -37,6 +37,7 @@
     =render 'application/favicon'
 
     =render partial: 'layouts/cookie_banner'
+    =render partial: 'layouts/global_site_tag'
 
   %body{class: (controller_name == 'student_sign_ups' && action_name != 'new') ? 'page-light' : (action_name == 'account_verified') ? 'page-gray' : ''}
 
