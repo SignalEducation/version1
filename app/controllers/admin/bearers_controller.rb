@@ -23,7 +23,7 @@ module Admin
         redirect_to admin_bearers_path
       else
         flash[:error] = t('controllers.bearers.create.flash.error')
-        redirect_to admin_bearer_path(@bearer)
+        render action: :new
       end
     end
 
