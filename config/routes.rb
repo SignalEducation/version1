@@ -65,6 +65,7 @@ Rails.application.routes.draw do
     get '404' => redirect('404-page')
 
     namespace :admin do
+      resources :bearers
       resources :exercises, only: %i[index show new create edit update] do
         get 'generate_daily_summary', on: :collection
         get 'correct_cbe', to: 'exercises#correct_cbe', as: :correct_cbe, on: :member

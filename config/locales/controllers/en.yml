@@ -606,3 +606,13 @@ en:
         flash:
           success: White Paper has been deleted
           error: White Paper was not deleted
+
+    bearers:
+      create:
+        flash:
+          success: Bearer API key has been generated successfully
+          error: Bearer API key has not been generated.
+      update:
+        flash:
+          success: Bearer details have been updated successfully
+          error: Bearer was not updated successfully

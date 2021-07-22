@@ -9,7 +9,7 @@
 # playon_subscriber.active? #=> true
 # playon_subscriber.inactive! #=> true
 
-class Beare < ApplicationRecord
+class Bearer < ApplicationRecord
   enum status: { inactive: 0, active: 1 }
 
   before_validation :generate_api_key
