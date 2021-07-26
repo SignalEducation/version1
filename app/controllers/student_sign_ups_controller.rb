@@ -148,13 +148,10 @@ class StudentSignUpsController < ApplicationController
       )
     )
 
-    @user.hutk = params[:hutk]
-    @user.hs_form_id = params[:hs_form_id]
-    @user.page_uri = params[:page_uri]
-    @user.page_name = params[:page_name]
+    @user.user_registration_calbacks(params)
 
-    if verify_recaptcha(model: @user) && @user.valid? && @user.save
-      handle_post_user_creation(@user)
+    if verify_recaptcha(model: @user) && @user.save
+      @user.handle_post_user_creation
       handle_course_enrollment(@user, params[:course_id]) if params[:course_id]
 
       # TODO: Refactor this to not use the flash
@@ -306,17 +303,6 @@ class StudentSignUpsController < ApplicationController
     @navbar = false
     @top_margin = false
     @footer = true
-  end
-
-  def handle_post_user_creation(user)
-    user.set_analytics(cookies[:_ga])
-    user.activate_user
-    user.create_stripe_customer
-    user.send_verification_email(
-      user_verification_url(email_verification_code: user.email_verification_code)
-    )
-    user.validate_referral(cookies.encrypted[:referral_data])
-    cookies.delete(:referral_data)
   end
 
   def handle_course_enrollment(user, course_id)
