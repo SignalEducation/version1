@@ -9,7 +9,10 @@
 # Add Token your_api_key_here in Authorization header;
 module Api
   module V1
-    class ApiController < Api::V1::ApplicationController
+    class ApiController < ApplicationController
+      include ExceptionHandler
+      include Response
+
       before_action :authenticate
 
       def logged_in_user
