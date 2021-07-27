@@ -3,12 +3,14 @@
     .container
       %header.hero-section
         %h1.h1-hero.mb-3
-          Check Your Email
+          -if @response[:status] == :ok
+            Check Your Email
+          -else
+            Please check your information and try again.
 
 
       %section.pb-md-6.pb-5
         .forgot-password-section.mb-7
           .form-box.text-center
             %p.p-hero.px-lg-8
-              If you don't receive an email within a couple of minutes, check your spam folder.
-
+              =@response[:json][:message]
