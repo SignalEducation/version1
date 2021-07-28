@@ -52,7 +52,7 @@
       %meta{name: 'robots', content: 'noindex'}
     =render 'application/favicon'
 
-    -unless controller_name == 'cbes'
+    -unless controller_name == 'cbes' || @layout == 'management'
       =render partial: 'layouts/cookie_banner'
     =render partial: 'layouts/global_site_tag'
   - if controller_name == 'cbes'
