@@ -671,13 +671,11 @@ class User < ApplicationRecord
     self.page_name  = form_params[:page_name]
   end
 
-  def handle_post_user_creation
+  def handle_post_user_creation(url)
     activate_user
     create_stripe_customer
 
-    send_verification_email(
-      UrlHelper.instance.user_verification_url(email_verification_code: email_verification_code)
-    )
+    send_verification_email(url)
   end
 
   private

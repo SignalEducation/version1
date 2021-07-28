@@ -151,7 +151,7 @@ class StudentSignUpsController < ApplicationController
     @user.user_registration_calbacks(params)
 
     if verify_recaptcha(model: @user) && @user.save
-      @user.handle_post_user_creation
+      @user.handle_post_user_creation(user_verification_url(email_verification_code: @user.email_verification_code))
       handle_course_enrollment(@user, params[:course_id]) if params[:course_id]
 
       # TODO: Refactor this to not use the flash

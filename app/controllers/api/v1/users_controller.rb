@@ -8,10 +8,10 @@ module Api
         user.country    = IpAddress.get_country(request.remote_ip, true)
         user.currency   = @user&.country&.currency || Currency.find_by(iso_code: 'GBP')
         user.user_group = UserGroup.student_group
-        user.user_registration_calbacks(params)
+        user.user_registration_calbacks(params[:user])
 
         if user.save
-          user.handle_post_user_creation
+          user.handle_post_user_creation(user_verification_url(email_verification_code: user.email_verification_code))
 
           json_response({ message: 'User successfully created.' }, :created)
         else
