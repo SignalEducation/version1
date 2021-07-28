@@ -54,6 +54,7 @@ Rails.application.routes.draw do
         resources :practice_questions, only: %i[show update]
       end
 
+      resources :exam_bodies, only: :index
       resources :practice_questions, only: :index
       resources :uploads, only: :create
       resources :users, only: :create
