@@ -2075,3 +2075,24 @@ en:
         utm_content: UTM Content
         utm_campaign: UTM Campaign
         started_at: Started At
+
+    bearers:
+      admin:
+        index:
+          h1: Bearers Access
+          new: Create a Bearer
+          name: Name
+          slug: Slug
+          active: Active
+        new:
+          h1: Create a new Bearer
+        edit:
+          h1: Edit Bearer
+        form:
+          name: Name
+          name_placeholder: Bearer Name.
+          slug: Slug
+          slug_placeholder: bearer-slug
+          api_key: API key
+          api_key_placeholder: API key will be auto generated...
+          status: Status
