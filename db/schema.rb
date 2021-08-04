@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_24_111626) do
+ActiveRecord::Schema.define(version: 2021_07_09_111805) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -27,6 +27,15 @@ ActiveRecord::Schema.define(version: 2021_06_24_111626) do
     t.index ["time"], name: "index_ahoy_events_on_time"
     t.index ["user_id"], name: "index_ahoy_events_on_user_id"
     t.index ["visit_id"], name: "index_ahoy_events_on_visit_id"
+  end
+
+  create_table "bearers", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "slug", null: false
+    t.string "api_key", null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "blazer_audits", id: :serial, force: :cascade do |t|

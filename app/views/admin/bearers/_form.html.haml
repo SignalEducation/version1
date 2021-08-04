@@ -1,0 +1,25 @@
+=form_for([:admin, @bearer], html: {class: 'form-horizontal', role: 'form'}) do |f|
+  =render partial: '/layouts/error_messages', locals: {thing: @bearer, message: nil}
+  .row
+    .col-sm-6
+      .form-group
+        =f.label :name, t('views.bearers.admin.form.name')
+        .input-group.input-group-lg
+          =f.text_field :name, placeholder: t('views.bearers.admin.form.name_placeholder'), class: 'form-control'
+      .form-group
+        =f.label :slug, t('views.bearers.admin.form.slug')
+        .input-group.input-group-lg
+          =f.text_field :slug, placeholder: t('views.bearers.admin.form.slug_placeholder'), class: 'form-control'
+      .form-group
+        =f.label :api_key, t('views.bearers.admin.form.api_key')
+        .input-group.input-group-lg
+          =f.text_field :api_key, placeholder: t('views.bearers.admin.form.api_key_placeholder'), class: 'form-control', disabled: true
+      .form-group
+        =f.label :status, t('views.bearers.admin.form.status')
+        .input-group.input-group-lg
+          =f.select :status, Bearer.statuses.keys.map {|status| [status.titleize, status]}
+
+  .row.pt-4
+    .col-md-12
+      =f.submit t('views.general.save'), class: 'btn btn-primary'
+      =link_to t('views.general.cancel'), admin_bearers_path, class: 'btn btn-secondary l-margin-right-big l-padding-side-3x'

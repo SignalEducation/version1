@@ -1,0 +1,28 @@
+.container
+  %header.management-console-section
+    %h1
+      =t('views.bearers.admin.index.h1')
+
+  %section.pb-7
+    .row
+      .col-sm-12
+        .box-item.table-box
+          .row
+            .col-sm
+              = link_to t('views.bearers.admin.index.new'), new_admin_bearer_path, class: 'btn btn-primary btn-sm'
+          .row
+            %table.table
+              %thead
+                %tr
+                  %th=t('views.bearers.admin.index.name')
+                  %th=t('views.bearers.admin.index.slug')
+                  %th=t('views.bearers.admin.index.active')
+                  %th
+              %tbody
+                -@bearers.each do |bearer|
+                  %tr
+                    %td=bearer.name
+                    %td=bearer.slug
+                    %td=tick_or_cross(bearer.active?)
+                    %td
+                      =link_to t('views.general.edit'), edit_admin_bearer_path(bearer), class: 'btn btn-primary btn-xs'

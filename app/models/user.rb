@@ -664,6 +664,20 @@ class User < ApplicationRecord
     subscriptions_revenue + orders_revenue
   end
 
+  def user_registration_calbacks(form_params)
+    self.hutk       = form_params[:hutk]
+    self.hs_form_id = form_params[:hs_form_id]
+    self.page_uri   = form_params[:page_uri]
+    self.page_name  = form_params[:page_name]
+  end
+
+  def handle_post_user_creation(url)
+    activate_user
+    create_stripe_customer
+
+    send_verification_email(url)
+  end
+
   private
 
   def add_guid

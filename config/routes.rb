@@ -22,10 +22,6 @@ Rails.application.routes.draw do
     post 'messages',        to: 'messages#update'
 
     namespace :v1, constraints: ApiConstraint.new(version: 1) do
-      resources :courses, only: :index do
-        post 'read_note_log'
-      end
-
       resources :cbes, format: 'json', only: %i[index show create edit update] do
         scope module: 'cbes' do
           resources :sections, only: %i[index create update destroy], shallow: true do
@@ -50,12 +46,18 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :courses, only: :index do
+        post 'read_note_log'
+      end
+
       resources :course_step_log, only: :show, format: 'json' do
         resources :practice_questions, only: %i[show update]
       end
 
+      resources :exam_bodies, only: :index
       resources :practice_questions, only: :index
       resources :uploads, only: :create
+      resources :users, only: %i[show create]
     end
   end
 
@@ -64,6 +66,7 @@ Rails.application.routes.draw do
     get '404' => redirect('404-page')
 
     namespace :admin do
+      resources :bearers
       resources :exercises, only: %i[index show new create edit update] do
         get 'generate_daily_summary', on: :collection
         get 'correct_cbe', to: 'exercises#correct_cbe', as: :correct_cbe, on: :member

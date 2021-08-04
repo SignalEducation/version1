@@ -73,7 +73,9 @@ class Message < ApplicationRecord
   end
 
   def unsubscribe_url
-    UrlHelper.instance.unsubscribe_url(message_guid: guid, host: LEARNSIGNAL_HOST) if kind == 'onboarding'
+    return unless kind == 'onboarding'
+
+    UrlHelper.instance.unsubscribe_url(message_guid: guid, host: LEARNSIGNAL_HOST)
   end
 
   protected
