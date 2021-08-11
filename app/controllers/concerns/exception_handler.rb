@@ -7,25 +7,28 @@ module ExceptionHandler
 
   included do
     rescue_from NoMethodError do |e|
-      json_response({ error: 'An internal error happened' }, :internal_server_error)
-      notify_error(e)
+      notify_error(e, :internal_server_error)
     end
 
     rescue_from ActiveRecord::RecordInvalid do |e|
-      json_response({ error: e.message }, :internal_server_error)
-      notify_error(e)
+      notify_error(e, :internal_server_error)
     end
 
     rescue_from ActiveRecord::RecordNotFound do |e|
-      json_response({ error: e.message }, :not_found)
-      notify_error(e)
+      notify_error(e, :not_found)
+    end
+
+    rescue_from JWT::DecodeError do |e|
+      notify_error(e, :internal_server_error)
     end
 
     private
 
-    def notify_error(e)
+    def notify_error(e, status)
       Airbrake.notify(e)
       Appsignal.send_error(e)
+
+      json_response({ error: e.message }, status)
     end
   end
 end
