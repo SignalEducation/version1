@@ -64,7 +64,8 @@ RSpec.describe 'Api::V1::UsersController', type: :request do
                                                   profile_image_updated_at
                                                   country
                                                   currency
-                                                  subscription_plan_category])
+                                                  subscription_plan_category
+                                                  token])
 
       end
     end
@@ -89,7 +90,7 @@ RSpec.describe 'Api::V1::UsersController', type: :request do
       end
     end
 
-    context 'Unauthorazied bearer' do
+    context 'Unauthorised bearer' do
       before do
         post api_v1_users_path,
              params: { user: 'anything here' },
