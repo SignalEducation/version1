@@ -235,6 +235,7 @@ GEM
     jquery-ui-rails (6.0.1)
       railties (>= 3.2.16)
     json (1.8.6)
+    jwt (2.2.3)
     launchy (2.4.3)
       addressable (~> 2.3)
     le (2.7.6)
@@ -627,6 +628,7 @@ DEPENDENCIES
   jbuilder (~> 2.5)
   jquery-rails
   jquery-ui-rails
+  jwt
   launchy
   le
   listen (>= 3.0.5, < 3.2)

@@ -67,3 +67,11 @@ json.subscription_plan_category do
     json.nil!
   end
 end
+
+if @user_token.present?
+  json.token @user_token
+end
+
+if @user_credentials.present?
+  json.user_credentials @user_credentials
+end

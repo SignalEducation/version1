@@ -1,27 +1,37 @@
 // Global site tag (gtag.js) - Google Analytics
--if Rails.env.staging? && (cookies[:iubenda_consent].present? || current_user&.terms_and_conditions)
+-if Rails.env.staging?
   %script{:async => "", :src => "https://www.googletagmanager.com/gtag/js?id=UA-185199057-2"}
   :javascript
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
 
-    gtag('config', 'UA-185199057-2', {
-      'send_page_view': false,
-      'custom_map': {'dimension1': 'user_type'}
-    });
-
--elsif Rails.env.production? && (cookies[:iubenda_consent].present? || current_user&.terms_and_conditions)
+    gtag('consent', 'default', { 'ad_storage': 'denied', 'analytics_storage': 'denied'});
+  -if (cookies[:iubenda_consent].present? || current_user&.terms_and_conditions)
+    :javascript
+      gtag('consent', 'update', { 'ad_storage': 'granted', 'analytics_storage': 'granted'});
+      gtag('js', new Date());
+      gtag('config', 'UA-185199057-2', {
+        'send_page_view': false,
+        'custom_map': {'dimension1': 'user_type'}
+      });
+-elsif Rails.env.production?
   %script{:async => "", :src => "https://www.googletagmanager.com/gtag/js?id=UA-141784351-1"}
   :javascript
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
 
-    gtag('config', 'UA-141784351-1', {
-      'send_page_view': false,
-      'custom_map': {'dimension4': 'user_type'}
+    gtag('consent', 'default', {
+      'ad_storage': 'denied',
+      'analytics_storage': 'denied'
     });
+  -if (cookies[:iubenda_consent].present? || current_user&.terms_and_conditions)
+    :javascript
+      gtag('consent', 'update', { 'ad_storage': 'granted', 'analytics_storage': 'granted'});
+      gtag('js', new Date());
+      gtag('config', 'UA-141784351-1', {
+        'send_page_view': false,
+        'custom_map': {'dimension4': 'user_type'}
+      });
 -else
   :javascript
     gtag = function (){};

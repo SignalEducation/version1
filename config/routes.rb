@@ -22,6 +22,11 @@ Rails.application.routes.draw do
     post 'messages',        to: 'messages#update'
 
     namespace :v1, constraints: ApiConstraint.new(version: 1) do
+      namespace :auth do
+        post 'login'
+        post 'logout'
+      end
+
       resources :cbes, format: 'json', only: %i[index show create edit update] do
         scope module: 'cbes' do
           resources :sections, only: %i[index create update destroy], shallow: true do
