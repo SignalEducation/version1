@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Api::V1::AuthController', type: :request do
+RSpec.describe Api::V1::AuthController, type: :request do
   let!(:user)          { create(:user) }
   let!(:active_bearer) { create(:bearer, :active) }
 
@@ -95,6 +95,74 @@ RSpec.describe 'Api::V1::AuthController', type: :request do
         body = JSON.parse(response.body)
 
         expect(body['error']).to eq('Invalid password.')
+      end
+    end
+  end
+
+  # logout
+  describe 'post /api/v1/auth/logout' do
+    context 'logout a valid user' do
+      before do
+        allow_any_instance_of(described_class).to receive(:current_user_session).and_return(user)
+        allow_any_instance_of(User).to receive(:destroy).and_return(true)
+
+        payload = described_class.new.send(:payload, user)
+        token   = described_class.new.send(:encode_token, payload)
+
+        post api_v1_auth_logout_path,
+               headers: { Authorization: "Bearer #{active_bearer.api_key}", token: token }
+      end
+
+      it 'returns HTTP status 200' do
+        expect(response).to have_http_status 200
+      end
+
+      it 'returns success json message' do
+        body = JSON.parse(response.body)
+
+        expect(body['message']).to eq('You have successfully logged out.')
+      end
+    end
+
+    context 'try to logout a invalid user_session' do
+      before do
+        allow_any_instance_of(described_class).to receive(:current_user_session).and_return(user)
+        allow_any_instance_of(User).to receive(:destroy).and_return(false)
+
+        payload = described_class.new.send(:payload, user)
+        token   = described_class.new.send(:encode_token, payload)
+
+        post api_v1_auth_logout_path,
+               headers: { Authorization: "Bearer #{active_bearer.api_key}", token: token }
+      end
+
+      it 'returns HTTP status 422' do
+        expect(response).to have_http_status 422
+      end
+
+      it 'returns success json message' do
+        body = JSON.parse(response.body)
+
+        expect(body['error']).to eq('Unsuccessfull attempt to logout.')
+      end
+    end
+
+    context 'try to logout a witn a blocked token' do
+      let(:blocked_token) { create(:jwt_blocked_token) }
+
+      before do
+         post api_v1_auth_logout_path,
+               headers: { Authorization: "Bearer #{active_bearer.api_key}", token: blocked_token.token }
+      end
+
+      it 'returns HTTP status 401' do
+        expect(response).to have_http_status 401
+      end
+
+      it 'returns error message data' do
+        body = JSON.parse(response.body)
+
+        expect(body['message']).to eq('User not logged in. Please log in.')
       end
     end
   end
