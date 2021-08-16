@@ -3,7 +3,6 @@
 module Api
   module V1
     class UsersController < Api::V1::ApiController
-      # before_action :authorize_user, only: :show
       before_action :set_user, only: :show
 
       def show
