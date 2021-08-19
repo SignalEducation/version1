@@ -63,7 +63,8 @@ Rails.application.routes.draw do
       resources :practice_questions, only: :index
       resources :uploads, only: :create
 
-      resources :users, only: %i[show create] do
+      resources :users, only: %i[show create update] do
+        post 'change_password'
         get 'forgot_password', on: :collection
       end
     end
