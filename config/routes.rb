@@ -67,6 +67,8 @@ Rails.application.routes.draw do
         post 'change_password'
         get 'forgot_password', on: :collection
       end
+
+      get 'pricing/', to: 'prices#index', as: :pricing
     end
   end
 
