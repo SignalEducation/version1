@@ -24,7 +24,7 @@ FactoryBot.define do
     user_id { 1 }
     course_id { 1 }
     course_log_id { 11 }
-    exam_date { (Date.today + 2.years).strftime("%Y-%m-%d") }
+    exam_date { (Date.today + 1.years).strftime("%Y-%m-%d") }
     exam_body_id { 1 }
     expired { false }
     paused { false }
