@@ -7,6 +7,7 @@ RSpec.describe 'Api::V1::UsersController', type: :request do
   let!(:user_group)      { create(:student_user_group) }
   let!(:active_bearer)   { create(:bearer, :active) }
   let!(:inactive_bearer) { create(:bearer, :inactive) }
+  let(:user)             { create(:user) }
 
   before do
     allow_any_instance_of(User).to receive(:handle_post_user_creation).and_return(true)
@@ -175,6 +176,64 @@ RSpec.describe 'Api::V1::UsersController', type: :request do
         body = JSON.parse(response.body)
 
         expect(body['error']).to eq("Couldn't find User with 'id'=9999999")
+      end
+    end
+  end
+
+  # forgot_password
+  describe 'get /api/v1/users/forgot_password' do
+    context 'start a valid reset password process' do
+      before do
+        get forgot_password_api_v1_users_path(email: user.email),
+            headers: { Authorization: "Bearer #{active_bearer.api_key}" }
+      end
+
+      it 'returns HTTP status 200' do
+        expect(response).to have_http_status 200
+      end
+
+      it 'returns success json message' do
+        body = JSON.parse(response.body)
+
+        expect(body['message']).to eq("Check your mailbox for further instructions. If you don't receive an email from learnsignal within a couple of minutes, check your spam folder.")
+      end
+    end
+
+    context 'reset password returns not found user' do
+      let(:no_user_email) { 'no_user@test.com' }
+
+      before do
+        get forgot_password_api_v1_users_path(email: no_user_email),
+            headers: { Authorization: "Bearer #{active_bearer.api_key}" }
+      end
+
+      it 'returns HTTP status 404' do
+        expect(response).to have_http_status 404
+      end
+
+      it 'returns success json message' do
+        body = JSON.parse(response.body)
+
+        expect(body['message']).to eq('No registered user using this email.')
+      end
+    end
+
+    context 'forgot password returns invalid email format' do
+      let(:invalid_email) { 'invalid@test' }
+
+      before do
+        get forgot_password_api_v1_users_path(email: invalid_email),
+            headers: { Authorization: "Bearer #{active_bearer.api_key}" }
+      end
+
+      it 'returns HTTP status 422' do
+        expect(response).to have_http_status 422
+      end
+
+      it 'returns success json message' do
+        body = JSON.parse(response.body)
+
+        expect(body['message']).to eq('Invalid email format.')
       end
     end
   end

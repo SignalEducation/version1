@@ -28,6 +28,12 @@ module Api
         end
       end
 
+      def forgot_password
+        response = User.start_password_reset_process(params[:email])
+
+        json_response(response[:json], response[:status])
+      end
+
       private
 
       def set_user
