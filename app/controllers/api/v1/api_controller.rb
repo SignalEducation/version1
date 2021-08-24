@@ -9,7 +9,7 @@
 # Add Token your_api_key_here in Authorization header;
 module Api
   module V1
-    class ApiController < ApplicationController
+    class ApiController < Api::V1::ApplicationController
       include ExceptionHandler
       include Response
 
