@@ -13,7 +13,7 @@ module Api
 
         if @user_session.save
           @user_token       = encode_token(payload(@user))
-          @user_credentials = cookies['user_credentials']
+          @user_credentials = "#{session['user_credentials']}::#{session['user_credentials_id']}"
 
           render 'api/v1/users/show.json'
         else

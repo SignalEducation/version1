@@ -22,7 +22,7 @@ module Api
         if @user.save && UserSession.create(@user)
           @user.handle_post_user_creation(user_verification_url(email_verification_code: @user.email_verification_code))
           @user_token       = encode_token(payload(@user))
-          @user_credentials = session['user_credentials']
+          @user_credentials = "#{session['user_credentials']}::#{session['user_credentials_id']}"
 
           render 'api/v1/users/show.json', status: :created
         else
