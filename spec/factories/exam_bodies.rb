@@ -34,7 +34,7 @@
 FactoryBot.define do
   factory :exam_body do
     sequence(:name)                    { |n| "#{Faker::Commerce.product_name} - #{n}" }
-    sequence(:hubspot_property)                    { |n| "#{Faker::Commerce.product_name} - #{n}" }
+    sequence(:hubspot_property)        { |n| "#{Faker::Commerce.product_name} - #{n}" }
     url                                { 'accaglobal.com/ie/en.html' }
     active                             { true }
     constructed_response_intro_heading { 'Intro Heading' }
