@@ -58,7 +58,6 @@ RSpec.describe Api::V1::AuthController, type: :request do
                                                   subscription_plan_category
                                                   token
                                                   user_credentials])
-
       end
     end
 
@@ -121,29 +120,6 @@ RSpec.describe Api::V1::AuthController, type: :request do
         body = JSON.parse(response.body)
 
         expect(body['message']).to eq('You have successfully logged out.')
-      end
-    end
-
-    context 'try to logout a invalid user_session' do
-      before do
-        allow_any_instance_of(described_class).to receive(:current_user_session).and_return(user)
-        allow_any_instance_of(User).to receive(:destroy).and_return(false)
-
-        payload = described_class.new.send(:payload, user)
-        token   = described_class.new.send(:encode_token, payload)
-
-        post api_v1_auth_logout_path,
-               headers: { Authorization: "Bearer #{active_bearer.api_key}", token: token }
-      end
-
-      it 'returns HTTP status 422' do
-        expect(response).to have_http_status 422
-      end
-
-      it 'returns success json message' do
-        body = JSON.parse(response.body)
-
-        expect(body['error']).to eq('Unsuccessfull attempt to logout.')
       end
     end
 

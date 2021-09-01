@@ -66,7 +66,8 @@ RSpec.describe Api::V1::UsersController, type: :request do
                                                   country
                                                   currency
                                                   subscription_plan_category
-                                                  token])
+                                                  token
+                                                  user_credentials])
 
       end
     end
