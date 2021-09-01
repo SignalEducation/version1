@@ -75,13 +75,6 @@
 
     .row.pt-6
       .col-sm-6
-        %p Exam Logo
-        -if @group.exam_logo.present?
-          =image_tag @group.exam_logo.url, class: 'md-image'
-
-        =f.file_field :exam_logo
-
-      .col-sm-6
         %p Icon
         -if @group.image.present?
           =image_tag @group.image.url, class: 'md-image'

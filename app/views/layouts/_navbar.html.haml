@@ -2,7 +2,6 @@
   %nav.fixed-top
     =render partial: 'layouts/external_banner'
     .navbar.navbar-expand-lg
-      -# .container.animate.fade-in-up
       .container
         %button.navbar-toggler{"aria-controls" => "navbarNavDropdown", "aria-expanded" => "false", "aria-haspopup" => "true", "aria-label" => "Toggle navigation", "data-target" => "#navbarNavDropdown", "data-toggle" => "collapse", :type => "button"}
           %span.navbar-toggler-bar.frst
@@ -27,16 +26,6 @@
                 %li.nav-item
                   =link_to pricing_url(current_user&.preferred_exam_body&.group&.name_url), class: 'nav-link upgrade-btn' do
                     %span Upgrade Now
-              -elsif !current_user&.preferred_exam_body_id && !current_user&.valid_subscription?
-                -# %li.nav-item
-                -#   =link_to pricing_url, class: 'nav-link' do
-                -#     %span Pricing
-              -# %li.nav-item
-              -#   =link_to student_dashboard_url, class: 'nav-link' do
-              -#     %span Dashboard
-              -# %li.nav-item
-              -#   =link_to library_url, class: 'nav-link' do
-              -#     %span Library
 
               -if current_user.non_student_user?
                 %li.nav-item
@@ -50,30 +39,14 @@
                     %svg.text-gray-400{:fill => "#9ca3af", :viewbox => "0 0 20 20", :xmlns => "http://www.w3.org/2000/svg"}
                       %path{"clip-rule" => "evenodd", :d => "M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z", "fill-rule" => "evenodd"}
                   %span.navbar-login-userName
-                    -# =t('views.general.user_name') + current_user.first_name.to_s
                     =current_user.first_name.to_s
                 .dropdown-menu.dropdown-menu-right{"aria-labelledby" => "navbarDropdown"}
                   =link_to t('views.users.show.h1'), account_url, class: 'nav-link dropdown-item'
                   =link_to t('views.general.log_out'), sign_out_url, class: 'nav-link dropdown-item'
 
             -else
-              -# -@navbar_landing_pages.each do |navbar_landing_page|
-              -#   %li.nav-item
-              -#     =link_to footer_landing_page_url(navbar_landing_page.public_url), class: 'nav-link' do
-              -#       %span=navbar_landing_page.name
-              -# %li.nav-item
-              -#   =link_to pricing_url, class: 'nav-link' do
-              -#     %span Pricing
-              -# %li.nav-item.dropdown.course-dropdown
-              -#   %a#navbarDropdown.nav-link.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
-              -#     %span Courses
-              -#   .dropdown-menu.dropdown-menu-right.dropdown-menu-course{"aria-labelledby" => "navbarDropdown"}
-              -#     -@groups.each do |group|
-              -#       =link_to group.name, group_landing_url(group.name_url), class: 'nav-link dropdown-item'
               %li.nav-item
                 =link_to new_student_url, class: 'nav-link' do
                   %span Register
               %li.nav-item
                 =link_to 'Log In', sign_in_url, {class: 'nav-link'}
-
-
