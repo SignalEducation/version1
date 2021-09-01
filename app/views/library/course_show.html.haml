@@ -1,29 +1,56 @@
 %main
-  %article.courses.bg-white
+  %article.courses.coursePage-container
     .container
       %header
-        .d-flex.flex-wrap.flex-sm-nowrap.justify-content-between.py-4.py-md-5
+        .d-flex.flex-wrap.flex-sm-nowrap.justify-content-between.align-items-center.py-4.py-md-4
           -if @course.parent
             .mw-0
-              =link_to library_special_link(@course.parent), class: 'btn btn-secondary btn-sm btn-sm-arrow-left mb-3 mb-sm-0' do
-                =@course.parent.name
+              =link_to library_url, class: 'courseWrapper-backBtn' do
+                .courseWrapper-backBtn-text
+                  Library
+              .courseWrapper-backBtn-icon.i.material-icons keyboard_arrow_right
+              =link_to library_special_link(@course.parent), class: 'courseWrapper-backBtn' do
+                .courseWrapper-backBtn-text
+                  =@course.parent.name
+              .courseWrapper-backBtn-icon.i.material-icons keyboard_arrow_right
+              .courseWrapper-backBtn
+                .courseWrapper-backBtn-text
+                  =@course.name
+
 
           -if @exam_body.has_sittings && @new_enrollment && (@computer_exam_sitting || @exam_sittings)
             .mw-0.preview-upgrade-btn
-              %a#enrol-top{data: {target: '#enrollment-modal', toggle: 'modal'}, href: '#', class: 'btn btn-secondary btn-sm mb-3 mb-sm-0 non-upgrade'}
+              %a#enrol-top{data: {target: '#enrollment-modal', toggle: 'modal'}, href: '#', class: 'btn btn-secondary btn-sm mb-3 mb-sm-0 non-upgrade mr-2'}
                 Enrol
               =render partial: 'course_enrollment_modal'
               =render partial: 'register_upgrade_links', locals: { user: current_user }
+              -if @course_log && !@course_log.completed && @course_log&.latest_course_step&.next_element
+                =link_to 'Resume', course_special_link(@course_log.latest_course_step.next_element, @course_log), class: 'btn btn-primary btn-sm mb-3 mb-sm-0'
+              %a{data: {target: '#enrollment-modal', toggle: 'modal'}, href: '#', class: 'btn btn-secondary btn-sm mb-3 mb-sm-0 upgrade-resp-enroll-btn upgrade-btn-flt'}
+                Enrol
 
         .pt-3
-          %h1.h1-hero
-            =@course.name
+          %div.courseWrapper-courseInfo
+            %div.courseWrapper-courseIcon{style: "border-color: #{@course.level.highlight_colour}; background-color: #{@course.level.highlight_colour};"}
+              %i{"aria-label" => @course.level.icon_label, :role => "img", class: @course.level.icon_label ? @course.level.icon_label : 'budicon-office-bag-c', style: "color: #FFF;"}
+            %div
+              %div.courseWrapper-parent
+                .courseWrapper-examName
+                  =@course.parent.name
+                .courseWrapper-backBtn-dot .
+                .courseWrapper-levelName{style: "color: #{@course.level.highlight_colour};"}
+                  =@course.level.name
+              %h1.h1-hero
+                =@course.name
 
-      %section.course-progress
-        - if @course_log
+      
+      - if @course_log
+        %section.course-progress.col-xl-8.p-0
           =render partial: 'progress'
-        - else
+      - else
+        %section.course-progress.col-xl-12.p-0
           =render partial: 'course_info'
+
       %nav.courses-nav
         %ul.nav.nav-tabs{id: 'coursesTabs', role: 'tablist'}
           - @course.course_sections.all_active.all_in_order.each_with_index do |course_section, counter|
@@ -46,11 +73,14 @@
               Locked
 
 =render partial: 'library/user_form_modal', locals: { ticket_type: 'Contact Us', form_id: 'contact-form-modal' }
-.bg-gray5
-  .container.py-5.py-sm-6
+.coursePage-moduleDetailWrapper
+  .container.py-5.py-sm-5
     #coursesTabsContent.tab-content
       - @course.course_sections.all_active.all_in_order.each_with_index do |course_section, counter|
         .tab-pane{id: course_section.name_url, class: "tab-#{course_section.name_url} #{counter == 0 ? 'active show' : ''} ", "aria-labelledby" => "#{course_section.name_url}-tab", :role => "tabpanel"}
+          - if course_section.name_url == 'learning-tab' 
+            %h3.text-gray1.mb-4.mb-sm-5 
+              Learning Modules
           .row.row-lg
             .col-xl-8
               .mb-5.mb-xl-0
@@ -60,9 +90,10 @@
             .col-xl-4.mb-5.custom-upgrade
               =render partial: 'register_upgrade_links', locals: { user: current_user }
 
-              %aside.lesson-preview-btn-pad
-                .btn.btn-secondary.btn-sm.mb-5{'data-target' => '#contact-form-modal', 'data-toggle' => 'modal', :href => '#'}
-                  =@exam_body&.help_text
+              -# Ask a Tutor CTA
+              -# %aside.lesson-preview-btn-pad
+              -#   .btn.btn-secondary.btn-sm.mb-5{'data-target' => '#contact-form-modal', 'data-toggle' => 'modal', :href => '#'}
+              -#     =@exam_body&.help_text
       -if @course_resources.any?
         =# VueJS include
         =javascript_pack_tag 'pdf_viewer'
@@ -88,8 +119,13 @@
                           .card-header.bg-white.d-flex.align-items-center.justify-content-center
                             %i.budicon-files-download{"aria-label" => "", :role => "img"}
                           .card-body.d-flex.align-items-center.pl-1
-                            %h5.m-0.text-truncate.text-gray2
+                            %h5.m-0.text-truncate.text-gray2.w-100
                               =resource.name
+                            %span{style: 'color: #6d5902;background-color: #f9e9af;font-size: 12px;border-radius: 4px;padding: 2px 8px;padding-top: 4px;letter-spacing: 1px;font-weight: 600;line-height: 1.7;display: inline-flex;column-gap: 6px;'}
+                              LOCKED
+                            -# %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img", style: 'color: #6d5902;background-color: #f9e9af;border-radius: 100%;'}
+                            -#   %span
+                            -#     lock_outline
                 - else
                   .col-sm-6
                     %a.card.card-horizontal.card-horizontal-sm.flex-row.resource-card{data: {target: '#account-required', toggle: 'modal', href: '#', resource_name: resource.name, resource_id: resource.id,
@@ -98,33 +134,48 @@
                       .card-header.bg-white.d-flex.align-items-center.justify-content-center
                         %i.budicon-files-download{"aria-label" => "", :role => "img"}
                       .card-body.d-flex.align-items-center.pl-1
-                        %h5.m-0.text-truncate.text-gray2
+                        %h5.m-0.text-truncate.text-gray2.w-100
                           =resource.name
+                        %span{style: 'color: #6d5902;background-color: #f9e9af;font-size: 12px;border-radius: 4px;padding: 2px 8px;padding-top: 4px;letter-spacing: 1px;font-weight: 600;line-height: 1.7;display: inline-flex;column-gap: 6px;'}
+                          LOCKED
+                        -# %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img", style: 'color: #6d5902;background-color: #f9e9af;border-radius: 100%;'}
+                        -#   %span
+                        -#     lock_outline
 
 
       -if @products && @products.any?
         .tab-pane.tab-products{id: 'products', role: 'tabpanel', 'aria-labelledby': 'products-tab'}
           %section.mb-5
-            %h3.text-gray1.mb-4.mb-sm-5 Exam Preparation Products
+            -# %h3.text-gray1.mb-2.mb-sm-2 Exam Preparation Products
+            %h3.text-gray1.mb-4.mb-sm-4 Addons
             .row.row-lg
-
               - @correction_pack_products.each do |product|
-                .col-sm-6
-                  =link_to product_checkout_special_link(product.group.exam_body.id, product.id), class: 'card card-horizontal card-horizontal-sm flex-row' do
-                    .card-header.bg-white.d-flex.align-items-center.justify-content-center
-                      %i.budicon-files-tick{"aria-label" => "", :role => "img"}
-                    .card-body.d-flex.align-items-center.pl-1
-                      %h5.m-0.text-truncate.text-gray2
-                        =product.mock_exam.try(:name)
+                .col-sm-3.mb-4
+                  =link_to product_checkout_special_link(product.group.exam_body.id, product.id), class: 'productCard' do
+                    .productCard-header.d-flex.align-items-center.justify-content-center
+                      =image_tag('course-addon-icons/addon-correction-pack.svg')
+                    .productCard-body.d-flex.align-items-center
+                      =product.mock_exam.try(:name)
+                    .productCard-footer.d-flex.align-items-center.justify-content-between
+                      .d-flex.flex-column.align-items-start.justify-content-start
+                        %span{style: 'font-size: 12px;color: #9CA3AF;font-weight: 500;'} Price
+                        =number_in_local_currency(product.price, product.currency)
+                      .btn.btn-primary.productCard--buyBtn
+                        Buy
 
               - @mock_exam_products.each do |product|
-                .col-sm-6
-                  =link_to product_link(product, current_user), class: 'card card-horizontal card-horizontal-sm flex-row' do
-                    .card-header.bg-white.d-flex.align-items-center.justify-content-center
-                      %i.budicon-files-tick{"aria-label" => "", :role => "img"}
-                    .card-body.d-flex.align-items-center.pl-1
-                      %h5.m-0.text-truncate.text-gray2
-                        =product.name_by_type
+                .col-sm-3.mb-4
+                  =link_to product_link(product, current_user), class: 'productCard' do
+                    .productCard-header.d-flex.align-items-center.justify-content-center
+                      =image_tag('course-addon-icons/addon-exams.svg')
+                    .productCard-body.d-flex.align-items-center
+                      =product.name_by_type
+                    .productCard-footer.d-flex.align-items-center.justify-content-between
+                      .d-flex.flex-column.align-items-start.justify-content-start
+                        %span{style: 'font-size: 12px;color: #9CA3AF;font-weight: 500;'} Price
+                        =number_in_local_currency(product.price, product.currency)
+                      .btn.btn-primary.productCard--buyBtn
+                        Buy
 
 
       -#locked.tab-pane.tab-locked{"aria-labelledby" => "locked-tab", :role => "tabpanel"}

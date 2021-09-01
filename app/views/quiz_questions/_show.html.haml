@@ -14,8 +14,8 @@
             %div.align-quiz-text
               .col-md-1.align-dot-quiz
                 %h2=('A'..'Z').to_a[counter]
-                %i.learnsignal-letter{"aria-label" => "failed"}
-                  %span.small-dot-quiz
+                -# %i.learnsignal-letter{"aria-label" => "failed"}
+                -#   %span.small-dot-quiz
               .col-md-11
                 -if question.custom_styles
                   =render partial: 'quiz_contents/index', locals: {contents: qa.quiz_contents}

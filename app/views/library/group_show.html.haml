@@ -1,68 +1,122 @@
 %main
-  %article.library-group-show.bg-white.py-5.py-lg-6
-    .container
-      %header.hero-section.hero-section-revisions{style: "background-image: url(#{@group.background_image.url});", title: "#{@group.name} Courses banner"}
-        %h1.h1-hero.mb-3.text-white
+  %article.libraryGroupWrapper.bg-white
+    
+    %header.libraryGroupWrapper-hero
+      .container.libraryGroupWrapper-heroInfoWrapper
+        .d-flex.flex-wrap.flex-sm-nowrap.justify-content-between.align-items-center.py-4.py-md-4
+          .mw-0
+            =link_to library_url, class: 'courseWrapper-backBtn' do
+              .courseWrapper-backBtn-text
+                Library
+            .courseWrapper-backBtn-icon.i.material-icons keyboard_arrow_right
+            .courseWrapper-backBtn
+              .courseWrapper-backBtn-text
+                =@group.name
+        .heroTitle
           =@group.name
           ='Courses'
-        %p.p-hero.px-lg-6.text-white
+        %p.heroDesc
           =@group.short_description
+        %a{class: "btn btn-primary", href: "#library-course-pricing"}
+          Explore Subscriptions
+      %div.libraryGroupWrapper-heroBgWrapper{style: "background-image: url(#{@group.background_image.url});", title: "#{@group.name} Courses banner"}
 
-      -if @group.tab_view && @group.levels.all_active.count >= 2
+    .border-top.bg-gray5
+      .container.pt-4
         =render partial: 'tabbed_list'
-      -else
-        =render partial: 'standard_list'
+      -# -if @group.tab_view && @group.levels.all_active.count >= 2
+      -#   =render partial: 'tabbed_list'
+      -# -else
+      -#  =render partial: 'standard_list'
 
 
   -if @group && @subscription_plans && @subscription_plans.any? && !(current_user && current_user.valid_access_for_exam_body?(@group.exam_body_id, @group.id))
-    .container-bg.bg-gray5
-      .container#plans
-        %article.py-6
-          %header.text-center.pb-5.pb-md-6
-            %h2.h1-mega
-              ="#{@group.name} Subscription"
-            %p.p-hero.px-lg-8
+    .pricingPlansWrapper.bg-white
+      .container
+        %article.py-6#library-course-pricing
+          %header.text-center.pb-4.pb-md-4
+            %div.heroSubtext
+              ="#{@group.name} Pricing"
+            %div.heroTitle
+              Our subscriptions fit your needs 💶
+            %p.heroDesc
               -if @group.exam_body.subscription_page_subheading_text && !@group.exam_body.subscription_page_subheading_text.blank?
                 =@group.exam_body.subscription_page_subheading_text
               -else
-                ='Achieve your learning goals with a learnsignal subscription plan and enjoy professional courses delivered online so that you can study on a schedule that suits you.'
+                ='Customised pricing plans designed to fit in with your wallet and work.'
 
-          .row.row-lg.justify-content-center
-            -@subscription_plans.each do |plan|
-              .col-lg-4
-                %article.card.card-primary.card-primary-alt.medium-gap
-                  -if plan.most_popular
-                    .card-banner.bg-mint
-                      %large.text-white
-                        Most popular payment plan
-                  .card-body.text-center.py-4.py-sm-5
-                    %h2.card-title
-                      =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
+          .row.row-lg.justify-content-start
+            -# FREE PLAN CARD
+            -# .col-lg-4.px-2
+            -#   %article.planCard
+            -#     .card-body.text-left.p-0
+            -#       %div.card-title
+            -#         FREE
+            -#       %p.priceValue.mb-0.pb-4
+            -#         €0
+            -#       %ul.list-centered.text-left.border-top.pt-4
+            -#         %li.mb-3
+            -#           .bulletIcon.i.material-icons check_circle
+            -#           %span First module in all course
+            -#         %li.mb-3
+            -#           .bulletIcon.i.material-icons check_circle
+            -#           %span Guided study plans
+            -#         %li.mb-3
+            -#           .bulletIcon.i.material-icons check_circle
+            -#           %span Subject cheat sheets
+            -#         %li.mb-3
+            -#           .bulletIcon.i.material-icons check_circle
+            -#           %span Exam practice questions
 
-                    %ul.list-centered
-                      -if plan.bullet_points_list && !plan.bullet_points_list.empty?
-                        - plan.bullet_points_list.split(/, ?/).each do |bullet|
-                          %li=bullet
-                      -else
-                        %li="Access all #{@group.name} courses"
-                        %li="Topic-by-topic lectures"
-                        %li="24/7 tutor support"
+            -#       .mt-auto
+            -#         %div{class: "btn disabled w-100 btn-secondary"}
+            -#           Currently Active
+            -#       %p.text-gray2.mt-4
+            -#         No Credit Card required
+            
+            -# PREMIUM CARDS
+            .col-lg-4.px-2
+              %article.planCard.planCard-popular
+                .card-banner
+                  Most popular
+                .card-body.text-left.p-0
+                  %div.card-title
+                    PREMIUM PLANS
+                  .tab-content
+                    -@subscription_plans.each_with_index do |plan, counter|
+                      .tab-pane{id: "nav-#{plan.guid}", class: "tab-#{plan.guid} #{counter == 0 ? 'active' : ''} ", "aria-labelledby" => "#{plan.guid}-tab", :role => "tabpanel"}
+                        %p.priceValue.mb-0.pb-4
+                          =plan.currency.format_number(plan.price)
+                          
+                        %ul.list-centered.text-left.border-top.pt-4.bulletList{class:@subscription_plans.length < 2 && 'noPlanNav'}
+                          -if plan.bullet_points_list && !plan.bullet_points_list.empty?
+                            - plan.bullet_points_list.split(/, ?/).each do |bullet|
+                              %li.mb-3
+                                .bulletIcon.i.material-icons check_circle
+                                %span=bullet
+                          -else
+                            %li.mb-3="Access all #{@group.name} courses"
+                            %li.mb-3="Topic-by-topic lectures"
+                            %li.mb-3="24/7 tutor support"
 
-                      -unless plan.exam_body.name == "CPD"
-                        %li{style: 'font-style: italic;'}
-                          Cancel anytime
-
-                    %p.h2.mb-0
-                      =plan.currency.format_number(plan.price)
-
-                    -if plan.monthly_percentage_off
-                      %p.h5.text-gray2
-                        Save over
-                        =plan.monthly_percentage_off
-                        ='%'
-                    .mt-auto
-                      =link_to subscription_checkout_special_link(plan.exam_body_id, plan.guid), class: 'btn btn-secondary btn-sm', onclick: "addToCart('#{plan.currency.iso_code}', '#{plan.name}', '#{plan.id}', '#{plan.price}', '#{plan.exam_body.name}');" do
-                        Choose this plan
+                        -if plan.monthly_percentage_off
+                          %p.h5.text-gray2
+                            Save over
+                            =plan.monthly_percentage_off
+                            ='%'
+                        .mt-auto
+                          =link_to subscription_checkout_special_link(plan.exam_body_id, plan.guid), class: "btn w-100 btn-primary", onclick: "addToCart('#{plan.currency.iso_code}', '#{plan.name}', '#{plan.id}', '#{plan.price}', '#{plan.exam_body.name}');" do
+                            Choose this plan
+                        -unless plan.exam_body.name == "CPD"
+                          %p.text-gray2.mt-4
+                            Cancel anytime
+                  %ul.nav.nav-pills.plan-nav{id: 'planTabs', role: 'tablist', class:@subscription_plans.length < 2 && 'hidden'}
+                    -@subscription_plans.each_with_index do |plan, counter|
+                      %li.nav-item{data: {tab_name: plan.guid}}
+                        -# TODO add active to first li
+                        %a{class: "nav-link #{counter == 0 ? 'active' : ''}", id: "#{plan.guid}-tab", data: {toggle: 'tab'}, href: "#nav-#{plan.guid}", aria: {controls: "#{plan.guid}", selected: 'false'}, role: 'tab'}
+                          =t("views.general.payment_intervals.a#{plan.payment_frequency_in_months}")
+            
 
 
     :javascript

@@ -1,3 +1,4 @@
+$sans-font: 'Manrope', sans-serif;
 #upgrade-subscription, #product_purchase {
   .card {
     position: relative;
@@ -55,7 +56,7 @@
 
 #upgrade-subscription, #product_purchase, #plans {
   font-size: 16px;
-  font-family: OakesGrotesk,sans-serif;
+  font-family: $sans-font;
   h1, h2, .h2, h3, h4 {
     color: #424366;
   }
@@ -76,7 +77,6 @@
     padding: 0;
   }
   .btn {
-    font-family: 'OakesGrotesk',sans-serif;
     &:not(:disabled):not(.disabled) {
       margin-left: 2px;
       padding: .525rem .75rem;
@@ -159,7 +159,6 @@
   h5 {
     font-size: 1em;
     margin-bottom: .5em;
-    font-family: OakesGrotesk,sans-serif;
     font-weight: 500;
     line-height: 1.2;
   }

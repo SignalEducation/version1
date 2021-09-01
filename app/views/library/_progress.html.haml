@@ -2,21 +2,16 @@
 -completed_lessons = @course_log.try(:count_of_cmes_completed) || 0
 -complete_percent = @course_log.try(:percentage_complete)
 
-.row
-  .col-xs-12.col-lg-8
+.row.m-0.w-100
+  .col-xs-12.col-lg-10.pl-0
     %h4.sr-only Course Progress
-    .pt-3.pb-4.pb-sm-3
-      %small.text-gray2.mb-3
-        %span.current-step-indicator=completed_lessons
-        out of
-        %span.total-steps-indicator=total_lessons
-        steps completed
+    %div
       .progress
         .progress-bar{role: "progressbar", 'aria-valuenow': complete_percent, 'aria-valuemin': "0", 'aria-valuemax': '100', style: "width: #{complete_percent}%"}
 
-  .col-xs-12.col-lg-3
-    .ml-lg-4.pt-1.pb-4.preview-upgrade-btn
-      -if !@course_log.completed && @course_log&.latest_course_step&.next_element
-        =link_to 'Resume', course_special_link(@course_log.latest_course_step.next_element, @course_log), class: 'btn btn-secondary btn-sm mb-3 mb-sm-0'
-      %a{data: {target: '#enrollment-modal', toggle: 'modal'}, href: '#', class: 'btn btn-secondary btn-sm mb-3 mb-sm-0 upgrade-resp-enroll-btn upgrade-btn-flt'}
-        Enrol
+  .col-xs-12.col-lg-2.p-0.mt-2
+    %small.text-gray2.mb-3
+      %span.current-step-indicator=completed_lessons
+      %span /
+      %span.total-steps-indicator=total_lessons
+      steps completed

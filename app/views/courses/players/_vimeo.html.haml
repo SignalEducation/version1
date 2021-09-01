@@ -25,7 +25,9 @@
 
   let player = new Vimeo.Player('video-player-window', options);
 
-  player.ready().catch(function(error) {
+  player.ready().then(function() {
+    $('.video-preloader').addClass('hidden');
+  }).catch(function(error) {
     $('.video-player-window').html('#{j render partial: 'courses/players/dacast', locals: { cme: cme }}')
   });
 
@@ -135,6 +137,15 @@
     videoQualityChange(data);
   };
 
+  //When the user adjusts the volume
+  let onVideoEnded = function(data) {
+    $("#js-end-of-video-modal").fadeIn(200);removeClass('hidden');
+    //videoEnded(data);
+  };
+
+  
+  
+
   player.on('play', onPlay);
   player.on('pause', onPause);
   player.on('timeupdate', timeUpdate);
@@ -143,3 +154,4 @@
   player.on('playbackratechange', playbackRateChange);
   player.on('fullscreenchange', fullScreenChange);
   player.on('qualitychange', qualityChange);
+  player.on('ended', onVideoEnded);

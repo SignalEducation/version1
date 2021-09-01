@@ -1,21 +1,20 @@
 %main.sidebar-right-main
   =render partial: 'mobile_nav'
-  %article#sidebar-right-content.courses.bg-gray5
+  %article#sidebar-right-content.courses
     .courses-container
       %div.course-show-external-banner#courses-show-external-banner
         =render partial: 'layouts/external_banner'
-      %header
-        .d-flex.flex-wrap.flex-sm-nowrap.justify-content-between.py-4.py-md-5
-          -if @course_step
-            =render partial: 'prev_lesson_navigation'
+      %header.main-header
+        .main-header-content
+          -# -if @course_step
+          -#   =render partial: 'prev_lesson_navigation'
 
           -if @course_step
-            .pt-3.sidebar-right-title
-              %h1.h3
-                =@course_step.name
+            .header-title
+              =@course_step.name
 
-          .right-topbar-item.color-shade.course-nav-helpers{onclick: "openZendesk()"}
-            %i.material-icons.icon-bg-round{"aria-label" => "failed", :role => "img", :title => "Contact Us"}help_outline
+          -# .right-topbar-item.color-shade.course-nav-helpers{onclick: "openZendesk()"}
+          -#   %i.material-icons.icon-bg-round{"aria-label" => "failed", :role => "img", :title => "Contact Us"}help_outline
 
           -if @course_step
             =render partial: 'next_lesson_navigation'

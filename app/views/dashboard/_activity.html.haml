@@ -2,34 +2,42 @@
   -@sculs.each do |scul|
     -if scul.course && scul.course.active
       .card.card-horizontal.flex-md-row{style: 'margin-bottom: 1.5rem;'}
-        .card-header.justify-content-center.align-items-center.d-none.d-sm-block
-          .pt-4.text-center
-            .h4
-              =scul.percentage_complete.to_s << '%'
-            .h4
-              Complete
-
         .card-body.d-flex.flex-column.justify-content-center
-
-          %h5.card-title.mb-1
-            %span.mr-1
-              =scul.course.name
+          %div.dashboardWrapper-courseInfo
+            %div.dashboardWrapper-courseIcon{style: "border-color: #{scul.course.level.highlight_colour}; background-color: #{scul.course.level.highlight_colour};"}
+              %i{"aria-label" => scul.course.level.icon_label, :role => "img", class: scul.course.level.icon_label ? scul.course.level.icon_label : 'budicon-office-bag-c', style: "color: #FFF;"}
+            %div
+              %div.dashboardWrapper-parent
+                .dashboardWrapper-examName
+                  =scul.course.parent.name
+                .dashboardWrapper-backBtn-dot .
+                .dashboardWrapper-levelName{style: "color: #{scul.course.level.highlight_colour};"}
+                  =scul.course.level.name
+              %div.courseName
+                =scul.course.name
         .card-footer.d-flex.justify-content-center.align-items-center{style: 'background-color: #fff; border-top: none;'}
-          =link_to 'Resume Course', library_special_link(scul.course), class: 'btn btn-primary'
+          .dashboardWrapper-progressText
+            =scul.percentage_complete.to_s << '%'
+            Complete
+          =link_to 'Resume', library_special_link(scul.course), class: 'btn btn-outline'
 
 -else
-  %h2.h2-hero.mb-2
+  %h4.h4-hero.mb-4
     ="Get started with an #{@default_group.name} course"
-  .row.row-lg
+  %div
     -@default_group.courses.all_active.all_in_order.each do |course|
-      .col-sm
-        =link_to library_special_link(course), class: 'card card-horizontal flex-row card-mint' do
-          .card-header.d-flex.justify-content-center.align-items-center
-            %i{"aria-label" => course.icon_label, :role => "img", class: course.icon_label ? course.icon_label : 'budicon-office-bag-c', style: "color: #{course.highlight_colour};"}
-
+      %div
+        =link_to library_special_link(course), class: 'card card-horizontal flex-row card-mint', style: 'margin-bottom: 1.5rem;' do
           .card-body.d-flex.flex-column.justify-content-center
-            %small.card-category.mb-2{style: "color: #{course.highlight_colour};"}
-              =course.category_label
-            %h5.card-title.mb-1
-              %span.mr-1
-                =course.name
+            %div.dashboardWrapper-courseInfo
+              %div.dashboardWrapper-courseIcon{style: "border-color: #{course.level.highlight_colour}; background-color: #{course.level.highlight_colour};"}
+                %i{"aria-label" => course.level.icon_label, :role => "img", class: course.level.icon_label ? course.level.icon_label : 'budicon-office-bag-c', style: "color: #FFF;"}
+              %div
+                %div.dashboardWrapper-parent
+                  .dashboardWrapper-examName
+                    =course.parent.name
+                  .dashboardWrapper-backBtn-dot .
+                  .dashboardWrapper-levelName{style: "color: #{course.level.highlight_colour};"}
+                    =course.category_label
+                %div.courseName
+                  =course.name

@@ -1,7 +1,8 @@
 <template>
   <div class="pdf-download" v-if="fileDownload">
-    <a @click.prevent.stop="downloadFile" class="icon material-icons">
-      <i class="glyphicon glyphicon-download-alt"></i>
+    <a @click.prevent.stop="downloadFile" class="icon">
+      <i class="glyphicon glyphicon-download-alt" style="font-size: 12px;margin-right: 4px;color: #999999;"></i>
+      Download
     </a>
   </div>
 </template>

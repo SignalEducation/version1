@@ -928,6 +928,10 @@ ActiveRecord::Schema.define(version: 2021_08_16_075325) do
     t.string "onboarding_level_heading"
     t.boolean "tab_view", default: false, null: false
     t.text "disclaimer"
+    t.string "group_logo_file_name"
+    t.string "group_logo_content_type"
+    t.bigint "group_logo_file_size"
+    t.datetime "group_logo_updated_at"
     t.index ["exam_body_id"], name: "index_groups_on_exam_body_id"
     t.index ["name"], name: "index_groups_on_name"
   end

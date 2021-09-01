@@ -1,6 +1,6 @@
 %header.header.sticky-top
-  %nav.navbar.navbar-light.navbar-expand-lg.navbar-lg
-    .container.animate.fade-in-up
+  %nav.navbar.navbar-expand-lg.navbar-lg
+    .container
       %button.navbar-toggler{"aria-controls" => "navbarNavDropdown", "aria-expanded" => "false", "aria-haspopup" => "true", "aria-label" => "Toggle navigation", "data-target" => "#navbarNavDropdown", "data-toggle" => "collapse", :type => "button"}
         %span.navbar-toggler-bar.frst
         %span.navbar-toggler-bar.scnd
@@ -10,17 +10,17 @@
 
       #navbarNavDropdown.collapse.navbar-collapse.justify-content-end
         %ul.navbar-nav.align-items-lg-center
-          -@navbar_landing_pages.each do |landing_page|
-            =navbar_landing_page_menu(landing_page)
-          %li.nav-item
-            =link_to pricing_url, class: 'nav-link', onclick: "gtag('event', 'clicks_header_pricing', {'event_category': 'pre-registration', 'event_label': 'pricing'});" do
-              %span Pricing
-          %li.nav-item.dropdown.course-dropdown
-            %a#navbarDropdown.nav-link.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
-              %span Courses
-            .dropdown-menu.dropdown-menu-right.dropdown-menu-course{"aria-labelledby" => "navbarDropdown"}
-              -@groups.each do |group|
-                =link_to group.name, group_landing_url(group.name_url), class: 'nav-link dropdown-item', onclick: "gtag('event', 'clicks_header_courses', {'event_category': 'pre-registration', 'event_label': '#{group.name}'});"
+          -# -@navbar_landing_pages.each do |landing_page|
+          -#   =navbar_landing_page_menu(landing_page)
+          -# %li.nav-item
+          -#   =link_to pricing_url, class: 'nav-link', onclick: "gtag('event', 'clicks_header_pricing', {'event_category': 'pre-registration', 'event_label': 'pricing'});" do
+          -#     %span Pricing
+          -# %li.nav-item.dropdown.course-dropdown
+          -#   %a#navbarDropdown.nav-link.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
+          -#     %span Courses
+          -#   .dropdown-menu.dropdown-menu-right.dropdown-menu-course{"aria-labelledby" => "navbarDropdown"}
+          -#     -@groups.each do |group|
+          -#       =link_to group.name, group_landing_url(group.name_url), class: 'nav-link dropdown-item', onclick: "gtag('event', 'clicks_header_courses', {'event_category': 'pre-registration', 'event_label': '#{group.name}'});"
 
 
           -if current_user
@@ -38,8 +38,8 @@
 
           -else
             %li.nav-item
-              =link_to new_student_url, class: 'nav-link', onclick: "gtag('event', 'clicks_register', {'event_category': 'pre-registration', 'event_label': 'register'});" do
-                %span Register
-            %li.nav-item
-              =link_to sign_in_url, class: 'nav-link navbar-login', onclick: "gtag('event', 'clicks_login', {'event_category': 'pre-registration', 'event_label': 'login'});" do
+              =link_to sign_in_url, class: 'navbar-login', onclick: "gtag('event', 'clicks_login', {'event_category': 'pre-registration', 'event_label': 'login'});" do
                 %span Login
+            %li.nav-item
+              =link_to new_student_url, class: 'nav-link btn btn-primary', onclick: "gtag('event', 'clicks_register', {'event_category': 'pre-registration', 'event_label': 'register'});" do
+                %span Register

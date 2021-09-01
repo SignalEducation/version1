@@ -15,6 +15,11 @@
                 =@course.release_date.strftime("%B, %Y")
 
         .pt-3
+          %div
+            .courseWrapper-examName
+              =@course.parent.name
+            .courseWrapper-examName
+              =@course.course_section.name
           %h1.h1-hero
             =@course.name
 

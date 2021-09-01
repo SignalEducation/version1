@@ -1,0 +1,67 @@
+/* stylelint-disable */
+// ====== Media Devices ======
+
+$scu-large-desktop-min-width: 1400px !default;
+$scu-large-desktop-min-height: 800px !default;
+$scu-desktop-min-width: 1280px !default;
+$scu-tablet-min-width: 768px !default;
+$scu-tablet-max-width: 1025px !default;
+$scu-phone-max-width: 767px !default;
+
+@mixin less-than-width($device-width) {
+	@media only screen and (max-width: $device-width - 1) {
+		@content;
+	}
+}
+
+@mixin more-than-width($device-width) {
+	@media only screen and (min-width: $device-width + 1) {
+		@content;
+	}
+}
+
+@mixin at-least-width($device-width) {
+	@media only screen and (min-width: $device-width) {
+		@content;
+	}
+}
+
+@mixin until-width($device-width) {
+	@media only screen and (max-width: $device-width) {
+		@content;
+	}
+}
+
+@mixin if-device($device) {
+	@if $device == large-desktop {
+		@media only screen and (min-width: $scu-large-desktop-min-width) and (min-height: $scu-large-desktop-min-height) {
+			@content;
+		}
+	} @else if $device == desktop {
+		@media only screen and (min-width: $scu-desktop-min-width) {
+			@content;
+		}
+	} @else if $device == tablet {
+		@media only screen and (min-width: $scu-tablet-min-width) and (max-width: $scu-tablet-max-width) {
+			@content;
+		}
+	} @else if $device == desktop-tablet {
+		@media only screen and (min-width: $scu-tablet-min-width) {
+			@content;
+		}
+	} @else if $device == phone-tablet {
+		@media only screen and (max-width: $scu-tablet-max-width) {
+			@content;
+		}
+	} @else if $device == phone {
+		@media only screen and (max-width: $scu-phone-max-width) {
+			@content;
+		}
+	} @else if $device == retina {
+		@media only screen and (-o-min-device-pixel-ratio: 13/10),
+			only screen and (-webkit-min-device-pixel-ratio: 1.3),
+			only screen and (min-resolution: 120dpi) {
+			@content;
+		}
+	}
+}

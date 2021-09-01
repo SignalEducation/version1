@@ -1667,7 +1667,7 @@ en:
         h1: New User
 
       show:
-        h1: Account
+        h1: My Account
         edit: Edit Account
         add_new_card: Update Payment Info
         new_card: Add New Card

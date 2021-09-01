@@ -2,6 +2,12 @@
   .col-xl-12
     #course-right-show-elem-vid.course-right-show-content
       .course-right-show-frame
+        .video-preloader
+          .vp-spin
+            %svg.vp-spin-trace{:focusable => "false", :viewbox => "0 0 50 50"}
+              %circle{:cx => "50%", :cy => "50%", :r => "20"}
+            %svg.vp-spin-circle{:focusable => "false", :viewbox => "0 0 50 50"}
+              %circle{:cx => "50%", :cy => "50%", :r => "20"}
         #video-player-window.video-player-window{:class => alt_video_player(current_user.video_player), data: {step_id: @course_step&.id, step_name: @course_step&.name,
          module_id: @course_lesson&.id, module_name: @course_lesson&.name, course_id: @course&.id, course_name: @course&.name, section_id: @course_lesson&.course_section_id,
           section_name: @course_lesson&.course_section&.name, exam_body_id: @group&.exam_body&.id, exam_body_name: @group&.exam_body&.name,
@@ -9,6 +15,11 @@
             onboarding: current_user&.analytics_onboarding_valid?.to_s, free_lesson: @course_lesson&.free&.to_s, step_order: @index_order, previous_completion_count: @previous_completion_count,
              video_length_in_seconds: @course_step&.estimated_time_in_seconds, video_length_in_minutes_seconds: seconds_to_time(@course_step&.estimated_time_in_seconds) }}
           =render partial: 'courses/video_player', locals: { cme: @course_step, responsive: false, autoPlay: false }
+        .hidden.end-of-video-modal#js-end-of-video-modal
+          .video-modal-actions
+            -if @course_lesson.next_module
+              =link_to course_special_link(@course_step.next_element), class: 'videoModal-next-btn btn btn-primary btn-sm btn-sm-arrow-right mb-3 mb-sm-0 w-auto font-weight-bold', data: {destination_url: course_special_link(@course_lesson&.next_module&.first_active_cme), type: 'Next Module'} do
+                Go to Next Lesson
 
     .pt-5.pb-5
 

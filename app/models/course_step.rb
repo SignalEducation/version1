@@ -235,11 +235,11 @@ class CourseStep < ApplicationRecord
 
   def icon_label
     if is_video
-      'ondemand_video'
+      'smart_display'
     elsif is_quiz
-      'playlist_add_check'
+      'quiz'
     elsif is_note
-      'insert_drive_file'
+      'file_present'
     elsif is_practice_question
       'grid_on'
     elsif is_constructed_response
