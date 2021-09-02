@@ -4,6 +4,7 @@ module Api
   module V1
     class AuthController < Api::V1::ApiController
       before_action :set_user, only: :login
+      before_action :authorize_user, only: :logout
 
       def login
         return json_response({ error: 'No user registered with this email.' }, :not_found) unless @user
@@ -12,7 +13,7 @@ module Api
 
         if @user_session.save
           @user_token       = encode_token(payload(@user))
-          @user_credentials = session['user_credentials']
+          @user_credentials = cookies['user_credentials']
 
           render 'api/v1/users/show.json'
         else
@@ -20,7 +21,17 @@ module Api
         end
       end
 
-      def logout; end
+      def logout
+        jwt_blocked_token = JwtBlockedToken.new(token: token_header)
+
+        jwt_blocked_token.transaction do
+          if jwt_blocked_token.save
+            json_response({ message: 'You have successfully logged out.' }, :ok)
+          else
+            json_response({ error: 'Unsuccessfull attempt to logout.' }, :unprocessable_entity)
+          end
+        end
+      end
 
       private
 
