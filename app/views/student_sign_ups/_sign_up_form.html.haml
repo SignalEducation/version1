@@ -1,5 +1,5 @@
 =form_for @user, url: create_student_url do |f|
-  =f.hidden_field :locale, value: (params[:locale] || 'en')
+  =f.hidden_field :locale, value: ('en')
   =f.hidden_field :terms_and_conditions, id: 'hidden_term_and_conditions'
   =f.hidden_field :communication_approval, id: 'hidden_communication_approval'
   =f.hidden_field :home_page_id, id: @home_page&.id

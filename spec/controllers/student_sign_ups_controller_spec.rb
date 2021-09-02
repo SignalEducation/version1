@@ -119,21 +119,21 @@ RSpec.describe StudentSignUpsController, type: :controller do
       # Stripe Customer Create
       describe 'invalid data' do
         it 'does not subscribe user if user with same email already exists' do
-          request.env['HTTP_REFERER'] = '/en/student_new'
+          request.env['HTTP_REFERER'] = '/student_new'
           post :create, params: { user: sign_up_params.merge(email: student_user.email) }
           expect(response.status).to eq(302)
           expect(response).to redirect_to(request.referer)
         end
 
         it 'does not subscribe user if password is blank' do
-          request.env['HTTP_REFERER'] = '/en/student_new'
+          request.env['HTTP_REFERER'] = '/student_new'
           post :create, params: { user: sign_up_params.merge(password: nil) }
           expect(response.status).to eq(302)
           expect(response).to redirect_to(request.referer)
         end
 
         it 'does not subscribe user if password is not of required length' do
-          request.env['HTTP_REFERER'] = '/en/student_new'
+          request.env['HTTP_REFERER'] = '/student_new'
           post :create, params: { user: sign_up_params.merge(password: '12345') }
           expect(response.status).to eq(302)
           expect(response).to redirect_to(request.referer)

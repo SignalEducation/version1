@@ -167,12 +167,11 @@ class ApplicationController < ActionController::Base
   #### Locale
 
   def set_locale
-    I18n.locale = params[:locale] || I18n.default_locale
+    I18n.locale = I18n.default_locale
   end
 
   def default_url_options(options = {})
-    Rails.logger.debug "DEBUG: ApplicationController#default_url_options: Received options: #{options.inspect}\n"
-    { locale: I18n.locale }
+    { locale: nil }
   end
 
   #### Session GUIDs and user tracking

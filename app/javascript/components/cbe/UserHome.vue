@@ -182,7 +182,7 @@ export default {
           }
         )
         .then((response) => {
-          window.location.href = `/en/exercises/${this.exerciseId}`;
+          window.location.href = `/exercises/${this.exerciseId}`;
         })
         .catch((error) => {});
 

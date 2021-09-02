@@ -72,7 +72,7 @@ RSpec.describe UserVerificationsController, :type => :controller do
 
     describe "Post 'resend_verification_mail'" do
       it 'returns success when given a valid code' do
-        request.env['HTTP_REFERER'] = 'http://test.host/en/account_verified'
+        request.env['HTTP_REFERER'] = 'http://test.host/account_verified'
         post :resend_verification_mail, params: { email_verification_code: unverified_student_user.email_verification_code }
         expect(response.status).to eq(302)
         expect(response).to redirect_to(request.referrer)
@@ -80,7 +80,7 @@ RSpec.describe UserVerificationsController, :type => :controller do
       end
 
       it 'returns error flash message' do
-        request.env['HTTP_REFERER'] = 'http://test.host/en/account_verified'
+        request.env['HTTP_REFERER'] = 'http://test.host/account_verified'
         post :resend_verification_mail, params: { email_verification_code: verified_student_user.email_verification_code }
         expect(response.status).to eq(302)
         expect(response).to redirect_to(request.referrer)
