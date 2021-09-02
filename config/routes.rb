@@ -62,7 +62,13 @@ Rails.application.routes.draw do
       resources :exam_bodies, only: :index
       resources :practice_questions, only: :index
       resources :uploads, only: :create
-      resources :users, only: %i[show create]
+
+      resources :users, only: %i[show create update] do
+        post 'change_password'
+        get 'forgot_password', on: :collection
+      end
+
+      get 'pricing/', to: 'prices#index', as: :pricing
     end
   end
 

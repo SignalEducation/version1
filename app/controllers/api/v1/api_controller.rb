@@ -10,13 +10,17 @@
 module Api
   module V1
     class ApiController < Api::V1::ApplicationController
+      include ExceptionHandler
+      include Response
+
       before_action :authenticate
 
       def logged_in_user
+        return if JwtBlockedToken.find_by(token: token_header).present?
         return unless decoded_token
 
-        user_id = decoded_token[0]['user_id']
-        @user = User.find_by(id: user_id)
+        user_id       = decoded_token[0]['user_id']
+        @current_user = User.find_by(id: user_id)
       end
 
       def logged_in?
@@ -47,14 +51,12 @@ module Api
         JWT.decode(token_header, secret, true, algorithm: 'HS256') if token_header.present?
       end
 
-      # TODO(giordano) work in expiration time in logout implementation
-      # IE:
-      # exp = Time.now.to_i + (valid_for_minutes*60)
-      # { exp: exp,
-      #   user_name: @user.name,
-      #   user_id: @user.id }
-      def payload(user, _valid_for_minutes = 5)
-        { user_name: user.name,
+      def payload(user, days = 14)
+        valid_for_days = days * 24 * 60 * 60
+        exp            = Time.now.to_i + valid_for_days
+
+        { exp: exp,
+          user_name: user.name,
           user_id: user.id }
       end
 
