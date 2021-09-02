@@ -1,25 +1,11 @@
 .card.card-collapse.mb-4
-  - # TODO add hover text colour change
   %a.btn.btn-text.btn-collapse.w-100.text-left.course-module-panel{data: { toggle: "collapse",panel_name: course_lesson.name, course_name: @course.name }, href: "#collapse_#{course_lesson.name_url}_#{counter}", role: "button", 'aria-expanded': "#{!count == 1}", 'aria-controls': "collapse_#{course_lesson.name_url}_#{counter}",id: course_lesson.id}
     .lesson-item.w-100{class: course_lesson_status(course_lesson, @completed_course_lesson_logs, @completed_course_lesson_ids) }
-      -# %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
-      -#   - if course_lesson.free
-      -#     check
-      -#   - elsif current_user && !current_user.can_view_content?(@group.exam_body_id, @group.id, @course.id)
-      -#     lock_outline
-      -#   - else
-      -#     check
       .lesson-item-content
-        .d-flex.flex-column.flex-sm-row.align-items-center.align-items-sm-center
-          %p.lesson-item-text.text-truncate.w-100{class: current_user && !current_user.can_view_content?(@group.exam_body_id, @group.id, @course.id) && 'locked'}
+        .lesson-item-content-wrap.d-flex.flex-column.flex-sm-row.align-items-center.align-items-sm-center
+          %p.lesson-item-text.w-100{class: current_user && !current_user.can_view_content?(@group.exam_body_id, @group.id, @course.id) && 'locked'}
             %span
               =course_lesson.name
-            -# - if course_lesson.free
-            -#   %span{style: 'color: #007bff;background-color: rgb(0 123 255 / 5%);font-size: 12px;border-radius: 4px;padding: 2px 8px;padding-top: 4px;letter-spacing: 1px;font-weight: 600;line-height: 1.7;display: inline-flex;column-gap: 6px;'}
-            -#     🎉 FREE
-            -# - if current_user && !current_user.can_view_content?(@group.exam_body_id, @group.id, @course.id)
-            -#   %span{style: 'color: #6d5902;background-color: #f9e9af;font-size: 12px;border-radius: 4px;padding: 2px 8px;padding-top: 4px;letter-spacing: 1px;font-weight: 600;line-height: 1.7;display: inline-flex;column-gap: 6px;'}
-            -#     LOCKED
           %small.lesson-item-tag.ml-sm-auto.text-sm-right
             - if course_lesson.free
               %span{style: 'color: #007bff;background-color: rgb(0 123 255 / 5%);font-size: 12px;border-radius: 4px;padding: 2px 8px;padding-top: 4px;letter-spacing: 1px;font-weight: 600;line-height: 1.7;display: inline-flex;column-gap: 6px;'}
@@ -45,7 +31,7 @@
     .card-body
       %ul.list-unstyled.mb-3
         -course_lesson.active_children.each do |cme|
-          %li.pl-4
+          %li
             - if current_user #Logged In User
               - permission = cme.available_to_user(current_user, @valid_subscription, @course_log)
 
@@ -61,18 +47,10 @@
                       =cme.icon_label
 
                     .lesson-item-content.ml-2
-                      .d-flex.flex-column.flex-sm-row.align-items-center
+                      .lesson-item-content-wrap.d-flex.flex-column.flex-sm-row
                         %p.lesson-item-text
                           =cme.name
-                        %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                          -# -if @cmeuls && @completed_cmeuls_cme_ids.include?(cme.id)
-                          -#   %span.green-check-iconWrapper
-                          -#     %i.material-icons.icon-bg-round.green-check{"aria-label" => "", :role => "img"}
-                          -#       check
-                          -# -if cme.temporary_label && !cme.temporary_label.empty?
-                          -#   %span{style: 'color: #fd7e14;'}
-                          -#     =cme.temporary_label
-                          -# -else
+                        %small.lesson-item-tag.ml-sm-auto.text-sm-right.hidden-xs
                           -if cme.is_video && cme.estimated_time_in_seconds
                             %span
                               =humanize_time(cme.estimated_time_in_seconds)
@@ -89,24 +67,13 @@
                 %a.btn.btn-text.py-3.w-100.text-left.course-lesson{data: {lesson_name: cme.name, course_name: @course.name, target: "##{permission[:reason]}", toggle: 'modal', related: cme.related_course_step.try(:name)}, href: '#'}
                   .lesson-item.lesson-item-inner.w-100{class: @cmeuls && @cmeuls_ids.include?(cme.id) ? (@completed_cmeuls_cme_ids.include?(cme.id) ? 'completed' : 'failed') : ''}
                     %i.material-icons.inner-icon-bg-round{"aria-label" => "failed", :role => "img", style: 'color: #6d5902;background-color: #f9e9af;border-radius: 100%;'}
-                      -# =permission[:reason] == 'related-lesson-restriction' ? 'lock_outline' : cme.icon_label
                       lock_outline
                     .lesson-item-content.ml-2
-                      .d-flex.flex-column.flex-sm-row.align-items-center
+                      .lesson-item-content-wrap.d-flex.flex-column.flex-sm-row.align-items-center
                         %p.lesson-item-text
-                          -# %span{style: 'color: #6d5902;background-color: #f9e9af;font-size: 12px;border-radius: 100%;padding: 0;letter-spacing: 1px;font-weight: 600;line-height: 1.7;display: inline-flex;column-gap: 6px;position: absolute;left: 2px;top: 18px;'}
-                          -#   %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img", style: 'font-size: 20px;padding: 2px;'}
-                          -#     lock_outline
                           %span
                             =cme.name
-                        %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                          -# %span{style: 'color: #6d5902;background-color: rgb(240 202 40 / 41%);font-size: 12px;border-radius: 100%;padding: 0;letter-spacing: 1px;font-weight: 600;line-height: 1.7;display: inline-flex;column-gap: 6px;position: absolute;right: 140px;top: 0px;'}
-                          -#   %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img", style: 'font-size: 20px;padding: 6px;'}
-                          -#     lock_outline
-                          -# -if cme.temporary_label.present?
-                          -#   %span{style: 'color: #fd7e14;'}
-                          -#     =cme.temporary_label
-                          -# -else
+                        %small.lesson-item-tag.ml-sm-auto.text-sm-right.hidden-xs
                           -if cme.is_video && cme.estimated_time_in_seconds
                             %span
                               =humanize_time(cme.estimated_time_in_seconds)
@@ -125,14 +92,10 @@
                     =cme.icon_label
 
                   .lesson-item-content
-                    .d-flex.flex-column.flex-sm-row.align-items-center
+                    .lesson-item-content-wrap.d-flex.flex-column.flex-sm-row.align-items-center
                       %p.lesson-item-text
                         =cme.name
-                      %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                        -# -if cme.temporary_label && !cme.temporary_label.empty?
-                        -#   %span{style: 'color: #fd7e14;'}
-                        -#     =cme.temporary_label
-                        -# -else
+                      %small.lesson-item-tag.ml-sm-auto.text-sm-right.hidden-xs
                         -if cme.is_video && cme.estimated_time_in_seconds
                           %span
                             =humanize_time(cme.estimated_time_in_seconds)

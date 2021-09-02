@@ -10,6 +10,10 @@
     font-weight: 600;
     color: rgb(17,24,39);
     margin-bottom: 0.875rem;
+    @include if-device(phone) {
+      font-size: 2rem;
+      line-height: 1.5
+    }
   }
   .heroDesc {
     margin-bottom: 0;
@@ -69,6 +73,10 @@
     font-weight: 600;
     color: rgb(17,24,39);
     margin-bottom: 0.875rem;
+    @include if-device(phone) {
+      font-size: 2rem;
+      line-height: 1.5
+    }
   }
   .heroDesc {
     margin-bottom: 0;
@@ -282,6 +290,9 @@
             font-size: 20px;
             line-height: 24px;
             font-weight: 700;
+            @include if-device(phone) {
+              font-size: 16px;
+            }
         }
       }
       .dashboardWrapper-progressText {

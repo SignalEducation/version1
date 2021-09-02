@@ -5,7 +5,7 @@
    free_lesson: @course_lesson.free.to_s, step_order: @index_order, previous_completion_count: @previous_completion_count,
     quiz_question_count: @course_step.course_quiz.quiz_questions.count, quiz_questions_asked: @number_of_questions, selection_strategy: @strategy,
      estimated_time_in_seconds: @course_step.estimated_time_in_seconds, previous_best_score: @previous_best_score, previously_passed: @previously_passed }}
-  .col-xl-12
+  .col-xl-12.p-0
     #course-right-show-elem-notes.course-right-show-content
       -if @course_step.try(:course_quiz).try(:enough_questions?)
         .quiz-heading.mb-2.align-quiz-text

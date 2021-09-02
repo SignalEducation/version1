@@ -1,5 +1,9 @@
+%header.header.visible-xs
+  %nav.fixed-top
+    .navbar.navbar-expand-lg
+      =render partial: 'mobile_nav'
 %main.sidebar-right-main
-  =render partial: 'mobile_nav'
+  -# =render partial: 'mobile_nav'
   %article#sidebar-right-content.courses
     .courses-container
       %div.course-show-external-banner#courses-show-external-banner
@@ -17,7 +21,11 @@
           -#   %i.material-icons.icon-bg-round{"aria-label" => "failed", :role => "img", :title => "Contact Us"}help_outline
 
           -if @course_step
-            =render partial: 'next_lesson_navigation'
+            .main-header-actions
+              .lessonMenu-btn.js-lessonMenu-btn{onclick: "toggleLessonMenuMobile()"}
+                %i.material-icons{"aria-hidden" => "true", style: "font-size: 16px;margin-right: 4px;"} subject
+                Menu
+              =render partial: 'next_lesson_navigation'
 
       %section.course-content
         -if defined?(@results)
@@ -73,6 +81,10 @@
 
     function openZendesk() {
       $zopim.livechat.window.show()
+    }
+
+    function toggleLessonMenuMobile() {
+      $("#sidebar-wrapper-student-responsive").toggleClass("active");
     }
 
     courseStepLoaded("#{@course_step&.type_name}");

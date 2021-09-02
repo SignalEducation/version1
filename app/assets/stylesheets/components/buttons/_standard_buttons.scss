@@ -1,3 +1,4 @@
+@import "breakpoints";
 .btn {
   display: inline-block;
   font-weight: 700;
@@ -192,8 +193,8 @@
 }
 .btn.btn-outline.focus,
 .btn.btn-outline:focus {
-  -webkit-box-shadow: 0 0 0 .2rem rgba(0,182,123,.5);
-  box-shadow: 0 0 0 .2rem rgba(0,182,123,.5)
+  -webkit-box-shadow: 0 0 0 .2rem rgba(0,0,0,.1);
+  box-shadow: 0 0 0 .2rem rgba(0,0,0,.1)
 }
 
 
@@ -371,9 +372,12 @@
   -webkit-align-items: center;
   -ms-flex-align: center;
   align-items: center;
-  padding-left: 1rem;
-  padding-top: 1rem;
-  padding-bottom: .9rem
+  padding-left: 1.25rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  @include if-device(phone) {
+    padding-left: 0.75rem;
+  }
 }
 .btn.btn-collapse::after {
   position: absolute;

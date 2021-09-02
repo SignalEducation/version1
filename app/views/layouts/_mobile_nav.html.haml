@@ -5,6 +5,9 @@
             .exit-btn-box
                 %i#exitBtn.material-icons.exit-btn-close{"aria-label" => "failed", :role => "img", :style => "margin-left:1px"} close
             -if current_user
+                -# -if current_user&.preferred_exam_body_id && !current_user&.valid_access_for_exam_body?(current_user&.preferred_exam_body_id, current_user&.preferred_exam_body&.group&.id)
+                -#     .nav-item-box
+                -#         =link_to 'Pricing', pricing_url(current_user&.preferred_exam_body&.group&.name_url)
                 -if !current_user&.preferred_exam_body_id && !current_user&.valid_subscription?
                     .nav-item-box.upgrade-btn
                         =link_to 'Upgrade Now', pricing_url

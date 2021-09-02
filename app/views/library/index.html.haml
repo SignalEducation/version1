@@ -11,7 +11,7 @@
       %h2.sr-only List of courses
       .row.justify-content-center
         -@groups.each do |group|
-          .col-lg-4
+          .col-md-6.col-lg-4
             =link_to library_special_link(group), class: 'libraryMainWrapper-card' do
               .cardImage
                 =image_tag(group.image.url, class: 'card-img-top', alt: 'People in front of the blackboard', style: "border-bottom-color: #{group.background_colour};")
@@ -20,7 +20,7 @@
                   - if group.name == 'ACCA'
                     =image_tag('learning-partner-badge.png', alt: 'ACCA Logo')
                   - if group.name == 'CIMA'
-                    =image_tag('CIMA_Registered_Tuition_Provider_RGB.png', alt: 'CIMA Logo')
+                    =image_tag('cima-logo-square.png', alt: 'CIMA Logo')
                   - if group.name == 'FRM'
                     =image_tag('FRM_logo.png', alt: 'FRM Logo')
                   - if group.name == 'AAT'

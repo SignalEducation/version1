@@ -1,33 +1,30 @@
 %main
   %article.courses.coursePage-container
-    .container
-      %header
-        .d-flex.flex-wrap.flex-sm-nowrap.justify-content-between.align-items-center.py-4.py-md-4
-          -if @course.parent
-            .mw-0
-              =link_to library_url, class: 'courseWrapper-backBtn' do
-                .courseWrapper-backBtn-text
-                  Library
-              .courseWrapper-backBtn-icon.i.material-icons keyboard_arrow_right
-              =link_to library_special_link(@course.parent), class: 'courseWrapper-backBtn' do
-                .courseWrapper-backBtn-text
-                  =@course.parent.name
-              .courseWrapper-backBtn-icon.i.material-icons keyboard_arrow_right
-              .courseWrapper-backBtn
-                .courseWrapper-backBtn-text
-                  =@course.name
-
-
-          -if @exam_body.has_sittings && @new_enrollment && (@computer_exam_sitting || @exam_sittings)
-            .mw-0.preview-upgrade-btn
-              %a#enrol-top{data: {target: '#enrollment-modal', toggle: 'modal'}, href: '#', class: 'btn btn-secondary btn-sm mb-3 mb-sm-0 non-upgrade mr-2'}
-                Enrol
-              =render partial: 'course_enrollment_modal'
-              =render partial: 'register_upgrade_links', locals: { user: current_user }
-              -if @course_log && !@course_log.completed && @course_log&.latest_course_step&.next_element
-                =link_to 'Resume', course_special_link(@course_log.latest_course_step.next_element, @course_log), class: 'btn btn-primary btn-sm mb-3 mb-sm-0'
-              %a{data: {target: '#enrollment-modal', toggle: 'modal'}, href: '#', class: 'btn btn-secondary btn-sm mb-3 mb-sm-0 upgrade-resp-enroll-btn upgrade-btn-flt'}
-                Enrol
+    .breadCrumbs.hidden-xs
+      -if @course.parent
+        .mw-0.container
+          =link_to library_url, class: 'courseWrapper-backBtn' do
+            .courseWrapper-backBtn-text
+              Library
+          .courseWrapper-backBtn-icon.i.material-icons keyboard_arrow_right
+          =link_to library_special_link(@course.parent), class: 'courseWrapper-backBtn' do
+            .courseWrapper-backBtn-text
+              =@course.parent.name
+          .courseWrapper-backBtn-icon.i.material-icons keyboard_arrow_right
+          .courseWrapper-backBtn
+            .courseWrapper-backBtn-text
+              =@course.name
+    .container.pt-4
+      %header.coursePage-container-header
+        -if @exam_body.has_sittings && @new_enrollment && (@computer_exam_sitting || @exam_sittings)
+          .mw-0.preview-upgrade-btn
+            %a#enrol-top{data: {target: '#enrollment-modal', toggle: 'modal'}, href: '#', class: 'btn btn-secondary btn-sm non-upgrade mr-2'}
+              Enrol
+            =render partial: 'course_enrollment_modal'
+            -if @course_log && !@course_log.completed && @course_log&.latest_course_step&.next_element
+              =link_to 'Resume', course_special_link(@course_log.latest_course_step.next_element, @course_log), class: 'btn btn-primary btn-sm'
+            %a{data: {target: '#enrollment-modal', toggle: 'modal'}, href: '#', class: 'btn btn-secondary btn-sm upgrade-resp-enroll-btn upgrade-btn-flt'}
+              Enrol
 
         .pt-3
           %div.courseWrapper-courseInfo
@@ -74,7 +71,7 @@
 
 =render partial: 'library/user_form_modal', locals: { ticket_type: 'Contact Us', form_id: 'contact-form-modal' }
 .coursePage-moduleDetailWrapper
-  .container.py-5.py-sm-5
+  .container.py-4.py-sm-4
     #coursesTabsContent.tab-content
       - @course.course_sections.all_active.all_in_order.each_with_index do |course_section, counter|
         .tab-pane{id: course_section.name_url, class: "tab-#{course_section.name_url} #{counter == 0 ? 'active show' : ''} ", "aria-labelledby" => "#{course_section.name_url}-tab", :role => "tabpanel"}
@@ -100,7 +97,7 @@
 
         .tab-pane.tab-resources{id: 'resources', role: 'tabpanel', 'aria-labelledby': 'resources-tab'}
           %section.mb-5
-            %h3.text-gray1.mb-4.mb-sm-5 Course Resources
+            %h3.text-gray1.mb-3.mb-sm-3 Course Resources
             .row.row-lg
               - @course_resources.each do |resource|
                 - if current_user
@@ -150,7 +147,7 @@
             %h3.text-gray1.mb-4.mb-sm-4 Addons
             .row.row-lg
               - @correction_pack_products.each do |product|
-                .col-sm-3.mb-4
+                .col-md-4.col-lg-3.mb-4
                   =link_to product_checkout_special_link(product.group.exam_body.id, product.id), class: 'productCard' do
                     .productCard-header.d-flex.align-items-center.justify-content-center
                       =image_tag('course-addon-icons/addon-correction-pack.svg')
@@ -164,7 +161,7 @@
                         Buy
 
               - @mock_exam_products.each do |product|
-                .col-sm-3.mb-4
+                .col-md-4.col-lg-3.mb-4
                   =link_to product_link(product, current_user), class: 'productCard' do
                     .productCard-header.d-flex.align-items-center.justify-content-center
                       =image_tag('course-addon-icons/addon-exams.svg')

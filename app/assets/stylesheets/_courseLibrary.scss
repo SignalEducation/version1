@@ -1,6 +1,9 @@
 
 
 .coursePage-container {
+  &-header {
+    position: relative;
+  }
   &-list {
     column-gap: 1.5rem;
     @include if-device(phone) {
@@ -119,9 +122,12 @@
   }
   .courseArrowIcon {
     font-size: 32px;
-    color: #929596;
+    color: #d6d6d6;
     position: absolute;
     right: 20px;
+    @include if-device(phone) {
+      right: 0;
+    }
   }
   .courseName {
     margin-top: 3px;
@@ -129,6 +135,9 @@
     font-size: 20px;
     line-height: 1.5;
     font-weight: 600;
+    @include if-device(phone) {
+      font-size: 16px;
+    }
   }
   .courseLibraryWrapper-list-progressText {
     font-weight: 600;
@@ -178,9 +187,37 @@
         }
     }
   }
+  .preview-upgrade-btn {
+    position: absolute;
+    right: 0;
+    @include if-device(phone) {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      background-color: #FFF;
+      z-index: 100;
+      padding: 1rem;
+      width: 100%;
+      display: flex;
+      column-gap: 10px;
+      -webkit-filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.06)) drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.1));
+      filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.06)) drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.1));
+      .btn {
+        width: 50%;
+      }
+    }
+  }
  
 }
 .coursePage-moduleDetailWrapper {
+  .course-lesson {
+    margin-left: 1.5rem;
+    
+    @include if-device(phone) {
+      margin-left: 0.75rem;
+      width: calc(100% - 1.5rem) !important;
+    }
+  }
   .productCard {
     position: relative;
     display: flex;
@@ -232,5 +269,31 @@
     &-buyBtn {
       padding: 0.5rem 1rem;
     }
+  }
+}
+.upgradeNudgeMini {
+  width: 100%;
+  background-color: #FFF;
+  padding: 2rem;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.06), 0px 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  &-img {
+
+  }
+  &-title {
+    font-size: 28px;
+    line-height: 150%;
+    color: #111827;
+    font-weight: 700;
+  }
+  &-desc {
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 150%;
+    color: #6B7280;
+  }
+  &-actions {
+    margin-top: 1rem;
+    
   }
 }

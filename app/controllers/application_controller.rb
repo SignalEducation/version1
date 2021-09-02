@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
   before_action :set_locale        # not for Api::
   before_action :set_session_stuff # not for Api::
   before_action :set_layout_variables
-  before_action :authorize_rack_profiler
+  # before_action :authorize_rack_profiler
 
   helper_method :current_user_session, :current_user
 

@@ -1,3 +1,16 @@
+.breadCrumbs {
+  display: flex;
+  flex-wrap: wrap !important;
+  padding: 1rem 0;
+  align-items: center !important;
+  justify-content: space-between !important;
+
+  @include if-device(phone) {
+    padding: 0.5rem 0;
+    background-color: #f9f9f9;
+  }
+  
+}
 .navbar {
   -webkit-box-pack: center;
   -webkit-justify-content: center;
@@ -7,6 +20,10 @@
   height: 64px;
   background-color: #FFF;
   box-shadow: inset 0 -1px #e3e8ee;
+  @include if-device(phone) {
+    height: 50px;
+    padding: 0.5rem;
+  }
 }
 .sticky-nav-border {
   border-bottom: 2px solid #e6ecf0;
@@ -23,6 +40,10 @@
   .navbar.navbar-lg {
     padding: 1.875rem 0
   }
+  .navbar-expand-lg .navbar-collapse {
+    display: flex !important;
+    flex-basis: auto;
+  }
 }
 @media (min-width:992px) {
   .navbar.navbar-lg .navbar-nav .nav-item.dropdown .dropdown-menu {
@@ -33,10 +54,10 @@
 .navbar > .container,
 .navbar > .container-fluid {
   position: relative;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center
+  -webkit-box-pack: flex-start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: flex-start;
+  justify-content: flex-start;
 }
 @media (min-width:992px) {
   .navbar > .container,
@@ -59,8 +80,10 @@
   }
 }
 .navbar-nav {
-  padding-top: 1rem;
-  padding-bottom: 1rem
+  flex-direction: row;
+  align-items: center !important;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 @media (min-width:992px) {
   .navbar-nav {
@@ -123,6 +146,15 @@
   font-weight: 600;
   padding: 8px 20px;
 }
+.navbar-nav .nav-link.console-btn {
+  background-color: #dcdcdc;
+  border: 1px solid #000032;
+  border-radius: 4px;
+  color: #000032;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 8px 12px;
+}
 .navbar-light .navbar-nav .nav-link:hover {
   color: #000032;
 }
@@ -144,11 +176,17 @@
   color: rgb(23, 43, 77);
   padding: 8px 20px;
   cursor: pointer;
-  font-weight: 400;
+  font-weight: 600;
   &:hover, &:active {
     color: rgb(23, 43, 77);
     background-color: rgb(244, 245, 247);
     text-decoration: none;
+  }
+  &.logout {
+    color: #dc3545;
+    &:hover, &:active {
+      background-color: rgba(220, 53, 69, 0.18);
+    }
   }
 }
 // @media (min-width:992px) {
@@ -174,11 +212,12 @@
   }
 }
 .navbar-nav .nav-link {
-  font-weight: 500
+  font-weight: 600;
 }
 .navbar-login {
   color: #1f2937;
   text-decoration: none;
+  font-weight: 600;
   &:hover, &:focus {
     color: #1f2937;
     outline: none;

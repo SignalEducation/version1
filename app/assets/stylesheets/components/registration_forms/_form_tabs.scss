@@ -303,6 +303,10 @@
     .navbar-expand-md .navbar-toggler {
       display: none
     }
+    .navbar-expand-lg .navbar-collapse {
+      display: flex !important;
+      flex-basis: auto;
+    }
   }
   @media (max-width:1025.98px) {
     .navbar-expand-lg > .container,

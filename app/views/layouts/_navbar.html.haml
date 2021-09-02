@@ -2,20 +2,21 @@
   %nav.fixed-top
     =render partial: 'layouts/external_banner'
     .navbar.navbar-expand-lg
-      .container
-        %button.navbar-toggler{"aria-controls" => "navbarNavDropdown", "aria-expanded" => "false", "aria-haspopup" => "true", "aria-label" => "Toggle navigation", "data-target" => "#navbarNavDropdown", "data-toggle" => "collapse", :type => "button"}
-          %span.navbar-toggler-bar.frst
-          %span.navbar-toggler-bar.scnd
+      =render partial: 'layouts/mobile_nav'
+      .container.hidden-xs
+        -# %button.navbar-toggler{"aria-controls" => "navbarNavDropdown", "aria-expanded" => "false", "aria-haspopup" => "true", "aria-label" => "Toggle navigation", "data-target" => "#navbarNavDropdown", "data-toggle" => "collapse", :type => "button"}
+        -#   %span.navbar-toggler-bar.frst
+        -#   %span.navbar-toggler-bar.scnd
         =link_to home_url, class: 'navbar-brand logo' do
           =image_tag('Learnsignal-Logo.svg', class: 'logo-img', alt: "LearnSignal Logo")
         
         -if current_user
           #navbarNavDropdown.collapse.navbar-collapse.justify-content-start
             %ul.navbar-nav.align-items-lg-center
-              %li.nav-item.mx-0
+              %li.nav-item.mx-3
                 =link_to student_dashboard_url, class: 'nav-link' do
                   %span Dashboard
-              %li.nav-item.mx-0
+              %li.nav-item.mx-3
                 =link_to library_url, class: 'nav-link' do
                   %span Library
 
@@ -29,20 +30,20 @@
 
               -if current_user.non_student_user?
                 %li.nav-item
-                  =link_to management_consoles_url, class: 'nav-link' do
-                    %span Console
+                  =link_to management_consoles_url, class: 'nav-link console-btn', target: '_blank' do
+                    %span 🥷🏼 Console
 
 
               %li.nav-item.dropdown
                 %a#navbarDropdown.navbar-login.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
                   %span.navbar-login-userIcon
-                    %svg.text-gray-400{:fill => "#9ca3af", :viewbox => "0 0 20 20", :xmlns => "http://www.w3.org/2000/svg"}
+                    %svg.text-gray-400{:fill => "#1f2937", :viewbox => "0 0 20 20", :xmlns => "http://www.w3.org/2000/svg"}
                       %path{"clip-rule" => "evenodd", :d => "M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z", "fill-rule" => "evenodd"}
                   %span.navbar-login-userName
                     =current_user.first_name.to_s
                 .dropdown-menu.dropdown-menu-right{"aria-labelledby" => "navbarDropdown"}
                   =link_to t('views.users.show.h1'), account_url, class: 'nav-link dropdown-item'
-                  =link_to t('views.general.log_out'), sign_out_url, class: 'nav-link dropdown-item'
+                  =link_to t('views.general.log_out'), sign_out_url, class: 'nav-link dropdown-item logout'
 
             -else
               %li.nav-item

@@ -1,17 +1,7 @@
 %main
   %article.libraryGroupWrapper.bg-white
-    
     %header.libraryGroupWrapper-hero
-      .container.libraryGroupWrapper-heroInfoWrapper
-        .d-flex.flex-wrap.flex-sm-nowrap.justify-content-between.align-items-center.py-4.py-md-4
-          .mw-0
-            =link_to library_url, class: 'courseWrapper-backBtn' do
-              .courseWrapper-backBtn-text
-                Library
-            .courseWrapper-backBtn-icon.i.material-icons keyboard_arrow_right
-            .courseWrapper-backBtn
-              .courseWrapper-backBtn-text
-                =@group.name
+      .container.libraryGroupWrapper-heroInfoWrapper.pt-4
         .heroTitle
           =@group.name
           ='Courses'
@@ -22,7 +12,7 @@
       %div.libraryGroupWrapper-heroBgWrapper{style: "background-image: url(#{@group.background_image.url});", title: "#{@group.name} Courses banner"}
 
     .border-top.bg-gray5
-      .container.pt-4
+      .container.pt-2
         =render partial: 'tabbed_list'
       -# -if @group.tab_view && @group.levels.all_active.count >= 2
       -#   =render partial: 'tabbed_list'

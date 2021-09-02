@@ -63,7 +63,7 @@
           -#           %a#exercises-tab.nav-link{"aria-controls" => "exercises", "aria-selected" => "true", "data-toggle" => "tab", :href => "#exercises", :role => "tab"}
           -#             Exercises
 
-          .col-lg-9.p-0
+          .col-md-12.col-lg-9.p-0
             #dashboardTabsContent.tab-content
               -if @enrollments.any?
                 #enrollments.tab-pane.show.active.tab-dashboard.tab-enrollments{"aria-labelledby" => "enrollments-tab", :role => "tabpanel"}
@@ -78,7 +78,7 @@
               -if current_user.exercises.any?
                 #exercises.tab-pane.show.tab-dashboard.tab-exercises{"aria-labelledby" => "exercises-tab", :role => "tabpanel"}
                   =render partial: 'exercises'
-          .col-lg-3
+          .col-md-0.col-lg-3
             .dashboardActions
               -# -if current_user.standard_student_user? && current_user&.preferred_exam_body_id && !current_user.valid_access_for_exam_body?(current_user&.preferred_exam_body_id, current_user&.preferred_exam_body&.group&.id)
               -#   =link_to pricing_url(current_user&.preferred_exam_body&.group&.name_url), class: 'btn btn-secondary btn-sm btn-sm-arrow-right mb-3 mb-sm-0' do
