@@ -81,7 +81,7 @@
         width: 100%;
       }
     }
-    @include if-device(desktop) {
+    @include if-device('desktop-tablet') {
       .nav {
         background-color: #FFF;
         border: 2px solid #F9FAFB;

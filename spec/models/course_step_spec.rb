@@ -265,13 +265,13 @@ describe CourseStep do
       it 'return Quiz' do
         allow_any_instance_of(CourseStep).to receive(:is_quiz).and_return(true)
 
-        expect(course_step_03.icon_label).to eq('playlist_add_check')
+        expect(course_step_03.icon_label).to eq('quiz')
       end
 
       it 'return Video' do
         allow_any_instance_of(CourseStep).to receive(:is_video).and_return(true)
 
-        expect(course_step_03.icon_label).to eq('ondemand_video')
+        expect(course_step_03.icon_label).to eq('smart_display')
       end
 
       it 'return Constructed Response' do
@@ -283,7 +283,7 @@ describe CourseStep do
       it 'return Notes' do
         allow_any_instance_of(CourseStep).to receive(:is_note).and_return(true)
 
-        expect(course_step_03.icon_label).to eq('insert_drive_file')
+        expect(course_step_03.icon_label).to eq('file_present')
       end
 
       it 'return Unknown' do

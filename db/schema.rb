@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_01_125050) do
+ActiveRecord::Schema.define(version: 2021_08_16_075325) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -455,9 +455,9 @@ ActiveRecord::Schema.define(version: 2021_09_01_125050) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer "cme_count", default: 0
-    t.string "seo_description", limit: 255
-    t.boolean "seo_no_index", default: false
     t.datetime "destroyed_at"
+    t.string "seo_description"
+    t.boolean "seo_no_index", default: false
     t.integer "number_of_questions", default: 0
     t.integer "course_id"
     t.float "video_duration", default: 0.0
@@ -649,9 +649,9 @@ ActiveRecord::Schema.define(version: 2021_09_01_125050) do
     t.boolean "is_video", default: false, null: false
     t.boolean "is_quiz", default: false, null: false
     t.boolean "active", default: true, null: false
-    t.string "seo_description", limit: 255
-    t.boolean "seo_no_index", default: false
     t.datetime "destroyed_at"
+    t.string "seo_description"
+    t.boolean "seo_no_index", default: false
     t.integer "number_of_questions", default: 0
     t.float "duration", default: 0.0
     t.string "temporary_label"
@@ -928,10 +928,6 @@ ActiveRecord::Schema.define(version: 2021_09_01_125050) do
     t.string "onboarding_level_heading"
     t.boolean "tab_view", default: false, null: false
     t.text "disclaimer"
-    t.string "group_logo_file_name"
-    t.string "group_logo_content_type"
-    t.bigint "group_logo_file_size"
-    t.datetime "group_logo_updated_at"
     t.index ["exam_body_id"], name: "index_groups_on_exam_body_id"
     t.index ["name"], name: "index_groups_on_name"
   end
@@ -1672,9 +1668,9 @@ ActiveRecord::Schema.define(version: 2021_09_01_125050) do
     t.bigint "currency_id"
     t.string "tutor_link"
     t.integer "video_player", default: 0, null: false
-    t.integer "home_page_id"
     t.decimal "subscriptions_revenue", default: "0.0"
     t.decimal "orders_revenue", default: "0.0"
+    t.integer "home_page_id"
     t.index ["country_id"], name: "index_users_on_country_id"
     t.index ["currency_id"], name: "index_users_on_currency_id"
     t.index ["preferred_exam_body_id"], name: "index_users_on_preferred_exam_body_id"

@@ -4577,6 +4577,9 @@ a.card:hover .card-title .card-explanation {
   &.completed {
     color: #00b67b;
   }
+  &:hover {
+    color: #000;
+  }
 }
 .lesson-item.lesson-item-inner {
   padding-right: -webkit-calc(24px + .5rem);
