@@ -63,7 +63,7 @@ RSpec.describe ApplicationHelper, type: :helper do
     end
 
     it 'return a unflagged span' do
-      expect(flagged_for_review(false)).to include('#ffffff')
+      expect(flagged_for_review(false)).to include('#333e4c')
     end
   end
 
