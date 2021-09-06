@@ -11,7 +11,8 @@
   }
   .form-details {
     display: none;
-    padding: .5em .75em 1.5em .75em
+    padding: .5em .75em 1.5em .75em;
+    border-top: 1px solid #d1d5da;
   }
   @media (min-width:576px) {
     .form-details {
@@ -116,18 +117,19 @@
     -webkit-align-self: center;
     -ms-flex-item-align: center;
     align-self: center;
-    width: 19px;
-    height: 19px;
+    width: 24px;
+    height: 24px;
     background-color: transparent;
     border: 1px solid #7f8599;
     border-radius: 2px;
+    overflow: hidden;
     -webkit-transition: all .1s linear 0s;
     -o-transition: all .1s linear 0s;
-    transition: all .1s linear 0s
+    transition: all .1s linear 0s;
   }
   .custom-control.custom-checkbox .custom-control-input + .custom-control-label:hover > .custom-check,
   .custom-control.custom-radio .custom-control-input + .custom-control-label:hover > .custom-check {
-    border-color: #00b67B
+    border-color: #007bff;
   }
   .custom-control.custom-checkbox .custom-control-input.style-checkbox + label > .custom-check,
   .custom-control.custom-radio .custom-control-input.style-checkbox + label > .custom-check {
@@ -141,8 +143,9 @@
     left: 0;
     content: '\e5ca';
     font-family: 'Material Icons';
-    font-size: 17px;
-    color: #424366
+    font-size: 22px;
+    color: #FFF;
+    background-color: #007bff;
   }
   .custom-control.custom-checkbox .custom-control-input.style-radio + label > .custom-check,
   .custom-control.custom-radio .custom-control-input.style-radio + label > .custom-check {
@@ -152,17 +155,17 @@
   .custom-control.custom-radio .custom-control-input.style-radio + label > .custom-check::after {
     display: none;
     position: absolute;
-    top: 7px;
-    left: 7px;
+    top: 4px;
+    left: 4px;
     content: '';
-    width: 3px;
-    height: 3px;
-    background-color: #424366;
-    border-radius: 50%
+    width: 14px;
+    height: 14px;
+    background-color: #007bff;
+    border-radius: 50%;
   }
   .custom-control.custom-checkbox .custom-control-input:checked + label > .custom-check,
   .custom-control.custom-radio .custom-control-input:checked + label > .custom-check {
-    border: 1px solid #00b67B
+    border: 1px solid #007bff;
   }
   .custom-control.custom-checkbox .custom-control-input:checked + label > .custom-check::after,
   .custom-control.custom-radio .custom-control-input:checked + label > .custom-check::after {
@@ -263,7 +266,7 @@
   }
   .custom-control.custom-checkbox .custom-control-input.custom-control-input-card + label:hover,
   .custom-control.custom-radio .custom-control-input.custom-control-input-card + label:hover {
-    border-color: #b4bbd4
+    border-color: #d1d5db;
   }
   .custom-control.custom-checkbox .custom-control-input.custom-control-input-card + label:hover > .custom-check,
   .custom-control.custom-radio .custom-control-input.custom-control-input-card + label:hover > .custom-check {
@@ -271,8 +274,8 @@
   }
   .custom-control.custom-checkbox .custom-control-input.custom-control-input-card:checked + label,
   .custom-control.custom-radio .custom-control-input.custom-control-input-card:checked + label {
-    background-color: #fff;
-    border-color: transparent
+    border-color: #00B67A;
+    background-color: #ECFDF5;
   }
   .custom-control.custom-checkbox .custom-control-input.custom-control-input-card:checked + label > .custom-check,
   .custom-control.custom-radio .custom-control-input.custom-control-input-card:checked + label > .custom-check {

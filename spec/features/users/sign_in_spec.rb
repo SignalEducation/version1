@@ -34,7 +34,6 @@ describe 'Sign in process', type: :feature do
 
       expect(page).to have_title('Dashboard')
       expect(page).to have_content('Dashboard')
-      expect(page).to have_content('Activity')
     end
 
     scenario 'invalid login user data' do

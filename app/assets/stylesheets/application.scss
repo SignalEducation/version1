@@ -440,6 +440,11 @@ code {
     max-width: calc(100% - 32px);
   }
 }
+@media (min-width:992px) and (max-width: 1200px) {
+  .container {
+    max-width: calc(100% - 32px);
+  }
+}
 @media (min-width:1200px) {
   .container {
     max-width: 1280px;
@@ -523,10 +528,10 @@ code {
   font-size: 1rem;
   line-height: 1.5;
   color: #000032;
-  background-color: #f5f8fa;
+  background-color: #FFF;
   background-clip: padding-box;
-  border: 1px solid #e1e8ed;
-  border-radius: 0;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
   -webkit-transition: border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
   transition: border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
   -o-transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
@@ -680,10 +685,10 @@ textarea.form-control {
   border-radius: 0
 }
 .custom-date-select select:nth-child(1){
-  margin-right: 10px;
+  margin-right: 0;
 }
 .custom-date-select select:nth-child(2){
-  margin-right: 10px;
+  margin-right: 0;
 }
 
 .custom-select.is-valid,
@@ -814,11 +819,11 @@ textarea.form-control {
   line-height: 1.5;
   color: #000032;
   vertical-align: middle;
-  background: #f5f8fa url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Cpath fill='%23343a40' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3E") no-repeat right .75rem center;
+  background: #FFF url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Cpath fill='%23343a40' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3E") no-repeat right .75rem center;
   -webkit-background-size: 8px 10px;
   background-size: 8px 10px;
-  border: 1px solid #e1e8ed;
-  border-radius: 0;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none
@@ -1153,7 +1158,7 @@ textarea.form-control {
   padding: .5rem 1rem;
   font-size: 1.125rem;
   line-height: 1.5;
-  border-radius: 0;
+  border-radius: 8px;
 }
 .input-group-sm > .form-control,
 .input-group-sm > .input-group-append > .btn,
@@ -6229,11 +6234,6 @@ a.list-group-item {
   display: none !important;
 }
 @media(max-width:1199px) {
-  .custom-upgrade {
-    .btn {
-      display: none !important;
-    }
-  }
   .lesson-preview-btn-pad {
     .btn {
       display: inline-block !important;
@@ -8768,6 +8768,7 @@ button.sub-details[aria-expanded="true"]:before{
 #courses-mobile-nav {
   display: none;
 }
+
 @media(max-width:768px) {
   .courses-container {
     height: 100%;
@@ -8818,8 +8819,8 @@ button.sub-details[aria-expanded="true"]:before{
     }
     .user-item-box {
       z-index: 1;
-      padding: 1.25rem 1rem;
-      padding-bottom: 3rem;
+      padding: 0.5rem 1rem 1rem;
+      padding-bottom: 1rem;
       border-radius: 0;
       display: flex;
       justify-content: flex-start;

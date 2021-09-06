@@ -80,7 +80,7 @@
 
 =render partial: 'library/user_form_modal', locals: { ticket_type: 'Contact Us', form_id: 'contact-form-modal' }
 .coursePage-moduleDetailWrapper
-  .container.py-4.py-sm-4
+  .container.py-4.py-sm-4.pb-6
     #coursesTabsContent.tab-content
       - @course.course_sections.all_active.all_in_order.each_with_index do |course_section, counter|
         .tab-pane{id: course_section.name_url, class: "tab-#{course_section.name_url} #{counter == 0 ? 'active show' : ''} ", "aria-labelledby" => "#{course_section.name_url}-tab", :role => "tabpanel"}

@@ -1,18 +1,39 @@
 -@enrollments.each do |enrollment|
   -if enrollment.course
-    .card.card-horizontal.flex-md-row{style: 'margin-bottom: 1.5rem;'}
-      .card-header.justify-content-center.align-items-center.d-none.d-sm-block
-        .pt-4.text-center
-          .h4
-            =enrollment.display_percentage_complete
-          .h4
-            Complete
+    =link_to library_special_link(enrollment.course), class: 'card card-horizontal flex-md-row', style: 'margin-bottom: 1.5rem;' do
       .card-body.d-flex.flex-column.justify-content-center
-        %small.card-category.mb-2{style: "color: #{enrollment.course.highlight_colour};"}
-          ="#{enrollment.days_until_exam} days until exam"
-
-        %h5.card-title.mb-1
-          %span.mr-1
-            =enrollment.course.name
+        %div.dashboardWrapper-courseInfo
+          %div.dashboardWrapper-courseIcon{style: "border-color: #{enrollment.course.level.highlight_colour}; background-color: #{enrollment.course.level.highlight_colour};"}
+            %i{"aria-label" => enrollment.course.level.icon_label, :role => "img", class: enrollment.course.level.icon_label ? enrollment.course.level.icon_label : 'budicon-office-bag-c', style: "color: #FFF;"}
+          %div
+            %div.dashboardWrapper-parent
+              .dashboardWrapper-examName
+                =enrollment.course.parent.name
+              .dashboardWrapper-backBtn-dot .
+              .dashboardWrapper-levelName{style: "color: #{enrollment.course.level.highlight_colour};"}
+                ="#{enrollment.days_until_exam} days until exam"
+            %div.courseName
+              =enrollment.course.name
       .card-footer.d-flex.justify-content-center.align-items-center{style: 'background-color: #fff; border-top: none;'}
-        =link_to 'Resume Course', library_special_link(enrollment.course), class: 'btn btn-primary'
+        .dashboardWrapper-progressText
+          =enrollment.display_percentage_complete
+          Complete
+        .btn.btn-outline
+          Resume
+
+
+      -# .card-header.justify-content-center.align-items-center.d-none.d-sm-block
+      -#   .pt-4.text-center
+      -#     .h4
+      -#       =enrollment.display_percentage_complete
+      -#     .h4
+      -#       Complete
+      -# .card-body.d-flex.flex-column.justify-content-center
+      -#   %small.card-category.mb-2{style: "color: #{enrollment.course.highlight_colour};"}
+      -#     ="#{enrollment.days_until_exam} days until exam"
+
+      -#   %h5.card-title.mb-1
+      -#     %span.mr-1
+      -#       =enrollment.course.name
+      -# .card-footer.d-flex.justify-content-center.align-items-center{style: 'background-color: #fff; border-top: none;'}
+      -#   =link_to 'Resume Course', library_special_link(enrollment.course), class: 'btn btn-primary'

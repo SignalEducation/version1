@@ -233,7 +233,7 @@ $sans-font: 'Manrope', sans-serif;
   }
   .form-control.is-valid,
   .form-control:valid {
-    border-color: #f4f6fa!important;
+    border-color: #d1d5da!important;
     -webkit-box-shadow: none;
     box-shadow: none
   }
@@ -345,7 +345,7 @@ $sans-font: 'Manrope', sans-serif;
     overflow: hidden;
     -webkit-transition: all .1s linear 0s;
     -o-transition: all .1s linear 0s;
-    transition: all .1s linear 0s
+    transition: all .1s linear 0s;
   }
   .custom-control.custom-checkbox .custom-control-input + .custom-control-label:hover > .custom-check,
   .custom-control.custom-radio .custom-control-input + .custom-control-label:hover > .custom-check {
