@@ -1,5 +1,5 @@
 .question{style: hide_me ? 'display: none;' : '', id: "question_#{question.id}"}
-  .l-margin-bottom
+  .l-margin-bottom.mb-4.font-weight-bold
     -if question.custom_styles
       =render partial: 'quiz_contents/index', locals: {contents: question.quiz_contents}
     -else

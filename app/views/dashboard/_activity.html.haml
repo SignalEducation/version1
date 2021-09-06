@@ -1,7 +1,7 @@
 -if @sculs.any?
   -@sculs.each do |scul|
     -if scul.course && scul.course.active
-      .card.card-horizontal.flex-md-row{style: 'margin-bottom: 1.5rem;'}
+      =link_to library_special_link(scul.course), class: 'card card-horizontal flex-md-row', style: 'margin-bottom: 1.5rem;' do
         .card-body.d-flex.flex-column.justify-content-center
           %div.dashboardWrapper-courseInfo
             %div.dashboardWrapper-courseIcon{style: "border-color: #{scul.course.level.highlight_colour}; background-color: #{scul.course.level.highlight_colour};"}
@@ -19,7 +19,8 @@
           .dashboardWrapper-progressText
             =scul.percentage_complete.to_s << '%'
             Complete
-          =link_to 'Resume', library_special_link(scul.course), class: 'btn btn-outline'
+          .btn.btn-outline
+            Resume
 
 -else
   %h4.h4-hero.mb-4

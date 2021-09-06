@@ -23,9 +23,16 @@
                 .nav-item-box.logout
                     =link_to t('views.general.log_out'), sign_out_url
 
-    %button.material-icons.btn-side-nav{:type => "button"}menu
-    =link_to home_url, class: 'navbar-brand logo' do
-        =image_tag('Learnsignal-Logo.svg', class: 'logo-img', alt: "LearnSignal Logo")
+    %header.main-header.d-flex.align-items-center
+        =link_to navigation_special_link(@course_step), class: 'main-header-backBtn' do
+            .i.material-icons{:style => "font-size: 20px;margin-right: 12px;margin-top: 6px;"} arrow_back
+        .main-header-content
+            -if @course_step
+                .header-title
+                    =@course_step.name
+    -# %button.material-icons.btn-side-nav{:type => "button"}menu
+    -# =link_to home_url, class: 'navbar-brand logo' do
+    -#     =image_tag('Learnsignal-Logo.svg', class: 'logo-img', alt: "LearnSignal Logo")
 
 
     :javascript

@@ -1,16 +1,19 @@
+@import "breakpoints";
 $sans-font: 'Manrope', sans-serif;
 #upgrade-subscription, #product_purchase {
   .card {
     position: relative;
-    padding: 1rem;
-    border: 0 none;
-    -webkit-box-shadow: 0 0 19px #d5dbe5;
-    box-shadow: 0 0 19px #d5dbe5;
-    -webkit-transition: all .15s ease-in 0s;
-    -o-transition: all .15s ease-in 0s;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: auto;
+    background-color: transparent;
+    border: none;
+    padding: 0 !important;
+    overflow: hidden;
+    cursor: pointer;
+    word-wrap: break-word;
     transition: all .15s ease-in 0s;
-
-
     &.card-link{
       border: 1px solid #e1e8ed;
       background-clip: border-box;
@@ -68,7 +71,7 @@ $sans-font: 'Manrope', sans-serif;
     font-weight: 500;
   }
   p {
-    color: #7f8599;
+    color: #000;
     font-weight: 400;
   }
   #paypal_submit {
@@ -173,7 +176,6 @@ $sans-font: 'Manrope', sans-serif;
   h1,
   h2,
   h3 {
-    font-family: Montserrat,sans-serif;
     font-weight: 700;
   }
   .h1-mega {
@@ -335,18 +337,19 @@ $sans-font: 'Manrope', sans-serif;
     -webkit-align-self: center;
     -ms-flex-item-align: center;
     align-self: center;
-    width: 19px;
-    height: 19px;
+    width: 24px;
+    height: 24px;
     background-color: transparent;
     border: 1px solid #7f8599;
     border-radius: 2px;
+    overflow: hidden;
     -webkit-transition: all .1s linear 0s;
     -o-transition: all .1s linear 0s;
     transition: all .1s linear 0s
   }
   .custom-control.custom-checkbox .custom-control-input + .custom-control-label:hover > .custom-check,
   .custom-control.custom-radio .custom-control-input + .custom-control-label:hover > .custom-check {
-    border-color: #00b67B
+    border-color: #02b57b;
   }
   .custom-control.custom-checkbox .custom-control-input.style-checkbox + label > .custom-check,
   .custom-control.custom-radio .custom-control-input.style-checkbox + label > .custom-check {
@@ -360,8 +363,9 @@ $sans-font: 'Manrope', sans-serif;
     left: 0;
     content: '\e5ca';
     font-family: 'Material Icons';
-    font-size: 17px;
-    color: #424366
+    font-size: 22px;
+    color: #FFF;
+    background-color: #02b57b;
   }
   .custom-control.custom-checkbox .custom-control-input.style-radio + label > .custom-check,
   .custom-control.custom-radio .custom-control-input.style-radio + label > .custom-check {
@@ -371,17 +375,17 @@ $sans-font: 'Manrope', sans-serif;
   .custom-control.custom-radio .custom-control-input.style-radio + label > .custom-check::after {
     display: none;
     position: absolute;
-    top: 7px;
-    left: 7px;
+    top: 4px;
+    left: 4px;
     content: '';
-    width: 3px;
-    height: 3px;
-    background-color: #424366;
+    width: 14px;
+    height: 14px;
+    background-color: #007bff;
     border-radius: 50%
   }
   .custom-control.custom-checkbox .custom-control-input:checked + label > .custom-check,
   .custom-control.custom-radio .custom-control-input:checked + label > .custom-check {
-    border: 1px solid #00b67B
+    border: 1px solid #007bff;
   }
   .custom-control.custom-checkbox .custom-control-input:checked + label > .custom-check::after,
   .custom-control.custom-radio .custom-control-input:checked + label > .custom-check::after {
@@ -401,7 +405,7 @@ $sans-font: 'Manrope', sans-serif;
   .custom-control.custom-radio .custom-control-input.custom-control-input-card + label {
     padding: .75em 1em;
     border: 1px solid transparent;
-    border-radius: 0
+    border-radius: 6px;
   }
   @media (min-width:576px) {
     .custom-control.custom-checkbox .custom-control-input.custom-control-input-card + label,
@@ -482,7 +486,7 @@ $sans-font: 'Manrope', sans-serif;
   }
   .custom-control.custom-checkbox .custom-control-input.custom-control-input-card + label:hover,
   .custom-control.custom-radio .custom-control-input.custom-control-input-card + label:hover {
-    border-color: #b4bbd4
+    border-color: #d1d5db;
   }
   .custom-control.custom-checkbox .custom-control-input.custom-control-input-card + label:hover > .custom-check,
   .custom-control.custom-radio .custom-control-input.custom-control-input-card + label:hover > .custom-check {
@@ -490,8 +494,8 @@ $sans-font: 'Manrope', sans-serif;
   }
   .custom-control.custom-checkbox .custom-control-input.custom-control-input-card:checked + label,
   .custom-control.custom-radio .custom-control-input.custom-control-input-card:checked + label {
-    background-color: #fff;
-    border-color: transparent
+    border-color: #00B67A;
+    background-color: #ECFDF5;
   }
   .custom-control.custom-checkbox .custom-control-input.custom-control-input-card:checked + label > .custom-check,
   .custom-control.custom-radio .custom-control-input.custom-control-input-card:checked + label > .custom-check {
@@ -528,9 +532,12 @@ $sans-font: 'Manrope', sans-serif;
     }
   }
   .form-group-expandable {
-    margin-bottom: 1.25em;
-    border: 1px solid #e6eaf2;
-    border-radius: 0
+    margin-bottom: 1.5rem;
+    // border: 1px solid #e6eaf2;
+    background-color: #FFF;
+    transition: all 0.15s ease-in-out 0s;
+    border: 1px solid rgb(209, 213, 219);
+    border-radius: 12px;
   }
 .input-group :first-child.sr-only + * {
     border-top-left-radius: 4px;
@@ -687,5 +694,40 @@ $sans-font: 'Manrope', sans-serif;
   }
   .custom-control.custom-control-simple .custom-control-input + .custom-control-label .custom-label {
     color: #424366
+  }
+}
+
+
+.show-more-plans {
+  position: relative;
+  text-decoration: none;
+  width: 100%;
+  text-align: right;
+  padding-right: 12px;
+  &:before {
+    content: ' ';
+    position: absolute;
+    z-index: 0;
+    left: 0;
+    top: 50%;
+    height: 1px;
+    width: 100%;
+    border-bottom: 1px solid #efefef;
+  }
+  span {
+    z-index: 10;
+    background-color: #FFF;
+    position: relative;
+    padding: 0 1rem;
+  }
+}
+.paymentOptionBox {
+  background-color: #F1F5F9;
+  padding: 2rem;
+  border-radius: 16px;
+  border: 1px solid #E5E7EB;
+  @include if-device(phone) {
+    border-radius: 0;
+    padding: 2rem 1rem;
   }
 }

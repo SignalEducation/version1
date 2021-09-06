@@ -21,6 +21,10 @@
     font-size: 18px;
     line-height: 150%;
     text-align: left;
+    @include if-device(phone) {
+      max-width: 100%;
+      font-size: 14px;
+    }
   }
   .nav.nav-pills {
     background-color: transparent;
@@ -84,6 +88,10 @@
     font-size: 18px;
     line-height: 150%;
     text-align: left;
+    @include if-device(phone) {
+      max-width: 100%;
+      font-size: 14px;
+    }
   }
   .planCard {
     position: relative;

@@ -1,18 +1,18 @@
 %main
-  %article.bg-gray5
+  %article.bg-white
     .container
-      %header.hero-section
-        %h1.h1-hero.mb-2
-          =order_heading(@order)
-        %p.p-hero.px-lg-8
-          =order_short_description(@order)
+      -# %header.hero-section.px-0.pb-0
+      -#   %h1.h2-hero.mb-2.text-left
+      -#     Purchase
+      -#   -# %p.p-hero.px-lg-12.text-left
+      -#   -#   =order_short_description(@order)
 
       -if flash[:success] || flash[:error] || flash[:warning]
         =render partial: 'layouts/flash_messages'
 
       %section.pb-md-3.pb-2
         .order-checkout-section
-          .container#product_purchase
+          .container.p-0#product_purchase
             =form_for([@product, @order], html: {id: 'orders-form', class: 'payment', role: 'form'}) do |f|
               =f.hidden_field :product_id, value: @order.product.id
               =f.hidden_field :stripe_payment_method_id
@@ -21,26 +21,31 @@
 
               .row
                 .col-lg-6.mb-5.mb-xl-0
+                  %header.mb-4
+                    %h1.h2-hero.mb-2.text-left
+                      Purchase
                   .row
-                    .col-lg-8.offset-2
-                      .card.card-link.text-center.mb-5
-                        .py-4
-                          %h4.text-ellipsis.mb-4
-                            =@order.product.name_by_type
-                          .pt-2
+                    .col-lg-12
+                      .text-left.mb-5
+                        .d-flex.py-0
+                          .mr-4
                             =product_icon(@order.product)
-                          .pt-4.pb-2
-                            .h6.text-ellipsis
-                              Total:
-                              %span
-                                =number_in_local_currency(@order.product.price, @order.product.currency)
-                  .px-4
+                          %div
+                            .mb-2
+                              .text-left
+                                %span{style: 'font-size: 1.5rem;line-height: 2rem;color: #00b67b;font-weight: 700;'}
+                                  =number_in_local_currency(@order.product.price, @order.product.currency)
+                            %div.h3.mb-1.text-black
+                              =@order.product.name_by_type
+                            %div.h5.mb-2.text-gray1
+                              =order_short_description(@order)
+                  .px-4{style: 'background-color: #f5f5f7;padding: 2rem;border-radius: 16px;'}
                     %p.text-left
                       =order_description(@order)
 
-                .col-lg-6.mb-5
+                .col-lg-6.paymentOptionBox
                   %fieldset.card.card-payments
-                    %p.h2.mb-1 Choose a way to pay
+                    %p.h3.mb-1.text-black Choose a way to pay
                     %p.mb-4 Select your preferred method of payment
                     .form-group.form-group-expandable
                       .custom-control.custom-radio
@@ -63,20 +68,28 @@
                           %span.custom-check
                       =render partial: 'orders/paypal_form', locals: {f: f}
 
+            -# .px-4{style: 'background-color: #f5f5f7;padding: 2rem;border-radius: 16px;'}
+            -#   %p.text-left
+            -#     =order_description(@order)
+
 
   -if @order.product.faqs.any?
-    %article.bg-gray5
-      .container-bg.bg-white-light
+    %article.bg-white
+      .container
+        %header.hero-section.px-0.pb-0
+          %h3.h2-hero.mb-2.text-left.text-gray2
+            FAQs
         .row
           .col-sm-12
-            %section.px-2.px-md-8.pb-6
+            %section.px-md-12.pb-6
               -@order.product.faqs.each do |faq|
                 .faq-box.faq-quest-box
-                  .faq-inner.narrow{onclick: '$(this).toggleClass("narrow"); $(this).find(".faq-answer").toggleClass("d-md-block"); $(this).find(".faq-answer-expanded").toggleClass("d-none"); $(this).find(".fa-plus-circle").toggleClass("d-none"); $(this).find(".fa-minus-circle").toggleClass("d-none");'}
+                  .faq-inner.narrow{onclick: '$(this).toggleClass("narrow"); $(this).find(".faq-answer").toggleClass("d-md-block"); $(this).find(".faq-answer-expanded").toggleClass("d-none"); $(this).find(".closed-icon").toggleClass("d-none"); $(this).find(".opened-icon").toggleClass("d-none");'}
                     .faq-title
-                      %i.fa.fa-plus-circle.faq-pm-icons{"aria-hidden" => "true"}
-                      %i.fa.fa-minus-circle.faq-pm-icons.d-none{"aria-hidden" => "true"}
-                      =faq.question_text.html_safe
+                      .p.m-0{style: 'width: calc(100% - 24px);'}
+                        =faq.question_text.html_safe
+                      %i.material-icons.closed-icon{style: 'position: absolute;right: 14px;top: 14px;'} keyboard_arrow_down
+                      %i.material-icons.opened-icon.d-none{style: 'position: absolute;right: 14px;top: 14px;'} keyboard_arrow_up
                     .faq-answer-expanded.d-none
                       =faq.answer_text.html_safe
 

@@ -1,12 +1,12 @@
-%div.d-flex.libraryGroupWrapper-list
-  %nav.levels-nav.py-4.py-md-4
+%div.container.d-flex.libraryGroupWrapper-list.pt-4
+  %nav.levels-nav
     %ul.d-flex.flex-column.nav.nav-pills.nav-fill{id: 'levelsTabs', role: 'tablist'}
       - @levels.each_with_index do |level, counter|
         %li.nav-item{data: {tab_name: level.name, group_name: @group.name}}
           %a{class: "nav-link #{counter == 0 ? 'active' : ''}", id: "#{level.name_url}-tab", data: {toggle: 'tab'}, href: "##{level.name_url}", aria: {controls: "#{level.name_url}", selected: 'false'}, role: 'tab'}
             =level.name
 
-  %section.content-section.py-4.py-md-4
+  %section.container.content-section
     %h2.sr-only List of Courses
     #levelsTabsContent.tab-content
       -@levels.each_with_index do |level, counter|

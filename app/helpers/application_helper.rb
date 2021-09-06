@@ -39,7 +39,7 @@ module ApplicationHelper
   end
 
   def flagged_for_review(the_thing)
-    color = the_thing ? '#eb4242' : '#ffffff'
+    color = the_thing ? '#eb4242' : '#333e4c'
     the_class = 'glyphicon glyphicon-flag'
     html_sanitizer('', the_class, "color: #{color};")
   end

@@ -14,17 +14,26 @@
           .courseWrapper-backBtn
             .courseWrapper-backBtn-text
               =@course.name
+    .breadCrumbs.visible-xs
+      -if @course.parent
+        .mw-0.container
+          =link_to library_special_link(@course.parent), class: 'courseWrapper-backBtn' do
+            .courseWrapper-backBtn-text
+              .i.material-icons{:style => "font-size: 18px;margin-right: 8px;"} arrow_back
+              %span
+                Back to
+                =@course.parent.name
     .container.pt-4
       %header.coursePage-container-header
         -if @exam_body.has_sittings && @new_enrollment && (@computer_exam_sitting || @exam_sittings)
           .mw-0.preview-upgrade-btn
             %a#enrol-top{data: {target: '#enrollment-modal', toggle: 'modal'}, href: '#', class: 'btn btn-secondary btn-sm non-upgrade mr-2'}
               Enrol
-            =render partial: 'course_enrollment_modal'
-            -if @course_log && !@course_log.completed && @course_log&.latest_course_step&.next_element
-              =link_to 'Resume', course_special_link(@course_log.latest_course_step.next_element, @course_log), class: 'btn btn-primary btn-sm'
             %a{data: {target: '#enrollment-modal', toggle: 'modal'}, href: '#', class: 'btn btn-secondary btn-sm upgrade-resp-enroll-btn upgrade-btn-flt'}
               Enrol
+            -if @course_log && !@course_log.completed && @course_log&.latest_course_step&.next_element
+              =link_to 'Resume', course_special_link(@course_log.latest_course_step.next_element, @course_log), class: 'btn btn-primary btn-sm'
+          =render partial: 'course_enrollment_modal'
 
         .pt-3
           %div.courseWrapper-courseInfo
@@ -84,7 +93,7 @@
                 - course_section.course_lessons.all_valid.all_in_order.each_with_index do |course_lesson, counter|
                   =render partial: 'course_lesson', locals: { course_lesson: course_lesson, counter: counter, count: course_section.course_lessons.all_valid.count }
 
-            .col-xl-4.mb-5.custom-upgrade
+            .col-xl-4.mb-4.custom-upgrade
               =render partial: 'register_upgrade_links', locals: { user: current_user }
 
               -# Ask a Tutor CTA
@@ -97,7 +106,7 @@
 
         .tab-pane.tab-resources{id: 'resources', role: 'tabpanel', 'aria-labelledby': 'resources-tab'}
           %section.mb-5
-            %h3.text-gray1.mb-3.mb-sm-3 Course Resources
+            %h3.text-gray1.mb-4.mb-sm-4 Course Resources
             .row.row-lg
               - @course_resources.each do |resource|
                 - if current_user
@@ -108,33 +117,44 @@
                     - if  permission[:view]
                       =pdf_viewer(resource, @banner.present?.to_s, current_user)
                     - else
-                      .col-sm-6
-                        %a.card.card-horizontal.card-horizontal-sm.flex-row.resource-card{data: {target: "##{permission[:reason]}", toggle: 'modal', resource_name: resource.name, resource_id: resource.id,
+                      .col-md-4.col-lg-3.mb-4
+                        %a.productCard{data: {target: "##{permission[:reason]}", toggle: 'modal', resource_name: resource.name, resource_id: resource.id,
                          course_name: resource.course.name, course_id: resource.course_id, exam_body_name: resource.course.exam_body.name, exam_body_id: resource.course.exam_body_id, resource_type: resource.type,
                           preferred_exam_body_id: current_user&.preferred_exam_body_id, preferred_exam_body: current_user&.preferred_exam_body&.name, banner: @banner.present?.to_s, onboarding: current_user&.analytics_onboarding_valid?.to_s,
                           allowed: 'false'}, href: '#'}
-                          .card-header.bg-white.d-flex.align-items-center.justify-content-center
-                            %i.budicon-files-download{"aria-label" => "", :role => "img"}
-                          .card-body.d-flex.align-items-center.pl-1
-                            %h5.m-0.text-truncate.text-gray2.w-100
+                          .productCard-header.d-flex.align-items-center.justify-content-center
+                            -# Change image for Downloadable resouses
+                            =image_tag('course-addon-icons/addon-exams.svg')
+                          .productCard-body.d-flex.align-items-center
+                            %div
                               =resource.name
-                            %span{style: 'color: #6d5902;background-color: #f9e9af;font-size: 12px;border-radius: 4px;padding: 2px 8px;padding-top: 4px;letter-spacing: 1px;font-weight: 600;line-height: 1.7;display: inline-flex;column-gap: 6px;'}
-                              LOCKED
+                            -# %span{style: 'color: #6d5902;background-color: #f9e9af;font-size: 12px;border-radius: 4px;padding: 2px 8px;padding-top: 4px;letter-spacing: 1px;font-weight: 600;line-height: 1.7;display: inline-flex;column-gap: 6px;'}
+                            -#   LOCKED
+                          .productCard-footer.d-flex.align-items-center.justify-content-between
+                            .d-flex.flex-column.align-items-start.justify-content-start
+                              %span{style: 'color: #6d5902;background-color: #f9e9af;font-size: 12px;border-radius: 4px;padding: 2px 8px;padding-top: 4px;letter-spacing: 1px;font-weight: 600;line-height: 1.7;display: inline-flex;column-gap: 6px;'}
+                                LOCKED
+                            -# .btn.btn-primary.productCard--buyBtn
+                            -#   Buy
                             -# %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img", style: 'color: #6d5902;background-color: #f9e9af;border-radius: 100%;'}
                             -#   %span
                             -#     lock_outline
                 - else
-                  .col-sm-6
-                    %a.card.card-horizontal.card-horizontal-sm.flex-row.resource-card{data: {target: '#account-required', toggle: 'modal', href: '#', resource_name: resource.name, resource_id: resource.id,
+                  .col-md-4.col-lg-3.mb-4
+                    %a.productCard{data: {target: '#account-required', toggle: 'modal', href: '#', resource_name: resource.name, resource_id: resource.id,
                      preferred_exam_body_id: current_user&.preferred_exam_body_id, preferred_exam_body: current_user&.preferred_exam_body&.name, banner: @banner.present?.to_s, onboarding: current_user&.analytics_onboarding_valid?.to_s,
                      course_name: resource.course.name, course_id: resource.course_id, exam_body_name: resource.course.exam_body.name, exam_body_id: resource.course.exam_body_id, resource_type: resource.type, allowed: 'false'}}
-                      .card-header.bg-white.d-flex.align-items-center.justify-content-center
-                        %i.budicon-files-download{"aria-label" => "", :role => "img"}
-                      .card-body.d-flex.align-items-center.pl-1
-                        %h5.m-0.text-truncate.text-gray2.w-100
+                      .productCard-header.d-flex.align-items-center.justify-content-center
+                        -# Change image for Downloadable resouses
+                        =image_tag('course-addon-icons/addon-exams.svg')
+                      .productCard-body.d-flex.align-items-center
+                        %div
                           =resource.name
-                        %span{style: 'color: #6d5902;background-color: #f9e9af;font-size: 12px;border-radius: 4px;padding: 2px 8px;padding-top: 4px;letter-spacing: 1px;font-weight: 600;line-height: 1.7;display: inline-flex;column-gap: 6px;'}
-                          LOCKED
+                      .productCard-footer.d-flex.align-items-center.justify-content-between
+                        .d-flex.flex-column.align-items-start.justify-content-start
+                          %span{style: 'color: #6d5902;background-color: #f9e9af;font-size: 12px;border-radius: 4px;padding: 2px 8px;padding-top: 4px;letter-spacing: 1px;font-weight: 600;line-height: 1.7;display: inline-flex;column-gap: 6px;'}
+                            LOCKED
+                          
                         -# %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img", style: 'color: #6d5902;background-color: #f9e9af;border-radius: 100%;'}
                         -#   %span
                         -#     lock_outline
@@ -152,7 +172,8 @@
                     .productCard-header.d-flex.align-items-center.justify-content-center
                       =image_tag('course-addon-icons/addon-correction-pack.svg')
                     .productCard-body.d-flex.align-items-center
-                      =product.mock_exam.try(:name)
+                      %div
+                        =product.mock_exam.try(:name)
                     .productCard-footer.d-flex.align-items-center.justify-content-between
                       .d-flex.flex-column.align-items-start.justify-content-start
                         %span{style: 'font-size: 12px;color: #9CA3AF;font-weight: 500;'} Price
@@ -166,7 +187,8 @@
                     .productCard-header.d-flex.align-items-center.justify-content-center
                       =image_tag('course-addon-icons/addon-exams.svg')
                     .productCard-body.d-flex.align-items-center
-                      =product.name_by_type
+                      %div
+                        =product.name_by_type
                     .productCard-footer.d-flex.align-items-center.justify-content-between
                       .d-flex.flex-column.align-items-start.justify-content-start
                         %span{style: 'font-size: 12px;color: #9CA3AF;font-weight: 500;'} Price

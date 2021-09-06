@@ -203,7 +203,7 @@
       -webkit-filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.06)) drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.1));
       filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.06)) drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.1));
       .btn {
-        width: 50%;
+        flex: 1 1;
       }
     }
   }
@@ -258,6 +258,7 @@
       font-size: 16px;
       font-weight: 600;
       line-height: 1.5;
+      min-height: 80px;
     }
     &-footer {
       padding: 1rem;
@@ -273,27 +274,32 @@
 }
 .upgradeNudgeMini {
   width: 100%;
-  background-color: #FFF;
+  background-color: #111827;
   padding: 2rem;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.06), 0px 4px 6px rgba(0, 0, 0, 0.1);
   border-radius: 12px;
-  &-img {
-
+  &-icon {
+    font-size: 48px;
   }
   &-title {
-    font-size: 28px;
-    line-height: 150%;
-    color: #111827;
-    font-weight: 700;
+    display: flex;
+    column-gap: 12px;
+    margin-bottom: 0.5rem;
+    &Text {
+      font-size: 24px;
+      line-height: 1.3;
+      color: #FFF;
+      font-weight: 700;
+    }
+    
   }
   &-desc {
     font-weight: 600;
-    font-size: 12px;
-    line-height: 150%;
-    color: #6B7280;
+    font-size: 14px;
+    line-height: 1.3;
+    color: #cccccc;
   }
-  &-actions {
+  &-action {
     margin-top: 1rem;
-    
   }
 }

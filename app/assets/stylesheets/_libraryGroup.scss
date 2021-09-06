@@ -65,6 +65,9 @@
     column-gap: 1.5rem;
     @include if-device(phone) {
       flex-direction: column;
+      padding: 0;
+      padding-top: 0 !important;
+      row-gap: 2rem !important;
     }
     .levels-nav {
       width: 25%;
@@ -78,25 +81,66 @@
         width: 100%;
       }
     }
-    .nav {
-      background-color: #FFF;
-      border: 2px solid #F9FAFB;
-      box-sizing: border-box;
-      padding: 16px;
-      row-gap: 12px;
-      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.06), 0px 4px 6px rgba(0, 0, 0, 0.1);
-      border-radius: 12px;
-      .nav-item {
-        text-align: left;
-        .nav-link {
-          padding: 0.5rem;
-          font-size: 16px;
-          line-height: 24px;
-          font-weight: 600;
-          border-radius: 4px;
-          &.active {
-            background-color: #F0FDF4;
-            color: #00B67A;
+    @include if-device(desktop) {
+      .nav {
+        background-color: #FFF;
+        border: 2px solid #F9FAFB;
+        box-sizing: border-box;
+        padding: 16px;
+        row-gap: 12px;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.06), 0px 4px 6px rgba(0, 0, 0, 0.1);
+        border-radius: 12px;
+        .nav-item {
+          text-align: left;
+          .nav-link {
+            padding: 0.5rem;
+            font-size: 16px;
+            line-height: 24px;
+            font-weight: 600;
+            border-radius: 4px;
+            &.active {
+              background-color: #F0FDF4;
+              color: #00B67A;
+            }
+          }
+        }
+      }
+    }
+    @include if-device(phone) {
+      .nav {
+        display: flex;
+        border-bottom: 0 none;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        flex-direction: row !important;
+        background-color: #FFF;
+        &::-webkit-scrollbar {
+          display: none;
+        }
+        .nav-item {
+          display: block;
+          margin-bottom: 0;
+          margin-right: 0.25rem;
+          .nav-link {
+            padding: .6rem 1rem;
+            padding-top: .7rem;
+            font-size: 14px;
+            color: #B1B1B1;
+            text-transform: none;
+            letter-spacing: 0;
+            border: 0 none;
+            font-weight: 700;
+            margin: 0;
+            white-space: nowrap;
+            border-bottom-width: 2px;
+            border-bottom-style: solid;
+            border-color: transparent;
+            transition: all .15s ease-in-out 0s;
+            &.active {
+              color: #000032;
+              background-color: transparent;
+              border-color: #000032;
+            }
           }
         }
       }
@@ -120,7 +164,7 @@
         box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.06), 0px 1px 10px rgba(0, 0, 0, 0.02);
         border-radius: 8px;
         @include if-device(phone) {
-          padding: 1rem;
+          padding: 0.75rem;
         }
         &:hover, &:focus {
           color: inherit;

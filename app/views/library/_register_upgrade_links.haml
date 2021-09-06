@@ -1,7 +1,10 @@
 -if user && @course_product && !user.can_view_content?(@group.exam_body_id, @group.id, @course.id)
   .upgradeNudgeMini
+    .upgradeNudgeMini-icon
+      🎉
     .upgradeNudgeMini-title
-      Upgrade subscription to unlock full syllabus
+      .upgradeNudgeMini-titleText
+        Upgrade subscription to unlock full syllabus
     .upgradeNudgeMini-desc
       Make getting your CPD credits easy this year. Get instant and flexible access to over 100 certified CPD courses designed for accountants.
     .upgradeNudgeMini-action
@@ -9,8 +12,11 @@
         ='Upgrade Now'
 -elsif user && !user.can_view_content?(@group.exam_body_id, @group.id, @course.id)
   .upgradeNudgeMini
+    .upgradeNudgeMini-icon
+      🎉
     .upgradeNudgeMini-title
-      Upgrade subscription to unlock full syllabus
+      .upgradeNudgeMini-titleText
+        Upgrade subscription to unlock full syllabus
     .upgradeNudgeMini-desc
       Make getting your CPD credits easy this year. Get instant and flexible access to over 100 certified CPD courses designed for accountants.
     .upgradeNudgeMini-action
@@ -18,8 +24,11 @@
         Upgrade Now
 -elsif !user
   .upgradeNudgeMini
+    .upgradeNudgeMini-icon
+      🎉
     .upgradeNudgeMini-title
-      Upgrade subscription to unlock full syllabus
+      .upgradeNudgeMini-titleText
+        Upgrade subscription to unlock full syllabus
     .upgradeNudgeMini-desc
       Make getting your CPD credits easy this year. Get instant and flexible access to over 100 certified CPD courses designed for accountants.
     .upgradeNudgeMini-action

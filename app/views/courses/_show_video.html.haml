@@ -1,5 +1,5 @@
 .row.row-lg#show-video-window
-  .col-xl-12
+  .col-xl-12.p-0
     #course-right-show-elem-vid.course-right-show-content
       .course-right-show-frame
         .video-preloader
@@ -25,16 +25,27 @@
 
     -@course_step.course_resources.all_active.all_in_order.each do |resource|
       -if resource.external_url && resource.external_url.present?
-        =link_to resource.external_url, class: 'card card-horizontal card-horizontal-sm flex-row resource-card', data: {resource_name: resource.name, course_name: @course.name, resource_type: resource.type}, target: '_blank' do
-          .card-header.bg-white.d-flex.align-items-center.justify-content-center
+        =link_to resource.external_url, class: 'productCard', data: {resource_name: resource.name, course_name: @course.name, resource_type: resource.type}, target: '_blank' do
+          .productCard-header.d-flex.align-items-center.justify-content-center
             %i.budicon-internal-link{"aria-label" => "", :role => "img"}
-          .card-body.d-flex.align-items-center.pl-1
-            %h5.m-0.text-truncate.text-gray2
+          .productCard-body.d-flex.align-items-center
+            %div
               =resource.name
+          .productCard-footer.d-flex.align-items-center.justify-content-between
+            .d-flex.flex-column.align-items-start.justify-content-start
+              %span{style: 'font-size: 12px;color: #9CA3AF;font-weight: 500;'} Price
+              External
+            .btn.btn-primary.productCard--buyBtn
+              View
       -else
-        =link_to resource.file_upload.url, class: 'card card-horizontal card-horizontal-sm flex-row resource-card', data: {resource_name: resource.name, course_name: @course.name, resource_type: resource.type}, target: '_blank' do
-          .card-header.bg-white.d-flex.align-items-center.justify-content-center
+        =link_to resource.file_upload.url, class: 'productCard', data: {resource_name: resource.name, course_name: @course.name, resource_type: resource.type}, target: '_blank' do
+          .productCard-header.d-flex.align-items-center.justify-content-center
             %i.budicon-files-download{"aria-label" => "", :role => "img"}
-          .card-body.d-flex.align-items-center.pl-1
-            %h5.m-0.text-truncate.text-gray2
+          .productCard-body.d-flex.align-items-center
+            %div
               =resource.name
+          .productCard-footer.d-flex.align-items-center.justify-content-between
+            .d-flex.flex-column.align-items-start.justify-content-start
+              Resource
+            .btn.btn-primary.productCard--buyBtn
+              View

@@ -1,18 +1,24 @@
 <template>
-  <div id="cbe-modals" class="col-sm-6">
-    <div class="card card-horizontal card-horizontal-sm flex-row" @click="show('modal-'+componentType+'-'+pdfFileName)">
+  <div id="cbe-modals" class="col-md-4 col-lg-3 mb-4">
+    <div class="productCard" @click="show('modal-'+componentType+'-'+pdfFileName)">
       <div
-        class="card-header bg-white d-flex align-items-center justify-content-center"
+        class="productCard-header d-flex align-items-center justify-content-center"
       >
+        <AddonExamsIcon />
+      </div>
+      <div class="productCard-body d-flex align-items-center">
         <div>
-          <i aria-label class="budicon-files-download" role="img"></i>
+          {{ this.pdfFileName }}
         </div>
       </div>
-      <a class="card-body d-flex align-items-center pl-1">
-        <h5 class="m-0 text-truncate text-gray2">
-          {{ this.pdfFileName }}
-        </h5>
-      </a>
+      <div class="productCard-footer d-flex align-items-center justify-content-between">
+        <div>
+          PDF
+        </div>
+        <div class="btn btn-primary productCard--buyBtn">
+          View
+        </div>
+      </div>
     </div>
     <VueModal
       :componentType="componentType"
@@ -36,12 +42,14 @@
 import PDFCourseViewer from "../../lib/PDFCourseViewer/index.vue";
 import VueModal from "../VueModal.vue";
 import eventBus from "../cbe/EventBus.vue";
+import AddonExamsIcon from './addon-exams.svg';
 
 export default {
   components: {
     PDFCourseViewer,
     VueModal,
-    eventBus
+    eventBus,
+    AddonExamsIcon
   },
   props: {
     componentType: {

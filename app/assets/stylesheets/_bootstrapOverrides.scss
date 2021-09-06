@@ -4,7 +4,7 @@
   }
 }
 .visible-xs {
-  display: none;
+  display: none !important;
   @include if-device(phone) {
     display: block !important;
   }

@@ -6,8 +6,8 @@
   justify-content: space-between !important;
 
   @include if-device(phone) {
-    padding: 0.5rem 0;
-    background-color: #f9f9f9;
+    padding: 1rem 0 0;
+    background-color: #FFF;
   }
   
 }
@@ -21,7 +21,8 @@
   background-color: #FFF;
   box-shadow: inset 0 -1px #e3e8ee;
   @include if-device(phone) {
-    height: 50px;
+    min-height: 54px;
+    height: auto;
     padding: 0.5rem;
   }
 }

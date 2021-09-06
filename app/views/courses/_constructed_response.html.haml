@@ -19,45 +19,98 @@
 
       %section.course-content
         #constructed-response-window.constructed-response-window-grown.constructed-response-window-shrunk
-          .col-xl-12
+          .col-xl-12.p-0
             #course-right-show-elem-notes.course-right-show-content
               .course-right-show-frame
                 .scenario-box-nav.scenario-box-nav-header
                   .cr-navigation
                     .cr-navigation-left
-                      %ul
-                        %li.cr-nav-link#open-calculator-dialog{onclick: 'openCalculatorDialog(); return false;'}
-                          .k-icon.k-i-calculator
-                          ='Calculator'
-                        %li.cr-nav-link.d-none#close-calculator-dialog{onclick: 'closeCalculatorDialog(); return false;'}
-                          .k-icon.k-i-calculator
-                          ='Calculator'
+                      -if @course_step.is_video? || @course_step.is_note? || @course_step.is_quiz? || @course_step.is_practice_question? || @course_step.is_constructed_response?
+                        .cr-header-title
+                          =@course_step.name
+                      -# %ul
+                      -#   %li.cr-nav-link#open-calculator-dialog{onclick: 'openCalculatorDialog(); return false;'}
+                      -#     .k-icon.k-i-calculator
+                      -#     ='Calculator'
+                      -#   %li.cr-nav-link.d-none#close-calculator-dialog{onclick: 'closeCalculatorDialog(); return false;'}
+                      -#     .k-icon.k-i-calculator
+                      -#     ='Calculator'
 
 
-                        &#124;
-                        %li.cr-nav-link#open-scratch-pad-dialog{onclick: 'openScratchPadDialog(); return false;'}
-                          .k-icon.k-i-track-changes-enable
-                          ='Scratch Pad'
-                        %li.cr-nav-link.d-none#close-scratch-pad-dialog{onclick: 'closeScratchPadDialog(); return false;'}
-                          .k-icon.k-i-track-changes-enable
-                          ='Scratch Pad'
-
-                    .cr-navigation-right
+                      -#   -# &#124;
+                      -#   %li.cr-nav-link#open-scratch-pad-dialog{onclick: 'openScratchPadDialog(); return false;'}
+                      -#     .k-icon.k-i-track-changes-enable
+                      -#     ='Scratch Pad'
+                      -#   %li.cr-nav-link.d-none#close-scratch-pad-dialog{onclick: 'closeScratchPadDialog(); return false;'}
+                      -#     .k-icon.k-i-track-changes-enable
+                      -#     ='Scratch Pad'
+                    .cr-navigation-center
                       %ul
                         %li.question-count
                           ='Question 1 of 1'
-                        &#124;
 
-                        -@all_scenario_question_attempt.each do |question_attempt|
-                          %li.cr-nav-link.review-flag{id: "review_flag_#{question_attempt.id}", onclick: "flagForReview(#{question_attempt.id}); return false;"}
-                            =flagged_for_review(question_attempt.flagged_for_review)
-                            ='Flag for review'
+                    .cr-navigation-right
+                      %ul
+                        -# %li.question-count
+                        -#   ='Question 1 of 1'
+                        -# &#124;
 
-                        &#124;
+                        -# -@all_scenario_question_attempt.each do |question_attempt|
+                        -#   %li.cr-nav-link.review-flag{id: "review_flag_#{question_attempt.id}", onclick: "flagForReview(#{question_attempt.id}); return false;"}
+                        -#     =flagged_for_review(question_attempt.flagged_for_review)
+                        -#     ='Flag for review'
+
+                        -# &#124;
                         %li
-                          =link_to course_special_link(@course_step, @course_log), class: 'cr-nav-link' do
+                          =link_to course_special_link(@course_step, @course_log), class: 'cr-nav-link exit-btn' do
                             -# Add 'Confirm' Modal
                             ='Exit'
+                  .cr-navigation.lightBg
+                    .cr-navigation-left
+                      -# -if @course_step.is_video? || @course_step.is_note? || @course_step.is_quiz? || @course_step.is_practice_question? || @course_step.is_constructed_response?
+                      -#   .cr-header-title
+                      -#     =@course_step.name
+                      %ul
+                        %li.cr-nav-link.tool-btn#open-calculator-dialog{onclick: 'openCalculatorDialog(); return false;'}
+                          .k-icon.k-i-calculator
+                          ='Calculator'
+                        %li.cr-nav-link.tool-btn.d-none#close-calculator-dialog{onclick: 'closeCalculatorDialog(); return false;'}
+                          .k-icon.k-i-calculator
+                          ='Calculator'
+
+
+                        -# &#124;
+                        %li.cr-nav-link.tool-btn#open-scratch-pad-dialog{onclick: 'openScratchPadDialog(); return false;'}
+                          .k-icon.k-i-track-changes-enable
+                          ='Scratch Pad'
+                        %li.cr-nav-link.tool-btn.d-none#close-scratch-pad-dialog{onclick: 'closeScratchPadDialog(); return false;'}
+                          .k-icon.k-i-track-changes-enable
+                          ='Scratch Pad'
+                    -# .cr-navigation-center
+                    -#   %ul
+                    -#     %li.question-count
+                    -#       ='Question 1 of 1'
+
+                    .cr-navigation-right
+                      %ul
+                        -@all_scenario_question_attempt.each do |question_attempt|
+                          %li.cr-nav-link.review-flag.tool-btn{id: "review_flag_#{question_attempt.id}", onclick: "flagForReview(#{question_attempt.id}); return false;"}
+                            =flagged_for_review(question_attempt.flagged_for_review)
+                            ='Flag for review'
+                    -#     -# %li.question-count
+                    -#     -#   ='Question 1 of 1'
+                    -#     -# &#124;
+
+                    -#     -@all_scenario_question_attempt.each do |question_attempt|
+                    -#       %li.cr-nav-link.review-flag{id: "review_flag_#{question_attempt.id}", onclick: "flagForReview(#{question_attempt.id}); return false;"}
+                    -#         =flagged_for_review(question_attempt.flagged_for_review)
+                    -#         ='Flag for review'
+
+                    -#     -# &#124;
+                    -#     %li
+                    -#       =link_to course_special_link(@course_step, @course_log), class: 'cr-nav-link exit-btn' do
+                    -#         -# Add 'Confirm' Modal
+                    -#         ='Exit'
 
                 .scenario-box.constructed-response-form
                   =form_for @course_step_log, url: update_constructed_response_user_log_courses_url, remote: true do |f|
@@ -139,30 +192,46 @@
                 .scenario-box-nav.scenario-box-nav-footer
                   .cr-navigation
                     .cr-navigation-left
-                      -#%ul
-                        %li.cr-nav-link
-                          ='Resources Will Go Here!'
+                      %ul
+                        %li.cr-nav-link{onclick: 'previousQuestion(); return false;'}
+                          -# .glyphicon.glyphicon-arrow-left
+                          %i.material-icons{"aria-hidden" => "true", style: "font-size: 16px;margin-right: 4px;"} arrow_back
+                          ='Previous'
+                        -# &#124;
+                        %li.cr-nav-link#open-navigation-dialog{onclick: 'openNavDialog(); return false;'}
+                          -# .glyphicon.glyphicon-screenshot
+                          %i.material-icons{"aria-hidden" => "true", style: "font-size: 16px;margin-right: 4px;"} subject
+                          ='Navigation'
+                        %li.cr-nav-link.d-none#close-navigation-dialog{onclick: 'closeNavDialog(); return false;'}
+                          -# .glyphicon.glyphicon-screenshot
+                          %i.material-icons{"aria-hidden" => "true", style: "font-size: 16px;margin-right: 4px;"} subject
+                          ='Navigation'
+                    .cr-navigation-center
+                      %ul
+                        %li.cr-nav-link.submit-btn{onclick: 'loadSubmission(); return false;'}
+                          ='Submit'
 
                     .cr-navigation-right
                       %ul
-                        %li.cr-nav-link{onclick: 'previousQuestion(); return false;'}
-                          .glyphicon.glyphicon-arrow-left
-                          ='Previous'
-                        &#124;
-                        %li.cr-nav-link#open-navigation-dialog{onclick: 'openNavDialog(); return false;'}
-                          .glyphicon.glyphicon-screenshot
-                          ='Navigation'
-                        %li.cr-nav-link.d-none#close-navigation-dialog{onclick: 'closeNavDialog(); return false;'}
-                          .glyphicon.glyphicon-screenshot
-                          ='Navigation'
-                        &#124;
-                        %li.cr-nav-link{onclick: 'loadSubmission(); return false;'}
-                          ='Submit'
+                        -# %li.cr-nav-link{onclick: 'previousQuestion(); return false;'}
+                        -#   .glyphicon.glyphicon-arrow-left
+                        -#   ='Previous'
+                        -# &#124;
+                        -# %li.cr-nav-link#open-navigation-dialog{onclick: 'openNavDialog(); return false;'}
+                        -#   .glyphicon.glyphicon-screenshot
+                        -#   ='Navigation'
+                        -# %li.cr-nav-link.d-none#close-navigation-dialog{onclick: 'closeNavDialog(); return false;'}
+                        -#   .glyphicon.glyphicon-screenshot
+                        -#   ='Navigation'
+                        -# &#124;
+                        -# %li.cr-nav-link{onclick: 'loadSubmission(); return false;'}
+                        -#   ='Submit'
 
-                        &#124;
+                        -# &#124;
                         %li.cr-nav-link{onclick: 'nextQuestion(); return false;'}
                           ='Next'
-                          .glyphicon.glyphicon-arrow-right
+                          %i.material-icons{"aria-hidden" => "true", style: "font-size: 16px;margin-right: 4px;"} arrow_forward
+                          -# .glyphicon.glyphicon-arrow-right
 
 
                 #navigation-dialog.nav-dialog
@@ -219,8 +288,11 @@
     var headerFooterHeight = $(".navbar.fixed-top").height() + 210;
 
     function resizeSplitter() {
-        outerBox.height(browserWindow.height() - headerFooterHeight);
-        outerSplitter.wrapper.height(browserWindow.height() - headerFooterHeight);
+        // outerBox.height(browserWindow.height() - headerFooterHeight);
+        // outerSplitter.wrapper.height(browserWindow.height() - headerFooterHeight);
+        // outerSplitter.resize();
+        outerBox.height(browserWindow.height() - 60);
+        outerSplitter.wrapper.height(browserWindow.height() - 160);
         outerSplitter.resize();
     }
 

@@ -1,17 +1,17 @@
 %main
-  %article.bg-gray5
+  %article.bg-white
     .container
-      %header.hero-section
-        -if @plans && @plans.first
-          %h1.h2-hero.mb-3
-            = "#{@plans.first.exam_body.name} Tuition Payment"
-          %p.p-hero.px-lg-6
-            =@plans.first.checkout_sub_heading
-        -else
-          %h1.h1-hero.mb-2
-            = 'Exam Tuition Payment'
-          %p.p-hero.px-lg-6
-            ='Achieve your learning goals with a learnsignal subscription plan and enjoy professional courses delivered online so that you can study on a schedule that suits you.'
+      -# %header.hero-section.px-0.pb-0
+      -#   -if @plans && @plans.first
+      -#     %h1.h2-hero.mb-2.text-left
+      -#       = "#{@plans.first.exam_body.name} Tuition Payment"
+      -#     %p.p-hero.px-lg-12.text-left
+      -#       =@plans.first.checkout_sub_heading
+      -#   -else
+      -#     %h1.h1-hero.mb-2.text-left
+      -#       = 'Exam Tuition Payment'
+      -#     %p.p-hero.px-lg-12.text-left
+      -#       ='Achieve your learning goals with a learnsignal subscription plan and enjoy professional courses delivered online so that you can study on a schedule that suits you.'
 
       %section.pb-md-6.pb-5#wrapper
         #upgrade-subscription
@@ -27,7 +27,7 @@
             =hidden_field_tag :discounted_price
             =hidden_field_tag :hidden_coupon_code
 
-            .bg-gray5
+            .bg-white
               .container
                 -if flash[:success] || flash[:error] || flash[:warning]
                   .row.subscription-flash
@@ -37,13 +37,24 @@
               .container.payment
                 .row
                   .col-lg-6.mb-5.mb-xl-0
+                    %header.mb-4
+                      -if @plans && @plans.first
+                        %h1.h2-hero.mb-2.text-left
+                          = "#{@plans.first.exam_body.name} Tuition Payment"
+                        %p.p-hero.px-lg-12.text-left
+                          =@plans.first.checkout_sub_heading
+                      -else
+                        %h1.h1-hero.mb-2.text-left
+                          = 'Exam Tuition Payment'
+                        %p.p-hero.px-lg-12.text-left
+                          ='Achieve your learning goals with a learnsignal subscription plan and enjoy professional courses delivered online so that you can study on a schedule that suits you.'
                     %fieldset{id: 'plans-options' }
                       %legend.sr-only Select a Plan
                       -# subscriptions helper
                       =plans_partials(params, @subscription, @plans)
-                  .col-lg-6
+                  .col-lg-6.paymentOptionBox
                     %fieldset.card.card-payments
-                      %p.h2.mb-1 Choose a way to pay
+                      %p.h3.mb-1.text-black Choose a way to pay
                       %p.mb-4 Select your preferred method of payment
                       .form-group.form-group-expandable
                         .custom-control.custom-radio
@@ -68,34 +79,34 @@
                               / custom checkbox
                         =render partial: 'subscription_payment_cards/paypal_form', locals: {f: f}
 
-    .container-bg.bg-white
-      .container
-        %article.text-center.py-6.py-sm-7
-          %header.pb-3
-            %h1.px-5.px-sm-6 Discover the smarter way to study
-            %p.p-hero Learnsignal uses a unique method of learning to provide an easier, more enjoyable and more effective way to learn.
-          .px-4.px-lg-8
-            .row.row-lg
-              .col-md-3
-                .pb-4.d-flex.flex-md-column.align-items-center
-                  .mr-4.mb-md-4.mx-md-0
-                    %i.budicon-desktop-smartphone{'ariahidden': 'true'}
-                  %p.m-0.text-left.text-md-center Access anytime, anywhere
-              .col-md-3
-                .pb-4.d-flex.flex-md-column.align-items-center
-                  .mr-4.mb-md-4.mx-md-0
-                    %i.budicon-card-slides{'ariahidden': 'true'}
-                  %p.m-0.text-left.text-md-center Topic-by-topic online lectures
-              .col-md-3
-                .pb-4.d-flex.flex-md-column.align-items-center
-                  .mr-4.mb-md-4.mx-md-0
-                    %i.budicon-doc-marker{'ariahidden': 'true'}
-                  %p.m-0.text-left.text-md-center Expert notes and corrected questions
-              .col-md-3
-                .pb-4.d-flex.flex-md-column.align-items-center
-                  .mr-4.mb-md-4.mx-md-0
-                    %i.budicon-happy-chat{'ariahidden': 'true'}
-                  %p.m-0.text-left.text-md-center Tutor support 24 hours a day, 7 days a week
+    -# .container-bg.bg-white
+    -#   .container
+    -#     %article.text-center.py-6.py-sm-7
+    -#       %header.pb-3
+    -#         %h1.px-5.px-sm-6 Discover the smarter way to study
+    -#         %p.p-hero Learnsignal uses a unique method of learning to provide an easier, more enjoyable and more effective way to learn.
+    -#       .px-4.px-lg-8
+    -#         .row.row-lg
+    -#           .col-md-3
+    -#             .pb-4.d-flex.flex-md-column.align-items-center
+    -#               .mr-4.mb-md-4.mx-md-0
+    -#                 %i.budicon-desktop-smartphone{'ariahidden': 'true'}
+    -#               %p.m-0.text-left.text-md-center Access anytime, anywhere
+    -#           .col-md-3
+    -#             .pb-4.d-flex.flex-md-column.align-items-center
+    -#               .mr-4.mb-md-4.mx-md-0
+    -#                 %i.budicon-card-slides{'ariahidden': 'true'}
+    -#               %p.m-0.text-left.text-md-center Topic-by-topic online lectures
+    -#           .col-md-3
+    -#             .pb-4.d-flex.flex-md-column.align-items-center
+    -#               .mr-4.mb-md-4.mx-md-0
+    -#                 %i.budicon-doc-marker{'ariahidden': 'true'}
+    -#               %p.m-0.text-left.text-md-center Expert notes and corrected questions
+    -#           .col-md-3
+    -#             .pb-4.d-flex.flex-md-column.align-items-center
+    -#               .mr-4.mb-md-4.mx-md-0
+    -#                 %i.budicon-happy-chat{'ariahidden': 'true'}
+    -#               %p.m-0.text-left.text-md-center Tutor support 24 hours a day, 7 days a week
 
 :javascript
   let plan_id = '1';
