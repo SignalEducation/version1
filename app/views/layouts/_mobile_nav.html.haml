@@ -24,13 +24,8 @@
                 .nav-item-box.logout
                     =link_to t('views.general.log_out'), sign_out_url
             -else
-                -# .nav-item-box
-                -#     =link_to t('views.users.show.h1'), login
-                -# .nav-item-box.logout
-                -#     =link_to t('views.general.log_out'), sign_out_url
-
-                .nav-item-box
-                    =link_to sign_in_url, class: 'navbar-login' do
+                .nav-item-box.mt-6
+                    =link_to sign_in_url, class: 'nav-link btn btn-outline' do
                         %span Login
                 .nav-item-box
                     =link_to new_student_url, class: 'nav-link btn btn-primary px-4' do
