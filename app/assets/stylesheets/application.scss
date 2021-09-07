@@ -2981,10 +2981,10 @@ h6 {
 }
 .courseWrapper-backBtn-icon {
   vertical-align: middle;
-  font-size: 16px !important;
-  color: #828282;
+  font-size: 12px !important;
+  color: #c5c5c5;
   height: 20px;
-  padding-top: 3px;
+  padding-top: 4px;
   margin-left: 4px;
 }
 .courseWrapper-courseInfo {
@@ -3038,8 +3038,8 @@ h6 {
     }
   } 
   .h1-hero {
-    margin-top: 14px;
-    margin-bottom: 16px;
+    margin-top: 10px;
+    margin-bottom: 0;
     font-size: 32px;
     line-height: 32px;
     font-weight: 700;
@@ -7978,6 +7978,7 @@ button.sub-details[aria-expanded="true"]:before{
         margin: 0 auto;
         padding: 1rem 0.5rem;
         background-color: #FFF;
+        border-top: 1px solid #e3e8ee;
         box-shadow: inset 0 -1px #e3e8ee;
         .course-title {
           font-weight: 700;
@@ -8310,7 +8311,6 @@ button.sub-details[aria-expanded="true"]:before{
     @include if-device(phone) {
       padding-top: 0;
       margin-left: 0;
-      box-shadow: inset 0 -1px #e3e8ee;
     }
 
   }
@@ -8471,11 +8471,9 @@ button.sub-details[aria-expanded="true"]:before{
   left: 25px !important;
 }
 .course-show-external-banner {
-  width: 130%;
-  margin-left: -5%;
+  width: 100%;
+  margin-left: 0;
   .external-banner {
-    border-top: 1px solid #fff;
-    border-bottom: 1px solid #fff;
     min-height: 2.75em;
     p {
       position: relative;
@@ -8739,8 +8737,7 @@ button.sub-details[aria-expanded="true"]:before{
     }
     .user-item-box {
       z-index: 1;
-      padding: 0.5rem 1rem 1rem;
-      padding-bottom: 1rem;
+      padding: 2rem 1rem;
       border-radius: 0;
       display: flex;
       justify-content: flex-start;
@@ -8826,7 +8823,7 @@ button.sub-details[aria-expanded="true"]:before{
       width: 24px;
       position: absolute;
       right: 1rem;
-      top: 20px;
+      top: 2.3rem;
     }
 
     #exitBtn:hover {
@@ -8841,20 +8838,20 @@ button.sub-details[aria-expanded="true"]:before{
       top: 120px;
     }
 
-    .btn {
-      background: #ff357a;
+    .zendesk-mobile-btn {
+      background: #000;
       border: none;
       outline: none;
       color: #fff;
-      width: 170px;
-      height: 50px;
+      width: auto;
+      padding: 0 1rem;
+      margin-top: 5px;
+      line-height: 30px;
       border-radius: 30px;
-      opacity: 1;
       transition: 300ms ease;
-    }
-    .btn:hover {
-      cursor: pointer;
-      filter: brightness(110%);
+      position: absolute;
+      right: 0.5rem;
+      font-size: 14px;
     }
     .overlay-active {
       left: 0;
@@ -9221,6 +9218,27 @@ button.sub-details[aria-expanded="true"]:before{
   position: relative;
   left: 10%;
   top: 6px;
+}
+
+.zendesk-btn {
+  background: #000;
+  border: none;
+  outline: none;
+  color: #fff;
+  width: auto;
+  padding: 0 1.5rem;
+  margin-top: 5px;
+  line-height: 40px;
+  border-radius: 30px;
+  transition: 300ms ease;
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  font-size: 18px;
+  &:hover {
+    background-color: #3c3b3b;
+    color: #FFF;
+  }
 }
 
 @import "dashboard";

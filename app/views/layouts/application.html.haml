@@ -28,8 +28,6 @@
     -if current_user
       =render partial: 'layouts/segment_tracking_code'
 
-    %meta{name: 'rohan', content: controller_name}
-
     -if controller_name == 'orders' || controller_name == 'subscriptions'
       %script{type: 'text/javascript', src: 'https://js.stripe.com/v3/'}
 
@@ -112,10 +110,6 @@
 
         =yield
 
-        -# -if @footer
-        -#   =render partial: 'layouts/footer_disclaimer' if @group&.disclaimer
-        -#   =render partial: 'layouts/footer'
-
       -elsif @layout == 'management'
         #management-console-wrapper
           .d-none.d-sm-block
@@ -152,9 +146,6 @@
         -if flash[:success] || flash[:error] || flash[:warning]
           =render partial: 'layouts/flash_messages'
         =yield
-        -# =render partial: 'layouts/footer_disclaimer' if @group&.disclaimer
-        -# =render partial: 'layouts/footer'
-
 
       -#General partials
       =render partial: 'layouts/misc_javascript'
@@ -200,5 +191,5 @@
 
       -if !current_user || current_user&.student_user?
         =render partial: 'layouts/hubspot_js'
-      -# -if ENV['ZENDESK_ON'] == 'true' && @chat
-      =render partial: 'layouts/zendesk_js'
+      -if ENV['ZENDESK_ON'] == 'true' && @chat
+        =render partial: 'layouts/zendesk_js'

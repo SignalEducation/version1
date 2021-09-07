@@ -4,9 +4,6 @@
     .navbar.navbar-expand-lg
       =render partial: 'layouts/mobile_nav'
       .container.hidden-xs
-        -# %button.navbar-toggler{"aria-controls" => "navbarNavDropdown", "aria-expanded" => "false", "aria-haspopup" => "true", "aria-label" => "Toggle navigation", "data-target" => "#navbarNavDropdown", "data-toggle" => "collapse", :type => "button"}
-        -#   %span.navbar-toggler-bar.frst
-        -#   %span.navbar-toggler-bar.scnd
         =link_to home_url, class: 'navbar-brand logo' do
           =image_tag('Learnsignal-Logo.svg', class: 'logo-img', alt: "LearnSignal Logo")
         
@@ -29,7 +26,7 @@
                     %span Upgrade Now
 
               -if current_user.non_student_user?
-                %li.nav-item
+                %li.nav-item.m-0
                   =link_to management_consoles_url, class: 'nav-link console-btn', target: '_blank' do
                     %span 🔮 Console
 

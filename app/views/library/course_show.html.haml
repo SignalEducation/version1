@@ -36,7 +36,7 @@
           =render partial: 'course_enrollment_modal'
 
         .pt-3
-          %div.courseWrapper-courseInfo
+          %div.courseWrapper-courseInfo.mb-2
             %div.courseWrapper-courseIcon{style: "border-color: #{@course.level.highlight_colour}; background-color: #{@course.level.highlight_colour};"}
               %i{"aria-label" => @course.level.icon_label, :role => "img", class: @course.level.icon_label ? @course.level.icon_label : 'budicon-office-bag-c', style: "color: #FFF;"}
             %div
@@ -209,8 +209,8 @@
   =render partial: 'subscription_restriction_modal'
   =render partial: 'verification_restriction_modal'
   =render partial: 'related_lesson_restriction_modal'
-- if @welcome_video
-  =render partial: 'welcome_video_modal'
+-# - if @welcome_video
+-#   =render partial: 'welcome_video_modal'
 :javascript
   $(document).ready(function(){
 

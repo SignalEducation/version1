@@ -27,7 +27,10 @@
           %div{style:"height:20px;margin-right: 8px;"}
             %i{class:"material-icons icon-bg-round side-nav-material-icons", style: "color: #dc3545; "} smart_display
           =@course_step.name
-    .pt-5.pb-5
+          .color-shade.step-part-font
+            -unless @course_step.estimated_time_in_seconds.nil? || @course_step.estimated_time_in_seconds == 0
+              =seconds_to_time(@course_step.estimated_time_in_seconds) 
+              m
 
     -@course_step.course_resources.all_active.all_in_order.each do |resource|
       -if resource.external_url && resource.external_url.present?

@@ -3,22 +3,15 @@
     .navbar.navbar-expand-lg
       =render partial: 'mobile_nav'
 %main.sidebar-right-main
-  -# =render partial: 'mobile_nav'
   %article#sidebar-right-content.courses
     .courses-container
-      %div.course-show-external-banner#courses-show-external-banner
-        =render partial: 'layouts/external_banner'
+      -# %div.course-show-external-banner#courses-show-external-banner
+      -#   =render partial: 'layouts/external_banner'
       %header.main-header
         .main-header-content
-          -# -if @course_step
-          -#   =render partial: 'prev_lesson_navigation'
-
           -if @course_step
             .header-title
               =@course_step.name
-
-          -# .right-topbar-item.color-shade.course-nav-helpers{onclick: "openZendesk()"}
-          -#   %i.material-icons.icon-bg-round{"aria-label" => "failed", :role => "img", :title => "Contact Us"}help_outline
 
           -if @course_step
             .main-header-actions

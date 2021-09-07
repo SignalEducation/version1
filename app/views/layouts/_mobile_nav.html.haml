@@ -23,10 +23,25 @@
                     =link_to t('views.users.show.h1'), account_url
                 .nav-item-box.logout
                     =link_to t('views.general.log_out'), sign_out_url
+            -else
+                -# .nav-item-box
+                -#     =link_to t('views.users.show.h1'), login
+                -# .nav-item-box.logout
+                -#     =link_to t('views.general.log_out'), sign_out_url
+
+                .nav-item-box
+                    =link_to sign_in_url, class: 'navbar-login' do
+                        %span Login
+                .nav-item-box
+                    =link_to new_student_url, class: 'nav-link btn btn-primary px-4' do
+                        %span Register
 
     %button.material-icons.btn-side-nav{:type => "button"}menu
     =link_to home_url, class: 'navbar-brand logo' do
         =image_tag('Learnsignal-Logo.svg', class: 'logo-img', alt: "LearnSignal Logo")
+    %div{onclick:'openWidget()', class: 'btn btn-outline btn-sm zendesk-mobile-btn'}
+        %i.material-icons{style: "color: #FFF;margin-right: 2px;font-size: 16px;top: 3px;position: relative;"} help_outline
+        Support
 
 
     :javascript
