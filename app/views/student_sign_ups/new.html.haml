@@ -17,7 +17,7 @@
                     ='Get started with our free Basic Plan to explore our innovative learning platform and access selected course content.'
 
                   =render partial: 'layouts/error_messages', locals: {thing: @user, message: t('views.home_pages.sign_up_form.error_panel_caption')}
-                  =f.hidden_field :locale, value: (params[:locale] || 'en')
+                  =f.hidden_field :locale, value: ('en')
                   =f.hidden_field :terms_and_conditions, id: 'hidden_term_and_conditions'
                   =f.hidden_field :communication_approval, id: 'hidden_communication_approval'
                   %fieldset.pb-3
