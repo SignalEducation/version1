@@ -8,60 +8,62 @@
   .col-xl-12
     #course-right-show-elem-notes.course-right-show-content
       .course-right-show-frame
-        #quiz-contents.px-2
+        #quiz-contents.px-3.py-4
           .btn.btn-secondary.btn-sm.btn-sm-arrow-left.answer-correct.mb-4
             Back to Results
-          #results
-            %div.align-quiz-result-text
-              %h3.h4
-                ="Result: "
-                -result_colour = @pass == 'Pass' ? '#00cc66' : '#EE5457'
-                %span{style: "color: #{result_colour};"}
-                  =@pass
+          %div.align-quiz-result-text
+            %h3.h4
+              ="Result: "
+              -result_colour = @pass == 'Pass' ? '#00cc66' : '#EE5457'
+              %span{style: "color: #{result_colour};"}
+                =@pass
 
-              %h3.h4
-                =t('views.courses.show_results.score')
-                =@course_step_log.quiz_attempts.where(correct: true).count
-                &#47;
-                =@course_step_log.quiz_attempts.count
+            %h3.h4
+              =t('views.courses.show_results.score')
+              =@course_step_log.quiz_attempts.where(correct: true).count
+              &#47;
+              =@course_step_log.quiz_attempts.count
+          #results{style: "display: flex;flex-direction: column;row-gap: 12px;"}
             -@course_step_log.quiz_attempts.sort_by(&:id).each_with_index do |attempt, counter|
               .step{id: "#{counter}", onclick: 'showSolution.call(this); return false;'}
-                %p.text-inline.text-bold.no-margin-bottom Question #{counter + 1}
-                %i.text-inline{style: 'font-size: 25px; float: right'}=red_or_green_arrow attempt.try(:correct)
+                %div
+                  %p.text-inline.text-bold.no-margin-bottom Question #{counter + 1}
+                  %i.material-icons.text-inline{style: 'font-size: 16px;margin-left:4px;float: right;margin-top: 6px;'}=red_or_green_arrow(attempt.try(:correct), 'arrow_forward')
+                  
+                %div
+                  -correct_answers = []; your_answer = 0
+                  -attempt.answers.each_with_index do |qa, counter2|
+                    -correct_answers << counter2 if qa.correct
+                    -your_answer = counter2 if qa.id == attempt.quiz_answer_id
 
-                -correct_answers = []; your_answer = 0
-                -attempt.answers.each_with_index do |qa, counter2|
-                  -correct_answers << counter2 if qa.correct
-                  -your_answer = counter2 if qa.id == attempt.quiz_answer_id
-
-                -if correct_answers.count > 1
-                  %p.text-inline.no-margin-bottom
-                    Correct Answers:
-                    &#160;
-                  -correct_answers.each_with_index do |correct_answer, counter3|
-                    -if counter3 == (correct_answers.count - 1)
-                      %p.text-inline.no-margin-bottom.text-bold{style: "color:#00cc66;"}=(('A'..'Z').to_a[correct_answer].to_s)
-                    -else
-                      %p.text-inline.no-margin-bottom.text-bold{style: "color:#00cc66;"}=(('A'..'Z').to_a[correct_answer].to_s + ' &')
-                -else
-                  %p.text-inline.no-margin-bottom
-                    Correct Answer:
-                    &#160;
-                  %p.text-inline.no-margin-bottom.text-bold{style: "color:#00cc66;"}=(('A'..'Z').to_a[correct_answers.first].to_s)
-                -if(!attempt.try(:correct))
-                  %p.text-inline.no-margin-bottom
-                    ='Your Answer:'
-                    &#160;
-                  %p.text-inline.no-margin-bottom.text-bold=red_or_green_text(attempt.try(:correct),('A'..'Z').to_a[your_answer].to_s)
-                  %h3.step-part-content-quiz.step-part-content-fail
-                    %i.material-icons.icon-bg-round.color-shade-red{"aria-label" => "failed", :role => "img", :style => "margin-left:1px"} close
-                -else
-                  %p.text-inline{style: "visibility: hidden;"}
-                    ='Your Answer:'
-                    &#160;
-                  %p.text-inline.text-bold{style: "visibility: hidden;"}=(('A'..'Z').to_a[your_answer].to_s)
-                  %h3.step-part-content-quiz
-                    %i.material-icons.icon-bg-round.color-shade{"aria-label" => "failed", :role => "img", :style => "margin-left:1px"} check
+                  -if correct_answers.count > 1
+                    %p.text-inline.no-margin-bottom
+                      Correct Answers:
+                      &#160;
+                    -correct_answers.each_with_index do |correct_answer, counter3|
+                      -if counter3 == (correct_answers.count - 1)
+                        %p.text-inline.no-margin-bottom.text-bold{style: "color:#00cc66;"}=(('A'..'Z').to_a[correct_answer].to_s)
+                      -else
+                        %p.text-inline.no-margin-bottom.text-bold{style: "color:#00cc66;"}=(('A'..'Z').to_a[correct_answer].to_s + ' &')
+                  -else
+                    %p.text-inline.no-margin-bottom
+                      Correct Answer:
+                      &#160;
+                    %p.text-inline.no-margin-bottom.text-bold{style: "color:#00cc66;"}=(('A'..'Z').to_a[correct_answers.first].to_s)
+                  -if(!attempt.try(:correct))
+                    %p.text-inline.no-margin-bottom
+                      ='Your Answer:'
+                      &#160;
+                    %p.text-inline.no-margin-bottom.text-bold=red_or_green_text(attempt.try(:correct),('A'..'Z').to_a[your_answer].to_s)
+                    %h3.step-part-content-quiz.step-part-content-fail
+                      %i.material-icons.icon-bg-round.color-shade-red{"aria-label" => "failed", :role => "img", :style => "margin-left:1px"} close
+                  -else
+                    %p.text-inline{style: "visibility: hidden;"}
+                      ='Your Answer:'
+                      &#160;
+                    %p.text-inline.text-bold{style: "visibility: hidden;"}=(('A'..'Z').to_a[your_answer].to_s)
+                    %h3.step-part-content-quiz
+                      %i.material-icons.icon-bg-round.color-shade{"aria-label" => "failed", :role => "img", :style => "margin-left:1px"} check
 
           -@course_step_log.quiz_attempts.sort_by(&:id).each_with_index do |attempt, counter|
             -if attempt

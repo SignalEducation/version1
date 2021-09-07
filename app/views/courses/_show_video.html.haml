@@ -21,6 +21,12 @@
               =link_to course_special_link(@course_step.next_element), class: 'videoModal-next-btn btn btn-primary btn-sm btn-sm-arrow-right mb-3 mb-sm-0 w-auto font-weight-bold', data: {destination_url: course_special_link(@course_lesson&.next_module&.first_active_cme), type: 'Next Module'} do
                 Go to Next Lesson
 
+    %header.course-header-mobile
+      -if @course_step
+        .course-title
+          %div{style:"height:20px;margin-right: 8px;"}
+            %i{class:"material-icons icon-bg-round side-nav-material-icons", style: "color: #dc3545; "} smart_display
+          =@course_step.name
     .pt-5.pb-5
 
     -@course_step.course_resources.all_active.all_in_order.each do |resource|

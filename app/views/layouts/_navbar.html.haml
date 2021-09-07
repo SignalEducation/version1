@@ -46,8 +46,8 @@
                   =link_to t('views.general.log_out'), sign_out_url, class: 'nav-link dropdown-item logout'
 
             -else
-              %li.nav-item
+              %li.nav-item.w-100.text-center.py-2
                 =link_to new_student_url, class: 'nav-link' do
                   %span Register
-              %li.nav-item
+              %li.nav-item.w-100.text-center.py-2
                 =link_to 'Log In', sign_in_url, {class: 'nav-link'}

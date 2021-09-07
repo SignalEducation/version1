@@ -9,7 +9,7 @@
         =image_tag('Learnsignal-Logo.svg', class: 'logo-img')
 
       #navbarNavDropdown.collapse.navbar-collapse.justify-content-end
-        %ul.navbar-nav.align-items-lg-center
+        %ul.navbar-nav.align-items-lg-center.flex-column
           -# -@navbar_landing_pages.each do |landing_page|
           -#   =navbar_landing_page_menu(landing_page)
           -# %li.nav-item
@@ -37,9 +37,9 @@
                 =link_to t('views.general.log_out'), sign_out_url, class: 'nav-link dropdown-item'
 
           -else
-            %li.nav-item
+            %li.nav-item.w-100.text-center.py-2
               =link_to sign_in_url, class: 'navbar-login', onclick: "gtag('event', 'clicks_login', {'event_category': 'pre-registration', 'event_label': 'login'});" do
                 %span Login
-            %li.nav-item
-              =link_to new_student_url, class: 'nav-link btn btn-primary', onclick: "gtag('event', 'clicks_register', {'event_category': 'pre-registration', 'event_label': 'register'});" do
+            %li.nav-item.w-100.text-center.py-2
+              =link_to new_student_url, class: 'nav-link btn btn-primary px-4', onclick: "gtag('event', 'clicks_register', {'event_category': 'pre-registration', 'event_label': 'register'});" do
                 %span Register
