@@ -15,11 +15,11 @@ RSpec.describe ApplicationHelper, type: :helper do
 
   describe '#red_or_green_arrow' do
     it 'return a green arrow' do
-      expect(red_or_green_arrow(true)).to include('#21CE99')
+      expect(red_or_green_arrow(true, 'arrow_forward')).to include('#21CE99')
     end
 
     it 'return a red arrow' do
-      expect(red_or_green_arrow(false)).to include('#eb4242')
+      expect(red_or_green_arrow(false, 'arrow_forward')).to include('#eb4242')
     end
   end
 
