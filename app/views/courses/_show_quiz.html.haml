@@ -8,11 +8,18 @@
   .col-xl-12.p-0
     #course-right-show-elem-notes.course-right-show-content
       -if @course_step.try(:course_quiz).try(:enough_questions?)
-        .quiz-heading.pt-4.mb-2.align-quiz-text
+        .quiz-heading.p-3.align-quiz-text
           #question-count.p
             Question 1 of 4
           .progress
             .progress-bar{role: 'progressbar', aria: {valuenow: 0, valuemin: 0, valuemax: 100}, style: 'width: 0%;'}
+        
+        %header.course-header-mobile
+          -if @course_step
+            .course-title
+              %div{style:"height:20px;margin-right: 12px;"}
+                %i{class:"material-icons icon-bg-round side-nav-material-icons", style: "color: #007bff; "} quiz
+              =@course_step.name
 
         .course-right-show-frame
           .reduce-quiz-text-top

@@ -58,7 +58,7 @@
   #sidebar-bottom-menu
     .bottom-menu
       -if @course_lesson.next_module
-        =link_to course_special_link(@course_lesson&.next_module&.first_active_cme), class: 'btn btn-primary btn-lg btn-lg-arrow-right mb-3 mb-sm-0 w-100 font-weight-bold', data: {destination_url: course_special_link(@course_lesson&.next_module&.first_active_cme), type: 'Next Module'} do
+        =link_to course_special_link(@course_lesson&.next_module&.first_active_cme), class: 'btn btn-primary btn-lg mb-3 mb-sm-0 w-100 font-weight-bold', data: {destination_url: course_special_link(@course_lesson&.next_module&.first_active_cme), type: 'Next Module'} do
           Next Module
 
 #sidebar-wrapper-student-responsive.text-left

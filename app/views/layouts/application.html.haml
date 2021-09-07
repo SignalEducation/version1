@@ -9,24 +9,29 @@
           =@seo_title
         -else
           The Smarter Way to Study | learnsignal
-
-    -# =preload_link_tag 'oakes_grotesk_semi_bold.woff2'
-    -# =preload_link_tag 'oakes_grotesk_bold.woff2'
+    -# Links for Fonts
     =preload_link_tag 'icons/budicon_classic.ttf'
     %link{:href => "https://fonts.googleapis.com", :rel => "preconnect"}/
     %link{:crossorigin => "", :href => "https://fonts.gstatic.com", :rel => "preconnect"}/
     %link{:href => "https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap", :rel => "stylesheet"}/
     =stylesheet_link_tag 'application', media: 'all'
     =javascript_include_tag 'application', modernizr: :true
-    -# CBE VueJS include
-    =javascript_pack_tag 'cbe_main'
-    =stylesheet_pack_tag 'cbe_main'
+    
+    -if controller_name == 'courses' || controller_name == 'course_steps' || controller_name == 'preview_course_steps'|| controller_name == 'content_activations'
+      -# CBE VueJS include
+      =javascript_pack_tag 'cbe_main'
+      =stylesheet_pack_tag 'cbe_main'
     -# CBE VueJS include
     =render partial: 'layouts/google_tag_manager'
-    -if current_user&.email_verified
+    -# Import Segment Script
+    -# -if current_user&.email_verified
+    -if current_user
       =render partial: 'layouts/segment_tracking_code'
 
-    %script{type: 'text/javascript', src: 'https://js.stripe.com/v3/'}
+    %meta{name: 'rohan', content: controller_name}
+
+    -if controller_name == 'orders' || controller_name == 'subscriptions'
+      %script{type: 'text/javascript', src: 'https://js.stripe.com/v3/'}
 
     =yield :head
 
@@ -195,5 +200,5 @@
 
       -if !current_user || current_user&.student_user?
         =render partial: 'layouts/hubspot_js'
-      -if ENV['ZENDESK_ON'] == 'true' && @chat
-        =render partial: 'layouts/zendesk_js'
+      -# -if ENV['ZENDESK_ON'] == 'true' && @chat
+      =render partial: 'layouts/zendesk_js'
