@@ -1379,7 +1379,7 @@ textarea.form-control {
 .nav-tabs .nav-link.active {
   color: #000032;
   background-color: transparent;
-  border-color: #000032
+  border-color: #02b57b
 }
 .nav-tabs .dropdown-menu {
   margin-top: -3px;
@@ -1634,7 +1634,6 @@ textarea.form-control {
     min-height: auto;
     padding: 0;
     color: #111827;
-    filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.06)) drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.1));
     border-radius: 8px;
     .icon-bg-round {
       height: 24px;
@@ -2981,7 +2980,10 @@ h6 {
     @include if-device(phone) {
       display: flex;
       align-items: center;
-      width: 100%;
+      width: auto;
+      background-color: rgba(0, 0, 0, 0.05);
+      padding: 4px 8px;
+      border-radius: 4px;
     }
   }
   &:hover {
@@ -4326,18 +4328,20 @@ a.card:hover .card-title .card-explanation {
   border: 0 none
 }
 .progress {
-  height: .5rem;
+  height: 0.8rem;
   overflow: hidden;
   font-size: .75rem;
   position: relative;
   margin-top: 1rem;
   margin-bottom: 1rem;
   overflow: unset;
-  border-radius: 3px;
+  border-radius: 8px;
 }
 .progress-bar {
   z-index: 1;
-  border-radius: 3px;
+  border-radius: 8px;
+  background-image: linear-gradient(45deg, rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);
+  background-size: 40px 40px;
   background-color: #36B37E;
 }
 
@@ -4668,7 +4672,7 @@ a.card:hover .card-title .card-explanation {
   height: 32px;
   text-transform: uppercase;
   letter-spacing: 1.2px;
-  font-weight: 600;
+  font-weight: 700;
   @include if-device(phone) {
     min-width: auto;
     height: auto;
@@ -8619,7 +8623,7 @@ button.sub-details[aria-expanded="true"]:before{
     column-gap: 12px;
     width: 100%;
     height: 100%;
-    background-color: #ffffff;
+    background-color: transparent;
     a {
       text-decoration: none;
       color: #000;
@@ -8987,7 +8991,7 @@ button.sub-details[aria-expanded="true"]:before{
     left: 0;
     width: 100%;
     z-index: 9999;
-    height: 100vh;
+    height: 100%;
     transition: opacity, visibility 0.25s;
     visibility: hidden;
 

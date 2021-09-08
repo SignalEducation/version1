@@ -1,4 +1,4 @@
-.card.card-collapse.mb-2
+.card.card-collapse.mb-3
   %a.btn.btn-text.btn-collapse.w-100.text-left.course-module-panel{data: { toggle: "collapse",panel_name: course_lesson.name, course_name: @course.name }, href: "#collapse_#{course_lesson.name_url}_#{counter}", role: "button", 'aria-expanded': "#{!count == 1}", 'aria-controls': "collapse_#{course_lesson.name_url}_#{counter}",id: course_lesson.id}
     .lesson-item.w-100{class: course_lesson_status(course_lesson, @completed_course_lesson_logs, @completed_course_lesson_ids) }
       .lesson-item-content
@@ -20,10 +20,10 @@
                 =course_lesson.temporary_label
             -else
               -if course_lesson.cme_count.positive?
-                %span
+                %span{style: 'color: #fdaf40;'}
                   =course_lesson.cme_count.to_s + ' ' + 'Lessons'
               -else
-                %span
+                %span{style: 'color: #fdaf40;'}
                   =course_lesson.cme_count.to_s + ' ' + 'Lessons'
 
 
