@@ -7,13 +7,25 @@
             -if current_user
                 .user-item-box.mb-3
                     %span.user-item-box-userIcon
-                        %svg{:fill => "#1f2937", :viewbox => "0 0 20 20", :xmlns => "http://www.w3.org/2000/svg"}
+                        %svg{:fill => "#bfbfbf", :viewbox => "0 0 20 20", :xmlns => "http://www.w3.org/2000/svg"}
                             %path{"clip-rule" => "evenodd", :d => "M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z", "fill-rule" => "evenodd"}
-                    %span.user-item-box-userName
-                        =current_user.first_name.to_s
+                    .user-item-box-userInfo
+                        %span.user-item-box-userName
+                            =current_user.first_name.to_s
+                        %span.user-item-box-userEmail
+                            =current_user.email
+                -if current_user.non_verified_user?
+                    .nav-verification-alert-box
+                        .nav-verification-alert-box-title 
+                            %span ACTION PENDING
+                        .nav-verification-alert-box-desc Verify your email address to continue your content access
+                        -if !current_user.email_verified && current_user.email_verification_code
+                            =link_to resend_verification_mail_url(current_user.email_verification_code), method: :post, class: 'btn verification-btn btn-sm mb-3 mb-sm-0' do
+                                ='Resend Email'
                 -if current_user&.preferred_exam_body_id && !current_user&.valid_access_for_exam_body?(current_user&.preferred_exam_body_id, current_user&.preferred_exam_body&.group&.id)
                     .nav-item-box.upgrade-btn
                         =link_to 'Upgrade Now', pricing_url(current_user&.preferred_exam_body&.group&.name_url)
+
                 .nav-item-box
                     =link_to 'Dashboard', student_dashboard_url
                 .nav-item-box

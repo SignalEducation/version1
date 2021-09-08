@@ -1,3 +1,9 @@
 -if @banner
-  .notice.external-banner.text-center{style: "background-color: #{@banner.background_colour};"}
+  .notice.external-banner.text-center.with-close-btn.js-external-banner{style: "background-color: #{@banner.background_colour};"}
     =@banner.text_content.html_safe
+    .external-banner-btn.js-lessonMenu-btn{onclick: "externalBannerClose()"}
+      %i.material-icons{"aria-hidden" => "true", style: "font-size: 16px;margin-right: 4px;"} close
+:javascript
+    function externalBannerClose() {
+      $(".js-external-banner").css("display", "none");
+    }
