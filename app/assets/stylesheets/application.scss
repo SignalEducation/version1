@@ -7868,6 +7868,7 @@ button.sub-details[aria-expanded="true"]:before{
   @include if-device(phone) {
     border-radius: 0;
     padding: 1rem;
+    padding-bottom: 72px;
   }
 }
 #sidebar-right-content {
@@ -7966,7 +7967,7 @@ button.sub-details[aria-expanded="true"]:before{
         text-align: left;
         max-width: 100%;
         margin: 0 auto;
-        padding: 1rem 0.5rem;
+        padding: 1rem;
         background-color: #FFF;
         border-top: 1px solid #e3e8ee;
         box-shadow: inset 0 -1px #e3e8ee;
@@ -8243,6 +8244,9 @@ button.sub-details[aria-expanded="true"]:before{
     margin-bottom: 0;
     width: 100%;
     text-align: left;
+    @include if-device(phone) {
+      background-color: #FFF;
+    }
   }
   p {
     font-size: 14px;
@@ -8807,7 +8811,7 @@ button.sub-details[aria-expanded="true"]:before{
       gap: 0;
       padding: 0;
       position: relative;
-      height: 100vh;
+      height: calc(100vh - 64px);
     }
 
     .exit-btn-box {
