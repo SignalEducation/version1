@@ -8,14 +8,14 @@
               =course_lesson.name
           %small.lesson-item-tag.ml-sm-auto.text-sm-right
             - if course_lesson.free && current_user&.preferred_exam_body_id && !current_user&.valid_access_for_exam_body?(current_user&.preferred_exam_body_id, current_user&.preferred_exam_body&.group&.id)
-              %span{style: 'color: #007bff;background-color: rgb(0 123 255 / 5%);font-size: 12px;border-radius: 4px;padding: 2px 8px;padding-top: 4px;letter-spacing: 1px;font-weight: 600;line-height: 1.7;display: inline-flex;column-gap: 6px;'}
+              %span{style: 'color: #007bff;background-color: rgb(0 123 255 / 5%);font-size: 12px;border-radius: 4px;padding: 2px 8px;padding-top: 4px;letter-spacing: 1px;font-weight: 600;line-height: 1;display: inline-flex;column-gap: 6px;'}
                 🎉 FREE
             - if current_user && !current_user.can_view_content?(@group.exam_body_id, @group.id, @course.id)
-              %span{style: 'color: #6d5902;background-color: #f9e9af;font-size: 12px;border-radius: 4px;padding: 2px 8px;padding-top: 4px;letter-spacing: 1px;font-weight: 600;line-height: 1.7;display: inline-flex;column-gap: 6px;'}
+              %span{style: 'color: #6d5902;background-color: #f9e9af;font-size: 12px;border-radius: 4px;padding: 2px 8px;padding-top: 4px;letter-spacing: 1px;font-weight: 600;line-height: 1;display: inline-flex;column-gap: 6px;'}
                 LOCKED
 
             -if course_lesson.temporary_label.present?
-              %span{style: 'color: #007bff;background-color: rgb(0 123 255 / 5%);font-size: 12px;border-radius: 4px;padding: 2px 8px;padding-top: 4px;letter-spacing: 1px;font-weight: 600;line-height: 1.7;display: inline-flex;column-gap: 6px;'}
+              %span{style: 'color: #007bff;background-color: rgb(0 123 255 / 5%);font-size: 12px;border-radius: 4px;padding: 2px 8px;padding-top: 4px;letter-spacing: 1px;font-weight: 600;line-height: 1;display: inline-flex;column-gap: 6px;'}
                 🎉 
                 =course_lesson.temporary_label
             -else
@@ -88,10 +88,10 @@
             - else #Anonymous User
               %a.btn.btn-text.py-3.w-100.text-left.course-lesson{data: {lesson_name: cme.name, course_name: @course.name, target: '#account-required', toggle: 'modal', href: '#'}}
                 .lesson-item.lesson-item-inner.w-100
-                  %i.material-icons.icon-bg-round{"aria-label" => "failed", :role => "img"}
+                  %i.material-icons.inner-icon-bg-round{"aria-label" => "failed", :role => "img"}
                     =cme.icon_label
 
-                  .lesson-item-content
+                  .lesson-item-content.ml-2
                     .lesson-item-content-wrap.d-flex.flex-column.flex-sm-row.align-items-center
                       %p.lesson-item-text
                         =cme.name

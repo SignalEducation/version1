@@ -1,18 +1,6 @@
 %main
   %article.bg-white
     .container
-      -# %header.hero-section.px-0.pb-0
-      -#   -if @plans && @plans.first
-      -#     %h1.h2-hero.mb-2.text-left
-      -#       = "#{@plans.first.exam_body.name} Tuition Payment"
-      -#     %p.p-hero.px-lg-12.text-left
-      -#       =@plans.first.checkout_sub_heading
-      -#   -else
-      -#     %h1.h1-hero.mb-2.text-left
-      -#       = 'Exam Tuition Payment'
-      -#     %p.p-hero.px-lg-12.text-left
-      -#       ='Achieve your learning goals with a learnsignal subscription plan and enjoy professional courses delivered online so that you can study on a schedule that suits you.'
-
       %section.pb-md-6.pb-5#wrapper
         #upgrade-subscription
           =form_for @subscription, url: subscriptions_path, html: { id: 'upgrade-form', role: 'form' } do |f|

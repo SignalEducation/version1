@@ -190,7 +190,6 @@
   @include border-radius(4px);
   @include box-shadow(0, 0, 3px, darken($colour-3, 30%));
   @include transition(box-shadow .1s ease);
-  //border-bottom: 2px solid darken($colour-12, 20%) ;
   &:hover, &:active {
     text-decoration: none;
     color: $white;

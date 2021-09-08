@@ -47,12 +47,11 @@
               .mb-5.mb-xl-0
                 - course_section.course_lessons.all_active.all_in_order.each_with_index do |course_lesson, counter|
                   .card.card-collapse.mb-4
-
                     %a.btn.btn-text.btn-collapse.w-100.text-left{data: {target: '#course-preview', toggle: 'modal', href: '#'}}
                       .lesson-item.w-100
-                        %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
+                        %i.material-icons.inner-icon-bg-round{"aria-label" => "", :role => "img"}
                           lock_outline
-                        .lesson-item-content.pl-3
+                        .lesson-item-content.ml-2
                           .d-flex.flex-column.flex-sm-row.align-items-start.align-items-sm-center
                             %p.lesson-item-text.text-truncate.w-100
                               =course_lesson.name

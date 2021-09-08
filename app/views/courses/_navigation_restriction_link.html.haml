@@ -1,28 +1,3 @@
--# #sidebar-next-lesson-link.d-none
--#   =link_to show_course_url(@course.name_url, step.course_lesson.course_section.name_url, step.course_lesson.name_url, step.name_url) do
--#     .step{data: {course_step: step.name}, :class => sidepanel_border_radius(step_index,index,@course_lesson.active_children.length.to_i) }
--#       .step-part
--#         %div
--#           %i.material-icons.icon-bg-round{"aria-label" => "failed", :role => "img", :style => "background-color: #000032;\n    color: #ffffff;\n    padding: 0em 0.4em 1.2em 0em;\n    border-radius: 5px;\n    width: 100%;"}
--#             %span{class: @course_log && @course_log.course_step_logs && @course_log.course_step_logs.map(&:course_step_id).include?(step.id) ? (@course_log.course_step_logs.all_completed.map(&:course_step_id).include?(step.id) ? 'small-dot' : 'small-dot-alt') : 'small-dot-neutral'}
--#             -if step.is_video?
--#               ondemand_video
--#             -elsif step.is_quiz?
--#               playlist_add_check
--#             -elsif step.is_note?
--#               insert_drive_file
--#             -elsif step.is_practice_question?
--#               dynamic_form
--#             -elsif step.is_constructed_response?
--#               sticky_note_2
--#             -else
--#               insert_drive_file
--#         %h3.step-part-content
--#           =step.name
--#       .color-shade.step-part-font
--#         -unless step.estimated_time_in_seconds.nil? || step.estimated_time_in_seconds == 0
--#           =seconds_to_time(step.estimated_time_in_seconds)
-
 -# #sidebar-next-lesson-modal
 =link_to '#', data: {target: "##{reason}", toggle: 'modal', related: step.related_course_step&.name} do
   .step{data: {course_step: step.name}, :class => sidepanel_border_radius(step_index,index,@course_lesson.active_children.length.to_i) }
@@ -30,20 +5,6 @@
       %div
         %i.material-icons.inner-icon-bg-round{"aria-label" => "failed", :role => "img", style: 'color: #6d5902;background-color: #f9e9af;border-radius: 100%;font-size: 20px;'}
           lock_outline
-        -# %i.material-icons.icon-bg-round{"aria-label" => "failed", :role => "img", :style => "background-color: #000032;\n    color: #ffffff;\n    padding: 0em 0.4em 1.2em 0em;\n    border-radius: 5px;\n    width: 100%;"}
-        -#   %span{class: @course_log && @course_log.course_step_logs && @course_log.course_step_logs.map(&:course_step_id).include?(step.id) ? (@course_log.course_step_logs.all_completed.map(&:course_step_id).include?(step.id) ? 'small-dot' : 'small-dot-alt') : 'small-dot-neutral'}
-        -#   -if step.is_video?
-        -#     ondemand_video
-        -#   -elsif step.is_quiz?
-        -#     playlist_add_check
-        -#   -elsif step.is_note?
-        -#     insert_drive_file
-        -#   -elsif step.is_practice_question?
-        -#     dynamic_form
-        -#   -elsif step.is_constructed_response?
-        -#     sticky_note_2
-        -#   -else
-        -#     insert_drive_file
       .step-part-content
         =step.name
     .color-shade.step-part-font

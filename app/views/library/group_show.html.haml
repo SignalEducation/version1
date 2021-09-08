@@ -4,7 +4,7 @@
       .mw-0.container
         =link_to library_url, class: 'courseWrapper-backBtn' do
           .courseWrapper-backBtn-text
-            .i.material-icons{:style => "font-size: 18px;margin-right: 8px;"} arrow_back
+            .i.material-icons{:style => "font-size: 14px;margin-right: 8px;"} arrow_back
             %span
               Back to Library
     %header.libraryGroupWrapper-hero
@@ -21,10 +21,6 @@
     .bg-gray5
       %div
         =render partial: 'tabbed_list'
-      -# -if @group.tab_view && @group.levels.all_active.count >= 2
-      -#   =render partial: 'tabbed_list'
-      -# -else
-      -#  =render partial: 'standard_list'
 
 
   -if @group && @subscription_plans && @subscription_plans.any? && !(current_user && current_user.valid_access_for_exam_body?(@group.exam_body_id, @group.id))

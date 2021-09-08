@@ -11,9 +11,5 @@
 
   .col-xs-12.col-lg-2.p-0.mt-2
     %small.text-gray2.mb-3
-      -# %span.current-step-indicator=completed_lessons
-      -# %span /
-      -# %span.total-steps-indicator=total_lessons
-      -# steps completed
       %span.current-step-indicator=complete_percent.to_s << '%'
       Complete

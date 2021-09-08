@@ -1,9 +1,19 @@
 -if @banner
-  .notice.external-banner.text-center.with-close-btn.js-external-banner{style: "background-color: #{@banner.background_colour};"}
+  .notice.external-banner.text-center.with-close-btn.js-external-banner{style: "background-color: #{@banner.background_colour}; display: none;"}
     =@banner.text_content.html_safe
     .external-banner-btn.js-lessonMenu-btn{onclick: "externalBannerClose()"}
       %i.material-icons{"aria-hidden" => "true", style: "font-size: 16px;margin-right: 4px;"} close
+
 :javascript
+    $(document).ready(function(){
+      if (sessionStorage.getItem('externalBannerDisabled') === 'true') {
+        $(".js-external-banner").css("display", "none");
+      } else {
+        $(".js-external-banner").css("display", "block");
+      }
+    });
+
     function externalBannerClose() {
       $(".js-external-banner").css("display", "none");
+      sessionStorage['externalBannerDisabled'] = true;
     }

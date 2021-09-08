@@ -28,7 +28,9 @@
     -if current_user
       =render partial: 'layouts/segment_tracking_code'
 
-    -if controller_name == 'orders' || controller_name == 'subscriptions'
+    %meta{name:"rohan", content:"#{controller_name}"}
+
+    -if controller_name == 'orders' || controller_name == 'subscriptions' || controller_name == 'user_accounts'
       %script{type: 'text/javascript', src: 'https://js.stripe.com/v3/'}
 
     =yield :head
