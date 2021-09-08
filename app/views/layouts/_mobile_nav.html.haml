@@ -42,6 +42,11 @@
                 .nav-item-box
                     =link_to new_student_url, class: 'nav-link btn btn-primary px-4' do
                         %span Register
+        .side-nav-bottom
+            .nav-item-box.logout
+                =link_to t('views.general.log_out'), sign_out_url
+
+
 
     %button.material-icons.btn-side-nav{:type => "button"}menu
     =link_to home_url, class: 'navbar-brand logo' do

@@ -52,14 +52,14 @@
                     %p.text-inline.no-margin-bottom.text-bold{style: "color:#00cc66;"}=(('A'..'Z').to_a[correct_answers.first].to_s)
                   -if(!attempt.try(:correct))
                     %p.text-inline.no-margin-bottom
-                      ='Your Answer:'
+                      =', Your Answer:'
                       &#160;
                     %p.text-inline.no-margin-bottom.text-bold=red_or_green_text(attempt.try(:correct),('A'..'Z').to_a[your_answer].to_s)
                     %h3.step-part-content-quiz.step-part-content-fail
                       %i.material-icons.icon-bg-round.color-shade-red{"aria-label" => "failed", :role => "img", :style => "margin-left:1px"} close
                   -else
                     %p.text-inline{style: "visibility: hidden;"}
-                      ='Your Answer:'
+                      =', Your Answer:'
                       &#160;
                     %p.text-inline.text-bold{style: "visibility: hidden;"}=(('A'..'Z').to_a[your_answer].to_s)
                     %h3.step-part-content-quiz

@@ -21,7 +21,7 @@
                   %div.courseLibraryWrapper-list-parent
                     .courseLibraryWrapper-list-examName
                       =course.parent.name
-                    .courseLibraryWrapper-list-backBtn-dot .
+                    .courseLibraryWrapper-list-backBtn-dot •
                     .courseLibraryWrapper-list-levelName{style: "color: #{course.highlight_colour};"}
                       -if course.preview && course.release_date
                         ="Coming #{course.release_date.strftime("%B, %Y")}"
