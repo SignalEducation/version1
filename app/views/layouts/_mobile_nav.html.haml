@@ -25,14 +25,19 @@
                 -if current_user&.preferred_exam_body_id && !current_user&.valid_access_for_exam_body?(current_user&.preferred_exam_body_id, current_user&.preferred_exam_body&.group&.id)
                     .nav-item-box.upgrade-btn
                         =link_to 'Upgrade Now', pricing_url(current_user&.preferred_exam_body&.group&.name_url)
-
+                    
                 .nav-item-box
                     =link_to 'Dashboard', student_dashboard_url
                 .nav-item-box
                     =link_to 'Library', library_url
 
+                .nav-item-header
+                    General
                 .nav-item-box
                     =link_to t('views.users.show.h1'), account_url
+                
+                .nav-item-box.logout
+                    =link_to t('views.general.log_out'), sign_out_url
             -else
                 .nav-item-box.mt-6
                     =link_to sign_in_url, class: 'nav-link btn btn-outline' do
@@ -40,9 +45,6 @@
                 .nav-item-box
                     =link_to new_student_url, class: 'nav-link btn btn-primary px-4' do
                         %span Register
-        .side-nav-bottom
-            .nav-item-box.logout
-                =link_to t('views.general.log_out'), sign_out_url
 
 
 

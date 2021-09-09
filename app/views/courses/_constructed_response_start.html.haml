@@ -3,13 +3,13 @@
     #course-right-show-elem-notes.course-right-show-content
       .course-right-show-frame
         .start-screen-box
+          .welcome-text
+            -if @group && @group.exam_body && @group.exam_body.constructed_response_intro_heading && !@group.exam_body.constructed_response_intro_heading.blank?
+              =@group.exam_body.constructed_response_intro_heading
+            -else
+              WELCOME TO YOUR CBE CONSTRUCTED RESPONSE TOOL
           .row
             .col-sm.mb-3
-              .welcome-text
-                -if @group && @group.exam_body && @group.exam_body.constructed_response_intro_heading && !@group.exam_body.constructed_response_intro_heading.blank?
-                  =@group.exam_body.constructed_response_intro_heading
-                -else
-                  WELCOME TO YOUR CBE CONSTRUCTED RESPONSE TOOL
 
               -if @group && @group.exam_body && @group.exam_body.constructed_response_intro_text && !@group.exam_body.constructed_response_intro_text.blank?
                 =@group.exam_body.constructed_response_intro_text.html_safe
@@ -35,12 +35,12 @@
               -#             =resource.name
 
             .col-sm.text-center
-              =link_to courses_constructed_response_url(course_name_url: @course_step.course_lesson.course_section.course.name_url,
-              course_section_name_url: @course_step.course_lesson.course_section.name_url,
-                course_lesson_name_url: @course_step.course_lesson.name_url,
-                course_step_name_url: @course_step.name_url), id: 'newConstructedResponseButton' do
-                .btn.btn-primary.mt-3
-                  ='New Constructed Response'
+              -# =link_to courses_constructed_response_url(course_name_url: @course_step.course_lesson.course_section.course.name_url,
+              -# course_section_name_url: @course_step.course_lesson.course_section.name_url,
+              -#   course_lesson_name_url: @course_step.course_lesson.name_url,
+              -#   course_step_name_url: @course_step.name_url), id: 'newConstructedResponseButton' do
+              -#   .btn.btn-primary.mt-3
+              -#     ='New Constructed Response'
 
               .sk-circle
                 .sk-circle1.sk-child
@@ -72,6 +72,7 @@
                       -@course_step_logs.each do |cmeul|
                         %tr
                           %td
+                            %i.material-icons{style: "color: #00B67A;margin-right: 2px;font-size: 16px;top: 3px;position: relative;"} link
                             =link_to "Response-##{cmeul.constructed_response_attempt.try(:guid)}", courses_constructed_response_url(@course_step.course_lesson.course.name_url, @course_step.course_lesson.course_section.name_url, @course_step.course_lesson.name_url, @course_step.name_url, cmeul.id)
                           %td
                             =humanize_datetime(cmeul.created_at)
@@ -79,6 +80,13 @@
                             =humanize_datetime(cmeul.updated_at)
                           %td
                             =cmeul.constructed_response_attempt.status
+              
+              =link_to courses_constructed_response_url(course_name_url: @course_step.course_lesson.course_section.course.name_url,
+              course_section_name_url: @course_step.course_lesson.course_section.name_url,
+                course_lesson_name_url: @course_step.course_lesson.name_url,
+                course_step_name_url: @course_step.name_url), id: 'newConstructedResponseButton' do
+                .btn.btn-primary.mt-3
+                  ='New Constructed Response'
 
 
 

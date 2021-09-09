@@ -14,6 +14,7 @@
     padding-top: 2rem;
     @include if-device(phone) {
       padding-top: 2rem;
+      min-height: 72vh;
     }
   }
   .dashboard__wrapper {

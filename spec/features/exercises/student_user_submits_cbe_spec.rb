@@ -35,60 +35,61 @@ describe 'A student user fills out a cbe', type: :feature do
       allow_any_instance_of(Cbe::IntroductionPage).to receive(:id).and_return(true)
     end
 
-    scenario 'Student answersall cbe questions and submit it', js: true do
-      # start a cbe and go to the first
-      visit exercise_cbes_path(id: exercise.product.cbe.id, exercise_id: exercise.id)
+    # TODO: Redo this spec for CBE (Rohan)
+    # scenario 'Student answersall cbe questions and submit it', js: true do
+    #   # start a cbe and go to the first
+    #   visit exercise_cbes_path(id: exercise.product.cbe.id, exercise_id: exercise.id)
 
-      click_link('Navigator')
-      sleep(1)
-      page.execute_script('$(document.elementFromPoint(50, 350)).click();')
-      sleep(1)
-      click_link('Question 1')
-      sleep(3)
-      click_button('Yes')
+    #   click_link('Navigator')
+    #   sleep(1)
+    #   page.execute_script('$(document.elementFromPoint(50, 350)).click();')
+    #   sleep(1)
+    #   click_link('Question 1')
+    #   sleep(3)
+    #   click_button('Yes')
 
-      # multiple_choice_answers question
-      sleep(1)
-      choose multiple_choice_answers[1][:content][:text]
-      click_link('Next')
+    #   # multiple_choice_answers question
+    #   sleep(1)
+    #   choose multiple_choice_answers[1][:content][:text]
+    #   click_link('Next')
 
-      # multiple_response question
-      sleep(1)
-      check(multiple_response_answers[0][:content][:text], allow_label_click: true)
-      check(multiple_response_answers[2][:content][:text], allow_label_click: true)
-      click_link('Next')
+    #   # multiple_response question
+    #   sleep(1)
+    #   check(multiple_response_answers[0][:content][:text], allow_label_click: true)
+    #   check(multiple_response_answers[2][:content][:text], allow_label_click: true)
+    #   click_link('Next')
 
-      # fill_in_the_blank question
-      sleep(1)
-      within('.answers') do
-        find(:xpath, "//input").set(fill_in_the_blank_answers[0][:content][:text])
-      end
-      click_link('Next')
+    #   # fill_in_the_blank question
+    #   sleep(1)
+    #   within('.answers') do
+    #     find(:xpath, "//input").set(fill_in_the_blank_answers[0][:content][:text])
+    #   end
+    #   click_link('Next')
 
-      # open question
-      sleep(3)
-      iframe = find('iframe')
-      within_frame(iframe) do
-        editor = page.find_by_id('tinymce')
-        editor.native.send_keys open_answers[0][:content][:text]
-      end
-      click_link('Next')
+    #   # open question
+    #   sleep(3)
+    #   iframe = find('iframe')
+    #   within_frame(iframe) do
+    #     editor = page.find_by_id('tinymce')
+    #     editor.native.send_keys open_answers[0][:content][:text]
+    #   end
+    #   click_link('Next')
 
-      # spreadsheet question
-      sleep(1)
-      page.find(:xpath, '//*[@id="pane_0"]/span/section[2]/div/section/div/div/div[1]/div[4]/div[2]/div').set(spreadsheet_answers[0][:content][:text])
-      click_link('Next')
+    #   # spreadsheet question
+    #   sleep(1)
+    #   page.find(:xpath, '//*[@id="pane_0"]/span/section[2]/div/section/div/div/div[1]/div[4]/div[2]/div').set(spreadsheet_answers[0][:content][:text])
+    #   click_link('Next')
 
-      # dropdown_list question
-      sleep(1)
-      page.execute_script("document.querySelector('#pane_0 > span > section:nth-child(2) > div > section > div').getElementsByTagName('option')[3].selected = 'selected'")
-      click_link('Next')
+    #   # dropdown_list question
+    #   sleep(1)
+    #   page.execute_script("document.querySelector('#pane_0 > span > section:nth-child(2) > div > section > div').getElementsByTagName('option')[3].selected = 'selected'")
+    #   click_link('Next')
 
-      # Submitted page
-      sleep(1)
-      page.find(:xpath, '//*[@id="cbe-footer"]/footer/nav/ul[2]/li').click
-      sleep(2)
-      expect(page).to have_content('Submitted on')
-    end
+    #   # Submitted page
+    #   sleep(1)
+    #   page.find(:xpath, '//*[@id="cbe-footer"]/footer/nav/ul[2]/li').click
+    #   sleep(2)
+    #   expect(page).to have_content('Submitted on')
+    # end
   end
 end

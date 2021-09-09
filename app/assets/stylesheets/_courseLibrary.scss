@@ -1,6 +1,22 @@
 
 
 .coursePage-container {
+  .courseProgressWrapper {
+    display: flex;
+    flex-direction: row;
+    column-gap: 12px;
+    align-items: center;
+    width: 100%;
+    &-progress {
+      flex: 8;
+      @include if-device(phone) {
+        flex: 3
+      }
+    }
+    &-percent {
+      flex: 1
+    }
+  }
   &-header {
     position: relative;
   }

@@ -24,10 +24,11 @@
     min-height: 54px;
     height: auto;
     padding: 0.5rem;
+    box-shadow: none;
   }
 }
 .sticky-nav-border {
-  border-bottom: 2px solid #e6ecf0;
+  // border-bottom: 2px solid #e6ecf0;
 }
 @media (min-width:992px) {
   .navbar {

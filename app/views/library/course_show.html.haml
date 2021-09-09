@@ -14,15 +14,15 @@
           .courseWrapper-backBtn
             .courseWrapper-backBtn-text
               =@course.name
-    .breadCrumbs.visible-xs
-      -if @course.parent
-        .mw-0.container
-          =link_to library_special_link(@course.parent), class: 'courseWrapper-backBtn' do
-            .courseWrapper-backBtn-text
-              .i.material-icons{:style => "font-size: 14px;margin-right: 8px;"} arrow_back
-              %span
-                Back
-    .container
+    -# .breadCrumbs.visible-xs
+    -#   -if @course.parent
+    -#     .mw-0.container
+    -#       =link_to library_special_link(@course.parent), class: 'courseWrapper-backBtn' do
+    -#         .courseWrapper-backBtn-text
+    -#           .i.material-icons{:style => "font-size: 14px;margin-right: 8px;"} arrow_back
+    -#           %span
+    -#             Back
+    .container.pt-4
       %header.coursePage-container-header
         -if @exam_body.has_sittings && @new_enrollment && (@computer_exam_sitting || @exam_sittings)
           .mw-0.preview-upgrade-btn
@@ -31,8 +31,8 @@
             -# Ask a Tutor CTA
             %a{class: 'btn btn-dark btn-sm mr-2', 'data-target' => '#contact-form-modal', 'data-toggle' => 'modal', :href => '#'}
               =@exam_body&.help_text
-            %a{data: {target: '#enrollment-modal', toggle: 'modal'}, href: '#', class: 'btn btn-secondary btn-sm upgrade-resp-enroll-btn upgrade-btn-flt'}
-              Enrol
+            -# %a{data: {target: '#enrollment-modal', toggle: 'modal'}, href: '#', class: 'btn btn-secondary btn-sm upgrade-resp-enroll-btn upgrade-btn-flt'}
+            -#   Enrol
             -if @course_log && !@course_log.completed && @course_log&.latest_course_step&.next_element
               =link_to 'Resume', course_special_link(@course_log.latest_course_step.next_element, @course_log), class: 'btn btn-primary btn-sm'
           =render partial: 'course_enrollment_modal'
@@ -238,7 +238,7 @@
 
     var move = function() {
         var st = $(window).scrollTop();
-        var ot = $anchor.offset().top;
+        var ot = $anchor.offset().top + 2;
         if(st > ot) {
             $scroller.addClass('fixedToTop');
             $scroller.css({ 'padding-left': $anchor.offset().left})

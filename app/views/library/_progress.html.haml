@@ -2,14 +2,14 @@
 -completed_lessons = @course_log.try(:count_of_cmes_completed) || 0
 -complete_percent = @course_log.try(:percentage_complete)
 
-.row.m-0.w-100
-  .col-xs-12.col-lg-10.pl-0
+.courseProgressWrapper
+  .courseProgressWrapper-progress
     %h4.sr-only Course Progress
     %div
       .progress
         .progress-bar{role: "progressbar", 'aria-valuenow': complete_percent, 'aria-valuemin': "0", 'aria-valuemax': '100', style: "width: #{complete_percent}%"}
 
-  .col-xs-12.col-lg-2.p-0.mt-2
+  .courseProgressWrapper-percent
     %small.text-gray2.mb-3
       %span.current-step-indicator=complete_percent.to_s << '%'
       Complete

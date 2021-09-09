@@ -113,8 +113,10 @@
         =yield
 
         -if @footer
-          =render partial: 'layouts/footer_minimal' if @group&.disclaimer
-          =render partial: 'layouts/footer_minimal'
+          -if controller_name == 'courses' || controller_name == 'course_steps' || controller_name == 'preview_course_steps' || controller_name == 'content_activations'
+            =render partial: 'layouts/footer_empty' 
+          -else
+            =render partial: 'layouts/footer_minimal'
 
       -elsif @layout == 'management'
         #management-console-wrapper
@@ -145,8 +147,10 @@
                 =link_to 'Resolve Issue!', account_url(anchor: 'account-info')
 
           =yield
-          =render partial: 'layouts/footer_minimal' if @group&.disclaimer
-          =render partial: 'layouts/footer_minimal'
+          -if controller_name == 'courses' || controller_name == 'course_steps' || controller_name == 'preview_course_steps' || controller_name == 'content_activations'
+            =render partial: 'layouts/footer_empty' 
+          -else
+            =render partial: 'layouts/footer_minimal'
 
       -else
         =render partial: 'layouts/navbar'

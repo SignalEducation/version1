@@ -27,13 +27,13 @@
         font-style: normal;
         font-weight: 700;
         @include if-device(phone) {
-          font-size: 32px;
+          font-size: 24px;
         }
       }
       .heroDesc {
         margin-bottom: 32px;
         color: #6B7280;
-        font-size: 16px;
+        font-size: 14px;
         line-height: 150%;
         max-width: 40%;
         @include if-device(phone) {

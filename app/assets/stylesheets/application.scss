@@ -526,7 +526,7 @@ code {
   color: #000032;
   background-color: #FFF;
   background-clip: padding-box;
-  border: 1px solid #E5E7EB;
+  border: 1px solid #D1D5DB;
   border-radius: 8px;
   -webkit-transition: border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
   transition: border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
@@ -2790,7 +2790,7 @@ button.bg-gray4:hover {
   background-color: #c6d4dd!important
 }
 .bg-gray5 {
-  background-color: #FAFAFA!important
+  background-color: #F1F5F9!important
   
 }
 a.bg-gray5:focus,
@@ -3030,7 +3030,7 @@ h6 {
   .courseWrapper-parent {
     display: flex;
     align-items: flex-start;
-    column-gap: 6px;
+    column-gap: 2px;
     .courseWrapper-examName {
       font-weight: 700;
       font-size: 16px;
@@ -3090,7 +3090,7 @@ h6 {
   }
 }
 .coursePage-moduleDetailWrapper {
-  background-color: #FAFAFA !important;
+  background-color: #F1F5F9 !important;
   border-top: 1px solid #e3e8ed;
   min-height: 60vh;
 }
@@ -4358,7 +4358,7 @@ a.card:hover .card-title .card-explanation {
   position: relative;
   margin-top: 1rem;
   margin-bottom: 1rem;
-  overflow: unset;
+  overflow: hidden;
   border-radius: 8px;
 }
 .progress-bar {
@@ -8085,6 +8085,7 @@ button.sub-details[aria-expanded="true"]:before{
     border: none;
     border-radius: 20px;
     overflow: hidden;
+    border: 1px solid #e3e8ed;
     box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.06);
     .start-screen-box-nav {
       background-color: transparent;
@@ -8093,12 +8094,13 @@ button.sub-details[aria-expanded="true"]:before{
       color: #111827;
       line-height: 1.3;
       margin-bottom: 12px;
+      font-size: 16px;
     }
     .welcome-text {
       font-size: 24px;
       font-weight: 700;
       line-height: 1.3;
-      margin-bottom: 20px;
+      margin-bottom: 3rem;
       color: #111827;
     }
   }
@@ -8784,25 +8786,26 @@ button.sub-details[aria-expanded="true"]:before{
     }
     .nav-item-box {
       z-index: 1;
-      padding: 0.5rem 1.5rem;
+      padding: 0.5rem 1rem;
       font-size: 16px;
       border-radius: 0;
       font-weight: 600;
       color: #9ca3af;
       &.logout {
-        color: #FFF;
+        color: #dc3545;
         position: relative;
-        background-color: #dc3545;
-        width: calc(100% - 2rem);
-        margin: 1rem;
-        z-index: 1;
-        padding: 0.5rem;
-        text-align: center;
-        border-radius: 8px;
         a {
-          color: #FFF;
+          color: #dc3545;
         }
       }
+    }
+    .nav-item-header {
+      color: #919191;
+      font-weight: 600;
+      padding: 0.5rem 1rem;
+      margin: 2rem 0 0.5rem;
+      border-bottom: 1px solid #e9ecef;
+      font-size: 14px;
     }
     .nav-item-box-last {
       z-index: 1;
