@@ -1,0 +1,14 @@
+.footerMinimal {
+    background-color: #FFF;
+    box-shadow: inset 0 1px #e3e8ee;
+    margin: 0;
+    padding: 0;
+    &-info {
+        padding: 1.5rem 0;
+        font-size: 14px;
+        color: #6b7280;
+        @include if-device(phone) {
+            padding: 1rem;
+        }
+    }
+}

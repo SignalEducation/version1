@@ -1,6 +1,6 @@
 <template>
   <div id="cbe-modals" class="col-md-4 col-lg-3 mb-4">
-    <div class="productCard" @click="show('modal-'+componentType+'-'+pdfFileName)">
+    <div class="productCard internal-card" @click="show('modal-'+componentType+'-'+pdfFileName)">
       <div
         class="productCard-header d-flex align-items-center justify-content-center"
       >
@@ -13,7 +13,9 @@
       </div>
       <div class="productCard-footer d-flex align-items-center justify-content-between">
         <div>
-          PDF
+          <span style="color: #007bff;background-color: rgb(0 123 255 / 5%);font-size: 14px;border-radius: 4px;padding: 0.5rem 1rem;letter-spacing: 1px;font-weight: 600;line-height: 1;display: inline-flex;column-gap: 6px;">
+            🎉 FREE
+          </span>
         </div>
         <div class="btn btn-primary productCard--buyBtn">
           View

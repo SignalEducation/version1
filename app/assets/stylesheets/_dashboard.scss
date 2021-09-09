@@ -80,6 +80,9 @@
           height: 42px;
           padding: 7px 0;
           background-color: #bdbebf;
+          @include if-device(phone) {
+            display: none;
+          }
           i {
             font-size: 20px;
             display: none;

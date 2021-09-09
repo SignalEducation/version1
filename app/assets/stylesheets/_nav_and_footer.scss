@@ -139,13 +139,19 @@
   color: #00b67b;
 }
 .navbar-nav .nav-link.upgrade-btn {
-  background-color: #FEF3C7;
-  border: 1px solid #F59E0B;
-  border-radius: 4px;
-  color: #F59E0B;
+  background-color: #FCD34D;
+  border-radius: 8px;
+  color: #111827;
   font-size: 14px;
   font-weight: 700;
-  padding: 8px 20px;
+  padding: 6px 20px;
+  transition: all 0.15s ease-in-out 0s;
+  &:hover {
+    background-color: #FBBF24;
+  }
+  &:active {
+    background-color: #F59E0B;
+  }
 }
 .navbar-nav .nav-link.console-btn {
   background-color: #cbe;

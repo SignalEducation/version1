@@ -3,9 +3,8 @@
     padding: 0;
   }
   .heroTitle {
-    text-align: left;
     margin-bottom: 2rem;
-    font-size: 3.5rem;
+    font-size: 2.5rem;
     line-height: 1;
     font-weight: 600;
     color: rgb(17,24,39);
@@ -16,11 +15,12 @@
     }
   }
   .heroDesc {
+    margin: 0 auto;
     margin-bottom: 0;
-    color: #647785;
-    font-size: 18px;
+    color: #374151;
+    font-size: 16px;
     line-height: 150%;
-    text-align: left;
+    max-width: 50%;
     @include if-device(phone) {
       max-width: 100%;
       font-size: 14px;
@@ -60,6 +60,7 @@
   }
 }
 .pricingPlansWrapper {
+  background-color: #D1FAE5 !important;
   .heroSubtext {
     letter-spacing: .1em;
     text-transform: uppercase;
@@ -68,11 +69,9 @@
     line-height: 1.5rem;
     margin-bottom: .5rem;
     color:rgb(156,163,175);
-    text-align: left;
   }
   .heroTitle {
-    text-align: left;
-    font-size: 3rem;
+    font-size: 2.5rem;
     line-height: 1;
     font-weight: 600;
     color: rgb(17,24,39);
@@ -83,11 +82,12 @@
     }
   }
   .heroDesc {
+    margin: 0 auto;
     margin-bottom: 0;
-    color: #647785;
-    font-size: 18px;
+    color: #374151;
+    font-size: 16px;
     line-height: 150%;
-    text-align: left;
+    max-width: 50%;
     @include if-device(phone) {
       max-width: 100%;
       font-size: 14px;

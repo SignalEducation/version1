@@ -33,8 +33,6 @@
 
                 .nav-item-box
                     =link_to t('views.users.show.h1'), account_url
-                .nav-item-box.logout
-                    =link_to t('views.general.log_out'), sign_out_url
             -else
                 .nav-item-box.mt-6
                     =link_to sign_in_url, class: 'nav-link btn btn-outline' do
@@ -62,6 +60,7 @@
         const sideNavOverlay = document.querySelector(".side-nav-overlay");
         const exitBtn = document.querySelector("#exitBtn");
         const shadow = document.querySelector("#overlay-active-shadow");
+        const bodyEl = document.querySelector("body");
 
         $(document).mouseup(function(e){
             var container = $("#courses-mobile-nav > section");
@@ -72,6 +71,7 @@
                 btnSideNavToggle.style.display = "";
                 shadow.style.opacity = "0";
                 shadow.style.visibility = "hidden";
+                bodyEl.classList.remove("overflow-hidden");
 
                 const btnOpacityOn = setTimeout((e) => {
                     btnSideNavToggle.style.opacity = "1";
@@ -86,6 +86,7 @@
             shadow.style.visibility = "visible";
             shadow.style.opacity = "1";
             shadow.style.transition = "opacity 1s";
+            bodyEl.classList.add("overflow-hidden");
         };
 
         exitBtn.onclick = () => {
@@ -94,6 +95,7 @@
             shadow.style.opacity = "0";
             shadow.style.visibility = "hidden";
             shadow.style.transition = "opacity 1s";
+            bodyEl.classList.remove("overflow-hidden");
 
             const btnOpacityOn = setTimeout((e) => {
                 btnSideNavToggle.style.opacity = "1";

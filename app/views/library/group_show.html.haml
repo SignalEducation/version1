@@ -18,15 +18,15 @@
           Explore Subscriptions
       %div.libraryGroupWrapper-heroBgWrapper{style: "background-image: url(#{@group.background_image.url});", title: "#{@group.name} Courses banner"}
 
-    .bg-gray5
+    .bg-gray5.border-top
       %div
         =render partial: 'tabbed_list'
 
 
   -if @group && @subscription_plans && @subscription_plans.any? && !(current_user && current_user.valid_access_for_exam_body?(@group.exam_body_id, @group.id))
-    .pricingPlansWrapper.bg-white
+    .pricingPlansWrapper
       .container
-        %article.py-4#library-course-pricing
+        %article.py-6#library-course-pricing
           %header.text-center.pb-4.pb-md-4
             %div.heroSubtext
               ="#{@group.name} Pricing"
@@ -38,7 +38,7 @@
               -else
                 ='Customised pricing plans designed to fit in with your wallet and work.'
 
-          .row.row-lg.justify-content-start
+          .row.row-lg.justify-content-center
             -# FREE PLAN CARD
             -# .col-lg-4.px-2
             -#   %article.planCard

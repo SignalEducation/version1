@@ -28,6 +28,9 @@
           .mw-0.preview-upgrade-btn
             %a#enrol-top{data: {target: '#enrollment-modal', toggle: 'modal'}, href: '#', class: 'btn btn-outline btn-sm non-upgrade mr-2'}
               Enrol
+            -# Ask a Tutor CTA
+            %a{class: 'btn btn-dark btn-sm mr-2', 'data-target' => '#contact-form-modal', 'data-toggle' => 'modal', :href => '#'}
+              =@exam_body&.help_text
             %a{data: {target: '#enrollment-modal', toggle: 'modal'}, href: '#', class: 'btn btn-secondary btn-sm upgrade-resp-enroll-btn upgrade-btn-flt'}
               Enrol
             -if @course_log && !@course_log.completed && @course_log&.latest_course_step&.next_element
@@ -56,8 +59,8 @@
         %section.course-progress.col-xl-12.p-0
           =render partial: 'course_info'
 
-      %nav.courses-nav
-        %ul.nav.nav-tabs{id: 'coursesTabs', role: 'tablist'}
+      %nav.courses-nav.js-courses-nav-anchor
+        %ul.nav.nav-tabs.js-courses-nav{id: 'coursesTabs', role: 'tablist'}
           - @course.course_sections.all_active.all_in_order.each_with_index do |course_section, counter|
             %li.nav-item{data: {tab_name: course_section.name, course_name: @course.name}}
               -# TODO add active to first li
@@ -71,7 +74,7 @@
           -if @products && @products.any?
             %li.nav-item{data: {tab_name: 'Products', course_name: @course.name}}
               %a{href: "#products", role: 'tab', class: 'nav-link', data: {toggle: 'tab'}, aria: {controls: "products", selected: 'false'}}
-                ='Products'
+                ='Product (Add-ons)'
 
           -#%li.nav-item
             %a#locked-tab.nav-link.locked{"aria-controls" => "locked", "aria-selected" => "false", "data-toggle" => "tab", :href => "#locked", :role => "tab"}
@@ -151,7 +154,7 @@
       -if @products && @products.any?
         .tab-pane.tab-products{id: 'products', role: 'tabpanel', 'aria-labelledby': 'products-tab'}
           %section.mb-5
-            %h3.text-gray1.mb-4.mb-sm-4 Addons
+            %h3.text-gray1.mb-4.mb-sm-4 Product (Add-ons)
             .row.row-lg
               - @correction_pack_products.each do |product|
                 .col-md-4.col-lg-3.mb-4
@@ -227,6 +230,26 @@
           }, 1);
       }
     }
+
+
+    // Sticky Nav
+    var $anchor = $(".js-courses-nav-anchor");
+    var $scroller = $('.js-courses-nav');
+
+    var move = function() {
+        var st = $(window).scrollTop();
+        var ot = $anchor.offset().top;
+        if(st > ot) {
+            $scroller.addClass('fixedToTop');
+            $scroller.css({ 'padding-left': $anchor.offset().left})
+        } else {
+          $scroller.removeClass('fixedToTop');
+          $scroller.css({ 'padding-left': 0})
+        }
+    };
+    $(window).scroll(move);
+    move();
+
   });
 
 

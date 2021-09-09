@@ -19,14 +19,7 @@
                     .card-body.d-flex.flex-column.justify-content-center
                       %div.libraryGroupWrapper-list-courseInfo
                         %div.libraryGroupWrapper-list-courseIcon{style: "border-color: #{course.highlight_colour}; background-color: #{course.highlight_colour};"}
-                          -if course.unit_label
-                            -# .pb-0.d-flex.flex-column.align-items-center
-                            -#   .mb-3.mx-md-2
-                            -#     %i{"aria-label" => course.icon_label, :role => "img", class: course.icon_label ? course.icon_label : 'budicon-office-bag-c', style: "color: #FFF;"}
-                            -#   %p.m-0.text-left.text-md-center{style: "color: #FFF;"}
-                            -#     =course.unit_label
-                          -else
-                            %i{"aria-label" => course.icon_label, :role => "img", class: course.icon_label ? course.icon_label : 'budicon-office-bag-c', style: "color: #FFF;"}
+                          %i{"aria-label" => course.icon_label, :role => "img", class: course.icon_label ? course.icon_label : 'budicon-office-bag-c', style: "color: #FFF;"}
                         %div
                           %div.libraryGroupWrapper-list-parent
                             .libraryGroupWrapper-list-levelName{style: "color: #{course.highlight_colour};"}

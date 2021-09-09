@@ -135,7 +135,7 @@ body {
   line-height: 1.5;
   color: #000;
   text-align: left;
-  background-color: #F1F5F9;
+  background-color: #FAFAFA;
   font-smoothing: antialiased;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -1368,7 +1368,7 @@ textarea.form-control {
 }
 .nav-tabs .nav-link:focus,
 .nav-tabs .nav-link:hover {
-  border-color: #000032
+  border-color: #02b57b
 }
 .nav-tabs .nav-link.disabled {
   color: #6c757d;
@@ -1377,7 +1377,7 @@ textarea.form-control {
 }
 .nav-tabs .nav-item.show .nav-link,
 .nav-tabs .nav-link.active {
-  color: #000032;
+  color: #02b57b;
   background-color: transparent;
   border-color: #02b57b
 }
@@ -1635,6 +1635,7 @@ textarea.form-control {
     padding: 0;
     color: #111827;
     border-radius: 8px;
+    border: 1px solid #e3e8ed;
     .icon-bg-round {
       height: 24px;
       min-height: 24px;
@@ -1994,9 +1995,12 @@ textarea.form-control {
   justify-content: space-between;
   padding: 1rem;
   border-bottom: none;
-  box-shadow: inset 0 -1px #e3e8ee;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
+
+  @include if-device(phone) {
+    box-shadow: inset 0 -1px #e3e8ee;
+  }
   h3, h4 {
     margin: 0;
   }
@@ -2016,7 +2020,7 @@ textarea.form-control {
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
   padding: 1rem;
-  background-color: #f5f8fa;
+  background-color: transparent;
 }
 .modal-footer {
   display: -webkit-box;
@@ -2786,7 +2790,7 @@ button.bg-gray4:hover {
   background-color: #c6d4dd!important
 }
 .bg-gray5 {
-  background-color: #F1F5F9!important
+  background-color: #FAFAFA!important
   
 }
 a.bg-gray5:focus,
@@ -3063,12 +3067,32 @@ h6 {
   }
 }
 .courses-nav {
+  position: relative;
   margin-top: 2rem;
+  min-height: 44px;
+  .nav-tabs {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    &.fixedToTop {
+      position: fixed;
+      width: 100%;
+      background-color: #FFF;
+      border-bottom: 1px solid #e3e8ed;
+      z-index: 1000;
+      top: 0;
+      left: 0;
+      padding: 0;
+      @include if-device(phone) {
+        padding: 0 1rem;
+      }
+    }
+  }
 }
 .coursePage-moduleDetailWrapper {
-  background-color: #F1F5F9 !important;
+  background-color: #FAFAFA !important;
   border-top: 1px solid #e3e8ed;
-  height: 100% !important;
+  min-height: 60vh;
 }
 
 @media (min-width:576px) {
@@ -3391,7 +3415,7 @@ cite {
 }
 .nav-tabs .nav-link.active:focus,
 .nav-tabs .nav-link:active:focus {
-  border-color: #000032
+  border-color: #02b57b
 }
 .nav-tabs .nav-link.focus,
 .nav-tabs .nav-link:focus {
@@ -3402,7 +3426,7 @@ cite {
   outline: transparent;
 }
 .nav-tabs .nav-link:hover {
-  color: #000032;
+  color: #02b57b;
 }
 .tab-content {
   padding-bottom: 1rem
@@ -4360,14 +4384,14 @@ a.card:hover .card-title .card-explanation {
 }
 .modal-content {
   position: relative;
-  padding: 2.5rem;
+  padding: 2rem;
   @include if-device(phone) {
     padding: 0;
   }
 }
 @media (min-width:576px) {
   .modal-content {
-    padding: 2.5rem;
+    padding: 2rem;
   }
 }
 .modal-close {
@@ -4677,6 +4701,9 @@ a.card:hover .card-title .card-explanation {
     min-width: auto;
     height: auto;
     align-items: flex-end;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    width: 100%;
   }
 }
 .lesson-item.lesson-item-inner .lesson-item-tag  {
@@ -8804,7 +8831,7 @@ button.sub-details[aria-expanded="true"]:before{
     }
     .side-nav-overlay {
       position: absolute;
-      z-index: 100;
+      z-index: 1000;
       top: 0;
       left: -75%;
       width: 75%;
@@ -8880,7 +8907,7 @@ button.sub-details[aria-expanded="true"]:before{
       left: 0;
       top: 0;
       background-color: rgba(46, 49, 49, .7);
-      z-index:2;
+      z-index: 1000;
     }
 
   }
@@ -9247,8 +9274,8 @@ button.sub-details[aria-expanded="true"]:before{
   border-radius: 30px;
   transition: 300ms ease;
   position: fixed;
-  right: 20px;
-  bottom: 20px;
+  right: 16px;
+  bottom: 16px;
   font-size: 18px;
   &:hover {
     background-color: #3c3b3b;
@@ -9257,6 +9284,7 @@ button.sub-details[aria-expanded="true"]:before{
 }
 
 @import "dashboard";
+@import "footer";
 @import "libraryMain";
 @import "libraryGroup";
 @import "pricingPlans";
