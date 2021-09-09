@@ -1,5 +1,8 @@
 .account {
     position: relative;
+    &-wrapper {
+      min-height: 70vh;
+    }
     .h1-hero {
         font-size: 3rem;
         padding-top: 4rem;

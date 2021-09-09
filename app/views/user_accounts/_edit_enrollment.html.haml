@@ -1,7 +1,7 @@
 .modal.fade{id: "enrollment-edit-modal-#{enrollment.id}", "aria-hidden" => "true", "aria-labelledby" => "enrollment-edit-modal-#{enrollment.id}", :role => "dialog", :tabindex => "-1"}
   .modal-dialog{:role => "document"}
     .modal-content
-      %button.btn.btn-text.modal-close.p-0{"data-dismiss" => "modal"}
+      %button.btn.btn-icon.modal-close{"data-dismiss" => "modal"}
         %i.material-icons{"aria-hidden" => "true"} close
       .modal-header
         %h3.text-gray2.mb-4{class: "enrollmentEdit-#{enrollment.id}"}

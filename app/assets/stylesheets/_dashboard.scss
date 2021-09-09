@@ -12,6 +12,7 @@
   }
   .dashboard__contentContainer {
     padding-top: 2rem;
+    min-height: 66vh;
     @include if-device(phone) {
       padding-top: 2rem;
       min-height: 72vh;

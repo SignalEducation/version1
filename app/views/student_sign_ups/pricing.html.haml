@@ -47,24 +47,33 @@
               -#         No Credit Card required
               
               -# PREMIUM CARDS
-              .col-lg-4.px-2
+              .col-lg-6.px-2
                 %article.planCard.planCard-popular
-                  .card-banner
-                    Most popular
                   .card-body.text-left.p-0
-                    %div.card-title
-                      PREMIUM PLANS
                     .tab-content
                       -@subscription_plans.each_with_index do |plan, counter|
                         .tab-pane{id: "nav-#{plan.guid}", class: "tab-#{plan.guid} #{counter == 0 ? 'active' : ''} ", "aria-labelledby" => "#{plan.guid}-tab", :role => "tabpanel"}
-                          %p.priceValue.mb-0.pb-4
-                            =plan.currency.format_number(plan.price)
+                          %div.planTitleWrapper
+                            %div.planTitle
+                              Premium 
+                              %span.greenShade=t("views.general.payment_intervals.a#{plan.payment_frequency_in_months}")
+                              Plan
+                            %p.priceValue.mb-0.pb-4
+                              %span.priceValue-actualPrice
+                                =plan.currency.format_number(plan.price)
+                                %span.priceValue-priceSuffix=t("views.general.payment_interval_shortSuffix.a#{plan.payment_frequency_in_months}")
+                              %span.priceValue-popularBadge
+                                Most popular
                             
                           %ul.list-centered.text-left.border-top.pt-4.bulletList{class:@subscription_plans.length < 2 && 'noPlanNav'}
+                            %li.mb-3
+                              .bulletIcon.i.material-icons trip_origin
+                              %span
+                                Everything in 🎉 FREE
                             -if plan.bullet_points_list && !plan.bullet_points_list.empty?
                               - plan.bullet_points_list.split(/, ?/).each do |bullet|
                                 %li.mb-3
-                                  .bulletIcon.i.material-icons check_circle
+                                  .bulletIcon.i.material-icons trip_origin
                                   %span=bullet
                             -else
                               %li.mb-3="Access all #{@group.name} courses"
@@ -77,15 +86,14 @@
                               =plan.monthly_percentage_off
                               ='%'
                           .mt-auto
-                            =link_to subscription_checkout_special_link(plan.exam_body_id, plan.guid), class: "btn w-100 btn-primary", onclick: "addToCart('#{plan.currency.iso_code}', '#{plan.name}', '#{plan.id}', '#{plan.price}', '#{plan.exam_body.name}');" do
+                            =link_to subscription_checkout_special_link(plan.exam_body_id, plan.guid), class: "btn w-100 btn-primary choosePlanBtn", onclick: "addToCart('#{plan.currency.iso_code}', '#{plan.name}', '#{plan.id}', '#{plan.price}', '#{plan.exam_body.name}');" do
                               Choose this plan
                           -unless plan.exam_body.name == "CPD"
-                            %p.text-gray2.mt-4
+                            %p.text-gray2.mt-3
                               Cancel anytime
                     %ul.nav.nav-pills.plan-nav{id: 'planTabs', role: 'tablist', class:@subscription_plans.length < 2 && 'hidden'}
                       -@subscription_plans.each_with_index do |plan, counter|
                         %li.nav-item{data: {tab_name: plan.guid}}
-                          -# TODO add active to first li
                           %a{class: "nav-link #{counter == 0 ? 'active' : ''}", id: "#{plan.guid}-tab", data: {toggle: 'tab'}, href: "#nav-#{plan.guid}", aria: {controls: "#{plan.guid}", selected: 'false'}, role: 'tab'}
                             =t("views.general.payment_intervals.a#{plan.payment_frequency_in_months}")
               
@@ -93,15 +101,19 @@
               -@products.each do |product|
                 -link = product_link(product, current_user, params[:login])
                 -name = product.name_by_type
-                .col-lg-4.px-2
+                .col-lg-6.px-2
                   %article.planCard
                     .card-body.text-left.p-0
-                      %div.card-title
-                        -name
-                        LIFETIME MEMBERSHIP
-                      %p.priceValue.mb-0.pb-4
-                        =number_in_local_currency(product.price, product.currency)
-                      %ul.list-centered.text-left.border-top.pt-4
+                      %div.planTitleWrapper
+                        %div.planTitle
+                          -name
+                          %span.greenShade LIFETIME
+                          MEMBERSHIP
+                        %p.priceValue.mb-0.pb-4
+                          %span.priceValue-actualPrice
+                            =number_in_local_currency(product.price, product.currency)
+                      
+                      %ul.list-centered.text-left.border-top.pt-4.bulletList
                         %li.mb-3
                           .bulletIcon.i.material-icons check_circle
                           %span Everything in Premium plan
@@ -116,8 +128,8 @@
                           %span No hassle of renewals
 
                       .mt-auto
-                        = link_to 'Choose Lifetime', link, class: 'btn btn-secondary w-100 ', onclick: "gtag('event', 'clicks_plan', {'event_category': 'pre-registration', 'event_label': '#{name}'});"
-                      %p.text-gray2.mt-4
+                        = link_to 'Choose Lifetime', link, class: 'btn btn-primary choosePlanBtn w-100 ', onclick: "gtag('event', 'clicks_plan', {'event_category': 'pre-registration', 'event_label': '#{name}'});"
+                      %p.text-gray2.mt-3
                         One-time payment
 
           -else
@@ -180,7 +192,6 @@
                                     -if plan.bullet_points_list && !plan.bullet_points_list.empty?
                                       - plan.bullet_points_list.split(/, ?/).each do |bullet|
                                         %li.mb-3
-                                          .bulletIcon.i.material-icons check_circle
                                           %span=bullet
                                     -else
                                       %li.mb-3="Access all #{@plan.exam_body.name} courses"
