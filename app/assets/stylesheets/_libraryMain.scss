@@ -70,11 +70,15 @@
     }
     .card-examLogo {
       height: 64px;
-      width: 64px;
+      width: auto;
       position: absolute;
       bottom: 20px;
       left: 20px;
       overflow: hidden;
+      img {
+        height: 100%;
+        width: auto;
+      }
     }
     .card-title {
       font-size: 24px;
