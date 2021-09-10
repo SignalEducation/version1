@@ -5,6 +5,7 @@
       <button @click="hide()" :style="{ 'color':textColor }" type="button" class="close modal-close modal-close-solution" data-dismiss="modal" aria-hidden="true">&times;</button>
     </div>
     <div v-resize:debounce="onResize" @click="makeActive(normId)" class="vue-modal-body">
+      Rohan
       <slot name="body" />
     </div>
   </modal>

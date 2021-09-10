@@ -27,7 +27,7 @@
       :componentName="this.pdfFileName"
       :componentModal="componentModal"
       :componentHeight="550"
-      :componentWidth="850"
+      :componentWidth="320"
     >
     <div slot="body">
       <div class="modal-internal-content">

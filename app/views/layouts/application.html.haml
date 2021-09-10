@@ -16,8 +16,8 @@
     %link{:href => "https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap", :rel => "stylesheet"}/
     =stylesheet_link_tag 'application', media: 'all'
     =javascript_include_tag 'application', modernizr: :true
-    
-    -if controller_name == 'courses' || controller_name == 'course_steps' || controller_name == 'preview_course_steps'|| controller_name == 'content_activations'
+
+    -if controller_name == 'courses' || controller_name == 'course_steps' || controller_name == 'preview_course_steps'|| controller_name == 'content_activations' || controller_name == 'cbes' 
       -# CBE VueJS include
       =javascript_pack_tag 'cbe_main'
       =stylesheet_pack_tag 'cbe_main'

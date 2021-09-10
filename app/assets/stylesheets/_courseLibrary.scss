@@ -22,6 +22,9 @@
       background-color: #FFF;
       padding: 2px 8px;
       border-radius: 4px;
+      @include if-device(phone) {
+        font-size: 10px;
+      }
     }
   }
   &-header {

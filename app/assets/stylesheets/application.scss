@@ -1871,7 +1871,11 @@ textarea.form-control {
   top: 0;
   z-index: 1;
   p { padding: 0.75em 1em 0 1em; font-weight: bold !important;}
-  .modal-close { top: .5rem; font-size: 1.15em;}
+  .modal-close { 
+    top: 0.5rem;
+    right: 0.5rem;
+    font-size: 2rem;
+  }
   button:focus { outline: none; }
   .close { opacity: 1 }
 }
@@ -3095,7 +3099,7 @@ h6 {
   margin-top: 4rem;
   min-height: 44px;
   @include if-device(phone) {
-    margin: 4rem -1rem 0;
+    margin: 1.5rem -1rem 0;
   }
   .nav-tabs {
     position: absolute;
@@ -4686,6 +4690,7 @@ a.card:hover .card-title .card-explanation {
     align-items: center !important;
     @include if-device(phone) {
       align-items: flex-start !important;
+      row-gap: 10px;
     }
   }
 }
@@ -7216,7 +7221,7 @@ button.sub-details[aria-expanded="true"]:before{
   z-index: 1100;
 }
 .vue-modal-body{
-  padding: 35px;
+  padding: 0 0.5rem;
 }
 #modal-navbar-calculator, #modal-nav-calculator {
   .vue-modal-body {

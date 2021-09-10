@@ -17,8 +17,12 @@
                 =scul.course.name
         .card-footer.d-flex.justify-content-center.align-items-center{style: 'background-color: #fff; border-top: none;'}
           .dashboardWrapper-progressText
-            =scul.percentage_complete.to_s << '%'
-            Complete
+            -if scul.percentage_complete > 0
+              %div
+                .progress
+                  .progress-bar{role: "progressbar", 'aria-valuenow': scul.percentage_complete, 'aria-valuemin': "0", 'aria-valuemax': '100', style: "width: #{scul.percentage_complete}%"}
+            -# =scul.percentage_complete.to_s << '%'
+            -# Complete
           .btn.btn-outline
             Resume
 
