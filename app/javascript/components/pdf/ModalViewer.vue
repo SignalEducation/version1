@@ -10,15 +10,15 @@
         <div>
           {{ this.pdfFileName }}
         </div>
-      </div>
-      <div class="productCard-footer d-flex align-items-center justify-content-between">
-        <div>
-          <span style="color: #007bff;background-color: rgb(0 123 255 / 5%);font-size: 14px;border-radius: 4px;padding: 0.5rem 1rem;letter-spacing: 1px;font-weight: 600;line-height: 1;display: inline-flex;column-gap: 6px;">
-            🎉 FREE
-          </span>
-        </div>
-        <div class="btn btn-primary productCard--buyBtn">
-          View
+        <div class="productCard-footer d-flex align-items-center justify-content-between">
+          <div>
+            <span style="color: #007bff;background-color: rgb(0 123 255 / 5%);font-size: 14px;border-radius: 4px;padding: 0.5rem 1rem;letter-spacing: 1px;font-weight: 600;line-height: 1;display: inline-flex;column-gap: 6px;">
+              🎉 FREE
+            </span>
+          </div>
+          <div class="btn btn-primary productCard--buyBtn">
+            View
+          </div>
         </div>
       </div>
     </div>

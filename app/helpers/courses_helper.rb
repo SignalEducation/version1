@@ -49,17 +49,16 @@ module CoursesHelper
         content_tag(:div, class: 'productCard-body d-flex align-items-center') do
           content_tag(:div, class: '') do
             resource.name
-          end
-        end +
-
-        content_tag(:div, class: 'productCard-footer d-flex align-items-center justify-content-between') do
-          content_tag(:div, '', class: '') do
-            content_tag(:span, style:"color: #007bff;background-color: rgb(0 123 255 / 5%);font-size: 14px;border-radius: 4px;padding: 0.5rem 1rem;letter-spacing: 1px;font-weight: 600;line-height: 1;display: inline-flex;column-gap: 6px;") do
-              '🎉 FREE'
-            end
           end +
-          content_tag(:div, '', class: 'btn btn-primary productCard--buyBtn') do
-            'View'
+          content_tag(:div, class: 'productCard-footer d-flex align-items-center justify-content-between') do
+            content_tag(:div, '', class: '') do
+              content_tag(:span, style:"color: #007bff;background-color: rgb(0 123 255 / 5%);font-size: 14px;border-radius: 4px;padding: 0.5rem 1rem;letter-spacing: 1px;font-weight: 600;line-height: 1;display: inline-flex;column-gap: 6px;") do
+                '🎉 FREE'
+              end
+            end +
+            content_tag(:div, '', class: 'btn btn-primary productCard--buyBtn') do
+              'View'
+            end
           end
         end
       end

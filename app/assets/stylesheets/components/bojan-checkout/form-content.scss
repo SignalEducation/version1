@@ -722,10 +722,10 @@ $sans-font: 'Manrope', sans-serif;
   }
 }
 .paymentOptionBox {
-  background-color: #FAFAFA;
+  background-color: transparent;
   padding: 2rem;
   border-radius: 16px;
-  border: 1px solid #E5E7EB;
+  border: none;
   @include if-device(phone) {
     border-radius: 0;
     padding: 2rem 1rem;

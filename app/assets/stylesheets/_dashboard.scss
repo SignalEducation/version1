@@ -174,7 +174,8 @@
         }
         &:hover, &:active, &:focus {
             text-decoration: none;
-            color: #000032;
+            color: #00b67b !important;
+            border-color: #00b67b !important;
         }
     }
 }

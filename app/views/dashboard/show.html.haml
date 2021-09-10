@@ -6,22 +6,22 @@
           %h1.h1-hero.pt-5
             =t('views.dashboard.student.h1')
         %nav.account-nav
-          %ul#dashboardTabs.dashboardTabsNav{:role => "tablist"}
+          %ul#dashboardTabs.nav.nav-tabs.dashboardTabsNav{:role => "tablist"}
             -if @enrollments.any?
-              %li.dashboardTabsNav-navItem
-                %a#enrollments-tab.dashboardTabsNav-navItemLink.active{"aria-controls" => "enrollments", "aria-selected" => "true", "data-toggle" => "tab", :href => "#enrollments", :role => "tab"}
+              %li.nav-item.dashboardTabsNav-navItem
+                %a#enrollments-tab.nav-link.dashboardTabsNav-navItemLink.active{"aria-controls" => "enrollments", "aria-selected" => "true", "data-toggle" => "tab", :href => "#enrollments", :role => "tab"}
                   Enrolments
-              %li.dashboardTabsNav-navItem
-                %a#activity-tab.dashboardTabsNav-navItemLink{"aria-controls" => "activity", "aria-selected" => "false", "data-toggle" => "tab", :href => "#activity", :role => "tab"}
+              %li.nav-item.dashboardTabsNav-navItem
+                %a#activity-tab.nav-link.dashboardTabsNav-navItemLink{"aria-controls" => "activity", "aria-selected" => "false", "data-toggle" => "tab", :href => "#activity", :role => "tab"}
                   Activity
             -else
               -if current_user.exercises.any?
-                %li.dashboardTabsNav-navItem
-                  %a#activity-tab.dashboardTabsNav-navItemLink.active{"aria-controls" => "activity", "aria-selected" => "false", "data-toggle" => "tab", :href => "#activity", :role => "tab"}
+                %li.nav-item.dashboardTabsNav-navItem
+                  %a#activity-tab.nav-link.dashboardTabsNav-navItemLink.active{"aria-controls" => "activity", "aria-selected" => "false", "data-toggle" => "tab", :href => "#activity", :role => "tab"}
                     Activity
                 -if current_user.exercises.any?
-                  %li.dashboardTabsNav-navItem
-                    %a#exercises-tab.dashboardTabsNav-navItemLink{"aria-controls" => "exercises", "aria-selected" => "true", "data-toggle" => "tab", :href => "#exercises", :role => "tab"}
+                  %li.nav-item.dashboardTabsNav-navItem
+                    %a#exercises-tab.nav-link.dashboardTabsNav-navItemLink{"aria-controls" => "exercises", "aria-selected" => "true", "data-toggle" => "tab", :href => "#exercises", :role => "tab"}
                       Exercises
 
 

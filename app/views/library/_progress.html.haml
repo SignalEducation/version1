@@ -10,6 +10,6 @@
         .progress-bar{role: "progressbar", 'aria-valuenow': complete_percent, 'aria-valuemin': "0", 'aria-valuemax': '100', style: "width: #{complete_percent}%"}
 
   .courseProgressWrapper-percent
-    %small.text-gray2.mb-3
+    %span.text-gray2.mb-3
       %span.current-step-indicator=complete_percent.to_s << '%'
       Complete
