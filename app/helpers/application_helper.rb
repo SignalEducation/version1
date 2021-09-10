@@ -228,12 +228,10 @@ module ApplicationHelper
   end
 
   def navbar_landing_page_menu(landing_page)
-    content_tag :li, class: 'nav-item' do
-      onclick = ga_on_click_actions(landing_page.public_url)
+    onclick = ga_on_click_actions(landing_page.public_url)
 
-      link_to footer_landing_page_url(landing_page.public_url), class: 'nav-link', onclick: onclick do
-        content_tag('span', landing_page.name)
-      end
+    link_to footer_landing_page_url(landing_page.public_url), class: '', onclick: onclick do
+      content_tag('span', landing_page.name)
     end
   end
 

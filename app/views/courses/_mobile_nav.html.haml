@@ -1,4 +1,4 @@
-#courses-mobile-nav
+#primary-mobile-nav
     %div#overlay-active-shadow
     %section.side-nav-overlay
         .side-nav-content
@@ -40,7 +40,7 @@
         const shadow = document.querySelector("#overlay-active-shadow");
 
         $(document).mouseup(function(e){
-            var container = $("#courses-mobile-nav > section");
+            var container = $("#primary-mobile-nav > section");
 
             // If the target of the click isn't the container
             if(!container.is(e.target) && container.has(e.target).length === 0){

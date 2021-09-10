@@ -1,4 +1,4 @@
-#courses-mobile-nav
+#primary-mobile-nav
     %div#overlay-active-shadow
     %section.side-nav-overlay
         .side-nav-content
@@ -39,12 +39,28 @@
                 .nav-item-box.logout
                     =link_to t('views.general.log_out'), sign_out_url
             -else
-                .nav-item-box.mt-6
-                    =link_to sign_in_url, class: 'nav-link btn btn-outline' do
-                        %span Login
-                .nav-item-box
-                    =link_to new_student_url, class: 'nav-link btn btn-primary px-4' do
-                        %span Register
+                %div.d-flex.flex-row.justify-content-center.align-items-center.mt-6.mb-2
+                    .nav-item-box
+                        =link_to sign_in_url, class: 'nav-link btn btn-outline' do
+                            %span Login
+                    .nav-item-box
+                        =link_to new_student_url, class: 'nav-link btn btn-primary px-4' do
+                            %span Register
+                .nav-item-header
+                    Resources
+                .nav-item-box.dropdown.course-dropdown
+                    %span#navbarDropdown.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
+                        %span Courses
+                    .dropdown-menu.dropdown-menu-right.dropdown-menu-course{"aria-labelledby" => "navbarDropdown"}
+                        -@groups.each do |group|
+                            =link_to group.name, group_landing_url(group.name_url), class: 'nav-item-box', onclick: "gtag('event', 'clicks_header_courses', {'event_category': 'pre-registration', 'event_label': '#{group.name}'});"
+                -@navbar_landing_pages.each do |landing_page|
+                    .nav-item-box
+                        =navbar_landing_page_menu(landing_page)
+
+
+
+
 
 
 
@@ -52,7 +68,7 @@
         =image_tag('Learnsignal-Logo.svg', class: 'logo-img', alt: "LearnSignal Logo")
     %div{onclick:'openWidget()', class: 'btn btn-outline btn-sm zendesk-mobile-btn'}
         %i.material-icons{style: "color: #FFF;margin-right: 2px;font-size: 16px;top: 3px;position: relative;"} help_outline
-        Support
+        Help
     %button.material-icons.btn-side-nav{:type => "button"}menu
 
 
@@ -65,7 +81,7 @@
         const bodyEl = document.querySelector("body");
 
         $(document).mouseup(function(e){
-            var container = $("#courses-mobile-nav > section");
+            var container = $("#primary-mobile-nav > section");
 
             // If the target of the click isn't the container
             if(!container.is(e.target) && container.has(e.target).length === 0){

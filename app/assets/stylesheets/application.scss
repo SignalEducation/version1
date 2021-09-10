@@ -194,7 +194,7 @@ p {
   margin-bottom: 1rem;
 }
 a {
-  color: #000032;
+  color: #000;
   text-decoration: none;
   background-color: transparent;
   display: inline-block;
@@ -4908,7 +4908,7 @@ a.card:hover .card-title .card-explanation {
     font-weight: 700;
     line-height: 1.1;
     @include if-device(phone) {
-      
+
     }
 
   }
@@ -8678,7 +8678,7 @@ button.sub-details[aria-expanded="true"]:before{
     }
   }
 }
-#courses-mobile-nav {
+#primary-mobile-nav {
   display: none;
 }
 
@@ -8699,7 +8699,7 @@ button.sub-details[aria-expanded="true"]:before{
   .video-player-window {
     height: 100%;
   }
-  #courses-mobile-nav {
+  #primary-mobile-nav {
     display: flex;
     justify-content: space-between;
     column-gap: 12px;
@@ -8708,7 +8708,6 @@ button.sub-details[aria-expanded="true"]:before{
     background-color: transparent;
     a {
       text-decoration: none;
-      color: #000;
       z-index: 1;
     }
     .nav-item-box a {
@@ -8843,7 +8842,7 @@ button.sub-details[aria-expanded="true"]:before{
       font-size: 16px;
       border-radius: 0;
       font-weight: 600;
-      color: #9ca3af;
+      color: #000;
       &.logout {
         color: #dc3545;
         position: relative;
@@ -8911,9 +8910,17 @@ button.sub-details[aria-expanded="true"]:before{
     .exit-btn-box {
       text-align: end;
     }
+    .dropdown-toggle::after {
+      font-size: 16px;
+    }
     .dropdown-menu {
-      background: #243E56;
+      background: #f1f1f1;
+      width: 100%;
+      padding: 0;
       border: 1px solid #FFFFFFCC;
+      position: relative;
+      top: 0;
+      border-radius: 8px;
     }
     #exitBtn {
       color: #95979d;
