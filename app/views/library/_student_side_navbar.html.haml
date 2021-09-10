@@ -29,8 +29,7 @@
                             %span.green-check-iconWrapper
                               %i.material-icons.icon-bg-round.green-check{"aria-label" => "", :role => "img"}
                                 check
-                        -else
-                          %span.small-dot-neutral
+                        
                         -if step.is_video?
                           smart_display
                         -elsif step.is_quiz?
@@ -90,8 +89,7 @@
                             %span.green-check-iconWrapper
                               %i.material-icons.icon-bg-round.green-check{"aria-label" => "", :role => "img"}
                                 check
-                        -else
-                          %span.small-dot-neutral
+                        
                         -if step.is_video?
                           smart_display
                         -elsif step.is_quiz?

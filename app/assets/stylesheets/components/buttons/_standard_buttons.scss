@@ -382,11 +382,15 @@
   padding-bottom: 0.75rem;
   @include if-device(phone) {
     padding-left: 0.75rem;
+    padding-right: 2.25rem;
   }
 }
 .btn.btn-collapse::after {
   position: absolute;
-  right: 1rem
+  right: 1rem;
+  @include if-device(phone) {
+    right: 0.5rem;
+  }
 }
 .btn.btn-collapse::after {
   content: '\e313';

@@ -136,7 +136,6 @@ body {
   color: #000;
   text-align: left;
   background-color: #FAFAFA;
-  font-smoothing: antialiased;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
@@ -5100,6 +5099,7 @@ a.card:hover .card-title .card-explanation {
   }
   @include if-device(phone) {
     position: fixed;
+    z-index: 10;
     bottom: 0;
     left: 0;
     width: 100%;
@@ -5118,6 +5118,10 @@ a.card:hover .card-title .card-explanation {
     filter: brightness(0.8);
     i {
       color: #FFF;
+      @include if-device(phone) {
+        color: #000;
+        font-size: 16px;
+      }
     }
     @include if-device(desktop) {
       display: none;
@@ -5132,9 +5136,14 @@ a.card:hover .card-title .card-explanation {
       border-radius: 0;
       border-top-right-radius: 4px;
       border-top-left-radius: 4px;
-      color: #FFF;
+      color: #000;
       display: flex;
-      filter: none;
+      -webkit-filter: none;
+      filter: brightness(0.9);
+      width: 100%;
+      font-weight: 700;
+      justify-content: center;
+      align-items: center;
     }
 
   }
@@ -7115,17 +7124,8 @@ div#hs-eu-cookie-confirmation {
 @import "custom-spacing.scss";
 @import "nav_and_footer.scss";
 @import "calculator.scss";
-
 @import "components/master";
 
-@import "dashboard";
-@import "footer";
-@import "libraryMain";
-@import "libraryGroup";
-@import "pricingPlans";
-@import "courseLibrary";
-@import "notesViewer";
-@import "account";
 
 button.sub-details[aria-expanded="false"]:before{
   content:"Show details";
@@ -9312,3 +9312,15 @@ button.sub-details[aria-expanded="true"]:before{
     color: #FFF;
   }
 }
+
+
+@import "dashboard";
+@import "footer";
+@import "libraryMain";
+@import "libraryGroup";
+@import "pricingPlans";
+@import "courseLibrary";
+@import "notesViewer";
+@import "account";
+@import "modals/upgrade-modal";
+@import "modals/verification-modal";

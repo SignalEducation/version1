@@ -1,0 +1,77 @@
+.modal {
+    .verification-modal {
+        .modal-content {
+            position: relative;
+            overflow: hidden;
+            background-color: #FFF4F4;
+            max-width: 720px;
+            margin: 0 auto;
+            @include if-device(phone) {
+                padding: 24px;
+                height: auto;
+                padding-top: 140px;
+            }
+        }
+        h3, h4 {
+            font-size: 20px;
+            line-height: 150%;
+            font-weight: 700;
+            color: #111827 !important;
+            width: 300px;
+            z-index: 20;
+            span {
+                color: #FD5454;
+            }
+            @include if-device(phone) {
+                background-color: #fff3f4;
+            }
+        }
+        p {
+            font-weight: 500;
+            color: #7B2929;
+        }
+        .btn-icon {
+            position: absolute;
+            z-index: 1000000;
+            background-color: #000;
+            width: 32px;
+                height: 32px;
+                padding: 7px 0px !important;
+            border-radius: 100%;
+            text-align: center;
+            right: 16px;
+            top: 16px;
+            color: #FFF;
+            i {
+                font-size: 20px;
+            }
+            &:hover {
+                background-color: #111827;
+                color: #FFF;
+                i {
+                    color: #FFF;
+                }
+            }
+        }
+        .upgradIllustration {
+            position: absolute;
+            right: -160px;
+            top: 0;
+            z-index: 10;
+            width: 500px;
+
+            @include if-device(phone) {
+                right: 0px;
+                top: 0;
+                width: 260px;
+            }
+
+        }
+        .modal-footer {
+            justify-content: flex-start !important;
+            .verify-btn {
+                background: #7B2929;
+            }
+        }
+    }
+}

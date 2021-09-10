@@ -13,6 +13,7 @@ $sans-font: 'Manrope', sans-serif;
     overflow: hidden;
     cursor: pointer;
     word-wrap: break-word;
+    box-shadow: none;
     transition: all .15s ease-in 0s;
     &.card-link{
       border: 1px solid #e1e8ed;
@@ -143,7 +144,7 @@ $sans-font: 'Manrope', sans-serif;
   }
   .h1,
   h1 {
-    font-size: 2.25em;
+    font-size: 2rem;
   }
   .h2,
   h2 {
@@ -533,6 +534,7 @@ $sans-font: 'Manrope', sans-serif;
   }
   .form-group-expandable {
     margin-bottom: 1.5rem;
+    padding: 0.5rem;
     background-color: #FFF;
     transition: all 0.15s ease-in-out 0s;
     border: 1px solid rgb(209, 213, 219);

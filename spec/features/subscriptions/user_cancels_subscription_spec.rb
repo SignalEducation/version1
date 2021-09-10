@@ -24,7 +24,6 @@ describe 'A user cancels a subscription', type: :feature do
 
       click_link('Keep Subscription')
       expect(page).to have_content('My Account')
-      expect(page).to have_content('Account Information')
     end
 
     scenario 'the user can cancel' do
@@ -37,7 +36,6 @@ describe 'A user cancels a subscription', type: :feature do
 
       expect(page).to have_content('Your Subscription has been cancelled')
       expect(page).to have_content('My Account')
-      expect(page).to have_content('Account Information')
     end
 
     xscenario 'the user must give a reason for cancelling' do

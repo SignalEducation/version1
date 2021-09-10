@@ -65,7 +65,7 @@
 
 
               - else
-                %a.btn.btn-text.py-3.w-100.text-left.course-lesson{data: {lesson_name: cme.name, course_name: @course.name, target: "##{permission[:reason]}", toggle: 'modal', related: cme.related_course_step.try(:name)}, href: '#'}
+                %a.btn.btn-text.py-2.w-100.text-left.course-lesson{data: {lesson_name: cme.name, course_name: @course.name, target: "##{permission[:reason]}", toggle: 'modal', related: cme.related_course_step.try(:name)}, href: '#'}
                   .lesson-item.lesson-item-inner.w-100{class: @cmeuls && @cmeuls_ids.include?(cme.id) ? (@completed_cmeuls_cme_ids.include?(cme.id) ? 'completed' : 'failed') : ''}
                     %i.material-icons.inner-icon-bg-round{"aria-label" => "failed", :role => "img", style: 'color: #6d5902;background-color: #f9e9af;border-radius: 100%;'}
                       lock_outline
@@ -87,7 +87,7 @@
                                 =cme.number_of_questions.to_s + ' ' +  'Question'
 
             - else #Anonymous User
-              %a.btn.btn-text.py-3.w-100.text-left.course-lesson{data: {lesson_name: cme.name, course_name: @course.name, target: '#account-required', toggle: 'modal', href: '#'}}
+              %a.btn.btn-text.py-2.w-100.text-left.course-lesson{data: {lesson_name: cme.name, course_name: @course.name, target: '#account-required', toggle: 'modal', href: '#'}}
                 .lesson-item.lesson-item-inner.w-100
                   %i.material-icons.inner-icon-bg-round{"aria-label" => "failed", :role => "img"}
                     =cme.icon_label

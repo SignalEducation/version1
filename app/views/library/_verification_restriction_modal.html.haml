@@ -1,18 +1,25 @@
-.modal.fade{id: 'verification-required', tabindex: '-1', role: 'dialog', 'aria-labelledby': 'verificationRequired', 'aria-hidden': 'true'}
-  .modal-dialog{role: 'document'}
+.modal.fade-scale{id: 'verification-required', tabindex: '-1', role: 'dialog', 'aria-labelledby': 'verificationRequired', 'aria-hidden': 'true'}
+  .modal-dialog.verification-modal{role: 'document'}
     .modal-content
       %button.btn.btn-icon.modal-close{'data-dismiss': 'modal'}
-        %i.material-icons.ml-1{'aria-hidden': 'true'}
+        %i.material-icons{'aria-hidden': 'true'}
           close
-      .modal-header
-        %h3.text-red{id: 'verificationRequired'}
-          Email Verification Required
-
-      .modal-body
-        %p.mb-4
-          To access this content you will need to verify your email address.
-        %p.mb-4
-          Check your inbox for your learnsignal verification email now.
+      %h3.text-red{id: 'verificationRequired'}
+        Email Verification
+        %span Required
+      %p.mt-1.mb-2
+        To access this content you will need to 
+        %br
+        verify your email address.
+      %p.mb-3
+        Check your inbox 
+      .upgradIllustration
+        =image_tag('illustrations/upgrade-illustration-v1@2x.png', alt: 'upgrade')
 
       .modal-footer
+        -if !current_user.email_verified && current_user.email_verification_code
+          =link_to resend_verification_mail_url(current_user.email_verification_code), method: :post, class: 'btn btn-dark verify-btn' do
+            ='Resend Email'
+
+
 
