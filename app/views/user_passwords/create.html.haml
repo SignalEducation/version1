@@ -2,7 +2,7 @@
   %article.bg-gray5
     .container
       %header.hero-section
-        %h1.h1-hero.mb-3
+        %h1.h2-hero.mb-3
           -if @response[:status] == :ok
             Check Your Email
           -else
@@ -12,5 +12,5 @@
       %section.pb-md-6.pb-5
         .forgot-password-section.mb-7
           .form-box.text-center
-            %p.p-hero.px-lg-8
+            %p.p-hero.px-lg-2
               =@response[:json][:message]

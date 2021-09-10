@@ -48,15 +48,15 @@
       %article.py-5
         %header.text-center.pb-sm-4.pb-md-5
           %h2.h1-mega Explore our courses
-          %p.p-hero.px-lg-6
+          %p.p-hero.px-lg-6.mb-4
             Make learning simple and affordable by studying online in a way that suits your professional and personal life.
         .row.justify-content-center
           -@groups.each do |group|
             .col-lg-4
-              %article.card.card-primary.card-pink
+              %article.card.card-primary.card-pink.p-0
                 =image_tag(group.image.url, class: 'card-img-top', alt: 'People in front of the blackboard', style: "border-bottom-color: #{group.background_colour};")
-                .card-body.text-center
-                  %h2.h1.card-title
+                .card-body.text-center.p-4
+                  %h2.h2.card-title
                     =group.name
                   %p
                     =group.description

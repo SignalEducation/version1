@@ -29,7 +29,7 @@
                   .row.row-md.justify-content-center
                     -@subscription.upgrade_options.each do |plan|
                       .col
-                        %article.card.card-primary.card-primary-alt{id: "sub-#{plan.currency.iso_code}-#{plan.payment_frequency_in_months}", data: {plan_id: plan.id, :price => plan.price, :currency => plan.currency.iso_code, :name => plan.name, :body => plan.exam_body.name}}
+                        %article.card.card-primary.card-primary-alt.p-0{id: "sub-#{plan.currency.iso_code}-#{plan.payment_frequency_in_months}", data: {plan_id: plan.id, :price => plan.price, :currency => plan.currency.iso_code, :name => plan.name, :body => plan.exam_body.name}}
                           -if plan.most_popular
                             .card-banner.bg-mint
                               %large.text-white

@@ -29,7 +29,7 @@
     -@default_group.courses.all_active.all_in_order.each do |course|
       -if course.level
         %div
-          =link_to library_special_link(course), class: 'card card-horizontal flex-row card-mint', style: 'margin-bottom: 1.5rem;' do
+          =link_to library_special_link(course), class: 'card card-horizontal flex-row card-mint p-0', style: 'margin-bottom: 1.5rem;' do
             .card-body.d-flex.flex-column.justify-content-center
               %div.dashboardWrapper-courseInfo
                 %div.dashboardWrapper-courseIcon{style: "border-color: #{course.level.highlight_colour}; background-color: #{course.level.highlight_colour};"}

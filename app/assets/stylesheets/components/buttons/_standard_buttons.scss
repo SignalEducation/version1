@@ -80,7 +80,7 @@
 .btn.btn-primary.focus,
 .btn.btn-primary:focus {
   -webkit-box-shadow: 0 0 0 .2rem rgba(0,182,123,.5);
-  box-shadow: 0 0 0 .2rem rgba(0,182,123,.5)
+  box-shadow: 0 0 0 .2rem rgba(0,182,123,.5);
 }
 .btn.btn-primary.active,
 .btn.btn-primary:active {
@@ -90,8 +90,8 @@
 }
 .btn.btn-primary.focus:hover,
 .btn.btn-primary:focus:hover {
-  -webkit-box-shadow: 0 0 0 .2rem rgba(0,0,50,.5);
-  box-shadow: 0 0 0 .2rem rgba(0,0,50,.5)
+  -webkit-box-shadow: 0 0 0 .2rem rgba(0,182,123,.5);
+  box-shadow: 0 0 0 .2rem rgba(0,182,123,.5)
 }
 .btn.btn-primary.disabled,
 .btn.btn-primary:disabled {

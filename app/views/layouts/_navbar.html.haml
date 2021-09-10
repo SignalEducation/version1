@@ -55,7 +55,7 @@
 
             -else
               %li.nav-item.w-100.text-center.py-2
-                =link_to new_student_url, class: 'nav-link' do
-                  %span Register
+                =link_to 'Login', sign_in_url, {class: 'nav-link'}
               %li.nav-item.w-100.text-center.py-2
-                =link_to 'Log In', sign_in_url, {class: 'nav-link'}
+                =link_to new_student_url, class: 'btn btn-primary nav-link px-4' do
+                  %span Register

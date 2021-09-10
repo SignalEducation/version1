@@ -59,7 +59,7 @@
                         %input{type: "checkbox", class: "custom-control-input", id: "terms_and_conditions", required: true}
                         %label{class: "custom-control-label", for: "terms_and_conditions"}
                           I agree to learnsignal's
-                          =link_to 'terms and conditions', terms_and_conditions_url, target: '_blank'
+                          =link_to 'terms and conditions', terms_and_conditions_url, target: '_blank', style: "color: #00b67b;"
                       .custom-control.custom-checkbox.mb-3
                         %input{type: "checkbox", class: "custom-control-input", id: "communication_approval", required: true}
                         %label{class: "custom-control-label", for: "communication_approval"}
@@ -69,7 +69,7 @@
                         ="We're committed to your privacy. The information you provide is used to contact you about relevant content,
                            products, and services. You may unsubscribe from these communications at any time. For more information,
                             check out our"
-                        =link_to 'Privacy Policy.', privacy_policy_url, target: '_blank'
+                        =link_to 'Privacy Policy.', privacy_policy_url, target: '_blank', style: "color: #00b67b;"
 
                       %p.pt-2
                         =recaptcha_tags
