@@ -61,6 +61,7 @@
 }
 .pricingPlansWrapper {
   background-color: #D1FAE5 !important;
+  border-top: 4px solid #00B67A;
   .heroSubtext {
     letter-spacing: .1em;
     text-transform: uppercase;
@@ -119,7 +120,7 @@
       display: flex;
       flex-direction: column;
       background-color: transparent;
-      min-height: 590px;
+      min-height: 480px;
     }
     .nav.nav-pills.plan-nav {
       width: 100%;

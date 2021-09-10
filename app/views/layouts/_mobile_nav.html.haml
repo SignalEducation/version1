@@ -48,12 +48,12 @@
 
 
 
-    %button.material-icons.btn-side-nav{:type => "button"}menu
     =link_to home_url, class: 'navbar-brand logo' do
         =image_tag('Learnsignal-Logo.svg', class: 'logo-img', alt: "LearnSignal Logo")
     %div{onclick:'openWidget()', class: 'btn btn-outline btn-sm zendesk-mobile-btn'}
         %i.material-icons{style: "color: #FFF;margin-right: 2px;font-size: 16px;top: 3px;position: relative;"} help_outline
         Support
+    %button.material-icons.btn-side-nav{:type => "button"}menu
 
 
     :javascript
@@ -73,6 +73,7 @@
                 btnSideNavToggle.style.display = "";
                 shadow.style.opacity = "0";
                 shadow.style.visibility = "hidden";
+                shadow.style.transition = "opacity 0.3s";
                 bodyEl.classList.remove("overflow-hidden");
 
                 const btnOpacityOn = setTimeout((e) => {
@@ -87,7 +88,7 @@
             btnSideNavToggle.style.transition = "opacity 0.3s";
             shadow.style.visibility = "visible";
             shadow.style.opacity = "1";
-            shadow.style.transition = "opacity 1s";
+            shadow.style.transition = "opacity 0.3s";
             bodyEl.classList.add("overflow-hidden");
         };
 
@@ -96,7 +97,7 @@
             btnSideNavToggle.style.display = "";
             shadow.style.opacity = "0";
             shadow.style.visibility = "hidden";
-            shadow.style.transition = "opacity 1s";
+            shadow.style.transition = "opacity 0.3s";
             bodyEl.classList.remove("overflow-hidden");
 
             const btnOpacityOn = setTimeout((e) => {

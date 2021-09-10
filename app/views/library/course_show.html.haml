@@ -44,7 +44,7 @@
                 %svg{:viewbox => "0 0 200 200", :xmlns => "http://www.w3.org/2000/svg"}
                   %path{:d => "\r\n                M 0, 100\r\n                C 0, 25 25, 0 100, 0\r\n                S 200, 25 200, 100\r\n                    175, 200 100, 200\r\n                    0, 175 0, 100\r\n            ", :fill => "#{@course.level.highlight_colour}", :transform => "rotate(\r\n                0,\r\n                100,\r\n                100\r\n            ) translate(\r\n                0\r\n                0\r\n            )"}
               %i{"aria-label" => @course.level.icon_label, :role => "img", class: @course.level.icon_label ? @course.level.icon_label : 'budicon-office-bag-c', style: "color: #FFF;"}
-            %div
+            %div.position-relative.courseWrapper-parentWrapper
               %div.courseWrapper-parent
                 .courseWrapper-examName
                   =@course.parent.name

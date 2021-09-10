@@ -23,7 +23,7 @@
   @include if-device(phone) {
     min-height: 54px;
     height: auto;
-    padding: 0.5rem;
+    padding: 0.5rem 1rem;
     box-shadow: none;
   }
 }
