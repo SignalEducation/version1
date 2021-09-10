@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_16_075325) do
+ActiveRecord::Schema.define(version: 2021_09_14_080026) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -1671,6 +1671,7 @@ ActiveRecord::Schema.define(version: 2021_08_16_075325) do
     t.decimal "subscriptions_revenue", default: "0.0"
     t.decimal "orders_revenue", default: "0.0"
     t.integer "home_page_id"
+    t.datetime "verify_remembered_at"
     t.index ["country_id"], name: "index_users_on_country_id"
     t.index ["currency_id"], name: "index_users_on_currency_id"
     t.index ["preferred_exam_body_id"], name: "index_users_on_preferred_exam_body_id"

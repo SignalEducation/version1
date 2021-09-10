@@ -696,6 +696,24 @@ class User < ApplicationRecord
     send_verification_email(url)
   end
 
+  # days since created minus 7
+  def verify_remain_days
+    remain_days = DAYS_TO_VERIFY_EMAIL - (Date.current - created_at.to_date).to_i
+
+    [remain_days, 0].max
+  end
+
+  def show_verify_email_message?
+    return false if email_verified
+
+    if verify_remembered_at.nil? || verify_remembered_at.time <= 1.day.ago
+      update(verify_remembered_at: Time.zone.now)
+      true
+    else
+      false
+    end
+  end
+
   private
 
   def add_guid

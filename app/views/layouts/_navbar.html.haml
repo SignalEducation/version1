@@ -38,6 +38,13 @@
                   %span
                     =t('views.general.user_name') + current_user.first_name.to_s
                 .dropdown-menu.dropdown-menu-right{"aria-labelledby" => "navbarDropdown"}
+                  -if current_user.non_verified_user?
+                    .alert.alert-warning
+                      =verify_email_message(current_user.verify_remain_days)
+                      -if !current_user.email_verified && current_user.email_verification_code
+                        =link_to resend_verification_mail_url(current_user.email_verification_code), method: :post, class: 'btn btn-secondary verification-btn btn-sm mb-3 mb-sm-0' do
+                          ='Resend Verification Email'
+
                   =link_to t('views.users.show.h1'), account_url, class: 'nav-link dropdown-item'
                   =link_to t('views.general.log_out'), sign_out_url, class: 'nav-link dropdown-item'
 
@@ -63,4 +70,3 @@
 
 
     =render partial: 'layouts/external_banner'
-

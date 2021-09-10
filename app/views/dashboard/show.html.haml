@@ -1,12 +1,5 @@
 %main
   %article.dashboard.bg-gray5
-    -if current_user.non_verified_user?
-      .alert.alert-warning
-        Your email requires verification. You will be unable to access content until you verify your email
-        -if !current_user.email_verified && current_user.email_verification_code
-          =link_to resend_verification_mail_url(current_user.email_verification_code), method: :post, class: 'btn btn-secondary verification-btn btn-sm mb-3 mb-sm-0' do
-            ='Resend Verification Email'
-
     .container
       %header
         .d-flex.flex-wrap.flex-sm-nowrap.justify-content-between.py-4.py-md-4
@@ -17,7 +10,6 @@
             -if current_user.standard_student_user? && current_user&.preferred_exam_body_id && !current_user.valid_access_for_exam_body?(current_user&.preferred_exam_body_id, current_user&.preferred_exam_body&.group&.id)
               =link_to pricing_url(current_user&.preferred_exam_body&.group&.name_url), class: 'btn btn-secondary btn-sm btn-sm-arrow-right mb-3 mb-sm-0' do
                 ='LifeTime Membership'
-
 
       %section.pb-md-6.pt-4
         .row.row-md
@@ -56,8 +48,7 @@
                 #exercises.tab-pane.show.tab-dashboard.tab-exercises{"aria-labelledby" => "exercises-tab", :role => "tabpanel"}
                   =render partial: 'exercises'
 
-
-
+  =show_user_verified_restriction
 :javascript
   $(document).ready(function(){
     hash = window.location.hash;

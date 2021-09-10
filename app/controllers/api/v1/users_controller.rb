@@ -3,7 +3,7 @@
 module Api
   module V1
     class UsersController < Api::V1::ApiController
-      before_action :set_user, only: %i[show update change_password]
+      before_action :set_user, only: %i[show update change_password resend_verify_user_email]
       before_action :set_user_id, only: %i[update change_password]
       before_action :authorize_user, only: %i[update change_password]
       before_action :same_user?, only: %i[update change_password]
@@ -30,12 +30,6 @@ module Api
         end
       end
 
-      def forgot_password
-        response = User.start_password_reset_process(params[:email])
-
-        json_response(response[:json], response[:status])
-      end
-
       def update
         if @user.update(user_params)
           render 'api/v1/users/show.json', status: :ok
@@ -44,11 +38,27 @@ module Api
         end
       end
 
+      def forgot_password
+        response = User.start_password_reset_process(params[:email])
+
+        json_response(response[:json], response[:status])
+      end
+
       def change_password
         if @user.change_the_password(change_password_params)
           json_response({ message: I18n.t('controllers.users.change_password.flash.success') }, :ok)
         else
           json_response({ message: I18n.t('controllers.users.change_password.flash.error') }, :unprocessable_entity)
+        end
+      end
+
+      def resend_verify_user_email
+        url = user_verification_url(email_verification_code: @user.email_verification_code)
+
+        if @user.send_verification_email(url)
+          json_response({ message: "A verification email was sent to #{@user.email}." }, :ok)
+        else
+          json_response({ error: "An error ocurred when tried to send e verification email to #{@user.email}." }, :unprocessable_entity)
         end
       end
 
