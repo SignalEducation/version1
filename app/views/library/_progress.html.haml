@@ -2,7 +2,7 @@
 -completed_lessons = @course_log.try(:count_of_cmes_completed) || 0
 -complete_percent = @course_log.try(:percentage_complete)
 
-.courseProgressWrapper{class: "#{complete_percent == 0 ? "hidden" : ''}"}
+.courseProgressWrapper{class: "#{complete_percent < 1 ? "hidden" : ''}"}
   .courseProgressWrapper-progress
     %h4.sr-only Course Progress
     %div

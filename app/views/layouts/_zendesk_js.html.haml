@@ -6,8 +6,8 @@
         hide: true,
       }
   };
-  zE && zE('webWidget', 'hide');
-  zE && zE(function(){zE.hide();}); 
+  // zE && zE('webWidget', 'hide');
+  // zE && zE(function(){zE.hide();}); 
 
 / Start of learnsignal Zendesk Widget script
 %script#ze-snippet{:src => "https://static.zdassets.com/ekr/snippet.js?key=#{Rails.application.credentials[Rails.env.to_sym][:zendesk][:project_key]}"} :cdata
@@ -19,11 +19,14 @@
   Help
 
 :javascript
-  zE && zE('webWidget', 'hide');
-  function openWidget() {
-      zE('webWidget', 'show');
-      zE('webWidget', 'open');
-  };
-  zE && zE('webWidget:on', 'close', function() {
-      zE('webWidget', 'hide');
-  })
+  if (window.hasOwnProperty('zE')) {
+    function openWidget() {
+      $zopim.livechat.window.show();
+      // zE('webWidget', 'show');
+      // zE('webWidget', 'open');
+    };
+    zE && zE('webWidget', 'hide');
+    zE && zE('webWidget:on', 'close', function() {
+        zE('webWidget', 'hide');
+    })
+  }

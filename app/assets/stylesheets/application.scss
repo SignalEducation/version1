@@ -526,6 +526,7 @@ code {
   background-color: #FFF;
   background-clip: padding-box;
   border: 1px solid #D1D5DB;
+  box-shadow: none;
   border-radius: 8px;
   -webkit-transition: border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
   transition: border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
@@ -1370,6 +1371,10 @@ textarea.form-control {
 .nav-tabs .nav-link:hover {
   border-color: #000032
 }
+.nav-tabs .nav-link:hover:active {
+  border-color: #000032;
+  color: #000032;
+}
 .nav-tabs .nav-link.disabled {
   color: #6c757d;
   background-color: transparent;
@@ -1875,6 +1880,10 @@ textarea.form-control {
     top: 0.5rem;
     right: 0.5rem;
     font-size: 2rem;
+    @include if-device(phone) {
+      top: 0;
+      right: 0;
+    }
   }
   button:focus { outline: none; }
   .close { opacity: 1 }
@@ -2005,7 +2014,7 @@ textarea.form-control {
   border-top-right-radius: 0;
 
   @include if-device(phone) {
-    box-shadow: inset 0 -1px #e3e8ee;
+    padding-bottom: 0
   }
   h3, h4 {
     margin: 0;
@@ -4076,7 +4085,7 @@ textarea.form-control {
 }
 .label,
 label {
-  margin-bottom: .6rem;
+  margin-bottom: 0.2rem;
   font-size: .875rem;
   font-weight: 500;
   color: #212529;
@@ -7208,9 +7217,14 @@ button.sub-details[aria-expanded="true"]:before{
 }
 .vm--modal {
   overflow-y: auto !important;
-  min-width: 300px !important;
   min-height: 250px !important;
+  max-width: 840px !important;
+  margin: 0 auto;
   resize: both;
+
+  @include if-device(phone) {
+    max-width: calc(100% - 2rem);
+  }
 }
 .vm--modal::-webkit-resizer {
   border-bottom: 15px solid #595959 !important;
@@ -7219,9 +7233,12 @@ button.sub-details[aria-expanded="true"]:before{
 .latent-modal {
   position: relative;
   z-index: 1100;
+  @include if-device(phone) {
+    max-width: calc(100% - 2rem);
+  }
 }
 .vue-modal-body{
-  padding: 0 0.5rem;
+  padding: 0.5rem;
 }
 #modal-navbar-calculator, #modal-nav-calculator {
   .vue-modal-body {

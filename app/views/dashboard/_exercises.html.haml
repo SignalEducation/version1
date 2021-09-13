@@ -22,21 +22,6 @@
             .btn.btn-outline.mx-0
               View Exercise
 
-
-          -# .card-body.d-flex.flex-column.justify-content-center
-          -#   %small.card-category.mb-2{style: 'color: #5e90ef'}
-          -#     =exercise.product.name_by_type
-          -#     =exercise.product.id
-
-          -#   %h5.card-title.mb-1
-          -#     %span.mr-1
-          -#       -if exercise.correcting?
-          -#         Your work is currently being corrected by our team
-          -#       -else
-          -#         Your work is submitted and awaiting correction
-          -# .card-footer.d-flex.justify-content-center.align-items-center{style: 'background-color: #fff; border-top: none;'}
-          -#   =link_to 'View Exercise', exercise, class: 'btn btn-primary'
-
   -if current_user.exercises.with_state(:pending).any?
     -current_user.exercises.with_state(:pending).each do |exercise|
       - if @cancelled_orders_id.exclude? exercise.order_id
@@ -56,19 +41,6 @@
               =link_to 'Begin Exercise', edit_exercise_path(exercise), class: 'btn btn-primary mx-0'
 
 
-        -# .card.card-horizontal.flex-md-row{style: 'margin-bottom: 1.5rem;'}
-        -#   .card-body.d-flex.flex-column.justify-content-center
-        -#     %small.card-category.mb-2{style: 'color: #5e90ef'}
-        -#       =exercise.product.name_by_type
-        -#     %h5.card-title.mb-1
-        -#       %span.mr-1
-        -#         =pending_exercise_message(exercise)
-        -#   .card-footer.d-flex.justify-content-center.align-items-center{style: 'background-color: #fff; border-top: none;'}
-        -#     -if exercise.product.cbe?
-        -#       =link_to 'Begin CBE', exercise_cbes_path(id: exercise.product.cbe.id, exercise_id: exercise.id), class: 'btn btn-primary'
-        -#     -else
-        -#       =link_to 'Begin Exercise', edit_exercise_path(exercise), class: 'btn btn-primary'
-
   -if current_user.exercises.with_states(:returned).any?
     -current_user.exercises.with_states(:returned).each do |exercise|
       - if @cancelled_orders_id.exclude? exercise.order_id
@@ -86,20 +58,6 @@
             -if exercise.product.cbe?
               =link_to 'Rerun CBE', exercise_cbes_path(id: exercise.product.cbe.id, exercise_id: exercise.id), class: 'btn btn-warning mx-0'
 
-
-
-        -# .card.card-horizontal.flex-md-row{style: 'margin-bottom: 1.5rem;'}
-        -#   .card-body.d-flex.flex-column.justify-content-center
-        -#     %small.card-category.mb-2{style: 'color: #5e90ef'}
-        -#       =exercise.product.name_by_type
-
-        -#     %h5.card-title.mb-1
-        -#       %span.mr-1
-        -#         Your work has been corrected
-        -#   .card-footer.d-flex.justify-content-center.align-items-center{style: 'background-color: #fff; border-top: none;'}
-        -#     =link_to 'View Response', exercise_path(exercise), class: 'btn btn-primary'
-        -#     -if exercise.product.cbe?
-        -#       =link_to 'Rerun CBE', exercise_cbes_path(id: exercise.product.cbe.id, exercise_id: exercise.id), class: 'btn btn-warning'
 
 -else
   .row.row-lg

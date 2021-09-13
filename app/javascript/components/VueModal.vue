@@ -1,21 +1,20 @@
 <template>
-  <modal :id="normId" class="latent-modal" :name="`modal-${componentType}-${componentName}`" draggable=".window-header" :height="componentHeight" :width="componentWidth">
+  <modal :id="normId" class="latent-modal" :name="`modal-${componentType}-${componentName}`" draggable=".window-header" :height="componentHeight" top="4rem" width="100%" :max-width="componentWidth">
     <div @click="makeActive(normId)" class="window-header latent-modal-header" :style="{ 'background-color':mainColor }">
       <p :style="{ 'color':textColor }">{{ componentName }}</p>
       <button @click="hide()" :style="{ 'color':textColor }" type="button" class="close modal-close modal-close-solution" data-dismiss="modal" aria-hidden="true">&times;</button>
     </div>
     <div v-resize:debounce="onResize" @click="makeActive(normId)" class="vue-modal-body">
-      Rohan
       <slot name="body" />
     </div>
   </modal>
 </template>
 
 <script>
-import eventBus from "./cbe/EventBus.vue";
-import pdfvuer from "pdfvuer";
-import SpreadsheetEditor from "./SpreadsheetEditor/SpreadsheetEditor.vue";
 import resize from 'vue-resize-directive';
+import pdfvuer from "pdfvuer";
+import eventBus from "./cbe/EventBus.vue";
+import SpreadsheetEditor from "./SpreadsheetEditor/SpreadsheetEditor.vue";
 
 export default {
   directives: {

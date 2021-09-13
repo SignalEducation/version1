@@ -510,10 +510,11 @@
 .btn-dark{
   background-color: #000;
   color: #FFF;
-  &:hover {
+  &:hover, &:active {
     background-color: #3c3b3b;
     color: #FFF;
   }
+
 }
 .btn.btn-xs {
   padding: .2rem 1rem;
