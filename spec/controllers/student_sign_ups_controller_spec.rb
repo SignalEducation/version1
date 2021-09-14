@@ -259,14 +259,14 @@ RSpec.describe StudentSignUpsController, type: :controller do
       end
     end
 
-    describe "GET 'show'" do
-      it 'should bounce as signed in' do
-        get :show, params: { account_activation_code: unverified_user.account_activation_code }
-        expect(flash[:success]).to be_nil
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to(student_dashboard_url)
-      end
-    end
+    # describe "GET 'show'" do
+    #  it 'should bounce as signed in' do
+    #    get :show, params: { account_activation_code: unverified_user.account_activation_code }
+    #    expect(flash[:success]).to be_nil
+    #    expect(response.status).to eq(302)
+    #    expect(response).to redirect_to(student_dashboard_url)
+    #  end
+    # end
 
     describe "GET 'new'" do
       it 'should bounce as signed in' do
