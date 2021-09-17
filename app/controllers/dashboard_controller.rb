@@ -5,9 +5,10 @@ class DashboardController < ApplicationController
   before_action :get_variables
 
   def show
-    @default_group = current_user&.preferred_exam_body&.group || Group.all_active.first
-    @enrollments = current_user.valid_enrollments_in_sitting_order
-    @sculs = current_user.course_logs.includes(:enrollments).where(enrollments: { id: nil })
+    @default_group       = current_user&.preferred_exam_body&.group || Group.all_active.first
+    @levels              = @default_group.levels.all_active.all_in_order
+    @enrollments         = current_user.valid_enrollments_in_sitting_order
+    @sculs               = current_user.course_logs.includes(:enrollments).where(enrollments: { id: nil })
     @cancelled_orders_id = filter_cancelled_orders(current_user&.orders)
   end
 

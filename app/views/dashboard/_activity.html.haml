@@ -21,27 +21,60 @@
               %div
                 .progress
                   .progress-bar{role: "progressbar", 'aria-valuenow': scul.percentage_complete, 'aria-valuemin': "0", 'aria-valuemax': '100', style: "width: #{scul.percentage_complete}%"}
-          .btn.btn-outline
-            Resume
+          -if scul.percentage_complete > 0
+            -next_step      = scul.latest_course_step.next_element
+            -next_step_link = show_course_url(scul.course.name_url,
+                                              next_step.course_lesson.course_section.name_url,
+                                              next_step.course_lesson.name_url,
+                                              next_step.name_url)
+            .btn.btn-outline.next_step_link{data: {destination: next_step_link}, id: scul.id}
+              Resume
+          -else
+            .btn.btn-outline
+              Resume
 
 -else
   %h4.h4-hero.mb-4
     ="Get started with an #{@default_group.name} course"
-  %div
-    -@default_group.courses.all_active.all_in_order.each do |course|
-      -if course.level
-        %div
-          =link_to library_special_link(course), class: 'card card-horizontal flex-row card-mint', style: 'margin-bottom: 1.5rem;' do
-            .card-body.d-flex.flex-column.justify-content-center
-              %div.dashboardWrapper-courseInfo
-                %div.dashboardWrapper-courseIcon{style: "border-color: #{course.level.highlight_colour}; background-color: #{course.level.highlight_colour};"}
-                  %i{"aria-label" => course.level.icon_label, :role => "img", class: course.level.icon_label ? course.level.icon_label : 'budicon-office-bag-c', style: "color: #FFF;"}
-                %div
-                  %div.dashboardWrapper-parent
-                    .dashboardWrapper-examName
-                      =course.parent.name
-                    .dashboardWrapper-backBtn-dot •
-                    .dashboardWrapper-levelName{style: "color: #{course.level.highlight_colour};"}
-                      =course.category_label
-                  %div.courseName
-                    =course.name
+  %div.container.d-flex.libraryGroupWrapper-list.pt-4.pb-4
+    %nav.levels-nav
+      %ul.d-flex.flex-column.nav.nav-pills.nav-fill{id: 'levelsTabs', role: 'tablist'}
+        - @levels.each_with_index do |level, counter|
+          %li.nav-item{data: {tab_name: level.name, group_name: @default_group.name}}
+            %a{class: "nav-link #{counter == 0 ? 'active' : ''}", id: "#{level.name_url}-tab", data: {toggle: 'tab'}, href: "##{level.name_url}", aria: {controls: "#{level.name_url}", selected: 'false'}, role: 'tab'}
+              =level.name
+
+    %section.container.content-section
+      %h2.sr-only List of Courses
+      #levelsTabsContent.tab-content
+        -@levels.each_with_index do |level, counter|
+          .tab-pane{id: level.name_url, class: "tab-#{level.name_url} #{counter == 0 ? 'active show' : ''} ", "aria-labelledby" => "#{level.name_url}-tab", :role => "tabpanel"}
+            .row.row-lg
+              -level.courses.all_in_order.each do |course|
+                - if course.active
+                  .col-lg-12.col-xl-12
+                    =link_to library_special_link(course), class: 'card flex-md-row', style: 'margin-bottom: 1rem;', data: { toggle: 'tooltip', placement: 'right', animation: 'true', delay: { "show": 300, "hide": 100 }}, title: "#{course.short_description}" do
+                      .card-body.d-flex.flex-column.justify-content-center
+                        %div.libraryGroupWrapper-list-courseInfo
+                          %div.libraryGroupWrapper-list-courseIcon{style: "border-color: #{course.highlight_colour}; background-color: #{course.highlight_colour};"}
+                            %i{"aria-label" => course.icon_label, :role => "img", class: course.icon_label ? course.icon_label : 'budicon-office-bag-c', style: "color: #FFF;"}
+                          %div
+                            %div.libraryGroupWrapper-list-parent
+                              .libraryGroupWrapper-list-levelName{style: "color: #{course.highlight_colour};"}
+                                -if course.preview && course.release_date
+                                  ="Coming #{course.release_date.strftime("%B, %Y")}"
+                                -else
+                                  =course.category_label
+                            %div.courseName
+                              =course.name
+                          .courseArrowIcon.i.material-icons keyboard_arrow_right
+
+
+:javascript
+  $(document).ready(function(){
+    $(".next_step_link").click(function(e){
+      e.preventDefault();
+      window.location.href =this.getAttribute("data-destination");
+      return false;
+    })
+  });

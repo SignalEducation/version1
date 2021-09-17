@@ -50,8 +50,10 @@ class IpAddress < ApplicationRecord
 
   # instance methods
   def assign_country_from_geo(result)
+    country_code = result&.country_code == 'CAN' ? 'CAD' : result&.country_code
+
     self.country_id = if result
-                        Country.find_by(iso_code: result.country_code)&.id || 78
+                        Country.find_by(iso_code: country_code)&.id || 78
                       else
                         78 # UK
                       end
