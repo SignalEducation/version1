@@ -52,27 +52,30 @@ describe CourseResource do
   describe 'Methods' do
     describe '#available_to_user' do
       context 'non verified user' do
-        before { allow_any_instance_of(User).to receive(:non_verified_user?).and_return(true) }
+        before do
+          allow_any_instance_of(User).to receive(:show_verify_email_message?).and_return(true)
+          allow_any_instance_of(User).to receive(:valid_subscription?).and_return(false)
+        end
 
         it { expect(course_resource_1.available_to_user(user, nil)).to eq({ view: false, reason: 'verification-required' }) }
       end
 
       context 'complimentary_user user' do
-        before { allow_any_instance_of(User).to receive(:non_verified_user?).and_return(false) }
+        before { allow_any_instance_of(User).to receive(:show_verify_email_message?).and_return(false) }
         before { allow_any_instance_of(User).to receive(:complimentary_user?).and_return(true) }
 
         it { expect(course_resource_1.available_to_user(user, nil)).to eq({ view: true, reason: nil }) }
       end
 
       context 'non_student_user user' do
-        before { allow_any_instance_of(User).to receive(:non_verified_user?).and_return(false) }
+        before { allow_any_instance_of(User).to receive(:show_verify_email_message?).and_return(false) }
         before { allow_any_instance_of(User).to receive(:non_student_user?).and_return(true) }
 
         it { expect(course_resource_1.available_to_user(user, nil)).to eq({ view: true, reason: nil }) }
       end
 
       context 'standard_student_user user' do
-        before { allow_any_instance_of(User).to receive(:non_verified_user?).and_return(false) }
+        before { allow_any_instance_of(User).to receive(:show_verify_email_message?).and_return(false) }
         before { allow_any_instance_of(User).to receive(:non_student_user?).and_return(false) }
         before { allow_any_instance_of(User).to receive(:complimentary_user?).and_return(false) }
         before { allow_any_instance_of(User).to receive(:standard_student_user?).and_return(true) }
@@ -83,7 +86,7 @@ describe CourseResource do
       end
 
       context 'default condition' do
-        before { allow_any_instance_of(User).to receive(:non_verified_user?).and_return(false) }
+        before { allow_any_instance_of(User).to receive(:show_verify_email_message?).and_return(false) }
         before { allow_any_instance_of(User).to receive(:non_student_user?).and_return(false) }
         before { allow_any_instance_of(User).to receive(:complimentary_user?).and_return(false) }
         before { allow_any_instance_of(User).to receive(:standard_student_user?).and_return(false) }

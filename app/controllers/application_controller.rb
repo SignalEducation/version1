@@ -343,7 +343,7 @@ class ApplicationController < ActionController::Base
   def user_course_correct_url(the_thing, scul = nil)
     return new_student_url unless current_user
 
-    if current_user.non_verified_user? # current_user.non_verified_user?
+    if current_user.verify_remain_days.zero?
       library_course_url(the_thing.course_lesson.course_section.course.group.name_url,
                          the_thing.course_lesson.course_section.course.name_url,
                          anchor: 'verification-required')

@@ -39,34 +39,6 @@
                 ='Customised pricing plans designed to fit in with your wallet and work.'
 
           .row.row-lg.justify-content-center
-            -# FREE PLAN CARD
-            -# .col-lg-4.px-2
-            -#   %article.planCard
-            -#     .card-body.text-left.p-0
-            -#       %div.card-title
-            -#         FREE
-            -#       %p.priceValue.mb-0.pb-4
-            -#         €0
-            -#       %ul.list-centered.text-left.border-top.pt-4
-            -#         %li.mb-3
-            -#           .bulletIcon.i.material-icons check_circle
-            -#           %span First module in all course
-            -#         %li.mb-3
-            -#           .bulletIcon.i.material-icons check_circle
-            -#           %span Guided study plans
-            -#         %li.mb-3
-            -#           .bulletIcon.i.material-icons check_circle
-            -#           %span Subject cheat sheets
-            -#         %li.mb-3
-            -#           .bulletIcon.i.material-icons check_circle
-            -#           %span Exam practice questions
-
-            -#       .mt-auto
-            -#         %div{class: "btn disabled w-100 btn-secondary"}
-            -#           Currently Active
-            -#       %p.text-gray2.mt-4
-            -#         No Credit Card required
-            
             -# PREMIUM CARDS
             .col-lg-6.px-2
               %article.planCard.planCard-popular
@@ -85,38 +57,76 @@
                               %span.priceValue-priceSuffix=t("views.general.payment_interval_shortSuffix.a#{plan.payment_frequency_in_months}")
                             %span.priceValue-popularBadge
                               Most popular
-                          
-                        %ul.list-centered.text-left.border-top.pt-4.bulletList{class:@subscription_plans.length < 2 && 'noPlanNav'}
+                            -if plan.monthly_percentage_off
+                              %span.priceValue-savingPill
+                                Save 
+                                =plan.monthly_percentage_off
+                                ='%'
+                        
+                        .bulletListTitle.hidden-xs ⚡️ What do you get
+                        %ul.hidden-xs.list-centered.text-left.bulletList{class:@subscription_plans.length < 2 && 'noPlanNav'}
                           %li.mb-3
-                            .bulletIcon.i.material-icons trip_origin
+                            .bulletIcon •
                             %span
                               Everything in 🎉 FREE
                           -if plan.bullet_points_list && !plan.bullet_points_list.empty?
                             - plan.bullet_points_list.split(/, ?/).each do |bullet|
                               %li.mb-3
-                                .bulletIcon.i.material-icons trip_origin
+                                .bulletIcon •
                                 %span=bullet
                           -else
-                            %li.mb-3="Access all #{@group.name} courses"
-                            %li.mb-3="Topic-by-topic lectures"
-                            %li.mb-3="24/7 tutor support"
+                            %li.mb-3
+                              .bulletIcon •
+                              %span="Access all #{@group.name} courses"
+                            %li.mb-3
+                              .bulletIcon •
+                              %span="Topic-by-topic lectures"
+                            %li.mb-3
+                              .bulletIcon •
+                              %span="24/7 tutor support"
 
-                        -if plan.monthly_percentage_off
-                          %p.h5.text-gray2
-                            Save over
-                            =plan.monthly_percentage_off
-                            ='%'
+                        
+                        -unless plan.exam_body.name == "CPD"
+                          %p.text-gray2.mt-4.mb-2.text-bold
+                            Recurring Payment. Cancel Anytime
                         .mt-auto
                           =link_to subscription_checkout_special_link(plan.exam_body_id, plan.guid), class: "btn w-100 btn-primary choosePlanBtn", onclick: "addToCart('#{plan.currency.iso_code}', '#{plan.name}', '#{plan.id}', '#{plan.price}', '#{plan.exam_body.name}');" do
-                            Choose this plan
-                        -unless plan.exam_body.name == "CPD"
-                          %p.text-gray2.mt-3
-                            Cancel anytime
+                            ="Choose #{t("views.general.payment_intervals.a#{plan.payment_frequency_in_months}")}"
+                        %div.visible-xs.bulletListAccordianBox
+                          .faq-box.mt-3
+                            .faq-inner.narrow{onclick: '$(this).toggleClass("narrow"); $(this).find(".faq-answer").toggleClass("d-md-block"); $(this).find(".faq-answer-expanded").toggleClass("d-none"); $(this).find(".bulletListAccordianBox-openIcon").toggleClass("d-none"); $(this).find(".bulletListAccordianBox-closeIcon").toggleClass("d-none");'}
+                              .faq-title
+                                See Details
+                                %i.material-icons.ml-2.bulletListAccordianBox-openIcon{"aria-hidden" => "true"} expand_more
+                                %i.material-icons.ml-2.bulletListAccordianBox-closeIcon.d-none{"aria-hidden" => "true"} expand_less
+                              .faq-answer-expanded.d-none
+                                .bulletListTitle ⚡️ What do you get
+                                %ul.list-centered.text-left.bulletList{class:@subscription_plans.length < 2 && 'noPlanNav'}
+                                  %li.mb-3
+                                    .bulletIcon •
+                                    %span
+                                      Everything in 🎉 FREE
+                                  -if plan.bullet_points_list && !plan.bullet_points_list.empty?
+                                    - plan.bullet_points_list.split(/, ?/).each do |bullet|
+                                      %li.mb-3
+                                        .bulletIcon •
+                                        %span=bullet
+                                  -else
+                                    %li.mb-3
+                                      .bulletIcon •
+                                      %span="Access all #{@group.name} courses"
+                                    %li.mb-3
+                                      .bulletIcon •
+                                      %span="Topic-by-topic lectures"
+                                    %li.mb-3
+                                      .bulletIcon •
+                                      %span="24/7 tutor support"
                   %ul.nav.nav-pills.plan-nav{id: 'planTabs', role: 'tablist', class:@subscription_plans.length < 2 && 'hidden'}
                     -@subscription_plans.each_with_index do |plan, counter|
                       %li.nav-item{data: {tab_name: plan.guid}}
                         %a{class: "nav-link #{counter == 0 ? 'active' : ''}", id: "#{plan.guid}-tab", data: {toggle: 'tab'}, href: "#nav-#{plan.guid}", aria: {controls: "#{plan.guid}", selected: 'false'}, role: 'tab'}
                           =t("views.general.payment_intervals.a#{plan.payment_frequency_in_months}")
+
 
 
     :javascript

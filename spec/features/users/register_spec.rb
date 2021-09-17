@@ -44,8 +44,8 @@ describe 'Register in process', type: :feature do
         click_button 'Register Now'
       end
 
-      expect(page).to have_title('Thank You for Registering | LearnSignal')
-      expect(page).to have_content('Verify Your Email Address')
+      expect(page).to have_title('Dashboard')
+      expect(page).to have_content('Please verify your email within 7 days to continue free tier subscription.')
       expect(page).to have_content('Check your inbox now')
     end
 

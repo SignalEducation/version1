@@ -815,5 +815,28 @@ describe User do
         expect(user.total_revenue).to eq(order_value + subscription_value)
       end
     end
+    
+    describe '#verify_remain_days' do
+      it 'return the default days remaning to user verify email' do
+        expect(user.verify_remain_days).to eq(DAYS_TO_VERIFY_EMAIL)
+      end
+
+      it 'return the 0 days remaning to user verify email' do
+        user.update(created_at: 7.days.ago)
+        expect(user.verify_remain_days).to eq(0)
+      end
+    end
+
+    describe '#show_verify_email_message?' do
+      it 'show verify email message' do
+        user.update(verify_remembered_at: 7.days.ago)
+        expect(user.show_verify_email_message?).to be_truthy
+      end
+
+      it 'return the 0 days remaning to user verify email' do
+        user.update(verify_remembered_at: Time.zone.today)
+        expect(user.show_verify_email_message?).to be_falsey
+      end
+    end
   end
 end

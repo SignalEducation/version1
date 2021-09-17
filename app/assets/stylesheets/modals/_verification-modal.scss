@@ -19,6 +19,7 @@
             color: #111827 !important;
             width: 300px;
             z-index: 20;
+            margin-bottom: 8px;
             span {
                 color: #FD5454;
             }
@@ -29,6 +30,10 @@
         p {
             font-weight: 500;
             color: #7B2929;
+            width: 50%;
+            @include if-device(phone) {
+                width: 100%;
+            }
         }
         .btn-icon {
             position: absolute;
@@ -63,7 +68,10 @@
             @include if-device(phone) {
                 right: 0px;
                 top: 0;
-                width: 260px;
+                width: 130%;
+                height: 120px;
+                overflow: hidden;
+                
             }
 
         }

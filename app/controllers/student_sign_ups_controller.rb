@@ -166,8 +166,9 @@ class StudentSignUpsController < ApplicationController
       else
         flash[:datalayer_id] = @user.id
         flash[:datalayer_body] = @user.try(:preferred_exam_body).try(:name)
+        UserSession.create(@user)
         set_current_visit(@user)
-        redirect_to personal_sign_up_complete_url
+        redirect_to student_dashboard_url
       end
     elsif request&.referrer
       set_session_errors(@user)

@@ -66,6 +66,7 @@ Rails.application.routes.draw do
       resources :users, only: %i[show create update] do
         post 'change_password'
         get 'forgot_password', on: :collection
+        get 'resend_verify_user_email'
       end
 
       get 'pricing/', to: 'prices#index', as: :pricing

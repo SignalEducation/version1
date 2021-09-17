@@ -8,9 +8,7 @@
         Email Verification
         %span Required
       %p.mt-1.mb-2
-        To access this content you will need to 
-        %br
-        verify your email address.
+        =verify_email_message(current_user.verify_remain_days)
       %p.mb-3
         Check your inbox 
       .upgradIllustration
@@ -21,5 +19,8 @@
           =link_to resend_verification_mail_url(current_user.email_verification_code), method: :post, class: 'btn btn-dark verify-btn' do
             ='Resend Email'
 
-
+:javascript
+  $(document).ready(function(){
+      $('#verification-required').modal('show');
+  });
 

@@ -201,7 +201,7 @@
 =render partial: 'pricing_modal'
 - if current_user
   =render partial: 'subscription_restriction_modal'
-  =render partial: 'verification_restriction_modal'
+  =render partial: 'verification_restriction_modal' if current_user&.verify_remain_days&.zero?
   =render partial: 'related_lesson_restriction_modal'
 -# - if @welcome_video
 -#   =render partial: 'welcome_video_modal'

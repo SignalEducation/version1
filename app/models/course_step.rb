@@ -184,7 +184,7 @@ class CourseStep < ApplicationRecord
     previous_restriction = previous_cme_restriction(scul)
 
     result =
-      if user.non_verified_user?
+      if user.show_verify_email_message? && !user.valid_subscription?
         { view: false, reason: 'verification-required' }
       elsif user.complimentary_user? || user.non_student_user? || user.lifetime_subscriber?(course.group)
         available_for_complimentary(scul)

@@ -10,9 +10,13 @@ json.address                         user.address
 json.user_group                      user.user_group.name
 json.guid                            user.guid
 json.address                         user.address
+json.valid_subscription              user.valid_subscription?
 json.email_verification_code         user.email_verification_code
 json.email_verified_at               user.email_verified_at
 json.email_verified                  user.email_verified
+json.verify_remain_days              user.verify_remain_days
+json.verify_email_message            verify_email_message(remain_days)
+json.show_verify_email_message       user.show_verify_email_message?
 json.free_trial                      user.free_trial
 json.terms_and_conditions            user.terms_and_conditions
 json.date_of_birth                   user.date_of_birth
