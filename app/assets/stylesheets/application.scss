@@ -442,7 +442,7 @@ code {
 }
 @media (min-width:1200px) {
   .container {
-    max-width: 1280px;
+    max-width: 1120px;
     padding-right: 0;
     padding-left: 0;
   }
@@ -518,11 +518,11 @@ code {
   display: block;
   width: 100%;
   height: auto;
-  padding: 0.5rem 0.875rem;
+  padding: 0.5rem 1rem;
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 700;
   line-height: 1.5;
-  color: #000032;
+  color: #111827;
   background-color: #FFF;
   background-clip: padding-box;
   border: 1px solid #D1D5DB;
@@ -4051,12 +4051,9 @@ cite {
   width: 3.125rem;
   height: 3.125rem
 }
-.form-control {
-  padding: 0.5rem 0.875rem;
-}
 @media (min-width:576px) {
   .form-control {
-    padding: 0.5rem 0.875rem;
+    padding: 0.5rem 1rem;
   }
 }
 .form-control.is-invalid {
@@ -4088,7 +4085,7 @@ label {
   margin-bottom: 0.2rem;
   font-size: .875rem;
   font-weight: 500;
-  color: #212529;
+  color: #6B7280;
 }
 @media (min-width:576px) {
   .label,
@@ -4469,6 +4466,7 @@ a.card:hover .card-title .card-explanation {
 .logo {
   max-width: 7rem;
   padding-right: 4px;
+  padding-top: 2px;
 }
 .partner-logo-2 {
   padding-top: 7em !important;
@@ -4481,8 +4479,10 @@ a.card:hover .card-title .card-explanation {
 }
 @media (min-width:768px) {
   .logo {
-    max-width: 8rem;
-    padding-right: 4px;
+    max-width: 9rem;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
   }
 }
 .hero-section {
@@ -4817,9 +4817,7 @@ a.card:hover .card-title .card-explanation {
 }
 @media screen and (min-width:1472px) {
   .home-hero-container {
-    max-width: 1472px;
-    padding-left: -webkit-calc(((1472px - 1280px)/ 2) + 1rem);
-    padding-left: calc(((1472px - 1280px)/ 2) + 1rem)
+    max-width: 1120px;
   }
 }
 .home-hero {
@@ -5133,7 +5131,7 @@ a.card:hover .card-title .card-explanation {
     margin: 0 !important;
   }
   @include if-device(phone) {
-    position: fixed;
+    position: relative;
     z-index: 1000;
     bottom: 0;
     left: 0;
@@ -8737,7 +8735,10 @@ button.sub-details[aria-expanded="true"]:before{
       height: 100%;
     }
     .logo {
-      padding-top: 3px;
+      padding-top: 0;
+      padding-bottom: 0;
+      padding-right: 0;
+      max-width: 8rem;
     }
     .header-title {
       font-weight: bold;
@@ -8896,9 +8897,10 @@ button.sub-details[aria-expanded="true"]:before{
       height: 34px;
       border-radius: 100%;
       background-color: transparent;
-      color: #657786;
+      color: #111827;
       margin: 0;
-      margin-top: 1px;
+      margin-top: 0;
+      margin-right: -8px;
       padding: 0;
       font-size: 24px;
       border: none;
