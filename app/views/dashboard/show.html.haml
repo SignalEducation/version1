@@ -27,23 +27,20 @@
 
       %section.dashboard__contentContainer.border-top.bg-gray5
         .container.d-flex.flex-sm-row.dashboard__wrapper
-          .col-md-12.col-lg-9.p-0
-            #dashboardTabsContent.tab-content
-              -if @enrollments.any?
-                #enrollments.tab-pane.show.active.tab-dashboard.tab-enrollments{"aria-labelledby" => "enrollments-tab", :role => "tabpanel"}
-                  =render partial: 'enrollments'
+          #dashboardTabsContent.tab-content
+            -if @enrollments.any?
+              #enrollments.tab-pane.show.active.tab-dashboard.tab-enrollments{"aria-labelledby" => "enrollments-tab", :role => "tabpanel"}
+                =render partial: 'enrollments'
 
-                #activity.tab-pane.tab-account.tab-dashboard{"aria-labelledby" => "activity-tab", :role => "tabpanel"}
-                  =render partial: 'activity'
-              -else
-                #activity.tab-pane.tab-account.active.tab-dashboard{"aria-labelledby" => "activity-tab", :role => "tabpanel"}
-                  =render partial: 'activity'
+              #activity.tab-pane.tab-account.tab-dashboard{"aria-labelledby" => "activity-tab", :role => "tabpanel"}
+                =render partial: 'activity'
+            -else
+              #activity.tab-pane.tab-account.active.tab-dashboard{"aria-labelledby" => "activity-tab", :role => "tabpanel"}
+                =render partial: 'activity'
 
-              -if current_user.exercises.any?
-                #exercises.tab-pane.show.tab-dashboard.tab-exercises{"aria-labelledby" => "exercises-tab", :role => "tabpanel"}
-                  =render partial: 'exercises'
-          .col-md-0.col-lg-3
-            .dashboardActions
+            -if current_user.exercises.any?
+              #exercises.tab-pane.show.tab-dashboard.tab-exercises{"aria-labelledby" => "exercises-tab", :role => "tabpanel"}
+                =render partial: 'exercises'
 
 
 
