@@ -1,97 +1,157 @@
-%main
-  %article.bg-white
-    .container
-      -# %header.hero-section.px-0.pb-0
-      -#   %h1.h2-hero.mb-2.text-left
-      -#     Purchase
-      -#   -# %p.p-hero.px-lg-12.text-left
-      -#   -#   =order_short_description(@order)
+%main.subscriptionPageWrapper
+  .subscriptionPageWrapper-header.navbar.navbar-expand-lg
+    .container.p-0.d-flex.align-items-center.justify-content-start
+      =link_to pricing_url('acca'), class: 'main-header-backBtn' do
+        .i.material-icons{:style => "font-size: 20px;margin-right: 12px;margin-top: 6px;"} arrow_back
+      .main-header-content
+        .container.subscriptionPageWrapper-logo.hidden-xs
+          =link_to pricing_url('acca'), class: 'navbar-brand logo' do
+            =image_tag('Learnsignal-Logo.svg', class: 'logo-img', alt: "LearnSignal Logo")
+        -# %div.header-title-lesson.visible-xs
+        -#   = 'Purchase'
+      #navbarNavDropdown.collapse.navbar-collapse.justify-content-end
+        %ul.navbar-nav.align-items-lg-center
+          -if current_user
+            %li.nav-item.dropdown
+              %a#navbarDropdown.navbar-login.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
+                .nav-login-box
+                  %span.navbar-login-userName
+                    =current_user.first_name.to_s
+                    =current_user.last_name.to_s
+                    %span.navbar-login-userEmail
+                      =current_user.email
+              .dropdown-menu.dropdown-menu-right{"aria-labelledby" => "navbarDropdown"}
+                =link_to t('views.users.show.h1'), account_url, class: 'nav-link dropdown-item'
+                =link_to t('views.general.log_out'), sign_out_url, class: 'nav-link dropdown-item logout'
 
-      -if flash[:success] || flash[:error] || flash[:warning]
-        =render partial: 'layouts/flash_messages'
+          -else
+            %li.nav-item.w-100.text-center.py-2
+              =link_to 'Login', sign_in_url, {class: 'nav-link'}
+            %li.nav-item.w-100.text-center.py-2
+              =link_to new_student_url, class: 'btn btn-primary nav-link px-4' do
+                %span Register
 
-      %section.pb-md-3.pb-2
-        .order-checkout-section
-          .container.p-0#product_purchase
-            =form_for([@product, @order], html: {id: 'orders-form', class: 'payment', role: 'form'}) do |f|
-              =f.hidden_field :product_id, value: @order.product.id
-              =f.hidden_field :stripe_payment_method_id
-              =f.hidden_field :use_paypal, value: false
-              =render partial: '/layouts/error_messages', locals: {thing: @order, message: nil}
 
-              .row
-                .col-lg-6.mb-5.mb-xl-0
+
+  %article.subscriptionPageWrapper-coreWrapper.container
+    %section.pb-4#wrapper
+      #product_purchase
+        =form_for([@product, @order], html: {id: 'orders-form', role: 'form'}) do |f|
+          =f.hidden_field :product_id, value: @order.product.id
+          =f.hidden_field :stripe_payment_method_id
+          =f.hidden_field :use_paypal, value: false
+          =render partial: '/layouts/error_messages', locals: {thing: @order, message: nil}
+          
+          %div
+            .container
+              -if flash[:success] || flash[:error] || flash[:warning]
+                .row.subscription-flash
+                  .col-xs-12
+                    =render partial: 'layouts/flash_messages'
+
+            .container.p-0
+              .subscriptionPageWrapper-infoBox
+                .subscriptionPageWrapper-detailsBox
                   %header.mb-4
                     %h1.h2-hero.mb-2.text-left
                       Purchase
-                  .row
-                    .col-lg-12
-                      .text-left.mb-5
-                        .d-flex.py-0
-                          .mr-4
-                            =product_icon(@order.product)
-                          %div
-                            .mb-2
-                              .text-left
-                                %span{style: 'font-size: 1.5rem;line-height: 2rem;color: #00b67b;font-weight: 700;'}
-                                  =number_in_local_currency(@order.product.price, @order.product.currency)
-                            %div.h3.mb-1.text-black
-                              =@order.product.name_by_type
-                            %div.h5.mb-2.text-gray1
-                              =order_short_description(@order)
+                  .col-lg-12.p-0
+                    .text-left.mb-5
+                      .d-flex.py-0
+                        .mr-2
+                          =product_icon(@order.product)
+                        %div
+                          .mb-2
+                            .text-left
+                              %span{style: 'font-size: 1.5rem;line-height: 2rem;color: #00b67b;font-weight: 700;'}
+                                =number_in_local_currency(@order.product.price, @order.product.currency)
+                          %div.h3.mb-1.text-black
+                            =@order.product.name_by_type
+                          %p.mb-2.text-gray1
+                            =order_short_description(@order)
                   .px-4{style: 'background-color: #f5f5f7;padding: 2rem;border-radius: 16px;'}
                     %p.text-left
                       =order_description(@order)
+                    
+                  -if @order.product.faqs.any?
+                    %article.bg-white
+                      .container
+                        %header.hero-section.px-0.pb-0
+                          %h3.h2-hero.mb-2.text-left.text-gray2
+                            FAQs
+                        .row
+                          .col-sm-12
+                            %section.px-md-12.pb-6
+                              -@order.product.faqs.each do |faq|
+                                .faq-box.faq-quest-box
+                                  .faq-inner.narrow{onclick: '$(this).toggleClass("narrow"); $(this).find(".faq-answer").toggleClass("d-md-block"); $(this).find(".faq-answer-expanded").toggleClass("d-none"); $(this).find(".closed-icon").toggleClass("d-none"); $(this).find(".opened-icon").toggleClass("d-none");'}
+                                    .faq-title
+                                      .p.m-0{style: 'width: calc(100% - 24px);'}
+                                        =faq.question_text.html_safe
+                                      %i.material-icons.closed-icon{style: 'position: absolute;right: 14px;top: 14px;'} keyboard_arrow_down
+                                      %i.material-icons.opened-icon.d-none{style: 'position: absolute;right: 14px;top: 14px;'} keyboard_arrow_up
+                                    .faq-answer-expanded.d-none
+                                      =faq.answer_text.html_safe
 
-                .col-lg-6.paymentOptionBox
+                .subscriptionPageWrapper-optionsBox
                   %fieldset.card.card-payments
-                    %p.h3.mb-1.text-black Choose a way to pay
-                    %p.mb-4 Select your preferred method of payment
-                    .form-group.form-group-expandable
-                      .custom-control.custom-radio
-                        %input#pay-with-card.custom-control-input.style-radio{:name => "payment-options", :type => "radio", :value => 'stripe', checked: true}
-                        %label.custom-control-label{:for => "pay-with-card"}
-                          %span.custom-label-info
-                            %span.h3.m-0
-                              =image_tag('ico-card.svg', :alt => "Credit Card Icon", :class => 'logo-icon.mr-2.mr-sm-3')
-                              %span Credit / Debit Card
-                          %span.custom-check
-                      =render partial: 'orders/order_card_form', locals: {f: f}
-                    .form-group.form-group-expandable
-                      .custom-control.custom-radio
-                        %input#pay-with-paypal.custom-control-input.style-radio{:name => "payment-options", :type => "radio", :value => 'paypal'}
-                        %label.custom-control-label{:for => "pay-with-paypal"}
-                          %span.custom-label-info
-                            %span.h3.m-0
-                              =image_tag('ico-paypal.svg', :alt => "PayPal Logo", :class => 'logo-icon.mr-2.mr-sm-3')
-                              %span PayPal
-                          %span.custom-check
-                      =render partial: 'orders/paypal_form', locals: {f: f}
+                    .subscriptionPageWrapper-paymentOptionsWrapper
+                      .subscriptionPageWrapper-paymentOptionsWrapper-optionForm.js-option-wrapper-stripe
+                        .subscriptionPageWrapper-paymentOptionsWrapper-header
+                          %span Pay with Card
+                          .subscriptionPageWrapper-optionsBox-optionTabs
+                            .subscriptionPageWrapper-optionsBox-optionTabs-Tab
+                              .custom-control.custom-radio
+                                %input#pay-with-paypal.custom-control-input.style-radio{name: 'payment-options', type: 'radio', value: 'paypal'}
+                                %label{for: 'pay-with-paypal'}
+                                  %span.custom-label-info
+                                    %span.0.m-0
+                                      %span Or Pay with 
+                                      %span PayPal
+                        =render partial: 'orders/order_card_form', locals: {f: f}
+                        
+                      .subscriptionPageWrapper-paymentOptionsWrapper-optionForm.js-option-wrapper-paypal
+                        .subscriptionPageWrapper-paymentOptionsWrapper-header
+                          %span Pay with PayPal
+                          .subscriptionPageWrapper-optionsBox-optionTabs
+                            .subscriptionPageWrapper-optionsBox-optionTabs-Tab
+                              .custom-control.custom-radio
+                                %input#pay-with-card.custom-control-input.style-radio{ name: 'payment-options', type: 'radio', value: 'stripe', checked: true }
+                                %label{ for: 'pay-with-card' }
+                                  %span.custom-label-info
+                                    %span Pay with 
+                                    %span Card
+                        =render partial: 'orders/paypal_form', locals: {f: f}
+                  
 
-            -# .px-4{style: 'background-color: #f5f5f7;padding: 2rem;border-radius: 16px;'}
-            -#   %p.text-left
-            -#     =order_description(@order)
+
+                      -# .form-group.form-group-expandable
+                      -#   .custom-control.custom-radio
+                      -#     %input#pay-with-card.custom-control-input.style-radio{:name => "payment-options", :type => "radio", :value => 'stripe', checked: true}
+                      -#     %label.custom-control-label{:for => "pay-with-card"}
+                      -#       %span.custom-label-info
+                      -#         %span.h3.m-0
+                      -#           =image_tag('ico-card.svg', :alt => "Credit Card Icon", :class => 'logo-icon.mr-2.mr-sm-3')
+                      -#           %span Credit / Debit Card
+                      -#       %span.custom-check
+                      -#   =render partial: 'orders/order_card_form', locals: {f: f}
+                      -# .form-group.form-group-expandable
+                      -#   .custom-control.custom-radio
+                      -#     %input#pay-with-paypal.custom-control-input.style-radio{:name => "payment-options", :type => "radio", :value => 'paypal'}
+                      -#     %label.custom-control-label{:for => "pay-with-paypal"}
+                      -#       %span.custom-label-info
+                      -#         %span.h3.m-0
+                      -#           =image_tag('ico-paypal.svg', :alt => "PayPal Logo", :class => 'logo-icon.mr-2.mr-sm-3')
+                      -#           %span PayPal
+                      -#       %span.custom-check
+                      -#   =render partial: 'orders/paypal_form', locals: {f: f}
+
+              -# .px-4{style: 'background-color: #f5f5f7;padding: 2rem;border-radius: 16px;'}
+              -#   %p.text-left
+              -#     =order_description(@order)
 
 
-  -if @order.product.faqs.any?
-    %article.bg-white
-      .container
-        %header.hero-section.px-0.pb-0
-          %h3.h2-hero.mb-2.text-left.text-gray2
-            FAQs
-        .row
-          .col-sm-12
-            %section.px-md-12.pb-6
-              -@order.product.faqs.each do |faq|
-                .faq-box.faq-quest-box
-                  .faq-inner.narrow{onclick: '$(this).toggleClass("narrow"); $(this).find(".faq-answer").toggleClass("d-md-block"); $(this).find(".faq-answer-expanded").toggleClass("d-none"); $(this).find(".closed-icon").toggleClass("d-none"); $(this).find(".opened-icon").toggleClass("d-none");'}
-                    .faq-title
-                      .p.m-0{style: 'width: calc(100% - 24px);'}
-                        =faq.question_text.html_safe
-                      %i.material-icons.closed-icon{style: 'position: absolute;right: 14px;top: 14px;'} keyboard_arrow_down
-                      %i.material-icons.opened-icon.d-none{style: 'position: absolute;right: 14px;top: 14px;'} keyboard_arrow_up
-                    .faq-answer-expanded.d-none
-                      =faq.answer_text.html_safe
+    
 
 :javascript
 
@@ -106,13 +166,23 @@
 
   $(document).on('ready', function() {
 
-    $('#pay-with-card').closest('.custom-control').siblings('.payment-details').slideDown();
-    $('#pay-with-paypal').closest('.custom-control').siblings('.payment-details').slideUp();
-    selectPaymentMethod($('.form-group-expandable').val(), false);
+    // $('#pay-with-card').closest('.custom-control').siblings('.payment-details').slideDown();
+    // $('#pay-with-paypal').closest('.custom-control').siblings('.payment-details').slideUp();
+    // selectPaymentMethod($('.form-group-expandable').val(), false);
+    $('.js-option-wrapper-stripe').addClass('active');
 
-    $('.form-group-expandable').on('change', '.custom-control-input[type="radio"][name="payment-options"]', function() {
+    $('.subscriptionPageWrapper-optionsBox-optionTabs').on('change', '.custom-control-input[type="radio"][name="payment-options"]', function() {
       $(this).closest('.card').find('.custom-control-input[type="radio"]').closest('.custom-control').siblings('.payment-details').slideUp();
       if ($(this).is(':checked')) {
+        if ($(this).val() == 'stripe') {
+          $('.js-option-wrapper-paypal').removeClass('active');
+          $('.js-option-wrapper-stripe').addClass('active');
+        } else {
+          $('.js-option-wrapper-paypal').addClass('active');
+          $('.js-option-wrapper-stripe').removeClass('active');
+
+        }
+        
         $(this).closest('.custom-control').siblings('.payment-details').slideDown();
         selectPaymentMethod($(this).val(), true);
         $('#stripe_terms_and_conditions').prop('required', true);
@@ -156,21 +226,25 @@
       base: {
         color: '#32325d',
         lineHeight: '18px',
-        fontFamily: '"Manrope", "Helvetica Neue", Helvetica, sans-serif',
+        fontFamily: '"Manrope", sans-serif',
         fontSmoothing: 'antialiased',
         fontSize: '16px',
+        fontWeight: '500',
         '::placeholder': {
-          color: '#aab7c4'
+          color: '#9CA3AF'
         }
       },
       invalid: {
-        color: '#fa755a',
-        iconColor: '#fa755a'
+        color: '#fd5c63',
+        iconColor: '#fd5c63',
+        fontWeight: '500',
       }
     };
 
     var stripe = Stripe('#{ENV['LEARNSIGNAL_V3_STRIPE_PUBLIC_KEY']}');
     var elements = stripe.elements();
+
+    console.log(elements);
 
     var card = elements.create('card', {hidePostalCode: true, style: style});
     card.mount('#card-element');

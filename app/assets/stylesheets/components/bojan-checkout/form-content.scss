@@ -41,18 +41,16 @@ $sans-font: 'Manrope', sans-serif;
 
   .strike {
     position: relative;
-
     font-weight: bold;
+    color: #888;
     &:before {
       position: absolute;
-      content: '';
-      left: 6%;
-      top: 35%;
-      right: 2%;
-      border-top: 0.1em solid #fd5c63;
-      -webkit-transform: skewY(-6deg);
-      -moz-transform: skewY(-6deg);
-      transform: skewY(-6deg);
+      content: ' ';
+      left: -20px;
+      top: 14px;
+      right: -20px;
+      border-top: 2px solid #888;
+      transform: skewY(0deg);
     }
   }
 
@@ -62,7 +60,8 @@ $sans-font: 'Manrope', sans-serif;
   font-size: 16px;
   font-family: $sans-font;
   h1, h2, .h2, h3, h4 {
-    color: #424366;
+    color: #111827;
+    font-size: 1.875rem;
   }
   .h2 {
     font-weight: 500;
@@ -82,8 +81,8 @@ $sans-font: 'Manrope', sans-serif;
   }
   .btn {
     &:not(:disabled):not(.disabled) {
-      margin-left: 2px;
-      padding: .525rem .75rem;
+      margin-left: 0;
+      padding: 0.8rem 1rem;
       cursor: pointer;
     }
     &.btn-text{
@@ -144,7 +143,7 @@ $sans-font: 'Manrope', sans-serif;
   }
   .h1,
   h1 {
-    font-size: 2rem;
+    font-size: 24px;
   }
   .h2,
   h2 {
@@ -209,20 +208,20 @@ $sans-font: 'Manrope', sans-serif;
 
 
   .form-control {
-    padding: 1.35em .75em
+    padding: 0.5rem 1rem;
   }
   @media (min-width:576px) {
     .form-control {
-      padding: 1.35em 0.75em
+      padding: 0.5rem 1rem;
     }
   }
   .form-control.coupon-error,
   .form-control:valid.coupon-error {
-    border:2px solid #f34664!important;
+    border:1px solid #f34664!important;
   }
   .form-control.coupon-success,
   .form-control:valid.coupon-success {
-    border:2px solid #00b67B!important;
+    border:1px solid #00b67B!important;
   }
 
 
@@ -235,16 +234,16 @@ $sans-font: 'Manrope', sans-serif;
   .form-control.is-valid,
   .form-control:valid {
     border-color: #d1d5da!important;
-    -webkit-box-shadow: none;
-    box-shadow: none
+    // -webkit-box-shadow: none;
+    // box-shadow: none
   }
   .form-control.is-valid.focus,
   .form-control.is-valid:focus,
   .form-control:valid.focus,
   .form-control:valid:focus {
     border-color: #7f8599!important;
-    -webkit-box-shadow: none!important;
-    box-shadow: none!important
+    // -webkit-box-shadow: none!important;
+    // box-shadow: none!important
   }
   .change_plan {
     background-color: #fff;
@@ -411,7 +410,7 @@ $sans-font: 'Manrope', sans-serif;
   @media (min-width:576px) {
     .custom-control.custom-checkbox .custom-control-input.custom-control-input-card + label,
     .custom-control.custom-radio .custom-control-input.custom-control-input-card + label {
-      padding: 1em 1.6em
+      padding: 1rem;
     }
   }
   .custom-control.custom-checkbox .custom-control-input.custom-control-input-card + label span,
@@ -495,12 +494,20 @@ $sans-font: 'Manrope', sans-serif;
   }
   .custom-control.custom-checkbox .custom-control-input.custom-control-input-card:checked + label,
   .custom-control.custom-radio .custom-control-input.custom-control-input-card:checked + label {
-    border-color: #00B67A;
-    background-color: #ECFDF5;
+    // border-color: #3B82F6;
+    // background-color: transparent;
+
+    border-color: transparent;
+    background: #fafafa;
+    border-radius: 6px;
+    box-shadow: 0 0 0 1px #e0e0e0, 0 2px 4px 0 rgba(0, 0, 0, 0.07), 0 1px 1.5px 0 rgba(0, 0, 0, 0.05);
+
+
+
   }
   .custom-control.custom-checkbox .custom-control-input.custom-control-input-card:checked + label > .custom-check,
   .custom-control.custom-radio .custom-control-input.custom-control-input-card:checked + label > .custom-check {
-    border-color: #00b67B
+    border-color: #3B82F6;
   }
   .custom-control.custom-checkbox .custom-control-input.custom-control-input-card.alt + label > .custom-label-info,
   .custom-control.custom-radio .custom-control-input.custom-control-input-card.alt + label > .custom-label-info {
@@ -615,7 +622,7 @@ $sans-font: 'Manrope', sans-serif;
   }
   .payment {
     padding: 2rem 0;
-    color: #7f8599
+    // color: #7f8599
   }
   @media (min-width:576px) {
     .payment {
@@ -623,15 +630,15 @@ $sans-font: 'Manrope', sans-serif;
       padding-bottom: 4em
     }
   }
-  .payment-details {
-    display: none;
-    padding: .5em .75em 1.5em .75em
-  }
-  @media (min-width:576px) {
-    .payment-details {
-      padding: .5em 1.5em 2.5em 1.5em
-    }
-  }
+  // .payment-details {
+  //   display: none;
+  //   padding: .5em .75em 1.5em .75em
+  // }
+  // @media (min-width:576px) {
+  //   .payment-details {
+  //     padding: .5em 1.5em 2.5em 1.5em
+  //   }
+  // }
   .payment-details .input-group {
     display: block
   }

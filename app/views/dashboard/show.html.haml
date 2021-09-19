@@ -27,7 +27,7 @@
 
       %section.dashboard__contentContainer.border-top.bg-gray5
         .container.d-flex.flex-sm-row.dashboard__wrapper
-          #dashboardTabsContent.tab-content
+          #dashboardTabsContent.tab-content.w-100
             -if @enrollments.any?
               #enrollments.tab-pane.show.active.tab-dashboard.tab-enrollments{"aria-labelledby" => "enrollments-tab", :role => "tabpanel"}
                 =render partial: 'enrollments'

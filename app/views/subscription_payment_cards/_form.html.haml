@@ -2,33 +2,46 @@
   .form-group.cc
     #card-element
     #card-errors.invalid-details{role: 'alert'}
-  .form-group{style: 'margin-bottom: 0;'}
-    .col-sm-6{style: 'padding-left: 0;'}
+  .form-group.text-right{style: 'margin-bottom: 0;'}
+    %span.custom-label-info.coupon-code-btn.js-coupon-code-btn
+      %span Have a Coupon code?
+
+    %div.js-coupon-input-box.hidden{style: 'padding-left: 0;'}
       %input{type: 'text_field', id: 'coupon_code', class: 'form-control', placeholder: 'Coupon Code'}
       .invalid-code.invalid-details
         ='Invalid Code'
 
   .row
-    .col-sm-6.mb-2.mt-sm-4
-      .discounted-price
-        %h4.m-0
-          Discounted Total:
-
-          %span.value#discounted-value
-
+    .col-sm-12.mb-2.mt-3.mt-sm-4{style: 'border-top: 1px solid #e0e0e0;'}
       .price
-        %h4.m-0
-          Total:
-          = @plans.first.currency.leading_symbol
-          %span.value#stripe-total-value
+        %h4.m-0.mt-4.d-flex.justify-content-between
+          %span Total:
+          %span
+            =@plans.first.currency.leading_symbol
+            %span.value#stripe-total-value
+      %p.billing-summary.text-right Billed every month
 
-      %p.billing-summary Billed every month
+      .discounted-price
+        %h4.m-0.mt-4
+          %h4.m-0.mt-4.d-flex.justify-content-between
+            %span Discounted Total:
+            %span
+              -# =@plans.first.currency.leading_symbol
+              %span.value#discounted-value
 
-
-    .col-sm-6.mb-2.mt-sm-4
+    .col-xl-12.mb-4.mt-sm-4
       = f.button :submit, class: 'btn btn-primary w-100 mb-3', id: 'card_submit' do
-        Subscribe Now
+        %span Subscribe Now
 
-      %button.btn.btn-primary.spinning-loading{:disabled => "disabled", :type => "button"}
+      %button.btn.btn-primary.w-100.mb-3.spinning-loading{:disabled => "disabled", :type => "button"}
         %span.spinner-border.spinner-border-sm{"aria-hidden" => "true", :role => "status"}
         %span.spinner-message
+
+:javascript
+  $(document).on('ready', function() {
+    $('.js-coupon-code-btn').on('click', function() {
+      $('.js-coupon-input-box').show();
+      $('.js-coupon-input-box input')[0].focus();
+      $('.js-coupon-code-btn').hide();
+    });
+  });

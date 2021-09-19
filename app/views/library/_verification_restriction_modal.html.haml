@@ -1,4 +1,4 @@
-.modal.fade-scale{id: 'verification-required', tabindex: '-1', role: 'dialog', 'aria-labelledby': 'verificationRequired', 'aria-hidden': 'true'}
+.modal.fade{id: 'verification-required', tabindex: '-1', role: 'dialog', 'aria-labelledby': 'verificationRequired', 'aria-hidden': 'true'}
   .modal-dialog.verification-modal{role: 'document'}
     .modal-content
       %button.btn.btn-icon.modal-close{'data-dismiss': 'modal'}
@@ -11,7 +11,7 @@
         =verify_email_message(current_user.verify_remain_days)
       %p.mb-3
         Check your inbox 
-      .upgradIllustration
+      .upgradeIllustration
         =image_tag('illustrations/upgrade-illustration-v1@2x.png', alt: 'upgrade')
 
       .modal-footer

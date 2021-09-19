@@ -271,6 +271,7 @@
 
       @include if-device(phone) {
         border-top: none;
+        margin-bottom: 24px;
       }
     }
     .bulletList {

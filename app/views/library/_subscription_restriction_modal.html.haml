@@ -8,7 +8,7 @@
         Unlock the 
         %span full experience 
         by getting your subcription today.
-      .upgradIllustration
+      .upgradeIllustration
         =image_tag('illustrations/upgrade-illustration-v1@2x.png', alt: 'upgrade')
         -# %p.mb-2
         -#   Enhance your study experience with these additional resources:
@@ -29,5 +29,7 @@
             =link_to 'Resolve Issue!', account_url(anchor: 'account-info')
 
       .modal-footer
-        =link_to 'View Pricing Plans', subscription_checkout_special_link(@group.exam_body_id), class: 'btn btn-dark upgrade-btn', title: 'Get Unlimited Access'
+        -# =link_to 'View Pricing Plans', subscription_checkout_special_link(@group.exam_body_id), class: 'btn btn-dark upgrade-btn', title: 'Get Unlimited Access'
+        =link_to 'View Pricing Plans', pricing_url(@group.name_url), class: 'btn btn-dark upgrade-btn', title: 'Get Unlimited Access'
+        
 

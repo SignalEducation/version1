@@ -1,5 +1,5 @@
 -if current_user.exercises.any?
-  .col-md-12.col-lg-9.p-0
+  .col-md-12.col-lg-12.p-0
     -if current_user.exercises.with_states([:submitted, :correcting]).any?
       -current_user.exercises.with_states([:submitted, :correcting]).each do |exercise|
         - if @cancelled_orders_id.exclude? exercise.order_id
@@ -60,7 +60,7 @@
 
 
 -else
-  .col-md-12.col-lg-9.p-0
+  .col-md-12.col-lg-12.p-0
     .row.row-lg
       .col-sm
         =render partial: 'purchase_products'
