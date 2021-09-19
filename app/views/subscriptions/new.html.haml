@@ -7,12 +7,14 @@
         .container.subscriptionPageWrapper-logo.hidden-xs
           =link_to pricing_url(@exam_body.name), class: 'navbar-brand logo' do
             =image_tag('Learnsignal-Logo.svg', class: 'logo-img', alt: "LearnSignal Logo")
-        -if @plans && @plans.first
-          %div.header-title-lesson.visible-xs
-            = "#{@plans.first.exam_body.name} Tuition Payment"
-        -else
-          %div.header-title-lesson.visible-xs
-            = 'Exam Tuition Payment'
+        %div.header-title-lesson.visible-xs
+          = 'Payment'
+        -# -if @plans && @plans.first
+        -#   %div.header-title-lesson.visible-xs
+        -#     = "#{@plans.first.exam_body.name} Tuition Payment"
+        -# -else
+        -#   %div.header-title-lesson.visible-xs
+        -#     = 'Exam Tuition Payment'
       #navbarNavDropdown.collapse.navbar-collapse.justify-content-end
         %ul.navbar-nav.align-items-lg-center
           -if current_user
@@ -38,7 +40,7 @@
 
 
   %article.subscriptionPageWrapper-coreWrapper.container
-    %section.pb-4#wrapper
+    %section.pb-2#wrapper
       #upgrade-subscription
         =form_for @subscription, url: subscriptions_path, html: { id: 'upgrade-form', role: 'form' } do |f|
           =render partial: 'layouts/error_messages', locals: { thing: @subscription, message: t('views.users.upgrade_subscription.error_panel_caption') }
@@ -78,7 +80,7 @@
                     -# subscriptions helper
                     =plans_partials(params, @subscription, @plans)
                 .subscriptionPageWrapper-optionsBox
-                  %fieldset.card.card-payments
+                  %fieldset.card.card-payments.m-0
                     -# %p.h4.mb-1.text-black Choose a way to pay
                     -# %p.mb-4 Select your preferred method of payment
                     -# %span.h3.m-0.mb-4.subscriptionPageWrapper-optionsBox-header

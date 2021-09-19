@@ -2,45 +2,58 @@
   %article
     .container-bg
       .container
-        %article.py-4
+        %article.py-5
           %header.text-center.pb-3.pb-md-4
+            %div.heroSubtext
+              ="#{@group&.name} PRICING"
             %div.heroTitle
-              -if @group&.exam_body&.pricing_heading
-                =@group.exam_body.pricing_heading
-              -else
-                ="#{@group&.name} Payment Plans"
+              Our subscriptions fit your needs 💶
+            -# %div.heroTitle
+            -#   -if @group&.exam_body&.pricing_heading
+            -#     =@group.exam_body.pricing_heading
+            -#   -else
+            -#     ="#{@group&.name} Payment Plans"
 
             %p.heroDesc
-              -if @group&.exam_body&.pricing_subheading
-                =@group.exam_body.pricing_subheading
-              -else
-                ="Instant Access to all #{@group&.name} Courses"
+              Customised pricing plans designed to fit in with your wallet and work.
+            -# %p.heroDesc
+            -#   -if @group&.exam_body&.pricing_subheading
+            -#     =@group.exam_body.pricing_subheading
+            -#   -else
+            -#     ="Instant Access to all #{@group&.name} Courses"
 
           -if @group
             .row.row-lg.justify-content-center
               -# PREMIUM CARDS
-              .col-lg-6.px-2
-                %article.planCard.planCard-popular
+              .col-lg-8.px-2
+                %article.planCard
                   .card-body.text-left.p-0
                     .tab-content
                       -@subscription_plans.each_with_index do |plan, counter|
                         .tab-pane{id: "nav-#{plan.guid}", class: "tab-#{plan.guid} #{counter == 0 ? 'active' : ''} ", "aria-labelledby" => "#{plan.guid}-tab", :role => "tabpanel"}
-                          %div.planTitleWrapper
-                            %div.planTitle
-                              Premium 
-                              %span.greenShade=t("views.general.payment_intervals.a#{plan.payment_frequency_in_months}")
-                              Plan
+                          %div.planInfoWrapper
+                            %div.planTitleWrapper
+                              %div.planTitle
+                                Premium 
+                                %span.greenShade=t("views.general.payment_intervals.a#{plan.payment_frequency_in_months}")
+                                Plan
+                              %ul.nav.nav-pills.plan-nav{id: 'planTabs', role: 'tablist', class:@subscription_plans.length < 2 && 'hidden'}
+                                -@subscription_plans.each_with_index do |navPlan, navCounter|
+                                  %li.nav-item{data: {tab_name: navPlan.guid}}
+                                    %a{class: "nav-link #{navCounter == counter ? 'active' : ''}", id: "#{navPlan.guid}-tab", data: {toggle: 'tab'}, href: "#nav-#{navPlan.guid}", aria: {controls: "#{navPlan.guid}", selected: 'false'}, role: 'tab'}
+                                      =t("views.general.payment_intervals.a#{navPlan.payment_frequency_in_months}")
                             %p.priceValue.mb-0.pb-4
                               %span.priceValue-actualPrice
                                 =plan.currency.format_number(plan.price)
                                 %span.priceValue-priceSuffix=t("views.general.payment_interval_shortSuffix.a#{plan.payment_frequency_in_months}")
-                              %span.priceValue-popularBadge
-                                Most popular
-                              -if plan.monthly_percentage_off
-                                %span.priceValue-savingPill
-                                  Save 
-                                  =plan.monthly_percentage_off
-                                  ='%'
+                              %span.d-flex.flex-column.align-items-center
+                                %span.priceValue-popularBadge
+                                  Most popular
+                                -if plan.monthly_percentage_off
+                                  %span.priceValue-savingPill.mt-1
+                                    Save 
+                                    =plan.monthly_percentage_off
+                                    ='%'
                           
                           .bulletListTitle.hidden-xs ⚡️ What do you get
                           %ul.hidden-xs.list-centered.text-left.bulletList{class:@subscription_plans.length < 2 && 'noPlanNav'}
@@ -56,7 +69,7 @@
                             -else
                               %li.mb-3
                                 .bulletIcon •
-                                %span="Access all #{@group.name} courses"
+                                %span="Access all #{@group && @group.name} courses"
                               %li.mb-3
                                 .bulletIcon •
                                 %span="Topic-by-topic lectures"
@@ -66,7 +79,7 @@
 
                           
                           -unless plan.exam_body.name == "CPD"
-                            %p.text-gray2.mt-4.mb-2.text-bold
+                            %p.preCtaText
                               Recurring Payment. Cancel Anytime
                           .mt-auto
                             =link_to subscription_checkout_special_link(plan.exam_body_id, plan.guid), class: "btn w-100 btn-primary choosePlanBtn", onclick: "addToCart('#{plan.currency.iso_code}', '#{plan.name}', '#{plan.id}', '#{plan.price}', '#{plan.exam_body.name}');" do
@@ -100,24 +113,26 @@
                                       %li.mb-3
                                         .bulletIcon •
                                         %span="24/7 tutor support"
-                    %ul.nav.nav-pills.plan-nav{id: 'planTabs', role: 'tablist', class:@subscription_plans.length < 2 && 'hidden'}
-                      -@subscription_plans.each_with_index do |plan, counter|
-                        %li.nav-item{data: {tab_name: plan.guid}}
-                          %a{class: "nav-link #{counter == 0 ? 'active' : ''}", id: "#{plan.guid}-tab", data: {toggle: 'tab'}, href: "#nav-#{plan.guid}", aria: {controls: "#{plan.guid}", selected: 'false'}, role: 'tab'}
-                            =t("views.general.payment_intervals.a#{plan.payment_frequency_in_months}")
+                    -# %ul.nav.nav-pills.plan-nav{id: 'planTabs', role: 'tablist', class:@subscription_plans.length < 2 && 'hidden'}
+                    -#   -@subscription_plans.each_with_index do |plan, counter|
+                    -#     %li.nav-item{data: {tab_name: plan.guid}}
+                    -#       %a{class: "nav-link #{counter == 0 ? 'active' : ''}", id: "#{plan.guid}-tab", data: {toggle: 'tab'}, href: "#nav-#{plan.guid}", aria: {controls: "#{plan.guid}", selected: 'false'}, role: 'tab'}
+                    -#         =t("views.general.payment_intervals.a#{plan.payment_frequency_in_months}")
               
               -# LIFETIME CARD
               -@products.each do |product|
                 -link = product_link(product, current_user, params[:login])
                 -name = product.name_by_type
-                .col-lg-6.px-2
-                  %article.planCard
+                .col-lg-8.px-2
+                  %article.planCard.planCard-light
                     .card-body.text-left.p-0
-                      %div.planTitleWrapper
-                        %div.planTitle
-                          -name
-                          %span.greenShade Lifetime
-                          Membership
+                      %div.planInfoWrapper
+                        %div.planTitleWrapper
+                          %div.planTitle
+                            -name
+                            %span.greenShade Lifetime
+                            Membership
+
                         %p.priceValue.mb-0.pb-4
                           %span.priceValue-actualPrice
                             =number_in_local_currency(product.price, product.currency)
@@ -136,7 +151,7 @@
                         %li.mb-3
                           .bulletIcon •
                           %span No hassle of renewals
-                      %p.text-gray2.mt-4.mb-2.text-bold
+                      %p.preCtaText
                         One-time payment
                       .mt-auto
                         = link_to 'Choose Lifetime', link, class: 'btn btn-primary choosePlanBtn w-100 ', onclick: "gtag('event', 'clicks_plan', {'event_category': 'pre-registration', 'event_label': '#{name}'});"
@@ -217,7 +232,7 @@
                                     -else
                                       %li.mb-3
                                         .bulletIcon •
-                                        %span="Access all #{@group.name} courses"
+                                        %span="Access all #{exam_body.group.name} courses"
                                       %li.mb-3
                                         .bulletIcon •
                                         %span="Topic-by-topic lectures"
@@ -254,7 +269,7 @@
                                             -else
                                               %li.mb-3
                                                 .bulletIcon •
-                                                %span="Access all #{@group.name} courses"
+                                                %span="Access all #{exam_body.group.name} courses"
                                               %li.mb-3
                                                 .bulletIcon •
                                                 %span="Topic-by-topic lectures"

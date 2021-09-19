@@ -7,8 +7,8 @@
         .container.subscriptionPageWrapper-logo.hidden-xs
           =link_to pricing_url('acca'), class: 'navbar-brand logo' do
             =image_tag('Learnsignal-Logo.svg', class: 'logo-img', alt: "LearnSignal Logo")
-        -# %div.header-title-lesson.visible-xs
-        -#   = 'Purchase'
+        %div.header-title-lesson.visible-xs
+          = 'Purchase'
       #navbarNavDropdown.collapse.navbar-collapse.justify-content-end
         %ul.navbar-nav.align-items-lg-center
           -if current_user
@@ -34,7 +34,7 @@
 
 
   %article.subscriptionPageWrapper-coreWrapper.container
-    %section.pb-4#wrapper
+    %section.pb-2#wrapper
       #product_purchase
         =form_for([@product, @order], html: {id: 'orders-form', role: 'form'}) do |f|
           =f.hidden_field :product_id, value: @order.product.id
@@ -52,7 +52,7 @@
             .container.p-0
               .subscriptionPageWrapper-infoBox
                 .subscriptionPageWrapper-detailsBox
-                  %header.mb-4
+                  %header.mb-4.hidden-xs
                     %h1.h2-hero.mb-2.text-left
                       Purchase
                   .col-lg-12.p-0
@@ -69,16 +69,16 @@
                             =@order.product.name_by_type
                           %p.mb-2.text-gray1
                             =order_short_description(@order)
-                  .px-4{style: 'background-color: #f5f5f7;padding: 2rem;border-radius: 16px;'}
+                  .hidden-xs.px-4{style: 'background-color: #f5f5f7;padding: 2rem;border-radius: 16px;'}
                     %p.text-left
                       =order_description(@order)
                     
                   -if @order.product.faqs.any?
-                    %article.bg-white
-                      .container
+                    %article.bg-white.hidden-xs
+                      .container.p-0
                         %header.hero-section.px-0.pb-0
-                          %h3.h2-hero.mb-2.text-left.text-gray2
-                            FAQs
+                          %h3.h2-hero.mb-2.text-left
+                            FAQs 🤔
                         .row
                           .col-sm-12
                             %section.px-md-12.pb-6
@@ -86,7 +86,7 @@
                                 .faq-box.faq-quest-box
                                   .faq-inner.narrow{onclick: '$(this).toggleClass("narrow"); $(this).find(".faq-answer").toggleClass("d-md-block"); $(this).find(".faq-answer-expanded").toggleClass("d-none"); $(this).find(".closed-icon").toggleClass("d-none"); $(this).find(".opened-icon").toggleClass("d-none");'}
                                     .faq-title
-                                      .p.m-0{style: 'width: calc(100% - 24px);'}
+                                      .div.m-0{style: 'width: calc(100% - 24px);'}
                                         =faq.question_text.html_safe
                                       %i.material-icons.closed-icon{style: 'position: absolute;right: 14px;top: 14px;'} keyboard_arrow_down
                                       %i.material-icons.opened-icon.d-none{style: 'position: absolute;right: 14px;top: 14px;'} keyboard_arrow_up
@@ -94,7 +94,7 @@
                                       =faq.answer_text.html_safe
 
                 .subscriptionPageWrapper-optionsBox
-                  %fieldset.card.card-payments
+                  %fieldset.card.card-payments.m-0
                     .subscriptionPageWrapper-paymentOptionsWrapper
                       .subscriptionPageWrapper-paymentOptionsWrapper-optionForm.js-option-wrapper-stripe
                         .subscriptionPageWrapper-paymentOptionsWrapper-header
@@ -145,6 +145,30 @@
                       -#           %span PayPal
                       -#       %span.custom-check
                       -#   =render partial: 'orders/paypal_form', locals: {f: f}
+
+                .visible-xs.px-4{style: 'background-color: #f5f5f7;padding: 1rem;border-radius: 16px;'}
+                  %p.text-left
+                    =order_description(@order)
+
+                -if @order.product.faqs.any?
+                  %article.bg-white.visible-xs
+                    .container.p-0
+                      %header.hero-section.px-0.pb-0
+                        %h3.h2-hero.mb-2.text-left
+                          FAQs 🤔
+                      .row
+                        .col-sm-12
+                          %section.px-md-12.pb-6
+                            -@order.product.faqs.each do |faq|
+                              .faq-box.faq-quest-box
+                                .faq-inner.narrow{onclick: '$(this).toggleClass("narrow"); $(this).find(".faq-answer").toggleClass("d-md-block"); $(this).find(".faq-answer-expanded").toggleClass("d-none"); $(this).find(".closed-icon").toggleClass("d-none"); $(this).find(".opened-icon").toggleClass("d-none");'}
+                                  .faq-title
+                                    .div.m-0{style: 'width: calc(100% - 24px);'}
+                                      =faq.question_text.html_safe
+                                    %i.material-icons.closed-icon{style: 'position: absolute;right: 14px;top: 14px;'} keyboard_arrow_down
+                                    %i.material-icons.opened-icon.d-none{style: 'position: absolute;right: 14px;top: 14px;'} keyboard_arrow_up
+                                  .faq-answer-expanded.d-none
+                                    =faq.answer_text.html_safe
 
               -# .px-4{style: 'background-color: #f5f5f7;padding: 2rem;border-radius: 16px;'}
               -#   %p.text-left

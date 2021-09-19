@@ -73,6 +73,10 @@
     line-height: 1.5rem;
     margin-bottom: .5rem;
     color:#0f482a;
+    text-align: center;
+    @include if-device(phone) {
+      text-align: left;
+    }
   }
   .heroTitle {
     font-size: 2.5rem;
@@ -129,7 +133,7 @@
       display: flex;
       flex-direction: column;
       background-color: transparent;
-      min-height: 480px;
+      min-height: 370px;
       @include if-device(phone) {
         min-height: auto;
       }
@@ -150,13 +154,13 @@
       align-items: center;
       flex-direction: row;
 
-      position: absolute;
-      top: 74px;
-      left: 0;
+      // position: absolute;
+      // top: 74px;
+      // left: 0;
       padding: 2px;
 
       @include if-device(phone) {
-        top: 190px;
+        // top: 190px;
       }
 
       &.hidden {
@@ -199,16 +203,32 @@
         }
       }
     }
+    .planInfoWrapper {
+      display: flex;
+      width: 100%;
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: space-between;
+      column-gap: 30px;
+      margin-bottom: 20px;
+      @include if-device(phone) {
+        flex-direction: column;
+      }
+    }
     .planTitleWrapper {
       display: flex;
       width: 100%;
+      flex: 1;
+      flex-direction: column;
       align-items: flex-start;
       justify-content: space-between;
       margin-bottom: 20px;
+      row-gap: 20px;
 
       @include if-device(phone) {
         flex-direction: column;
-        row-gap: 18px;
+        row-gap: 8px;
+        margin-bottom: 0;
       }
     }
     .planTitle {
@@ -228,6 +248,7 @@
     }
     .priceValue {
       display: flex;
+      width: auto;
       flex-direction: column;
       color: #FFF;
       font-size: 40px;
@@ -236,6 +257,16 @@
       padding: 16px !important;
       background: #1F2937;
       border-radius: 20px;
+      @include if-device(phone) {
+        flex-direction: row;
+        justify-content: space-between;
+        column-gap: 12px;
+        margin-top: 0;
+        font-size: 30px;
+        padding: 12px 0 !important;
+        width: 100%;
+        background: transparent;
+      }
       &-actualPrice {
 
       }
@@ -249,6 +280,9 @@
         font-size: 12px;
         line-height: 150%;
         color: #FDE68A;
+        @include if-device(phone) {
+          font-size: 10px;
+        }
       }
       &-savingPill {
         padding: 4px 8px;
@@ -272,6 +306,21 @@
       @include if-device(phone) {
         border-top: none;
         margin-bottom: 24px;
+      }
+    }
+    .preCtaText {
+      color: #6B7280;
+      font-weight: 600;
+      margin-top: 24px;
+      margin-bottom: 12px;
+      font-size: 14px;
+      line-height: 1.5;
+      @include if-device(phone) {
+        font-size: 11px;
+        margin-top: 12px;
+        margin-bottom: 8px;
+        padding-top: 16px;
+        border-top: 1px solid #374151;
       }
     }
     .bulletList {
@@ -313,7 +362,7 @@
         font-size: 18px;
 
         @include if-device(phone) {
-          font-size: 14px;
+          font-size: 16px;
         }
       }
       .faq-answer-expanded {
@@ -334,12 +383,53 @@
         font-size: 14px;
       }
     }
+
+    &-light {
+      background-color: #FFF;
+      border-color: #FFF;
+      .planTitle {
+        color: #111827;
+      }
+      .priceValue {
+        color: #111827;
+        background-color: transparent;
+      }
+      .preCtaText {
+        border-color: #E5E7EB;
+      }
+      .bulletListAccordianBox .faq-title {
+        background-color: #F3F4F6;
+        color: #111827;
+      }
+      .bulletListAccordianBox .bulletList {
+        color: #4B5563;
+      }
+      .bulletListAccordianBox .bulletList {
+        color: #4B5563;
+      }
+      .bulletListTitle {
+        border-color: #E5E7EB;
+
+      }
+      ul li {
+        color: #4B5563;
+
+      }
+      .choosePlanBtn {
+        border: 2px solid #00B67A;
+        background-color: transparent;
+        color: #00B67A;
+        &:hover {
+          background-color: #ECFDF5;
+        }
+      }
+    }
   }
     .choosePlanBtn {
       max-width: 360px;
-      padding: 1rem 0;
+      padding: 0.6rem ​1rem;
       font-size: 18px;
-      line-height: 1.5;
+      line-height: 1.8;
       margin-top: 0;
       @include if-device(phone) {
         font-size: 16px;

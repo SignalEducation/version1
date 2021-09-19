@@ -6271,8 +6271,13 @@ a.list-group-item {
   min-height: auto;
   padding: 0;
   color: #111827;
-  filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.06)) drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.1));
-  border-radius: 8px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.06), 0px 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  
+  .faq-title p {
+    color: #111827 !important;
+    font-weight: 700 !important;
+  }
 
 
   @include box-shadow(0, 0, 2px, darken($colour-3, 20%));
