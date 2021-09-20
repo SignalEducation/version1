@@ -25,6 +25,8 @@
             }
             @include if-device(phone) {
                 background-color: #fff3f4;
+                font-size: 20px;
+                width: 100%;
             }
         }
         p {

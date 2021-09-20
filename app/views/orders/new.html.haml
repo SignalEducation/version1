@@ -58,7 +58,7 @@
                   .col-lg-12.p-0
                     .text-left.mb-5
                       .d-flex.py-0
-                        .mr-2
+                        .mr-4
                           =product_icon(@order.product)
                         %div
                           .mb-2
@@ -69,7 +69,7 @@
                             =@order.product.name_by_type
                           %p.mb-2.text-gray1
                             =order_short_description(@order)
-                  .hidden-xs.px-4{style: 'background-color: #f5f5f7;padding: 2rem;border-radius: 16px;'}
+                  .hidden-xs.alert-secondary.px-4{style: 'background-color: #f5f5f7;padding: 2rem;border-radius: 16px;'}
                     %p.text-left
                       =order_description(@order)
                     
@@ -95,7 +95,6 @@
 
                 .subscriptionPageWrapper-optionsBox
                   %fieldset.card.card-payments.m-0
-
                     .wholeTabs
                       .subscriptionPageWrapper-optionsBox-optionTabs
                         .subscriptionPageWrapper-optionsBox-optionTabs-Tab.active.js-option-wrapper-stripe
@@ -104,7 +103,6 @@
                             %label.tab-label{ for: 'pay-with-card' }
                               %span.custom-label-info
                                 %span.m-0
-                                  -# =image_tag('ico-card.svg', alt: 'Credit Card Icon', class: 'logo-icon mr-1')
                                   %span Credit / Debit Card
                         .subscriptionPageWrapper-optionsBox-optionTabs-Tab.js-option-wrapper-paypal
                           .custom-control.custom-radio
@@ -127,63 +125,7 @@
                         =render partial: 'orders/paypal_form', locals: {f: f}
 
 
-
-
-
-
-
-                    -# .subscriptionPageWrapper-paymentOptionsWrapper
-                    -#   .subscriptionPageWrapper-paymentOptionsWrapper-optionForm.js-option-wrapper-stripe
-                    -#     .subscriptionPageWrapper-paymentOptionsWrapper-header
-                    -#       %span Pay with Card
-                    -#       .subscriptionPageWrapper-optionsBox-optionTabs
-                    -#         .subscriptionPageWrapper-optionsBox-optionTabs-Tab
-                    -#           .custom-control.custom-radio
-                    -#             %input#pay-with-paypal.custom-control-input.style-radio{name: 'payment-options', type: 'radio', value: 'paypal'}
-                    -#             %label{for: 'pay-with-paypal'}
-                    -#               %span.custom-label-info
-                    -#                 %span.0.m-0
-                    -#                   %span Or Pay with 
-                    -#                   %span PayPal
-                    -#     =render partial: 'orders/order_card_form', locals: {f: f}
-                        
-                    -#   .subscriptionPageWrapper-paymentOptionsWrapper-optionForm.js-option-wrapper-paypal
-                    -#     .subscriptionPageWrapper-paymentOptionsWrapper-header
-                    -#       %span Pay with PayPal
-                    -#       .subscriptionPageWrapper-optionsBox-optionTabs
-                    -#         .subscriptionPageWrapper-optionsBox-optionTabs-Tab
-                    -#           .custom-control.custom-radio
-                    -#             %input#pay-with-card.custom-control-input.style-radio{ name: 'payment-options', type: 'radio', value: 'stripe', checked: true }
-                    -#             %label{ for: 'pay-with-card' }
-                    -#               %span.custom-label-info
-                    -#                 %span Pay with 
-                    -#                 %span Card
-                    -#     =render partial: 'orders/paypal_form', locals: {f: f}
-                  
-
-
-                      -# .form-group.form-group-expandable
-                      -#   .custom-control.custom-radio
-                      -#     %input#pay-with-card.custom-control-input.style-radio{:name => "payment-options", :type => "radio", :value => 'stripe', checked: true}
-                      -#     %label.custom-control-label{:for => "pay-with-card"}
-                      -#       %span.custom-label-info
-                      -#         %span.h3.m-0
-                      -#           =image_tag('ico-card.svg', :alt => "Credit Card Icon", :class => 'logo-icon.mr-2.mr-sm-3')
-                      -#           %span Credit / Debit Card
-                      -#       %span.custom-check
-                      -#   =render partial: 'orders/order_card_form', locals: {f: f}
-                      -# .form-group.form-group-expandable
-                      -#   .custom-control.custom-radio
-                      -#     %input#pay-with-paypal.custom-control-input.style-radio{:name => "payment-options", :type => "radio", :value => 'paypal'}
-                      -#     %label.custom-control-label{:for => "pay-with-paypal"}
-                      -#       %span.custom-label-info
-                      -#         %span.h3.m-0
-                      -#           =image_tag('ico-paypal.svg', :alt => "PayPal Logo", :class => 'logo-icon.mr-2.mr-sm-3')
-                      -#           %span PayPal
-                      -#       %span.custom-check
-                      -#   =render partial: 'orders/paypal_form', locals: {f: f}
-
-                .visible-xs.px-4{style: 'background-color: #f5f5f7;padding: 1rem;border-radius: 16px;'}
+                .visible-xs.alert-secondary.px-4{style: 'background-color: #f5f5f7;padding: 1rem;border-radius: 16px;'}
                   %p.text-left
                     =order_description(@order)
 
@@ -206,12 +148,6 @@
                                     %i.material-icons.opened-icon.d-none{style: 'position: absolute;right: 14px;top: 14px;'} keyboard_arrow_up
                                   .faq-answer-expanded.d-none
                                     =faq.answer_text.html_safe
-
-              -# .px-4{style: 'background-color: #f5f5f7;padding: 2rem;border-radius: 16px;'}
-              -#   %p.text-left
-              -#     =order_description(@order)
-
-
     
 
 :javascript

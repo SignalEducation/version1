@@ -9,7 +9,7 @@
     -#   Make getting your CPD credits easy this year. Get instant and flexible access to over 100 certified CPD courses designed for accountants.
     .upgradeNudgeMini-action
       %a#enrol-top{data: {target: '#pricing-modal', toggle: 'modal'}, href: '#', class: 'btn btn-primary'}
-        ='Upgrade Now'
+        View Pricing Plans
 -elsif user && !user.can_view_content?(@group.exam_body_id, @group.id, @course.id)
   .upgradeNudgeMini
     .upgradeNudgeMini-icon
@@ -21,7 +21,7 @@
     -#   Make getting your CPD credits easy this year. Get instant and flexible access to over 100 certified CPD courses designed for accountants.
     .upgradeNudgeMini-action
       =link_to pricing_url(@group.name_url), class: 'btn btn-primary upgrade' do
-        Upgrade Now
+        View Pricing Plans
 -elsif !user
   .upgradeNudgeMini
     .upgradeNudgeMini-icon

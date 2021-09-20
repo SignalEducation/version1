@@ -30,7 +30,7 @@
 
     %meta{name:"rohan", content:"#{controller_name}"}
 
-    -if controller_name == 'orders' || controller_name == 'subscriptions' || controller_name == 'user_accounts'
+    -if controller_name == 'orders' || controller_name == 'subscriptions' || controller_name == 'user_accounts' || controller_name == 'plan_changes' 
       %script{type: 'text/javascript', src: 'https://js.stripe.com/v3/'}
 
     =yield :head

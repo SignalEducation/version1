@@ -24,7 +24,7 @@
 %footer.footer.footerMarketing
   .container.position-relative.pt-5.pb-3
     .row
-      .col-12.col-md-6.col-lg-4
+      .col-12.col-md-6.col-lg-3
         =link_to home_url, class: 'mb-4' do
           -# =image_tag(@footer == 'white' ? 'Learnsignal-Logo.svg' : 'learnsignal-Logo-white.svg', class: 'mb-1 logo', alt: 'LearnSignal Logo')
           =image_tag('Learnsignal-Logo.svg', class: 'mb-1 logo', alt: 'LearnSignal Logo')
@@ -55,9 +55,9 @@
               %span.hidden-xs
                 Youtube
 
-      .col-6.col-md-3.col-lg-8.mb-4
+      .col-6.col-md-3.col-lg-9.mb-4
         .row
-          .col-lg-4
+          .col-lg-3
             %ul.nav.flex-column
               -if @groups
                 %li.nav-item.nav-item-header
@@ -74,8 +74,20 @@
 
               -# %li.nav-item
               -#   =link_to 'ACCA Info', acca_info_url, class: 'nav-link'
+          .col-lg-3
+            %ul.nav.flex-column
+              -if @groups
+                %li.nav-item.nav-item-header
+                  Products
 
-          .col-lg-4
+                -@groups.all_in_order.each do |group|
+                  -if group.active && group.exam_body.has_products?
+                    %li.nav-item
+                      =link_to "#{group.name} Products", exam_products_url(group.name_url), class: 'nav-link'
+
+              -# %li.nav-item
+              -#   =link_to 'ACCA Info', acca_info_url, class: 'nav-link'
+          .col-lg-3
             %ul.nav.flex-column
               %li.nav-item.nav-item-header
                 Company
@@ -94,7 +106,7 @@
               %li.nav-item
                 =link_to 'Terms & Conditions', terms_and_conditions_url, class: 'nav-link'
           
-          .col-lg-4
+          .col-lg-3
             %ul.nav.flex-column
               %li.nav-item.nav-item-header
                 Support

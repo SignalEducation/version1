@@ -122,14 +122,14 @@
             %span
               =yearly_plan.currency.format_number(yearly_plan.previous_plan_price)
 
-        %div.mb-2
+        %div.alert-secondary.mb-2
           %span.font-weight-medium Note: 
           %br
           You are subscribing to a recurring payment which will continue until you cancel your subscription. 
           %br
           You can cancel your subscription at anytime.
       - else
-        %div.mb-2
+        %div.alert-secondary.mb-2
           %span.font-weight-medium Note:
           You are subscribing to a recurring payment which will continue until you cancel your subscription. You can cancel your subscription at anytime.  
   -# .container-bg.bg-white

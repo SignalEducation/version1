@@ -46,21 +46,27 @@ function validateCoupon() {
         const validCoupon = data.valid;
 
         if (validCoupon === false) {
-          analyticsData.valid_coupon_present = false;
-          analyticsData.discountedPrice =  '';
-          analyticsData.couponCode = '';
+          if (analyticsData) {
+            analyticsData.valid_coupon_present = false;
+            analyticsData.discountedPrice =  '';
+            analyticsData.couponCode = '';
+          }
           displayInvalidCouponClasses(data.reason);
         } else if (validCoupon === true) {
-          analyticsData.valid_coupon_present = true;
-          // regex to remove the currency iso code and let just the numbers.
           let discounted_price = Number(data.discounted_price.replace(/[^0-9\.-]+/g,""));
-          analyticsData.discountedPrice = discounted_price.toString()  ;
-          analyticsData.couponCode = couponCode.val();
+          if (analyticsData) {
+            analyticsData.valid_coupon_present = true;
+            // regex to remove the currency iso code and let just the numbers.
+            analyticsData.discountedPrice = discounted_price.toString()  ;
+            analyticsData.couponCode = couponCode.val();
+          }
           displayValidCouponClasses(data.discounted_price, data.coupon_id);
         } else {
-          analyticsData.valid_coupon_present = false;
-          analyticsData.discountedPrice =  '';
-          analyticsData.couponCode = '';
+          if (analyticsData) {
+            analyticsData.valid_coupon_present = false;
+            analyticsData.discountedPrice =  '';
+            analyticsData.couponCode = '';
+          }
           removeCouponClasses();
         }
 

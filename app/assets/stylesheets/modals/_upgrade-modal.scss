@@ -25,6 +25,8 @@
             }
             @include if-device(phone) {
                 background-color: #fef3c7;
+                font-size: 20px;
+                width: 100%;
             }
         }
         .btn-icon {
