@@ -1,4 +1,12 @@
 .coursePage-container {
+  .course-progress {
+    p, span {
+      font-size: 14px !important;
+      font-weight: 500 !important;
+      font-family: $sans-font !important;
+      color: #111827 !important;
+    }
+  }
   .courseProgressWrapper {
     display: flex;
     flex-direction: row;

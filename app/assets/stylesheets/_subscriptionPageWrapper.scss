@@ -218,7 +218,16 @@
             height: 16px;
         }
     }
-    
+    &-priceValue {
+        font-size: 20px;
+        line-height: 2rem;
+        color: #111827;
+        font-weight: 700;
+        @include if-device(phone) {
+            font-size: 16px;
+        }
+    }
+     
     &-paymentOptionsWrapper {
         position: relative;
         display: block;

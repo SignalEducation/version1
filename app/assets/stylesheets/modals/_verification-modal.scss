@@ -4,8 +4,9 @@
             position: relative;
             overflow: hidden;
             background-color: #FFF4F4;
-            max-width: 720px;
+            max-width: 980px;
             margin: 0 auto;
+            padding: 4rem 2rem 4rem;
             @include if-device(phone) {
                 padding: 24px;
                 height: auto;
@@ -13,13 +14,12 @@
             }
         }
         h3, h4 {
-            font-size: 20px;
-            line-height: 150%;
+            font-size: 32px;
+            line-height: 130%;
             font-weight: 700;
             color: #111827 !important;
-            width: 300px;
+            width: 460px;
             z-index: 20;
-            margin-bottom: 8px;
             span {
                 color: #FD5454;
             }
@@ -28,8 +28,8 @@
             }
         }
         p {
-            font-weight: 500;
-            color: #7B2929;
+            font-weight: 700;
+            color: #FD5454;
             width: 50%;
             @include if-device(phone) {
                 width: 100%;
@@ -60,10 +60,10 @@
         }
         .upgradeIllustration {
             position: absolute;
-            right: -160px;
+            right: -30%;
             top: 0;
             z-index: 10;
-            width: 500px;
+            width: 750px;
 
             @include if-device(phone) {
                 right: 0px;

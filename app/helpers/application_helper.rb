@@ -237,9 +237,9 @@ module ApplicationHelper
 
   def verify_email_message(remain_days)
     if remain_days.positive?
-      "Please verify your email within #{remain_days} days to continue free tier subscription."
+      "Please verify your email within <span>#{remain_days}</span> days to continue free tier subscription."
     else
-      'Please verify your email to continue free tier subscription.'
+      'Please <span>verify</span> your email to continue free tier subscription.'
     end
   end
 

@@ -5,10 +5,7 @@
         %i.material-icons{'aria-hidden': 'true'}
           close
       %h3.text-red{id: 'verificationRequired'}
-        Email Verification
-        %span Required
-      %p.mt-1.mb-2
-        =verify_email_message(current_user.verify_remain_days)
+        =verify_email_message(current_user.verify_remain_days).html_safe
       %p.mb-3
         Check your inbox 
       .upgradeIllustration

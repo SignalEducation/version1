@@ -3,18 +3,18 @@
     .custom-control.custom-radio.subscriptionPageWrapper-customRadio
       %input.custom-control-input.custom-control-input-card.style-radio{:id => plan.interval_name.downcase, :name => "plans", :type => "radio", :data => {:guid => plan.guid, :name => plan.name, :price => plan.price}, :value => plan.id, :checked => ("checked" if subscription.subscription_plan_id == plan.id)}
       %label.custom-control-label.justify-content-start{:for => plan.interval_name.downcase}
-        %span.custom-check.mr-3
+        %span.custom-check.mr-2
         .d-flex.py-0{style: 'width: calc(100% - 46px);'}
-          .d-flex.flex-column.justify-content-center.align-items-start.w-75
+          .d-flex.flex-column.justify-content-between.align-items-start{style: 'width: 60% !important;'}
             %div.h4.m-0.text-black
               =plans.first.exam_body.name
               &#8212;
               =plan.interval_name
             %div.m-0.text-gray1
               ="Billed every #{plan.payment_frequency_in_months > 1 ? pluralize(plan.payment_frequency_in_months, 'month') : 'month'}"
-          .d-flex.flex-column.justify-content-center.align-items-end.w-25
+          .d-flex.flex-column.justify-content-center.align-items-end{style: 'width: 40% !important;'}
             %div.h4.m-0.text-black
-              %span{style: 'font-size: 1.2rem;line-height: 2rem;color: #111827;font-weight: 700;'}
+              %span.subscriptionPageWrapper-priceValue
                 =plan.currency.format_number(plan.price)
             %div.h5.m-0.text-gray1
               - if plan.monthly_percentage_off.present? && plan.monthly_percentage_off > 0

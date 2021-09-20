@@ -11,9 +11,10 @@
               - if course_lesson.free && current_user&.preferred_exam_body_id && !current_user&.valid_access_for_exam_body?(current_user&.preferred_exam_body_id, current_user&.preferred_exam_body&.group&.id)
                 %span{style: 'color: #007bff;background-color: rgb(0 123 255 / 5%);font-size: 12px;border-radius: 4px;padding: 2px 8px;padding-top: 4px;letter-spacing: 1px;font-weight: 600;line-height: 1;display: inline-flex;column-gap: 6px;'}
                   🎉 FREE
-              - if current_user && !current_user.can_view_content?(@group.exam_body_id, @group.id, @course.id)
-                %span{style: 'color: #6d5902;background-color: #f9e9af;font-size: 12px;border-radius: 4px;padding: 2px 8px;padding-top: 4px;letter-spacing: 1px;font-weight: 600;line-height: 1;display: inline-flex;column-gap: 6px;'}
-                  LOCKED
+              - else
+                - if current_user && !current_user.can_view_content?(@group.exam_body_id, @group.id, @course.id) && !course_lesson.temporary_label.present?
+                  %span{style: 'color: #6d5902;background-color: #f9e9af;font-size: 12px;border-radius: 4px;padding: 2px 8px;padding-top: 4px;letter-spacing: 1px;font-weight: 600;line-height: 1;display: inline-flex;column-gap: 6px;'}
+                    LOCKED
 
             -if course_lesson.temporary_label.present?
               %span{style: 'color: #007bff;background-color: rgb(0 123 255 / 5%);font-size: 12px;border-radius: 4px;padding: 2px 8px;padding-top: 4px;letter-spacing: 1px;font-weight: 600;line-height: 1;display: inline-flex;column-gap: 6px;'}

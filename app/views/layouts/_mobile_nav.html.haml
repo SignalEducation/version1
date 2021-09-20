@@ -14,6 +14,16 @@
                             =current_user.first_name.to_s
                         %span.user-item-box-userEmail
                             =current_user.email
+                    
+                .nav-item-box
+                    =link_to 'Dashboard', student_dashboard_url
+                .nav-item-box
+                    =link_to 'Library', library_url
+
+                -if current_user&.preferred_exam_body_id && !current_user&.valid_access_for_exam_body?(current_user&.preferred_exam_body_id, current_user&.preferred_exam_body&.group&.id)
+                    .nav-item-box.upgrade-btn.mb-3
+                        =link_to 'Upgrade Now', pricing_url(current_user&.preferred_exam_body&.group&.name_url)
+                        
                 -if current_user.non_verified_user?
                     .nav-verification-alert-box
                         .nav-verification-alert-box-icon
@@ -28,16 +38,7 @@
                             -if !current_user.email_verified && current_user.email_verification_code
                                 =link_to resend_verification_mail_url(current_user.email_verification_code), method: :post, class: 'btn verification-btn btn-sm mb-3 mb-sm-0' do
                                     ='Resend Email'
-                    
-                .nav-item-box.mt-3
-                    =link_to 'Dashboard', student_dashboard_url
-                .nav-item-box
-                    =link_to 'Library', library_url
 
-                -if current_user&.preferred_exam_body_id && !current_user&.valid_access_for_exam_body?(current_user&.preferred_exam_body_id, current_user&.preferred_exam_body&.group&.id)
-                    .nav-item-box.upgrade-btn
-                        =link_to 'Upgrade Now', pricing_url(current_user&.preferred_exam_body&.group&.name_url)
-                        
                 .nav-item-header
                     General
                 .nav-item-box

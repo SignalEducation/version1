@@ -64,7 +64,7 @@
 }
 .pricingPlansWrapper {
   background-color: #D1FAE5 !important;
-  border-top: 4px solid #00B67A;
+  // border-top: 4px solid #00B67A;
   .heroSubtext {
     letter-spacing: .1em;
     text-transform: uppercase;
@@ -328,6 +328,7 @@
       border-color: #374151 !important;
       columns: 2;
       margin-top: 0 !important;
+      margin-bottom: 20px;
 
       @include if-device(phone) {
         columns: 1;

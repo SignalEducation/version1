@@ -156,8 +156,11 @@ $sans-font: 'Manrope', sans-serif;
   }
   .h4,
   h4 {
-    font-size: 1.1875em !important;
+    font-size: 20px !important;
     font-weight: 700 !important;
+    @include if-device(phone) {
+      font-size: 16px !important;
+    }
   }
   .h5,
   h5 {
