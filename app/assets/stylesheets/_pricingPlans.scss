@@ -64,7 +64,6 @@
 }
 .pricingPlansWrapper {
   background-color: #D1FAE5 !important;
-  // border-top: 4px solid #00B67A;
   .heroSubtext {
     letter-spacing: .1em;
     text-transform: uppercase;
@@ -153,15 +152,7 @@
       grid-template-rows: auto;
       align-items: center;
       flex-direction: row;
-
-      // position: absolute;
-      // top: 74px;
-      // left: 0;
       padding: 2px;
-
-      @include if-device(phone) {
-        // top: 190px;
-      }
 
       &.hidden {
         visibility: hidden;
