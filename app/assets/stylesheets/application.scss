@@ -5728,11 +5728,10 @@ a.box-item {
   padding: $gutter;
   color: $colour-7;
   border-radius: 0;
-  border: 1px solid #e1e8ed;
   background-color: #FFF;
-  border: 2px solid #F9FAFB;
+  border: 2px solid #e1e8ed;
   box-sizing: border-box;
-  padding: 16px;
+  padding: 1.5rem;
   row-gap: 12px;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.06), 0px 4px 6px rgba(0, 0, 0, 0.10);
   border-radius: 12px;

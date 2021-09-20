@@ -17,20 +17,8 @@
       %section.pb-md-6.pb-5
         .row.justify-content-center
           .col-xs-12.col-sm-8
-            .box-item.text-center.py-5.mx-auto{style: 'max-width: 540px;'}
-              -if current_user.non_verified_user?
-                %h4.text-warning
-                  Your email requires verification. You will be unable to access content until you verify your email.
-                -if !current_user.email_verified && current_user.email_verification_code
-                  =link_to resend_verification_mail_url(current_user.email_verification_code), method: :post, class: 'btn btn-secondary verification-btn btn-sm mb-3 mb-sm-0' do
-                    ='Resend Verification Email'
-                %h5.mb-1
-                  ="You have subscribed to the #{t("views.general.subscription_label_in_months.a#{@subscription.subscription_plan.payment_frequency_in_months}")}."
-                %p
-                  ="Your payment receipt will be sent to #{current_user.email}"
-
-              -else
-                %h5.mb-1
+            .box-item.text-center.py-4.mx-auto{style: 'max-width: 640px;'}
+              %h5.mb-1
                   ="You have subscribed to the #{t("views.general.subscription_label_in_months.a#{@subscription.subscription_plan.payment_frequency_in_months}")}."
                 %p
                   ="Your payment receipt will be sent to #{current_user.email}"
