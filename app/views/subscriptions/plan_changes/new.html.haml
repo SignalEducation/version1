@@ -10,8 +10,8 @@
         .container.changePlanPageWrapper-logo.hidden-xs
           =link_to pricing_url(current_user&.preferred_exam_body&.group&.name_url), class: 'navbar-brand logo' do
             =image_tag('Learnsignal-Logo.svg', class: 'logo-img', alt: "LearnSignal Logo")
-          %div.header-title-lesson.visible-xs
-            = 'Change Plan'
+        %div.header-title-lesson.visible-xs
+          = 'Change Plan'
       #navbarNavDropdown.collapse.navbar-collapse.justify-content-end
         %ul.navbar-nav.align-items-lg-center
           -if current_user

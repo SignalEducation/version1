@@ -19,8 +19,11 @@
         .mw-0
           %h1.mb-0.h1-hero.mr-2=t('views.users.show.h1')
         .mw-0
-          %h5.mb-0.text-gray2
+          %h4.mb-0.text-gray2
             =@user.full_name
+        .mw-0
+          %p.mb-0.text-gray2
+            =@user.email
     .row.row-md
       .col-lg-12
         %nav.courses-nav

@@ -1958,7 +1958,7 @@ textarea.form-control {
   outline: 0
 }
 .modal-content.pricing {
-  background-color: #f5f8fa;
+  background-color: #FFF;
   border-radius: 12px;
   height: auto;
   width: 100%;
@@ -1971,6 +1971,35 @@ textarea.form-control {
     }
   }
 }
+.modal-content.addCard {
+  background-color: #FFF;
+  border-radius: 12px;
+  height: auto;
+  width: 100%;
+  max-width: 540px;
+  margin: 0 auto;
+  .modal-body {
+    max-width: 100%;
+    .row {
+      justify-content: center;
+    }
+  }
+}
+.modal-content.editEnrollment {
+  background-color: #FFF;
+  border-radius: 12px;
+  height: auto;
+  width: 100%;
+  max-width: 680px;
+  margin: 0 auto;
+  .modal-body {
+    max-width: 100%;
+    .row {
+      justify-content: center;
+    }
+  }
+}
+
 #pricing-modal {
   .modal-dialog {
     height: 100%;
@@ -7150,7 +7179,10 @@ div#hs-eu-cookie-confirmation {
   background-color: rgba(119,94,173,.1)
 }
 .badge-warning {
-  background-color: #fff3cd
+  font-size: 12px;
+  background-color: #FCD34D;
+  padding: 2px 6px;
+  border-radius: 4px;
 }
 .badge-danger {
   background-color: rgba(253,92,99,.1)
@@ -9010,7 +9042,7 @@ button.sub-details[aria-expanded="true"]:before{
       outline: none;
       color: #fff;
       width: auto;
-      padding: 0.3rem 1rem;
+      padding: 0.2rem 0.5rem;
       margin-top: 2px;
       line-height: 1.6;
       border-radius: 30px;

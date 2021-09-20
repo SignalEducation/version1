@@ -1,14 +1,34 @@
-%article.card
+%article.card#dashboardTabsContent
   .card-body
     %h4.text-gray1.mb-4
       Enrolments
 
-    -@enrollments.each do |enrollment|
-      %article.card.mb-4
-        .card-body.card-body-sm.d-flex.flex-wrap.flex-sm-nowrap.align-items-center
-          %h4.mb-sm-0.mr-4.text-gray2
-            =enrollment.course.name
-          .ml-auto
-            =link_to 'Edit Details', '#', 'data-target' => "#enrollment-edit-modal-#{enrollment.id}", 'data-toggle' => 'modal', class: 'btn btn-secondary btn-sm'
 
-        =render partial: 'edit_enrollment', locals: {enrollment: enrollment}
+
+    .col-md-12.col-lg-10.p-0
+      -@enrollments.each do |enrollment|
+        -if enrollment.course
+          .card.card-horizontal.flex-md-row{style:'margin-bottom: 1.5rem;border: 1px solid #e6ecef;'}
+            .card-body.d-flex.flex-column.justify-content-center
+              %div.dashboardWrapper-courseInfo
+                %div.dashboardWrapper-courseIcon{style: "border-color: #{enrollment.course.level.highlight_colour}; background-color: #{enrollment.course.level.highlight_colour};"}
+                  %i{"aria-label" => enrollment.course.level.icon_label, :role => "img", class: enrollment.course.level.icon_label ? enrollment.course.level.icon_label : 'budicon-office-bag-c', style: "color: #FFF;"}
+                %div
+                  %div.dashboardWrapper-parent
+                    .dashboardWrapper-examName
+                      =enrollment.course.parent.name
+                    .dashboardWrapper-backBtn-dot •
+                    .dashboardWrapper-levelName{style: "color: #{enrollment.course.level.highlight_colour};"}
+                      ="#{enrollment.days_until_exam} days until exam"
+                  %div.courseName
+                    =enrollment.course.name
+            .card-footer.d-flex.justify-content-center.align-items-center{style: 'background-color: #fff; border-top: none;'}
+              .dashboardWrapper-progressText
+                -if enrollment.percentage_complete > 0
+                  %div
+                    .progress
+                      .progress-bar{role: "progressbar", 'aria-valuenow': enrollment.display_percentage_complete, 'aria-valuemin': "0", 'aria-valuemax': '100', style: "width: #{enrollment.display_percentage_complete}%"}
+              =link_to 'Edit Details', '#', 'data-target' => "#enrollment-edit-modal-#{enrollment.id}", 'data-toggle' => 'modal', class: 'btn btn-secondary btn-sm'
+          
+          =render partial: 'edit_enrollment', locals: {enrollment: enrollment}
+          

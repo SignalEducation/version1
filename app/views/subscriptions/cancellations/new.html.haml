@@ -26,7 +26,7 @@
                         %span.label.cancellation-label
                           =b.radio_button
                           =b.label
-                  .col-sm-7
+                  .col-sm-7.p-0
                     .form-group
                       =f.label :cancellation_note, 'Please let us know if there’s any other way we could improve our service:', class: 'block-label h6'
                       #cancellation-note-error
@@ -39,9 +39,6 @@
                     %p
                       =account_cancellation_message(@subscription)
                 .row.m-0.mt-4.justify-content-end
-                  -# .w-auto.mr-4
-                  -#   =link_to t('views.users.show.keep_subscription'), account_url(anchor: 'account-info'), class: 'btn btn-primary btn-sm'
-
                   .w-auto
                     =f.submit t('views.users.show.confirm_subscription_cancellation'), id: 'confirm_cancellation_button', class: 'btn btn-danger btn-sm', data: { disable_with: false }
 

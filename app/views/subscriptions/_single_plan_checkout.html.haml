@@ -2,7 +2,7 @@
   .custom-control.custom-radio.subscriptionPageWrapper-customRadio
     %input.custom-control-input.custom-control-input-card.style-radio{:id => subscription.subscription_plan.interval_name.downcase, :name => "plans", :type => "radio", :data => {:price => subscription.subscription_plan.price, :frequency => subscription.subscription_plan.payment_frequency_in_months, :currency => subscription.subscription_plan.currency.iso_code, :name => subscription.subscription_plan.name, :body => subscription.subscription_plan.exam_body.name}, :value => subscription.subscription_plan.id, :checked => true}
     %label.custom-control-label.justify-content-start{:for => subscription.subscription_plan.interval_name.downcase}
-      %span.custom-check.mr-2
+      %span.custom-check.mr-3
       .d-flex.py-0{style: 'width: calc(100% - 46px);'}
         .d-flex.flex-column.justify-content-between.align-items-start{style: 'width: 60% !important;'}
           %div.h4.m-0.text-black
@@ -30,7 +30,7 @@
       .custom-control.custom-radio.subscriptionPageWrapper-customRadio
         %input.custom-control-input.custom-control-input-card.style-radio{:id => plan.interval_name.downcase, :name => "plans", :type => "radio", :data => {:guid => plan.guid, :name => plan.name, :price => plan.price}, :value => plan.id, :checked => ("checked" if subscription.subscription_plan_id == plan.id)}
         %label.custom-control-label.justify-content-start{:for => plan.interval_name.downcase}
-          %span.custom-check.mr-2
+          %span.custom-check.mr-3
           .d-flex.py-0{style: 'width: calc(100% - 46px);'}
             .d-flex.flex-column.justify-content-between.align-items-start{style: 'width: 60% !important;'}
               %div.h4.m-0.text-black
