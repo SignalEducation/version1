@@ -510,7 +510,7 @@
 .btn-dark{
   background-color: #000;
   color: #FFF;
-  &:hover, &:active {
+  &:hover, &:active, &:focus {
     background-color: #3c3b3b;
     color: #FFF;
   }

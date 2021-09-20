@@ -35,12 +35,13 @@
                 %li.nav-item
                   =link_to pricing_url(current_user&.preferred_exam_body&.group&.name_url), class: 'nav-link upgrade-btn' do
                     %span Upgrade Now
-
-              -if current_user.non_student_user?
-                %li.nav-item.m-0
-                  =link_to management_consoles_url, class: 'nav-link console-btn', target: '_blank' do
-                    %span 🔮 Console
-
+              
+              -# Ask a Tutor CTA
+              -if controller_name == 'library'
+                -if @exam_body.has_sittings && @new_enrollment && (@computer_exam_sitting || @exam_sittings)
+                  %li.nav-item.m-0
+                    %a{class: 'btn btn-dark btn-sm mr-2', 'data-target' => '#contact-form-modal', 'data-toggle' => 'modal', :href => '#', :style => 'padding: 3px 1rem;'}
+                      =@exam_body&.help_text
 
               %li.nav-item.dropdown
                 %a#navbarDropdown.navbar-login.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
@@ -67,6 +68,9 @@
                           =link_to resend_verification_mail_url(current_user.email_verification_code), method: :post, class: 'btn verification-btn btn-sm mb-3 mb-sm-0' do
                             ='Resend Email'
                   =link_to t('views.users.show.h1'), account_url, class: 'nav-link dropdown-item'
+                  -if current_user.non_student_user?
+                    =link_to management_consoles_url, class: 'nav-link dropdown-item console-btn', target: '_blank' do
+                      %span 🔮 Console
                   =link_to t('views.general.log_out'), sign_out_url, class: 'nav-link dropdown-item logout'
 
             -else

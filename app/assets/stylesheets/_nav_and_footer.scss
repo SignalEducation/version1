@@ -165,8 +165,9 @@
   color: #583e8c;
   font-size: 14px;
   font-weight: 600;
-  padding: 3px 12px;
-  border-radius: 34px;
+  padding: 6px;
+  border-radius: 4px;
+  margin: 0 20px;
 }
 .navbar-light .navbar-nav .nav-link:hover {
   color: #02b57b;
@@ -706,6 +707,7 @@
       flex-direction: row;
       position: relative;
       column-gap: 12px;
+      min-width: 300px;
       &-title {
         position: relative;
         margin-bottom: 4px;
