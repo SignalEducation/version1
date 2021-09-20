@@ -1,11 +1,11 @@
 %main.subscriptionPageWrapper
   .subscriptionPageWrapper-header.navbar.navbar-expand-lg
     .container.p-0.d-flex.align-items-center.justify-content-start
-      =link_to pricing_url('acca'), class: 'main-header-backBtn' do
+      =link_to pricing_url(current_user&.preferred_exam_body&.group&.name_url), class: 'main-header-backBtn' do
         .i.material-icons{:style => "font-size: 20px;margin-right: 12px;margin-top: 6px;"} arrow_back
       .main-header-content
         .container.subscriptionPageWrapper-logo.hidden-xs
-          =link_to pricing_url('acca'), class: 'navbar-brand logo' do
+          =link_to pricing_url(current_user&.preferred_exam_body&.group&.name_url), class: 'navbar-brand logo' do
             =image_tag('Learnsignal-Logo.svg', class: 'logo-img', alt: "LearnSignal Logo")
         %div.header-title-lesson.visible-xs
           = 'Purchase'
@@ -95,33 +95,70 @@
 
                 .subscriptionPageWrapper-optionsBox
                   %fieldset.card.card-payments.m-0
+
+                    .wholeTabs
+                      .subscriptionPageWrapper-optionsBox-optionTabs
+                        .subscriptionPageWrapper-optionsBox-optionTabs-Tab.active.js-option-wrapper-stripe
+                          .custom-control.custom-radio
+                            %input#pay-with-card.custom-control-input.style-radio{ name: 'payment-options', type: 'radio', value: 'stripe', checked: true }
+                            %label.tab-label{ for: 'pay-with-card' }
+                              %span.custom-label-info
+                                %span.m-0
+                                  -# =image_tag('ico-card.svg', alt: 'Credit Card Icon', class: 'logo-icon mr-1')
+                                  %span Credit / Debit Card
+                        .subscriptionPageWrapper-optionsBox-optionTabs-Tab.js-option-wrapper-paypal
+                          .custom-control.custom-radio
+                            %input#pay-with-paypal.custom-control-input.style-radio{name: 'payment-options', type: 'radio', value: 'paypal'}
+                            %label.tab-label{for: 'pay-with-paypal'}
+                              %span.custom-label-info
+                                %span.0.m-0
+                                  =image_tag('ico-paypal.svg', alt: 'PayPal Logo', class: 'logo-icon mr-1')
+                                  %span PayPal
+
                     .subscriptionPageWrapper-paymentOptionsWrapper
                       .subscriptionPageWrapper-paymentOptionsWrapper-optionForm.js-option-wrapper-stripe
                         .subscriptionPageWrapper-paymentOptionsWrapper-header
                           %span Pay with Card
-                          .subscriptionPageWrapper-optionsBox-optionTabs
-                            .subscriptionPageWrapper-optionsBox-optionTabs-Tab
-                              .custom-control.custom-radio
-                                %input#pay-with-paypal.custom-control-input.style-radio{name: 'payment-options', type: 'radio', value: 'paypal'}
-                                %label{for: 'pay-with-paypal'}
-                                  %span.custom-label-info
-                                    %span.0.m-0
-                                      %span Or Pay with 
-                                      %span PayPal
                         =render partial: 'orders/order_card_form', locals: {f: f}
                         
                       .subscriptionPageWrapper-paymentOptionsWrapper-optionForm.js-option-wrapper-paypal
                         .subscriptionPageWrapper-paymentOptionsWrapper-header
                           %span Pay with PayPal
-                          .subscriptionPageWrapper-optionsBox-optionTabs
-                            .subscriptionPageWrapper-optionsBox-optionTabs-Tab
-                              .custom-control.custom-radio
-                                %input#pay-with-card.custom-control-input.style-radio{ name: 'payment-options', type: 'radio', value: 'stripe', checked: true }
-                                %label{ for: 'pay-with-card' }
-                                  %span.custom-label-info
-                                    %span Pay with 
-                                    %span Card
                         =render partial: 'orders/paypal_form', locals: {f: f}
+
+
+
+
+
+
+
+                    -# .subscriptionPageWrapper-paymentOptionsWrapper
+                    -#   .subscriptionPageWrapper-paymentOptionsWrapper-optionForm.js-option-wrapper-stripe
+                    -#     .subscriptionPageWrapper-paymentOptionsWrapper-header
+                    -#       %span Pay with Card
+                    -#       .subscriptionPageWrapper-optionsBox-optionTabs
+                    -#         .subscriptionPageWrapper-optionsBox-optionTabs-Tab
+                    -#           .custom-control.custom-radio
+                    -#             %input#pay-with-paypal.custom-control-input.style-radio{name: 'payment-options', type: 'radio', value: 'paypal'}
+                    -#             %label{for: 'pay-with-paypal'}
+                    -#               %span.custom-label-info
+                    -#                 %span.0.m-0
+                    -#                   %span Or Pay with 
+                    -#                   %span PayPal
+                    -#     =render partial: 'orders/order_card_form', locals: {f: f}
+                        
+                    -#   .subscriptionPageWrapper-paymentOptionsWrapper-optionForm.js-option-wrapper-paypal
+                    -#     .subscriptionPageWrapper-paymentOptionsWrapper-header
+                    -#       %span Pay with PayPal
+                    -#       .subscriptionPageWrapper-optionsBox-optionTabs
+                    -#         .subscriptionPageWrapper-optionsBox-optionTabs-Tab
+                    -#           .custom-control.custom-radio
+                    -#             %input#pay-with-card.custom-control-input.style-radio{ name: 'payment-options', type: 'radio', value: 'stripe', checked: true }
+                    -#             %label{ for: 'pay-with-card' }
+                    -#               %span.custom-label-info
+                    -#                 %span Pay with 
+                    -#                 %span Card
+                    -#     =render partial: 'orders/paypal_form', locals: {f: f}
                   
 
 

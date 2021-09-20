@@ -1,11 +1,11 @@
 %main.subscriptionPageWrapper
   .subscriptionPageWrapper-header.navbar.navbar-expand-lg
     .container.p-0.d-flex.align-items-center.justify-content-start
-      =link_to pricing_url(@exam_body.name), class: 'main-header-backBtn' do
+      =link_to pricing_url(current_user&.preferred_exam_body&.group&.name_url), class: 'main-header-backBtn' do
         .i.material-icons{:style => "font-size: 20px;margin-right: 12px;margin-top: 6px;"} arrow_back
       .main-header-content
         .container.subscriptionPageWrapper-logo.hidden-xs
-          =link_to pricing_url(@exam_body.name), class: 'navbar-brand logo' do
+          =link_to pricing_url(current_user&.preferred_exam_body&.group&.name_url), class: 'navbar-brand logo' do
             =image_tag('Learnsignal-Logo.svg', class: 'logo-img', alt: "LearnSignal Logo")
         -if @plans && @plans.first
           %div.header-title-lesson.visible-xs
@@ -98,70 +98,15 @@
                                   =image_tag('ico-paypal.svg', alt: 'PayPal Logo', class: 'logo-icon mr-1')
                                   %span PayPal
 
-
-                    -# %p.h4.mb-1.text-black Choose a way to pay
-                    -# %p.mb-4 Select your preferred method of payment
-                    -# %span.h3.m-0.mb-4.subscriptionPageWrapper-optionsBox-header
-                    -#   =image_tag('ico-card.svg', alt: 'Credit Card Icon', class: 'logo-icon.mr-3.mr-sm-3')
-                    -#   %span Credit / Debit Card
-                    -# %span.h3.m-0.mb-4.subscriptionPageWrapper-optionsBox-header
-                    -#   =image_tag('ico-paypal.svg', alt: 'PayPal Logo', class: 'logo-icon.mr-2.mr-sm-3')
-                    -#   %span PayPal
-
-                    -# .subscriptionPageWrapper-optionsBox-optionTabs
-                    -#   .form-group.form-group-expandable.subscriptionPageWrapper-optionsBox-optionTabs-Tab
-                    -#     .custom-control.custom-radio
-                    -#       %input#pay-with-card.custom-control-input.style-radio{ name: 'payment-options', type: 'radio', value: 'stripe', checked: true }
-                    -#       %label.custom-control-label{ for: 'pay-with-card' }
-                    -#         %span.custom-label-info
-                    -#           %span.h3.m-0
-                    -#             =image_tag('ico-card.svg', alt: 'Credit Card Icon', class: 'logo-icon.mr-2.mr-sm-3')
-                    -#             %span Credit / Debit Card
-                    -#         %span.custom-check
-                    -#           / custom checkbox
-                    -#     -# =render partial: 'subscription_payment_cards/form', locals: {f: f}
-                    -#   .form-group.form-group-expandable
-                    -#     .custom-control.custom-radio
-                    -#       %input#pay-with-paypal.custom-control-input.style-radio{name: 'payment-options', type: 'radio', value: 'paypal'}
-                    -#       %label.custom-control-label{for: 'pay-with-paypal'}
-                    -#         %span.custom-label-info
-                    -#           %span.h3.m-0
-                    -#             =image_tag('ico-paypal.svg', alt: 'PayPal Logo', class: 'logo-icon.mr-2.mr-sm-3')
-                    -#             %span PayPal
-                    -#         %span.custom-check
-                              / custom checkbox
-                      -# =render partial: 'subscription_payment_cards/paypal_form', locals: {f: f}
                     .subscriptionPageWrapper-paymentOptionsWrapper
                       .subscriptionPageWrapper-paymentOptionsWrapper-optionForm.js-option-wrapper-stripe
                         .subscriptionPageWrapper-paymentOptionsWrapper-header
-                          -# =image_tag('ico-card.svg', alt: 'Credit Card Icon', class: 'logo-icon mr-2')
-                          -# %span Credit / Debit Card
                           %span Pay with Card
-                          -# .subscriptionPageWrapper-optionsBox-optionTabs
-                          -#   .subscriptionPageWrapper-optionsBox-optionTabs-Tab
-                          -#     .custom-control.custom-radio
-                          -#       %input#pay-with-paypal.custom-control-input.style-radio{name: 'payment-options', type: 'radio', value: 'paypal'}
-                          -#       %label{for: 'pay-with-paypal'}
-                          -#         %span.custom-label-info
-                          -#           %span.0.m-0
-                          -#             %span Or Pay with 
-                          -#             =image_tag('ico-paypal.svg', alt: 'PayPal Logo', class: 'tab-logo-icon.mr-2.mr-sm-3')
-                          -#             %span PayPal
                         =render partial: 'subscription_payment_cards/form', locals: {f: f}
                         
                       .subscriptionPageWrapper-paymentOptionsWrapper-optionForm.js-option-wrapper-paypal
                         .subscriptionPageWrapper-paymentOptionsWrapper-header
-                          -# =image_tag('ico-paypal.svg', alt: 'PayPal Logo', class: 'logo-icon mr-2')
                           %span Pay with PayPal
-                          -# .subscriptionPageWrapper-optionsBox-optionTabs
-                          -#   .subscriptionPageWrapper-optionsBox-optionTabs-Tab
-                          -#     .custom-control.custom-radio
-                          -#       %input#pay-with-card.custom-control-input.style-radio{ name: 'payment-options', type: 'radio', value: 'stripe', checked: true }
-                          -#       %label{ for: 'pay-with-card' }
-                          -#         %span.custom-label-info
-                          -#           %span Back to Pay with 
-                          -#           -# =image_tag('ico-card.svg', alt: 'Credit Card Icon', class: 'tab-logo-icon.mr-2.mr-sm-3')
-                          -#           %span Card
                         =render partial: 'subscription_payment_cards/paypal_form', locals: {f: f}
                         
 

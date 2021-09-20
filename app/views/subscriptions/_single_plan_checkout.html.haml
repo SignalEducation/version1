@@ -38,12 +38,7 @@
                 &#8212;
                 =plan.interval_name
               %div.m-0.text-gray1
-                -# - if plan.monthly_percentage_off.present? && plan.monthly_percentage_off > 0
-                -#   %span.discount
-                -#     Save over
-                -#     %span.text-with-bg.bg-yellow2
-                -#       ="#{plan.monthly_percentage_off}%"
-                -# ="Billed every #{plan.payment_frequency_in_months > 1 ? pluralize(plan.payment_frequency_in_months, 'month') : 'month'}"
+                ="Billed every #{plan.payment_frequency_in_months > 1 ? pluralize(plan.payment_frequency_in_months, 'month') : 'month'}"
             .d-flex.flex-column.justify-content-center.align-items-end.w-25
               %div.h4.m-0.text-black
                 %span{style: 'font-size: 1.2rem;line-height: 2rem;color: #111827;font-weight: 700;'}

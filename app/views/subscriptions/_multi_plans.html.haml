@@ -1,28 +1,51 @@
 -plans.each do |plan|
   .form-group
-    .custom-control.custom-radio
-      %input.custom-control-input.custom-control-input-card.style-checkbox{:id => plan.interval_name.downcase, :name => "plans", :type => "radio", :data => {:price => plan.price, :frequency => plan.payment_frequency_in_months, :currency => plan.currency.iso_code, :name => plan.name, :body => plan.exam_body.name}, :value => plan.id, :checked => ("checked" if subscription.subscription_plan_id == plan.id)}
-      %label.custom-control-label{:for => plan.interval_name.downcase}
-        %span.custom-label-info
-          %span.h3.m-0
-            %span
+    .custom-control.custom-radio.subscriptionPageWrapper-customRadio
+      %input.custom-control-input.custom-control-input-card.style-radio{:id => plan.interval_name.downcase, :name => "plans", :type => "radio", :data => {:guid => plan.guid, :name => plan.name, :price => plan.price}, :value => plan.id, :checked => ("checked" if subscription.subscription_plan_id == plan.id)}
+      %label.custom-control-label.justify-content-start{:for => plan.interval_name.downcase}
+        %span.custom-check.mr-3
+        .d-flex.py-0{style: 'width: calc(100% - 46px);'}
+          .d-flex.flex-column.justify-content-center.align-items-start.w-75
+            %div.h4.m-0.text-black
+              =plans.first.exam_body.name
+              &#8212;
               =plan.interval_name
-          - if plan.monthly_percentage_off.present? && plan.monthly_percentage_off > 0
-            %span.discount{style: 'font-size: 12px;'}
-              Save over
-              %span.text-with-bg.bg-yellow2
-                ="#{plan.monthly_percentage_off}%"
+            %div.m-0.text-gray1
+              ="Billed every #{plan.payment_frequency_in_months > 1 ? pluralize(plan.payment_frequency_in_months, 'month') : 'month'}"
+          .d-flex.flex-column.justify-content-center.align-items-end.w-25
+            %div.h4.m-0.text-black
+              %span{style: 'font-size: 1.2rem;line-height: 2rem;color: #111827;font-weight: 700;'}
+                =plan.currency.format_number(plan.price)
+            %div.h5.m-0.text-gray1
+              - if plan.monthly_percentage_off.present? && plan.monthly_percentage_off > 0
+                %span.discount{style: 'font-size: 12px;'}
+                  Save over
+                  %span.text-with-bg{style: 'background-color: #FCD34D;padding: 2px 6px;border-radius: 4px;'}
+                    ="#{plan.monthly_percentage_off}%"
+  -# .form-group
+  -#   .custom-control.custom-radio
+  -#     %input.custom-control-input.custom-control-input-card.style-checkbox{:id => plan.interval_name.downcase, :name => "plans", :type => "radio", :data => {:price => plan.price, :frequency => plan.payment_frequency_in_months, :currency => plan.currency.iso_code, :name => plan.name, :body => plan.exam_body.name}, :value => plan.id, :checked => ("checked" if subscription.subscription_plan_id == plan.id)}
+  -#     %label.custom-control-label{:for => plan.interval_name.downcase}
+  -#       %span.custom-label-info
+  -#         %span.h3.m-0
+  -#           %span
+  -#             =plan.interval_name
+  -#         - if plan.monthly_percentage_off.present? && plan.monthly_percentage_off > 0
+  -#           %span.discount{style: 'font-size: 12px;'}
+  -#             Save over
+  -#             %span.text-with-bg.bg-yellow2
+  -#               ="#{plan.monthly_percentage_off}%"
 
-        %span.custom-label-amount
-          %span.text-purple5.text-xl
-            =plan.currency.format_number(plan.price)
-          %span.p
-            ="Billed every #{plan.payment_frequency_in_months > 1 ? pluralize(plan.payment_frequency_in_months, 'month') : 'month'}"
-        %span.custom-check
-          / custom checkbox
+  -#       %span.custom-label-amount
+  -#         %span.text-purple5.text-xl
+  -#           =plan.currency.format_number(plan.price)
+  -#         %span.p
+  -#           ="Billed every #{plan.payment_frequency_in_months > 1 ? pluralize(plan.payment_frequency_in_months, 'month') : 'month'}"
+  -#       %span.custom-check
+  -#         / custom checkbox
 
-#info-text
+-# #info-text
 
-  %p.mb-2
-    %span.font-weight-medium Note:
-    You are subscribing to a recurring payment which will continue until you cancel your subscription. You can cancel your subscription at anytime.
+-#   %p.mb-2
+-#     %span.font-weight-medium Note:
+-#     You are subscribing to a recurring payment which will continue until you cancel your subscription. You can cancel your subscription at anytime.

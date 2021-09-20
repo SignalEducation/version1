@@ -405,9 +405,13 @@ $sans-font: 'Manrope', sans-serif;
   }
   .custom-control.custom-checkbox .custom-control-input.custom-control-input-card + label,
   .custom-control.custom-radio .custom-control-input.custom-control-input-card + label {
-    padding: .75em 1em;
+    // padding: .75em 1em;
+    padding: 10px 14px;
     border: 1px solid transparent;
     border-radius: 6px;
+    @include if-device(phone) {
+      padding: 8px 12px;
+    }
   }
   @media (min-width:576px) {
     .custom-control.custom-checkbox .custom-control-input.custom-control-input-card + label,
