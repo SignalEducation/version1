@@ -34,9 +34,13 @@ RSpec.describe Api::V1::AuthController, type: :request do
                                                   address
                                                   user_group
                                                   guid
+                                                  valid_subscription
                                                   email_verification_code
                                                   email_verified_at
                                                   email_verified
+                                                  verify_remain_days
+                                                  verify_email_message
+                                                  show_verify_email_message
                                                   free_trial
                                                   terms_and_conditions
                                                   date_of_birth

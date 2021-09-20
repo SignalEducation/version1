@@ -10,9 +10,14 @@
 
       .modal-body
         %p.mb-4
-          To access this content you will need to verify your email address.
+          =verify_email_message(current_user.verify_remain_days)
         %p.mb-4
-          Check your inbox for your learnsignal verification email now.
+          =link_to resend_verification_mail_url(current_user.email_verification_code), method: :post, class: 'btn btn-secondary verification-btn btn-sm mb-3 mb-sm-0' do
+            ='Resend Verification Email'
 
       .modal-footer
 
+:javascript
+  $(document).ready(function(){
+      $('#verification-required').modal('show');
+  });
