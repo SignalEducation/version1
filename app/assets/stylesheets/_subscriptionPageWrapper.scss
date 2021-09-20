@@ -134,7 +134,7 @@
         @include if-device(phone) {
             flex-direction: column;
             justify-content: flex-start;
-            row-gap: 24px;
+            row-gap: 48px;
         }
     }
     &-detailsBox {

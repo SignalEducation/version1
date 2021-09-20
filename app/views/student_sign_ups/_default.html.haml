@@ -4,7 +4,7 @@
     .container
       %article.home-hero.home-hero-default
         .row{class: "#{(@home_page.registration_form || @home_page.login_form) ? 'justify-content-between' : ''}"}
-          .col-10.offset-1.col-md-8.offset-md-2.col-lg-6.offset-lg-0.col-xl-4
+          .col-10.offset-1.col-md-8.offset-md-2.col-lg-6.offset-lg-0.col-xl-6
             %header.home-hero-header
               -if @home_page&.header_h1.present?
                 %h1.h1-hero.text-white.mb-5

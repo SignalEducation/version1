@@ -13,7 +13,7 @@
     =preload_link_tag 'icons/budicon_classic.ttf'
     %link{:href => "https://fonts.googleapis.com", :rel => "preconnect"}/
     %link{:crossorigin => "", :href => "https://fonts.gstatic.com", :rel => "preconnect"}/
-    %link{:href => "https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap", :rel => "stylesheet"}/
+    %link{:href => "https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap", :rel => "stylesheet"}/
     =stylesheet_link_tag 'application', media: 'all'
     =javascript_include_tag 'application', modernizr: :true
 
@@ -116,7 +116,11 @@
           -if controller_name == 'courses' || controller_name == 'course_steps' || controller_name == 'preview_course_steps' || controller_name == 'content_activations'
             =render partial: 'layouts/footer_empty' 
           -else
-            =render partial: 'layouts/footer_minimal'
+            -if current_user
+              =render partial: 'layouts/footer_minimal'
+            -else
+              =render partial: 'layouts/footer_marketing'
+
 
       -elsif @layout == 'management'
         #management-console-wrapper
@@ -150,7 +154,10 @@
           -if controller_name == 'courses' || controller_name == 'course_steps' || controller_name == 'preview_course_steps' || controller_name == 'content_activations'
             =render partial: 'layouts/footer_empty' 
           -else
-            =render partial: 'layouts/footer_minimal'
+            -if current_user
+              =render partial: 'layouts/footer_minimal'
+            -else
+              =render partial: 'layouts/footer_marketing'
 
       -else
         =render partial: 'layouts/navbar'

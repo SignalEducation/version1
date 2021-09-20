@@ -4770,11 +4770,7 @@ a.card:hover .card-title .card-explanation {
       font-size: 1.0rem;
   }
 }
-@media (min-width:576px) {
-  .footer {
-    padding: 0 0 5rem 0
-  }
-}
+
 .footer .nav .nav-link {
   padding-left: 0;
   padding-right: 0;
@@ -4918,11 +4914,11 @@ a.card:hover .card-title .card-explanation {
   padding-bottom: 1rem;
   .h1-hero {
     margin-bottom: 1rem;
-    font-size: 2.5rem;
-    font-weight: 700;
-    line-height: 1.1;
+    font-size: 72px;
+    font-weight: 800;
+    line-height: 1.2;
     @include if-device(phone) {
-
+      font-size: 40px;
     }
 
   }
@@ -5013,23 +5009,23 @@ a.card:hover .card-title .card-explanation {
 }
 @media (min-width:1320px) {
   .home-hero-cta-section {
-    position: absolute;
-    bottom: 2rem;
-    left: 0
+    // position: absolute;
+    // bottom: 2rem;
+    // left: 0
   }
 }
 @media (min-width:1200px) {
   .home-hero-cta-section {
-    position: absolute;
-    bottom: 0.1rem;
-    left: 3rem;
+    // position: absolute;
+    // bottom: 0.1rem;
+    // left: 3rem;
   }
 }
 @media screen and (min-width:1321px) {
   .home-hero-cta-section {
-    position: absolute;
-    bottom: 4rem;
-    left: 0;
+    // position: absolute;
+    // bottom: 4rem;
+    // left: 0;
   }
 }
 .home-hero-alt-bg {
@@ -8807,6 +8803,9 @@ button.sub-details[aria-expanded="true"]:before{
       flex-direction: column;
       position: relative;
       row-gap: 12px;
+      @include if-device(phone) {
+        margin: 0 1rem;
+      }
       &-title {
         position: relative;
         margin-bottom: 4px;
@@ -8939,6 +8938,20 @@ button.sub-details[aria-expanded="true"]:before{
 
     .exit-btn-box {
       text-align: end;
+    }
+    .login-mobile-box {
+      flex-direction: row;
+      width: 100% ;
+      justify-content: center ;
+      align-items: center;
+      display: flex;
+      margin: 4rem 0 2rem;
+      @include if-device(phone) {
+        flex-direction: column;
+      }
+      .nav-item-box {
+        width: 100%;
+      }
     }
     .dropdown-toggle::after {
       font-size: 16px;

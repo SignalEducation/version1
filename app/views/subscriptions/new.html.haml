@@ -7,14 +7,12 @@
         .container.subscriptionPageWrapper-logo.hidden-xs
           =link_to pricing_url(@exam_body.name), class: 'navbar-brand logo' do
             =image_tag('Learnsignal-Logo.svg', class: 'logo-img', alt: "LearnSignal Logo")
-        %div.header-title-lesson.visible-xs
-          = 'Payment'
-        -# -if @plans && @plans.first
-        -#   %div.header-title-lesson.visible-xs
-        -#     = "#{@plans.first.exam_body.name} Tuition Payment"
-        -# -else
-        -#   %div.header-title-lesson.visible-xs
-        -#     = 'Exam Tuition Payment'
+        -if @plans && @plans.first
+          %div.header-title-lesson.visible-xs
+            = "#{@plans.first.exam_body.name} Subscription"
+        -else
+          %div.header-title-lesson.visible-xs
+            = 'Subscription'
       #navbarNavDropdown.collapse.navbar-collapse.justify-content-end
         %ul.navbar-nav.align-items-lg-center
           -if current_user

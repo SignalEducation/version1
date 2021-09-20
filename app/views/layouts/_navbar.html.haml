@@ -17,6 +17,16 @@
               %li.nav-item.mx-3
                 =link_to library_url, class: 'nav-link' do
                   %span Library
+        -else
+          #navbarNavDropdown.collapse.navbar-collapse.justify-content-start
+            %ul.navbar-nav.align-items-lg-center
+              %li.nav-item.dropdown.course-dropdown
+                %a#navbarDropdown.nav-link.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
+                  %span Courses
+                .dropdown-menu.dropdown-menu-right.dropdown-menu-course{"aria-labelledby" => "navbarDropdown"}
+                  -@groups.each do |group|
+                    =link_to group.name, group_landing_url(group.name_url), class: 'nav-link dropdown-item'
+                
 
         #navbarNavDropdown.collapse.navbar-collapse.justify-content-end
           %ul.navbar-nav.align-items-lg-center

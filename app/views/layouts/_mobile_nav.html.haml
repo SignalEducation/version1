@@ -28,15 +28,16 @@
                             -if !current_user.email_verified && current_user.email_verification_code
                                 =link_to resend_verification_mail_url(current_user.email_verification_code), method: :post, class: 'btn verification-btn btn-sm mb-3 mb-sm-0' do
                                     ='Resend Email'
-                -if current_user&.preferred_exam_body_id && !current_user&.valid_access_for_exam_body?(current_user&.preferred_exam_body_id, current_user&.preferred_exam_body&.group&.id)
-                    .nav-item-box.upgrade-btn
-                        =link_to 'Upgrade Now', pricing_url(current_user&.preferred_exam_body&.group&.name_url)
                     
-                .nav-item-box
+                .nav-item-box.mt-3
                     =link_to 'Dashboard', student_dashboard_url
                 .nav-item-box
                     =link_to 'Library', library_url
 
+                -if current_user&.preferred_exam_body_id && !current_user&.valid_access_for_exam_body?(current_user&.preferred_exam_body_id, current_user&.preferred_exam_body&.group&.id)
+                    .nav-item-box.upgrade-btn
+                        =link_to 'Upgrade Now', pricing_url(current_user&.preferred_exam_body&.group&.name_url)
+                        
                 .nav-item-header
                     General
                 .nav-item-box
@@ -45,7 +46,7 @@
                 .nav-item-box.logout
                     =link_to t('views.general.log_out'), sign_out_url
             -else
-                %div.d-flex.flex-row.justify-content-center.align-items-center.mt-6.mb-2
+                .login-mobile-box
                     .nav-item-box
                         =link_to sign_in_url, class: 'nav-link btn btn-outline' do
                             %span Login

@@ -21,7 +21,7 @@
 
     %link{:href => "https://fonts.googleapis.com", :rel => "preconnect"}/
     %link{:crossorigin => "", :href => "https://fonts.gstatic.com", :rel => "preconnect"}/
-    %link{:href => "https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap", :rel => "stylesheet"}/
+    %link{:href => "https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap", :rel => "stylesheet"}/
     %link{href: 'https://fonts.googleapis.com/icon?family=Material+Icons', rel: 'stylesheet'}
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -62,8 +62,8 @@
       =yield
 
       -if @footer
-        =render partial: 'layouts/footer_minimal' if @group&.disclaimer
-        =render partial: 'layouts/footer_minimal'
+        =render partial: 'layouts/footer_marketing' if @group&.disclaimer
+        =render partial: 'layouts/footer_marketing'
 
     -else
       =render partial: 'layouts/navbar'
@@ -72,8 +72,8 @@
       -if flash[:success] || flash[:error] || flash[:warning]
         =render partial: 'layouts/flash_messages'
       =yield
-      =render partial: 'layouts/footer_minimal' if @group&.disclaimer
-      =render partial: 'layouts/footer_minimal'
+      =render partial: 'layouts/footer_marketing' if @group&.disclaimer
+      =render partial: 'layouts/footer_marketing'
 
 
     -#General partials

@@ -13,9 +13,11 @@
   .dashboard__contentContainer {
     padding-top: 2rem;
     min-height: 66vh;
+    border-top: 1px solid #e6ecf0;
     @include if-device(phone) {
       padding-top: 0;
       min-height: 72vh;
+      border-top: none;
     }
   }
   .dashboard__wrapper {
