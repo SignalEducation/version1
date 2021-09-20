@@ -265,8 +265,50 @@
         letter-spacing: 1px;
         &:hover {
             color: #1D4ED8;
-            text-decoration: underline;
-
+        }
+    }
+    .coupon-code-btn-hide {
+        color: #1D4ED8;
+    }
+    .coupon-input-box {
+        position: relative;
+        width: 60%;
+        text-align: right;
+        margin-left: auto;
+        padding-left: 0px;
+        input {
+            padding: 8px 16px !important;
+            height: auto !important;
+            font-size: 14px;
+            background-color: #FFFBEB;
+            border-color: #FBBF24 !important;
+            color: #78350F !important;
+            &::placeholder {
+                color: #6B7280 !important;
+            }
+        }
+        .form-control:valid.coupon-success {
+            border: 1px solid #00b67B !important;
+            background-color: #ECFDF5;
+            color: #00b67B !important;
+        }
+        .form-control:valid.coupon-error {
+            border: 1px solid #f34664 !important;
+            background-color: #FEF2F2;
+            color: #f34664 !important;
+        }
+        .coupon-code-apply-btn {
+            position: absolute;
+            right: 10px;
+            top: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            background-color: #FCD34D;
+            padding: 4px 12px;
+            border-radius: 4px;
+            &:hover {
+                background-color: #F59E0B;
+            }
         }
     }
 }

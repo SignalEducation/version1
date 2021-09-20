@@ -4,10 +4,16 @@
     #card-errors.invalid-details{role: 'alert'}
   .form-group.text-right{style: 'margin-bottom: 0;'}
     %span.custom-label-info.coupon-code-btn.js-coupon-code-btn
-      %span Have a Coupon code?
+      %span.js-coupon-code-btn-text Have a Coupon code?
+      %i.material-icons.coupon-code-btn-icon{style: 'font-size: 16px;top: 3px;position: relative;'} keyboard_arrow_down
+    %span.custom-label-info.coupon-code-btn.coupon-code-btn-hide.hidden.js-coupon-code-btn-hide
+      %span.js-coupon-code-btn-text Hide
+      %i.material-icons.coupon-code-btn-icon{style: 'font-size: 16px;top: 3px;position: relative;'} keyboard_arrow_down
 
-    %div.js-coupon-input-box.hidden{style: 'padding-left: 0;'}
+    %div.coupon-input-box.js-coupon-input-box.hidden{style: 'padding-left: 0;'}
       %input{type: 'text_field', id: 'coupon_code', class: 'form-control', placeholder: 'Coupon Code'}
+      %span.coupon-code-apply-btn.js-coupon-code-apply-btn Apply
+        
       .invalid-code.invalid-details
         ='Invalid Code'
 
@@ -40,8 +46,14 @@
 :javascript
   $(document).on('ready', function() {
     $('.js-coupon-code-btn').on('click', function() {
+      $('.js-coupon-code-btn-hide').show();
       $('.js-coupon-input-box').show();
       $('.js-coupon-input-box input')[0].focus();
       $('.js-coupon-code-btn').hide();
+    });
+    $('.js-coupon-code-btn-hide').on('click', function() {
+      $('.js-coupon-input-box').hide();
+      $('.js-coupon-code-btn-hide').hide();
+      $('.js-coupon-code-btn').show();
     });
   });

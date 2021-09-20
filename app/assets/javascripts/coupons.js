@@ -3,7 +3,11 @@ $(document).on('ready', function () {
     couponFieldFocus(analyticsData);
   });
 
-  $('#coupon_code').on('input', function (e) {
+  // $('#coupon_code').on('input', function (e) {
+  //   validateCoupon();
+  // });
+
+  $('.js-coupon-code-apply-btn').on('click', function (e) {
     validateCoupon();
   });
 
