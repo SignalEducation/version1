@@ -146,22 +146,70 @@
         z-index: 1000;
         max-width: 396px;
         &-optionTabs {
-            width: 50%;
-            text-align: right;
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            flex-direction: row;
+            flex: 1 1;
+            align-items: center;
+            justify-content: flex-start;
+            margin-bottom: 2rem;
             &-Tab {
-                label, .label {
+                width: auto;
+                @include if-device(phone) {
+                    width: 50%;
+                }
+                label, .tab-label {
+                    width: 100%;
+                    text-align: center;
                     font-size: 14px;
-                    color: #3B82F6;
-                    font-weight: bold;
+                    margin: 0;
+                    color: #888;
+                    font-weight: 800;
                     cursor: pointer;
-                    border-radius: 8px;
-                    border: 1px solid #3B82F6;
-                    padding: 4px 10px;
+                    border: 1px solid #e6ecf0;
+                    padding: 8px 16px;
+                    background: #fafafa;
+                    border-radius: 0;
+                    // box-shadow: 0 0 0 1px #e0e0e0, 0 2px 4px 0 rgba(0, 0, 0, 0.07), 0 1px 1.5px 0 rgba(0, 0, 0, 0.05);
                     &:hover {
                         background-color: #EFF6FF;
                         // text-decoration: underline;
 
                     }
+                }
+                &.active {
+                    label, .tab-label {
+                        font-size: 14px;
+                        color: #FFF;
+                        font-weight: 800;
+                        cursor: pointer;
+                        border-radius: 0;
+                        border: 1px solid #3B82F6;
+                        padding: 8px 16px;
+                        background-color: #3B82F6;
+                        &:hover {
+                            background-color: #2563EB;
+                            // text-decoration: underline;
+    
+                        }
+                    }
+
+                }
+                &:first-child {
+                    .tab-label {
+                        border-top-left-radius: 6px;
+                        border-bottom-left-radius: 6px;
+                        overflow: hidden;
+                    }
+                }
+                &:last-child {
+                    .tab-label {
+                        border-top-right-radius: 6px;
+                        border-bottom-right-radius: 6px;
+                        overflow: hidden;
+                    }
+
                 }
             }
         }

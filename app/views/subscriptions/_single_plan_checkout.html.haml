@@ -18,7 +18,7 @@
               =subscription.subscription_plan.currency.format_number(subscription.subscription_plan.price)
           %div.h5.m-0.text-gray1
             -if subscription.subscription_plan.monthly_percentage_off.present? && subscription.subscription_plan.monthly_percentage_off > 0
-              %span.discount
+              %span.discount{style: 'font-size: 12px;'}
                 Save over
                 %span.text-with-bg{style: 'background-color: #FCD34D;padding: 2px 6px;border-radius: 4px;'}
                   ="#{subscription.subscription_plan.monthly_percentage_off}%"
@@ -50,7 +50,7 @@
                   =plan.currency.format_number(plan.price)
               %div.h5.m-0.text-gray1
                 - if plan.monthly_percentage_off.present? && plan.monthly_percentage_off > 0
-                  %span.discount
+                  %span.discount{style: 'font-size: 12px;'}
                     Save over
                     %span.text-with-bg{style: 'background-color: #FCD34D;padding: 2px 6px;border-radius: 4px;'}
                       ="#{plan.monthly_percentage_off}%"
