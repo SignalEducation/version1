@@ -7837,7 +7837,7 @@ button.sub-details[aria-expanded="true"]:before{
 }
 .question {
   padding: 2rem;
-  background-color: #f2f2f2;
+  background-color: #f5f8fa;
   border-radius: 16px;
   @include if-device(phone) {
     border-radius: 0;
@@ -8227,7 +8227,7 @@ button.sub-details[aria-expanded="true"]:before{
     width: 100%;
     text-align: left;
     @include if-device(phone) {
-      background-color: #FFF;
+      background-color: transparent;
     }
   }
   p {
@@ -8859,6 +8859,7 @@ button.sub-details[aria-expanded="true"]:before{
       position: absolute;
       right: 3.5rem;
       font-size: 15px;
+      overflow: visible;
     }
     .overlay-active {
       right: 0;
@@ -9242,6 +9243,7 @@ button.sub-details[aria-expanded="true"]:before{
   right: 16px;
   bottom: 16px;
   font-size: 18px;
+  overflow: visible;
   &:hover {
     background-color: #3c3b3b;
     color: #FFF;
@@ -9260,6 +9262,37 @@ button.sub-details[aria-expanded="true"]:before{
     background: #00B67A;
     border-radius: 8px;
     transform: rotate(-2deg);
+  }
+}
+
+.zendeskNotificationBadge {
+  background-color: #dc3545;
+  border-radius: 4px;
+  color: #FFF;
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  font-size: 12px;
+  line-height: 1.8;
+  font-weight: 700;
+  top: 10px;
+  left: -26px;
+  animation: pulseBadge 1s ease infinite;
+  @include if-device(phone){ 
+    top: 5px;
+  }
+}
+
+@keyframes pulseBadge {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  60% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
   }
 }
 

@@ -6,27 +6,33 @@
         hide: true,
       }
   };
-  // zE && zE('webWidget', 'hide');
-  // zE && zE(function(){zE.hide();}); 
 
 / Start of learnsignal Zendesk Widget script
 %script#ze-snippet{:src => "https://static.zdassets.com/ekr/snippet.js?key=#{Rails.application.credentials[Rails.env.to_sym][:zendesk][:project_key]}"} :cdata
 / End of learnsignal Zendesk Widget script
 
 -# Zendesk custom button
-%div{onclick:'openWidget()', class: 'btn hidden-xs zendesk-btn'}
+%div{onclick:'openWidget()', class: 'btn hidden-xs zendesk-btn js-zendesk-btn'}
   %i.material-icons{style: "color: #FFF;margin-right: 2px;font-size: 18px;top: 3px;position: relative;"} help_outline
-  Help
+  %span.js-zendesk-text Help
+  .zendeskNotificationBadge.js-zendesk-badge.hidden
 
 :javascript
   if (window.hasOwnProperty('zE')) {
     function openWidget() {
       $zopim.livechat.window.show();
-      // zE('webWidget', 'show');
-      // zE('webWidget', 'open');
+      zE('webWidget', 'identify', {
+        name: '#{current_user.name}',
+        email: '#{current_user.email}',
+      });
     };
     zE && zE('webWidget', 'hide');
     zE && zE('webWidget:on', 'close', function() {
-        zE('webWidget', 'hide');
+      zE('webWidget', 'hide');
+      $('.js-zendesk-btn .js-zendesk-badge').hide();
     })
+    zE('webWidget:on', 'chat:unreadMessages', function(number) {
+      $('.js-zendesk-btn .js-zendesk-badge').text(number);
+      $('.js-zendesk-btn .js-zendesk-badge').show();
+    });
   }

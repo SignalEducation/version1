@@ -1,5 +1,5 @@
 -if user && @course_product && !user.can_view_content?(@group.exam_body_id, @group.id, @course.id)
-  .upgradeNudgeMini
+  .upgradeNudgeMini.mb-4
     .upgradeNudgeMini-icon
       🎉
     .upgradeNudgeMini-title
@@ -11,7 +11,7 @@
       %a#enrol-top{data: {target: '#pricing-modal', toggle: 'modal'}, href: '#', class: 'btn btn-primary'}
         View Pricing Plans
 -elsif user && !user.can_view_content?(@group.exam_body_id, @group.id, @course.id)
-  .upgradeNudgeMini
+  .upgradeNudgeMini.mb-4
     .upgradeNudgeMini-icon
       🎉
     .upgradeNudgeMini-title
@@ -23,7 +23,7 @@
       =link_to pricing_url(@group.name_url), class: 'btn btn-primary upgrade' do
         View Pricing Plans
 -elsif !user
-  .upgradeNudgeMini
+  .upgradeNudgeMini.mb-4
     .upgradeNudgeMini-icon
       📨
     .upgradeNudgeMini-title

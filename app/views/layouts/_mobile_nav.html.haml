@@ -74,9 +74,10 @@
 
     =link_to home_url, class: 'navbar-brand logo' do
         =image_tag('Learnsignal-Logo.svg', class: 'logo-img', alt: "LearnSignal Logo")
-    %div{onclick:'openWidget()', class: 'btn btn-outline btn-sm zendesk-mobile-btn'}
+    %div{onclick:'openWidget()', class: 'btn btn-outline btn-sm zendesk-mobile-btn js-zendesk-btn'}
         %i.material-icons{style: "color: #FFF;margin-right: 2px;font-size: 18px;top: 3px;position: relative;"} support
-        Help
+        %span.js-zendesk-text Help
+        .zendeskNotificationBadge.js-zendesk-badge.hidden
     %button.material-icons.btn-side-nav{:type => "button"}menu
 
 
