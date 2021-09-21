@@ -30,8 +30,8 @@
                 =label_tag :question, 'Question'
                 =text_area_tag :question, nil, rows: 3, class: 'form-control', placeholder: 'Please outline your question', required: true
 
-          %p.pt-1.text-right
+          %div.pt-1.text-right.px-3
             =recaptcha_tags
 
-          .pt-2.px-2.text-left
+          .pt-4.px-3.text-left
             =submit_tag 'Submit', class: 'btn btn-primary btn-sm', id: 'contact_form_btn', data: { disable_with: "Please wait..." }

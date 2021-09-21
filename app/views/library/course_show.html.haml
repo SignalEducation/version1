@@ -77,9 +77,6 @@
               %a{href: "#products", role: 'tab', class: 'nav-link', data: {toggle: 'tab'}, aria: {controls: "products", selected: 'false'}}
                 ='Product (Add-ons)'
 
-          -#%li.nav-item
-            %a#locked-tab.nav-link.locked{"aria-controls" => "locked", "aria-selected" => "false", "data-toggle" => "tab", :href => "#locked", :role => "tab"}
-              Locked
 
 =render partial: 'library/user_form_modal', locals: { ticket_type: 'Contact Us', form_id: 'contact-form-modal' }
 .coursePage-moduleDetailWrapper
@@ -186,9 +183,6 @@
                           =number_in_local_currency(product.price, product.currency)
                         .btn.btn-primary.productCard--buyBtn
                           Buy
-
-      -#locked.tab-pane.tab-locked{"aria-labelledby" => "locked-tab", :role => "tabpanel"}
-        %h4.sr-only This is placeholder Locked content
 
 -# Modals
 =render partial: 'account_required_modal'

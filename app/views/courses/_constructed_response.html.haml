@@ -139,23 +139,32 @@
                 .scenario-box-nav.scenario-box-nav-footer
                   .cr-navigation
                     .cr-navigation-left
+                      
+                    .cr-navigation-center
+                      
+
+                    .cr-navigation-right
                       %ul
                         %li.cr-nav-link{onclick: 'previousQuestion(); return false;'}
                           %i.material-icons{"aria-hidden" => "true", style: "font-size: 16px;margin-right: 4px;"} arrow_back
                           ='Previous'
+                        &nbsp;
+                        =" | "
+                        &nbsp;
                         %li.cr-nav-link#open-navigation-dialog{onclick: 'openNavDialog(); return false;'}
-                          %i.material-icons{"aria-hidden" => "true", style: "font-size: 16px;margin-right: 4px;"} subject
+                          %i.material-icons{"aria-hidden" => "true", style: "font-size: 16px;margin-right: 4px;"} my_location
                           ='Navigation'
-                        %li.cr-nav-link.d-none#close-navigation-dialog{onclick: 'closeNavDialog(); return false;'}
-                          %i.material-icons{"aria-hidden" => "true", style: "font-size: 16px;margin-right: 4px;"} subject
+                        %li.d-none#close-navigation-dialog{onclick: 'closeNavDialog(); return false;'}
+                          %i.material-icons{"aria-hidden" => "true", style: "font-size: 16px;margin-right: 4px;"} my_location
                           ='Navigation'
-                    .cr-navigation-center
-                      %ul
-                        %li.cr-nav-link.submit-btn{onclick: 'loadSubmission(); return false;'}
+                        &nbsp;
+                        =" | "
+                        &nbsp;
+                        %li.cr-nav-link{onclick: 'loadSubmission(); return false;'}
                           ='Submit'
-
-                    .cr-navigation-right
-                      %ul
+                        &nbsp;
+                        =" | "
+                        &nbsp;
                         %li.cr-nav-link{onclick: 'nextQuestion(); return false;'}
                           ='Next'
                           %i.material-icons{"aria-hidden" => "true", style: "font-size: 16px;margin-right: 4px;"} arrow_forward

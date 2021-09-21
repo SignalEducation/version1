@@ -277,7 +277,7 @@ h4,
 h5,
 h6 {
   margin-bottom: 1rem;
-  font-weight: 600;
+  font-weight: 700;
   line-height: 1.35;
   color: #000032
 }
@@ -8020,6 +8020,9 @@ button.sub-details[aria-expanded="true"]:before{
   }
   .start-screen-box {
     min-height: 70vh;
+    @include if-device(phone) {
+      padding: 0;
+    }
   }
   .course-right-show-frame {
     padding: 1px;
@@ -8095,10 +8098,11 @@ button.sub-details[aria-expanded="true"]:before{
       border-bottom: 1px solid rgba(0,0,0,.08);
     }
     .cr-nav-link {
-      background-color: rgb(15, 23, 42);
-      padding: 0.5rem 1rem;
-      border-radius: 4px;
       font-weight: 600;
+      i {
+        position: relative;
+        top: 2px;
+      }
     }
     .tool-btn {
       background-color: rgba(191, 191, 191, 0.95);
@@ -8228,6 +8232,7 @@ button.sub-details[aria-expanded="true"]:before{
     text-align: left;
     @include if-device(phone) {
       background-color: transparent;
+      font-size: 14px;
     }
   }
   p {
