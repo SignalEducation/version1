@@ -384,7 +384,7 @@ RSpec.describe Api::V1::UsersController, type: :request do
       end
     end
   end
-  
+
   # resend_verify_user_email
   describe 'get /api/v1/users/#user_id/resend_verify_user_email' do
     context 'resend verify user email' do
