@@ -42,7 +42,7 @@ describe 'An individual purchasing a product', type: :feature do
       visit prep_products_path
       first(:link, mock.mock_exam.name).click
 
-      expect(page).to have_content('Pay with Carad')
+      expect(page).to have_content('Pay with Card')
       expect(page).to have_selector('#pay-with-card')
     end
   end

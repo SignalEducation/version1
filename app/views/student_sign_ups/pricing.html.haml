@@ -85,6 +85,7 @@
                           .mt-auto
                             =link_to subscription_checkout_special_link(plan.exam_body_id, plan.guid), class: "btn w-100 btn-primary choosePlanBtn", onclick: "addToCart('#{plan.currency.iso_code}', '#{plan.name}', '#{plan.id}', '#{plan.price}', '#{plan.exam_body.name}');" do
                               ="Choose #{t("views.general.payment_intervals.a#{plan.payment_frequency_in_months}")}"
+                              %span.sr-only Choose this plan
                           %div.visible-xs.bulletListAccordianBox
                             .faq-box.mt-3
                               .faq-inner.narrow{onclick: '$(this).toggleClass("narrow"); $(this).find(".faq-answer").toggleClass("d-md-block"); $(this).find(".faq-answer-expanded").toggleClass("d-none"); $(this).find(".bulletListAccordianBox-openIcon").toggleClass("d-none"); $(this).find(".bulletListAccordianBox-closeIcon").toggleClass("d-none");'}
@@ -151,7 +152,9 @@
                       %p.preCtaText
                         One-time payment
                       .mt-auto
-                        = link_to 'Choose Lifetime', link, class: 'btn btn-primary choosePlanBtn w-100 ', onclick: "gtag('event', 'clicks_plan', {'event_category': 'pre-registration', 'event_label': '#{name}'});"
+                        =link_to link, class: 'btn btn-primary choosePlanBtn w-100 ', onclick: "gtag('event', 'clicks_plan', {'event_category': 'pre-registration', 'event_label': '#{name}'});" do
+                          ="Choose Lifetime"
+                          %span.sr-only Choose this plan
                       %div.visible-xs.bulletListAccordianBox
                         .faq-box.mt-3
                           .faq-inner.narrow{onclick: '$(this).toggleClass("narrow"); $(this).find(".faq-answer").toggleClass("d-md-block"); $(this).find(".faq-answer-expanded").toggleClass("d-none"); $(this).find(".bulletListAccordianBox-openIcon").toggleClass("d-none"); $(this).find(".bulletListAccordianBox-closeIcon").toggleClass("d-none");'}
@@ -254,6 +257,7 @@
                                   .mt-auto
                                     =link_to subscription_checkout_special_link(plan.exam_body_id, plan.guid), class: "btn w-100 btn-primary choosePlanBtn", onclick: "addToCart('#{plan.currency.iso_code}', '#{plan.name}', '#{plan.id}', '#{plan.price}', '#{plan.exam_body.name}');" do
                                       ="Choose #{t("views.general.payment_intervals.a#{plan.payment_frequency_in_months}")}"
+                                      %span.sr-only Choose this plan
                                   %div.visible-xs.bulletListAccordianBox
                                     .faq-box.mt-3
                                       .faq-inner.narrow{onclick: '$(this).toggleClass("narrow"); $(this).find(".faq-answer").toggleClass("d-md-block"); $(this).find(".faq-answer-expanded").toggleClass("d-none"); $(this).find(".bulletListAccordianBox-openIcon").toggleClass("d-none"); $(this).find(".bulletListAccordianBox-closeIcon").toggleClass("d-none");'}
@@ -320,7 +324,9 @@
                               %p.text-gray2.mt-4.mb-2.text-bold
                                 One-time payment
                               .mt-auto
-                                = link_to 'Choose Lifetime', link, class: 'btn btn-primary choosePlanBtn w-100 ', onclick: "gtag('event', 'clicks_plan', {'event_category': 'pre-registration', 'event_label': '#{name}'});"
+                                = link_to link, class: 'btn btn-primary choosePlanBtn w-100 ', onclick: "gtag('event', 'clicks_plan', {'event_category': 'pre-registration', 'event_label': '#{name}'});" do
+                                  ="Choose Lifetime"
+                                  %span.sr-only Choose this plan
                               %div.visible-xs.bulletListAccordianBox
                                 .faq-box.mt-3
                                   .faq-inner.narrow{onclick: '$(this).toggleClass("narrow"); $(this).find(".faq-answer").toggleClass("d-md-block"); $(this).find(".faq-answer-expanded").toggleClass("d-none"); $(this).find(".bulletListAccordianBox-openIcon").toggleClass("d-none"); $(this).find(".bulletListAccordianBox-closeIcon").toggleClass("d-none");'}
