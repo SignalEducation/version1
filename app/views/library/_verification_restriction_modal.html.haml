@@ -7,7 +7,7 @@
       %h3.text-red{id: 'verificationRequired'}
         =verify_email_message(current_user.verify_remain_days).html_safe
       %p.mb-3
-        Check your inbox 
+        Check your inbox
       .upgradeIllustration
         =image_tag('illustrations/upgrade-illustration-v1@2x.png', alt: 'upgrade')
 
@@ -16,8 +16,8 @@
           =link_to resend_verification_mail_url(current_user.email_verification_code), method: :post, class: 'btn btn-dark verify-btn' do
             ='Resend Email'
 
-:javascript
-  $(document).ready(function(){
+- if onload
+  :javascript
+    $(document).ready(function(){
       $('#verification-required').modal('show');
-  });
-
+    });

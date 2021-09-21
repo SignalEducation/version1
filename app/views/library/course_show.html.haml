@@ -52,7 +52,7 @@
               %h1.h1-hero
                 =@course.name
 
-      
+
       - if @course_log
         %section.course-progress.col-sm-8.col-xl-8.p-0
           =render partial: 'progress'
@@ -87,8 +87,8 @@
     #coursesTabsContent.tab-content
       - @course.course_sections.all_active.all_in_order.each_with_index do |course_section, counter|
         .tab-pane{id: course_section.name_url, class: "tab-#{course_section.name_url} #{counter == 0 ? 'active show' : ''} ", "aria-labelledby" => "#{course_section.name_url}-tab", :role => "tabpanel"}
-          - if course_section.name_url == 'learning-tab' 
-            %h3.text-gray1.mb-4.mb-sm-5 
+          - if course_section.name_url == 'learning-tab'
+            %h3.text-gray1.mb-4.mb-sm-5
               Learning Modules
           .row.row-lg
             .col-sm-8.col-xl-8
@@ -202,7 +202,7 @@
 =render partial: 'pricing_modal'
 - if current_user
   =render partial: 'subscription_restriction_modal'
-  =render partial: 'verification_restriction_modal' if current_user&.verify_remain_days&.zero?
+  =render partial: 'verification_restriction_modal', locals: { onload: false }
   =render partial: 'related_lesson_restriction_modal'
 -# - if @welcome_video
 -#   =render partial: 'welcome_video_modal'
