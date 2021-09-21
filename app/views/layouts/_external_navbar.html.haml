@@ -1,28 +1,17 @@
 %header.header.sticky-top
-  %nav.navbar.navbar-light.navbar-expand-lg.navbar-lg
-    .container.animate.fade-in-up
-      %button.navbar-toggler{"aria-controls" => "navbarNavDropdown", "aria-expanded" => "false", "aria-haspopup" => "true", "aria-label" => "Toggle navigation", "data-target" => "#navbarNavDropdown", "data-toggle" => "collapse", :type => "button"}
-        %span.navbar-toggler-bar.frst
-        %span.navbar-toggler-bar.scnd
+  %nav.navbar.navbar-expand-lg.navbar-lg{style: "box-shadow: inset 0 -1px #e3e8ee;"}
+    .container
+      -# %button.navbar-toggler{"aria-controls" => "navbarNavDropdown", "aria-expanded" => "false", "aria-haspopup" => "true", "aria-label" => "Toggle navigation", "data-target" => "#navbarNavDropdown", "data-toggle" => "collapse", :type => "button"}
+      -#   %span.navbar-toggler-bar.frst
+      -#   %span.navbar-toggler-bar.scnd
+      %button{"aria-controls" => "navbarNavDropdown", "aria-expanded" => "false", "aria-haspopup" => "true", "aria-label" => "Toggle navigation", "data-target" => "#navbarNavDropdown", "data-toggle" => "collapse", :type => "button", :class => "material-icons", :style => "position: relative;z-index: 80;width: 24px;height: 34px;border-radius: 100%;background-color: transparent;color: #657786;margin: 0;margin-top: 1px;padding: 0;font-size: 24px;border: none;margin-right: 12px;"}
+        menu
 
       =link_to home_url, class: 'navbar-brand logo' do
         =image_tag('Learnsignal-Logo.svg', class: 'logo-img')
 
       #navbarNavDropdown.collapse.navbar-collapse.justify-content-end
         %ul.navbar-nav.align-items-lg-center
-          -@navbar_landing_pages.each do |landing_page|
-            =navbar_landing_page_menu(landing_page)
-          %li.nav-item
-            =link_to pricing_url, class: 'nav-link', onclick: "gtag('event', 'clicks_header_pricing', {'event_category': 'pre-registration', 'event_label': 'pricing'});" do
-              %span Pricing
-          %li.nav-item.dropdown.course-dropdown
-            %a#navbarDropdown.nav-link.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
-              %span Courses
-            .dropdown-menu.dropdown-menu-right.dropdown-menu-course{"aria-labelledby" => "navbarDropdown"}
-              -@groups.each do |group|
-                =link_to group.name, group_landing_url(group.name_url), class: 'nav-link dropdown-item', onclick: "gtag('event', 'clicks_header_courses', {'event_category': 'pre-registration', 'event_label': '#{group.name}'});"
-
-
           -if current_user
             %li.nav-item.dropdown
               %a#navbarDropdown.nav-link.navbar-login.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
@@ -37,9 +26,9 @@
                 =link_to t('views.general.log_out'), sign_out_url, class: 'nav-link dropdown-item'
 
           -else
-            %li.nav-item
-              =link_to new_student_url, class: 'nav-link', onclick: "gtag('event', 'clicks_register', {'event_category': 'pre-registration', 'event_label': 'register'});" do
-                %span Register
-            %li.nav-item
-              =link_to sign_in_url, class: 'nav-link navbar-login', onclick: "gtag('event', 'clicks_login', {'event_category': 'pre-registration', 'event_label': 'login'});" do
+            %li.nav-item.w-100.text-center.py-2
+              =link_to sign_in_url, class: 'navbar-login', onclick: "gtag('event', 'clicks_login', {'event_category': 'pre-registration', 'event_label': 'login'});" do
                 %span Login
+            %li.nav-item.w-100.text-center.py-2
+              =link_to new_student_url, class: 'nav-link btn btn-primary px-4', onclick: "gtag('event', 'clicks_register', {'event_category': 'pre-registration', 'event_label': 'register'});" do
+                %span Register

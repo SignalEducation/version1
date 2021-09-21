@@ -1,7 +1,7 @@
 <template>
-  <div class="pdf-viewer">
+  <div class="pdf-viewer course-viewers">
     <header class="pdf-viewer__header box-shadow">
-      <div class="pdf-preview-toggle toolbarButton">
+      <!-- <div class="pdf-preview-toggle toolbarButton">
         <a @click.prevent.stop="togglePreview" class="icon material-icons">
           <i class="glyphicon glyphicon-list-alt"></i>
         </a>
@@ -18,7 +18,7 @@
         @change="updateScale"
         @fit="updateFit"
         class="toolbarButton"
-      />
+      /> -->
 
       <PDFFullscreen
         @presentationMode="enablePresentation"

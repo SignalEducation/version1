@@ -1,26 +1,26 @@
 .modal.fade{id: form_id, tabindex: '-1', role: 'dialog', 'aria-labelledby': 'user_form', 'aria-hidden': 'true'}
   .modal-dialog{role: 'document'}
-    .modal-content
-      %button.btn.btn-text.modal-close.p-0{"data-dismiss" => "modal"}
+    .modal-content.userForm
+      %button.btn.btn-icon.modal-close{"data-dismiss" => "modal"}
         %span.sr-only Close Modal
         %i.material-icons{"aria-hidden" => "true"} close
 
-      .modal-header
+      .modal-header.p-0
         %h3.mb-3{id: 'user_form'}
           =ticket_type
 
-      .modal-body
-        .row.col-sm-12.flash-messages
+      .modal-body.p-0
+        .row.col-sm-12.flash-messages{style: 'right: 50%;transform: translate(30%, 0);'}
 
         =form_tag(user_contact_form_path, { class: 'form py-2', role: 'form', name: 'user_contact_form', id: 'user_contact_form', remote: true }) do
           =hidden_field_tag :type, ticket_type
-          .row
-            .col-sm-6
+          .row.col-sm-12.m-0.p-0
+            .col-sm-12
               .form-group
                 =label_tag :full_name, 'Name'
                 =text_field_tag :full_name, nil, class: 'form-control', placeholder: 'Enter your full name', required: true
 
-            .col-sm-6
+            .col-sm-12
               .form-group
                 =label_tag :email, 'Email'
                 =email_field_tag :email_address, nil, class: 'form-control', placeholder: 'Enter your Email', type: :email, required: true
@@ -30,8 +30,8 @@
                 =label_tag :question, 'Question'
                 =text_area_tag :question, nil, rows: 3, class: 'form-control', placeholder: 'Please outline your question', required: true
 
-          %p.pt-1
+          %p.pt-1.text-right
             =recaptcha_tags
 
-          .pt-2
+          .pt-2.px-2.text-left
             =submit_tag 'Submit', class: 'btn btn-primary btn-sm', id: 'contact_form_btn', data: { disable_with: "Please wait..." }

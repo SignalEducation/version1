@@ -44,7 +44,7 @@ export default {
       const {width: actualSizeWidth, height: actualSizeHeight} = this.actualSizeViewport;
       const [pixelWidth, pixelHeight] = [actualSizeWidth, actualSizeHeight]
         .map(dim => Math.ceil(dim / PIXEL_RATIO));
-      return `width: ${pixelWidth}px; height: ${pixelHeight}px;`;
+      return `width: ${pixelWidth + 14}px; height: ${pixelHeight}px;`;
     },
     canvasAttrs() {
       let {width, height} = this.viewport;

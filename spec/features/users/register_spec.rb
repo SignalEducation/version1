@@ -15,7 +15,7 @@ describe 'Register in process', type: :feature do
   context 'User visits the register page' do
     scenario 'Loading the register page' do
       expect(page).to have_title('Free Basic Plan Registration | LearnSignal')
-      expect(page).to have_content('Basic Plan Registration')
+      expect(page).to have_content('Get Started')
       expect(page).to have_content('Registration Details')
 
       within('#new_user') do
@@ -46,6 +46,7 @@ describe 'Register in process', type: :feature do
 
       expect(page).to have_title('Dashboard')
       expect(page).to have_content('Please verify your email within 7 days to continue free tier subscription.')
+      expect(page).to have_content('Check your inbox now')
     end
 
     scenario 'invalid user data' do

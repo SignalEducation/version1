@@ -1,0 +1,212 @@
+.account {
+    position: relative;
+    &-wrapper {
+      min-height: 70vh;
+    }
+    .h1-hero {
+        font-size: 3rem;
+        padding-top: 4rem;
+        padding-bottom: 1rem;
+        @include if-device(phone) {
+          font-size: 1rem;
+          padding: 2rem 0 0 !important;
+          font-size: 32px;
+          font-weight: 700;
+          line-height: 1.5;
+          margin: 0;
+        }
+      }
+      .nav-verification-alert-box {
+        z-index: 1;
+        padding: 16px 12px;
+        font-size: 16px;
+        font-weight: 600;
+        color: #D97706;
+        background-color: #FEF3C7;
+        border: none;
+        border-radius: 12px;
+        margin: 0;
+        display: flex;
+        flex-direction: row;
+        column-gap: 12px;
+        position: relative;
+        top: 10px;
+        @include if-device(desktop) {
+          max-width: 330px;
+          margin: 1rem;
+          margin-left: auto;
+          height: auto;
+          position: fixed;
+          left: 20px;
+          bottom: 20px;
+          top: auto;
+          box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.06), 0px 1px 10px rgba(0, 0, 0, 0.02);
+        }
+        &-title {
+          position: relative;
+          margin-bottom: 4px;
+          color: #78350F;
+          span {
+            z-index: 10;
+            position: relative;
+            padding: 0;
+            font-weight: 700;;
+          }
+  
+        }
+        &-desc {
+          font-size: 14px;
+          color: #D97706;
+        }
+        .verification-btn {
+          position: relative;
+          width: 50%;
+          color: #FFF;
+          margin: 0;
+          padding: 0.2rem;
+          margin-bottom: 0 !important;
+          margin-top: 1rem;
+          font-size: 14px;
+        }
+      }
+}
+
+.accountSubscription {
+  .subscriptionCard {
+    border: 1px solid #e6ecef; 
+    background: #fafafa !important;
+    width: 100%;
+    margin-right: auto;
+    &-body {
+      display: flex;
+      flex-direction: row;
+      padding: 1.5rem;
+      width: 100%;
+      &-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: #111827;
+        line-height: 1.5;
+      }
+      &-icon {
+        display: flex;
+        width: auto;
+        margin-right: 10px;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        .iconText {
+          font-size: 32px;
+        }
+      }
+      &-nameBox {
+        display: flex;
+        width: 35%;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        
+      }
+      &-paymentBox {
+        display: flex;
+        width: 20%;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+      }
+      &-statusBox {
+        display: flex;
+        width: 15%;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-end;
+        text-align: center;
+        .statusText {
+          background-color: #FCD34D;
+          color: #111827;
+          padding: 6px 24px;
+          border-radius: 40px;
+          text-transform: uppercase;
+          font-size: 14px;
+        }
+      }
+      &-actionBox {
+        display: flex;
+        width: 30%;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-end;
+        text-align: right;
+      }
+      @include if-device(phone) {
+        flex-direction: column;
+        align-items: flex-start;
+        row-gap: 16px;
+        padding: 1rem;
+        &-title {
+          font-size: 20px;
+          line-height: 1.5;
+        }
+        &-icon, &-nameBox, &-paymentBox, &-statusBox, &-actionBox {
+          width: 100%;
+          text-align: left;
+          flex-direction: column;
+          align-items: flex-start;
+          justify-content: space-between;
+          .btn {
+            width: 100%;
+          }
+          .iconText {
+            font-size: 32px;
+          }
+        }
+        .statusText {
+          position: absolute;
+          right: 16px;
+          top: 16px;
+          font-size: 12px;
+          padding: 0px 20px;
+        }
+      }
+
+    }
+
+  }
+}
+
+.zeroCaseWrapper {
+  width: 100%;
+  display: flex;
+  row-gap: 24px;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin: 2rem 0;
+  &-image {
+    width: 160px;
+
+  }
+  &-infoBox {
+    &-title {
+      font-size: 20px;
+      line-height: 1.5;
+      font-weight: 700;
+      color: #111827;
+      @include if-device(phone) {
+        font-size: 18px;
+      }
+    }
+    &-desc {
+      font-size: 14px;
+      line-height: 1.5;
+      font-weight: 500;
+      color: #4B5563;
+      @include if-device(phone) {
+        font-size: 13px;
+      }
+    }
+
+  }
+
+}

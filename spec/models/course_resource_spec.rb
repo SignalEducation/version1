@@ -57,7 +57,6 @@ describe CourseResource do
           allow_any_instance_of(User).to receive(:valid_subscription?).and_return(false)
         end
 
-
         it { expect(course_resource_1.available_to_user(user, nil)).to eq({ view: false, reason: 'verification-required' }) }
       end
 

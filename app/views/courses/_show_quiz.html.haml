@@ -5,17 +5,24 @@
    free_lesson: @course_lesson.free.to_s, step_order: @index_order, previous_completion_count: @previous_completion_count,
     quiz_question_count: @course_step.course_quiz.quiz_questions.count, quiz_questions_asked: @number_of_questions, selection_strategy: @strategy,
      estimated_time_in_seconds: @course_step.estimated_time_in_seconds, previous_best_score: @previous_best_score, previously_passed: @previously_passed }}
-  .col-xl-12
+  .col-xl-12.p-0
     #course-right-show-elem-notes.course-right-show-content
       -if @course_step.try(:course_quiz).try(:enough_questions?)
-        .quiz-heading.mb-2.align-quiz-text
+        .quiz-heading.p-3.align-quiz-text
           #question-count.p
             Question 1 of 4
-          .progress.mb-5
+          .progress
             .progress-bar{role: 'progressbar', aria: {valuenow: 0, valuemin: 0, valuemax: 100}, style: 'width: 0%;'}
+        
+        %header.course-header-mobile
+          -if @course_step
+            .course-title
+              %div{style:"height:20px;margin-right: 12px;"}
+                %i{class:"material-icons icon-bg-round side-nav-material-icons", style: "color: #888; "} quiz
+              =@course_step.name
 
         .course-right-show-frame
-          #step-block.reduce-quiz-text-top
+          .reduce-quiz-text-top
             -@quiz_questions.each do |question|
               =render partial: 'quiz_questions/show', locals: {question: question, hide_me: true}
 

@@ -36,18 +36,29 @@ module CoursesHelper
   end
 
   def external_pdf_link(resource, banner, user)
-    content_tag(:div, class: 'col-sm-6') do
-      content_tag(:div, id: 'resource-window', class: 'card card-horizontal card-horizontal-sm flex-row resource-card', data: { resource_name: resource.name, resource_id: resource.id, course_name: resource.course.name, course_id: resource.course_id,
+    content_tag(:div, class: 'col-md-4 col-lg-3 mb-4') do
+      link_to(course_resource_special_link(resource), target: :blank, id: 'resource-window', class: 'productCard external-card', data: { resource_name: resource.name, resource_id: resource.id, course_name: resource.course.name, course_id: resource.course_id,
                                                                                                                                 preferred_exam_body_id: user&.preferred_exam_body_id, preferred_exam_body: user&.preferred_exam_body&.name, banner: banner,
                                                                                                                                 onboarding: user&.analytics_onboarding_valid?.to_s, exam_body_name: resource.course.exam_body.name, exam_body_id: resource.course.exam_body_id,
                                                                                                                                 resource_type: resource.type, allowed: true }) do
-        content_tag(:div, class: 'card-header bg-white d-flex align-items-center justify-content-center') do
-          content_tag(:i, '', class: 'budicon-files-download')
+        content_tag(:div, class: 'productCard-header d-flex align-items-center justify-content-center') do
+          # content_tag(:i, '', class: 'budicon-files-download')
+          image_tag('course-addon-icons/addon-correction-pack.svg')
         end +
 
-        link_to(course_resource_special_link(resource), target: :blank, class: 'card-body d-flex align-items-center pl-1') do
-          content_tag(:h5, class: 'm-0 text-truncate text-gray2') do
+        content_tag(:div, class: 'productCard-body d-flex align-items-center') do
+          content_tag(:div, class: '') do
             resource.name
+          end +
+          content_tag(:div, class: 'productCard-footer d-flex align-items-center justify-content-between') do
+            content_tag(:div, '', class: '') do
+              content_tag(:span, style:"color: #007bff;background-color: rgb(0 123 255 / 5%);font-size: 14px;border-radius: 4px;padding: 0.5rem 1rem;letter-spacing: 1px;font-weight: 600;line-height: 1;display: inline-flex;column-gap: 6px;") do
+                '🎉 FREE'
+              end
+            end +
+            content_tag(:div, '', class: 'btn btn-primary productCard--buyBtn') do
+              'View'
+            end
           end
         end
       end

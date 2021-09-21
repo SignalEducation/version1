@@ -1,121 +1,306 @@
 =javascript_include_tag 'coupons'
 
-%main
-  %article.bg-gray5
-    .container-bg
-      .container#plans
-        %header.hero-section
-          %h1.h2-hero.mb-2
-            Change Plan
-          %p.p-hero.px-lg-6
-            -if @subscription.upgrade_options.present?
-              Select your preferred payment plan
-            -else
-              Sorry! There are no other payment plans available at this time.
-              %p.p-hero.px-lg-6
-                =link_to t('views.user_accounts.back_to_account'), account_url, class: 'btn btn-primary'
 
-        %section.pb-md-6.pb-5.plan-change-col
-          -if @subscription.upgrade_options.present?
-            -if flash[:success] || flash[:error] || flash[:warning]
-              =render partial: 'layouts/flash_messages'
-            =form_for(@subscription, url: subscription_plan_changes_path(@subscription), method: :post, html: {class: 'form-horizontal', role: 'form', id: 'upgrade-subscription-form'}) do |f|
-              =f.hidden_field :subscription_plan_id
-              =f.hidden_field :use_paypal, value: @subscription.paypal?
-              =f.hidden_field :kind, value: :change_plan
-              =hidden_field_tag :hidden_coupon_code
-              .row
-                .col-12.col-lg-8
-                  .row.row-md.justify-content-center
-                    -@subscription.upgrade_options.each do |plan|
-                      .col
-                        %article.card.card-primary.card-primary-alt{id: "sub-#{plan.currency.iso_code}-#{plan.payment_frequency_in_months}", data: {plan_id: plan.id, :price => plan.price, :currency => plan.currency.iso_code, :name => plan.name, :body => plan.exam_body.name}}
-                          -if plan.most_popular
-                            .card-banner.bg-mint
-                              %large.text-white
-                                Most popular payment plan
-                          .card-body.text-center.py-4.py-sm-5
-                            %h2.card-title
-                              =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
+%main.changePlanPageWrapper
+  .changePlanPageWrapper-header.navbar.navbar-expand-lg
+    .container.p-0.d-flex.align-items-center.justify-content-start
+      =link_to pricing_url(current_user&.preferred_exam_body&.group&.name_url), class: 'main-header-backBtn' do
+        .i.material-icons{:style => "font-size: 20px;margin-right: 12px;margin-top: 6px;"} arrow_back
+      .main-header-content
+        .container.changePlanPageWrapper-logo.hidden-xs
+          =link_to pricing_url(current_user&.preferred_exam_body&.group&.name_url), class: 'navbar-brand logo' do
+            =image_tag('Learnsignal-Logo.svg', class: 'logo-img', alt: "LearnSignal Logo")
+        %div.header-title-lesson.visible-xs
+          = 'Change Plan'
+      #navbarNavDropdown.collapse.navbar-collapse.justify-content-end
+        %ul.navbar-nav.align-items-lg-center
+          -if current_user
+            %li.nav-item.dropdown
+              %a#navbarDropdown.navbar-login.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
+                .nav-login-box
+                  %span.navbar-login-userName
+                    =current_user.first_name.to_s
+                    =current_user.last_name.to_s
+                    %span.navbar-login-userEmail
+                      =current_user.email
+              .dropdown-menu.dropdown-menu-right{"aria-labelledby" => "navbarDropdown"}
+                =link_to t('views.users.show.h1'), account_url, class: 'nav-link dropdown-item'
+                =link_to t('views.general.log_out'), sign_out_url, class: 'nav-link dropdown-item logout'
 
-                            %ul.list-centered
-                              -if plan.bullet_points_list && !plan.bullet_points_list.empty?
-                                - plan.bullet_points_list.split(/, ?/).each do |bullet|
-                                  %li=bullet
-                              -else
-                                %li="Access all #{plan.exam_body.group.name} courses"
-                                %li="Topic-by-topic lectures"
-                                %li="24/7 tutor support"
+          -else
+            %li.nav-item.w-100.text-center.py-2
+              =link_to 'Login', sign_in_url, {class: 'nav-link'}
+            %li.nav-item.w-100.text-center.py-2
+              =link_to new_student_url, class: 'btn btn-primary nav-link px-4' do
+                %span Register
 
-                              -unless plan.exam_body.name == "CPD"
-                                %li{style: 'font-style: italic;'}
-                                  Cancel anytime
+  %article.changePlanPageWrapper-coreWrapper.container
+    %section.pb-2#wrapper
+      #upgrade-subscription
+        -if @subscription.upgrade_options.present?
+          =form_for(@subscription, url: subscription_plan_changes_path(@subscription), method: :post, html: {class: 'form-horizontal', role: 'form', id: 'upgrade-subscription-form'}) do |f|
+            =f.hidden_field :subscription_plan_id
+            =f.hidden_field :use_paypal, value: @subscription.paypal?
+            =f.hidden_field :kind, value: :change_plan
+            =hidden_field_tag :hidden_coupon_code
 
-                            %p.h2.mb-0
-                              =plan.currency.format_number(plan.price)
+            %div
+              .container
+                -if @subscription.upgrade_options.present?
+                  -if flash[:success] || flash[:error] || flash[:warning]
+                    =render partial: 'layouts/flash_messages'
 
-                            -if plan.monthly_percentage_off
-                              %p.h5.text-gray2{style: 'margin-bottom: 0;'}
-                                Save over
-                                =plan.monthly_percentage_off
-                                ='%'
+              .container.p-0
+                .subscriptionPageWrapper-infoBox
+                  .subscriptionPageWrapper-detailsBox
+                    %header.mb-4.hidden-xs
+                      %h1.purchaseTitle.mb-2.text-left
+                        Change Plan
+                      %p.p-hero.px-lg-12.text-left
+                        -if @subscription.upgrade_options.present?
+                          Select your preferred payment plan
+                        -else
+                          Sorry! There are no other payment plans available at this time.
+                          %p.p-hero.px-lg-6
+                            =link_to t('views.user_accounts.back_to_account'), account_url, class: 'btn btn-primary'
 
-                            .pt-4.pt-md-5
-                              %fieldset
-                                %legend.sr-only Select this plan
-                                .custom-control.custom-radio.plan-option
-                                  %input{id: 'chk-plan-' + plan.id.to_s, name: 'plans', type: 'radio', class: 'custom-control-input style-radio option', value: plan.id}
-                                  %label{class: "custom-control-label ", for: 'chk-plan-' + plan.id.to_s}
-                                    %span.custom-label-info
-                                      %span Select this plan
-                                    %span.custom-check
+                    %fieldset{id: 'plans-options' }
+                      %legend.sr-only Select a Plan
+                      -# subscriptions helper
+                      %div
+                        -@subscription.upgrade_options.each do |plan|
+                          .form-group
+                            .custom-control.custom-radio.subscriptionPageWrapper-customRadio.plan-option
+                              -# %input.custom-control-input.custom-control-input-card.style-radio{:id => plan.interval_name.downcase, :name => "plans", :type => "radio", :data => {:guid => plan.guid, :name => plan.name, :price => plan.price}, :value => plan.id, :checked => ("checked" if subscription.subscription_plan_id == plan.id)}
+                              %input.custom-control-input.custom-control-input-card.style-radio.js-radio-option{id: 'chk-plan-' + plan.id.to_s, name: 'plans', type: 'radio', value: plan.id}
+                              %label.custom-control-label.justify-content-start{for: 'chk-plan-' + plan.id.to_s}
+                                %span.custom-check.mr-3
+                                .d-flex.py-0{style: 'width: calc(100% - 46px);'}
+                                  .d-flex.flex-column.justify-content-between.align-items-start{style: 'width: 60% !important;'}
+                                    %div.h4.m-0.text-black
+                                      =plan.exam_body.group.name
+                                      &#8212;
+                                      =plan.interval_name
+                                    %div.m-0.text-gray1
+                                      ="Billed every #{plan.payment_frequency_in_months > 1 ? pluralize(plan.payment_frequency_in_months, 'month') : 'month'}"
+                                  .d-flex.flex-column.justify-content-center.align-items-end{style: 'width: 40% !important;'}
+                                    %div.h4.m-0.text-black
+                                      %span.subscriptionPageWrapper-priceValue
+                                        =plan.currency.format_number(plan.price)
+                                    %div.h5.m-0.text-gray1
+                                      - if plan.monthly_percentage_off.present? && plan.monthly_percentage_off > 0
+                                        %span.discount{style: 'font-size: 12px;'}
+                                          Save over
+                                          %span.text-with-bg{style: 'background-color: #FCD34D;padding: 2px 6px;border-radius: 4px;'}
+                                            ="#{plan.monthly_percentage_off}%"
+                  
+                  .subscriptionPageWrapper-optionsBox
+                    - if @subscription.stripe? && !@card
+                      .col-sm-12.p-0
+                        .alert-warning.mb-4
+                          %p
+                            ='You must have a default payment method in order to change plans. Please visit the card details section in your account.'
+                    - else
+                      .col-sm-12.p-0
+                        .alert-warning.d-flex.mb-4
+                          %i.material-icons.mr-2{style: 'font-size: 16px;top: 3px;position: relative;'} warning_amber
+                          %p
+                            ='This action will result in an immediate charge and start a new billing period from this date.'
 
-                .col-12.col-lg-4
-                  %section#simply
-                    .container.pt-lg-6
-                      .row
-                        - if @subscription.stripe? && !@card
-                          .col-sm-10.offset-1
-                            %h5.text-alert
-                              ='You must have a default payment method in order to change plans. Please visit the card details section in your account.'
-                        - else
-                          .col-sm-10.offset-1
-                            %h5.pt-4
-                              ='This action will result in an immediate charge and start a new billing period from this date.'
+                        - if @subscription.stripe? && @card
+                          .form-control.invoice-payment-details-wrap
+                            %span.payment-content
+                              =image_tag('ico-card.svg', alt: 'Credit Card Icon', class: 'logo-icon mr-3 mr-sm-3')
+                              %span.mr-2
+                                =@card.brand
+                              &#8226;&#8226;&#8226;&#8226;
+                              &nbsp;
+                              &#8226;&#8226;&#8226;&#8226;
+                              &nbsp;
+                              &#8226;&#8226;&#8226;&#8226;
+                              &nbsp;
+                              =@card.last_4
 
-                            - if @subscription.stripe? && @card
-                              .invoice-payment-details-wrap
-                                %span.payment-content
-                                  =image_tag('ico-card.svg', alt: 'Credit Card Icon', class: 'logo-icon mr-2 mr-sm-3')
-                                  =@card.brand
-                                  &#8226;
-                                  &#8226;
-                                  &#8226;
-                                  =@card.last_4
+                          -# coupon
+                          .form-group.text-right.mb-4{style: 'margin-bottom: 0;'}
+                            %span.custom-label-info.coupon-code-btn.js-coupon-code-btn
+                              %span.js-coupon-code-btn-text Have a Coupon code?
+                              %i.material-icons.coupon-code-btn-icon{style: 'font-size: 16px;top: 3px;position: relative;'} keyboard_arrow_down
+                            %span.custom-label-info.coupon-code-btn.coupon-code-btn-hide.hidden.js-coupon-code-btn-hide
+                              %span.js-coupon-code-btn-text Hide
+                              %i.material-icons.coupon-code-btn-icon{style: 'font-size: 16px;top: 3px;position: relative;'} keyboard_arrow_down
 
-                              -# coupon
-                              .form-group{style: 'margin-bottom: 0;'}
-                                .col-sm-6{style: 'padding-left: 0;'}
-                                  %span.payment-content
-                                    %input{type: 'text_field', id: 'coupon_code', class: 'form-control change_plan', placeholder: 'Coupon Code'}
-                                    .invalid-code.invalid-details
-                                      ='Invalid Code'
-                              -# coupon
+                            %div.coupon-input-box.js-coupon-input-box.hidden{style: 'padding-left: 0;'}
+                              %input{type: 'text_field', id: 'coupon_code', class: 'form-control change_plan', placeholder: 'Coupon Code'}
+                              %span.coupon-code-apply-btn.js-coupon-code-apply-btn Apply
+                                
+                              .invalid-code.invalid-details
+                                ='Invalid Code'
 
-                            %p.py-4
-                              ='Any remaining time on your current billing period will be credited to your account, and used for this and any future payments until all credit is used.'
-                            %div.invalid-details
+                            -# .col-sm-6{style: 'padding-left: 0;'}
+                            -#   %span.payment-content
+                            -#     %input{type: 'text_field', id: 'coupon_code', class: 'form-control change_plan', placeholder: 'Coupon Code'}
+                            -#     .invalid-code.invalid-details
+                            -#       ='Invalid Code'
+                          -# coupon
 
-                          .col-sm-10.offset-1.text-center
-                            =f.submit 'Change Plan Now', class: 'btn btn-primary full-width', id: 'changePlan'
-                            %button.btn.btn-primary.spinning-loading{:disabled => "disabled", :type => "button"}
-                              %span.spinner-border.spinner-border-sm{"aria-hidden" => "true", :role => "status"}
-                              %span.spinner-message
+                        .alert-secondary.d-flex.mb-4
+                          %i.material-icons.mr-2{style: 'font-size: 16px;top: 3px;position: relative;'} sticky_note_2
+                          %p
+                            ='Any remaining time on your current billing period will be credited to your account, and used for this and any future payments until all credit is used.'
+
+                      .col-sm-12.text-center.p-0
+                        =f.submit 'Change Plan Now', class: 'btn btn-primary full-width', id: 'changePlan'
+                        %button.btn.btn-primary.spinning-loading.w-100{:disabled => "disabled", :type => "button", :style => "height: 52px;"}
+                          %span.spinner-border.spinner-border-sm{"aria-hidden" => "true", :role => "status"}
+                          %span.spinner-message
+                      %div.invalid-details
+                          
+
+                      
+
+      
+      -# .subscriptionPageWrapper-notesBox
+      -#   -if is_plan_single_checkout(params, @subscription, @plans)
+      -#     - yearly_plan = @plans.yearly.first
+      -#     - if yearly_plan&.previous_plan_price&.present? && yearly_plan.previous_plan_price > 0
+      -#       %p.mb-2.price
+      -#         ='Currently we are offering a discount off the Annual Plan. Original Price '
+      -#         %span
+      -#           =yearly_plan.currency.format_number(yearly_plan.previous_plan_price)
+
+      -#     %div.mb-2
+      -#       %span.font-weight-medium Note: 
+      -#       %br
+      -#       You are subscribing to a recurring payment which will continue until you cancel your subscription. 
+      -#       %br
+      -#       You can cancel your subscription at anytime.
+      -#   - else
+      -#     %div.mb-2
+      -#       %span.font-weight-medium Note:
+      -#       You are subscribing to a recurring payment which will continue until you cancel your subscription. You can cancel your subscription at anytime.  
+
+    
+
+-# %main.changePlanPageWrapper
+-#   %article.bg-gray5
+-#     .container-bg
+-#       .container
+-#         %header.hero-section
+-#           %h1.h2-hero.mb-2
+-#             Change Plan
+-#           %p.p-hero.px-lg-6
+-#             -if @subscription.upgrade_options.present?
+-#               Select your preferred payment plan
+-#             -else
+-#               Sorry! There are no other payment plans available at this time.
+-#               %p.p-hero.px-lg-6
+-#                 =link_to t('views.user_accounts.back_to_account'), account_url, class: 'btn btn-primary'
+
+-#         %section.pb-md-6.pb-5.plan-change-col
+-#           -if @subscription.upgrade_options.present?
+-#             -if flash[:success] || flash[:error] || flash[:warning]
+-#               =render partial: 'layouts/flash_messages'
+-#             =form_for(@subscription, url: subscription_plan_changes_path(@subscription), method: :post, html: {class: 'form-horizontal', role: 'form', id: 'upgrade-subscription-form'}) do |f|
+-#               =f.hidden_field :subscription_plan_id
+-#               =f.hidden_field :use_paypal, value: @subscription.paypal?
+-#               =f.hidden_field :kind, value: :change_plan
+-#               =hidden_field_tag :hidden_coupon_code
+-#               .row
+-#                 .col-12.col-lg-8
+-#                   .row.row-md.justify-content-center
+-#                     -@subscription.upgrade_options.each do |plan|
+-#                       .col
+-#                         %article.card.card-primary.card-primary-alt.p-0{id: "sub-#{plan.currency.iso_code}-#{plan.payment_frequency_in_months}", data: {plan_id: plan.id, :price => plan.price, :currency => plan.currency.iso_code, :name => plan.name, :body => plan.exam_body.name}}
+-#                           -if plan.most_popular
+-#                             .card-banner.bg-mint
+-#                               %large.text-white
+-#                                 Most popular payment plan
+-#                           .card-body.text-center.py-4.py-sm-5
+-#                             %h2.card-title
+-#                               =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
+
+-#                             %ul.list-centered
+-#                               -if plan.bullet_points_list && !plan.bullet_points_list.empty?
+-#                                 - plan.bullet_points_list.split(/, ?/).each do |bullet|
+-#                                   %li=bullet
+-#                               -else
+-#                                 %li="Access all #{plan.exam_body.group.name} courses"
+-#                                 %li="Topic-by-topic lectures"
+-#                                 %li="24/7 tutor support"
+
+-#                               -unless plan.exam_body.name == "CPD"
+-#                                 %li{style: 'font-style: italic;'}
+-#                                   Cancel anytime
+
+-#                             %p.h2.mb-0
+-#                               =plan.currency.format_number(plan.price)
+
+-#                             -if plan.monthly_percentage_off
+-#                               %p.h5.text-gray2{style: 'margin-bottom: 0;'}
+-#                                 Save over
+-#                                 =plan.monthly_percentage_off
+-#                                 ='%'
+
+-#                             .pt-4.pt-md-5
+-#                               %fieldset
+-#                                 %legend.sr-only Select this plan
+-#                                 .custom-control.custom-radio.plan-option
+-#                                   %input{id: 'chk-plan-' + plan.id.to_s, name: 'plans', type: 'radio', class: 'custom-control-input style-radio option', value: plan.id}
+-#                                   %label{class: "custom-control-label ", for: 'chk-plan-' + plan.id.to_s}
+-#                                     %span.custom-label-info
+-#                                       %span Select this plan
+-#                                     %span.custom-check
+
+                -# .col-12.col-lg-4
+                -#   %section#simply
+                -#     .container.pt-lg-6
+                -#       .row
+                -#         - if @subscription.stripe? && !@card
+                -#           .col-sm-10.offset-1
+                -#             %h5.text-alert
+                -#               ='You must have a default payment method in order to change plans. Please visit the card details section in your account.'
+                -#         - else
+                -#           .col-sm-10.offset-1
+                -#             %h5.pt-4
+                -#               ='This action will result in an immediate charge and start a new billing period from this date.'
+
+                -#             - if @subscription.stripe? && @card
+                -#               .invoice-payment-details-wrap
+                -#                 %span.payment-content
+                -#                   =image_tag('ico-card.svg', alt: 'Credit Card Icon', class: 'logo-icon mr-2 mr-sm-3')
+                -#                   =@card.brand
+                -#                   &#8226;
+                -#                   &#8226;
+                -#                   &#8226;
+                -#                   =@card.last_4
+
+                -#               -# coupon
+                -#               .form-group{style: 'margin-bottom: 0;'}
+                -#                 .col-sm-6{style: 'padding-left: 0;'}
+                -#                   %span.payment-content
+                -#                     %input{type: 'text_field', id: 'coupon_code', class: 'form-control change_plan', placeholder: 'Coupon Code'}
+                -#                     .invalid-code.invalid-details
+                -#                       ='Invalid Code'
+                -#               -# coupon
+
+                -#             %p.py-4
+                -#               ='Any remaining time on your current billing period will be credited to your account, and used for this and any future payments until all credit is used.'
+                -#             %div.invalid-details
+
+                -#           .col-sm-10.offset-1.text-center
+                -#             =f.submit 'Change Plan Now', class: 'btn btn-primary full-width', id: 'changePlan'
+                -#             %button.btn.btn-primary.spinning-loading{:disabled => "disabled", :type => "button"}
+                -#               %span.spinner-border.spinner-border-sm{"aria-hidden" => "true", :role => "status"}
+                -#               %span.spinner-message
+
+
 
 =render partial: 'update_card_modal'
 
 
 :javascript
+  let analyticsData = {exam_body_id: '', exam_body_name: '', onboarding: "", product_id: '', product_name: '', product_price: '', currency_iso_code: ''};
   function addToCart(theThing) {
     let parentThing = $(theThing).parent().parent().parent().parent();
     // dataLayer.push({
@@ -140,10 +325,11 @@
   // Finds the id value of the sub plan that the radio button belongs to.
   // Sets the hidden field subscription_plan_id to that id.
   function choosePlan(theThing) {
-    $('.option[type="radio"]:checked').prop('checked', false);
-    $(theThing).find('.option[type="radio"]').prop('checked', true);
+    $('.js-radio-option[type="radio"]:checked').prop('checked', false);
+    $(theThing).find('.js-radio-option[type="radio"]').prop('checked', true);
     $('#subscription_subscription_plan_id').val($(theThing).parent().parent().parent().parent().attr('data-plan-id'));
     addToCart(theThing);
+    console.log("ChoosePlan and addtoCard called");
   }
 
   var style = {
@@ -180,15 +366,30 @@
 
     $(".spinning-loading").hide();
     choosePlan($('.plan-option')[0]);
-    $('.option').bind('click', function(event) {
+    $('.js-radio-option').bind('click', function(event) {
       event.stopPropagation();
       choosePlan(this.parentElement);
     });
 
     $(".plan-option").bind('click', function(event) {
       event.preventDefault();
+      console.log("on plan-option click");
       choosePlan(this);
     });
+
+    $('.js-coupon-code-btn').on('click', function() {
+      $('.js-coupon-code-btn-hide').show();
+      $('.js-coupon-input-box').show();
+      $('.js-coupon-input-box input')[0].focus();
+      $('.js-coupon-code-btn').hide();
+    });
+    $('.js-coupon-code-btn-hide').on('click', function() {
+      $('.js-coupon-input-box').hide();
+      $('.js-coupon-code-btn-hide').hide();
+      $('.js-coupon-code-btn').show();
+    });
+
+
 
     $("#upgrade-subscription-form").submit(function(ev) {
       ev.preventDefault();

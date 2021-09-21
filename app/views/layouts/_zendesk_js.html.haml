@@ -1,9 +1,32 @@
 / Disable widget to send data to google analitics
 :javascript
   window.zESettings = {
-      analytics: false
+      analytics: false,
+      webWidget: {
+        hide: true,
+      }
   };
+  // zE && zE('webWidget', 'hide');
+  // zE && zE(function(){zE.hide();}); 
 
 / Start of learnsignal Zendesk Widget script
 %script#ze-snippet{:src => "https://static.zdassets.com/ekr/snippet.js?key=#{Rails.application.credentials[Rails.env.to_sym][:zendesk][:project_key]}"} :cdata
 / End of learnsignal Zendesk Widget script
+
+-# Zendesk custom button
+%div{onclick:'openWidget()', class: 'btn hidden-xs zendesk-btn'}
+  %i.material-icons{style: "color: #FFF;margin-right: 2px;font-size: 18px;top: 3px;position: relative;"} help_outline
+  Help
+
+:javascript
+  if (window.hasOwnProperty('zE')) {
+    function openWidget() {
+      $zopim.livechat.window.show();
+      // zE('webWidget', 'show');
+      // zE('webWidget', 'open');
+    };
+    zE && zE('webWidget', 'hide');
+    zE && zE('webWidget:on', 'close', function() {
+        zE('webWidget', 'hide');
+    })
+  }

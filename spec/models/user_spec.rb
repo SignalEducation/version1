@@ -815,7 +815,7 @@ describe User do
         expect(user.total_revenue).to eq(order_value + subscription_value)
       end
     end
-
+    
     describe '#verify_remain_days' do
       it 'return the default days remaning to user verify email' do
         expect(user.verify_remain_days).to eq(DAYS_TO_VERIFY_EMAIL)

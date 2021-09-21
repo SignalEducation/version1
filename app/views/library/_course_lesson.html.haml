@@ -1,109 +1,110 @@
-.card.card-collapse.mb-4
-  - # TODO add hover text colour change
+.card.card-collapse.mb-3
   %a.btn.btn-text.btn-collapse.w-100.text-left.course-module-panel{data: { toggle: "collapse",panel_name: course_lesson.name, course_name: @course.name }, href: "#collapse_#{course_lesson.name_url}_#{counter}", role: "button", 'aria-expanded': "#{!count == 1}", 'aria-controls': "collapse_#{course_lesson.name_url}_#{counter}",id: course_lesson.id}
     .lesson-item.w-100{class: course_lesson_status(course_lesson, @completed_course_lesson_logs, @completed_course_lesson_ids) }
-      %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
-        - if course_lesson.free
-          check
-        - elsif current_user && !current_user.can_view_content?(@group.exam_body_id, @group.id, @course.id)
-          lock_outline
-        - else
-          check
-      .lesson-item-content.pl-3
-        .d-flex.flex-column.flex-sm-row.align-items-start.align-items-sm-center
-          %p.lesson-item-text.text-truncate.w-100
-            =course_lesson.name
+      .lesson-item-content
+        .lesson-item-content-wrap.d-flex.flex-column.flex-sm-row.align-items-center.align-items-sm-center
+          %p.lesson-item-text.w-100{class: current_user && !current_user.can_view_content?(@group.exam_body_id, @group.id, @course.id) && 'locked'}
+            %span
+              =course_lesson.name
           %small.lesson-item-tag.ml-sm-auto.text-sm-right
+            %span
+              - if course_lesson.free && current_user&.preferred_exam_body_id && !current_user&.valid_access_for_exam_body?(current_user&.preferred_exam_body_id, current_user&.preferred_exam_body&.group&.id)
+                %span{style: 'color: #007bff;background-color: rgb(0 123 255 / 5%);font-size: 12px;border-radius: 4px;padding: 2px 8px;padding-top: 4px;letter-spacing: 1px;font-weight: 600;line-height: 1;display: inline-flex;column-gap: 6px;'}
+                  🎉 FREE
+              - else
+                - if current_user && !current_user.can_view_content?(@group.exam_body_id, @group.id, @course.id) && !course_lesson.temporary_label.present?
+                  %span{style: 'color: #6d5902;background-color: #f9e9af;font-size: 12px;border-radius: 4px;padding: 2px 8px;padding-top: 4px;letter-spacing: 1px;font-weight: 600;line-height: 1;display: inline-flex;column-gap: 6px;'}
+                    LOCKED
+
             -if course_lesson.temporary_label.present?
-              %span{style: 'color: #fd7e14;'}
+              %span{style: 'color: #007bff;background-color: rgb(0 123 255 / 5%);font-size: 12px;border-radius: 4px;padding: 2px 8px;padding-top: 4px;letter-spacing: 1px;font-weight: 600;line-height: 1;display: inline-flex;column-gap: 6px;'}
+                🎉
                 =course_lesson.temporary_label
             -else
-              %span
-                -if course_lesson.cme_count.positive?
-                  =course_lesson.cme_count.to_s + ' ' + t('views.library.show.lessons')
-                -else
-                  =course_lesson.cme_count.to_s + ' ' + t('views.library.show.lesson')
+              -if course_lesson.cme_count.positive?
+                %span{style: 'color: #fdaf40;'}
+                  =course_lesson.cme_count.to_s + ' ' + 'Lessons'
+              -else
+                %span{style: 'color: #fdaf40;'}
+                  =course_lesson.cme_count.to_s + ' ' + 'Lessons'
 
 
   .collapse{id: "collapse_#{course_lesson.name_url}_#{counter}", class: "#{count == 1 ? 'show' : ''}"}
     .card-body
-      %ul.list-unstyled
+      %ul.list-unstyled.mb-3
         -course_lesson.active_children.each do |cme|
-
-          %li.py-2.border-top
-
+          %li
             - if current_user #Logged In User
               - permission = cme.available_to_user(current_user, @valid_subscription, @course_log)
 
               - if permission[:view]
 
-                =link_to course_special_link(cme, @course_log), class: 'btn btn-text py-3 w-100 text-left course-lesson', data: { lesson_name: cme.name, course_name: @course.name } do
+                =link_to course_special_link(cme, @course_log), class: 'btn btn-text py-2 w-100 text-left course-lesson', data: { lesson_name: cme.name, course_name: @course.name } do
                   .lesson-item.lesson-item-inner.w-100{class: @cmeuls && @cmeuls_ids.include?(cme.id) ? (@completed_cmeuls_cme_ids.include?(cme.id) ? 'completed' : 'failed') : ''}
-                    %i.material-icons.icon-bg-round{"aria-label" => "failed", :role => "img"}
+                    -if @cmeuls && @completed_cmeuls_cme_ids.include?(cme.id)
+                      %span.green-check-iconWrapper
+                        %i.material-icons.icon-bg-round.green-check{"aria-label" => "", :role => "img"}
+                          check
+                    %i.material-icons.inner-icon-bg-round{"aria-label" => "failed", :role => "img", class: @cmeuls && @completed_cmeuls_cme_ids.include?(cme.id) && 'hidden'}
                       =cme.icon_label
 
-                    .lesson-item-content.pl-3
-                      .d-flex.flex-column.flex-sm-row.align-items-start
+                    .lesson-item-content.ml-2
+                      .lesson-item-content-wrap.d-flex.flex-column.flex-sm-row
                         %p.lesson-item-text
                           =cme.name
-                        %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                          -if cme.temporary_label && !cme.temporary_label.empty?
-                            %span{style: 'color: #fd7e14;'}
-                              =cme.temporary_label
-                          -else
+                        %small.lesson-item-tag.ml-sm-auto.text-sm-right.hidden-xs
+                          -if cme.is_video && cme.estimated_time_in_seconds
                             %span
-                              -if cme.is_video && cme.estimated_time_in_seconds
-                                =humanize_time(cme.estimated_time_in_seconds)
-                              -elsif cme.is_quiz
-                                -if cme.number_of_questions.to_i > 1
-                                  =cme.number_of_questions.to_s + ' ' +  t('views.library.show.questions')
-                                -else
-                                  =cme.number_of_questions.to_s + ' ' +  'Question'
+                              =humanize_time(cme.estimated_time_in_seconds)
+                          -elsif cme.is_quiz
+                            -if cme.number_of_questions.to_i > 1
+                              %span
+                                =cme.number_of_questions.to_s + ' ' +  t('views.library.show.questions')
+                            -else
+                              %span
+                                =cme.number_of_questions.to_s + ' ' +  'Question'
 
 
               - else
-                %a.btn.btn-text.py-3.w-100.text-left.course-lesson{data: {lesson_name: cme.name, course_name: @course.name, target: "##{permission[:reason]}", toggle: 'modal', related: cme.related_course_step.try(:name)}, href: '#'}
+                %a.btn.btn-text.py-2.w-100.text-left.course-lesson{data: {lesson_name: cme.name, course_name: @course.name, target: "##{permission[:reason]}", toggle: 'modal', related: cme.related_course_step.try(:name)}, href: '#'}
                   .lesson-item.lesson-item-inner.w-100{class: @cmeuls && @cmeuls_ids.include?(cme.id) ? (@completed_cmeuls_cme_ids.include?(cme.id) ? 'completed' : 'failed') : ''}
-                    %i.material-icons.icon-bg-round{"aria-label" => "failed", :role => "img"}
-                      =permission[:reason] == 'related-lesson-restriction' ? 'lock_outline' : cme.icon_label
-                    .lesson-item-content.pl-3
-                      .d-flex.flex-column.flex-sm-row.align-items-start
+                    %i.material-icons.inner-icon-bg-round{"aria-label" => "failed", :role => "img", style: 'color: #6d5902;background-color: #f9e9af;border-radius: 100%;'}
+                      lock_outline
+                    .lesson-item-content.ml-2
+                      .lesson-item-content-wrap.d-flex.flex-column.flex-sm-row.align-items-center
                         %p.lesson-item-text
-                          =cme.name
-                        %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                          -if cme.temporary_label.present?
-                            %span{style: 'color: #fd7e14;'}
-                              =cme.temporary_label
-                          -else
+                          %span
+                            =cme.name
+                        %small.lesson-item-tag.ml-sm-auto.text-sm-right.hidden-xs
+                          -if cme.is_video && cme.estimated_time_in_seconds
                             %span
-                              -if cme.is_video && cme.estimated_time_in_seconds
-                                =humanize_time(cme.estimated_time_in_seconds)
-                              -elsif cme.is_quiz
-                                -if cme.number_of_questions.positive?
-                                  =cme.number_of_questions.to_s + ' ' +  t('views.library.show.questions')
-                                -else
-                                  =cme.number_of_questions.to_s + ' ' +  'Question'
+                              =humanize_time(cme.estimated_time_in_seconds)
+                          -elsif cme.is_quiz
+                            -if cme.number_of_questions.positive?
+                              %span
+                                =cme.number_of_questions.to_s + ' ' +  t('views.library.show.questions')
+                            -else
+                              %span
+                                =cme.number_of_questions.to_s + ' ' +  'Question'
 
             - else #Anonymous User
-              %a.btn.btn-text.py-3.w-100.text-left.course-lesson{data: {lesson_name: cme.name, course_name: @course.name, target: '#account-required', toggle: 'modal', href: '#'}}
+              %a.btn.btn-text.py-2.w-100.text-left.course-lesson{data: {lesson_name: cme.name, course_name: @course.name, target: '#account-required', toggle: 'modal', href: '#'}}
                 .lesson-item.lesson-item-inner.w-100
-                  %i.material-icons.icon-bg-round{"aria-label" => "failed", :role => "img"}
+                  %i.material-icons.inner-icon-bg-round{"aria-label" => "failed", :role => "img"}
                     =cme.icon_label
 
-                  .lesson-item-content.pl-3
-                    .d-flex.flex-column.flex-sm-row.align-items-start
+                  .lesson-item-content.ml-2
+                    .lesson-item-content-wrap.d-flex.flex-column.flex-sm-row.align-items-center
                       %p.lesson-item-text
                         =cme.name
-                      %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                        -if cme.temporary_label && !cme.temporary_label.empty?
-                          %span{style: 'color: #fd7e14;'}
-                            =cme.temporary_label
-                        -else
+                      %small.lesson-item-tag.ml-sm-auto.text-sm-right.hidden-xs
+                        -if cme.is_video && cme.estimated_time_in_seconds
                           %span
-                            -if cme.is_video && cme.estimated_time_in_seconds
-                              =humanize_time(cme.estimated_time_in_seconds)
-                            -elsif cme.is_quiz
-                              -if cme.number_of_questions.to_i > 1
-                                =cme.number_of_questions.to_s + ' ' +  t('views.library.show.questions')
-                              -else
-                                =cme.number_of_questions.to_s + ' ' +  'Question'
+                            =humanize_time(cme.estimated_time_in_seconds)
+                        -elsif cme.is_quiz
+                          -if cme.number_of_questions.to_i > 1
+                            %span
+                              =cme.number_of_questions.to_s + ' ' +  t('views.library.show.questions')
+                          -else
+                            %span
+                              =cme.number_of_questions.to_s + ' ' +  'Question'

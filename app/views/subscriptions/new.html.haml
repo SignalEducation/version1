@@ -1,101 +1,165 @@
-%main
-  %article.bg-gray5
-    .container
-      %header.hero-section
+%main.subscriptionPageWrapper
+  .subscriptionPageWrapper-header.navbar.navbar-expand-lg
+    .container.p-0.d-flex.align-items-center.justify-content-start
+      =link_to pricing_url(current_user&.preferred_exam_body&.group&.name_url), class: 'main-header-backBtn' do
+        .i.material-icons{:style => "font-size: 20px;margin-right: 12px;margin-top: 6px;"} arrow_back
+      .main-header-content
+        .container.subscriptionPageWrapper-logo.hidden-xs
+          =link_to pricing_url(current_user&.preferred_exam_body&.group&.name_url), class: 'navbar-brand logo' do
+            =image_tag('Learnsignal-Logo.svg', class: 'logo-img', alt: "LearnSignal Logo")
         -if @plans && @plans.first
-          %h1.h2-hero.mb-3
-            = "#{@plans.first.exam_body.name} Tuition Payment"
-          %p.p-hero.px-lg-6
-            =@plans.first.checkout_sub_heading
+          %div.header-title-lesson.visible-xs
+            = "#{@plans.first.exam_body.name} Subscription"
         -else
-          %h1.h1-hero.mb-2
-            = 'Exam Tuition Payment'
-          %p.p-hero.px-lg-6
-            ='Achieve your learning goals with a learnsignal subscription plan and enjoy professional courses delivered online so that you can study on a schedule that suits you.'
+          %div.header-title-lesson.visible-xs
+            = 'Subscription'
+      #navbarNavDropdown.collapse.navbar-collapse.justify-content-end
+        %ul.navbar-nav.align-items-lg-center
+          -if current_user
+            %li.nav-item.dropdown
+              %a#navbarDropdown.navbar-login.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
+                .nav-login-box
+                  %span.navbar-login-userName
+                    =current_user.first_name.to_s
+                    =current_user.last_name.to_s
+                    %span.navbar-login-userEmail
+                      =current_user.email
+              .dropdown-menu.dropdown-menu-right{"aria-labelledby" => "navbarDropdown"}
+                =link_to t('views.users.show.h1'), account_url, class: 'nav-link dropdown-item'
+                =link_to t('views.general.log_out'), sign_out_url, class: 'nav-link dropdown-item logout'
 
-      %section.pb-md-6.pb-5#wrapper
-        #upgrade-subscription
-          =form_for @subscription, url: subscriptions_path, html: { id: 'upgrade-form', role: 'form' } do |f|
-            =render partial: 'layouts/error_messages', locals: { thing: @subscription, message: t('views.users.upgrade_subscription.error_panel_caption') }
-            =f.hidden_field :user_id, value: current_user.id
-            =f.hidden_field :subscription_plan_id, value: @subscription.subscription_plan_id
-            =f.hidden_field :completion_guid
-            =f.hidden_field :stripe_token
-            =f.hidden_field :use_paypal, value: false
-            =f.hidden_field :kind, value: @kind
-            =f.hidden_field :coupon_id, value: nil
-            =hidden_field_tag :discounted_price
-            =hidden_field_tag :hidden_coupon_code
+          -else
+            %li.nav-item.w-100.text-center.py-2
+              =link_to 'Login', sign_in_url, {class: 'nav-link'}
+            %li.nav-item.w-100.text-center.py-2
+              =link_to new_student_url, class: 'btn btn-primary nav-link px-4' do
+                %span Register
 
-            .bg-gray5
-              .container
-                -if flash[:success] || flash[:error] || flash[:warning]
-                  .row.subscription-flash
-                    .col-xs-12
-                      =render partial: 'layouts/flash_messages'
 
-              .container.payment
-                .row
-                  .col-lg-6.mb-5.mb-xl-0
-                    %fieldset{id: 'plans-options' }
-                      %legend.sr-only Select a Plan
-                      -# subscriptions helper
-                      =plans_partials(params, @subscription, @plans)
-                  .col-lg-6
-                    %fieldset.card.card-payments
-                      %p.h2.mb-1 Choose a way to pay
-                      %p.mb-4 Select your preferred method of payment
-                      .form-group.form-group-expandable
-                        .custom-control.custom-radio
-                          %input#pay-with-card.custom-control-input.style-radio{ name: 'payment-options', type: 'radio', value: 'stripe', checked: true }
-                          %label.custom-control-label{ for: 'pay-with-card' }
-                            %span.custom-label-info
-                              %span.h3.m-0
-                                =image_tag('ico-card.svg', alt: 'Credit Card Icon', class: 'logo-icon.mr-2.mr-sm-3')
-                                %span Credit / Debit Card
-                            %span.custom-check
-                              / custom checkbox
+
+  %article.subscriptionPageWrapper-coreWrapper.container
+    %section.pb-2#wrapper
+      #upgrade-subscription
+        =form_for @subscription, url: subscriptions_path, html: { id: 'upgrade-form', role: 'form' } do |f|
+          =render partial: 'layouts/error_messages', locals: { thing: @subscription, message: t('views.users.upgrade_subscription.error_panel_caption') }
+          =f.hidden_field :user_id, value: current_user.id
+          =f.hidden_field :subscription_plan_id, value: @subscription.subscription_plan_id
+          =f.hidden_field :completion_guid
+          =f.hidden_field :stripe_token
+          =f.hidden_field :use_paypal, value: false
+          =f.hidden_field :kind, value: @kind
+          =f.hidden_field :coupon_id, value: nil
+          =hidden_field_tag :discounted_price
+          =hidden_field_tag :hidden_coupon_code
+
+          %div
+            .container
+              -if flash[:success] || flash[:error] || flash[:warning]
+                .row.subscription-flash
+                  .col-xs-12
+                    =render partial: 'layouts/flash_messages'
+
+            .container.p-0
+              .subscriptionPageWrapper-infoBox
+                .subscriptionPageWrapper-detailsBox
+                  %header.mb-4.hidden-xs
+                    -if @plans && @plans.first
+                      %h1.purchaseTitle.mb-2.text-left
+                        = "#{@plans.first.exam_body.name} Tuition Payment"
+                      %p.p-hero.px-lg-12.text-left
+                        =@plans.first.checkout_sub_heading
+                    -else
+                      %h1.purchaseTitle.mb-2.text-left
+                        = 'Exam Tuition Payment'
+                      %p.p-hero.px-lg-12.text-left
+                        ='Achieve your learning goals with a learnsignal subscription plan and enjoy professional courses delivered online so that you can study on a schedule that suits you.'
+                  %fieldset{id: 'plans-options' }
+                    %legend.sr-only Select a Plan
+                    -# subscriptions helper
+                    =plans_partials(params, @subscription, @plans)
+                .subscriptionPageWrapper-optionsBox
+                  %fieldset.card.card-payments.m-0
+                    .wholeTabs
+                      .subscriptionPageWrapper-optionsBox-optionTabs
+                        .subscriptionPageWrapper-optionsBox-optionTabs-Tab.active.js-option-wrapper-stripe
+                          .custom-control.custom-radio
+                            %input#pay-with-card.custom-control-input.style-radio{ name: 'payment-options', type: 'radio', value: 'stripe', checked: true }
+                            %label.tab-label{ for: 'pay-with-card' }
+                              %span.custom-label-info
+                                %span.m-0
+                                  -# =image_tag('ico-card.svg', alt: 'Credit Card Icon', class: 'logo-icon mr-1')
+                                  %span Credit / Debit Card
+                        .subscriptionPageWrapper-optionsBox-optionTabs-Tab.js-option-wrapper-paypal
+                          .custom-control.custom-radio
+                            %input#pay-with-paypal.custom-control-input.style-radio{name: 'payment-options', type: 'radio', value: 'paypal'}
+                            %label.tab-label{for: 'pay-with-paypal'}
+                              %span.custom-label-info
+                                %span.0.m-0
+                                  =image_tag('ico-paypal.svg', alt: 'PayPal Logo', class: 'logo-icon mr-1')
+                                  %span PayPal
+
+                    .subscriptionPageWrapper-paymentOptionsWrapper
+                      .subscriptionPageWrapper-paymentOptionsWrapper-optionForm.js-option-wrapper-stripe
+                        .subscriptionPageWrapper-paymentOptionsWrapper-header
+                          %span Pay with Card
                         =render partial: 'subscription_payment_cards/form', locals: {f: f}
-                      .form-group.form-group-expandable
-                        .custom-control.custom-radio
-                          %input#pay-with-paypal.custom-control-input.style-radio{name: 'payment-options', type: 'radio', value: 'paypal'}
-                          %label.custom-control-label{for: 'pay-with-paypal'}
-                            %span.custom-label-info
-                              %span.h3.m-0
-                                =image_tag('ico-paypal.svg', alt: 'PayPal Logo', class: 'logo-icon.mr-2.mr-sm-3')
-                                %span PayPal
-                            %span.custom-check
-                              / custom checkbox
+                        
+                      .subscriptionPageWrapper-paymentOptionsWrapper-optionForm.js-option-wrapper-paypal
+                        .subscriptionPageWrapper-paymentOptionsWrapper-header
+                          %span Pay with PayPal
                         =render partial: 'subscription_payment_cards/paypal_form', locals: {f: f}
+                        
 
-    .container-bg.bg-white
-      .container
-        %article.text-center.py-6.py-sm-7
-          %header.pb-3
-            %h1.px-5.px-sm-6 Discover the smarter way to study
-            %p.p-hero Learnsignal uses a unique method of learning to provide an easier, more enjoyable and more effective way to learn.
-          .px-4.px-lg-8
-            .row.row-lg
-              .col-md-3
-                .pb-4.d-flex.flex-md-column.align-items-center
-                  .mr-4.mb-md-4.mx-md-0
-                    %i.budicon-desktop-smartphone{'ariahidden': 'true'}
-                  %p.m-0.text-left.text-md-center Access anytime, anywhere
-              .col-md-3
-                .pb-4.d-flex.flex-md-column.align-items-center
-                  .mr-4.mb-md-4.mx-md-0
-                    %i.budicon-card-slides{'ariahidden': 'true'}
-                  %p.m-0.text-left.text-md-center Topic-by-topic online lectures
-              .col-md-3
-                .pb-4.d-flex.flex-md-column.align-items-center
-                  .mr-4.mb-md-4.mx-md-0
-                    %i.budicon-doc-marker{'ariahidden': 'true'}
-                  %p.m-0.text-left.text-md-center Expert notes and corrected questions
-              .col-md-3
-                .pb-4.d-flex.flex-md-column.align-items-center
-                  .mr-4.mb-md-4.mx-md-0
-                    %i.budicon-happy-chat{'ariahidden': 'true'}
-                  %p.m-0.text-left.text-md-center Tutor support 24 hours a day, 7 days a week
+                    
+
+    
+    .subscriptionPageWrapper-notesBox
+      -if is_plan_single_checkout(params, @subscription, @plans)
+        - yearly_plan = @plans.yearly.first
+        - if yearly_plan&.previous_plan_price&.present? && yearly_plan.previous_plan_price > 0
+          %p.mb-2.price
+            ='Currently we are offering a discount off the Annual Plan. Original Price '
+            %span
+              =yearly_plan.currency.format_number(yearly_plan.previous_plan_price)
+
+        %div.alert-secondary.mb-2
+          %span.font-weight-medium Note: 
+          %br
+          You are subscribing to a recurring payment which will continue until you cancel your subscription. 
+          %br
+          You can cancel your subscription at anytime.
+      - else
+        %div.alert-secondary.mb-2
+          %span.font-weight-medium Note:
+          You are subscribing to a recurring payment which will continue until you cancel your subscription. You can cancel your subscription at anytime.  
+  -# .container-bg.bg-white
+  -#   .container
+  -#     %article.text-center.py-6.py-sm-7
+  -#       %header.pb-3
+  -#         %h1.px-5.px-sm-6 Discover the smarter way to study
+  -#         %p.p-hero Learnsignal uses a unique method of learning to provide an easier, more enjoyable and more effective way to learn.
+  -#       .px-4.px-lg-8
+  -#         .row.row-lg
+  -#           .col-md-3
+  -#             .pb-4.d-flex.flex-md-column.align-items-center
+  -#               .mr-4.mb-md-4.mx-md-0
+  -#                 %i.budicon-desktop-smartphone{'ariahidden': 'true'}
+  -#               %p.m-0.text-left.text-md-center Access anytime, anywhere
+  -#           .col-md-3
+  -#             .pb-4.d-flex.flex-md-column.align-items-center
+  -#               .mr-4.mb-md-4.mx-md-0
+  -#                 %i.budicon-card-slides{'ariahidden': 'true'}
+  -#               %p.m-0.text-left.text-md-center Topic-by-topic online lectures
+  -#           .col-md-3
+  -#             .pb-4.d-flex.flex-md-column.align-items-center
+  -#               .mr-4.mb-md-4.mx-md-0
+  -#                 %i.budicon-doc-marker{'ariahidden': 'true'}
+  -#               %p.m-0.text-left.text-md-center Expert notes and corrected questions
+  -#           .col-md-3
+  -#             .pb-4.d-flex.flex-md-column.align-items-center
+  -#               .mr-4.mb-md-4.mx-md-0
+  -#                 %i.budicon-happy-chat{'ariahidden': 'true'}
+  -#               %p.m-0.text-left.text-md-center Tutor support 24 hours a day, 7 days a week
 
 :javascript
   let plan_id = '1';
@@ -183,13 +247,22 @@
     $('.invalid-code').hide();
     $('.discounted-price').hide();
 
-    $('#pay-with-card').closest('.custom-control').siblings('.payment-details').slideDown();
-    $('#pay-with-paypal').closest('.custom-control').siblings('.payment-details').slideUp();
-    selectPaymentMethod($('.form-group-expandable').val(), false);
+    $('.js-option-wrapper-stripe').addClass('active');
+    // $('#pay-with-card').closest('.custom-control').siblings('.payment-details').slideDown();
+    // $('#pay-with-paypal').closest('.custom-control').siblings('.payment-details').slideUp();
+    selectPaymentMethod($('.subscriptionPageWrapper-optionsBox-optionTabs').val(), false);
 
-    $('.form-group-expandable').on('change', '.custom-control-input[type="radio"][name="payment-options"]', function() {
+    $('.subscriptionPageWrapper-optionsBox-optionTabs').on('change', '.custom-control-input[type="radio"][name="payment-options"]', function() {
       $(this).closest('.card').find('.custom-control-input[type="radio"]').closest('.custom-control').siblings('.payment-details').slideUp();
       if ($(this).is(':checked')) {
+        if ($(this).val() == 'stripe') {
+          $('.js-option-wrapper-paypal').removeClass('active');
+          $('.js-option-wrapper-stripe').addClass('active');
+        } else {
+          $('.js-option-wrapper-paypal').addClass('active');
+          $('.js-option-wrapper-stripe').removeClass('active');
+
+        }
         $(this).closest('.custom-control').siblings('.payment-details').slideDown();
         selectPaymentMethod($(this).val(), true);
       }
@@ -229,16 +302,18 @@
       base: {
         color: '#32325d',
         lineHeight: '18px',
-        fontFamily: '"OakesGrotesk", "Helvetica Neue", Helvetica, sans-serif',
+        fontFamily: '"Manrope", sans-serif',
         fontSmoothing: 'antialiased',
         fontSize: '16px',
+        fontWeight: '500',
         '::placeholder': {
-          color: '#aab7c4'
+          color: '#9CA3AF'
         }
       },
       invalid: {
         color: '#fd5c63',
-        iconColor: '#fd5c63'
+        iconColor: '#fd5c63',
+        fontWeight: '500',
       }
     };
 

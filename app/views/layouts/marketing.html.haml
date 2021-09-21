@@ -19,7 +19,9 @@
 
     =yield :head
 
-    %link{href: 'https://fonts.googleapis.com/css?family=Rubik:300,400,500,700', rel: 'stylesheet'}
+    %link{:href => "https://fonts.googleapis.com", :rel => "preconnect"}/
+    %link{:crossorigin => "", :href => "https://fonts.gstatic.com", :rel => "preconnect"}/
+    %link{:href => "https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap", :rel => "stylesheet"}/
     %link{href: 'https://fonts.googleapis.com/icon?family=Material+Icons', rel: 'stylesheet'}
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -47,11 +49,11 @@
       -if @navbar
         =render partial: 'layouts/navbar'
 
-      -if @top_margin
-        -if @banner
-          .margin-top-lg
-        -else
-          .margin-top
+      -# -if @top_margin
+      -#   -if @banner
+      -#     .margin-top-lg
+      -#   -else
+      -#     .margin-top
 
       -unless controller_name == 'subscriptions' || controller_name == 'orders' || controller_name == 'footer_pages' || controller_name == 'student_sign_ups' || controller_name == 'user_accounts'
         -if flash[:success] || flash[:error] || flash[:warning]
@@ -60,17 +62,18 @@
       =yield
 
       -if @footer
-        =render partial: 'layouts/footer_disclaimer' if @group&.disclaimer
-        =render partial: 'layouts/footer'
+        =render partial: 'layouts/footer_marketing' if @group&.disclaimer
+        =render partial: 'layouts/footer_marketing'
+
     -else
       =render partial: 'layouts/navbar'
-      -if @top_margin
-        .margin-top
+      -# -if @top_margin
+      -#   .margin-top
       -if flash[:success] || flash[:error] || flash[:warning]
         =render partial: 'layouts/flash_messages'
       =yield
-      =render partial: 'layouts/footer_disclaimer' if @group&.disclaimer
-      =render partial: 'layouts/footer'
+      =render partial: 'layouts/footer_marketing' if @group&.disclaimer
+      =render partial: 'layouts/footer_marketing'
 
 
     -#General partials

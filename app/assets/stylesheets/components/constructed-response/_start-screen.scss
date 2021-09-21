@@ -14,7 +14,7 @@
     margin-bottom: 20px;
   }
   .before-text {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
     line-height: 20px;
     margin-bottom: 20px;
@@ -27,11 +27,22 @@
   ul, li {
     display: list-item;
     list-style: disc;
-    font-size: 16px;
+    font-size: 14px;
     line-height: 24px;
     font-weight: 300;
     font-style: normal;
     padding: 0;
+    color: #656565;
+  }
+  .table-responsive {
+    a {
+      transition: transform 250ms cubic-bezier(0.4, 0, 0.2, 1);
+      border-bottom: 1px dashed #02b57b;
+      &:hover {
+        color: #02b57b;
+        border-bottom: 1px solid #02b57b;
+      }
+    }
   }
 
 }

@@ -1,54 +1,49 @@
 %main
-  %article.dashboard.bg-gray5
-    .container
-      %header
-        .d-flex.flex-wrap.flex-sm-nowrap.justify-content-between.py-4.py-md-4
-          .mw-0
-            %h1.h1-hero.pt-5
-              =t('views.dashboard.student.h1')
-          .mw-0.pt-5
-            -if current_user.standard_student_user? && current_user&.preferred_exam_body_id && !current_user.valid_access_for_exam_body?(current_user&.preferred_exam_body_id, current_user&.preferred_exam_body&.group&.id)
-              =link_to pricing_url(current_user&.preferred_exam_body&.group&.name_url), class: 'btn btn-secondary btn-sm btn-sm-arrow-right mb-3 mb-sm-0' do
-                ='LifeTime Membership'
-
-      %section.pb-md-6.pt-4
-        .row.row-md
-          .col-lg-2-7
-            %nav.mb-4.account-nav
-              %ul#dashboardTabs.nav.nav-tabs.nav-tabs-vertical{:role => "tablist"}
-                -if @enrollments.any?
-                  %li.nav-item
-                    %a#enrollments-tab.nav-link.active{"aria-controls" => "enrollments", "aria-selected" => "true", "data-toggle" => "tab", :href => "#enrollments", :role => "tab"}
-                      Enrolments
-                  %li.nav-item
-                    %a#activity-tab.nav-link{"aria-controls" => "activity", "aria-selected" => "false", "data-toggle" => "tab", :href => "#activity", :role => "tab"}
-                      Activity
-                -else
-                  %li.nav-item
-                    %a#activity-tab.nav-link.active{"aria-controls" => "activity", "aria-selected" => "false", "data-toggle" => "tab", :href => "#activity", :role => "tab"}
-                      Activity
+  %article.dashboard.bg-white
+    %header
+      .position-relative.container.d-flex.flex-column.flex-wrap.flex-sm-nowrap.justify-content-between
+        .mw-0
+          %h1.h1-hero.pt-6.pb-4
+            =t('views.dashboard.student.h1')
+        %nav.account-nav
+          %ul#dashboardTabs.nav.nav-tabs.dashboardTabsNav{:role => "tablist"}
+            -if @enrollments.any?
+              %li.nav-item.dashboardTabsNav-navItem
+                %a#enrollments-tab.nav-link.dashboardTabsNav-navItemLink.active{"aria-controls" => "enrollments", "aria-selected" => "true", "data-toggle" => "tab", :href => "#enrollments", :role => "tab"}
+                  Enrolments
+              %li.nav-item.dashboardTabsNav-navItem
+                %a#activity-tab.nav-link.dashboardTabsNav-navItemLink{"aria-controls" => "activity", "aria-selected" => "false", "data-toggle" => "tab", :href => "#activity", :role => "tab"}
+                  Activity
+            -else
+              -if current_user.exercises.any?
+                %li.nav-item.dashboardTabsNav-navItem
+                  %a#activity-tab.nav-link.dashboardTabsNav-navItemLink.active{"aria-controls" => "activity", "aria-selected" => "false", "data-toggle" => "tab", :href => "#activity", :role => "tab"}
+                    Activity
                 -if current_user.exercises.any?
-                  %li.nav-item
-                    %a#exercises-tab.nav-link{"aria-controls" => "exercises", "aria-selected" => "true", "data-toggle" => "tab", :href => "#exercises", :role => "tab"}
+                  %li.nav-item.dashboardTabsNav-navItem
+                    %a#exercises-tab.nav-link.dashboardTabsNav-navItemLink{"aria-controls" => "exercises", "aria-selected" => "true", "data-toggle" => "tab", :href => "#exercises", :role => "tab"}
                       Exercises
 
-          .col-lg-5-7
-            #dashboardTabsContent.tab-content
-              -if @enrollments.any?
-                #enrollments.tab-pane.show.active.tab-dashboard.tab-enrollments{"aria-labelledby" => "enrollments-tab", :role => "tabpanel"}
-                  =render partial: 'enrollments'
 
-                #activity.tab-pane.tab-account.tab-dashboard{"aria-labelledby" => "activity-tab", :role => "tabpanel"}
-                  =render partial: 'activity'
-              -else
-                #activity.tab-pane.tab-account.active.tab-dashboard{"aria-labelledby" => "activity-tab", :role => "tabpanel"}
-                  =render partial: 'activity'
+      %section.dashboard__contentContainer.pt-4.bg-gray5
+        .container.d-flex.flex-sm-row.dashboard__wrapper
+          #dashboardTabsContent.tab-content.w-100
+            -if @enrollments.any?
+              #enrollments.tab-pane.show.active.tab-dashboard.tab-enrollments{"aria-labelledby" => "enrollments-tab", :role => "tabpanel"}
+                =render partial: 'enrollments'
 
-              -if current_user.exercises.any?
-                #exercises.tab-pane.show.tab-dashboard.tab-exercises{"aria-labelledby" => "exercises-tab", :role => "tabpanel"}
-                  =render partial: 'exercises'
+              #activity.tab-pane.tab-account.tab-dashboard{"aria-labelledby" => "activity-tab", :role => "tabpanel"}
+                =render partial: 'activity'
+            -else
+              #activity.tab-pane.tab-account.active.tab-dashboard{"aria-labelledby" => "activity-tab", :role => "tabpanel"}
+                =render partial: 'activity'
+
+            -if current_user.exercises.any?
+              #exercises.tab-pane.show.tab-dashboard.tab-exercises{"aria-labelledby" => "exercises-tab", :role => "tabpanel"}
+                =render partial: 'exercises'
 
   =show_user_verified_restriction
+
 :javascript
   $(document).ready(function(){
     hash = window.location.hash;

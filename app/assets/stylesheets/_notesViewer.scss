@@ -1,0 +1,204 @@
+// Notes Viewer Classes
+.course-notes-reader {
+  position: relative;
+  padding-bottom: 0;
+  height: 100%;
+  overflow: hidden;
+  max-width: 100%;
+  background-color: #FFF;
+}
+
+#notes_next_lesson_navigation {
+  position: relative;
+}
+
+.pdf-viewer {
+  position: relative;
+  min-height: 700px;
+  background-color: #FFF;
+  height: calc(100vh - 92px);
+  @include if-device(phone) {
+    margin-top: 1.2rem;
+  }
+
+  header {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 99;
+    position: absolute;
+    right: 0;
+    top: 0;
+    background: transparent;
+
+    @include if-device(phone) {
+      right: 16px;
+    }
+  }
+
+  .header-item {
+    margin: 0 2.5em;
+  }
+
+  .pdf-paginator {
+    padding: 0px 20% 0px 30%;
+    ;
+  }
+
+  .toolbarButton,
+  .dropdownToolbarButton,
+  .secondaryToolbarButton,
+  .overlayButton {
+    min-width: 16px;
+    padding: 10px;
+    border: 1px solid #E5E7EB;
+    border-radius: 6px;
+    color: #000;
+    font-size: 14px;
+    line-height: 14px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+    margin-left: 12px;
+
+    font-size: 14px;
+    font-weight: 600;
+    background-color: #FFF;
+    border-color: #D9D9D9;
+    color: rgba(0, 0, 0, 0.65);
+  }
+
+  .toolbarButton:hover,
+  .toolbarButton:focus {
+    background-color: rgba(0, 0, 0, 0.12);
+    background-image: linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0));
+    background-clip: padding-box;
+    border: 1px solid rgba(0, 0, 0, 0.35);
+    border-color: rgba(0, 0, 0, 0.32) rgba(0, 0, 0, 0.38) rgba(0, 0, 0, 0.42);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05) inset, 0 0 1px rgba(255, 255, 255, 0.15) inset, 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+
+
+  .pdf-viewer__document,
+  .pdf-viewer__preview {
+    top: 45px;
+  }
+
+  .pdf-viewer__preview {
+    display: block;
+    width: 15%;
+    right: 85%;
+  }
+
+  .pdf-viewer__document {
+    top: 108px;
+    width: 97%;
+    height: 90%;
+    left: 10px;
+  }
+  .pdf-viewer__document.preview-enabled {
+    width: 84%;
+    left: 15%;
+  }
+
+  .pdf-document {
+    position: absolute;
+    overflow: auto;
+    width: 100%;
+    top: 52px;
+    padding: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-top: 3px solid #d6d9db;
+    border-bottom: 3px solid #d6d9db;
+    background: #d6d9db;
+
+    @include if-device(phone) {
+      border-top: 1px solid #d6d9db;
+      border-bottom: 1px solid #d6d9db;
+    }
+  }
+
+  .scrolling-page {
+    margin-bottom: 1em;
+  }
+
+  .pdf-page {
+    display: block;
+    margin: 0 auto;
+  }
+
+  .pdf-paginator {
+    color: white;
+    font-weight: bold;
+  }
+
+  .pdf-paginator input {
+    min-width: 2em;
+    padding: 0.3em;
+  }
+
+  .pdf-preview {
+    position: absolute;
+    overflow: auto;
+    z-index: 1;
+    padding: 2em 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 55px;
+  }
+}
+
+#resourceTabs {
+  padding-top: 35px;
+  .pdf-viewer {
+    width: 100%;
+    left: 0;
+    height: 1400px;
+    header {
+      position: initial;
+      margin-top: -2.2em;
+    }
+  }
+}
+
+@media print {
+  .pdf-document {
+    position: static;
+  }
+
+  header {
+    display: none;
+  }
+}
+
+// Paperclip File Rendering
+.resource-box {
+  display: inline-block;
+  background: $colour-12;
+  color: $white;
+  margin: $gutter*.5 $gutter $gutter 0;
+  a {
+    color: $white;
+    text-decoration: none;
+  }
+  @include border-radius(4px);
+  @include box-shadow(0, 0, 3px, darken($colour-3, 30%));
+  @include transition(box-shadow .1s ease);
+  &:hover, &:active {
+    text-decoration: none;
+    color: $white;
+    background: darken($colour-12, 15%);
+    @include box-shadow(0, 0, 12px, rgba(#000, .35));
+    cursor: pointer;
+  }
+}
+.resource-box-inner {
+  padding: $gutter/2 $gutter;
+}
+

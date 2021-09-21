@@ -1,25 +1,33 @@
 <template>
-  <div id="cbe-modals" class="col-sm-6">
-    <div class="card card-horizontal card-horizontal-sm flex-row" @click="show('modal-'+componentType+'-'+pdfFileName)">
+  <div id="cbe-modals" class="col-md-4 col-lg-3 mb-4">
+    <div class="productCard internal-card" @click="show('modal-'+componentType+'-'+pdfFileName)">
       <div
-        class="card-header bg-white d-flex align-items-center justify-content-center"
+        class="productCard-header d-flex align-items-center justify-content-center"
       >
+        <AddonExamsIcon />
+      </div>
+      <div class="productCard-body d-flex align-items-center">
         <div>
-          <i aria-label class="budicon-files-download" role="img"></i>
+          {{ this.pdfFileName }}
+        </div>
+        <div class="productCard-footer d-flex align-items-center justify-content-between">
+          <div>
+            <span style="color: #007bff;background-color: rgb(0 123 255 / 5%);font-size: 14px;border-radius: 4px;padding: 0.5rem 1rem;letter-spacing: 1px;font-weight: 600;line-height: 1;display: inline-flex;column-gap: 6px;">
+              🎉 FREE
+            </span>
+          </div>
+          <div class="btn btn-primary productCard--buyBtn">
+            View
+          </div>
         </div>
       </div>
-      <a class="card-body d-flex align-items-center pl-1">
-        <h5 class="m-0 text-truncate text-gray2">
-          {{ this.pdfFileName }}
-        </h5>
-      </a>
     </div>
     <VueModal
       :componentType="componentType"
       :componentName="this.pdfFileName"
       :componentModal="componentModal"
       :componentHeight="550"
-      :componentWidth="850"
+      :componentWidth="320"
     >
     <div slot="body">
       <div class="modal-internal-content">
@@ -36,12 +44,14 @@
 import PDFCourseViewer from "../../lib/PDFCourseViewer/index.vue";
 import VueModal from "../VueModal.vue";
 import eventBus from "../cbe/EventBus.vue";
+import AddonExamsIcon from './addon-exams.svg';
 
 export default {
   components: {
     PDFCourseViewer,
     VueModal,
-    eventBus
+    eventBus,
+    AddonExamsIcon
   },
   props: {
     componentType: {

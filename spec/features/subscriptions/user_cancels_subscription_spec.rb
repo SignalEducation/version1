@@ -17,18 +17,17 @@ describe 'A user cancels a subscription', type: :feature do
     end
 
     scenario 'the user can keep the subscription' do
-      expect(page).to have_content('Profile')
+      expect(page).to have_content('My Account')
       click_link 'Subscriptions'
       find(:css, '.sub-details').click
       click_link 'Cancel Subscription'
 
       click_link('Keep Subscription')
-      expect(page).to have_content('Profile')
-      expect(page).to have_content('Account Information')
+      expect(page).to have_content('My Account')
     end
 
     scenario 'the user can cancel' do
-      expect(page).to have_content('Profile')
+      expect(page).to have_content('My Account')
       click_link 'Subscriptions'
       find(:css, '.sub-details').click
       click_link 'Cancel Subscription'
@@ -36,12 +35,11 @@ describe 'A user cancels a subscription', type: :feature do
       click_button 'Cancel My Subscription'
 
       expect(page).to have_content('Your Subscription has been cancelled')
-      expect(page).to have_content('Profile')
-      expect(page).to have_content('Account Information')
+      expect(page).to have_content('My Account')
     end
 
     xscenario 'the user must give a reason for cancelling' do
-      expect(page).to have_content('Profile')
+      expect(page).to have_content('My Account')
       click_link 'Subscriptions'
       find(:css, '.sub-details').click
       click_link 'Cancel Subscription'
