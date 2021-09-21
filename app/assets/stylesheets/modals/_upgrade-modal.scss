@@ -32,7 +32,7 @@
         .btn-icon {
             position: absolute;
             z-index: 1000000;
-            background-color: #000;
+            background-color: #FFF;
             width: 32px;
             height: 32px;
             padding: 7px 0px !important;
@@ -40,9 +40,13 @@
             text-align: center;
             right: 16px;
             top: 16px;
-            color: #FFF;
+            color: #111827;
             i {
                 font-size: 20px;
+                border-radius: 100%;
+                background-color: transparent;
+                padding: 0;
+                color: #111827;
             }
             &:hover {
                 background-color: #111827;

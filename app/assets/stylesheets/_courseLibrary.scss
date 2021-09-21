@@ -16,7 +16,7 @@
     &-progress {
       flex: 6;
       @include if-device(phone) {
-        flex: 3
+        flex: 2
       }
     }
     &-percent {
@@ -228,7 +228,7 @@
       position: fixed;
       bottom: 0;
       left: 0;
-      background: linear-gradient(to bottom, white 0%, #f6f6f6 47%, #ededed 100%);
+      background-color: #FFF;
       z-index: 100;
       padding: 1rem;
       width: 100%;

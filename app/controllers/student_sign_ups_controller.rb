@@ -124,7 +124,7 @@ class StudentSignUpsController < ApplicationController
 
     @navbar = false
     @top_margin = false
-    @footer = true
+    @footer = 'white'
   end
 
   def new
@@ -136,7 +136,7 @@ class StudentSignUpsController < ApplicationController
 
   def create
     @navbar = false
-    @footer = false
+    @footer = 'white'
     user_country = IpAddress.get_country(request.remote_ip, true)
     user_currency = user_country&.currency || Currency.find_by(iso_code: 'GBP')
 

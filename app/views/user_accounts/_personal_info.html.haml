@@ -1,22 +1,21 @@
 =form_for(@user, url: update_personal_details_url, html: {class: 'card mb-5', role: 'form', id: 'personal-details-form'}) do |f|
-  .card-body
-    -# %h2.text-gray2.mb-5 Personal Information
+  .card-body.col-md-6
     .row
-      .col-md-6
+      .col-md-12
         .form-group
           =f.label :first_name, t('views.user_accounts.student_user_form.first_name')
           =f.text_field :first_name, class: 'form-control'
 
-      .col-md-6
+      .col-md-12
         .form-group
           =f.label :last_name, t('views.user_accounts.student_user_form.last_name')
           =f.text_field :last_name, class: 'form-control'
     .row
-      .col-md-6
+      .col-md-12
         .form-group
           =f.label :email, t('views.user_accounts.student_user_form.email')
           =f.text_field :email, class: 'form-control'
-      .col-xl-6
+      .col-md-12
         .form-group
           =f.label :date_of_birth, t('views.user_accounts.student_user_form.date_of_birth')
           .form-row.align-items-center.justify-content-xl-between
@@ -27,7 +26,7 @@
 
       =f.fields_for :exam_body_user_details do |detail|
         =detail.hidden_field :exam_body_id
-        .col-md-6
+        .col-md-12
           .form-group
             =detail.label :student_number, "#{detail.object.exam_body.name} Student Number"
             =detail.text_field :student_number, class: 'form-control'

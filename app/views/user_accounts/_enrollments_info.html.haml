@@ -1,10 +1,5 @@
-%article.card#dashboardTabsContent
-  .card-body
-    %h4.text-gray1.mb-4
-      Enrolments
-
-
-
+%article#dashboardTabsContent
+  -if @enrollments.length > 0
     .col-md-12.col-lg-10.p-0
       -@enrollments.each do |enrollment|
         -if enrollment.course
@@ -31,4 +26,15 @@
               =link_to 'Edit Details', '#', 'data-target' => "#enrollment-edit-modal-#{enrollment.id}", 'data-toggle' => 'modal', class: 'btn btn-secondary btn-sm'
           
           =render partial: 'edit_enrollment', locals: {enrollment: enrollment}
-          
+  -else
+    %article.card
+      .card-body
+        .zeroCaseWrapper
+          .zeroCaseWrapper-image
+            =image_tag('illustrations/zero-case-illustration@2x.png', alt: 'could not find anything')
+          .zeroCaseWrapper-infoBox
+            .zeroCaseWrapper-infoBox-title
+              You haven't enroled in any Course yet
+            .zeroCaseWrapper-infoBox-desc
+              Enrol in a preferred to course to track the course well.
+        

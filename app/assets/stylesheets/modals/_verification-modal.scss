@@ -14,11 +14,11 @@
             }
         }
         h3, h4 {
-            font-size: 30px;
+            font-size: 28px;
             line-height: 130%;
             font-weight: 700;
             color: #111827 !important;
-            width: 460px;
+            width: 520px;
             z-index: 20;
             span {
                 color: #FD5454;
@@ -40,7 +40,7 @@
         .btn-icon {
             position: absolute;
             z-index: 1000000;
-            background-color: #000;
+            background-color: #FFF;
             width: 32px;
             height: 32px;
             padding: 7px 0px !important;
@@ -48,9 +48,13 @@
             text-align: center;
             right: 16px;
             top: 16px;
-            color: #FFF;
+            color: #111827;
             i {
                 font-size: 20px;
+                border-radius: 100%;
+                background-color: transparent;
+                padding: 0;
+                color: #111827;
             }
             &:hover {
                 background-color: #111827;

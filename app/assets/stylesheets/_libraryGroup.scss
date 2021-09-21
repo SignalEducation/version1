@@ -13,7 +13,7 @@
     -ms-grid-rows: auto;
     grid-template-rows: auto;
     padding-top: 0;
-    padding-bottom: 3rem;
+    padding-bottom: 6rem;
     margin: 0 auto;
     .libraryGroupWrapper-heroInfoWrapper {
       flex: 1 1;
@@ -22,10 +22,11 @@
       .heroTitle {
         margin-bottom: 8px;
         color: #010032;
-        font-size: 40px;
+        font-size: 48px;
         line-height: 140%;
         font-style: normal;
         font-weight: 700;
+        padding-top: 3rem !important;
         @include if-device(phone) {
           font-size: 24px;
         }
@@ -33,11 +34,12 @@
       .heroDesc {
         margin-bottom: 32px;
         color: #6B7280;
-        font-size: 14px;
+        font-size: 18px;
         line-height: 150%;
         max-width: 40%;
         @include if-device(phone) {
           max-width: 100%;
+          font-size: 14px;
         }
       }
     }
