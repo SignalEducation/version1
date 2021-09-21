@@ -15,7 +15,7 @@ RSpec.describe 'library/_register_upgrade_links' do
     end
   end
 
-  describe 'visibility of Upgrade Now link' do
+  describe 'visibility of View Pricing Plans link' do
     before :each do
       def view.subscription_checkout_special_link(_id)
         'http://example.com'
@@ -30,7 +30,7 @@ RSpec.describe 'library/_register_upgrade_links' do
 
         render partial: 'library/register_upgrade_links', locals: { user: user }
 
-        expect(rendered).not_to match /Upgrade Now/
+        expect(rendered).not_to match /View Pricing Plans/
         expect(rendered).not_to match /Register Now/
       end
     end
@@ -48,7 +48,7 @@ RSpec.describe 'library/_register_upgrade_links' do
 
         render partial: 'library/register_upgrade_links', locals: { user: user }
 
-        expect(rendered).not_to match /Upgrade Now/
+        expect(rendered).not_to match /View Pricing Plans/
         expect(rendered).not_to match /Register Now/
       end
     end
@@ -60,13 +60,13 @@ RSpec.describe 'library/_register_upgrade_links' do
         allow(user).to receive(:valid_subscription_for_exam_body?).and_return false
       end
 
-      it 'does not show the UPGRADE NOW link' do
+      it 'does not show the View Pricing Plans link' do
         assign(:group, build_stubbed(:group))
         assign(:course, build_stubbed(:course))
 
         render partial: 'library/register_upgrade_links', locals: { user: user }
 
-        expect(rendered).to match /Upgrade Now/
+        expect(rendered).to match /View Pricing Plans/
         expect(rendered).not_to match /Register Now/
       end
     end
@@ -80,7 +80,7 @@ RSpec.describe 'library/_register_upgrade_links' do
 
         render partial: 'library/register_upgrade_links', locals: { user: user }
 
-        expect(rendered).not_to match /Upgrade Now/
+        expect(rendered).not_to match /View Pricing Plans/
         expect(rendered).not_to match /Register Now/
       end
     end
