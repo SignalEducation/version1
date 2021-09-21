@@ -246,7 +246,7 @@ module ApplicationHelper
   def show_user_verified_restriction
     return unless current_user.show_verify_email_message?
 
-    render partial: 'library/verification_restriction_modal'
+    render partial: 'library/verification_restriction_modal', locals: { onload: true }
   end
   private
 
