@@ -7,7 +7,7 @@
             .subscriptionCard-body-icon
               .iconText ✨
             .subscriptionCard-body-nameBox
-              %div.h5.m-0.text-black
+              %div.subscriptionCard-body-title
                 %span.mr-1
                   =subscription.user_readable_name
               %div.m-0.text-gray1{style: 'font-size: 12px;'}
@@ -15,7 +15,7 @@
                 %span
                   =humanize_date(subscription.next_renewal_date)
             .subscriptionCard-body-paymentBox
-              %div.h5.m-0.text-black
+              %div.subscriptionCard-body-title
                 %span.discount
                   =subscription.stripe? ? 'Credit card' : "PayPal"
               %div.m-0.text-gray1{style: 'font-size: 12px;'}
@@ -100,15 +100,10 @@
           .subscriptionCard-body-icon
             .iconText 🎉
           .subscriptionCard-body-nameBox
-            %div.h5.m-0.text-black
+            %div.subscriptionCard-body-title
               %span.mr-1
                 ='Basic Membership'
             %div.m-0.text-gray1{style: 'font-size: 12px;'}
               Account created on
               %span=humanize_datetime_full(@user.created_at)
-          .subscriptionCard-body-paymentBox
-             
-          .subscriptionCard-body-statusBox
-            
-          .subscriptionCard-body-actionBox
             

@@ -35,6 +35,9 @@
 
 -else
   .col-md-12.col-lg-12.p-0
+    %h3.h4-hero.mb-4.mt-4.bg-white.visible-xs{style: 'margin: 0 -1rem !important;padding: 0 1rem 1.5rem !important;'}
+      ="Get started with an #{@default_group.name} course"
+
     %div.libraryGroupWrapper-list.visible-xs
       %nav.levels-nav{style: 'margin-left: -1rem;     width: calc(100% + 2rem);'}
         %ul.d-flex.flex-column.nav.nav-pills.nav-fill{id: 'levelsTabs', role: 'tablist'}
@@ -42,9 +45,9 @@
             %li.nav-item{data: {tab_name: level.name, group_name: @default_group.name}}
               %a{class: "nav-link #{counter == 0 ? 'active' : ''}", id: "#{level.name_url}-tab", data: {toggle: 'tab'}, href: "##{level.name_url}", aria: {controls: "#{level.name_url}", selected: 'false'}, role: 'tab'}
                 =level.name
-    %h4.h4-hero.mb-4.mt-4
+    %h4.h4-hero.mb-4.mt-4.hidden-xs
       ="Get started with an #{@default_group.name} course"
-    %div.container.d-flex.libraryGroupWrapper-list.pt-4.pb-4
+    %div.container.d-flex.libraryGroupWrapper-list.pt-4.pb-4{style: 'padding-top: 2rem !important;'}
       %nav.levels-nav.hidden-xs
         %ul.d-flex.flex-column.nav.nav-pills.nav-fill{id: 'levelsTabs', role: 'tablist'}
           - @levels.each_with_index do |level, counter|

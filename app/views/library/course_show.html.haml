@@ -28,11 +28,8 @@
           -if @exam_body.has_sittings && @new_enrollment && (@computer_exam_sitting || @exam_sittings)
             %a#enrol-top{data: {target: '#enrollment-modal', toggle: 'modal'}, href: '#', class: 'btn btn-outline btn-sm non-upgrade mr-2'}
               Enrol
-            -# Ask a Tutor CTA
-            %a{class: 'btn btn-dark btn-sm mr-2', 'data-target' => '#contact-form-modal', 'data-toggle' => 'modal', :href => '#'}
-              =@exam_body&.help_text
-            -# %a{data: {target: '#enrollment-modal', toggle: 'modal'}, href: '#', class: 'btn btn-secondary btn-sm upgrade-resp-enroll-btn upgrade-btn-flt'}
-            -#   Enrol
+            %a{data: {target: '#enrollment-modal', toggle: 'modal'}, href: '#', class: 'btn btn-secondary btn-sm upgrade-resp-enroll-btn upgrade-btn-flt'}
+              Enrol
             =render partial: 'course_enrollment_modal'
           -if @course_log && @course_log&.latest_course_step && @course_log&.latest_course_step&.next_element
             =link_to 'Resume', course_special_link(@course_log.latest_course_step.next_element, @course_log), class: 'btn btn-primary btn-sm'
@@ -57,10 +54,10 @@
 
       
       - if @course_log
-        %section.course-progress.col-xl-8.p-0
+        %section.course-progress.col-sm-8.col-xl-8.p-0
           =render partial: 'progress'
       - else
-        %section.course-progress.col-xl-12.p-0
+        %section.course-progress.col-sm-8.col-xl-12.p-0
           =render partial: 'course_info'
 
       %nav.courses-nav.js-courses-nav-anchor
@@ -94,13 +91,17 @@
             %h3.text-gray1.mb-4.mb-sm-5 
               Learning Modules
           .row.row-lg
-            .col-xl-8
+            .col-sm-8.col-xl-8
               .mb-5.mb-xl-0
                 - course_section.course_lessons.all_valid.all_in_order.each_with_index do |course_lesson, counter|
                   =render partial: 'course_lesson', locals: { course_lesson: course_lesson, counter: counter, count: course_section.course_lessons.all_valid.count }
 
-            .col-xl-4.mb-4.custom-upgrade
+            .col-sm-4.col-xl-4.mb-4.custom-upgrade
               =render partial: 'register_upgrade_links', locals: { user: current_user }
+              
+              -# Ask a Tutor CTA
+              %a{class: 'btn btn-dark btn-sm mr-2 w-100 mt-4 py-3', 'data-target' => '#contact-form-modal', 'data-toggle' => 'modal', :href => '#'}
+                =@exam_body&.help_text
 
               -# Ask a Tutor CTA
               -# %aside.lesson-preview-btn-pad

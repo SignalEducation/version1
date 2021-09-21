@@ -15,6 +15,9 @@
     padding-top: 0;
     padding-bottom: 6rem;
     margin: 0 auto;
+    @include if-device(phone) {
+      padding-bottom: 2rem;
+    }
     .libraryGroupWrapper-heroInfoWrapper {
       flex: 1 1;
       z-index: 1;
@@ -29,6 +32,7 @@
         padding-top: 3rem !important;
         @include if-device(phone) {
           font-size: 24px;
+          padding-top: 1rem !important;
         }
       }
       .heroDesc {
@@ -139,9 +143,10 @@
             border-color: transparent;
             transition: all .15s ease-in-out 0s;
             &.active {
-              color: #000032;
+              text-decoration: none;
               background-color: transparent;
-              border-color: #000032;
+              color: #00b67b !important;
+              border-color: #00b67b !important;
             }
           }
         }
