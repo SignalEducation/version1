@@ -19,10 +19,10 @@
                 %li.nav-item.dashboardTabsNav-navItem
                   %a#activity-tab.nav-link.dashboardTabsNav-navItemLink.active{"aria-controls" => "activity", "aria-selected" => "false", "data-toggle" => "tab", :href => "#activity", :role => "tab"}
                     Activity
-                -if current_user.exercises.any?
-                  %li.nav-item.dashboardTabsNav-navItem
-                    %a#exercises-tab.nav-link.dashboardTabsNav-navItemLink{"aria-controls" => "exercises", "aria-selected" => "true", "data-toggle" => "tab", :href => "#exercises", :role => "tab"}
-                      Exercises
+            -if current_user.exercises.any?
+              %li.nav-item.dashboardTabsNav-navItem
+                %a#exercises-tab.nav-link.dashboardTabsNav-navItemLink{"aria-controls" => "exercises", "aria-selected" => "true", "data-toggle" => "tab", :href => "#exercises", :role => "tab"}
+                  Exercises
 
 
       %section.dashboard__contentContainer.pt-4.bg-gray5
