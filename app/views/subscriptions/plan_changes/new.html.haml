@@ -324,8 +324,8 @@
   // Sets the hidden field subscription_plan_id to that id.
   function choosePlan(theThing) {
     $('.js-radio-option[type="radio"]:checked').prop('checked', false);
-    $(theThing).find('.js-radio-option[type="radio"]').prop('checked', true);
-    $('#subscription_subscription_plan_id').val($(theThing).parent().parent().parent().parent().attr('data-plan-id'));
+    var selector = $(theThing).find('.js-radio-option[type="radio"]').prop('checked', true);
+    $('#subscription_subscription_plan_id').val(selector.attr('value'));
     addToCart(theThing);
     console.log("ChoosePlan and addtoCard called");
   }
