@@ -8,6 +8,28 @@ module Api
         render 'admin/courses/index.json'
       end
 
+      def groups
+        @groups = Group.all_active.all_in_order
+        @groups = @groups.where(name_url: params[:group_name]) if params[:group_name]
+
+        if @groups.empty?
+          render json: { errors: 'Group not found' }, status: :not_found
+        else
+          render 'api/v1/courses/groups.json'
+        end
+      end
+
+      def lessons
+        group   = Group.find_by(name_url: params[:group_name])
+        @course = Course.find_by(name_url: params[:course_name], group: group)
+
+        if @course.nil?
+          render json: { errors: 'Group not found' }, status: :not_found
+        else
+          render 'api/v1/courses/lessons.json'
+        end
+      end
+
       def read_note_log
         step_log = CourseStepLog.find(params[:step_log_id])
 
