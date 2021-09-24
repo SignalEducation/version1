@@ -52,6 +52,11 @@ Rails.application.routes.draw do
       end
 
       resources :courses, only: :index do
+        collection do
+          get 'groups(/:group_name)', to: 'courses#groups'
+          get 'lessons/:group_name/:course_name', to: 'courses#lessons'
+        end
+
         post 'read_note_log'
       end
 
