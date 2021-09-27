@@ -266,13 +266,6 @@ class CourseStep < ApplicationRecord
     attributes['question'].blank? && attributes['name'].blank? && attributes['notes'].blank?
   end
 
-  def full_link_path
-    UrlHelper.instance.show_course_url(course_lesson.course_section.course.name_url,
-                                       course_lesson.course_section.name_url,
-                                       course_lesson.name_url,
-                                       name_url)
-  end
-
   private
 
   def log_count_fields

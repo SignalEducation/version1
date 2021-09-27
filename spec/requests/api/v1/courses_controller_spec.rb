@@ -99,8 +99,6 @@ RSpec.describe 'Api::V1::CoursesController', type: :request do
 
     context 'return all records' do
       before do
-        allow_any_instance_of(CourseStep).to receive(:full_link_path).and_return(Faker::Internet.slug)
-
         get "/api/v1/courses/lessons/#{group_1.name_url}/#{course_1.name_url}"
       end
 

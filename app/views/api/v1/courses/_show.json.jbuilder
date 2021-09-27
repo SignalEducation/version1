@@ -9,7 +9,7 @@ json.course do
 
   json.sections do
     if course.course_sections.present?
-      json.array! course.course_sections.all_active.all_in_order.each do |section|
+      json.array! course.course_sections.includes(:course_lessons).all_active.all_in_order.each do |section|
         json.id   section.id
         json.name section.name
         json.url  section.name_url
@@ -22,13 +22,16 @@ json.course do
               json.url  lesson.name_url
 
               json.steps do
-                if lesson.course_steps.present?
+                if lesson.course_steps.includes(:course_video).present?
                   json.array! lesson.course_steps.all_active.all_in_order.each do |step|
                     json.id   step.id
                     json.name step.name
                     json.url  step.name_url
                     json.kind step.type_name
-                    json.link step.full_link_path
+                    json.link show_course_url(step.course_lesson.course_section.course.name_url,
+                                              step.course_lesson.course_section.name_url,
+                                              step.course_lesson.name_url,
+                                              step.name_url)
 
 
                     json.video_data do
