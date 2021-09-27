@@ -21,7 +21,7 @@ module Api
 
       def lessons
         group   = Group.find_by(name_url: params[:group_name])
-        @course = Course.includes(:course_steps).find_by(name_url: params[:course_name], group: group)
+        @course = Course.find_by(name_url: params[:course_name], group: group)
 
         if @course.nil?
           render json: { errors: 'Group not found' }, status: :not_found
