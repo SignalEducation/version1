@@ -44,7 +44,7 @@ RSpec.describe UserVerificationsController, :type => :controller do
         expect(controller.params[:email_verification_code]).to eq(unverified_student_user.email_verification_code)
         expect(response.status).to eq(302)
 
-        expect(response).to redirect_to(registration_onboarding_url(exam_body_2.group.name_url))
+        expect(response).to redirect_to(student_dashboard_url)
         expect(flash[:error]).to be_nil
       end
 

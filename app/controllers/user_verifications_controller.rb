@@ -19,7 +19,8 @@ class UserVerificationsController < ApplicationController
       SegmentService.new.track_verification_event(@user) if flash[:datalayer_verify] || !Rails.env.test?
       if @user.preferred_exam_body&.group
         # Redirect to account_verified method below
-        redirect_to registration_onboarding_url(@user.preferred_exam_body.group.name_url)
+        # redirect_to registration_onboarding_url(@user.preferred_exam_body.group.name_url)
+        redirect_to student_dashboard_url
       else
         flash[:success] = 'Thank you! Your email is now verified'
         redirect_to student_dashboard_url
