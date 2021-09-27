@@ -9,9 +9,10 @@
               %path{:d => "M8 8H24C25.1 8 26 8.9 26 10V22C26 23.1 25.1 24 24 24H8C6.9 24 6 23.1 6 22V10C6 8.9 6.9 8 8 8Z", :stroke => "#FEF3C7", "stroke-linecap" => "round", "stroke-linejoin" => "round", "stroke-width" => "2"}
               %path{:d => "M26 10L16 17L6 10", :stroke => "#FEF3C7", "stroke-linecap" => "round", "stroke-linejoin" => "round", "stroke-width" => "2"}
           .nav-verification-alert-box-info
-            .nav-verification-alert-box-title 
+            .nav-verification-alert-box-title
               %span Verify your email
-            .nav-verification-alert-box-desc Your account will get deactivated within 7-days from now.
+            .nav-verification-alert-box-desc
+              ="Your account will get deactivated in #{current_user.verify_remain_days} days."
             -if !current_user.email_verified && current_user.email_verification_code
               =link_to resend_verification_mail_url(current_user.email_verification_code), method: :post, class: 'btn verification-btn btn-sm mb-3 mb-sm-0' do
                 ='Resend Email'

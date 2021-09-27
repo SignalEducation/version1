@@ -427,7 +427,7 @@ RSpec.describe ApplicationHelper, type: :helper do
       let(:days) { rand(1..7) }
 
       it 'returns a message with the remain days' do
-        expect(verify_email_message(days)).to eq("Please verify your email within <span>#{days}</span> days to continue free tier subscription.")
+        expect(verify_email_message(days)).to eq("Please verify your email address within <span>#{days}</span> days to continue using your free subscription.")
       end
     end
 
