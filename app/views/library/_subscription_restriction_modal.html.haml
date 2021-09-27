@@ -5,8 +5,8 @@
         %i.material-icons{'aria-hidden': 'true'}
           close
       %h3.text-red{id: 'invalidSubscription'}
-        Unlock the 
-        %span full experience 
+        Unlock the
+        %span full experience
         by getting your subcription today.
       .upgradeIllustration
         =image_tag('illustrations/upgrade-illustration-v1@2x.png', alt: 'upgrade')
@@ -18,6 +18,4 @@
             =link_to 'Resolve Issue!', account_url(anchor: 'account-info')
 
       .modal-footer
-        =link_to 'View Pricing Plans', pricing_url(@group.name_url), class: 'btn btn-dark upgrade-btn', title: 'Get Unlimited Access'
-        
-
+        =link_to 'View Subscription Plans', pricing_url(@group.name_url), class: 'btn btn-dark upgrade-btn', title: 'Get Unlimited Access'
