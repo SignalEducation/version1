@@ -98,7 +98,11 @@ RSpec.describe 'Api::V1::CoursesController', type: :request do
     include_context 'course_content' # support/course_content.rb
 
     context 'return all records' do
-      before { get "/api/v1/courses/lessons/#{group_1.name_url}/#{course_1.name_url}" }
+      before do
+        allow_any_instance_of(CourseStep).to receive(:full_link_path).and_return(Faker::Internet.slug)
+
+        get "/api/v1/courses/lessons/#{group_1.name_url}/#{course_1.name_url}"
+      end
 
       it 'returns HTTP status 200' do
         expect(response).to have_http_status 200
@@ -119,13 +123,13 @@ RSpec.describe 'Api::V1::CoursesController', type: :request do
         expect(course['release_date']).to eq(course_1.release_date)
         expect(course['level_id']).to eq(course_1.level_id)
         expect(course.keys).to eq(%w[id
-                                          name
-                                          name_url
-                                          sorting_order
-                                          description
-                                          release_date
-                                          level_id
-                                          sections])
+                                     name
+                                     name_url
+                                     sorting_order
+                                     description
+                                     release_date
+                                     level_id
+                                     sections])
 
         expect(section['id']).to eq(course_section_1.id)
         expect(section['name']).to eq(course_section_1.name)
@@ -143,6 +147,7 @@ RSpec.describe 'Api::V1::CoursesController', type: :request do
         expect(lesson_steps.map { |s| s['url'] }).to include(course_step_2.name_url)
         expect(lesson_steps.map { |s| s['kind'] }).to include(course_step_2.type_name)
         expect(lesson_steps.map { |s| s['video_data'] }).to include({ "dacast_id"=>course_video_1.dacast_id,
+                                                                      "duration"=>course_video_1.duration,
                                                                       "vimeo_guid"=> course_video_1.vimeo_guid })
       end
     end
