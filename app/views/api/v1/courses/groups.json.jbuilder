@@ -14,13 +14,7 @@ json.groups do
 
         json.courses do
           json.array! level.courses.all_active.all_in_order.each do |course|
-            json.id            course.id
-            json.name          course.name
-            json.name_url      course.name_url
-            json.sorting_order course.sorting_order
-            json.description   course.description
-            json.release_date  course.release_date
-            json.level_id      course.level_id
+            json.partial! 'show', locals: { course: course }
 
             json.exam_body do
               json.id   course.exam_body.id
