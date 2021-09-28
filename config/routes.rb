@@ -52,6 +52,11 @@ Rails.application.routes.draw do
       end
 
       resources :courses, only: :index do
+        collection do
+          get 'groups(/:group_name)', to: 'courses#groups'
+          get 'lessons/:group_name/:course_name', to: 'courses#lessons'
+        end
+
         post 'read_note_log'
       end
 
@@ -339,7 +344,7 @@ Rails.application.routes.draw do
 
   resources :management_consoles
   get '/system_requirements', to: 'management_consoles#system_requirements', as: :system_requirements
-  get '/public_resources', to: 'management_consoles#public_resources', as: :public_resources
+  get '/external-content', to: 'management_consoles#public_resources', as: :public_resources
 
   # Reports
   get '/reports',                       to: 'reports#index',                            as: :reports

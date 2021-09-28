@@ -21,7 +21,7 @@
                 %i{class:"material-icons icon-bg-round side-nav-material-icons", style: "color: #888; "} quiz
               =@course_step.name
 
-        .course-right-show-frame
+        .course-right-show-frame{style: 'padding-bottom: 6rem;'}
           .reduce-quiz-text-top
             -@quiz_questions.each do |question|
               =render partial: 'quiz_questions/show', locals: {question: question, hide_me: true}

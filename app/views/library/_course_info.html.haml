@@ -10,7 +10,7 @@
         .row.m-0
           -@course_tutors.each do |course_tutor|
             %div.mr-4
-              =link_to profile_url(course_tutor.user.name_url), class: 'profile-item link-alt d-inline-flex align-items-center mb-3' do
+              %div{class:'profile-item link-alt d-inline-flex align-items-center mb-3'}
                 .mr-3
                   =image_tag course_tutor.user.profile_image.url, class: 'img-thumbnail img-thumbnail-xs', alt: 'Tutor'
                 %div

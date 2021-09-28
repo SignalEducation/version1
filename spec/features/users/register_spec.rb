@@ -45,8 +45,8 @@ describe 'Register in process', type: :feature do
       end
 
       expect(page).to have_title('Dashboard')
-      expect(page).to have_content('Please verify your email within 7 days to continue free tier subscription.')
-      expect(page).to have_content('Check your inbox now')
+      expect(page).to have_content('Your account will get deactivated in 3 days')
+      expect(page).to have_content('Please check your inbox')
     end
 
     scenario 'invalid user data' do

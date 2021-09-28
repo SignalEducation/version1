@@ -13,3 +13,12 @@
                          preferred_exam_body_name: current_user&.preferred_exam_body&.name,
                          preferred_exam_body_id: current_user&.preferred_exam_body_id,
                          onboarding: current_user&.analytics_onboarding_valid?.to_s } }
+
+.row
+  .col-xl-12
+    %h1.h4
+      #fade-overlay.load-overlay-blank
+      #small-screen-overlay.load-overlay
+        .small-screen-overlay-text
+          Please use a larger screen device or landscape mode if on a tablet to access CBE.
+          =link_to 'Dashboard', student_dashboard_path, class: 'btn btn-secondary btn-sm btn-sm-arrow-left mb-3 mb-sm-0'

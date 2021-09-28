@@ -40,20 +40,4 @@ describe ProductsHelper, type: :helper do
       end
     end
   end
-
-  describe '#product_icon' do
-    context 'returns product ico' do
-      it 'cbe product' do
-        expect(product_icon(cbe_product)).to eq('<i class="budicon-desktop" role="img"></i>')
-      end
-
-      it 'not cbe product' do
-        expect(product_icon(correction_pack_product)).to eq('<i class="budicon-files-tick" role="img"></i>')
-      end
-
-      it 'lifetime product' do
-        expect(product_icon(lifetime_product)).to eq('<i class="budicon-web-banking" role="img"></i>')
-      end
-    end
-  end
 end

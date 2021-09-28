@@ -16,7 +16,7 @@
                 %h2=('A'..'Z').to_a[counter]
                 -# %i.learnsignal-letter{"aria-label" => "failed"}
                 -#   %span.small-dot-quiz
-              .col-md-11
+              .col-md-11.px-2
                 -if question.custom_styles
                   =render partial: 'quiz_contents/index', locals: {contents: qa.quiz_contents}
                 -else

@@ -1,10 +1,10 @@
 <template>
-  <div id="cbe-modals" class="col-md-4 col-lg-3 mb-4">
-    <div class="productCard internal-card" @click="show('modal-'+componentType+'-'+pdfFileName)">
+  <div id="cbe-modals" class="col-md-4 col-lg-3 mb-4 px-3">
+    <div class="productCard internal-card" :class="this.hasValidSubscription && 'has-true-subscription'" @click="show('modal-'+componentType+'-'+pdfFileName)">
       <div
         class="productCard-header d-flex align-items-center justify-content-center"
       >
-        <AddonExamsIcon />
+        <AddonExamsIcon style="margin-bottom: -16px;" />
       </div>
       <div class="productCard-body d-flex align-items-center">
         <div>
@@ -12,7 +12,7 @@
         </div>
         <div class="productCard-footer d-flex align-items-center justify-content-between">
           <div>
-            <span style="color: #007bff;background-color: rgb(0 123 255 / 5%);font-size: 14px;border-radius: 4px;padding: 0.5rem 1rem;letter-spacing: 1px;font-weight: 600;line-height: 1;display: inline-flex;column-gap: 6px;">
+            <span class="productCard-statusLabel">
               🎉 FREE
             </span>
           </div>
@@ -83,6 +83,7 @@ export default {
       pdfExamBodyId: this.$parent.examBodyId,
       preferredExamBodyId: this.$parent.preferredExamBodyId,
       preferredExamBodyName: this.$parent.preferredExamBodyName,
+      hasValidSubscription: this.$parent.hasValidSubscription,
       banner: this.$parent.banner,
       onboarding: this.$parent.onboarding
     };

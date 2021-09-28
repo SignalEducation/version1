@@ -1,12 +1,5 @@
 %main
   %article.libraryGroupWrapper.bg-white
-    -# .breadCrumbs.visible-xs
-    -#   .mw-0.container
-    -#     =link_to library_url, class: 'courseWrapper-backBtn' do
-    -#       .courseWrapper-backBtn-text
-    -#         .i.material-icons{:style => "font-size: 14px;margin-right: 8px;"} arrow_back
-    -#         %span
-    -#           Back
     %header.libraryGroupWrapper-hero
       .container.libraryGroupWrapper-heroInfoWrapper.pt-4
         .heroTitle
@@ -45,6 +38,12 @@
               %article.planCard.planCard-popular
                 .card-body.text-left.p-0
                   .tab-content
+                    -if @subscription_plans.length > 1
+                      %ul.nav.nav-pills.plan-nav{id: 'planTabs', role: 'tablist', class:@subscription_plans.length < 2 && 'hidden'}
+                        -@subscription_plans.each_with_index do |navPlan, navCounter|
+                          %li.nav-item{data: {tab_name: navPlan.guid}}
+                            %a{class: "nav-link #{navCounter == 0 ? 'active' : ''}", id: "#{navPlan.guid}-tab", data: {toggle: 'tab'}, href: "#nav-#{navPlan.guid}", aria: {controls: "#{navPlan.guid}", selected: 'false'}, role: 'tab'}
+                              =t("views.general.payment_intervals.a#{navPlan.payment_frequency_in_months}")
                     -@subscription_plans.each_with_index do |plan, counter|
                       .tab-pane{id: "nav-#{plan.guid}", class: "tab-#{plan.guid} #{counter == 0 ? 'active' : ''} ", "aria-labelledby" => "#{plan.guid}-tab", :role => "tabpanel"}
                         %div.planInfoWrapper
@@ -53,12 +52,7 @@
                               Premium 
                               %span.greenShade=t("views.general.payment_intervals.a#{plan.payment_frequency_in_months}")
                               Plan
-                            %ul.nav.nav-pills.plan-nav{id: 'planTabs', role: 'tablist', class:@subscription_plans.length < 2 && 'hidden'}
-                              -@subscription_plans.each_with_index do |navPlan, navCounter|
-                                %li.nav-item{data: {tab_name: navPlan.guid}}
-                                  %a{class: "nav-link #{navCounter == counter ? 'active' : ''}", id: "#{navPlan.guid}-tab", data: {toggle: 'tab'}, href: "#nav-#{navPlan.guid}", aria: {controls: "#{navPlan.guid}", selected: 'false'}, role: 'tab'}
-                                    =t("views.general.payment_intervals.a#{navPlan.payment_frequency_in_months}")
-                          %p.priceValue.mb-0.pb-4
+                          %p.priceValue.mb-0.pb-4{class: @subscription_plans.length < 2 && 'mt-0'}
                             %span.priceValue-actualPrice
                               =plan.currency.format_number(plan.price)
                               %span.priceValue-priceSuffix=t("views.general.payment_interval_shortSuffix.a#{plan.payment_frequency_in_months}")
@@ -74,10 +68,6 @@
                         
                         .bulletListTitle.hidden-xs ⚡️ What do you get
                         %ul.hidden-xs.list-centered.text-left.bulletList{class:@subscription_plans.length < 2 && 'noPlanNav'}
-                          %li.mb-3
-                            .bulletIcon •
-                            %span
-                              Everything in 🎉 FREE
                           -if plan.bullet_points_list && !plan.bullet_points_list.empty?
                             - plan.bullet_points_list.split(/, ?/).each do |bullet|
                               %li.mb-3
@@ -111,10 +101,6 @@
                               .faq-answer-expanded.d-none
                                 .bulletListTitle ⚡️ What do you get
                                 %ul.list-centered.text-left.bulletList{class:@subscription_plans.length < 2 && 'noPlanNav'}
-                                  %li.mb-3
-                                    .bulletIcon •
-                                    %span
-                                      Everything in 🎉 FREE
                                   -if plan.bullet_points_list && !plan.bullet_points_list.empty?
                                     - plan.bullet_points_list.split(/, ?/).each do |bullet|
                                       %li.mb-3

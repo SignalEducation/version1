@@ -26,11 +26,11 @@
       %header.coursePage-container-header
         .mw-0.preview-upgrade-btn
           -if @exam_body.has_sittings && @new_enrollment && (@computer_exam_sitting || @exam_sittings)
-            %a#enrol-top{data: {target: '#enrollment-modal', toggle: 'modal'}, href: '#', class: 'btn btn-outline btn-sm non-upgrade mr-2'}
+            %a#enrol-top{data: {target: '#enrollment-modal', toggle: 'modal'}, href: '#', class: 'btn btn-secondary btn-sm non-upgrade mr-2'}
               Enrol
             %a{data: {target: '#enrollment-modal', toggle: 'modal'}, href: '#', class: 'btn btn-secondary btn-sm upgrade-resp-enroll-btn upgrade-btn-flt'}
               Enrol
-            =render partial: 'course_enrollment_modal'
+            -# =render partial: 'course_enrollment_modal'
           -if @course_log && @course_log&.latest_course_step && @course_log&.latest_course_step&.next_element
             =link_to 'Resume', course_special_link(@course_log.latest_course_step.next_element, @course_log), class: 'btn btn-primary btn-sm'
 
@@ -77,9 +77,6 @@
               %a{href: "#products", role: 'tab', class: 'nav-link', data: {toggle: 'tab'}, aria: {controls: "products", selected: 'false'}}
                 ='Product (Add-ons)'
 
-          -#%li.nav-item
-            %a#locked-tab.nav-link.locked{"aria-controls" => "locked", "aria-selected" => "false", "data-toggle" => "tab", :href => "#locked", :role => "tab"}
-              Locked
 
 =render partial: 'library/user_form_modal', locals: { ticket_type: 'Contact Us', form_id: 'contact-form-modal' }
 .coursePage-moduleDetailWrapper
@@ -99,14 +96,10 @@
             .col-sm-4.col-xl-4.mb-4.custom-upgrade
               =render partial: 'register_upgrade_links', locals: { user: current_user }
               
-              -# Ask a Tutor CTA
-              %a{class: 'btn btn-dark btn-sm mr-2 w-100 mt-4 py-3', 'data-target' => '#contact-form-modal', 'data-toggle' => 'modal', :href => '#'}
+              -# Ask the Tutor CTA
+              %a{class: 'btn btn-outline btn-sm mr-2 w-100 py-3', 'data-target' => '#contact-form-modal', 'data-toggle' => 'modal', :href => '#'}
                 =@exam_body&.help_text
 
-              -# Ask a Tutor CTA
-              -# %aside.lesson-preview-btn-pad
-              -#   .btn.btn-secondary.btn-sm.mb-5{'data-target' => '#contact-form-modal', 'data-toggle' => 'modal', :href => '#'}
-              -#     =@exam_body&.help_text
       -if @course_resources.any?
         =# VueJS include
         =javascript_pack_tag 'pdf_viewer'
@@ -118,13 +111,13 @@
               - @course_resources.each do |resource|
                 - if current_user
                   - if @valid_subscription
-                    =pdf_viewer(resource, @banner.present?.to_s, current_user)
+                    =pdf_viewer(resource, @banner.present?.to_s, current_user, @valid_subscription)
                   - else
                     - permission = resource.available_to_user(current_user, @valid_subscription)
                     - if  permission[:view]
-                      =pdf_viewer(resource, @banner.present?.to_s, current_user)
+                      =pdf_viewer(resource, @banner.present?.to_s, current_user, false)
                     - else
-                      .col-md-4.col-lg-3.mb-4
+                      .col-md-4.col-lg-3.mb-4.px-3
                         %a.productCard{data: {target: "##{permission[:reason]}", toggle: 'modal', resource_name: resource.name, resource_id: resource.id,
                          course_name: resource.course.name, course_id: resource.course_id, exam_body_name: resource.course.exam_body.name, exam_body_id: resource.course.exam_body_id, resource_type: resource.type,
                           preferred_exam_body_id: current_user&.preferred_exam_body_id, preferred_exam_body: current_user&.preferred_exam_body&.name, banner: @banner.present?.to_s, onboarding: current_user&.analytics_onboarding_valid?.to_s,
@@ -140,7 +133,7 @@
                                 %span{style: 'color: #6d5902;background-color: #f9e9af;font-size: 12px;border-radius: 4px;padding: 2px 8px;padding-top: 4px;letter-spacing: 1px;font-weight: 600;line-height: 1.7;display: inline-flex;column-gap: 6px;'}
                                   LOCKED
                 - else
-                  .col-md-4.col-lg-3.mb-4
+                  .col-md-4.col-lg-3.mb-4.px-3
                     %a.productCard{data: {target: '#account-required', toggle: 'modal', href: '#', resource_name: resource.name, resource_id: resource.id,
                      preferred_exam_body_id: current_user&.preferred_exam_body_id, preferred_exam_body: current_user&.preferred_exam_body&.name, banner: @banner.present?.to_s, onboarding: current_user&.analytics_onboarding_valid?.to_s,
                      course_name: resource.course.name, course_id: resource.course_id, exam_body_name: resource.course.exam_body.name, exam_body_id: resource.course.exam_body_id, resource_type: resource.type, allowed: 'false'}}
@@ -162,7 +155,7 @@
             %h3.text-gray1.mb-4.mb-sm-4 Product (Add-ons)
             .row.row-lg
               - @correction_pack_products.each do |product|
-                .col-md-4.col-lg-3.mb-4
+                .col-md-4.col-lg-3.mb-4.px-3
                   =link_to product_checkout_special_link(product.group.exam_body.id, product.id), class: 'productCard' do
                     .productCard-header.d-flex.align-items-center.justify-content-center
                       =image_tag('course-addon-icons/addon-correction-pack.svg')
@@ -177,7 +170,7 @@
                           Buy
 
               - @mock_exam_products.each do |product|
-                .col-md-4.col-lg-3.mb-4
+                .col-md-4.col-lg-3.mb-4.px-3
                   =link_to product_link(product, current_user), class: 'productCard' do
                     .productCard-header.d-flex.align-items-center.justify-content-center
                       =image_tag('course-addon-icons/addon-exams.svg')
@@ -191,9 +184,6 @@
                         .btn.btn-primary.productCard--buyBtn
                           Buy
 
-      -#locked.tab-pane.tab-locked{"aria-labelledby" => "locked-tab", :role => "tabpanel"}
-        %h4.sr-only This is placeholder Locked content
-
 -# Modals
 =render partial: 'account_required_modal'
 =render partial: 'pricing_modal'
@@ -201,6 +191,8 @@
   =render partial: 'subscription_restriction_modal'
   =render partial: 'verification_restriction_modal', locals: { onload: false }
   =render partial: 'related_lesson_restriction_modal'
+  -if @exam_body.has_sittings && @new_enrollment && (@computer_exam_sitting || @exam_sittings)
+    =render partial: 'course_enrollment_modal'
 -# - if @welcome_video
 -#   =render partial: 'welcome_video_modal'
 :javascript
@@ -264,3 +256,23 @@
           $('#enrollment-modal').modal('show');
         }, 900);
       });
+
+
+-if current_user && !current_user.onboarding_course && current_user.course_lesson_logs.count < 1
+  :javascript
+    
+    $(document).ready(function() {
+      $.ajax({
+        url: "#{user_update_hubspot_path(current_user.id)}",
+        method: 'post',
+        data: JSON.stringify({'custom_data': {'onboarding_course': "#{@course.name}", 'course_id': "#{@course.id}" } } ),
+        contentType: 'application/json',
+        success: function(data,status,xhr){
+          console.log(xhr)
+        },
+        error: function(xhr,status,error){
+          console.log(xhr);
+        }
+      });
+    });
+§

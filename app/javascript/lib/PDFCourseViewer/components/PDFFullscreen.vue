@@ -1,7 +1,13 @@
 <template>
   <div class="pdf-fullscreen">
-    <a @click.prevent.stop="fullscreenWindow" class="icon">
-      <i class="glyphicon glyphicon-fullscreen" style="font-size: 12px;margin-right: 4px;color: #999999;"></i>
+    <a 
+      class="icon"
+      @click.prevent.stop="fullscreenWindow" 
+    >
+      <i 
+        class="glyphicon glyphicon-fullscreen" 
+        style="font-size: 12px;margin-right: 4px;color: #999999;" 
+      />
       Fullscreen
     </a>
   </div>

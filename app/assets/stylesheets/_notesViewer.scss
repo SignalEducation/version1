@@ -46,6 +46,12 @@
     ;
   }
 
+  .pdf-fullscreen {
+    @include if-device(phone) {
+      display: none;
+    }
+  }
+
   .toolbarButton,
   .dropdownToolbarButton,
   .secondaryToolbarButton,
@@ -120,6 +126,7 @@
     @include if-device(phone) {
       border-top: 1px solid #d6d9db;
       border-bottom: 1px solid #d6d9db;
+      padding-bottom: 3rem;
     }
   }
 

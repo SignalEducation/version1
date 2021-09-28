@@ -1,37 +1,24 @@
 -if user && @course_product && !user.can_view_content?(@group.exam_body_id, @group.id, @course.id)
-  .upgradeNudgeMini
-    .upgradeNudgeMini-icon
-      🎉
+  .upgradeNudgeMini.mb-4
     .upgradeNudgeMini-title
       .upgradeNudgeMini-titleText
-        Upgrade subscription to unlock full syllabus
-    -# .upgradeNudgeMini-desc
-    -#   Make getting your CPD credits easy this year. Get instant and flexible access to over 100 certified CPD courses designed for accountants.
+        Upgrade to unlock the complete syllabus
     .upgradeNudgeMini-action
-      %a#enrol-top{data: {target: '#pricing-modal', toggle: 'modal'}, href: '#', class: 'btn btn-primary'}
-        View Pricing Plans
+      %a#enrol-top{data: {target: '#pricing-modal', toggle: 'modal'}, href: '#', class: 'btn btn-dark'}
+        View Subscription Plans
 -elsif user && !user.can_view_content?(@group.exam_body_id, @group.id, @course.id)
-  .upgradeNudgeMini
-    .upgradeNudgeMini-icon
-      🎉
+  .upgradeNudgeMini.mb-4
     .upgradeNudgeMini-title
       .upgradeNudgeMini-titleText
-        Upgrade subscription to unlock full syllabus
-    -# .upgradeNudgeMini-desc
-    -#   Make getting your CPD credits easy this year. Get instant and flexible access to over 100 certified CPD courses designed for accountants.
+        Upgrade to unlock the complete syllabus
     .upgradeNudgeMini-action
-      =link_to pricing_url(@group.name_url), class: 'btn btn-primary upgrade' do
-        View Pricing Plans
+      =link_to pricing_url(@group.name_url), class: 'btn btn-dark upgrade' do
+        View Subscription Plans
 -elsif !user
-  .upgradeNudgeMini
-    .upgradeNudgeMini-icon
-      📨
+  .upgradeNudgeMini.mb-4
     .upgradeNudgeMini-title
       .upgradeNudgeMini-titleText
         ="Kickstart your #{@group.name} preparation today!"
-    -# .upgradeNudgeMini-desc
-    -#   Make getting your CPD credits easy this year. Get instant and flexible access to over 100 certified CPD courses designed for accountants.
     .upgradeNudgeMini-action
-      =link_to new_student_url, class: 'btn btn-primary upgrade', onclick: "gtag('event', 'clicks_register_now', {'event_category': 'pre-registration', 'event_label': '#{@course.name}'});" do
+      =link_to new_student_url, class: 'btn btn-dark upgrade', onclick: "gtag('event', 'clicks_register_now', {'event_category': 'pre-registration', 'event_label': '#{@course.name}'});" do
         Register Now
-

@@ -69,7 +69,7 @@ describe CoursesHelper do
     let(:user)   { create(:user) }
     let(:banner) { Faker::Internet.slug }
 
-    subject { pdf_viewer(resource, banner, user) }
+    subject { pdf_viewer(resource, banner, user, false) }
 
     context 'Internal link' do
       let(:resource) { build(:course_resource, :file_uploaded) }

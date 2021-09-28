@@ -1,4 +1,11 @@
 .row.row-lg.m-0#constructed-response-window.constructed-response-window-shrunk
+  %div.visible-xs
+    #small-screen-overlay.load-overlay{style: 'position: absolute;height: calc(100vh - 120px);z-index: 100;background-color: #fff;'}
+      .p-5
+        .h2{style: 'font-size: 72px;'} 🖥
+        .h2.text-gray1.mt-5{style: 'line-height: 1.3;'}
+          Please use a larger screen device to access CBE for a better experience.
+        =link_to 'Next Lesson', show_course_url(@course.name_url, @course_step.next_element.course_lesson.course_section.name_url, @course_step.next_element.course_lesson.name_url, @course_step.next_element.name_url), class: 'btn btn-primary btn-sm btn-sm-arrow-left mt-3 mb-3 mb-sm-0'
   .col-xl-12
     #course-right-show-elem-notes.course-right-show-content
       .course-right-show-frame

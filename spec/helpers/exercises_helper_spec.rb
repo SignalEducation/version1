@@ -21,7 +21,7 @@ describe ExercisesHelper, type: :helper do
       end
 
       it 'Mock exam product' do
-        expect(pending_exercise_message(mock_exam_exercise)).to eq('Start your mock exam')
+        expect(pending_exercise_message(mock_exam_exercise)).to eq('Start your Mock Exam')
       end
 
       it 'Correction pack product' do

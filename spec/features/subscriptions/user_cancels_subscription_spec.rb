@@ -21,9 +21,6 @@ describe 'A user cancels a subscription', type: :feature do
       click_link 'Subscriptions'
       find(:css, '.sub-details').click
       click_link 'Cancel Subscription'
-
-      click_link('Keep Subscription')
-      expect(page).to have_content('My Account')
     end
 
     scenario 'the user can cancel' do

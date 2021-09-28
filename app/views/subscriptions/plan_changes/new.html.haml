@@ -1,6 +1,5 @@
 =javascript_include_tag 'coupons'
 
-
 %main.changePlanPageWrapper
   .changePlanPageWrapper-header.navbar.navbar-expand-lg
     .container.p-0.d-flex.align-items-center.justify-content-start
@@ -71,7 +70,6 @@
                         -@subscription.upgrade_options.each do |plan|
                           .form-group
                             .custom-control.custom-radio.subscriptionPageWrapper-customRadio.plan-option
-                              -# %input.custom-control-input.custom-control-input-card.style-radio{:id => plan.interval_name.downcase, :name => "plans", :type => "radio", :data => {:guid => plan.guid, :name => plan.name, :price => plan.price}, :value => plan.id, :checked => ("checked" if subscription.subscription_plan_id == plan.id)}
                               %input.custom-control-input.custom-control-input-card.style-radio.js-radio-option{id: 'chk-plan-' + plan.id.to_s, name: 'plans', type: 'radio', value: plan.id}
                               %label.custom-control-label.justify-content-start{for: 'chk-plan-' + plan.id.to_s}
                                 %span.custom-check.mr-3
@@ -326,10 +324,9 @@
   // Sets the hidden field subscription_plan_id to that id.
   function choosePlan(theThing) {
     $('.js-radio-option[type="radio"]:checked').prop('checked', false);
-    $(theThing).find('.js-radio-option[type="radio"]').prop('checked', true);
-    $('#subscription_subscription_plan_id').val($(theThing).parent().parent().parent().parent().attr('data-plan-id'));
+    var selector = $(theThing).find('.js-radio-option[type="radio"]').prop('checked', true);
+    $('#subscription_subscription_plan_id').val(selector.attr('value'));
     addToCart(theThing);
-    console.log("ChoosePlan and addtoCard called");
   }
 
   var style = {
@@ -373,7 +370,6 @@
 
     $(".plan-option").bind('click', function(event) {
       event.preventDefault();
-      console.log("on plan-option click");
       choosePlan(this);
     });
 

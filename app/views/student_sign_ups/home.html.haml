@@ -11,7 +11,7 @@
               -if @home_page&.header_paragraph.present?
                 =@home_page.header_paragraph
               -else
-                Get everything you need to pass your ACCA exam in one place! See why over 100,000 students have saved money and time by switching to studying online with learnsignal.
+                Everything you need to pass your Accounting & Finance exams is here! 30,000+ students have chosen Learnsignal as their trusted online study partner.
         .col-xl-6.p-0
           %aside.home-hero-aside.py-2.py-sm-5
             .home-hero-img-wrap
@@ -56,9 +56,9 @@
               %article.card.card-primary.card-pink.p-0
                 =image_tag(group.image.url, class: 'card-img-top', alt: 'People in front of the blackboard', style: "border-bottom-color: #{group.background_colour};")
                 .card-body.text-center.p-4
-                  %h2.h2.card-title
+                  %h2.h2.card-title{style: 'font-size: 24px; color: #111827;'}
                     =group.name
-                  %p
+                  %p{style: 'font-size: 14px; color: #6B7280;'}
                     =group.description
                   .mt-auto
                     =link_to 'Browse Courses', group_landing_url(group.name_url), class: 'btn btn-secondary btn-sm'

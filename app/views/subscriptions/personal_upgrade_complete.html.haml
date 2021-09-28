@@ -19,10 +19,9 @@
           .col-xs-12.col-sm-8
             .box-item.text-center.py-4.mx-auto{style: 'max-width: 640px;'}
               %h5.mb-1
-                  ="You have subscribed to the #{t("views.general.subscription_label_in_months.a#{@subscription.subscription_plan.payment_frequency_in_months}")}."
+                ="You have subscribed to the #{t("views.general.subscription_label_in_months.a#{@subscription.subscription_plan.payment_frequency_in_months}")}."
                 %p
                   ="Your payment receipt will be sent to #{current_user.email}"
-
                 =link_to library_special_link(@subscription&.exam_body&.group) do
                   .btn.btn-primary
                     ='Continue Learning'
