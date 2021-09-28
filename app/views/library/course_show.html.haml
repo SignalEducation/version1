@@ -254,3 +254,23 @@
           $('#enrollment-modal').modal('show');
         }, 900);
       });
+
+
+-if current_user && !current_user.onboarding_course && current_user.course_lesson_logs.count < 1
+  :javascript
+    
+    $(document).ready(function() {
+      $.ajax({
+        url: "#{user_update_hubspot_path(current_user.id)}",
+        method: 'post',
+        data: JSON.stringify({'custom_data': {'onboarding_course': "#{@course.name}", 'course_id': "#{@course.id}" } } ),
+        contentType: 'application/json',
+        success: function(data,status,xhr){
+          console.log(xhr)
+        },
+        error: function(xhr,status,error){
+          console.log(xhr);
+        }
+      });
+    });
+§

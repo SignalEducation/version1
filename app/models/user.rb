@@ -81,6 +81,7 @@ class User < ApplicationRecord
   belongs_to :country, optional: true
   belongs_to :currency, optional: true
   belongs_to :preferred_exam_body, class_name: 'ExamBody', optional: true
+  belongs_to :onboarding_course, class_name: 'Course', optional: true
   belongs_to :subscription_plan_category, optional: true
   belongs_to :user_group
   belongs_to :home_page, optional: true
