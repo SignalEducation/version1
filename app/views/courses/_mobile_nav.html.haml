@@ -33,8 +33,6 @@
 
 
     :javascript
-
-        const btnSideNavToggle = document.querySelector(".btn-side-nav");
         const sideNavOverlay = document.querySelector(".side-nav-overlay");
         const exitBtn = document.querySelector("#exitBtn");
         const shadow = document.querySelector("#overlay-active-shadow");
@@ -45,33 +43,14 @@
             // If the target of the click isn't the container
             if(!container.is(e.target) && container.has(e.target).length === 0){
                 sideNavOverlay.classList.remove("overlay-active");
-                btnSideNavToggle.style.display = "";
                 shadow.style.opacity = "0";
                 shadow.style.visibility = "hidden";
-
-                const btnOpacityOn = setTimeout((e) => {
-                    btnSideNavToggle.style.opacity = "1";
-                }, 10);
             }
         });
 
-        btnSideNavToggle.onclick = () => {
-            sideNavOverlay.classList.add("overlay-active");
-            btnSideNavToggle.style.opacity = "1";
-            btnSideNavToggle.style.transition = "opacity 0.3s";
-            shadow.style.visibility = "visible";
-            shadow.style.opacity = "1";
-            shadow.style.transition = "opacity 1s";
-        };
-
         exitBtn.onclick = () => {
             sideNavOverlay.classList.remove("overlay-active");
-            btnSideNavToggle.style.display = "";
             shadow.style.opacity = "0";
             shadow.style.visibility = "hidden";
             shadow.style.transition = "opacity 1s";
-
-            const btnOpacityOn = setTimeout((e) => {
-                btnSideNavToggle.style.opacity = "1";
-            }, 10);
         };
