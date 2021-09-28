@@ -15,11 +15,11 @@ RSpec.describe ApplicationHelper, type: :helper do
 
   describe '#red_or_green_arrow' do
     it 'return a green arrow' do
-      expect(red_or_green_arrow(true)).to include('#21CE99')
+      expect(red_or_green_arrow(true, 'arrow_forward')).to include('#21CE99')
     end
 
     it 'return a red arrow' do
-      expect(red_or_green_arrow(false)).to include('#eb4242')
+      expect(red_or_green_arrow(false, 'arrow_forward')).to include('#eb4242')
     end
   end
 
@@ -63,7 +63,7 @@ RSpec.describe ApplicationHelper, type: :helper do
     end
 
     it 'return a unflagged span' do
-      expect(flagged_for_review(false)).to include('#ffffff')
+      expect(flagged_for_review(false)).to include('#333e4c')
     end
   end
 
@@ -418,6 +418,22 @@ RSpec.describe ApplicationHelper, type: :helper do
 
       it 'returns the correctly formatted date' do
         expect(navbar_landing_page_menu(page)).to include('onclick=""')
+      end
+    end
+  end
+
+  describe '#verify_email_message' do
+    context 'remain days to verify' do
+      let(:days) { rand(1..7) }
+
+      it 'returns a message with the remain days' do
+        expect(verify_email_message(days)).to eq("Please verify your email address within <span>#{days}</span> days to continue using your free subscription.")
+      end
+    end
+
+    context 'no more days remains to verufy' do
+      it 'returns a message asking to user verify the email' do
+        expect(verify_email_message(0)).to eq('Please <span>verify</span> your email address to continue using your free subscription.')
       end
     end
   end

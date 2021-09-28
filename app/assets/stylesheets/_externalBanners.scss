@@ -1,0 +1,73 @@
+
+.notice.external-banner {
+    border-radius: 0;
+    padding: 1rem;
+    position: relative;
+    p {
+      margin: 0 !important;
+    }
+    @include if-device(phone) {
+      position: relative;
+      z-index: 1000;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      padding: 0.5rem 1rem;
+      display: block;
+      // background: linear-gradient(to right, white 0%, #f6f6f6 47%, #ededed 100%);
+      // color: #311873 !important;
+      // box-shadow: inset 0 -1px #e3e8ee;
+      p, span, b {
+        font-size: 14px !important;
+        line-height: 1.3;
+      }
+    }
+    .external-banner-btn {
+      height: 32px;
+      width: 32px;
+      position: absolute;
+      right: 12px;
+      top: 12px;
+      background-color: inherit;
+      box-shadow: 0px 1px 2px rgba(0,0,0, 0.06), 0px 1px 10px rgba(0,0,0, 0.02);
+      padding: 7px;
+      border-radius: 100%;
+      color: #FFF;
+      filter: brightness(0.8);
+      i {
+        color: #FFF;
+        @include if-device(phone) {
+          color: #000;
+          font-size: 16px;
+        }
+      }
+      &-closeText {
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      @include if-device(desktop) {
+        display: none;
+      }
+      @include if-device(phone) {
+        position: absolute;
+        right: 0;
+        top: -32px;
+        background-color: inherit;
+        box-shadow: none;
+        padding: 0.5rem;
+        border-radius: 0;
+        border-top-right-radius: 16px;
+        border-top-left-radius: 16px;
+        color: #000;
+        display: flex;
+        -webkit-filter: none;
+        filter: brightness(0.9);
+        width: 100%;
+        font-weight: 700;
+        justify-content: center;
+        align-items: center;
+      }
+  
+    }
+  }

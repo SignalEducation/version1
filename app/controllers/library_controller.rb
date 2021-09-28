@@ -11,7 +11,10 @@ class LibraryController < ApplicationController
     redirect_to library_group_url(@groups.first.name_url) unless @groups.count > 1
 
     group_names = @groups.map(&:name).join(' and ')
-    seo_title_maker("#{group_names} Professional Courses | LearnSignal",
+    # seo_title_maker("#{group_names} Professional Courses | LearnSignal",
+    #                 'Discover professional courses designed by experts and delivered online so that you can study on a schedule that suits your needs.',
+    #                 nil)
+    seo_title_maker("Library | LearnSignal",
                     'Discover professional courses designed by experts and delivered online so that you can study on a schedule that suits your needs.',
                     nil)
   end

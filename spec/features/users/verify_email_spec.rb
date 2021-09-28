@@ -15,8 +15,7 @@ describe 'Verify Account process', type: :feature do
 
   context 'User start onboarding page' do
     scenario 'Loading the onboarding page after verify' do
-      expect(page).to have_content('Welcome to learnsignal!')
-      expect(page).to have_content('We’re delighted you’ve decided to study with us. Let’s get started.')
+      expect(page).to have_content('Dashboard')
     end
   end
 end

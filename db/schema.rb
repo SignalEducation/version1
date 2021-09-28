@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_16_075325) do
+ActiveRecord::Schema.define(version: 2021_09_28_104628) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -455,9 +455,9 @@ ActiveRecord::Schema.define(version: 2021_08_16_075325) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer "cme_count", default: 0
-    t.datetime "destroyed_at"
-    t.string "seo_description"
+    t.string "seo_description", limit: 255
     t.boolean "seo_no_index", default: false
+    t.datetime "destroyed_at"
     t.integer "number_of_questions", default: 0
     t.integer "course_id"
     t.float "video_duration", default: 0.0
@@ -649,9 +649,9 @@ ActiveRecord::Schema.define(version: 2021_08_16_075325) do
     t.boolean "is_video", default: false, null: false
     t.boolean "is_quiz", default: false, null: false
     t.boolean "active", default: true, null: false
-    t.datetime "destroyed_at"
-    t.string "seo_description"
+    t.string "seo_description", limit: 255
     t.boolean "seo_no_index", default: false
+    t.datetime "destroyed_at"
     t.integer "number_of_questions", default: 0
     t.float "duration", default: 0.0
     t.string "temporary_label"
@@ -928,6 +928,10 @@ ActiveRecord::Schema.define(version: 2021_08_16_075325) do
     t.string "onboarding_level_heading"
     t.boolean "tab_view", default: false, null: false
     t.text "disclaimer"
+    t.string "group_logo_file_name"
+    t.string "group_logo_content_type"
+    t.bigint "group_logo_file_size"
+    t.datetime "group_logo_updated_at"
     t.index ["exam_body_id"], name: "index_groups_on_exam_body_id"
     t.index ["name"], name: "index_groups_on_name"
   end
@@ -1668,11 +1672,14 @@ ActiveRecord::Schema.define(version: 2021_08_16_075325) do
     t.bigint "currency_id"
     t.string "tutor_link"
     t.integer "video_player", default: 0, null: false
+    t.integer "home_page_id"
     t.decimal "subscriptions_revenue", default: "0.0"
     t.decimal "orders_revenue", default: "0.0"
-    t.integer "home_page_id"
+    t.datetime "verify_remembered_at"
+    t.bigint "onboarding_course_id"
     t.index ["country_id"], name: "index_users_on_country_id"
     t.index ["currency_id"], name: "index_users_on_currency_id"
+    t.index ["onboarding_course_id"], name: "index_users_on_onboarding_course_id"
     t.index ["preferred_exam_body_id"], name: "index_users_on_preferred_exam_body_id"
     t.index ["subscription_plan_category_id"], name: "index_users_on_subscription_plan_category_id"
     t.index ["user_group_id"], name: "index_users_on_user_group_id"
@@ -1751,6 +1758,7 @@ ActiveRecord::Schema.define(version: 2021_08_16_075325) do
   add_foreign_key "practice_question_responses", "course_step_logs"
   add_foreign_key "subscription_plans", "exam_bodies"
   add_foreign_key "subscriptions", "subscriptions", column: "changed_from_id"
+  add_foreign_key "users", "courses", column: "onboarding_course_id"
   add_foreign_key "users", "currencies"
   add_foreign_key "users", "exam_bodies", column: "preferred_exam_body_id"
 end

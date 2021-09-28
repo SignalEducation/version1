@@ -184,7 +184,9 @@ class CourseStep < ApplicationRecord
     previous_restriction = previous_cme_restriction(scul)
 
     result =
-      if user.non_verified_user?
+      if user.show_verify_email_message? && !user.valid_subscription?
+        { view: false, reason: 'verification-required' }
+      elsif user.verify_remain_days.zero? && !user.valid_subscription? && !user.email_verified
         { view: false, reason: 'verification-required' }
       elsif user.complimentary_user? || user.non_student_user? || user.lifetime_subscriber?(course.group)
         available_for_complimentary(scul)
@@ -235,11 +237,11 @@ class CourseStep < ApplicationRecord
 
   def icon_label
     if is_video
-      'ondemand_video'
+      'smart_display'
     elsif is_quiz
-      'playlist_add_check'
+      'quiz'
     elsif is_note
-      'insert_drive_file'
+      'file_present'
     elsif is_practice_question
       'grid_on'
     elsif is_constructed_response

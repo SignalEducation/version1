@@ -124,8 +124,8 @@
   }
   .navbar-brand {
     display: inline-block;
-    padding-top: .30625rem;
-    padding-bottom: .30625rem;
+    padding-top: 0;
+    padding-bottom: 0;
     margin-right: 0;
     font-size: 1.125rem;
     line-height: inherit;
@@ -303,6 +303,10 @@
     .navbar-expand-md .navbar-toggler {
       display: none
     }
+    .navbar-expand-lg .navbar-collapse {
+      display: flex !important;
+      flex-basis: auto;
+    }
   }
   @media (max-width:1025.98px) {
     .navbar-expand-lg > .container,
@@ -334,8 +338,7 @@
       position: absolute
     }
     .navbar-expand-lg .navbar-nav .nav-link {
-      padding-right: .5rem;
-      padding-left: .5rem
+      padding: 0.5rem 1rem;
     }
     .navbar-expand-lg > .container,
     .navbar-expand-lg > .container-fluid {
@@ -920,8 +923,6 @@
   @media (min-width:1026px) and (min-width:576px) {
     .navbar-nav .nav-link.navbar-login {
       padding: .65rem 2.6rem;
-      padding-top: -webkit-calc(.65rem + .1rem);
-      padding-top: calc(.65rem + .1rem);
       font-size: 1rem
     }
   }

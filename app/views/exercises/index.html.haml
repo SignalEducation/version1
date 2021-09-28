@@ -1,56 +1,63 @@
 %main
-  %article.dashboard.bg-gray5
-    .container
-      %header
-        %h1.h1-hero.pt-5
-          Exercises
-      %section.pb-md-6.pt-4
-        .row.row-md
-          .col-sm-12
-            -if current_user.exercises.any?
-              -if current_user.exercises.with_states([:submitted, :correcting]).any?
-                %h2 Submitted Exercises
-                -current_user.exercises.with_states([:submitted, :correcting]).each do |exercise|
-                  .card.card-horizontal.flex-row{style: 'margin-bottom: 1.5rem;'}
-                    .card-body.d-flex.flex-column.justify-content-center
-                      %small.card-category.mb-2{style: 'color: #5e90ef'}
-                        =exercise.state
+  %article.dashboard.bg-white
+    %header
+      .position-relative.container.d-flex.flex-column.flex-wrap.flex-sm-nowrap.justify-content-between
+        .mw-0
+          %h1.h1-hero.pt-6.pb-4
+            Exercises
 
-                      %h5.card-title.mb-1
-                        %span.mr-1
-                          -if exercise.correcting?
-                            Your work is currently being corrected by our team
-                          -else
-                            Your work is submitted and awaiting correction
-                    .card-footer.d-flex.justify-content-center.align-items-center{style: 'background-color: #fff; border-top: none;'}
-                      =link_to 'View Exercise', exercise, class: 'btn btn-primary'
+      %section.dashboard__contentContainer.pt-4.bg-gray5
+        .container.d-flex.flex-sm-row.dashboard__wrapper
+          #dashboardTabsContent.tab-content.w-100
+            .col-md-12.col-lg-10.p-0
+              -if current_user.exercises.any?
+                -if current_user.exercises.with_states([:submitted, :correcting]).any?
+                  %h4 Submitted Exercises
+                  -current_user.exercises.with_states([:submitted, :correcting]).each do |exercise|
+                    =link_to exercise, class: 'card card-horizontal flex-md-row', style: 'margin-bottom: 1.5rem;' do
+                      .card-body.d-flex.flex-column.justify-content-center
+                        %div.dashboardWrapper-courseInfo
+                          %div
+                            %div.dashboardWrapper-parent
+                              .dashboardWrapper-levelName{style: "color: #5e90ef"}
+                                =exercise.state
+                            %div.courseName
+                              -if exercise.correcting?
+                                Your work is currently being corrected by our team
+                              -else
+                                Your work is submitted and awaiting correction
+                      .card-footer.d-flex.justify-content-center.align-items-center{style: 'background-color: #fff; border-top: none;'}
+                        .btn.btn-outline.mx-0
+                          View Exercise
 
-              -if current_user.exercises.with_state(:pending).any?
-                %h2 Pending Exercises
-                -current_user.exercises.with_state(:pending).each do |exercise|
-                  .card.card-horizontal.flex-row{style: 'margin-bottom: 1.5rem;'}
-                    .card-body.d-flex.flex-column.justify-content-center
-                      %small.card-category.mb-2{style: 'color: #5e90ef'}
-                        =exercise.product.name
+                -if current_user.exercises.with_state(:pending).any?
+                  %h4 Pending Exercises
+                  -current_user.exercises.with_state(:pending).each do |exercise|
+                    .card.card-horizontal.flex-md-row{style: 'margin-bottom: 1.5rem;'}
+                      .card-body.d-flex.flex-column.justify-content-center
+                        %div.dashboardWrapper-courseInfo
+                          %div
+                            %div.dashboardWrapper-parent
+                              .dashboardWrapper-levelName{style: "color: #5e90ef;"}
+                                =exercise.product.name
+                            %div.courseName
+                              -if exercise.product.mock_exam?
+                                Start your Mock Exam
+                              -if exercise.product.cbe?
+                                Start your CBE session
+                              -else
+                                Submit work for correction
+                      .card-footer.d-flex.justify-content-center.align-items-center{style: 'background-color: #fff; border-top: none;'}
+                        -if exercise.product.cbe?
+                          =link_to 'Begin CBE', exercise_cbes_path(id: exercise.product.cbe.id, exercise_id: exercise.id), class: 'btn btn-primary mx-0'
+                        -else
+                          =link_to 'Begin Exercise', edit_exercise_path(exercise), class: 'btn btn-primary mx-0'
 
-                      %h5.card-title.mb-1
-                        %span.mr-1
-                          -if exercise.product.mock_exam?
-                            Start your mock exam
-                          -if exercise.product.cbe?
-                            Start CBE
-                          -else
-                            Submit work for correction
-                    .card-footer.d-flex.justify-content-center.align-items-center{style: 'background-color: #fff; border-top: none;'}
-                      -if exercise.product.cbe?
-                        =link_to 'Begin Exercise', exercise_cbes_path(id: exercise.product.cbe.id, exercise_id: exercise.id), class: 'btn btn-primary'
-                      -else
-                        =link_to 'Begin Exercise', edit_exercise_path(exercise), class: 'btn btn-primary'
+              -else
+                .row.row-lg
+                  .col-sm
+                    =render partial: 'dashboard/purchase_products'
 
-            -else
-              .row.row-lg
-                .col-sm
-                  =render partial: 'dashboard/purchase_products'
 
 -if flash[:success]
   -# :javascript

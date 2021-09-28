@@ -81,6 +81,7 @@ class User < ApplicationRecord
   belongs_to :country, optional: true
   belongs_to :currency, optional: true
   belongs_to :preferred_exam_body, class_name: 'ExamBody', optional: true
+  belongs_to :onboarding_course, class_name: 'Course', optional: true
   belongs_to :subscription_plan_category, optional: true
   belongs_to :user_group
   belongs_to :home_page, optional: true
@@ -694,6 +695,24 @@ class User < ApplicationRecord
     create_stripe_customer
 
     send_verification_email(url)
+  end
+
+  # days since created minus 7
+  def verify_remain_days
+    remain_days = DAYS_TO_VERIFY_EMAIL - (Date.current - created_at.to_date).to_i
+
+    [remain_days, 0].max
+  end
+
+  def show_verify_email_message?
+    return false if email_verified
+
+    if verify_remembered_at.nil? || verify_remembered_at.time <= 6.hours.ago
+      update(verify_remembered_at: Time.zone.now)
+      true
+    else
+      false
+    end
   end
 
   private

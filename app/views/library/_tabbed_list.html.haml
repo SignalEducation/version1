@@ -1,41 +1,32 @@
-%nav.levels-nav.mt-3
-  %ul.nav.nav-pills.nav-fill{id: 'levelsTabs', role: 'tablist'}
-    - @levels.each_with_index do |level, counter|
-      %li.nav-item{data: {tab_name: level.name, group_name: @group.name}}
-        -# TODO add active to first li
-        %a{class: "nav-link #{counter == 0 ? 'active' : ''}", id: "#{level.name_url}-tab", data: {toggle: 'tab'}, href: "##{level.name_url}", aria: {controls: "#{level.name_url}", selected: 'false'}, role: 'tab'}
-          =level.name
+%div.container.d-flex.libraryGroupWrapper-list.pt-4.pb-4
+  %nav.levels-nav
+    %ul.d-flex.flex-column.nav.nav-pills.nav-fill{id: 'levelsTabs', role: 'tablist'}
+      - @levels.each_with_index do |level, counter|
+        %li.nav-item{data: {tab_name: level.name, group_name: @group.name}}
+          %a{class: "nav-link #{counter == 0 ? 'active' : ''}", id: "#{level.name_url}-tab", data: {toggle: 'tab'}, href: "##{level.name_url}", aria: {controls: "#{level.name_url}", selected: 'false'}, role: 'tab'}
+            =level.name
 
-
-
-
-%section.py-5.py-md-6
-  %h2.sr-only List of Courses
-  #levelsTabsContent.tab-content
-    -@levels.each_with_index do |level, counter|
-      .tab-pane{id: level.name_url, class: "tab-#{level.name_url} #{counter == 0 ? 'active show' : ''} ", "aria-labelledby" => "#{level.name_url}-tab", :role => "tabpanel"}
-        .row.row-lg
-          -level.courses.all_in_order.each do |course|
-            - if course.active
-              .col-lg-6.col-xl-4
-                =link_to library_special_link(course), class: 'card card-horizontal flex-row card-mint', data: { toggle: 'tooltip', placement: 'right', animation: 'true', delay: { "show": 300, "hide": 100 }}, title: "#{course.short_description}" do
-                  .card-header.d-flex.justify-content-center.align-items-center
-                    -# TODO - Convert this into partial
-                    -if course.unit_label
-                      .pb-0.d-flex.flex-column.align-items-center
-                        .mb-3.mx-md-2
-                          %i{"aria-label" => course.icon_label, :role => "img", class: course.icon_label ? course.icon_label : 'budicon-office-bag-c', style: "color: #{course.highlight_colour};"}
-                        %p.m-0.text-left.text-md-center{style: "color: #{course.highlight_colour};"}
-                          =course.unit_label
-                    -else
-                      %i{"aria-label" => course.icon_label, :role => "img", class: course.icon_label ? course.icon_label : 'budicon-office-bag-c', style: "color: #{course.highlight_colour};"}
-
-                  .card-body.d-flex.flex-column.justify-content-center
-                    %small.card-category.mb-2{style: "color: #{course.highlight_colour};"}
-                      -if course.preview && course.release_date
-                        ="Coming #{course.release_date.strftime("%B, %Y")}"
-                      -else
-                        =course.category_label
-                    %h5.card-title.mb-1
-                      %span.mr-1
-                        =course.name
+  %section.container.content-section
+    %h2.sr-only List of Courses
+    #levelsTabsContent.tab-content
+      -@levels.each_with_index do |level, counter|
+        .tab-pane{id: level.name_url, class: "tab-#{level.name_url} #{counter == 0 ? 'active show' : ''} ", "aria-labelledby" => "#{level.name_url}-tab", :role => "tabpanel"}
+          .row.row-lg
+            -level.courses.all_in_order.each do |course|
+              - if course.active
+                .col-lg-12.col-xl-12
+                  =link_to library_special_link(course), class: 'card flex-md-row', style: 'margin-bottom: 1rem;', data: { toggle: 'tooltip', placement: 'right', animation: 'true', delay: { "show": 300, "hide": 100 }}, title: "#{course.short_description}" do
+                    .card-body.d-flex.flex-column.justify-content-center
+                      %div.libraryGroupWrapper-list-courseInfo
+                        %div.libraryGroupWrapper-list-courseIcon{style: "border-color: #{course.highlight_colour}; background-color: #{course.highlight_colour};"}
+                          %i{"aria-label" => course.icon_label, :role => "img", class: course.icon_label ? course.icon_label : 'budicon-office-bag-c', style: "color: #FFF;"}
+                        %div
+                          %div.libraryGroupWrapper-list-parent
+                            .libraryGroupWrapper-list-levelName{style: "color: #{course.highlight_colour};"}
+                              -if course.preview && course.release_date
+                                ="Coming #{course.release_date.strftime("%B, %Y")}"
+                              -else
+                                =course.category_label
+                          %div.courseName
+                            =course.name
+                        .courseArrowIcon.i.material-icons keyboard_arrow_right
