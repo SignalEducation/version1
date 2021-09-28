@@ -31,7 +31,8 @@ module Api
         currency = Currency.find_by(iso_code: iso_code.upcase) if iso_code.present?
         return currency if currency.present?
 
-        country = IpAddress.get_country(request.remote_ip) || Country.find_by(name: 'United Kingdom')
+        # country = IpAddress.get_country(request.remote_ip) || Country.find_by(name: 'United Kingdom')
+        country = Country.find_by(name: 'United Kingdom')
 
         if @current_user
           @current_user.get_currency(country)
