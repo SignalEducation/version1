@@ -27,7 +27,6 @@ module Api
       private
 
       def user_currency(iso_code)
-
         currency = Currency.find_by(iso_code: iso_code.upcase) if iso_code.present?
         return currency if currency.present?
 
