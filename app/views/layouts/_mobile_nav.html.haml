@@ -35,7 +35,10 @@
                             .nav-verification-alert-box-title
                                 %span Verify your email
                             .nav-verification-alert-box-desc
-                                ="Your account will get deactivated in #{current_user.verify_remain_days} days."
+                                -if current_user.verify_remain_days > 0
+                                    ="Your account will get deactivated in #{current_user.verify_remain_days} days."
+                                -else
+                                    ="Please <span>verify</span> your email address to continue using your free subscription.".html_safe
                             -if !current_user.email_verified && current_user.email_verification_code
                                 =link_to resend_verification_mail_url(current_user.email_verification_code), method: :post, class: 'btn verification-btn btn-sm mb-3 mb-sm-0' do
                                     ='Resend Email'

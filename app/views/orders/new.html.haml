@@ -368,5 +368,10 @@
       productType: productType,
       paymentType: "Product"
     });
+
+    $(".js-browser-back-btn").on( "click", function(event) {
+      event.preventDefault();
+      history && history.back();
+    });
   });
 
