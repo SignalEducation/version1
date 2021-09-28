@@ -56,9 +56,9 @@
               %article.card.card-primary.card-pink.p-0
                 =image_tag(group.image.url, class: 'card-img-top', alt: 'People in front of the blackboard', style: "border-bottom-color: #{group.background_colour};")
                 .card-body.text-center.p-4
-                  %h2.h2.card-title
+                  %h2.h2.card-title{style: 'font-size: 24px; color: #111827;'}
                     =group.name
-                  %p
+                  %p{style: 'font-size: 14px; color: #6B7280;'}
                     =group.description
                   .mt-auto
                     =link_to 'Browse Courses', group_landing_url(group.name_url), class: 'btn btn-secondary btn-sm'

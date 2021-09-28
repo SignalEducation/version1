@@ -1,11 +1,11 @@
 %main.subscriptionPageWrapper
   .subscriptionPageWrapper-header.navbar.navbar-expand-lg
     .container.p-0.d-flex.align-items-center.justify-content-start
-      =link_to pricing_url(current_user&.preferred_exam_body&.group&.name_url), class: 'main-header-backBtn' do
+      =link_to '#', class: 'main-header-backBtn js-browser-back-btn' do
         .i.material-icons{:style => "font-size: 20px;margin-right: 12px;margin-top: 6px;"} arrow_back
       .main-header-content
         .container.subscriptionPageWrapper-logo.hidden-xs
-          =link_to pricing_url(current_user&.preferred_exam_body&.group&.name_url), class: 'navbar-brand logo' do
+          =link_to '#', class: 'navbar-brand logo js-browser-back-btn' do
             =image_tag('Learnsignal-Logo.svg', class: 'logo-img', alt: "LearnSignal Logo")
         -if @plans && @plans.first
           %div.header-title-lesson.visible-xs
@@ -434,30 +434,38 @@
     let coupon_code = $('#coupon_code').val();
     let discounted_price = Number($('#discounted_price').val().replace(/[^0-9\.-]+/g,""));
 
-    // Segment Analytics
-    analytics.page('Payment', {
-      preferredExamBodyId: preferredExamBodyId,
-      preferredExamBody:preferredExamBody ,
-      banner: banner,
-      onboarding: onboarding,
-      examBodyId: "#{@exam_body&.id}",
-      examBodyName: "#{@exam_body&.name}",
-      currency: "#{@currency&.iso_code}",
-      country: "#{current_user&.country&.name}",
-      subscriptionPlanOptions: "#{@plans.map(&:id)}",
-      subPlanNames: planNames,
-      subPlanGuid: "#{params[:plan_guid]}",
-      selectedSubPlanName: preSelectedPlan.attr('data-name'),
-      selectedSubPlanPrice: preSelectedPlan.attr('data-price'),
-      selectedSubPlanGuid: preSelectedPlan.attr('data-guid'),
-      subscriptionType: "#{@kind.to_s}",
-      paymentType: "Subscription",
-      discountedPrice: (discounted_price) ? discounted_price : '',
-      couponCode: coupon_code
-    });
+    if (analytics) {
+      // Segment Analytics
+      analytics.page('Payment', {
+        preferredExamBodyId: preferredExamBodyId,
+        preferredExamBody:preferredExamBody ,
+        banner: banner,
+        onboarding: onboarding,
+        examBodyId: "#{@exam_body&.id}",
+        examBodyName: "#{@exam_body&.name}",
+        currency: "#{@currency&.iso_code}",
+        country: "#{current_user&.country&.name}",
+        subscriptionPlanOptions: "#{@plans.map(&:id)}",
+        subPlanNames: planNames,
+        subPlanGuid: "#{params[:plan_guid]}",
+        selectedSubPlanName: preSelectedPlan.attr('data-name'),
+        selectedSubPlanPrice: preSelectedPlan.attr('data-price'),
+        selectedSubPlanGuid: preSelectedPlan.attr('data-guid'),
+        subscriptionType: "#{@kind.to_s}",
+        paymentType: "Subscription",
+        discountedPrice: (discounted_price) ? discounted_price : '',
+        couponCode: coupon_code
+      });
+    }
 
     $("#show_all_plans").on( "click", function() {
       showAllPlans(analyticsData);
     });
+
+    $(".js-browser-back-btn").on( "click", function(event) {
+      event.preventDefault();
+      history && history.back();
+    });
+
 
   })

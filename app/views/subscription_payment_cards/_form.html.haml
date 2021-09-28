@@ -33,13 +33,13 @@
             %span Discounted Total:
             %span
               -# =@plans.first.currency.leading_symbol
-              %span.value#discounted-value
+              %span.d-value#discounted-value
 
     .col-xl-12.mt-sm-4
       = f.button :submit, class: 'btn btn-primary w-100 mb-3', id: 'card_submit' do
         %span Subscribe Now
 
-      %button.btn.btn-primary.w-100.mb-3.spinning-loading{:disabled => "disabled", :type => "button"}
+      %button.btn.btn-primary.w-100.mb-3.spinning-loading{:disabled => "disabled", :type => "button", :style => "padding: 12px;"}
         %span.spinner-border.spinner-border-sm{"aria-hidden" => "true", :role => "status"}
         %span.spinner-message
 

@@ -29,6 +29,7 @@ new Vue({
       examBodyName: data.examBodyName,
       preferredExamBodyId: data.preferredExamBodyId,
       preferredExamBodyName: data.preferredExamBodyName,
+      hasValidSubscription: data.hasValidSubscription,
       banner: data.banner,
       onboarding: data.onboarding
     },

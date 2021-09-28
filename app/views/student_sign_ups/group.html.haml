@@ -130,20 +130,21 @@
               %article.planCard.planCard-popular
                 .card-body.text-left.p-0
                   .tab-content
+                    -if @subscription_plans.length > 1
+                      %ul.nav.nav-pills.plan-nav{id: 'planTabs', role: 'tablist', class:@subscription_plans.length < 2 && 'hidden'}
+                        -@subscription_plans.each_with_index do |navPlan, navCounter|
+                          %li.nav-item{data: {tab_name: navPlan.guid}}
+                            %a{class: "nav-link #{navCounter == counter ? 'active' : ''}", id: "#{navPlan.guid}-tab", data: {toggle: 'tab'}, href: "#nav-#{navPlan.guid}", aria: {controls: "#{navPlan.guid}", selected: 'false'}, role: 'tab'}
+                              =t("views.general.payment_intervals.a#{navPlan.payment_frequency_in_months}")
                     -@subscription_plans.each_with_index do |plan, counter|
                       .tab-pane{id: "nav-#{plan.guid}", class: "tab-#{plan.guid} #{counter == 0 ? 'active' : ''} ", "aria-labelledby" => "#{plan.guid}-tab", :role => "tabpanel"}
                         %div.planInfoWrapper
                           %div.planTitleWrapper
                             %div.planTitle
-                              Premium 
+                              Premium
                               %span.greenShade=t("views.general.payment_intervals.a#{plan.payment_frequency_in_months}")
                               Plan
-                            %ul.nav.nav-pills.plan-nav{id: 'planTabs', role: 'tablist', class:@subscription_plans.length < 2 && 'hidden'}
-                              -@subscription_plans.each_with_index do |navPlan, navCounter|
-                                %li.nav-item{data: {tab_name: navPlan.guid}}
-                                  %a{class: "nav-link #{navCounter == counter ? 'active' : ''}", id: "#{navPlan.guid}-tab", data: {toggle: 'tab'}, href: "#nav-#{navPlan.guid}", aria: {controls: "#{navPlan.guid}", selected: 'false'}, role: 'tab'}
-                                    =t("views.general.payment_intervals.a#{navPlan.payment_frequency_in_months}")
-                          %p.priceValue.mb-0.pb-4
+                          %p.priceValue.mb-0.pb-4{class: @subscription_plans.length < 2 && 'mt-0'}
                             %span.priceValue-actualPrice
                               =plan.currency.format_number(plan.price)
                               %span.priceValue-priceSuffix=t("views.general.payment_interval_shortSuffix.a#{plan.payment_frequency_in_months}")
@@ -159,10 +160,6 @@
                         
                         .bulletListTitle.hidden-xs ⚡️ What do you get
                         %ul.hidden-xs.list-centered.text-left.bulletList{class:@subscription_plans.length < 2 && 'noPlanNav'}
-                          %li.mb-3
-                            .bulletIcon •
-                            %span
-                              Everything in 🎉 FREE
                           -if plan.bullet_points_list && !plan.bullet_points_list.empty?
                             - plan.bullet_points_list.split(/, ?/).each do |bullet|
                               %li.mb-3
@@ -196,10 +193,6 @@
                               .faq-answer-expanded.d-none
                                 .bulletListTitle ⚡️ What do you get
                                 %ul.list-centered.text-left.bulletList{class:@subscription_plans.length < 2 && 'noPlanNav'}
-                                  %li.mb-3
-                                    .bulletIcon •
-                                    %span
-                                      Everything in 🎉 FREE
                                   -if plan.bullet_points_list && !plan.bullet_points_list.empty?
                                     - plan.bullet_points_list.split(/, ?/).each do |bullet|
                                       %li.mb-3
@@ -216,55 +209,6 @@
                                       .bulletIcon •
                                       %span="24/7 tutor support"
 
-                                      
-    -# .container-bg.bg-gray5
-    -#   .container#plans
-    -#     %article.py-6
-    -#       %header.text-center.pb-5.pb-md-6
-    -#         %h2.h1-mega
-    -#           ="#{@group.name} Subscription"
-    -#         %p.p-hero.px-lg-8
-    -#           -if @exam_body&.subscription_page_subheading_text.present?
-    -#             =@exam_body.subscription_page_subheading_text
-    -#           -else
-    -#             ='Achieve your learning goals with a learnsignal subscription plan and enjoy professional courses delivered online so that you can study on a schedule that suits you.'
-
-    -#       .row.row-lg.justify-content-center
-    -#         -@subscription_plans.each do |plan|
-    -#           .col-lg-4
-    -#             %article.card.card-primary.card-primary-alt.medium-gap.p-0
-    -#               -if plan.most_popular
-    -#                 .card-banner.bg-mint
-    -#                   %large.text-white
-    -#                     Most popular payment plan
-    -#               .card-body.text-center.py-4.py-sm-5
-    -#                 %h2.card-title
-    -#                   =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
-
-    -#                 %ul.list-centered
-    -#                   -if plan.bullet_points_list && !plan.bullet_points_list.empty?
-    -#                     - plan.bullet_points_list.split(/, ?/).each do |bullet|
-    -#                       %li=bullet
-    -#                   -else
-    -#                     %li="Access all #{@group.name} courses"
-    -#                     %li="Topic-by-topic lectures"
-    -#                     %li="24/7 tutor support"
-
-    -#                   -unless plan.exam_body.name == "CPD"
-    -#                     %li{style: 'font-style: italic;'}
-    -#                       Cancel anytime
-
-    -#                 %p.h2.mb-0
-    -#                   =plan.currency.format_number(plan.price)
-
-    -#                 -if plan.monthly_percentage_off
-    -#                   %p.h5.text-gray2
-    -#                     Save over
-    -#                     =plan.monthly_percentage_off
-    -#                     ='%'
-    -#                 .mt-auto
-    -#                   =link_to subscription_checkout_special_link(plan.exam_body_id, plan.guid), class: 'btn btn-secondary btn-sm', onclick: "addToCart('#{plan.currency.iso_code}', '#{plan.name}', '#{plan.id}', '#{plan.price}', '#{plan.exam_body.name}');" do
-    -#                     Choose this plan
 
 
   =render partial: 'customer_support_section'

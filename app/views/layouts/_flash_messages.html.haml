@@ -1,5 +1,5 @@
 .notificationMessageWrapper.my-4#flash_message
-  %button.btn.btn-icon.modal-close.notificationMessageWrapper-closeBtn.js-flash-message-close-btn{"data-dismiss" => "modal", :style => "right: -32px;position: absolute;top: -20px;"}
+  %button.btn.btn-icon.modal-close.notificationMessageWrapper-closeBtn.js-flash-message-close-btn{"data-dismiss" => "modal"}
     %i.material-icons{"aria-hidden" => "true"} close
   -if flash[:notice]
     .notificationMessageWrapper-icon.notice
@@ -71,7 +71,9 @@
 :javascript
   $(document).on('ready', function() {
     $('.js-flash-message-close-btn').on('click', function() {
-      $('.notificationMessageWrapper#flash_message').hide();
-      $('.notificationMessageWrapper#flash_message').remove();
+      $('.notificationMessageWrapper#flash_message').fadeOut();
     });
+    setTimeout(function() {
+        $('.notificationMessageWrapper#flash_message').fadeOut();
+    }, 3000);
   });

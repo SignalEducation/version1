@@ -1955,7 +1955,8 @@ textarea.form-control {
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: 1040;
+  // z-index: 1040;
+  z-index: 98;
   background-color: #000032
 }
 .modal-backdrop.fade {
@@ -4881,7 +4882,7 @@ a.card:hover .card-title .card-explanation {
   padding-bottom: 1rem;
   .h1-hero {
     margin-bottom: 1rem;
-    font-size: 72px;
+    font-size: 64px;
     font-weight: 800;
     line-height: 1.2;
     @include if-device(phone) {
@@ -9323,5 +9324,6 @@ button.sub-details[aria-expanded="true"]:before{
 @import "account";
 @import "modals/upgrade-modal";
 @import "modals/verification-modal";
+@import "modals/enrolment-modal";
 @import "subscriptionPageWrapper";
 @import "changePlanPageWrapper";

@@ -4,7 +4,7 @@
       - @levels.each_with_index do |level, counter|
         %li.nav-item{data: {tab_name: level.name, group_name: @group.name}}
           %a{class: "nav-link #{counter == 0 ? 'active' : ''}", id: "#{level.name_url}-tab", data: {toggle: 'tab'}, href: "##{level.name_url}", aria: {controls: "#{level.name_url}", selected: 'false'}, role: 'tab'}
-            =level.name
+            =level.name.html_safe
 
   %section.container.content-section
     %h2.sr-only List of Courses

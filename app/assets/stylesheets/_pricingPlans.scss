@@ -154,6 +154,13 @@
       flex-direction: row;
       padding: 2px;
 
+      top: 56px;
+      position: absolute;
+
+      @include if-device(phone) {
+        top: 40px;
+      }
+
       &.hidden {
         visibility: hidden;
       }
@@ -258,6 +265,7 @@
         padding: 12px !important;
         width: 100%;
         background: transparent;
+        margin-top: 50px;
       }
       &-actualPrice {
 
@@ -378,42 +386,44 @@
     }
 
     &-light {
-      background-color: #FFF;
-      border-color: #FFF;
-      .planTitle {
-        color: #111827;
-      }
-      .priceValue {
-        color: #111827;
-        background-color: transparent;
-      }
-      .preCtaText {
-        border-color: #E5E7EB;
-      }
-      .bulletListAccordianBox .faq-title {
-        background-color: #F3F4F6;
-        color: #111827;
-      }
-      .bulletListAccordianBox .bulletList {
-        color: #4B5563;
-      }
-      .bulletListAccordianBox .bulletList {
-        color: #4B5563;
-      }
-      .bulletListTitle {
-        border-color: #E5E7EB;
+      @include if-device(phone) {
+        background-color: #FFF;
+        border-color: #FFF;
+        .planTitle {
+          color: #111827;
+        }
+        .priceValue {
+          color: #111827;
+          background-color: transparent;
+        }
+        .preCtaText {
+          border-color: #E5E7EB;
+        }
+        .bulletListAccordianBox .faq-title {
+          background-color: #F3F4F6;
+          color: #111827;
+        }
+        .bulletListAccordianBox .bulletList {
+          color: #4B5563;
+        }
+        .bulletListAccordianBox .bulletList {
+          color: #4B5563;
+        }
+        .bulletListTitle {
+          border-color: #E5E7EB;
 
-      }
-      ul li {
-        color: #4B5563;
+        }
+        ul li {
+          color: #4B5563;
 
-      }
-      .choosePlanBtn {
-        border: 2px solid #00B67A;
-        background-color: transparent;
-        color: #00B67A;
-        &:hover {
-          background-color: #ECFDF5;
+        }
+        .choosePlanBtn {
+          border: 2px solid #00B67A;
+          background-color: transparent;
+          color: #00B67A;
+          &:hover {
+            background-color: #ECFDF5;
+          }
         }
       }
     }

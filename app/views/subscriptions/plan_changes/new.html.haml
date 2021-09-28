@@ -327,7 +327,6 @@
     var selector = $(theThing).find('.js-radio-option[type="radio"]').prop('checked', true);
     $('#subscription_subscription_plan_id').val(selector.attr('value'));
     addToCart(theThing);
-    console.log("ChoosePlan and addtoCard called");
   }
 
   var style = {
@@ -371,7 +370,6 @@
 
     $(".plan-option").bind('click', function(event) {
       event.preventDefault();
-      console.log("on plan-option click");
       choosePlan(this);
     });
 
