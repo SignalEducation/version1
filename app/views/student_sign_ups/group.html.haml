@@ -1,33 +1,6 @@
 =render partial: 'layouts/navbar'
--# %main
--#   .container-bg.home-hero-alt-bg.bg-group{style: "background-image: url(#{@group.background_image.url});", title: "#{@group.name} Courses"}
--#     .container.home-hero-container
--#       %article.home-hero
-
--#         .row.no-gutters
--#           .col-sm-12.col-md-6
--#             %header.home-hero-header.py-6
--#               %h1.h1-mega.text-white
--#                 -if @exam_body&.landing_page_h1.present?
--#                   =@exam_body.landing_page_h1
--#                 -else
--#                   ="Prepare for your #{@exam_body.name} exam"
--#               %p.p-hero.text-white.py-4
--#                 -if @exam_body&.landing_page_paragraph.present?
--#                   =@exam_body.landing_page_paragraph
--#           .col-sm-12.col-md-6
--#             -if @exam_body&.logo_image.present?
--#               .exam-body-img-wrap
--#                 =image_tag(@exam_body.logo_image, class: 'px-md-5 px-xl-0', alt: "#{@exam_body.name} Logo")
 %main
   %article.libraryGroupWrapper.bg-white
-    -# .breadCrumbs.visible-xs
-    -#   .mw-0.container
-    -#     =link_to library_url, class: 'courseWrapper-backBtn' do
-    -#       .courseWrapper-backBtn-text
-    -#         .i.material-icons{:style => "font-size: 14px;margin-right: 8px;"} arrow_back
-    -#         %span
-    -#           Back
     %header.libraryGroupWrapper-hero
       .container.libraryGroupWrapper-heroInfoWrapper.pt-4
         .heroTitle
@@ -40,9 +13,6 @@
           Explore Subscriptions
       %div.libraryGroupWrapper-heroBgWrapper{style: "background-image: url(#{@group.background_image.url});", title: "#{@group.name} Courses banner"}
 
-    -# .bg-gray5
-    -#   %div
-    -#     =render partial: 'tabbed_list'
     .bg-gray5
       %div
         %div.container.d-flex.libraryGroupWrapper-list.pt-4.pb-4
@@ -51,7 +21,7 @@
               - @group.levels.all_active.all_in_order.each_with_index do |level, counter|
                 %li.nav-item{data: {tab_name: level.name, group_name: @group.name}}
                   %a{class: "nav-link #{counter == 0 ? 'active' : ''}", id: "#{level.name_url}-tab", data: {toggle: 'tab'}, href: "##{level.name_url}", aria: {controls: "#{level.name_url}", selected: 'false'}, role: 'tab'}
-                    =level.name
+                    =level.name.html_safe
 
           %section.container.content-section
             %h2.sr-only List of Courses
@@ -79,36 +49,6 @@
                                 .courseArrowIcon.i.material-icons keyboard_arrow_right
 
 
-  -# .container-bg
-  -#   .container
-  -#     %article.py-4
-  -#       %header.pb-sm-4.pb-md-5
-  -#         .row.row-lg
-  -#           -@group.courses.all_active.all_in_order.each do |course|
-  -#             .col-lg-6.col-xl-4
-  -#               =link_to library_special_link(course), class: 'card card-horizontal flex-row card-mint p-0', data: { toggle: 'tooltip', placement: 'right', animation: 'true', delay: { "show": 300, "hide": 100 }}, title: "#{course.short_description}", onclick: "gtag('event', 'clicks_course_name', {'event_category': 'pre-registration', 'event_label': '#{course.name}'});" do
-  -#                 .card-header.d-flex.justify-content-center.align-items-center
-  -#                   -# TODO - Convert this into partial
-  -#                   -if course.unit_label
-  -#                     .pb-0.d-flex.flex-column.align-items-center
-  -#                       .mb-3.mx-md-2
-  -#                         %i{"aria-label" => course.icon_label, :role => "img", class: course.icon_label ? course.icon_label : 'budicon-office-bag-c', style: "color: #{course.highlight_colour};"}
-  -#                       %p.m-0.text-left.text-md-center{style: "color: #{course.highlight_colour};"}
-  -#                         =course.unit_label
-  -#                   -else
-  -#                     %i{"aria-label" => course.icon_label, :role => "img", class: course.icon_label ? course.icon_label : 'budicon-office-bag-c', style: "color: #{course.highlight_colour};"}
-
-  -#                 .card-body.d-flex.flex-column.justify-content-center
-  -#                   %small.card-category.mb-2{style: "color: #{course.highlight_colour};"}
-  -#                     -if course.preview && course.release_date
-  -#                       ="Coming #{course.release_date.strftime("%B, %Y")}"
-  -#                     -else
-  -#                       =course.category_label
-  -#                   %h5.card-title.mb-1
-  -#                     %span.mr-1
-  -#                       =course.name
-
-
   -if @group && @subscription_plans && @subscription_plans.any?
     .pricingPlansWrapper
       .container
@@ -134,7 +74,7 @@
                       %ul.nav.nav-pills.plan-nav{id: 'planTabs', role: 'tablist', class:@subscription_plans.length < 2 && 'hidden'}
                         -@subscription_plans.each_with_index do |navPlan, navCounter|
                           %li.nav-item{data: {tab_name: navPlan.guid}}
-                            %a{class: "nav-link #{navCounter == counter ? 'active' : ''}", id: "#{navPlan.guid}-tab", data: {toggle: 'tab'}, href: "#nav-#{navPlan.guid}", aria: {controls: "#{navPlan.guid}", selected: 'false'}, role: 'tab'}
+                            %a{class: "nav-link #{navCounter == 0 ? 'active' : ''}", id: "#{navPlan.guid}-tab", data: {toggle: 'tab'}, href: "#nav-#{navPlan.guid}", aria: {controls: "#{navPlan.guid}", selected: 'false'}, role: 'tab'}
                               =t("views.general.payment_intervals.a#{navPlan.payment_frequency_in_months}")
                     -@subscription_plans.each_with_index do |plan, counter|
                       .tab-pane{id: "nav-#{plan.guid}", class: "tab-#{plan.guid} #{counter == 0 ? 'active' : ''} ", "aria-labelledby" => "#{plan.guid}-tab", :role => "tabpanel"}

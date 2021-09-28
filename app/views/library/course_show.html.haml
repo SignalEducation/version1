@@ -48,7 +48,7 @@
                   =@course.parent.name
                 .courseWrapper-backBtn-dot •
                 .courseWrapper-levelName{style: "color: #{@course.level.highlight_colour};"}
-                  =@course.level.name
+                  =@course.level.name.html_safe
               %h1.h1-hero
                 =@course.name
 

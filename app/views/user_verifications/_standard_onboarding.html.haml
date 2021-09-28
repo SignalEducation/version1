@@ -74,7 +74,7 @@
                         .card-body.d-flex.flex-column.justify-content-center
                           %h5.card-title.mb-1
                             %span.mr-1
-                              =level.name
+                              =level.name.html_safe
 
             .py-2.text-center
               %btn.btn.btn-secondary.btn-sm.btn-sm-arrow-left.onboarding-back-button{onclick: 'showStartScreen(); return false;', data: { exam_body_id: @group&.exam_body&.id, exam_body_name: @group&.exam_body&.name, preferred_exam_body_id: current_user&.preferred_exam_body_id, preferred_exam_body: current_user&.preferred_exam_body&.name, banner: 'false', onboarding: current_user&.analytics_onboarding_valid?.to_s }}

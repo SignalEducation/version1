@@ -13,7 +13,7 @@
                     =scul.course.parent.name
                   .dashboardWrapper-backBtn-dot •
                   .dashboardWrapper-levelName{style: "color: #{scul.course.level.highlight_colour};"}
-                    =scul.course.level.name
+                    =scul.course.level.name.html_safe
                 %div.courseName
                   =scul.course.name
           .card-footer.d-flex.justify-content-center.align-items-center{style: 'background-color: #fff; border-top: none;'}
@@ -44,7 +44,7 @@
           - @levels.each_with_index do |level, counter|
             %li.nav-item{data: {tab_name: level.name, group_name: @default_group.name}}
               %a{class: "nav-link #{counter == 0 ? 'active' : ''}", id: "#{level.name_url}-tab", data: {toggle: 'tab'}, href: "##{level.name_url}", aria: {controls: "#{level.name_url}", selected: 'false'}, role: 'tab'}
-                =level.name
+                =level.name.html_safe
     %h4.h4-hero.mb-4.mt-4.hidden-xs
       ="Get started with an #{@default_group.name} course"
     %div.container.d-flex.libraryGroupWrapper-list.pt-4.pb-4{style: 'padding-top: 2rem !important;'}
@@ -53,7 +53,7 @@
           - @levels.each_with_index do |level, counter|
             %li.nav-item{data: {tab_name: level.name, group_name: @default_group.name}}
               %a{class: "nav-link #{counter == 0 ? 'active' : ''}", id: "#{level.name_url}-tab", data: {toggle: 'tab'}, href: "##{level.name_url}", aria: {controls: "#{level.name_url}", selected: 'false'}, role: 'tab'}
-                =level.name
+                =level.name.html_safe
 
       %section.container.content-section.p-0
         %h2.sr-only List of Courses
