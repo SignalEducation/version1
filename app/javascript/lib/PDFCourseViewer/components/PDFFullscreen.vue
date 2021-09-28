@@ -2,7 +2,7 @@
   <div class="pdf-fullscreen">
     <a 
       class="icon"
-      @click="fullscreenWindow" 
+      @click.prevent.stop="fullscreenWindow" 
     >
       <i 
         class="glyphicon glyphicon-fullscreen" 
