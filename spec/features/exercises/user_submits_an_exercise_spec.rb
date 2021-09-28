@@ -17,7 +17,7 @@ describe 'A user submitting an exercise', type: :feature do
 
     scenario 'can upload an exercise submission file' do
       visit user_exercises_path(user_id: user.id)
-      expect(page).to have_content('Start your mock exam')
+      expect(page).to have_content('Start your Mock Exam')
       click_link 'Begin Exercise'
 
       page.attach_file('Upload a PDF of your solution', file_path)

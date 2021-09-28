@@ -433,7 +433,7 @@ RSpec.describe ApplicationHelper, type: :helper do
 
     context 'no more days remains to verufy' do
       it 'returns a message asking to user verify the email' do
-        expect(verify_email_message(0)).to eq('PPlease <span>verify</span> your email address to continue using your free subscription.')
+        expect(verify_email_message(0)).to eq('Please <span>verify</span> your email address to continue using your free subscription.')
       end
     end
   end
