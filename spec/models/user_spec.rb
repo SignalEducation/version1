@@ -95,9 +95,9 @@ describe User do
   it { should have_one(:referral_code) }
   it { should have_one(:referred_signup) }
   it { should belong_to(:subscription_plan_category) }
-  it { should belong_to(:currency) }  
+  it { should belong_to(:currency) }
   it { should belong_to(:home_page) }
-  it { should belong_to(:onboarding_course) }  
+  it { should belong_to(:onboarding_course) }
 
   # validation
   context 'test uniqueness validation' do
@@ -816,7 +816,7 @@ describe User do
         expect(user.total_revenue).to eq(order_value + subscription_value)
       end
     end
-    
+
     describe '#verify_remain_days' do
       it 'return the default days remaning to user verify email' do
         expect(user.verify_remain_days).to eq(DAYS_TO_VERIFY_EMAIL)
@@ -830,12 +830,12 @@ describe User do
 
     describe '#show_verify_email_message?' do
       it 'show verify email message' do
-        user.update(verify_remembered_at: 7.days.ago)
+        user.update(verify_remembered_at: 7.hours.ago)
         expect(user.show_verify_email_message?).to be_truthy
       end
 
-      it 'return the 0 days remaning to user verify email' do
-        user.update(verify_remembered_at: Time.zone.today)
+      it 'do not show verify email message' do
+        user.update(verify_remembered_at: Time.zone.now)
         expect(user.show_verify_email_message?).to be_falsey
       end
     end
