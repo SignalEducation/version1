@@ -8,7 +8,7 @@
         %p.heroDesc
           =@group.short_description
         -if @group && @subscription_plans && @subscription_plans.any? && !(current_user && current_user.valid_access_for_exam_body?(@group.exam_body_id, @group.id))
-          %a{class: "btn btn-primary", href: "#library-course-pricing"}
+          =link_to pricing_url(@group.name_url), class: 'btn btn-primary' do
             Explore Subscriptions
       %div.libraryGroupWrapper-heroBgWrapper{style: "background-image: url(#{@group.background_image.url});", title: "#{@group.name} Courses banner"}
 
@@ -42,10 +42,10 @@
                       %ul.nav.nav-pills.plan-nav{id: 'planTabs', role: 'tablist', class:@subscription_plans.length < 2 && 'hidden'}
                         -@subscription_plans.each_with_index do |navPlan, navCounter|
                           %li.nav-item{data: {tab_name: navPlan.guid}}
-                            %a{class: "nav-link #{navCounter == 0 ? 'active' : ''}", id: "#{navPlan.guid}-tab", data: {toggle: 'tab'}, href: "#nav-#{navPlan.guid}", aria: {controls: "#{navPlan.guid}", selected: 'false'}, role: 'tab'}
+                            %a{class: "nav-link #{navCounter == @subscription_plans.length - 1 ? 'active' : ''}", id: "#{navPlan.guid}-tab", data: {toggle: 'tab'}, href: "#nav-#{navPlan.guid}", aria: {controls: "#{navPlan.guid}", selected: 'false'}, role: 'tab'}
                               =t("views.general.payment_intervals.a#{navPlan.payment_frequency_in_months}")
                     -@subscription_plans.each_with_index do |plan, counter|
-                      .tab-pane{id: "nav-#{plan.guid}", class: "tab-#{plan.guid} #{counter == 0 ? 'active' : ''} ", "aria-labelledby" => "#{plan.guid}-tab", :role => "tabpanel"}
+                      .tab-pane{id: "nav-#{plan.guid}", class: "tab-#{plan.guid} #{counter == @subscription_plans.length - 1 ? 'active' : ''} ", "aria-labelledby" => "#{plan.guid}-tab", :role => "tabpanel"}
                         %div.planInfoWrapper
                           %div.planTitleWrapper
                             %div.planTitle

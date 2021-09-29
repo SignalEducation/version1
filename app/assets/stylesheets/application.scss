@@ -9246,6 +9246,7 @@ button.sub-details[aria-expanded="true"]:before{
   border-radius: 30px;
   transition: 300ms ease;
   position: fixed;
+  z-index: 100;
   right: 16px;
   bottom: 16px;
   font-size: 18px;
