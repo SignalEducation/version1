@@ -34,7 +34,6 @@ json.course do
                                               step.course_lesson.name_url,
                                               step.name_url)
 
-
                     json.video_data do
                       if step.is_video
                         json.vimeo_guid step.course_video.vimeo_guid

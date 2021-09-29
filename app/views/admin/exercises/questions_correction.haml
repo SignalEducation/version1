@@ -26,7 +26,6 @@
                     %nav.mb-4.account-nav
                       %ul#questionTabs.nav.nav-tabs.nav-tabs-vertical{:role => "tablist"}
                         -# all_section_questions
-                        -# -section_questions.each_with_index do |question, index|
                         -all_section_questions.each_with_index do |question, index|
                           %li.nav-item
                             %a.nav-link{class: index == 0 ? 'active' : '', id: "#section-#{section.id}-question-#{question.id}", "aria-controls" => "section-#{section.id}-question-#{question.id}", "aria-selected" => "true", "data-toggle" => "tab", :href => "#section-#{section.id}-question-#{question.id}", :role => "tab"}
@@ -34,7 +33,6 @@
 
                   .col-sm-10
                     #questionTabsContent.tab-content
-                      -# -section_questions.each_with_index do |user_question, index|
                       -all_section_questions.each_with_index do |question, index|
                         -user_question = section_questions.select{ |q| q.cbe_question_id == question.id }.first
                         .tab-pane.tab-account.tab-personal-info{class: index == 0 ? 'show active' : '', id: "section-#{section.id}-question-#{question.id}", "aria-labelledby" => "personal-info-tab", :role => "tabpanel"}

@@ -42,7 +42,6 @@ module CoursesHelper
                                                                                                                                 onboarding: user&.analytics_onboarding_valid?.to_s, exam_body_name: resource.course.exam_body.name, exam_body_id: resource.course.exam_body_id,
                                                                                                                                 resource_type: resource.type, allowed: true }) do
         content_tag(:div, class: 'productCard-header d-flex align-items-center justify-content-center') do
-          # content_tag(:i, '', class: 'budicon-files-download')
           image_tag('course-addon-icons/addon-correction-pack.svg')
         end +
 
@@ -51,12 +50,12 @@ module CoursesHelper
             resource.name
           end +
           content_tag(:div, class: 'productCard-footer d-flex align-items-center justify-content-between') do
-            content_tag(:div, '', class: '') do
+            content_tag(:div, class: '') do
               content_tag(:span, class:'productCard-statusLabel') do
                 '🎉 FREE'
               end
             end +
-            content_tag(:div, '', class: 'btn btn-primary productCard--buyBtn') do
+            content_tag(:div, class: 'btn btn-primary productCard--buyBtn') do
               'View'
             end
           end
