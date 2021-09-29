@@ -1,19 +1,19 @@
 =javascript_include_tag 'video_players/vimeo'
-=render partial: 'layouts/external_navbar'
+=render partial: 'layouts/navbar'
 %main
   .container.home-hero-container
     %article.home-hero
-      .row.no-gutters
-        .col-xl-4
+      .row.m-0
+        .col-xl-6.p-0
           %header.home-hero-header.pb-2
             <h1 class="h1-hero">the smarter<br>way to study<span class="text-mint">.</span></h1>
             %p.p-hero
               -if @home_page&.header_paragraph.present?
                 =@home_page.header_paragraph
               -else
-                Get everything you need to pass your ACCA exam in one place! See why over 100,000 students have saved money and time by switching to studying online with learnsignal.
-        .col-xl-8
-          %aside.home-hero-aside.py-2.py-sm-0
+                Everything you need to pass your Accounting & Finance exams is here! 30,000+ students have chosen Learnsignal as their trusted online study partner.
+        .col-xl-6.p-0
+          %aside.home-hero-aside.py-2.py-sm-5
             .home-hero-img-wrap
               .circle-top-wrap
                 %svg{:fill => "none", :viewbox => "0 0 237 237", :xmlns => "http://www.w3.org/2000/svg"}
@@ -48,17 +48,17 @@
       %article.py-5
         %header.text-center.pb-sm-4.pb-md-5
           %h2.h1-mega Explore our courses
-          %p.p-hero.px-lg-6
+          %p.p-hero.px-lg-6.mb-4
             Make learning simple and affordable by studying online in a way that suits your professional and personal life.
         .row.justify-content-center
           -@groups.each do |group|
             .col-lg-4
-              %article.card.card-primary.card-pink
+              %article.card.card-primary.card-pink.p-0
                 =image_tag(group.image.url, class: 'card-img-top', alt: 'People in front of the blackboard', style: "border-bottom-color: #{group.background_colour};")
-                .card-body.text-center
-                  %h2.h1.card-title
+                .card-body.text-center.p-4
+                  %h2.h2.card-title{style: 'font-size: 24px; color: #111827;'}
                     =group.name
-                  %p
+                  %p{style: 'font-size: 14px; color: #6B7280;'}
                     =group.description
                   .mt-auto
                     =link_to 'Browse Courses', group_landing_url(group.name_url), class: 'btn btn-secondary btn-sm'

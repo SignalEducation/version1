@@ -1,0 +1,11 @@
+.hidden-xs {
+  @include if-device(phone) {
+    display: none !important;
+  }
+}
+.visible-xs {
+  display: none !important;
+  @include if-device(phone) {
+    display: block !important;
+  }
+}

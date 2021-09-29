@@ -26,7 +26,7 @@ describe 'An individual purchasing a product', type: :feature do
       click_button('Log In')
 
       expect(page).to have_content(mock.mock_exam.name)
-      expect(page).to have_content('Choose a way to pay')
+      expect(page).to have_content('Pay with Card')
     end
   end
 

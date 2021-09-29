@@ -1,45 +1,44 @@
 %main
-  %article.dashboard.bg-gray5
+  %article.dashboard.bg-white
     .container
       %header
-        %h1.h1-hero.pt-5
+        %h1.h2-hero.pt-5
           Cancel your subscription
 
       %section.pb-md-6.pt-4
         .form-box
-          .row
-            .col-sm-12
-              %p
-                At LearnSignal we’re keen to keep improving our service.
-              %p.h6
+          .row.m-0
+            .col-sm-12.p-0
+              -# %p
+              -#   At LearnSignal we’re keen to keep improving our service.
+              %p.h4.border-bottom.pb-4
                 Why do you want to cancel?
 
               =form_for @subscription, url: subscription_cancellations_path(id: @subscription.id), method: :post, html: { :id => "attempt_subscription_cancellation" } do |f|
                 =f.hidden_field(:cancelled_by_id, value: current_user.id)
                 =f.hidden_field(:cancelling_subscription, value: true)
-                .row
-                  .col-sm-6
+                .row.m-0
+                  .col-sm-5.p-0
                     .form-group.cancellation-reason
-                      =f.label :cancellation_reason, 'Please tick the box which is most applicable to you', class: 'block-label h4'
+                      =f.label :cancellation_reason, 'Please tick the box which is most applicable to you', class: 'block-label h6'
                       #cancellation-reason-error
                       =f.collection_radio_buttons(:cancellation_reason, [['I’ve come to the end of my studies', 'I’ve come to the end of my studies'], ['The service is too expensive', 'The service is too expensive'], ['I wasn’t using it enough', 'I wasn’t using it enough'], ['I didn’t feel like it was helping me', 'I didn’t feel like it was helping me'], ['My next exam is 3 months away', 'My next exam is 3 months away'], ['I didn’t understand the content', 'I didn’t understand the content'], ['I didn’t know how to use the platform', 'I didn’t know how to use the platform'], ['Other', 'Other']], :first, :last) do |b|
                         %span.label.cancellation-label
                           =b.radio_button
                           =b.label
-                  .col-sm-6
+                  .col-sm-7.p-0
                     .form-group
-                      =f.label :cancellation_note, 'Please let us know if there’s any other way we could improve our service:', class: 'block-label h4'
+                      =f.label :cancellation_note, 'Please let us know if there’s any other way we could improve our service:', class: 'block-label h6'
                       #cancellation-note-error
                       =f.text_area :cancellation_note, :rows => 4, class: 'form-control'
 
 
-                .row.mt-4
-                  .col-sm-4
-                    =link_to t('views.users.show.keep_subscription'), account_url(anchor: 'account-info'), class: 'btn btn-primary btn-sm'
-
-                  .col-sm-4
+                .offset-md-5.col-sm-7.mt-3.p-0
+                  .alert-warning.d-flex.mb-4
+                    %i.material-icons.mr-2{style: 'font-size: 16px;top: 3px;position: relative;'} warning_amber
+                    %p
+                      =account_cancellation_message(@subscription)
+                .row.m-0.mt-4.justify-content-end
+                  .w-auto
                     =f.submit t('views.users.show.confirm_subscription_cancellation'), id: 'confirm_cancellation_button', class: 'btn btn-danger btn-sm', data: { disable_with: false }
 
-                  .col-sm-12.mt-3
-                    %p
-                      = account_cancellation_message(@subscription)

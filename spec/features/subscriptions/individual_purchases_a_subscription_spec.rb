@@ -24,7 +24,7 @@ describe 'An individual purchasing a subscription', type: :feature do
       end
 
       scenario 'can browse available plans' do
-        expect(page).to have_content('Payment Plans')
+        expect(page).to have_content('Choose this plan')
       end
 
       scenario 'can choose a plan and register as a user' do
@@ -43,7 +43,7 @@ describe 'An individual purchasing a subscription', type: :feature do
 
         click_button 'Register Now'
 
-        expect(page).to have_content('Choose a way to pay')
+        expect(page).to have_content('Pay with Card')
       end
 
       scenario 'has the option to log in' do
@@ -70,7 +70,7 @@ describe 'An individual purchasing a subscription', type: :feature do
       scenario 'can browse available plans' do
         sign_in_via_sign_in_page(user)
         visit pricing_path(group_name_url: exam_body.group.name_url)
-        expect(page).to have_content('Payment Plans')
+        expect(page).to have_content('Choose this plan')
       end
 
       scenario 'can choose a plan and checkout with PayPal' do
@@ -78,7 +78,7 @@ describe 'An individual purchasing a subscription', type: :feature do
         visit pricing_path(group_name_url: exam_body.group.name_url)
         first(:link, 'Choose this plan').click
 
-        expect(page).to have_content('Choose a way to pay')
+        expect(page).to have_content('Pay with PayPal')
 
         find('label[for=pay-with-paypal]').click
 
@@ -90,7 +90,7 @@ describe 'An individual purchasing a subscription', type: :feature do
         visit pricing_path(group_name_url: exam_body.group.name_url)
         first(:link, 'Choose this plan').click
 
-        expect(page).to have_content('Choose a way to pay')
+        expect(page).to have_content('Pay with Card')
         expect(page).to have_selector('#pay-with-card', visible: false)
       end
 

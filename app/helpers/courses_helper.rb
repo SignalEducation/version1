@@ -11,11 +11,11 @@ module CoursesHelper
     log.is_quiz? ? quiz_status(log) : course_status(log)
   end
 
-  def pdf_viewer(resource, banner, user)
+  def pdf_viewer(resource, banner, user, has_valid_subscription)
     if resource.file_upload_updated_at.present? && resource.file_upload_content_type == 'application/pdf'
-      internal_pdf_link(resource, banner, user)
+      internal_pdf_link(resource, banner, user, has_valid_subscription)
     else
-      external_pdf_link(resource, banner, user)
+      external_pdf_link(resource, banner, user, has_valid_subscription)
     end
   end
 
@@ -30,24 +30,35 @@ module CoursesHelper
   end
 
   # VUEJS component
-  def internal_pdf_link(resource, banner, user)
-    viewer = "<div class='pdf-files-elements' id: 'resource-window' data-file-id='#{resource&.id}' data-file-name='#{resource&.name}' data-file-url='#{resource&.file_upload&.url}' data-file-download='#{resource&.download_available}' data-course-name='#{resource&.course&.name}' data-course-id='#{resource&.course_id}' data-onboarding='#{user&.analytics_onboarding_valid?.to_s}' data-banner='#{banner}' data-preferred-exam-body-id='#{user&.preferred_exam_body_id}' data-preferred-exam-body-name='#{user&.preferred_exam_body&.name}' data-exam-body-id='#{resource&.course&.exam_body_id}' data-exam-body-name='#{resource&.course&.exam_body&.name}'></div>"
+  def internal_pdf_link(resource, banner, user, has_valid_subscription)
+    viewer = "<div class='pdf-files-elements' id: 'resource-window' data-has-valid-subscription='#{!!has_valid_subscription}' data-file-id='#{resource&.id}' data-file-name='#{resource&.name}' data-file-url='#{resource&.file_upload&.url}' data-file-download='#{resource&.download_available}' data-course-name='#{resource&.course&.name}' data-course-id='#{resource&.course_id}' data-onboarding='#{user&.analytics_onboarding_valid?.to_s}' data-banner='#{banner}' data-preferred-exam-body-id='#{user&.preferred_exam_body_id}' data-preferred-exam-body-name='#{user&.preferred_exam_body&.name}' data-exam-body-id='#{resource&.course&.exam_body_id}' data-exam-body-name='#{resource&.course&.exam_body&.name}'></div>"
     viewer.html_safe
   end
 
-  def external_pdf_link(resource, banner, user)
-    content_tag(:div, class: 'col-sm-6') do
-      content_tag(:div, id: 'resource-window', class: 'card card-horizontal card-horizontal-sm flex-row resource-card', data: { resource_name: resource.name, resource_id: resource.id, course_name: resource.course.name, course_id: resource.course_id,
+  def external_pdf_link(resource, banner, user, has_valid_subscription)
+    content_tag(:div, class: 'col-md-4 col-lg-3 mb-4 px-3') do
+      link_to(course_resource_special_link(resource), target: :blank, id: 'resource-window', class: "productCard external-card has-#{!!has_valid_subscription}-subscription", data: { resource_name: resource.name, resource_id: resource.id, course_name: resource.course.name, course_id: resource.course_id,
                                                                                                                                 preferred_exam_body_id: user&.preferred_exam_body_id, preferred_exam_body: user&.preferred_exam_body&.name, banner: banner,
                                                                                                                                 onboarding: user&.analytics_onboarding_valid?.to_s, exam_body_name: resource.course.exam_body.name, exam_body_id: resource.course.exam_body_id,
                                                                                                                                 resource_type: resource.type, allowed: true }) do
-        content_tag(:div, class: 'card-header bg-white d-flex align-items-center justify-content-center') do
-          content_tag(:i, '', class: 'budicon-files-download')
+        content_tag(:div, class: 'productCard-header d-flex align-items-center justify-content-center') do
+          # content_tag(:i, '', class: 'budicon-files-download')
+          image_tag('course-addon-icons/addon-correction-pack.svg')
         end +
 
-        link_to(course_resource_special_link(resource), target: :blank, class: 'card-body d-flex align-items-center pl-1') do
-          content_tag(:h5, class: 'm-0 text-truncate text-gray2') do
+        content_tag(:div, class: 'productCard-body d-flex align-items-center') do
+          content_tag(:div, class: '') do
             resource.name
+          end +
+          content_tag(:div, class: 'productCard-footer d-flex align-items-center justify-content-between') do
+            content_tag(:div, '', class: '') do
+              content_tag(:span, class:'productCard-statusLabel') do
+                '🎉 FREE'
+              end
+            end +
+            content_tag(:div, '', class: 'btn btn-primary productCard--buyBtn') do
+              'View'
+            end
           end
         end
       end

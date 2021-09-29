@@ -12,9 +12,10 @@ class UserPasswordsController < ApplicationController
   end
 
   def create
-    User.start_password_reset_process(params[:email_address].to_s, root_url)
+    @response = User.start_password_reset_process(params[:email_address].to_s)
+
     seo_title_maker('Password Reset Email Sent | LearnSignal',
-                    "Check your mailbox for further instructions. If you don't receive an email from learnsignal within a couple of minutes, check your spam folder.",
+                    @response[:json][:message],
                     nil)
   end
 

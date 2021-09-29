@@ -33,7 +33,7 @@ end
 
 def log_out
   find('#navbarDropdown').click
-  click_link(I18n.t('views.general.log_out'))
+  click_link(I18n.t('views.general.log_out'), :match => :first)
 end
 
 def visit_my_profile

@@ -1,0 +1,548 @@
+.pricingPageWrapper {
+  .tab-content {
+    padding: 0;
+  }
+  .heroTitle {
+    margin-bottom: 2rem;
+    font-size: 2.5rem;
+    line-height: 1;
+    font-weight: 700;
+    color: rgb(17,24,39);
+    margin-bottom: 0.875rem;
+    @include if-device(phone) {
+      font-size: 28px;
+      line-height: 1.5;
+      text-align: left;
+      margin-bottom: 8px;
+    }
+  }
+  .heroDesc {
+    margin: 0 auto;
+    margin-bottom: 0;
+    color: #374151;
+    font-size: 16px;
+    line-height: 150%;
+    max-width: 50%;
+    @include if-device(phone) {
+      max-width: 100%;
+      font-size: 14px;
+      text-align: left;
+    }
+  }
+  .nav.nav-pills {
+    background-color: transparent;
+    box-shadow: 0 0 20px 0 hsla(0,0%,80.4%,.25);
+    .nav-item {
+      display: flex;
+      height: 60px;
+      padding-top: 0;
+      padding-bottom: 0;
+      justify-content: center;
+      align-items: center;
+      border: 1px solid #f2f2f2;
+      background-color: #ECFDF5;
+      font-size: 16px;
+      font-weight: 500;
+      overflow: hidden;
+      &:first-child {
+        border-top-left-radius: 8px;
+        border-bottom-left-radius: 8px;
+      }
+      &:last-child {
+        border-top-right-radius: 8px;
+        border-bottom-right-radius: 8px;
+      }
+      .nav-link {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+  }
+}
+.pricingPlansWrapper {
+  background-color: #D1FAE5 !important;
+  .heroSubtext {
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    font-weight: 600;
+    font-size: .875rem;
+    line-height: 1.5rem;
+    margin-bottom: .5rem;
+    color:#0f482a;
+    text-align: center;
+    @include if-device(phone) {
+      text-align: left;
+    }
+  }
+  .heroTitle {
+    font-size: 2.5rem;
+    line-height: 1;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 0.875rem;
+    @include if-device(phone) {
+      font-size: 28px;
+      line-height: 1.5;
+      text-align: left;
+      margin-bottom: 8px;
+    }
+  }
+  .heroDesc {
+    margin: 0 auto;
+    margin-bottom: 0;
+    color: #374151;
+    font-size: 16px;
+    line-height: 150%;
+    max-width: 50%;
+    font-weight: 500;
+    @include if-device(phone) {
+      max-width: 100%;
+      font-size: 16px;
+      text-align: left;
+    }
+  }
+  .planCard {
+    position: relative;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 30px;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 1px solid #111827;
+    border-radius: 40px;
+    background-color: #111827;
+
+    @include if-device(phone) {
+      border-radius: 20px;
+      padding: 20px;
+      margin: 10px 0;
+    }
+    &:hover {
+        color: inherit;
+    }
+    .card-body {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      background-color: transparent;
+      min-height: 370px;
+      @include if-device(phone) {
+        min-height: auto;
+      }
+    }
+    .nav.nav-pills.plan-nav {
+      width: 100%;
+      max-width: 280px;
+      flex-wrap: nowrap;
+      border-radius: 40px;
+      background-color: #ECFDF5;
+      box-shadow: none;
+      display: flex;
+      grid-auto-columns: 1fr;
+      -ms-grid-columns: 1fr 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr;
+      -ms-grid-rows: auto;
+      grid-template-rows: auto;
+      align-items: center;
+      flex-direction: row;
+      padding: 2px;
+
+      top: 56px;
+      position: absolute;
+
+      @include if-device(phone) {
+        top: 40px;
+      }
+
+      &.hidden {
+        visibility: hidden;
+      }
+
+      .nav-item {
+        display: flex;
+        width: 100%;
+        height: auto;
+        padding: 0;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid #f2f2f2;
+        background-color: #fff;
+        font-size: 14px;
+        font-weight: 500;
+        overflow: hidden;
+        border: none;
+        border-radius: 40px;
+        line-height: 16px;
+        color: #010032;
+        .nav-link {
+          width: 100%;
+          height: 100%;
+          font-size: 14px;
+          padding: 8px 30px;
+          margin-bottom: 0;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          border-radius: 40px;
+          &:hover {
+            color: #010032;
+          }
+
+          &.active, &.show {
+            background-color: #00B67A;
+            color: #fff;
+          }
+        }
+      }
+    }
+    .planInfoWrapper {
+      display: flex;
+      width: 100%;
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: space-between;
+      column-gap: 30px;
+      margin-bottom: 20px;
+      @include if-device(phone) {
+        flex-direction: column;
+      }
+    }
+    .planTitleWrapper {
+      display: flex;
+      width: 100%;
+      flex: 1;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      row-gap: 20px;
+
+      @include if-device(phone) {
+        flex-direction: column;
+        row-gap: 12px;
+        margin-bottom: 0;
+      }
+    }
+    .planTitle {
+      margin-top: 0;
+      margin-bottom: 0;
+      color: #FFF;
+      font-size: 24px;
+      line-height: 150%;
+      font-weight: 600;
+      .greenShade {
+        color: #00B67A;
+      }
+      @include if-device(phone) {
+        font-size: 18px;
+        line-height: 1.5;
+      }
+    }
+    .priceValue {
+      display: flex;
+      width: auto;
+      flex-direction: column;
+      color: #FFF;
+      font-size: 40px;
+      line-height: 150%;
+      font-weight: 600;
+      padding: 16px !important;
+      background: #1F2937;
+      border-radius: 20px;
+      @include if-device(phone) {
+        flex-direction: row;
+        justify-content: space-between;
+        column-gap: 12px;
+        margin-top: 0;
+        font-size: 30px;
+        padding: 12px !important;
+        width: 100%;
+        background: transparent;
+        margin-top: 50px;
+      }
+      &-actualPrice {
+
+      }
+      &-priceSuffix {
+        font-weight: 500;
+        font-size: 20px;
+        line-height: 150%;
+      }
+      &-popularBadge {
+        font-weight: 500;
+        font-size: 12px;
+        line-height: 150%;
+        color: #FDE68A;
+        @include if-device(phone) {
+          font-size: 10px;
+        }
+      }
+      &-savingPill {
+        padding: 4px 8px;
+        font-weight: 600;
+        font-size: 12px;
+        line-height: 150%;
+        color: #111827;
+        background: #FCD34D;
+        border-radius: 8px;
+      }
+    }
+    .bulletListTitle {
+      font-size: 16px;
+      line-height: 150%;
+      color: #6B7280;
+      font-weight: bold;
+      border-top: 1px solid #374151;
+      padding-top: 20px;
+      margin-bottom: 30px;
+
+      @include if-device(phone) {
+        border-top: none;
+        margin-bottom: 24px;
+      }
+    }
+    .preCtaText {
+      color: #6B7280;
+      font-weight: 600;
+      margin-top: 24px;
+      margin-bottom: 12px;
+      font-size: 14px;
+      line-height: 1.5;
+      @include if-device(phone) {
+        font-size: 11px;
+        margin-top: 12px;
+        margin-bottom: 8px;
+        padding-top: 16px;
+        border-top: 1px solid #374151;
+      }
+    }
+    .bulletList {
+      padding-top: 0 !important;
+      border-color: #374151 !important;
+      columns: 2;
+      margin-top: 0 !important;
+      margin-bottom: 20px;
+
+      @include if-device(phone) {
+        columns: 1;
+      }
+    }
+    .bulletIcon {
+      font-size: 30px;
+      line-height: 1.2rem;
+      margin-right: 4px;
+    }
+    .bulletListAccordianBox {
+      .faq-inner {
+        padding: 0;
+      }
+      .faq-box {
+        padding: 0;
+        background-color: transparent;
+        border: none;
+        margin: 10px 0 0;
+        filter: none;
+        box-shadow: none;
+      }
+      .faq-title {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        background-color: #374151;
+        color: #FFF;
+        border-radius: 8px;
+        padding: 12px 40px;
+        font-size: 18px;
+
+        @include if-device(phone) {
+          font-size: 16px;
+        }
+      }
+      .faq-answer-expanded {
+        padding: 0;
+
+      }
+    }
+    .tab-content {
+      padding-bottom: 0;
+    }
+    ul li {
+      color: #FFF;
+      font-size: 14px;
+      display: flex;
+      padding-right: 24px;
+
+      @include if-device(phone) {
+        font-size: 14px;
+      }
+    }
+
+    &-light {
+      @include if-device(phone) {
+        background-color: #FFF;
+        border-color: #FFF;
+        .planTitle {
+          color: #111827;
+        }
+        .priceValue {
+          color: #111827;
+          background-color: transparent;
+        }
+        .preCtaText {
+          border-color: #E5E7EB;
+        }
+        .bulletListAccordianBox .faq-title {
+          background-color: #F3F4F6;
+          color: #111827;
+        }
+        .bulletListAccordianBox .bulletList {
+          color: #4B5563;
+        }
+        .bulletListAccordianBox .bulletList {
+          color: #4B5563;
+        }
+        .bulletListTitle {
+          border-color: #E5E7EB;
+
+        }
+        ul li {
+          color: #4B5563;
+
+        }
+        .choosePlanBtn {
+          border: 2px solid #00B67A;
+          background-color: transparent;
+          color: #00B67A;
+          &:hover {
+            background-color: #ECFDF5;
+          }
+        }
+      }
+    }
+  }
+    .choosePlanBtn {
+      max-width: 360px;
+      padding: 0.6rem ​1rem;
+      font-size: 18px;
+      line-height: 1.8;
+      margin-top: 0;
+      @include if-device(phone) {
+        font-size: 16px;
+      }
+    }
+    .card.card-horizontal .card-header {
+        width: auto;
+    }
+    .card.card-horizontal .card-body {
+        padding: 0;
+    }
+    .card-footer {
+        padding: 0;
+    }
+    .dashboardWrapper-courseInfo {
+        display: flex;
+        align-items: center;
+        column-gap: 16px;
+        .dashboardWrapper-courseIcon {
+            border: 1px solid transparent;
+            border-radius: 10px;
+            width: 42px;
+            height: 42px;
+            padding: 7px 11px;
+          background-color: #bdbebf;
+          i {
+            font-size: 20px;
+          }
+        }
+        .dashboardWrapper-parent {
+          display: flex;
+          column-gap: 4px;
+          .dashboardWrapper-examName {
+            font-weight: 600;
+            font-size: 12px;
+            line-height: 15px;
+            letter-spacing: 0.25px;
+            color: #828282;
+          }
+          .dashboardWrapper-backBtn-dot {
+            font-weight: 600;
+            font-size: 16px;
+            line-height: 15px;
+            letter-spacing: 0.25px;
+            color: #D2D2D2;
+          }
+          .dashboardWrapper-levelName {
+            font-weight: 600;
+            font-size: 12px;
+            line-height: 15px;
+            letter-spacing: 0.25px;
+            color: #828282;
+          }
+        } 
+        .courseName {
+            margin-top: 3px;
+            margin-bottom: 0;
+            font-size: 20px;
+            line-height: 24px;
+            font-weight: 700;
+            @include if-device(phone) {
+              font-size: 16px;
+            }
+        }
+      }
+      .dashboardWrapper-progressText {
+        font-weight: 600;
+        font-size: 12px;
+        line-height: 15px;
+        letter-spacing: 1px;
+        margin-right: 24px;
+        color: #979797;
+      }   
+}
+.dashboardActions {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+.dashboardTabsNav {
+    display: flex;
+    flex-wrap: wrap;
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+    justify-content: flex-start;
+    .dashboardTabsNav-navItem {
+        display: inline-block;
+        margin-bottom: 0;
+        margin-right: 0.25rem;
+    }
+    .dashboardTabsNav-navItemLink {
+        border: 0 none;
+        border-bottom-style: solid;
+        border-color: transparent;
+        border-bottom-width: 2px;
+        padding: .6rem 1rem;
+        padding-top: .7rem;
+        font-size: 16px;
+        color: #B1B1B1;
+        font-weight: 700;
+        transition: all 0.15s ease-in-out 0s;
+        &.active {
+            color: #00b67b;
+            background-color: transparent;
+            border-color: #00b67b;
+        }
+        &:hover, &:active, &:focus {
+            text-decoration: none;
+            color: #000032;
+        }
+    }
+}

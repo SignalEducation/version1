@@ -5,9 +5,9 @@ module ApplicationHelper
     html_sanitizer('', the_class, "color: #{color};")
   end
 
-  def red_or_green_arrow(the_thing)
+  def red_or_green_arrow(the_thing, iconTag)
     color = the_thing ? '#21CE99' : '#eb4242'
-    html_sanitizer('', 'glyphicon glyphicon-arrow-right', "color: #{color};")
+    html_sanitizer(iconTag, 'result-icon', "color: #{color};")
   end
 
   def red_or_green_text(the_thing, letter)
@@ -39,7 +39,7 @@ module ApplicationHelper
   end
 
   def flagged_for_review(the_thing)
-    color = the_thing ? '#eb4242' : '#ffffff'
+    color = the_thing ? '#eb4242' : '#333e4c'
     the_class = 'glyphicon glyphicon-flag'
     html_sanitizer('', the_class, "color: #{color};")
   end
@@ -228,15 +228,26 @@ module ApplicationHelper
   end
 
   def navbar_landing_page_menu(landing_page)
-    content_tag :li, class: 'nav-item' do
-      onclick = ga_on_click_actions(landing_page.public_url)
+    onclick = ga_on_click_actions(landing_page.public_url)
 
-      link_to footer_landing_page_url(landing_page.public_url), class: 'nav-link', onclick: onclick do
-        content_tag('span', landing_page.name)
-      end
+    link_to footer_landing_page_url(landing_page.public_url), class: '', onclick: onclick do
+      content_tag('span', landing_page.name)
     end
   end
 
+  def verify_email_message(remain_days)
+    if remain_days.positive?
+      "Please verify your email address within <span>#{remain_days}</span> days to continue using your free subscription."
+    else
+      'Please <span>verify</span> your email address to continue using your free subscription.'
+    end
+  end
+
+  def show_user_verified_restriction
+    return unless current_user.show_verify_email_message?
+
+    render partial: 'library/verification_restriction_modal', locals: { onload: true }
+  end
   private
 
   def ga_on_click_actions(public_url)

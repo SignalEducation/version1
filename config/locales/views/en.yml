@@ -107,10 +107,15 @@ en:
         a6: Half-yearly
         a12: Pay yearly
       payment_intervals:
-        a1: Month
-        a3: Quarter
+        a1: Monthly
+        a3: Quarterly
         a6: 6 Months
-        a12: Year
+        a12: Yearly
+      payment_interval_shortSuffix:
+        a1: / mo
+        a3: / 3 mos
+        a6: / 6 mo
+        a12: / yr
       subscription_label_in_months:
         a1: Monthly Subscription Plan
         a3: Quarterly Subscription Plan
@@ -1667,7 +1672,7 @@ en:
         h1: New User
 
       show:
-        h1: Account
+        h1: My Account
         edit: Edit Account
         add_new_card: Update Payment Info
         new_card: Add New Card

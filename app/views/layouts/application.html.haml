@@ -1,5 +1,5 @@
 !!! 5
-%html{lang: params[:locale] || 'en'}
+%html{lang: 'en'}
   %head
     %meta{charset: 'utf-8'}
       %meta{http: {equiv:'X-UA-Compatible'}, content:'IE=edge'}
@@ -9,21 +9,26 @@
           =@seo_title
         -else
           The Smarter Way to Study | learnsignal
-
-    =preload_link_tag 'oakes_grotesk_semi_bold.woff2'
-    =preload_link_tag 'oakes_grotesk_bold.woff2'
+    -# Links for Fonts
     =preload_link_tag 'icons/budicon_classic.ttf'
+    %link{:href => "https://fonts.googleapis.com", :rel => "preconnect"}/
+    %link{:crossorigin => "", :href => "https://fonts.gstatic.com", :rel => "preconnect"}/
+    %link{:href => "https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap", :rel => "stylesheet"}/
     =stylesheet_link_tag 'application', media: 'all'
     =javascript_include_tag 'application', modernizr: :true
-    -# CBE VueJS include
-    =javascript_pack_tag 'cbe_main'
-    =stylesheet_pack_tag 'cbe_main'
+
+    -if controller_name == 'courses' || controller_name == 'course_steps' || controller_name == 'preview_course_steps'|| controller_name == 'content_activations' || controller_name == 'cbes' 
+      -# CBE VueJS include
+      =javascript_pack_tag 'cbe_main'
+      =stylesheet_pack_tag 'cbe_main'
     -# CBE VueJS include
     =render partial: 'layouts/google_tag_manager'
-    -if current_user&.email_verified
+    -# Import Segment Script
+    -if current_user
       =render partial: 'layouts/segment_tracking_code'
 
-    %script{type: 'text/javascript', src: 'https://js.stripe.com/v3/'}
+    -if controller_name == 'orders' || controller_name == 'subscriptions' || controller_name == 'user_accounts' || controller_name == 'plan_changes' 
+      %script{type: 'text/javascript', src: 'https://js.stripe.com/v3/'}
 
     =yield :head
 
@@ -32,7 +37,6 @@
       %link{href: 'https://kendo.cdn.telerik.com/2018.2.516/styles/kendo.default-v2.min.css', rel: 'stylesheet'}
       %link{href: 'https://kendo.cdn.telerik.com/2018.2.516/styles/kendo.default.mobile.min.css', rel: 'stylesheet'}
 
-    %link{href: 'https://fonts.googleapis.com/css?family=Rubik:300,400,500,700', rel: 'stylesheet'}
     %link{href: 'https://fonts.googleapis.com/icon?family=Material+Icons', rel: 'stylesheet'}
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -52,7 +56,7 @@
       %meta{name: 'robots', content: 'noindex'}
     =render 'application/favicon'
 
-    -unless controller_name == 'cbes'
+    -unless controller_name == 'cbes' || @layout == 'management'
       =render partial: 'layouts/cookie_banner'
     =render partial: 'layouts/global_site_tag'
   - if controller_name == 'cbes'
@@ -86,11 +90,11 @@
         -if @navbar
           =render partial: 'layouts/navbar'
 
-        -if @top_margin
-          -if @banner
-            .margin-top-lg
-          -else
-            .margin-top
+        -# -if @top_margin
+        -#   -if @banner
+        -#     .margin-top-lg
+        -#   -else
+        -#     .margin-top
 
         -unless controller_name == 'subscriptions' || controller_name == 'orders' || controller_name == 'footer_pages' || controller_name == 'student_sign_ups' || controller_name == 'user_accounts'
           -if flash[:success] || flash[:error] || flash[:warning]
@@ -106,11 +110,17 @@
         =yield
 
         -if @footer
-          =render partial: 'layouts/footer_disclaimer' if @group&.disclaimer
-          =render partial: 'layouts/footer'
+          -if controller_name == 'courses' || controller_name == 'course_steps' || controller_name == 'preview_course_steps' || controller_name == 'content_activations'
+            =render partial: 'layouts/footer_empty' 
+          -else
+            -if current_user
+              =render partial: 'layouts/footer_minimal'
+            -else
+              =render partial: 'layouts/footer_marketing'
+
 
       -elsif @layout == 'management'
-        #console-wrapper
+        #management-console-wrapper
           .d-none.d-sm-block
             =render partial: 'layouts/management_side_navbar'
 
@@ -123,7 +133,7 @@
           .d-none.d-sm-block
           #sidebar-btn-collapse.sidebar-btn-collapse
             #sidebar-btn-collapse-elem.sidebar-btn-collapse-content{:onclick => "collapseFunc()"}
-              #arrow-collapse.i.material-icons{:style => "font-size:32px;"} keyboard_arrow_left
+              #arrow-collapse.i.material-icons{:style => "font-size:32px; color: #71767B;"} keyboard_arrow_left
             =render partial: 'library/student_side_navbar'
 
           -unless controller_name == 'subscriptions' || controller_name == 'orders' || controller_name == 'footer_pages' || controller_name == 'student_sign_ups' || controller_name == 'user_accounts'
@@ -138,6 +148,14 @@
                 =link_to 'Resolve Issue!', account_url(anchor: 'account-info')
 
           =yield
+          -if controller_name == 'courses' || controller_name == 'course_steps' || controller_name == 'preview_course_steps' || controller_name == 'content_activations'
+            =render partial: 'layouts/footer_empty' 
+          -else
+            -if current_user
+              =render partial: 'layouts/footer_minimal'
+            -else
+              =render partial: 'layouts/footer_marketing'
+
       -else
         =render partial: 'layouts/navbar'
         -if @top_margin
@@ -145,9 +163,6 @@
         -if flash[:success] || flash[:error] || flash[:warning]
           =render partial: 'layouts/flash_messages'
         =yield
-        =render partial: 'layouts/footer_disclaimer' if @group&.disclaimer
-        =render partial: 'layouts/footer'
-
 
       -#General partials
       =render partial: 'layouts/misc_javascript'

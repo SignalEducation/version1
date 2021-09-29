@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class StudentSignUpsController < ApplicationController
-  before_action :check_logged_in_status, except: %i[landing group pricing new_landing]
+  before_action :check_logged_in_status, except: %i[show landing group pricing new_landing]
   before_action :get_variables
   before_action :create_user_object, only: %i[new sign_in_or_register sign_in_checkout landing new_landing]
   before_action :create_user_session_object, only: %i[sign_in_or_register sign_in_checkout landing]
@@ -124,7 +124,7 @@ class StudentSignUpsController < ApplicationController
 
     @navbar = false
     @top_margin = false
-    @footer = true
+    @footer = 'white'
   end
 
   def new
@@ -136,7 +136,7 @@ class StudentSignUpsController < ApplicationController
 
   def create
     @navbar = false
-    @footer = false
+    @footer = 'white'
     user_country = IpAddress.get_country(request.remote_ip, true)
     user_currency = user_country&.currency || Currency.find_by(iso_code: 'GBP')
 
@@ -166,8 +166,9 @@ class StudentSignUpsController < ApplicationController
       else
         flash[:datalayer_id] = @user.id
         flash[:datalayer_body] = @user.try(:preferred_exam_body).try(:name)
+        UserSession.create(@user)
         set_current_visit(@user)
-        redirect_to personal_sign_up_complete_url
+        redirect_to student_dashboard_url
       end
     elsif request&.referrer
       set_session_errors(@user)

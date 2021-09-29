@@ -2,20 +2,19 @@
   .col-xl-8
     .pb-2
       %p.mb-4
-        %a{data: {target: '#enrollment-modal', toggle: 'modal'}, href: '#', class: 'btn btn-secondary btn-sm mb-3 mb-sm-0 upgrade-resp-enroll-btn-hide'}
-          Enrol
         =@course.description.to_s.html_safe
-  .col-xl-4
+  .col-xl-8
     -if @course.course_tutors.any?
-      %aside.pb-5.pb-xl-3
-        %h4.text-gray2 Course Tutors
-        -@course_tutors.each do |course_tutor|
-          %div
-            =link_to profile_url(course_tutor.user.name_url), class: 'profile-item link-alt d-inline-flex align-items-center mb-3' do
-              .mr-3
-                =image_tag course_tutor.user.profile_image.url, class: 'img-thumbnail img-thumbnail-xs', alt: 'Tutor Profile Image'
-              %div
-                %p.profile-name.font-weight-medium.mb-0
-                  =course_tutor.user.full_name.to_s
-                %small.text-gray2
-                  =course_tutor.title
+      %aside.pb-3.pb-xl-3{style: "background-color: #F9FAFB;padding: 20px;border-radius: 20px;border: 2px solid #F3F4F6;"}
+        %h5.text-gray2.mb-4.h5 Course Tutors
+        .row.m-0
+          -@course_tutors.each do |course_tutor|
+            %div.mr-4
+              %div{class:'profile-item link-alt d-inline-flex align-items-center mb-3'}
+                .mr-3
+                  =image_tag course_tutor.user.profile_image.url, class: 'img-thumbnail img-thumbnail-xs', alt: 'Tutor'
+                %div
+                  %p.profile-name.font-weight-bold.mb-0
+                    =course_tutor.user.full_name.to_s
+                  %small.text-gray2
+                    =course_tutor.title

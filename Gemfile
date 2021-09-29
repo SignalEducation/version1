@@ -31,6 +31,7 @@ gem 'haml-rails' # a replacement system for HTML
 gem 'jbuilder', '~> 2.5' # https://github.com/rails/jbuilder
 gem 'jquery-rails' # include jQuery for Rails
 gem 'jquery-ui-rails' # include jQuery UI for Rails
+gem 'jwt'
 gem 'le' # logEntries.com
 gem 'mathjax-rails' # maths functions in the UI
 gem 'prawn' # PDF creator

@@ -22,7 +22,7 @@
             -if @courses
               -@courses.each do |course|
                 .col-lg-6.col-xl-4
-                  =link_to library_special_link(course), class: 'card card-horizontal flex-row card-mint' do
+                  =link_to library_special_link(course), class: 'card card-horizontal flex-row card-mint p-0' do
                     .card-header.d-flex.justify-content-center.align-items-center
                       %i{"aria-label" => "Strategic Professional", :role => "img", class: course.icon_label ? course.icon_label : 'budicon-office-bag-c', style: "color: #{course.highlight_colour};"}
 
