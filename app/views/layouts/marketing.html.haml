@@ -14,7 +14,7 @@
     =javascript_include_tag 'application', modernizr: :true
 
     =render partial: 'layouts/google_tag_manager'
-    -if current_user&.email_verified
+    -if current_user
       =render partial: 'layouts/segment_tracking_code'
 
     =yield :head

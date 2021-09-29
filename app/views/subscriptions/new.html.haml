@@ -464,7 +464,16 @@
 
     $(".js-browser-back-btn").on( "click", function(event) {
       event.preventDefault();
-      history && history.back();
+      if(document.referrer == "") {
+        window.location.href = "/dashboard";
+      } else {
+        const { hostname } = new URL(document.referrer);
+        if(hostname.includes('learnsignal.com' || 'locahost')) {
+          window.location.href = "/dashboard";
+        } else {
+          history && history.back();
+        }
+      }
     });
 
 

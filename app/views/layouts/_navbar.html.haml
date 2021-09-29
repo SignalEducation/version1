@@ -34,7 +34,10 @@
               -if current_user&.preferred_exam_body_id && !current_user&.valid_access_for_exam_body?(current_user&.preferred_exam_body_id, current_user&.preferred_exam_body&.group&.id)
                 %li.nav-item
                   =link_to pricing_url(current_user&.preferred_exam_body&.group&.name_url), class: 'nav-link upgrade-btn' do
-                    %span Upgrade Now
+                    -if current_user&.preferred_exam_body&.group&.name
+                      %span="Upgrade your #{current_user&.preferred_exam_body&.group&.name} Subscription"
+                    -else
+                      %span="Upgrade now"
               %li.nav-item.dropdown
                 %a#navbarDropdown.navbar-login.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
                   %span.navbar-login-userIcon
