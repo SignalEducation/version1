@@ -36,6 +36,8 @@ class LibraryController < ApplicationController
         @subscription_plans =
           SubscriptionPlan.where(subscription_plan_category_id: nil, exam_body_id: @group.exam_body_id).
             includes(:currency).in_currency(@currency_id).all_active.all_in_display_order.limit(3)
+
+        @products = Product.for_group(@group.id).where(product_type: :lifetime_access).includes(:currency).in_currency(@currency_id).all_active
       end
     else
       redirect_to root_url
