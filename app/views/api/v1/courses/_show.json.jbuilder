@@ -20,6 +20,7 @@ json.course do
               json.id   lesson.id
               json.name lesson.name
               json.url  lesson.name_url
+              json.free lesson.free
 
               json.steps do
                 if lesson.course_steps.includes(:course_video).present?

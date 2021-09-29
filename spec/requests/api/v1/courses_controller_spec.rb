@@ -137,7 +137,7 @@ RSpec.describe 'Api::V1::CoursesController', type: :request do
         expect(lesson['id']).to eq(course_lesson_1.id)
         expect(lesson['name']).to eq(course_lesson_1.name)
         expect(lesson['url']).to eq(course_lesson_1.name_url)
-        expect(lesson.keys).to eq(%w[id name url steps])
+        expect(lesson.keys).to eq(%w[id name url free steps])
 
         expect(lesson_steps.size).to eq(6)
         expect(lesson_steps.map { |s| s['id'] }).to include(course_step_2.id)
