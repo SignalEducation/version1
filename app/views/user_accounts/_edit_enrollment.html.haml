@@ -1,13 +1,13 @@
 .modal.fade{id: "enrollment-edit-modal-#{enrollment.id}", "aria-hidden" => "true", "aria-labelledby" => "enrollment-edit-modal-#{enrollment.id}", :role => "dialog", :tabindex => "-1"}
   .modal-dialog{:role => "document"}
-    .modal-content
-      %button.btn.btn-text.modal-close.p-0{"data-dismiss" => "modal"}
+    .modal-content.editEnrollment
+      %button.btn.btn-icon.modal-close{"data-dismiss" => "modal"}
         %i.material-icons{"aria-hidden" => "true"} close
-      .modal-header
-        %h3.text-gray2.mb-4{class: "enrollmentEdit-#{enrollment.id}"}
+      .modal-header.p-0
+        %h3.text-gray1.mb-4{class: "enrollmentEdit-#{enrollment.id}"}
           =enrollment.course.name
-      .modal-body
-        =form_for(enrollment, html: {class: 'py-2', role: 'form'}) do |f|
+      .modal-body.p-0
+        =form_for(enrollment, html: {class: 'py-0', role: 'form'}) do |f|
           .py-3
             -if enrollment.computer_based_exam
               .form-group
@@ -21,7 +21,7 @@
               .form-group
                 =f.label :exam_sitting_id, t('views.enrollments.form.edit_exam_sitting')
                 .input-group.input-group-lg
-                  =f.collection_select :exam_sitting_id, enrollment.alternate_exam_sittings, :id, :formatted_date, {include_blank: t('views.general.select')}, {class: 'form-control', id: 'exam_sitting_select'}
+                  =f.collection_select :exam_sitting_id, enrollment.alternate_exam_sittings, :id, :formatted_date, {include_blank: t('views.general.select')}, {class: 'form-control custom-select', id: 'exam_sitting_select'}
 
             .form-group
               %label
@@ -30,8 +30,8 @@
 
 
 
-          .pt-2.d-flex.flex-wrap.flex-sm-nowrap.justify-content-between
+          .pt-2.d-flex.flex-wrap.flex-sm-nowrap.justify-content-end
             %div
               =f.submit t('views.general.save_changes'), class: 'btn btn-primary btn-sm float-left mb-2', id: 'enroll_now'
-            %div
-              %button.btn.btn-secondary.btn-sm.float-right.mb-2{'data-dismiss' => "modal"} Cancel
+            -# %div
+            -#   %button.btn.btn-secondary.btn-sm.float-right.mb-2{'data-dismiss' => "modal"} Cancel

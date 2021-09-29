@@ -1,31 +1,67 @@
 %main
-  %article.courses.bg-white
-    .container
-      %header
-        .d-flex.flex-wrap.flex-sm-nowrap.justify-content-between.py-4.py-md-5
-          -if @course.parent
-            .mw-0
-              =link_to library_special_link(@course.parent), class: 'btn btn-secondary btn-sm btn-sm-arrow-left mb-3 mb-sm-0' do
-                =@course.parent.name
-
+  %article.courses.coursePage-container
+    .breadCrumbs.hidden-xs
+      -if @course.parent
+        .mw-0.container
+          =link_to library_url, class: 'courseWrapper-backBtn' do
+            .courseWrapper-backBtn-text
+              Library
+          .courseWrapper-backBtn-icon.i.material-icons keyboard_arrow_right
+          =link_to library_special_link(@course.parent), class: 'courseWrapper-backBtn' do
+            .courseWrapper-backBtn-text
+              =@course.parent.name
+          .courseWrapper-backBtn-icon.i.material-icons keyboard_arrow_right
+          .courseWrapper-backBtn
+            .courseWrapper-backBtn-text
+              =@course.name
+    -# .breadCrumbs.visible-xs
+    -#   -if @course.parent
+    -#     .mw-0.container
+    -#       =link_to library_special_link(@course.parent), class: 'courseWrapper-backBtn' do
+    -#         .courseWrapper-backBtn-text
+    -#           .i.material-icons{:style => "font-size: 14px;margin-right: 8px;"} arrow_back
+    -#           %span
+    -#             Back
+    .container.pt-2
+      %header.coursePage-container-header
+        .mw-0.preview-upgrade-btn
           -if @exam_body.has_sittings && @new_enrollment && (@computer_exam_sitting || @exam_sittings)
-            .mw-0.preview-upgrade-btn
-              %a#enrol-top{data: {target: '#enrollment-modal', toggle: 'modal'}, href: '#', class: 'btn btn-secondary btn-sm mb-3 mb-sm-0 non-upgrade'}
-                Enrol
-              =render partial: 'course_enrollment_modal'
-              =render partial: 'register_upgrade_links', locals: { user: current_user }
+            %a#enrol-top{data: {target: '#enrollment-modal', toggle: 'modal'}, href: '#', class: 'btn btn-secondary btn-sm non-upgrade mr-2'}
+              Enrol
+            %a{data: {target: '#enrollment-modal', toggle: 'modal'}, href: '#', class: 'btn btn-secondary btn-sm upgrade-resp-enroll-btn upgrade-btn-flt'}
+              Enrol
+            -# =render partial: 'course_enrollment_modal'
+          -if @course_log && @course_log&.latest_course_step && @course_log&.latest_course_step&.next_element
+            =link_to 'Resume', course_special_link(@course_log.latest_course_step.next_element, @course_log), class: 'btn btn-primary btn-sm'
+
 
         .pt-3
-          %h1.h1-hero
-            =@course.name
+          %div.courseWrapper-courseInfo.mb-2
+            %div.courseWrapper-courseIcon
+              %div.courseWrapper-courseIconSquircleBG
+                %svg{:viewbox => "0 0 200 200", :xmlns => "http://www.w3.org/2000/svg"}
+                  %path{:d => "\r\n                M 0, 100\r\n                C 0, 25 25, 0 100, 0\r\n                S 200, 25 200, 100\r\n                    175, 200 100, 200\r\n                    0, 175 0, 100\r\n            ", :fill => "#{@course.level.highlight_colour}", :transform => "rotate(\r\n                0,\r\n                100,\r\n                100\r\n            ) translate(\r\n                0\r\n                0\r\n            )"}
+              %i{"aria-label" => @course.level.icon_label, :role => "img", class: @course.level.icon_label ? @course.level.icon_label : 'budicon-office-bag-c', style: "color: #FFF;"}
+            %div.position-relative.courseWrapper-parentWrapper
+              %div.courseWrapper-parent
+                .courseWrapper-examName
+                  =@course.parent.name
+                .courseWrapper-backBtn-dot •
+                .courseWrapper-levelName{style: "color: #{@course.level.highlight_colour};"}
+                  =@course.level.name
+              %h1.h1-hero
+                =@course.name
 
-      %section.course-progress
-        - if @course_log
+
+      - if @course_log
+        %section.course-progress.col-sm-8.col-xl-8.p-0
           =render partial: 'progress'
-        - else
+      - else
+        %section.course-progress.col-sm-8.col-xl-12.p-0
           =render partial: 'course_info'
-      %nav.courses-nav
-        %ul.nav.nav-tabs{id: 'coursesTabs', role: 'tablist'}
+
+      %nav.courses-nav.js-courses-nav-anchor
+        %ul.nav.nav-tabs.js-courses-nav{id: 'coursesTabs', role: 'tablist'}
           - @course.course_sections.all_active.all_in_order.each_with_index do |course_section, counter|
             %li.nav-item{data: {tab_name: course_section.name, course_name: @course.name}}
               -# TODO add active to first li
@@ -39,108 +75,126 @@
           -if @products && @products.any?
             %li.nav-item{data: {tab_name: 'Products', course_name: @course.name}}
               %a{href: "#products", role: 'tab', class: 'nav-link', data: {toggle: 'tab'}, aria: {controls: "products", selected: 'false'}}
-                ='Products'
+                ='Product (Add-ons)'
 
-          -#%li.nav-item
-            %a#locked-tab.nav-link.locked{"aria-controls" => "locked", "aria-selected" => "false", "data-toggle" => "tab", :href => "#locked", :role => "tab"}
-              Locked
 
 =render partial: 'library/user_form_modal', locals: { ticket_type: 'Contact Us', form_id: 'contact-form-modal' }
-.bg-gray5
-  .container.py-5.py-sm-6
+.coursePage-moduleDetailWrapper
+  .container.py-4.py-sm-4.pb-6
     #coursesTabsContent.tab-content
       - @course.course_sections.all_active.all_in_order.each_with_index do |course_section, counter|
         .tab-pane{id: course_section.name_url, class: "tab-#{course_section.name_url} #{counter == 0 ? 'active show' : ''} ", "aria-labelledby" => "#{course_section.name_url}-tab", :role => "tabpanel"}
+          - if course_section.name_url == 'learning-tab'
+            %h3.text-gray1.mb-4.mb-sm-5
+              Learning Modules
           .row.row-lg
-            .col-xl-8
+            .col-sm-8.col-xl-8
               .mb-5.mb-xl-0
                 - course_section.course_lessons.all_valid.all_in_order.each_with_index do |course_lesson, counter|
                   =render partial: 'course_lesson', locals: { course_lesson: course_lesson, counter: counter, count: course_section.course_lessons.all_valid.count }
 
-            .col-xl-4.mb-5.custom-upgrade
+            .col-sm-4.col-xl-4.mb-4.custom-upgrade
               =render partial: 'register_upgrade_links', locals: { user: current_user }
+              
+              -# Ask the Tutor CTA
+              %a{class: 'btn btn-outline btn-sm mr-2 w-100 py-3', 'data-target' => '#contact-form-modal', 'data-toggle' => 'modal', :href => '#'}
+                =@exam_body&.help_text
 
-              %aside.lesson-preview-btn-pad
-                .btn.btn-secondary.btn-sm.mb-5{'data-target' => '#contact-form-modal', 'data-toggle' => 'modal', :href => '#'}
-                  =@exam_body&.help_text
       -if @course_resources.any?
         =# VueJS include
         =javascript_pack_tag 'pdf_viewer'
 
         .tab-pane.tab-resources{id: 'resources', role: 'tabpanel', 'aria-labelledby': 'resources-tab'}
           %section.mb-5
-            %h3.text-gray1.mb-4.mb-sm-5 Course Resources
+            %h3.text-gray1.mb-4.mb-sm-4 Course Resources
             .row.row-lg
               - @course_resources.each do |resource|
                 - if current_user
                   - if @valid_subscription
-                    =pdf_viewer(resource, @banner.present?.to_s, current_user)
+                    =pdf_viewer(resource, @banner.present?.to_s, current_user, @valid_subscription)
                   - else
                     - permission = resource.available_to_user(current_user, @valid_subscription)
                     - if  permission[:view]
-                      =pdf_viewer(resource, @banner.present?.to_s, current_user)
+                      =pdf_viewer(resource, @banner.present?.to_s, current_user, false)
                     - else
-                      .col-sm-6
-                        %a.card.card-horizontal.card-horizontal-sm.flex-row.resource-card{data: {target: "##{permission[:reason]}", toggle: 'modal', resource_name: resource.name, resource_id: resource.id,
+                      .col-md-4.col-lg-3.mb-4.px-3
+                        %a.productCard{data: {target: "##{permission[:reason]}", toggle: 'modal', resource_name: resource.name, resource_id: resource.id,
                          course_name: resource.course.name, course_id: resource.course_id, exam_body_name: resource.course.exam_body.name, exam_body_id: resource.course.exam_body_id, resource_type: resource.type,
                           preferred_exam_body_id: current_user&.preferred_exam_body_id, preferred_exam_body: current_user&.preferred_exam_body&.name, banner: @banner.present?.to_s, onboarding: current_user&.analytics_onboarding_valid?.to_s,
                           allowed: 'false'}, href: '#'}
-                          .card-header.bg-white.d-flex.align-items-center.justify-content-center
-                            %i.budicon-files-download{"aria-label" => "", :role => "img"}
-                          .card-body.d-flex.align-items-center.pl-1
-                            %h5.m-0.text-truncate.text-gray2
+                          .productCard-header.d-flex.align-items-center.justify-content-center
+                            -# Change image for Downloadable resouses
+                            =image_tag('course-addon-icons/addon-exams.svg')
+                          .productCard-body.d-flex.align-items-center
+                            %div
                               =resource.name
+                            .productCard-footer.d-flex.align-items-center.justify-content-between
+                              .d-flex.flex-column.align-items-start.justify-content-start
+                                %span{style: 'color: #6d5902;background-color: #f9e9af;font-size: 12px;border-radius: 4px;padding: 2px 8px;padding-top: 4px;letter-spacing: 1px;font-weight: 600;line-height: 1.7;display: inline-flex;column-gap: 6px;'}
+                                  LOCKED
                 - else
-                  .col-sm-6
-                    %a.card.card-horizontal.card-horizontal-sm.flex-row.resource-card{data: {target: '#account-required', toggle: 'modal', href: '#', resource_name: resource.name, resource_id: resource.id,
+                  .col-md-4.col-lg-3.mb-4.px-3
+                    %a.productCard{data: {target: '#account-required', toggle: 'modal', href: '#', resource_name: resource.name, resource_id: resource.id,
                      preferred_exam_body_id: current_user&.preferred_exam_body_id, preferred_exam_body: current_user&.preferred_exam_body&.name, banner: @banner.present?.to_s, onboarding: current_user&.analytics_onboarding_valid?.to_s,
                      course_name: resource.course.name, course_id: resource.course_id, exam_body_name: resource.course.exam_body.name, exam_body_id: resource.course.exam_body_id, resource_type: resource.type, allowed: 'false'}}
-                      .card-header.bg-white.d-flex.align-items-center.justify-content-center
-                        %i.budicon-files-download{"aria-label" => "", :role => "img"}
-                      .card-body.d-flex.align-items-center.pl-1
-                        %h5.m-0.text-truncate.text-gray2
+                      .productCard-header.d-flex.align-items-center.justify-content-center
+                        -# Change image for Downloadable resouses
+                        =image_tag('course-addon-icons/addon-exams.svg')
+                      .productCard-body.d-flex.align-items-center
+                        %div
                           =resource.name
+                        .productCard-footer.d-flex.align-items-center.justify-content-between
+                          .d-flex.flex-column.align-items-start.justify-content-start
+                            %span{style: 'color: #6d5902;background-color: #f9e9af;font-size: 12px;border-radius: 4px;padding: 2px 8px;padding-top: 4px;letter-spacing: 1px;font-weight: 600;line-height: 1.7;display: inline-flex;column-gap: 6px;'}
+                              LOCKED
 
 
       -if @products && @products.any?
         .tab-pane.tab-products{id: 'products', role: 'tabpanel', 'aria-labelledby': 'products-tab'}
           %section.mb-5
-            %h3.text-gray1.mb-4.mb-sm-5 Exam Preparation Products
+            %h3.text-gray1.mb-4.mb-sm-4 Product (Add-ons)
             .row.row-lg
-
               - @correction_pack_products.each do |product|
-                .col-sm-6
-                  =link_to product_checkout_special_link(product.group.exam_body.id, product.id), class: 'card card-horizontal card-horizontal-sm flex-row' do
-                    .card-header.bg-white.d-flex.align-items-center.justify-content-center
-                      %i.budicon-files-tick{"aria-label" => "", :role => "img"}
-                    .card-body.d-flex.align-items-center.pl-1
-                      %h5.m-0.text-truncate.text-gray2
+                .col-md-4.col-lg-3.mb-4.px-3
+                  =link_to product_checkout_special_link(product.group.exam_body.id, product.id), class: 'productCard' do
+                    .productCard-header.d-flex.align-items-center.justify-content-center
+                      =image_tag('course-addon-icons/addon-correction-pack.svg')
+                    .productCard-body.d-flex.align-items-center
+                      %div
                         =product.mock_exam.try(:name)
+                      .productCard-footer.d-flex.align-items-center.justify-content-between
+                        .d-flex.flex-column.align-items-start.justify-content-start
+                          %span{style: 'font-size: 12px;color: #9CA3AF;font-weight: 500;'} Price
+                          =number_in_local_currency(product.price, product.currency)
+                        .btn.btn-primary.productCard--buyBtn
+                          Buy
 
               - @mock_exam_products.each do |product|
-                .col-sm-6
-                  =link_to product_link(product, current_user), class: 'card card-horizontal card-horizontal-sm flex-row' do
-                    .card-header.bg-white.d-flex.align-items-center.justify-content-center
-                      %i.budicon-files-tick{"aria-label" => "", :role => "img"}
-                    .card-body.d-flex.align-items-center.pl-1
-                      %h5.m-0.text-truncate.text-gray2
+                .col-md-4.col-lg-3.mb-4.px-3
+                  =link_to product_link(product, current_user), class: 'productCard' do
+                    .productCard-header.d-flex.align-items-center.justify-content-center
+                      =image_tag('course-addon-icons/addon-exams.svg')
+                    .productCard-body.d-flex.align-items-center
+                      %div
                         =product.name_by_type
-
-
-      -#locked.tab-pane.tab-locked{"aria-labelledby" => "locked-tab", :role => "tabpanel"}
-        %h4.sr-only This is placeholder Locked content
-
-
+                      .productCard-footer.d-flex.align-items-center.justify-content-between
+                        .d-flex.flex-column.align-items-start.justify-content-start
+                          %span{style: 'font-size: 12px;color: #9CA3AF;font-weight: 500;'} Price
+                          =number_in_local_currency(product.price, product.currency)
+                        .btn.btn-primary.productCard--buyBtn
+                          Buy
 
 -# Modals
 =render partial: 'account_required_modal'
 =render partial: 'pricing_modal'
 - if current_user
   =render partial: 'subscription_restriction_modal'
-  =render partial: 'verification_restriction_modal'
+  =render partial: 'verification_restriction_modal', locals: { onload: false }
   =render partial: 'related_lesson_restriction_modal'
-- if @welcome_video
-  =render partial: 'welcome_video_modal'
+  -if @exam_body.has_sittings && @new_enrollment && (@computer_exam_sitting || @exam_sittings)
+    =render partial: 'course_enrollment_modal'
+-# - if @welcome_video
+-#   =render partial: 'welcome_video_modal'
 :javascript
   $(document).ready(function(){
 
@@ -170,6 +224,26 @@
           }, 1);
       }
     }
+
+
+    // Sticky Nav
+    var $anchor = $(".js-courses-nav-anchor");
+    var $scroller = $('.js-courses-nav');
+
+    var move = function() {
+        var st = $(window).scrollTop();
+        var ot = $anchor.offset().top + 2;
+        if(st > ot) {
+            $scroller.addClass('fixedToTop');
+            $scroller.css({ 'padding-left': $anchor.offset().left})
+        } else {
+          $scroller.removeClass('fixedToTop');
+          $scroller.css({ 'padding-left': 0})
+        }
+    };
+    $(window).scroll(move);
+    move();
+
   });
 
 
@@ -182,3 +256,23 @@
           $('#enrollment-modal').modal('show');
         }, 900);
       });
+
+
+-if current_user && !current_user.onboarding_course && current_user.course_lesson_logs.count < 1
+  :javascript
+    
+    $(document).ready(function() {
+      $.ajax({
+        url: "#{user_update_hubspot_path(current_user.id)}",
+        method: 'post',
+        data: JSON.stringify({'custom_data': {'onboarding_course': "#{@course.name}", 'course_id': "#{@course.id}" } } ),
+        contentType: 'application/json',
+        success: function(data,status,xhr){
+          console.log(xhr)
+        },
+        error: function(xhr,status,error){
+          console.log(xhr);
+        }
+      });
+    });
+§

@@ -1,17 +1,20 @@
 #sidebar-wrapper-student.text-center
   #sidebar
     #menu
+      =link_to navigation_special_link(@course_step), class: 'sidebar-back-btn' do
+        .i.material-icons{:style => "font-size:16px; margin-right:6px;"} arrow_back
+        Back to Course
       .menu-title
         %div
-          %h3.sidebar-title{data: {destination_url: navigation_special_link(@course_step), exit_type: 'Breadcrumbs',
-           step_id: @course_step.id, step_name: @course_step.name, module_id: @course_lesson.id, module_name: @course_lesson.name, course_id: @course.id,
-             course_name: @course.name, section_id: @course_lesson&.course_section_id, section_name: @course_lesson&.course_section&.name,
-              exam_body_id: @group&.exam_body&.id, exam_body_name: @group&.exam_body&.name,
-                preferred_exam_body_id: current_user&.preferred_exam_body_id, preferred_exam_body: current_user&.preferred_exam_body&.name,
-             banner: @banner.present?.to_s, onboarding: current_user&.analytics_onboarding_valid?.to_s}}
+          %div.sidebar-title-course
             = link_to @course.name, navigation_special_link(@course_step), title: @course.name
-            = succeed @course_lesson.name do
-              %i.material-icons.color-shade{"aria-label" => "failed", :role => "img", :style => "position: relative;top: 6px;"} arrow_right
+          %div.sidebar-title-lesson
+            =@course_lesson.name
+          
+        %div.lesson-title
+          Lessons (
+          =@course_lesson.active_children.count
+          )
         #step-block
           -@course_lesson.active_children.each_with_index  do |step, index|
             - permission = step.available_to_user(current_user, @valid_subscription, @course_log)
@@ -19,112 +22,121 @@
               =link_to course_special_link(step, @course_log) do
                 .step{data: {course_step: step.name}, :class => sidepanel_border_radius(@course_step_index,index,@course_lesson.active_children.length.to_i) }
                   .step-part
-                    %div
+                    %div{:style => "height:20px;"}
                       %i.material-icons.icon-bg-round.side-nav-material-icons
                         -if @course_log
-                          %span{class: @course_log && @course_log.course_step_logs && @course_log.course_step_logs.map(&:course_step_id).include?(step.id) ? (@course_log.course_step_logs.all_completed.map(&:course_step_id).include?(step.id) ? 'small-dot' : 'small-dot-alt') : 'small-dot-neutral'}
-                        -else
-                          %span.small-dot-neutral
+                          -if @course_log.course_step_logs.all_completed.map(&:course_step_id).include?(step.id)
+                            %span.green-check-iconWrapper
+                              %i.material-icons.icon-bg-round.green-check{"aria-label" => "", :role => "img"}
+                                check
+                        
                         -if step.is_video?
-                          ondemand_video
+                          smart_display
                         -elsif step.is_quiz?
-                          playlist_add_check
+                          quiz
                         -elsif step.is_note?
-                          insert_drive_file
+                          file_present
                         -elsif step.is_practice_question?
                           dynamic_form
                         -elsif step.is_constructed_response?
                           sticky_note_2
                         -else
-                          insert_drive_file
-                    %h3.step-part-content
+                          file_present
+                    %div.step-part-content
                       =step.name
                   .color-shade.step-part-font
                     -unless step.estimated_time_in_seconds.nil? || step.estimated_time_in_seconds == 0
-                      =seconds_to_time(step.estimated_time_in_seconds)
+                      =seconds_to_time(step.estimated_time_in_seconds) 
+                      m
 
             - elsif !permission[:view] && permission[:reason] == 'invalid-subscription'
               =render partial: 'courses/navigation_restriction_link.html.haml', locals: {reason: permission[:reason], step: step, step_index: @course_step_index, index: index}
 
             - elsif !permission[:view] && permission[:reason] == 'related-lesson-restriction'
               =render partial: 'courses/navigation_restriction_link.html.haml', locals: {reason: permission[:reason], step: step, step_index: @course_step_index, index: index}
-
-      %p.sidebar-step-title#sidebar-steps-count
-        =@course_step_index
-        of
-        =@course_lesson.active_children.count
-        Steps
   #sidebar-bottom-menu
     .bottom-menu
       -if @course_lesson.next_module
-        =link_to course_special_link(@course_lesson&.next_module&.first_active_cme), class: 'btn btn-secondary btn-sm btn-sm-arrow-right mb-3 mb-sm-0', data: {destination_url: course_special_link(@course_lesson&.next_module&.first_active_cme), type: 'Next Module'} do
+        =link_to course_special_link(@course_lesson&.next_module&.first_active_cme), class: 'btn btn-primary btn-lg mb-3 mb-sm-0 w-100 font-weight-bold', data: {destination_url: course_special_link(@course_lesson&.next_module&.first_active_cme), type: 'Next Module'} do
           Next Module
 
-#sidebar-wrapper-student-responsive.text-center
+#sidebar-wrapper-student-responsive.text-left
+  .menu-overlay{onclick: "toggleLessonMenuMobile()"}
   #sidebar
     #menu
       .menu-title
         %div
-          %h3.sidebar-title{data: {destination_url: navigation_special_link(@course_step), exit_type: 'Breadcrumbs'}}
+          %div.sidebar-title-course
             = link_to @course.name, navigation_special_link(@course_step), title: @course.name
-            = succeed @course_lesson.name do
-              %i.material-icons.color-shade{"aria-label" => "failed", :role => "img", :style => "position: relative;top: 6px;"} arrow_right
-        #step-block.step-block-column
+          %div.sidebar-title-lesson
+            =@course_lesson.name
+          
+        %div.lesson-title
+          Lessons (
+          =@course_lesson.active_children.count
+          )
+        #step-block
           -@course_lesson.active_children.each_with_index  do |step, index|
             - permission = step.available_to_user(current_user, @valid_subscription, @course_log)
             - if step.course_lesson.free || permission[:view]
               =link_to course_special_link(step, @course_log) do
-                .step{data: {course_step: step.name}, class: sidepanel_border_radius(@course_step_index,index,@course_lesson.active_children.length.to_i) }
+                .step{data: {course_step: step.name}, :class => sidepanel_border_radius(@course_step_index,index,@course_lesson.active_children.length.to_i) }
                   .step-part
-                    %div
+                    %div{:style => "height:20px;"}
                       %i.material-icons.icon-bg-round.side-nav-material-icons
                         -if @course_log
-                          %span{class: @course_log && @course_log.course_step_logs && @course_log.course_step_logs.map(&:course_step_id).include?(step.id) ? (@course_log.course_step_logs.all_completed.map(&:course_step_id).include?(step.id) ? 'small-dot' : 'small-dot-alt') : 'small-dot-neutral'}
-                        -else
-                          %span.small-dot-neutral
+                          -if @course_log.course_step_logs.all_completed.map(&:course_step_id).include?(step.id)
+                            %span.green-check-iconWrapper
+                              %i.material-icons.icon-bg-round.green-check{"aria-label" => "", :role => "img"}
+                                check
+                        
                         -if step.is_video?
-                          ondemand_video
+                          smart_display
                         -elsif step.is_quiz?
-                          playlist_add_check
+                          quiz
                         -elsif step.is_note?
-                          insert_drive_file
+                          file_present
                         -elsif step.is_practice_question?
                           dynamic_form
                         -elsif step.is_constructed_response?
                           sticky_note_2
                         -else
-                          insert_drive_file
-                    %h3.step-part-content
+                          file_present
+                    %div.step-part-content
                       =step.name
                   .color-shade.step-part-font
                     -unless step.estimated_time_in_seconds.nil? || step.estimated_time_in_seconds == 0
                       =seconds_to_time(step.estimated_time_in_seconds)
+                      m
 
             - elsif !permission[:view] && permission[:reason] == 'invalid-subscription'
               =render partial: 'courses/navigation_restriction_link.html.haml', locals: {reason: permission[:reason], step: step, step_index: @course_step_index, index: index}
 
             - elsif !permission[:view] && permission[:reason] == 'related-lesson-restriction'
               =render partial: 'courses/navigation_restriction_link.html.haml', locals: {reason: permission[:reason], step: step, step_index: @course_step_index, index: index}
-
-      #sidebar-bottom-menu
-        %p.sidebar-step-title
-          =@course_step_index
-          of
-          =@course_lesson.active_children.count
-          Steps
-        .bottom-menu
-          -if @course_lesson.next_module
-            =link_to course_special_link(@course_lesson&.next_module&.first_active_cme), class: 'btn btn-secondary btn-sm btn-sm-arrow-right mb-3 mb-sm-0', data: {destination_url: navigation_special_link(@course_step), type: 'Next Module'} do
-              Next Module
+    #sidebar-bottom-menu
+      .bottom-menu.border-top
+        .btn.lessonMenu-btn.js-lessonMenu-btn{onclick: "toggleLessonMenuMobile()"}
+          %i.material-icons{"aria-hidden" => "true", style: "font-size: 16px;margin-right: 4px;"} close
+          Close
+        -if @course_lesson.next_module
+          =link_to course_special_link(@course_lesson&.next_module&.first_active_cme), class: 'btn btn-primary btn-sm btn-sm-arrow-right', data: {destination_url: navigation_special_link(@course_step), type: 'Next Module'} do
+            Next Module
 
 :javascript
   $(document).ready(function(){
 
    setTimeout(function(){
      if (screen.width <= 768) {
-      var divA = document.getElementById('course-right-show-elem-notes').offsetHeight;
-      var divB = document.getElementById('sidebar-wrapper-student-responsive').offsetHeight;
-      document.getElementById('console-wrapper-sidebar').style.height = String(divA + divB) + 'px'
+      // var divA = document.getElementById('course-right-show-elem-notes').offsetHeight;
+      // var divB = document.getElementById('sidebar-wrapper-student-responsive').offsetHeight;
+      // document.getElementById('console-wrapper-sidebar').style.height = String(divA + divB) + 'px'
      }
     }, 100);
+    function toggleLessonMenuMobile() {
+      $("#sidebar-wrapper-student-responsive").toggleClass("active");
+    }
+    function toggleLessonMenuMobileOverlay() {
+      $("#sidebar-wrapper-student-responsive").toggleClass("active");
+    }
   });

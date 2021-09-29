@@ -1,46 +1,57 @@
 %article.card
   .card-body
-    %h2.mb-4.text-gray2
-      Subscription Payment Cards
-    .table-responsive
-      %table.table
-        %thead
-          %tr
-            %th
-              Ending In
-            %th
-              Expiration
-            %th
-              Status
-            %th
-
-
-        %tbody
-          -@subscription_payment_cards.each do |card|
+    -if @subscription_payment_cards.length > 0
+      .table-responsive.my-2
+        %table.table
+          %thead
             %tr
-              %td
-                =card.last_4
-              %td
-                =card.expiry_month
-                &#45;
-                =card.expiry_year
-              %td
-                -if !card.status == 'expired'
-                  Card Expired
-                -else
-                  -if card.is_default_card?
-                    Active
+              %th
+                Ending In
+              %th
+                Status
+              %th
+
+
+          %tbody
+            -@subscription_payment_cards.each do |card|
+              %tr
+                %td
+                  %div.payment-content.mb-2
+                    =image_tag('ico-card.svg', alt: 'Credit Card Icon', class: 'logo-icon mr-2 mr-sm-2')
+                    %span.mr-2.text-bold
+                      =card.brand
+                    &#8226;&#8226;&#8226;
+                    &nbsp;
+                    =card.last_4
+                  %div.payment-content.mt-2.pt-2
+                    Expiration: 
+                    =card.expiry_month
+                    ="/" 
+                    =card.expiry_year
+                %td
+                  -if !card.status == 'expired'
+                    Card Expired
                   -else
-                    =link_to t('views.users.show.use_this_card'), subscription_payment_card_path(id: card.id,
-                     subscription_payment_card: {make_default_card: true}),
-                      method: :put, data: {confirm: t('views.users.show.confirm_use_this_card')}, class: 'btn btn-xs btn-secondary'
-              %td
-                -if card.destroyable?
-                  =link_to t('views.users.show.remove_this_card'), card, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-xs btn-danger'
+                    -if card.is_default_card?
+                      Active
+                    -else
+                      =link_to t('views.users.show.use_this_card'), subscription_payment_card_path(id: card.id,
+                      subscription_payment_card: {make_default_card: true}),
+                        method: :put, data: {confirm: t('views.users.show.confirm_use_this_card')}, class: 'btn btn-xs btn-secondary'
+                %td
+                  -if card.destroyable?
+                    =link_to t('views.users.show.remove_this_card'), card, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-xs btn-danger'
 
+    -else
+      .zeroCaseWrapper
+        .zeroCaseWrapper-image
+          =image_tag('illustrations/zero-case-illustration@2x.png', alt: 'could not find anything')
+        .zeroCaseWrapper-infoBox
+          .zeroCaseWrapper-infoBox-title
+            You haven't added any Cards yet
+          .zeroCaseWrapper-infoBox-desc
+            Add your preferred cards for a faster checkout
 
-
-    #add-card.col-md-12.l-margin-top-big
-
+    #add-card.col-md-12.l-margin-top-big.text-center
       %a{data: {target: '#add-card-modal', toggle: 'modal'}, href: '#', class: 'btn btn-primary btn-sm add-card'}
         =t('views.users.show.new_card')

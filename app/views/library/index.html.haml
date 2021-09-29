@@ -1,26 +1,37 @@
 %main
-  %article.library.bg-gray5
-    .container
-      %header.hero-section
-        %h1.h1-hero.mb-3 Explore our courses
-        %p.p-hero.px-lg-6 Discover our professional courses designed by experts and delivered online so that you can study on a schedule that suits your needs.
+  %article.libraryMainWrapper.bg-gray5
+    %header.libraryMainWrapper-hero
+      .container.libraryMainWrapper-heroInfoWrapper.text-center
+        .heroTitle
+          Explore our courses
+        %p.heroDesc
+          Discover our professional courses designed by experts and delivered online so that you can study on a schedule that suits your needs.
 
-      %section.pb-md-6
-        %h2.sr-only List of courses
-        .row.justify-content-center
-          -@groups.each do |group|
-            .col-lg-4
-              %article.card.card-primary.card-pink
+    %section.pb-md-6.container
+      %h2.sr-only List of courses
+      .row.justify-content-center
+        -@groups.each do |group|
+          .col-md-6.col-lg-4
+            =link_to library_special_link(group), class: 'libraryMainWrapper-card' do
+              .cardImage
                 =image_tag(group.image.url, class: 'card-img-top', alt: 'People in front of the blackboard', style: "border-bottom-color: #{group.background_colour};")
-                .card-body.text-center
-                  %h2.h1.card-title
-                    =group.name
-                  %p
-                    =group.description
-                  .mt-auto
-                    =link_to 'Browse Courses', library_special_link(group), class: 'btn btn-secondary btn-sm'
-
-
+              .card-body.text-left
+                .card-examLogo
+                  - if group.name == 'ACCA'
+                    =image_tag('learning-partner-badge.png', alt: 'ACCA Logo')
+                  - if group.name == 'CIMA'
+                    =image_tag('cima-logo-square.png', alt: 'CIMA Logo')
+                  - if group.name == 'FRM'
+                    =image_tag('FRM_logo.png', alt: 'FRM Logo')
+                  - if group.name == 'AAT'
+                    =image_tag('AAT_Approved.png', alt: 'AAT Logo')
+                %div.card-title
+                  =group.name
+                %p.card-desc
+                  =group.description
+                .mt-auto.text-right
+                  .btn.btn-secondary.btn-sm
+                    Browse
 
 
   -unless current_user

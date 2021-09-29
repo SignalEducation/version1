@@ -39,7 +39,7 @@ describe 'Video Course Step', type: :feature do
       expect(page).to have_selector('div', text: 'keyboard_arrow_left')
 
       within('.sidebar-nav-btn-right') do
-        expect(page).to have_selector('div', text: 'keyboard_arrow_right')
+        expect(page).to have_selector('div', text: 'arrow_forward')
       end
     end
   end

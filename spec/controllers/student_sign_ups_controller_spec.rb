@@ -119,21 +119,21 @@ RSpec.describe StudentSignUpsController, type: :controller do
       # Stripe Customer Create
       describe 'invalid data' do
         it 'does not subscribe user if user with same email already exists' do
-          request.env['HTTP_REFERER'] = '/en/student_new'
+          request.env['HTTP_REFERER'] = '/student_new'
           post :create, params: { user: sign_up_params.merge(email: student_user.email) }
           expect(response.status).to eq(302)
           expect(response).to redirect_to(request.referer)
         end
 
         it 'does not subscribe user if password is blank' do
-          request.env['HTTP_REFERER'] = '/en/student_new'
+          request.env['HTTP_REFERER'] = '/student_new'
           post :create, params: { user: sign_up_params.merge(password: nil) }
           expect(response.status).to eq(302)
           expect(response).to redirect_to(request.referer)
         end
 
         it 'does not subscribe user if password is not of required length' do
-          request.env['HTTP_REFERER'] = '/en/student_new'
+          request.env['HTTP_REFERER'] = '/student_new'
           post :create, params: { user: sign_up_params.merge(password: '12345') }
           expect(response.status).to eq(302)
           expect(response).to redirect_to(request.referer)
@@ -156,7 +156,8 @@ RSpec.describe StudentSignUpsController, type: :controller do
           post :create, params: { user: sign_up_params }
           user = assigns(:user)
           expect(response.status).to eq(302)
-          expect(response).to redirect_to(personal_sign_up_complete_url(account_activation_code: user.account_activation_code))
+          expect(response).to redirect_to(student_dashboard_url)
+          # expect(response).to redirect_to(personal_sign_up_complete_url(account_activation_code: user.account_activation_code))
           expect(User.all.count).to eq(user_count + 1)
 
           # expect(a_request(:post, stripe_url).with(body: stripe_request_body)).to have_been_made.once

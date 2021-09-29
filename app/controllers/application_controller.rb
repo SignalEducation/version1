@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
   before_action :set_locale        # not for Api::
   before_action :set_session_stuff # not for Api::
   before_action :set_layout_variables
-  before_action :authorize_rack_profiler
+  # before_action :authorize_rack_profiler
 
   helper_method :current_user_session, :current_user
 
@@ -65,7 +65,7 @@ class ApplicationController < ActionController::Base
     @layout ||= 'standard'
     @navbar = 'standard'
     @top_margin = true
-    @footer = 'standard'
+    @footer = 'white'
     @chat   = true
     @groups = Group.includes(:exam_body).all_active.with_active_body.all_in_order
     @footer_content_pages = ContentPage.all_active.for_footer
@@ -167,12 +167,11 @@ class ApplicationController < ActionController::Base
   #### Locale
 
   def set_locale
-    I18n.locale = params[:locale] || I18n.default_locale
+    I18n.locale = I18n.default_locale
   end
 
   def default_url_options(options = {})
-    Rails.logger.debug "DEBUG: ApplicationController#default_url_options: Received options: #{options.inspect}\n"
-    { locale: I18n.locale }
+    { locale: nil }
   end
 
   #### Session GUIDs and user tracking
@@ -344,7 +343,7 @@ class ApplicationController < ActionController::Base
   def user_course_correct_url(the_thing, scul = nil)
     return new_student_url unless current_user
 
-    if current_user.non_verified_user? # current_user.non_verified_user?
+    if current_user.show_verify_email_message? && current_user.verify_remain_days.zero? && !current_user.valid_subscription?
       library_course_url(the_thing.course_lesson.course_section.course.group.name_url,
                          the_thing.course_lesson.course_section.course.name_url,
                          anchor: 'verification-required')

@@ -21,7 +21,7 @@ class UserAccountsController < ApplicationController
       # and where enrolments exist for this user
     #  @user.exam_body_user_details.build(exam_body_id: exam_body.id)
     #end
-    seo_title_maker('View Your Account Details | LearnSignal',
+    seo_title_maker('My Account | LearnSignal',
                     'Log in to view your learnsignal account details including personal information, account information, orders, enrolments and referral program.',
                     false)
 

@@ -1,24 +1,29 @@
+%header.header.visible-xs
+  %nav.fixed-top
+    .navbar.navbar-expand-lg
+      =render partial: 'mobile_nav'
 %main.sidebar-right-main
-  =render partial: 'mobile_nav'
-  %article#sidebar-right-content.courses.bg-gray5
+  %article#sidebar-right-content.courses
     .courses-container
-      %div.course-show-external-banner#courses-show-external-banner
-        =render partial: 'layouts/external_banner'
-      %header
-        .d-flex.flex-wrap.flex-sm-nowrap.justify-content-between.py-4.py-md-5
+      -# %div.course-show-external-banner#courses-show-external-banner
+      -#   =render partial: 'layouts/external_banner'
+      %header.main-header
+        .main-header-content
           -if @course_step
-            =render partial: 'prev_lesson_navigation'
+            .header-title
+              =@course_step.name
 
           -if @course_step
-            .pt-3.sidebar-right-title
-              %h1.h3
-                =@course_step.name
-
-          .right-topbar-item.color-shade.course-nav-helpers{onclick: "openZendesk()"}
-            %i.material-icons.icon-bg-round{"aria-label" => "failed", :role => "img", :title => "Contact Us"}help_outline
-
+            .main-header-actions
+              =render partial: 'next_lesson_navigation'
+      %header.main-header-mobile
+        .main-header-content
           -if @course_step
-            =render partial: 'next_lesson_navigation'
+            .main-header-actions
+              .lessonMenu-btn.js-lessonMenu-btn{onclick: "toggleLessonMenuMobile()"}
+                %i.material-icons{"aria-hidden" => "true", style: "font-size: 16px;margin-right: 4px;"} subject
+                Menu
+              =render partial: 'next_lesson_navigation_mobile'
 
       %section.course-content
         -if defined?(@results)
@@ -68,12 +73,15 @@
   :javascript
 
     function upgradeClose() {
-      console.log('Upgrade Close');
       $("#upgrade-subscription-modal").css("display", "none");
     }
 
     function openZendesk() {
       $zopim.livechat.window.show()
+    }
+
+    function toggleLessonMenuMobile() {
+      $("#sidebar-wrapper-student-responsive").toggleClass("active");
     }
 
     courseStepLoaded("#{@course_step&.type_name}");

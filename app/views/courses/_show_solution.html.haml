@@ -53,7 +53,7 @@
           %i.material-icons.icon-bg-round.color-shade{"aria-label" => "failed", :role => "img", :style => "margin-left:1px"} check
           %p=render partial: 'quiz_contents/index', locals: {contents: attempt.quiz_question.quiz_solutions}
 
-  .panel.panel-default.border-same-backcolor
+  #quiz-window.panel.panel-default.border-same-backcolor
     .list-group
       -if attempt.try(:quiz_question).try(:quiz_answers)
         -attempt.answers.includes(:quiz_contents).each_with_index do |qa, counter2|
