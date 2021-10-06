@@ -30,7 +30,7 @@
                           %div.planInfoWrapper
                             %div.planTitleWrapper
                               %div.planTitle
-                                Premium 
+                                Premium
                                 %span.greenShade=t("views.general.payment_intervals.a#{plan.payment_frequency_in_months}")
                                 Plan
                             %p.priceValue.mb-0.pb-4{class: @subscription_plans.length < 2 && 'mt-0'}
@@ -43,10 +43,10 @@
                                     Most popular
                                 -if plan.monthly_percentage_off
                                   %span.priceValue-savingPill.mt-1
-                                    Save 
+                                    Save
                                     =plan.monthly_percentage_off
                                     ='%'
-                          
+
                           .bulletListTitle.hidden-xs ⚡️ What do you get
                           %ul.hidden-xs.list-centered.text-left.bulletList{class:@subscription_plans.length < 2 && 'noPlanNav'}
                             -if plan.bullet_points_list && !plan.bullet_points_list.empty?
@@ -65,7 +65,7 @@
                                 .bulletIcon •
                                 %span="24/7 tutor support"
 
-                          
+
                           -unless plan.exam_body.name == "CPD"
                             %p.preCtaText
                               Recurring Payment. Cancel Anytime
@@ -99,7 +99,6 @@
                                         .bulletIcon •
                                         %span="24/7 tutor support"
 
-              
               -# LIFETIME CARD
               -@products.each do |product|
                 -link = product_link(product, current_user, params[:login])
@@ -117,7 +116,7 @@
                         %p.priceValue.mb-0.pb-4.mt-0
                           %span.priceValue-actualPrice
                             =number_in_local_currency(product.price, product.currency)
-                      
+
                       .bulletListTitle.hidden-xs ⚡️ What do you get
                       %ul.hidden-xs.list-centered.text-left.bulletList
                         %li.mb-3
@@ -176,7 +175,7 @@
                   .tab-pane{id: "examBodytab-#{exam_body.group.name_url}", class: "tab-#{exam_body.group.name_url} #{counter == 0 ? 'active show' : ''} ", "aria-labelledby" => "#{exam_body.group.name_url}-tab", :role => "tabpanel"}
                     -# Each ExamBody PricingTab
                     .row.row-lg.justify-content-center.mt-5
-                      
+
                       -# PREMIUM CARDS
                       .col-lg-8.px-2
                         %article.planCard.planCard-popular
@@ -193,7 +192,7 @@
                                   %div.planInfoWrapper
                                     %div.planTitleWrapper
                                       %div.planTitle
-                                        Premium 
+                                        Premium
                                         %span.greenShade=t("views.general.payment_intervals.a#{plan.payment_frequency_in_months}")
                                         Plan
                                     %p.priceValue.mb-0.pb-4
@@ -206,11 +205,11 @@
                                             Most popular
                                         -if plan.monthly_percentage_off
                                           %span.priceValue-savingPill.mt-1
-                                            Save 
+                                            Save
                                             =plan.monthly_percentage_off
                                             ='%'
 
-                                  
+
                                   .bulletListTitle.hidden-xs ⚡️ What do you get
                                   %ul.hidden-xs.list-centered.text-left.bulletList{class:@subscription_plans.length < 2 && 'noPlanNav'}
                                     -if plan.bullet_points_list && !plan.bullet_points_list.empty?
@@ -229,7 +228,7 @@
                                         .bulletIcon •
                                         %span="24/7 tutor support"
 
-                                  
+
                                   -unless plan.exam_body.name == "CPD"
                                     %p.text-gray2.mt-4.mb-2.text-bold
                                       Recurring Payment. Cancel Anytime
@@ -262,8 +261,8 @@
                                               %li.mb-3
                                                 .bulletIcon •
                                                 %span="24/7 tutor support"
-                                
-                      
+
+
                       -# LIFETIME CARD
                       -@products.where(group_id: exam_body.group.id).each do |product|
                         -link = product_link(product, current_user, params[:login])
@@ -281,7 +280,7 @@
                                 %p.priceValue.mb-0.pb-4.mt-0
                                   %span.priceValue-actualPrice
                                     =number_in_local_currency(product.price, product.currency)
-                              
+
                               .bulletListTitle.hidden-xs ⚡️ What do you get
                               %ul.hidden-xs.list-centered.text-left.bulletList
                                 %li.mb-3
@@ -373,7 +372,7 @@
     });
 
     let activePricingPlanTab = 0;
-    function updatePlanTab(activeTabIdx) { 
+    function updatePlanTab(activeTabIdx) {
       activePricingPlanTabIdx = activeTabIdx;
     };
 

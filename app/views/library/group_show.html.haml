@@ -49,7 +49,7 @@
                         %div.planInfoWrapper
                           %div.planTitleWrapper
                             %div.planTitle
-                              Premium 
+                              Premium
                               %span.greenShade=t("views.general.payment_intervals.a#{plan.payment_frequency_in_months}")
                               Plan
                           %p.priceValue.mb-0.pb-4{class: @subscription_plans.length < 2 && 'mt-0'}
@@ -62,10 +62,10 @@
                                   Most popular
                               -if plan.monthly_percentage_off
                                 %span.priceValue-savingPill.mt-1
-                                  Save 
+                                  Save
                                   =plan.monthly_percentage_off
                                   ='%'
-                        
+
                         .bulletListTitle.hidden-xs ⚡️ What do you get
                         %ul.hidden-xs.list-centered.text-left.bulletList{class:@subscription_plans.length < 2 && 'noPlanNav'}
                           -if plan.bullet_points_list && !plan.bullet_points_list.empty?
@@ -84,7 +84,7 @@
                               .bulletIcon •
                               %span="24/7 tutor support"
 
-                        
+
                         -unless plan.exam_body.name == "CPD"
                           %p.text-gray2.mt-4.mb-2.text-bold
                             Recurring Payment. Cancel Anytime
@@ -117,10 +117,67 @@
                                       .bulletIcon •
                                       %span="24/7 tutor support"
 
+            -# LIFETIME CARD
+            -@products.each do |product|
+              -link = product_link(product, current_user, params[:login])
+              -name = product.name_by_type
+              .col-lg-8.px-2
+                %article.planCard.planCard-light
+                  .card-body.text-left.p-0
+                    %div.planInfoWrapper
+                      %div.planTitleWrapper
+                        %div.planTitle
+                          -name
+                          %span.greenShade Lifetime
+                          Membership
 
+                      %p.priceValue.mb-0.pb-4.mt-0
+                        %span.priceValue-actualPrice
+                          =number_in_local_currency(product.price, product.currency)
 
-    
-    
+                    .bulletListTitle.hidden-xs ⚡️ What do you get
+                    %ul.hidden-xs.list-centered.text-left.bulletList
+                      %li.mb-3
+                        .bulletIcon •
+                        %span Everything in Premium plan
+                      %li.mb-3
+                        .bulletIcon •
+                        %span="Access all #{@group.name} courses Forever"
+                      %li.mb-3
+                        .bulletIcon •
+                        %span Most economical plan
+                      %li.mb-3
+                        .bulletIcon •
+                        %span No hassle of renewals
+                    %p.preCtaText
+                      One-time payment
+                    .mt-auto
+                      =link_to link, class: 'btn btn-primary choosePlanBtn w-100 ', onclick: "gtag('event', 'clicks_plan', {'event_category': 'pre-registration', 'event_label': '#{name}'});" do
+                        ="Choose Lifetime"
+                        %span.sr-only Choose this plan
+                    %div.visible-xs.bulletListAccordianBox
+                      .faq-box.mt-3
+                        .faq-inner.narrow{onclick: '$(this).toggleClass("narrow"); $(this).find(".faq-answer").toggleClass("d-md-block"); $(this).find(".faq-answer-expanded").toggleClass("d-none"); $(this).find(".bulletListAccordianBox-openIcon").toggleClass("d-none"); $(this).find(".bulletListAccordianBox-closeIcon").toggleClass("d-none");'}
+                          .faq-title
+                            See Details
+                            %i.material-icons.ml-2.bulletListAccordianBox-openIcon{"aria-hidden" => "true"} expand_more
+                            %i.material-icons.ml-2.bulletListAccordianBox-closeIcon.d-none{"aria-hidden" => "true"} expand_less
+                          .faq-answer-expanded.d-none
+                            .bulletListTitle ⚡️ What do you get
+                            %ul.list-centered.text-left.bulletList
+                              %li.mb-3
+                                .bulletIcon •
+                                %span Everything in Premium plan
+                              %li.mb-3
+                                .bulletIcon •
+                                %span="Access all #{@group.name} courses Forever"
+                              %li.mb-3
+                                .bulletIcon •
+                                %span Most economical plan
+                              %li.mb-3
+                                .bulletIcon •
+                                %span No hassle of renewals
+
     :javascript
       function addToCart(currency, name, id, price, body) {
         // dataLayer.push({

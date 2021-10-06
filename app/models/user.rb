@@ -707,8 +707,8 @@ class User < ApplicationRecord
   def show_verify_email_message?
     return false if email_verified
 
-    if verify_remembered_at.nil? || verify_remembered_at.time <= 6.hours.ago
-      update(verify_remembered_at: Time.zone.now)
+    if verify_remembered_at.nil? || verify_remembered_at != current_login_at
+      update(verify_remembered_at: current_login_at)
       true
     else
       false

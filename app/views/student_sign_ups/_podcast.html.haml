@@ -29,17 +29,3 @@
 
   -if @home_page.blog_posts.any?
     =render partial: 'blog_posts_section', locals: {home_page: @home_page}
-
-
--# :javascript
-
--#   $(window).scroll(function() {
--#     var scroll = $(window).scrollTop();
-
--#     if (scroll >= 1) {
--#         //clearHeader, not clearheader - caps H
--#         $(".header").addClass("sticky-nav-border");
--#     } else if (scroll <= 1) {
--#       $(".header").removeClass("sticky-nav-border");
--#     }
--#   });
