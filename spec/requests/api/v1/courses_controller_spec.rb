@@ -127,6 +127,10 @@ RSpec.describe 'Api::V1::CoursesController', type: :request do
                                      description
                                      release_date
                                      level_id
+                                     category_label
+                                     icon_label
+                                     unit_label
+                                     hours_label
                                      sections])
 
         expect(section['id']).to eq(course_section_1.id)

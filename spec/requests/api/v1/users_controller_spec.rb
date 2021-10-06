@@ -70,6 +70,7 @@ RSpec.describe Api::V1::UsersController, type: :request do
                                                   country
                                                   currency
                                                   subscription_plan_category
+                                                  subscriptions
                                                   token
                                                   user_credentials])
 
@@ -167,7 +168,8 @@ RSpec.describe Api::V1::UsersController, type: :request do
                                                   profile_image_updated_at
                                                   country
                                                   currency
-                                                  subscription_plan_category])
+                                                  subscription_plan_category
+                                                  subscriptions])
       end
     end
 
@@ -306,7 +308,8 @@ RSpec.describe Api::V1::UsersController, type: :request do
                                                   profile_image_updated_at
                                                   country
                                                   currency
-                                                  subscription_plan_category])
+                                                  subscription_plan_category
+                                                  subscriptions])
       end
     end
 
