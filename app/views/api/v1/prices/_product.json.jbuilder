@@ -31,11 +31,16 @@ json.cbe do
   end
 end
 
-
 json.course do
   if product.course_id.present?
-    json.id              product.course.id
-    json.name            product.course.name
+    json.id   product.course.id
+    json.name product.course.name
+  elsif product&.mock_exam&.course_id.present?
+    json.id   product.mock_exam.course.id
+    json.name product.mock_exam.course.name
+  elsif product&.cbe&.course_id.present?
+    json.id   product.cbe.course.id
+    json.name product.cbe.course.name
   else
     json.nil!
   end

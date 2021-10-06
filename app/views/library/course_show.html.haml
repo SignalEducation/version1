@@ -87,7 +87,7 @@
 
             .col-sm-4.col-xl-4.mb-4.custom-upgrade
               =render partial: 'register_upgrade_links', locals: { user: current_user }
-              
+
               %a{class: 'btn btn-outline btn-sm mr-2 w-100 py-3', 'data-target' => '#contact-form-modal', 'data-toggle' => 'modal', :href => '#'}
                 =@exam_body&.help_text
 
@@ -251,7 +251,7 @@
 
 -if current_user && !current_user.onboarding_course && current_user.course_lesson_logs.count < 1
   :javascript
-    
+
     $(document).ready(function() {
       $.ajax({
         url: "#{user_update_hubspot_path(current_user.id)}",

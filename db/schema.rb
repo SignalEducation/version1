@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_28_104628) do
+ActiveRecord::Schema.define(version: 2021_10_06_164200) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -725,6 +725,7 @@ ActiveRecord::Schema.define(version: 2021_09_28_104628) do
     t.string "unit_label"
     t.integer "level_id"
     t.integer "accredible_group_id"
+    t.string "hours_label"
     t.index ["exam_body_id"], name: "index_courses_on_exam_body_id"
     t.index ["group_id"], name: "index_courses_on_group_id"
     t.index ["level_id"], name: "index_courses_on_level_id"
@@ -928,10 +929,6 @@ ActiveRecord::Schema.define(version: 2021_09_28_104628) do
     t.string "onboarding_level_heading"
     t.boolean "tab_view", default: false, null: false
     t.text "disclaimer"
-    t.string "group_logo_file_name"
-    t.string "group_logo_content_type"
-    t.bigint "group_logo_file_size"
-    t.datetime "group_logo_updated_at"
     t.index ["exam_body_id"], name: "index_groups_on_exam_body_id"
     t.index ["name"], name: "index_groups_on_name"
   end
@@ -1085,6 +1082,8 @@ ActiveRecord::Schema.define(version: 2021_09_28_104628) do
     t.datetime "updated_at", null: false
     t.text "onboarding_course_subheading"
     t.string "onboarding_course_heading"
+    t.boolean "track", default: false, null: false
+    t.text "sub_text"
     t.index ["group_id"], name: "index_levels_on_group_id"
   end
 

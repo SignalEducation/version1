@@ -1,11 +1,15 @@
 json.course do
-  json.id            course.id
-  json.name          course.name
-  json.name_url      course.name_url
-  json.sorting_order course.sorting_order
-  json.description   course.description
-  json.release_date  course.release_date
-  json.level_id      course.level_id
+  json.id             course.id
+  json.name           course.name
+  json.name_url       course.name_url
+  json.sorting_order  course.sorting_order
+  json.description    course.description
+  json.release_date   course.release_date
+  json.level_id       course.level_id
+  json.category_label course.category_label
+  json.icon_label     course.icon_label
+  json.unit_label     course.unit_label
+  json.hours_label    course.hours_label
 
   json.sections do
     if course.course_sections.present?
