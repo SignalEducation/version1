@@ -14,14 +14,7 @@
           .courseWrapper-backBtn
             .courseWrapper-backBtn-text
               =@course.name
-    -# .breadCrumbs.visible-xs
-    -#   -if @course.parent
-    -#     .mw-0.container
-    -#       =link_to library_special_link(@course.parent), class: 'courseWrapper-backBtn' do
-    -#         .courseWrapper-backBtn-text
-    -#           .i.material-icons{:style => "font-size: 14px;margin-right: 8px;"} arrow_back
-    -#           %span
-    -#             Back
+
     .container.pt-2
       %header.coursePage-container-header
         .mw-0.preview-upgrade-btn
@@ -30,7 +23,6 @@
               Enrol
             %a{data: {target: '#enrollment-modal', toggle: 'modal'}, href: '#', class: 'btn btn-secondary btn-sm upgrade-resp-enroll-btn upgrade-btn-flt'}
               Enrol
-            -# =render partial: 'course_enrollment_modal'
           -if @course_log && @course_log&.latest_course_step && @course_log&.latest_course_step&.next_element
             =link_to 'Resume', course_special_link(@course_log.latest_course_step.next_element, @course_log), class: 'btn btn-primary btn-sm'
 
@@ -96,7 +88,6 @@
             .col-sm-4.col-xl-4.mb-4.custom-upgrade
               =render partial: 'register_upgrade_links', locals: { user: current_user }
               
-              -# Ask the Tutor CTA
               %a{class: 'btn btn-outline btn-sm mr-2 w-100 py-3', 'data-target' => '#contact-form-modal', 'data-toggle' => 'modal', :href => '#'}
                 =@exam_body&.help_text
 

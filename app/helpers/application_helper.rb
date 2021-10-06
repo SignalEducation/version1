@@ -5,9 +5,9 @@ module ApplicationHelper
     html_sanitizer('', the_class, "color: #{color};")
   end
 
-  def red_or_green_arrow(the_thing, iconTag)
+  def red_or_green_arrow(the_thing, icon_tag)
     color = the_thing ? '#21CE99' : '#eb4242'
-    html_sanitizer(iconTag, 'result-icon', "color: #{color};")
+    html_sanitizer(icon_tag, 'result-icon', "color: #{color};")
   end
 
   def red_or_green_text(the_thing, letter)
