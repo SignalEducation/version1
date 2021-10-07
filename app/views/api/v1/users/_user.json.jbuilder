@@ -72,6 +72,19 @@ json.subscription_plan_category do
   end
 end
 
+json.subscriptions do
+  if user.viewable_subscriptions.present?
+    json.array! user.viewable_subscriptions.each do |subscription|
+      json.id            subscription.id
+      json.plan          subscription.subscription_plan.description
+      json.plan_interval subscription.subscription_plan.interval_name
+      json.created_at    subscription.created_at
+    end
+  else
+    json.nil!
+  end
+end
+
 if @user_token.present?
   json.token @user_token
 end

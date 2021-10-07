@@ -80,8 +80,8 @@ module Admin
 
     def allowed_params
       params.require(:level).permit(
-        :name, :name_url, :sorting_order, :active, :group_id, :highlight_colour,
-        :sorting_order, :icon_label, :onboarding_course_heading, :onboarding_course_subheading
+        :name, :name_url, :sorting_order, :active, :track, :group_id, :highlight_colour,
+        :sorting_order, :sub_text, :onboarding_course_heading, :onboarding_course_subheading
       )
     end
   end

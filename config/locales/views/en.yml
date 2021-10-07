@@ -1292,7 +1292,9 @@ en:
         icon_label: Icon Label
         icon_label_placeholder: Budicon Text Label
         unit_label: Unit Label
-        unit_label_placeholder: CPD Unit/Hours Label
+        unit_label_placeholder: Unit Label
+        hours_label: Hours Label
+        hours_label_placeholder: Hours Label
         level: Level
         category_label: Category Label
         category_label_placeholder: Category Label [Applied Knowledge]
@@ -1436,6 +1438,8 @@ en:
         group_id: Group
         icon_label: Icon Label
         icon_label_placeholder: Icon Label
+        sub_text: Sub Text
+        sub_text_placeholder: Sub text
         onboarding_course_subheading: Onboarding Course Subheading
         onboarding_course_subheading_placeholder: Onboarding Course Subheading
         onboarding_course_heading: Onboarding Course Heading
