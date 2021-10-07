@@ -8,7 +8,7 @@ json.course do
   json.level_id       course.level_id
   json.category_label course.category_label
   json.icon_label     course.icon_label
-  json.unit_label     course.unit_label
+  json.unit_label     course.api_unit_label
   json.hours_label    course.hours_label
 
   json.sections do
