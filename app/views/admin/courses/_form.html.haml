@@ -34,6 +34,10 @@
             .input-group.input-group-lg
               =f.text_field :unit_label, placeholder: t('views.courses.form.unit_label_placeholder'), class: 'form-control'
           .form-group
+            =f.label :api_unit_label, t('views.courses.form.api_unit_label')
+            .input-group.input-group-lg
+              =f.text_field :api_unit_label, placeholder: t('views.courses.form.api_unit_label_placeholder'), class: 'form-control'
+          .form-group
             =f.label :hours_label, t('views.courses.form.hours_label')
             .input-group.input-group-lg
               =f.text_field :hours_label, placeholder: t('views.courses.form.hours_label_placeholder'), class: 'form-control'
