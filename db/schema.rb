@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_06_164200) do
+ActiveRecord::Schema.define(version: 2021_10_07_113033) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -725,7 +725,8 @@ ActiveRecord::Schema.define(version: 2021_10_06_164200) do
     t.string "unit_label"
     t.integer "level_id"
     t.integer "accredible_group_id"
-    t.string "hours_label"
+    t.integer "hours_label"
+    t.integer "api_unit_label"
     t.index ["exam_body_id"], name: "index_courses_on_exam_body_id"
     t.index ["group_id"], name: "index_courses_on_group_id"
     t.index ["level_id"], name: "index_courses_on_level_id"

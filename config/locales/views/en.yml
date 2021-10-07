@@ -1293,6 +1293,8 @@ en:
         icon_label_placeholder: Budicon Text Label
         unit_label: Unit Label
         unit_label_placeholder: Unit Label
+        api_unit_label: Acquisition Unit Label
+        api_unit_label_placeholder: Acquisition Unit Label
         hours_label: Hours Label
         hours_label_placeholder: Hours Label
         level: Level
