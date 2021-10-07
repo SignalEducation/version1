@@ -1,5 +1,19 @@
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: cbe_user_responses
+#
+#  id                     :bigint           not null, primary key
+#  content                :json
+#  educator_comment       :text
+#  score                  :float            default("0.0")
+#  correct                :boolean          default("false")
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  cbe_user_log_id        :bigint
+#  cbe_response_option_id :bigint
+#
 require 'rails_helper'
 
 RSpec.describe Cbe::UserResponse, type: :model do

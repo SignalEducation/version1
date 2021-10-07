@@ -65,6 +65,7 @@ Rails.application.routes.draw do
       end
 
       resources :exam_bodies, only: :index
+      resources :key_areas, only: :index
       resources :practice_questions, only: :index
       resources :uploads, only: :create
 
@@ -117,6 +118,7 @@ Rails.application.routes.draw do
       post 'search_exercises', to: 'exercises#index', as: :search_exercises
 
       resources :levels, concerns: :supports_reordering
+      resources :key_areas, concerns: :supports_reordering
 
       get 'courses/:id/new_course_section',                                                     to: 'course_sections#new',               as: :new_course_section
       get 'courses/:id/course_section/:course_section_id/new_course_lesson',                    to: 'course_lessons#new',                as: :new_course_lesson

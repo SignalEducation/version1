@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_07_113033) do
+ActiveRecord::Schema.define(version: 2021_10_07_171118) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -725,10 +725,12 @@ ActiveRecord::Schema.define(version: 2021_10_07_113033) do
     t.string "unit_label"
     t.integer "level_id"
     t.integer "accredible_group_id"
-    t.integer "hours_label"
+    t.integer "hour_label"
     t.integer "api_unit_label"
+    t.bigint "key_area_id"
     t.index ["exam_body_id"], name: "index_courses_on_exam_body_id"
     t.index ["group_id"], name: "index_courses_on_group_id"
+    t.index ["key_area_id"], name: "index_courses_on_key_area_id"
     t.index ["level_id"], name: "index_courses_on_level_id"
     t.index ["name"], name: "index_courses_on_name"
   end
@@ -1069,6 +1071,16 @@ ActiveRecord::Schema.define(version: 2021_10_07_113033) do
     t.string "token", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "key_areas", force: :cascade do |t|
+    t.string "name"
+    t.integer "sorting_order"
+    t.boolean "active", default: false, null: false
+    t.bigint "group_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["group_id"], name: "index_key_areas_on_group_id"
   end
 
   create_table "levels", force: :cascade do |t|
@@ -1753,6 +1765,7 @@ ActiveRecord::Schema.define(version: 2021_10_07_113033) do
   add_foreign_key "exercises", "users", column: "corrector_id"
   add_foreign_key "groups", "exam_bodies"
   add_foreign_key "invoices", "orders"
+  add_foreign_key "key_areas", "groups"
   add_foreign_key "practice_question_answers", "practice_question_questions"
   add_foreign_key "practice_question_questions", "course_practice_questions"
   add_foreign_key "practice_question_responses", "course_step_logs"

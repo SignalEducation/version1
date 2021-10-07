@@ -45,7 +45,8 @@ module Admin
     end
 
     def edit
-      @levels = @course.group.levels if @course.group_id
+      @levels    = @course.group.levels    if @course.group_id
+      @key_areas = @course.group.key_areas if @course.group_id
     end
 
     def update
@@ -160,10 +161,11 @@ module Admin
     protected
 
     def get_variables
-      @course = Course.find_by(id: params[:id]) if params[:id].to_i > 0
-      @groups = Group.all_in_order
-      @levels = Level.all
-      @tutors = User.all_tutors.all_in_order
+      @course      = Course.find_by(id: params[:id]) if params[:id].to_i > 0
+      @groups      = Group.all_in_order
+      @levels      = Level.all
+      @keys_areas  = KeyArea.all
+      @tutors      = User.all_tutors.all_in_order
       @exam_bodies = ExamBody.all_in_order
     end
 
@@ -174,7 +176,7 @@ module Admin
         :background_image, :survey_url, :quiz_pass_rate, :group_id, :accredible_group_id, :preview,
         :computer_based, :highlight_colour, :category_label, :icon_label,
         :seo_title, :seo_description, :has_correction_packs, :short_description,
-        :on_welcome_page, :api_unit_label, :hours_label, :level_id,
+        :on_welcome_page, :unit_label, :api_unit_label, :hour_label, :level_id, :key_area_id,
         course_sections_attributes: [
           course_lessons_attributes: [
             course_steps_attributes: [
