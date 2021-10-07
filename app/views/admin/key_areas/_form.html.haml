@@ -1,0 +1,27 @@
+.box-item.form-box
+  .col-sm-12
+    =form_for([:admin, @key_area], html: {class: 'form-horizontal', role: 'form'}) do |f|
+      =render partial: '/layouts/error_messages', locals: {thing: @key_area, message: nil}
+      .row
+        .col-sm-6
+          .form-group
+            =f.label :name, t('views.key_areas.form.name')
+            .input-group.input-group-lg
+              =f.text_field :name, placeholder: t('views.key_areas.form.name_placeholder'), class: 'form-control'
+
+          %br/
+
+          .checkbox
+            %label
+              =f.check_box :active
+              Active
+        .col-sm-6
+          .form-group
+            =f.label :group_id, t('views.key_areas.form.group_id')
+            .input-group.input-group-lg
+              =f.collection_select :group_id, @groups, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
+
+      .row.pt-4
+        .col-md-12
+          =f.submit t('views.general.save'), class: 'btn btn-primary'
+          =link_to t('views.general.cancel'), admin_key_areas_path, class: 'btn btn-secondary l-margin-right-big l-padding-side-3x'

@@ -14,9 +14,9 @@
 #  is_video                  :boolean          default("false"), not null
 #  is_quiz                   :boolean          default("false"), not null
 #  active                    :boolean          default("true"), not null
-#  seo_description           :string(255)
-#  seo_no_index              :boolean          default("false")
 #  destroyed_at              :datetime
+#  seo_description           :string
+#  seo_no_index              :boolean          default("false")
 #  number_of_questions       :integer          default("0")
 #  duration                  :float            default("0.0")
 #  temporary_label           :string
