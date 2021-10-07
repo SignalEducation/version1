@@ -111,7 +111,11 @@ Rails.application.configure do
   config.action_dispatch.trusted_proxies = 
     (ActionDispatch::RemoteIp::TRUSTED_PROXIES +
       ENV['AWS_LOAD_BALANCERS'].split(',').map { |alp| IPAddr.new(alp) }) if ENV['AWS_LOAD_BALANCERS']
-end
+
+
+    config.cloudfront.expires_in = 1.hour # Cache expiry for the ips
+    config.cloudfront.timeout = 2.seconds # Timeout for the http access
+  end
 
 # Required by LogEntries
 #Rails.logger = Le.new('133cb62a-cefa-43a4-b277-f7f87a78ac54', # staging

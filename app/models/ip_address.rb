@@ -18,6 +18,7 @@ class IpAddress < ApplicationRecord
   geocoded_by :ip_address
 
   reverse_geocoded_by :latitude, :longitude do |obj, results|
+    Rails.logger.warn "WARN: IpAddress.assign_country_from_geo failed. obj: #{obj}, results: #{results}."
     obj.assign_country_from_geo(results.first)
   end
 
@@ -42,7 +43,8 @@ class IpAddress < ApplicationRecord
   def self.get_country(ip_address, country_required = false)
     country = where(ip_address: ip_address).first_or_create.country
     if !country && country_required
-      Country.find_by(name: 'United Kingdom')
+      Rails.logger.warn "WARN: IpAddress.get_country failed to find country. ip_address: #{ip_address}, ip_address: #{ip_address}."
+      Country.find(39)
     else
       country
     end
@@ -51,11 +53,11 @@ class IpAddress < ApplicationRecord
   # instance methods
   def assign_country_from_geo(result)
     country_code = result&.country_code == 'CAN' ? 'CAD' : result&.country_code
-
+    Rails.logger.warn "WARN: IpAddress.assign_country_from_geo failed. result: #{result}, ip_address: #{result&.country_code},."
     self.country_id = if result
-                        Country.find_by(iso_code: country_code)&.id || 78
+                        Country.find_by(iso_code: country_code)&.id || 39
                       else
-                        78 # UK
+                        39 # Ireland
                       end
   end
 

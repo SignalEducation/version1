@@ -134,6 +134,7 @@ group :test do
 end
 
 group :staging, :production do
+  gem 'cloudfront-rails'
   gem 'execjs'
   gem 'newrelic_rpm' # support for the newrelic.com performance monitoring service
   #gem 'rails_serve_static_assets' # needed for Heroku

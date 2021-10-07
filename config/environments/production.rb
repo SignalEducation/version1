@@ -116,6 +116,9 @@ Rails.application.configure do
       ENV['AWS_LOAD_BALANCERS'].split(',').map { |alp| IPAddr.new(alp) }) if ENV['AWS_LOAD_BALANCERS']
 
   config.require_master_key = true
+
+  config.cloudfront.expires_in = 1.hour # Cache expiry for the ips
+  config.cloudfront.timeout = 2.seconds # Timeout for the http access
 end
 
 # Required by LogEntries
