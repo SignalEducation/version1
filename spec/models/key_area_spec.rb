@@ -19,7 +19,7 @@ RSpec.describe KeyArea, type: :model do
 
   # validation
   it { should validate_presence_of(:name) }
-  it { should validate_uniqueness_of(:name) }
+  it { should validate_uniqueness_of(:name).scoped_to(:group_id).with_message('must be unique within the group') }
 
   # scopes
   it { expect(KeyArea).to respond_to(:all_in_order) }
