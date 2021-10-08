@@ -6,27 +6,23 @@
           %a{class: "nav-link #{counter == 0 ? 'active' : ''}", id: "#{level.name_url}-tab", data: {toggle: 'tab'}, href: "##{level.name_url}", aria: {controls: "#{level.name_url}", selected: 'false'}, role: 'tab'}
             =level.name
 
+
+
   %section.container.content-section
     %h2.sr-only List of Courses
     #levelsTabsContent.tab-content
       -@levels.each_with_index do |level, counter|
         .tab-pane{id: level.name_url, class: "tab-#{level.name_url} #{counter == 0 ? 'active show' : ''} ", "aria-labelledby" => "#{level.name_url}-tab", :role => "tabpanel"}
-          .row.row-lg
-            -level.courses.all_in_order.each do |course|
-              - if course.active
-                .col-lg-12.col-xl-12
-                  =link_to library_special_link(course), class: 'card flex-md-row', style: 'margin-bottom: 1rem;', data: { toggle: 'tooltip', placement: 'right', animation: 'true', delay: { "show": 300, "hide": 100 }}, title: "#{course.short_description}" do
-                    .card-body.d-flex.flex-column.justify-content-center
-                      %div.libraryGroupWrapper-list-courseInfo
-                        %div.libraryGroupWrapper-list-courseIcon{style: "border-color: #{course.highlight_colour}; background-color: #{course.highlight_colour};"}
-                          %i{"aria-label" => course.icon_label, :role => "img", class: course.icon_label ? course.icon_label : 'budicon-office-bag-c', style: "color: #FFF;"}
-                        %div
-                          %div.libraryGroupWrapper-list-parent
-                            .libraryGroupWrapper-list-levelName{style: "color: #{course.highlight_colour};"}
-                              -if course.preview && course.release_date
-                                ="Coming #{course.release_date.strftime("%B, %Y")}"
-                              -else
-                                =course.category_label
-                          %div.courseName
-                            =course.name
-                        .courseArrowIcon.i.material-icons keyboard_arrow_right
+          .row.row-lge
+            .col-sm
+              %h2 FILTERS:
+              .search-container
+                =form_tag(courses_search_url, method: :post, role: 'form', class: 'form-inline', remote: true) do
+                  = select_tag(:key_area_id, options_for_select( @group.key_areas.map{ |k| [k.name, k.id] }), include_blank: '----', onchange: 'jQuery(this).parent().trigger("submit")')
+
+                  = select_tag(:units, options_for_select( @units.each{ |u| ["#{u} units", u] }), include_blank: '----')
+                  = select_tag(:hours, options_for_select( @hours.each{ |u| ["#{u} hours", u] }), include_blank: '----')
+                  =hidden_field_tag :level_id, level.id
+
+          .row.row-lge{id: "#{level.id}-tabbed-courses-list"}
+            =render partial: 'tabbed_courses_list', locals: { courses: level.courses.all_active.all_in_order }

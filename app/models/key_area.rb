@@ -7,8 +7,10 @@ class KeyArea < ApplicationRecord
 
   # validations
   validates :group_id, :name, presence: true
-  validates :name, uniqueness: true
-
+  validates :name, presence: true, uniqueness: {
+    scope: :group_id,
+    message: 'must be unique within the group'
+  }
   # scopes
   scope :all_in_order, -> { order(:sorting_order, :group_id) }
   scope :all_active, -> { where(active: true) }
