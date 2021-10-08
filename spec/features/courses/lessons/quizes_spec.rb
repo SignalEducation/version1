@@ -33,7 +33,7 @@ describe 'Video Quiz Step', type: :feature do
                              course_lesson_name_url: course_quiz.course_step.course_lesson.name_url,
                              course_step_name_url: course_quiz.course_step.name_url)
 
-      expect(page).to have_title('The Smarter Way to Study | learnsignal')
+      expect(page).to have_title('The Smarter Way to Study | Learnsignal')
       expect(page).to have_content("Question 1 of #{course_quiz.number_of_questions}")
       expect(page).to have_content(course_quiz.course_step.name)
       expect(page).to have_content(course_quiz.quiz_questions.first.quiz_contents.sample.text_content)
@@ -54,7 +54,7 @@ describe 'Video Quiz Step', type: :feature do
                              course_lesson_name_url: course_quiz.course_step.course_lesson.name_url,
                              course_step_name_url: course_quiz.course_step.name_url)
 
-      expect(page).to have_title('The Smarter Way to Study | learnsignal')
+      expect(page).to have_title('The Smarter Way to Study | Learnsignal')
       expect(page).to have_content("Question 1 of #{course_quiz.number_of_questions}")
       expect(page).to have_content(course_quiz.course_step.name)
       expect(page).to have_content(course_quiz.quiz_questions.first.quiz_contents.sample.text_content)

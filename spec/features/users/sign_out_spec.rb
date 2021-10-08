@@ -19,7 +19,7 @@ describe 'Sign out process', type: :feature do
 
       log_out
 
-      expect(page).to have_title('The Smarter Way to Study | LearnSignal')
+      expect(page).to have_title('The Smarter Way to Study | Learnsignal')
       expect(page).to have_content('Login')
     end
   end
