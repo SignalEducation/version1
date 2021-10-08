@@ -13,6 +13,7 @@
 #  created_at                  :datetime         not null
 #  updated_at                  :datetime         not null
 #  description                 :text
+#  name                        :string
 #
 require 'rails_helper'
 

@@ -931,8 +931,6 @@ en:
       manage_courses:
         course: Courses
 
-
-
     home_pages:
       form:
         name: Name
@@ -1295,9 +1293,10 @@ en:
         unit_label_placeholder: Unit Label
         api_unit_label: Acquisition Unit Label
         api_unit_label_placeholder: Acquisition Unit Label
-        hours_label: Hours Label
-        hours_label_placeholder: Hours Label
+        hour_label: Hour Label
+        hour_label_placeholder: Hour Label
         level: Level
+        key_area: Key Area
         category_label: Category Label
         category_label_placeholder: Category Label [Applied Knowledge]
         seo_title: SEO Title
@@ -1427,6 +1426,24 @@ en:
         active: Active
         expired: Expired
         notifications: Notifications
+
+    key_areas:
+      form:
+        name: Name
+        name_placeholder: Key Area
+        active: Active
+        sorting_order: Sorting order
+        group_id: Group
+
+      index:
+        h1: Key Areas
+        add_course: Add Key Area
+
+      new:
+        h1: New Key Area
+
+      edit:
+        h1: Edit Key Area
 
     levels:
       form:

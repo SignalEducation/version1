@@ -303,6 +303,17 @@ en:
         flash:
           success: Invoice has been deleted
           error: Invoice was not deleted
+    key_areas:
+      create:
+        flash:
+          success: Key Area has been created successfully
+      update:
+        flash:
+          success: Key Area details have been updated successfully
+      destroy:
+        flash:
+          success: Key Area has been deleted
+          error: Key Area was not deleted
 
     levels:
       create:

@@ -29,6 +29,7 @@
 #  cancelled_by_id          :bigint
 #  kind                     :integer
 #  paypal_retry_count       :integer          default("0")
+#  total_revenue            :decimal(, )      default("0")
 #
 
 FactoryBot.define do
