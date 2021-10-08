@@ -50,7 +50,7 @@
           .form-group
             =f.label :key_area_id, t('views.courses.form.key_area')
             .input-group.input-group-lg
-              =f.collection_select :key_area_id, @key_areas, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
+              =f.collection_select :key_area_id, @key_areas || [], :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
           .form-group
             =f.label :exam_body_id, t('views.courses.form.exam_body_id')
             .input-group.input-group-lg
