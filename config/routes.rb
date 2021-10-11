@@ -389,6 +389,7 @@ Rails.application.routes.draw do
     get 'course/:name_url', to: 'student_sign_ups#group', as: :group_landing
 
     root 'student_sign_ups#home'
+    get 'logout', to: redirect { Rails.application.credentials[Rails.env.to_sym][:acqusition_domain][:url] }, as: :logout_redirect
 
     # Catch-all
     get '404', to: 'footer_pages#missing_page', first_element: '404-page', as: :missing_page
