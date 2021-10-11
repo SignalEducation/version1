@@ -8,7 +8,7 @@ class UserSessionsController < ApplicationController
 
   def new
     @user_session = UserSession.new
-    seo_title_maker('Log in to Start Studying Today | LearnSignal',
+    seo_title_maker('Log in to Start Studying Today | Learnsignal',
                     'Log in to your ACCA or CPD courses to access topic-by-topic tuition modules, explore online learning resources and kick-start your study today.',
                     false)
     respond_to do |format|

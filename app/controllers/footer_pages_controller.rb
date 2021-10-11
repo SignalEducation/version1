@@ -4,16 +4,16 @@ class FooterPagesController < ApplicationController
   before_action :get_variables, except: :missing_page
 
   def privacy_policy
-    seo_title_maker('Read Our Privacy Policy | LearnSignal', 'Read the Privacy Policy for learnsignal.com. Find out about our privacy and cookies policy here including how your data is used.', nil)
+    seo_title_maker('Read Our Privacy Policy | Learnsignal', 'Read the Privacy Policy for learnsignal.com. Find out about our privacy and cookies policy here including how your data is used.', nil)
   end
 
   def acca_info
-    seo_title_maker('ACCA Information | LearnSignal', 'This ACCA guideline from learnsignal provides information on exams, EPSM and PER and links to key ACCA resources to help you get your ACCA qualification.', nil)
+    seo_title_maker('ACCA Information | Learnsignal', 'This ACCA guideline from learnsignal provides information on exams, EPSM and PER and links to key ACCA resources to help you get your ACCA qualification.', nil)
   end
 
   def contact
     @form_type = 'Contact Us'
-    seo_title_maker('Contact Us Today | LearnSignal',
+    seo_title_maker('Contact Us Today | Learnsignal',
                     "Contact us if you have any queries about learnsignal's online learning courses. Let us know if you have any specific feedback or complaints regarding our services.",
                     nil)
   end
@@ -31,7 +31,7 @@ class FooterPagesController < ApplicationController
   end
 
   def frequently_asked_questions
-    seo_title_maker('Frequently Asked Questions | LearnSignal', "Find answers to learnsignal's frequently asked questions. If you have a question that you can't see the answer to don't hesitate to get in touch.", nil)
+    seo_title_maker('Frequently Asked Questions | Learnsignal', "Find answers to learnsignal's frequently asked questions. If you have a question that you can't see the answer to don't hesitate to get in touch.", nil)
     @faq_section = FaqSection.all_active.all_in_order
   end
 
@@ -42,7 +42,7 @@ class FooterPagesController < ApplicationController
       seo_title_maker(@group.exam_body.products_seo_title, @group.exam_body.products_seo_description, false)
       valid_products = Product.for_group(@group.id).in_currency(@currency_id).all_active.all_in_order
     else
-      seo_title_maker('Mock Exams and Correction Packs | LearnSignal', 'Get access to question and solution correction packs and mock exams designed by experts to help you pass your exams the first time.', nil)
+      seo_title_maker('Mock Exams and Correction Packs | Learnsignal', 'Get access to question and solution correction packs and mock exams designed by experts to help you pass your exams the first time.', nil)
       valid_products = Product.in_currency(@currency_id).all_active.all_in_order
     end
     @products      = valid_products.where('mock_exam_id IS NOT NULL OR cbe_id IS NOT NULL').
@@ -60,7 +60,7 @@ class FooterPagesController < ApplicationController
         @course_ids << course_tutor.course if course_tutor.course
       end
       @courses = Course.where(id: @course_ids)
-      seo_title_maker("#{@tutor.full_name} Tutor | LearnSignal", @tutor.description, nil)
+      seo_title_maker("#{@tutor.full_name} Tutor | Learnsignal", @tutor.description, nil)
     else
       redirect_to tutors_url
     end
@@ -72,7 +72,7 @@ class FooterPagesController < ApplicationController
   def profile_index
     # /profiles
     @tutors = User.all_tutors.with_course_tutors.where.not(profile_image_file_name: nil)
-    seo_title_maker('Learn About Our Tutors | LearnSignal', 'Our tutors are dedicated helping students achieve their learning goals. Read profiles of the industry experts that create learnsignal’s online courses.', nil)
+    seo_title_maker('Learn About Our Tutors | Learnsignal', 'Our tutors are dedicated helping students achieve their learning goals. Read profiles of the industry experts that create learnsignal’s online courses.', nil)
     @navbar = true
     @top_margin = true
   end
