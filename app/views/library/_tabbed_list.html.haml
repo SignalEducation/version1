@@ -6,8 +6,6 @@
           %a{class: "nav-link #{counter == 0 ? 'active' : ''}", id: "#{level.name_url}-tab", data: {toggle: 'tab'}, href: "##{level.name_url}", aria: {controls: "#{level.name_url}", selected: 'false'}, role: 'tab'}
             =level.name
 
-
-
   %section.container.content-section
     %h2.sr-only List of Courses
     #levelsTabsContent.tab-content
@@ -18,11 +16,28 @@
               %h2 FILTERS:
               .search-container
                 =form_tag(courses_search_url, method: :post, role: 'form', class: 'form-inline', remote: true) do
-                  = select_tag(:key_area_id, options_for_select( @group.key_areas.map{ |k| [k.name, k.id] }), include_blank: '----', onchange: 'jQuery(this).parent().trigger("submit")')
+                  =select_tag(:key_area_id, options_for_select( @group.key_areas.map{ |k| [k.name, k.id] }.sort), include_blank: '----', onchange: 'jQuery(this).parent().trigger("submit")')
 
-                  = select_tag(:units, options_for_select( @units.each{ |u| ["#{u} units", u] }), include_blank: '----')
-                  = select_tag(:hours, options_for_select( @hours.each{ |u| ["#{u} hours", u] }), include_blank: '----')
+                  =radio_button_tag 'filter', 'units', true, onclick: 'disableSelectBoxes("hours")'
+                  =select_tag(:units, options_for_select( @units.each{ |u| ["#{u} units", u] }), include_blank: '----', onchange: 'jQuery(this).parent().trigger("submit")')
+                  =radio_button_tag 'filter', 'hours', false, onclick: 'disableSelectBoxes("units")'
+                  =select_tag(:hours, options_for_select( @hours.each{ |u| ["#{u} hours", u] }), include_blank: '----', disabled: true, onchange: 'jQuery(this).parent().trigger("submit")')
                   =hidden_field_tag :level_id, level.id
 
           .row.row-lge{id: "#{level.id}-tabbed-courses-list"}
             =render partial: 'tabbed_courses_list', locals: { courses: level.courses.all_active.all_in_order }
+
+:javascript
+    function disableSelectBoxes(select_box) {
+       switch (select_box) {
+          case "units":
+            $("#units").prop("disabled", true);
+            $("#hours").prop("disabled", false);
+            break;
+          case "hours":
+            $("#units").prop("disabled", false);
+            $("#hours").prop("disabled", true);
+            break;
+       }
+
+    };
