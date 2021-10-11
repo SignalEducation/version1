@@ -125,4 +125,4 @@ Rails.logger = Le.new('3101cfa2-8352-43bb-8465-ca043de116b1', # production
                       local: true # keep local logs as well
 )
 
-Rails.application.routes.default_url_options = { host: 'www.learnsignal.com' }
+Rails.application.routes.default_url_options = { host: 'app.learnsignal.com' }

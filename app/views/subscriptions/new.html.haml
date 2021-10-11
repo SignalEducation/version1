@@ -467,7 +467,7 @@
         window.location.href = "/dashboard";
       } else {
         const { hostname } = new URL(document.referrer);
-        if(hostname.includes('learnsignal.com' || 'locahost')) {
+        if(hostname.includes('app.learnsignal.com' || 'locahost')) {
           window.location.href = "/dashboard";
         } else {
           history && history.back();
