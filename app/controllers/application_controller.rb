@@ -395,7 +395,7 @@ class ApplicationController < ActionController::Base
   helper_method :product_checkout_special_link
 
   def seo_title_maker(seo_title, seo_description, seo_no_index)
-    @seo_title = seo_title.to_s.truncate(65) || 'Professional Finance Courses Online| LearnSignal'
+    @seo_title = seo_title.to_s.truncate(65) || 'Professional Finance Courses Online| Learnsignal'
     @seo_description = seo_description.to_s.truncate(156)
     @seo_no_index = seo_no_index
   end

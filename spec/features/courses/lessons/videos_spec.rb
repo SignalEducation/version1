@@ -34,7 +34,7 @@ describe 'Video Course Step', type: :feature do
                              course_lesson_name_url: course_video_3.course_step.course_lesson.name_url,
                              course_step_name_url: course_video_3.course_step.name_url)
 
-      expect(page).to have_title('The Smarter Way to Study | learnsignal')
+      expect(page).to have_title('The Smarter Way to Study | Learnsignal')
       expect(page).to have_content(course_video_3.course_step.name)
       expect(page).to have_selector('div', text: 'keyboard_arrow_left')
 

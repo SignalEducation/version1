@@ -14,7 +14,7 @@ class CoursesController < ApplicationController
     @course_section_log = @course_log.course_section_logs.where(course_section_id: @course_section.id).last if @course_log
     @course_lesson_log = @course_section_log.course_lesson_logs.where(course_lesson_id: @course_lesson.id).last if @course_section_log
     @group = @course.group
-    @course_step_index = @course_lesson.active_children.find_index { |item| item.name == @course_step.name } + 1
+    @course_step_index = @course_lesson.active_children.find_index { |item| item.id == @course_step.id } + 1
     @index_order = @course_step_index.to_s + '/' + @course_lesson.active_children.count.to_s
     @previous_completion_count = @course_lesson_log.course_step_logs.for_user(current_user.id).for_course_step(@course_step.id).all_completed.count if @course_lesson_log&.course_step_logs
 
