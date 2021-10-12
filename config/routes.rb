@@ -285,6 +285,8 @@ Rails.application.routes.draw do
       get ':course_name_url', to: redirect('/library/%{course_name_url}'), on: :collection
     end
 
+    post 'courses/search', to: 'courses#search'
+
     get 'courses/:course_name_url/:course_section_name_url/:course_lesson_name_url(/:course_step_name_url)', to: 'courses#show', as: 'show_course'
 
     get 'submit_constructed_response_user_log/:cmeul_id', to: 'courses#submit_constructed_response_user_log', as: :submit_constructed_response_user_log
