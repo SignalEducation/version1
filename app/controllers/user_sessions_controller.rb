@@ -56,7 +56,7 @@ class UserSessionsController < ApplicationController
   def destroy
     current_user_session.destroy
 
-    redirect_to root_url
+    redirect_to logout_redirect_url
   end
 
   protected
