@@ -1,11 +1,17 @@
 json.course do
-  json.id            course.id
-  json.name          course.name
-  json.name_url      course.name_url
-  json.sorting_order course.sorting_order
-  json.description   course.description
-  json.release_date  course.release_date
-  json.level_id      course.level_id
+  json.id             course.id
+  json.name           course.name
+  json.name_url       course.name_url
+  json.sorting_order  course.sorting_order
+  json.description    course.description
+  json.release_date   course.release_date
+  json.level_id       course.level_id
+  json.key_area_id    course.key_area_id
+  json.key_area       course&.key_area&.name
+  json.category_label course.category_label
+  json.icon_label     course.icon_label
+  json.unit_label     course.api_unit_label
+  json.hour_label     course.hour_label
 
   json.sections do
     if course.course_sections.present?
@@ -16,14 +22,14 @@ json.course do
 
         json.lessons do
           if section.course_lessons.present?
-            json.array! section.course_lessons.all_active.all_in_order.each do |lesson|
+            json.array! section.course_lessons.includes(:course_steps).all_active.all_in_order.each do |lesson|
               json.id   lesson.id
               json.name lesson.name
               json.url  lesson.name_url
               json.free lesson.free
 
               json.steps do
-                if lesson.course_steps.includes(:course_video).present?
+                if lesson.course_steps.present?
                   json.array! lesson.course_steps.all_active.all_in_order.each do |step|
                     json.id   step.id
                     json.name step.name

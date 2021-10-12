@@ -13,6 +13,7 @@
 #  created_at                  :datetime         not null
 #  updated_at                  :datetime         not null
 #  description                 :text
+#  name                        :string
 #
 FactoryBot.define do
   factory :practice_question_questions, class: ::PracticeQuestion::Question do

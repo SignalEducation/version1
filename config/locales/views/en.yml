@@ -931,8 +931,6 @@ en:
       manage_courses:
         course: Courses
 
-
-
     home_pages:
       form:
         name: Name
@@ -1292,8 +1290,13 @@ en:
         icon_label: Icon Label
         icon_label_placeholder: Budicon Text Label
         unit_label: Unit Label
-        unit_label_placeholder: CPD Unit/Hours Label
+        unit_label_placeholder: Unit Label
+        api_unit_label: Acquisition Unit Label
+        api_unit_label_placeholder: Acquisition Unit Label
+        hour_label: Hour Label
+        hour_label_placeholder: Hour Label
         level: Level
+        key_area: Key Area
         category_label: Category Label
         category_label_placeholder: Category Label [Applied Knowledge]
         seo_title: SEO Title
@@ -1424,6 +1427,24 @@ en:
         expired: Expired
         notifications: Notifications
 
+    key_areas:
+      form:
+        name: Name
+        name_placeholder: Key Area
+        active: Active
+        sorting_order: Sorting order
+        group_id: Group
+
+      index:
+        h1: Key Areas
+        add_course: Add Key Area
+
+      new:
+        h1: New Key Area
+
+      edit:
+        h1: Edit Key Area
+
     levels:
       form:
         name: Name
@@ -1436,6 +1457,8 @@ en:
         group_id: Group
         icon_label: Icon Label
         icon_label_placeholder: Icon Label
+        sub_text: Sub Text
+        sub_text_placeholder: Sub text
         onboarding_course_subheading: Onboarding Course Subheading
         onboarding_course_subheading_placeholder: Onboarding Course Subheading
         onboarding_course_heading: Onboarding Course Heading

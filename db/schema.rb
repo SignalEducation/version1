@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_28_104628) do
+ActiveRecord::Schema.define(version: 2021_10_07_171118) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -725,8 +725,12 @@ ActiveRecord::Schema.define(version: 2021_09_28_104628) do
     t.string "unit_label"
     t.integer "level_id"
     t.integer "accredible_group_id"
+    t.integer "hour_label"
+    t.integer "api_unit_label"
+    t.bigint "key_area_id"
     t.index ["exam_body_id"], name: "index_courses_on_exam_body_id"
     t.index ["group_id"], name: "index_courses_on_group_id"
+    t.index ["key_area_id"], name: "index_courses_on_key_area_id"
     t.index ["level_id"], name: "index_courses_on_level_id"
     t.index ["name"], name: "index_courses_on_name"
   end
@@ -928,10 +932,6 @@ ActiveRecord::Schema.define(version: 2021_09_28_104628) do
     t.string "onboarding_level_heading"
     t.boolean "tab_view", default: false, null: false
     t.text "disclaimer"
-    t.string "group_logo_file_name"
-    t.string "group_logo_content_type"
-    t.bigint "group_logo_file_size"
-    t.datetime "group_logo_updated_at"
     t.index ["exam_body_id"], name: "index_groups_on_exam_body_id"
     t.index ["name"], name: "index_groups_on_name"
   end
@@ -1073,6 +1073,16 @@ ActiveRecord::Schema.define(version: 2021_09_28_104628) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "key_areas", force: :cascade do |t|
+    t.string "name"
+    t.integer "sorting_order"
+    t.boolean "active", default: false, null: false
+    t.bigint "group_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["group_id"], name: "index_key_areas_on_group_id"
+  end
+
   create_table "levels", force: :cascade do |t|
     t.integer "group_id"
     t.string "name"
@@ -1085,6 +1095,8 @@ ActiveRecord::Schema.define(version: 2021_09_28_104628) do
     t.datetime "updated_at", null: false
     t.text "onboarding_course_subheading"
     t.string "onboarding_course_heading"
+    t.boolean "track", default: false, null: false
+    t.text "sub_text"
     t.index ["group_id"], name: "index_levels_on_group_id"
   end
 
@@ -1753,6 +1765,7 @@ ActiveRecord::Schema.define(version: 2021_09_28_104628) do
   add_foreign_key "exercises", "users", column: "corrector_id"
   add_foreign_key "groups", "exam_bodies"
   add_foreign_key "invoices", "orders"
+  add_foreign_key "key_areas", "groups"
   add_foreign_key "practice_question_answers", "practice_question_questions"
   add_foreign_key "practice_question_questions", "course_practice_questions"
   add_foreign_key "practice_question_responses", "course_step_logs"

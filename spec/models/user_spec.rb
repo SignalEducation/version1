@@ -57,6 +57,11 @@
 #  currency_id                     :bigint
 #  tutor_link                      :string
 #  video_player                    :integer          default("0"), not null
+#  subscriptions_revenue           :decimal(, )      default("0")
+#  orders_revenue                  :decimal(, )      default("0")
+#  home_page_id                    :integer
+#  verify_remembered_at            :datetime
+#  onboarding_course_id            :bigint
 #
 require 'rails_helper'
 require Rails.root.join 'spec/concerns/user_accessable_spec.rb'
