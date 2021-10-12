@@ -195,8 +195,6 @@ class CoursesController < ApplicationController
     @courses = @courses.where(api_unit_label: params[:units])    if params[:units].present?
     @courses = @courses.where(hour_label: params[:hours])        if params[:hours].present?
 
-    binding.pry
-    # binding.pry
     respond_to do |format|
       format.js
     end
