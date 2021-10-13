@@ -328,21 +328,23 @@
   function addToCart(currency, plan_name, plan_id, price, brand, interval_name) {
     gtag('event', 'clicks_plan', {'event_category': 'pre-registration', 'event_label': interval_name});
 
-    fbq('track', 'AddToCart', {
-      value: price,
-      currency: currency,
-      name: plan_name,
-      brand: brand,
-      subscription_interval: interval_name,
-      content_category: 'Subscription'
-    });
+    /*
+      fbq('track', 'AddToCart', {
+        value: price,
+        currency: currency,
+        name: plan_name,
+        brand: brand,
+        subscription_interval: interval_name,
+        content_category: 'Subscription'
+      });
 
-    window.uetq = window.uetq || [];
-    window.uetq.push('event', 'AddToCart', {
-      'event_category': 'Subscription',
-      'event_label': plan_name,
-      'event_value': price
-    });
+      window.uetq = window.uetq || [];
+      window.uetq.push('event', 'AddToCart', {
+        'event_category': 'Subscription',
+        'event_label': plan_name,
+        'event_value': price
+      });
+    */
   }
 
   $( document ).ready(function() {
