@@ -285,6 +285,8 @@ Rails.application.routes.draw do
       get ':course_name_url', to: redirect('/library/%{course_name_url}'), on: :collection
     end
 
+    post 'courses/search', to: 'courses#search'
+
     get 'courses/:course_name_url/:course_section_name_url/:course_lesson_name_url(/:course_step_name_url)', to: 'courses#show', as: 'show_course'
 
     get 'submit_constructed_response_user_log/:cmeul_id', to: 'courses#submit_constructed_response_user_log', as: :submit_constructed_response_user_log
@@ -389,6 +391,7 @@ Rails.application.routes.draw do
     get 'course/:name_url', to: 'student_sign_ups#group', as: :group_landing
 
     root 'student_sign_ups#home'
+    get 'logout', to: redirect { Rails.application.credentials[Rails.env.to_sym][:acqusition_domain][:url] }, as: :logout_redirect
 
     # Catch-all
     get '404', to: 'footer_pages#missing_page', first_element: '404-page', as: :missing_page

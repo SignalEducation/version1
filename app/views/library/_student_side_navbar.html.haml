@@ -20,7 +20,7 @@
             - permission = step.available_to_user(current_user, @valid_subscription, @course_log)
             - if step.course_lesson.free || permission[:view]
               =link_to course_special_link(step, @course_log) do
-                .step{data: {course_step: step.name}, :class => sidepanel_border_radius(@course_step_index,index,@course_lesson.active_children.length.to_i) }
+                .step{data: {course_step: step.id}, :class => sidepanel_border_radius(@course_step_index,index,@course_lesson.active_children.length.to_i) }
                   .step-part
                     %div{:style => "height:20px;"}
                       %i.material-icons.icon-bg-round.side-nav-material-icons

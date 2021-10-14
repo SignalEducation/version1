@@ -8,7 +8,7 @@ LEARNSIGNAL_HOST =
   when 'development'
     'http://localhost:3000'
   when 'staging', 'test'
-    'https://staging.learnsignal.com'
+    'https://staging-app.learnsignal.com'
   when 'production'
-    'https://learnsignal.com'
+    'https://app.learnsignal.com'
   end
