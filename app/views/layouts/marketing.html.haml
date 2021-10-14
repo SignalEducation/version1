@@ -56,8 +56,8 @@
       =yield
 
       -if @footer
-        =render partial: 'layouts/footer_marketing' if @group&.disclaimer
-        =render partial: 'layouts/footer_marketing'
+        =render partial: 'layouts/footer_minimal' if @group&.disclaimer
+        =render partial: 'layouts/footer_minimal'
 
     -else
       =render partial: 'layouts/navbar'
@@ -65,8 +65,8 @@
       -if flash[:success] || flash[:error] || flash[:warning]
         =render partial: 'layouts/flash_messages'
       =yield
-      =render partial: 'layouts/footer_marketing' if @group&.disclaimer
-      =render partial: 'layouts/footer_marketing'
+      =render partial: 'layouts/footer_minimal' if @group&.disclaimer
+      =render partial: 'layouts/footer_minimal'
 
 
     -#General partials

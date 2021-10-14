@@ -12,7 +12,7 @@ en:
       datepicker_datetime_format: "YYYY-MM-DD"
       datepicker_date_format: "YYYY-MM-DD"
       logged_in_required:
-        flash_error: 'You must be logged in to access that page - please log in'
+        flash_error: 'You must be logged in to access that page'
       logged_out_required:
         flash_error: 'You must be logged out to do that'
       you_are_not_permitted_to_do_that: 'You are not permitted to do that'

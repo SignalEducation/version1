@@ -110,7 +110,7 @@
             -if current_user
               =render partial: 'layouts/footer_minimal'
             -else
-              =render partial: 'layouts/footer_marketing'
+              =render partial: 'layouts/footer_minimal'
 
 
       -elsif @layout == 'management'
@@ -148,7 +148,7 @@
             -if current_user
               =render partial: 'layouts/footer_minimal'
             -else
-              =render partial: 'layouts/footer_marketing'
+              =render partial: 'layouts/footer_minimal'
 
       -else
         =render partial: 'layouts/navbar'
