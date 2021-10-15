@@ -22,9 +22,6 @@ class LibraryController < ApplicationController
     if @group
       @levels  = @group.levels.all_active.all_in_order
       @courses = @group.active_children.all_in_order
-      @units   = @courses.map(&:api_unit_label)&.uniq.compact&.sort
-      @hours   = @courses.map(&:hour_label)&.uniq.compact&.sort
-
       seo_title_maker(@group.seo_title, @group.seo_description, nil)
       tag_manager_data_layer(@group.try(:name))
 
