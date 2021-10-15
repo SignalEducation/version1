@@ -10,6 +10,7 @@ describe 'An individual purchasing a product', type: :feature do
   let!(:group) { FactoryBot.create(:group, exam_body: exam_body) }
 
   before :each do
+    allow_any_instance_of(::ApplicationController).to receive(:logged_in_required).and_return(true)
     visit prep_products_path
   end
 

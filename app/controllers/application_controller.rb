@@ -99,7 +99,6 @@ class ApplicationController < ActionController::Base
     return if current_user
 
     session[:return_to] = request.original_url
-    flash[:error] = I18n.t('controllers.application.logged_in_required.flash_error')
     redirect_to sign_in_url
     false
   end
