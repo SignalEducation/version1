@@ -40,6 +40,7 @@ class ApplicationController < ActionController::Base
   end
 
   def log_out_user
+    localStorage.removeItem('user-ls')
     current_user_session&.destroy
     redirect_to sign_in_path
   end
