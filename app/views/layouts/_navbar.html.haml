@@ -69,7 +69,7 @@
                   -if current_user.non_student_user?
                     =link_to management_consoles_url, class: 'nav-link dropdown-item console-btn', target: '_blank' do
                       %span 🔮 Console
-                  =link_to t('views.general.log_out'), sign_out_url, class: 'nav-link dropdown-item logout'
+                  =link_to t('views.general.log_out'), sign_out_url, class: 'nav-link dropdown-item logout', onclick: 'localStorage.removeItem("user-ls");'
 
             -# -else
             -#   %li.nav-item.w-100.text-center.py-2

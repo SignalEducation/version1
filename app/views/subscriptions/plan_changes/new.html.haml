@@ -24,7 +24,7 @@
                       =current_user.email
               .dropdown-menu.dropdown-menu-right{"aria-labelledby" => "navbarDropdown"}
                 =link_to t('views.users.show.h1'), account_url, class: 'nav-link dropdown-item'
-                =link_to t('views.general.log_out'), sign_out_url, class: 'nav-link dropdown-item logout'
+                =link_to t('views.general.log_out'), sign_out_url, class: 'nav-link dropdown-item logout', onclick: 'localStorage.removeItem("user-ls");'
 
           -else
             %li.nav-item.w-100.text-center.py-2
@@ -91,7 +91,7 @@
                                           Save over
                                           %span.text-with-bg{style: 'background-color: #FCD34D;padding: 2px 6px;border-radius: 4px;'}
                                             ="#{plan.monthly_percentage_off}%"
-                  
+
                   .subscriptionPageWrapper-optionsBox
                     - if @subscription.stripe? && !@card
                       .col-sm-12.p-0
@@ -131,7 +131,7 @@
                             %div.coupon-input-box.js-coupon-input-box.hidden{style: 'padding-left: 0;'}
                               %input{type: 'text_field', id: 'coupon_code', class: 'form-control change_plan', placeholder: 'Coupon Code'}
                               %span.coupon-code-apply-btn.js-coupon-code-apply-btn Apply
-                                
+
                               .invalid-code.invalid-details
                                 ='Invalid Code'
 

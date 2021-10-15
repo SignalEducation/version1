@@ -21,7 +21,7 @@
                 .nav-item-box
                     =link_to t('views.users.show.h1'), account_url
                 .nav-item-box.logout
-                    =link_to t('views.general.log_out'), sign_out_url
+                    =link_to t('views.general.log_out'), sign_out_url, onclick: 'localStorage.removeItem("user-ls");'
 
     %header.main-header.d-flex.align-items-center
         =link_to navigation_special_link(@course_step), class: 'main-header-backBtn' do

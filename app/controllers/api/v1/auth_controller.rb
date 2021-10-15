@@ -27,8 +27,6 @@ module Api
         jwt_blocked_token.transaction do
           if jwt_blocked_token.save
             current_user_session&.destroy
-            localStorage.removeItem('user-ls')
-
             json_response({ message: 'You have successfully logged out.' }, :ok)
           else
             json_response({ error: 'Unsuccessfull attempt to logout.' }, :unprocessable_entity)

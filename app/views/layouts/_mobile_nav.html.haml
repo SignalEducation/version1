@@ -49,7 +49,7 @@
                     =link_to t('views.users.show.h1'), account_url
 
                 .nav-item-box.logout
-                    =link_to t('views.general.log_out'), sign_out_url
+                    =link_to t('views.general.log_out'), sign_out_url, onclick: 'localStorage.removeItem("user-ls");'
             -else
                 .login-mobile-box
                     .nav-item-box

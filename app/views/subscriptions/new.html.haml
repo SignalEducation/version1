@@ -26,7 +26,7 @@
                       =current_user.email
               .dropdown-menu.dropdown-menu-right{"aria-labelledby" => "navbarDropdown"}
                 =link_to t('views.users.show.h1'), account_url, class: 'nav-link dropdown-item'
-                =link_to t('views.general.log_out'), sign_out_url, class: 'nav-link dropdown-item logout'
+                =link_to t('views.general.log_out'), sign_out_url, class: 'nav-link dropdown-item logout', onclick: 'localStorage.removeItem("user-ls");'
 
           -else
             %li.nav-item.w-100.text-center.py-2
@@ -102,16 +102,16 @@
                         .subscriptionPageWrapper-paymentOptionsWrapper-header
                           %span Pay with Card
                         =render partial: 'subscription_payment_cards/form', locals: {f: f}
-                        
+
                       .subscriptionPageWrapper-paymentOptionsWrapper-optionForm.js-option-wrapper-paypal
                         .subscriptionPageWrapper-paymentOptionsWrapper-header
                           %span Pay with PayPal
                         =render partial: 'subscription_payment_cards/paypal_form', locals: {f: f}
-                        
 
-                    
 
-    
+
+
+
     .subscriptionPageWrapper-notesBox
       -if is_plan_single_checkout(params, @subscription, @plans)
         - yearly_plan = @plans.yearly.first
@@ -122,15 +122,15 @@
               =yearly_plan.currency.format_number(yearly_plan.previous_plan_price)
 
         %div.alert-secondary.mb-2
-          %span.font-weight-medium Note: 
+          %span.font-weight-medium Note:
           %br
-          You are subscribing to a recurring payment which will continue until you cancel your subscription. 
+          You are subscribing to a recurring payment which will continue until you cancel your subscription.
           %br
           You can cancel your subscription at anytime.
       - else
         %div.alert-secondary.mb-2
           %span.font-weight-medium Note:
-          You are subscribing to a recurring payment which will continue until you cancel your subscription. You can cancel your subscription at anytime.  
+          You are subscribing to a recurring payment which will continue until you cancel your subscription. You can cancel your subscription at anytime.
 
 :javascript
   let plan_id = '1';
