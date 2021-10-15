@@ -12,6 +12,8 @@
       -@levels.each_with_index do |level, counter|
         .tab-pane{id: level.name_url, class: "tab-#{level.name_url} #{counter == 0 ? 'active show' : ''} ", "aria-labelledby" => "#{level.name_url}-tab", :role => "tabpanel"}
           -if @group.name_url == 'cpd'
+            -level_units = level.courses.all_active.map(&:api_unit_label)&.uniq.compact&.sort
+            -level_hours = level.courses.all_active.map(&:hour_label)&.uniq.compact&.sort
             .row.row-lge
               .col-sm
                 .filter-tabbed-card
@@ -28,13 +30,13 @@
                             %input{:checked => "checked", :name => "radio-button", :type => "radio", :value => "no", :onclick => "disableSelectBoxes('hours', #{level.id})"}/
                             %span.filter-select-label
                               Choose Units
-                          =select_tag(:units, options_for_select( @units.map{ |u| [pluralize( u, 'unit'), u] }), id: "#{level.id}-units-select", include_blank: 'All', onchange: 'jQuery(this).parent().trigger("submit")', class: 'form-control filter-select-opts')
+                          =select_tag(:units, options_for_select( level_units.map{ |u| [pluralize( u, 'unit'), u] }), id: "#{level.id}-units-select", include_blank: 'All', onchange: 'jQuery(this).parent().trigger("submit")', class: 'form-control filter-select-opts')
                         .filter-label-select-col.filter-width-half.filter-pad
                           %label.filter-label-container
                             %input{:name => "radio-button", :type => "radio", :value => "no", :onclick => "disableSelectBoxes('units', #{level.id})"}/
                             %span.filter-select-label
                               Choose Hours
-                          =select_tag(:hours, options_for_select( @hours.map{ |u| [pluralize( u, 'hour'), u] }), id: "#{level.id}-hours-select", include_blank: 'All', disabled: true, onchange: 'jQuery(this).parent().trigger("submit")', class: 'form-control filter-select-opts')
+                          =select_tag(:hours, options_for_select( level_hours.map{ |u| [pluralize( u, 'hour'), u] }), id: "#{level.id}-hours-select", include_blank: 'All', disabled: true, onchange: 'jQuery(this).parent().trigger("submit")', class: 'form-control filter-select-opts')
 
                       =hidden_field_tag :level_id, level.id
 
