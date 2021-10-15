@@ -53,15 +53,15 @@ class MandrillClient
     send_template('account-suspended-190605', msg)
   end
 
-  def send_successful_payment_email(account_url, invoice_url)
-    msg = message_stub.merge('subject' => 'LearnSignal - Payment Invoice')
+  def send_successful_payment_email(account_url, invoice_url, bcc_url = nil)
+    msg = message_stub.merge('subject' => 'LearnSignal - Payment Invoice', 'bcc_address' => bcc_url)
     msg['global_merge_vars'] << { 'name' => 'ACCOUNTURL', 'content' => account_url }
     msg['global_merge_vars'] << { 'name' => 'INVOICEURL', 'content' => invoice_url }
     send_template('payment-invoice-new-branding-190605', msg)
   end
 
-  def send_successful_order_email(account_url, product)
-    msg = message_stub.merge('subject' => 'LearnSignal - Payment Invoice')
+  def send_successful_order_email(account_url, product, bcc_url = nil)
+    msg = message_stub.merge('subject' => 'LearnSignal - Payment Invoice', 'bcc_address' => bcc_url)
     msg['global_merge_vars'] << { 'name' => 'ACCOUNTURL', 'content' => account_url }
     msg['global_merge_vars'] << { 'name' => 'PRODUCTNAME', 'content' => product }
     send_template('order-invoice-230920', msg)
