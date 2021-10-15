@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class FooterPagesController < ApplicationController
+  before_action :logged_in_required
   before_action :get_variables, except: :missing_page
 
   def privacy_policy
