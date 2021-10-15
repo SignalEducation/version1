@@ -1,5 +1,5 @@
 %main
-  %article.bg-gray5
+  %article.bg-white
     .container.w-100
       %header.pt-4.px-2.mb-4.text-center
         %h1.mb-2
@@ -28,6 +28,6 @@
               .d-flex.flex-wrap.flex-sm-nowrap.justify-content-between.pt-3
                 =link_to t('views.user_sessions.form.forgot_password'), forgot_password_url, id: '#forgot-password', style: 'font-size: 14px;color: #02b57b;font-weight: 700;'
                 =f.submit t('views.general.sign_in'), class: 'btn btn-primary btn-sm'
-          %p.mt-4.text-center
-            ="Don't have an account?"
-            =link_to 'Register today.', new_student_url, style: 'font-size: 14px;color: #02b57b;font-weight: 700;' 
+          -# %p.mt-4.text-center
+          -#   ="Don't have an account?"
+          -#   =link_to 'Register today.', new_student_url, style: 'font-size: 14px;color: #02b57b;font-weight: 700;' 

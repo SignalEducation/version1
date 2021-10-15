@@ -32,6 +32,10 @@ describe Message do
     it { should respond_to(:updated_at) }
     it { should respond_to(:state) }
     it { should respond_to(:template_params) }
+    it { should respond_to(:guid) }
+    it { should respond_to(:onboarding_process_id) }
+    it { should respond_to(:subscription_id) }
+    it { should respond_to(:order_id) }
   end
 
   describe 'Constants' do
@@ -95,4 +99,6 @@ describe Message do
     end
   end
 
+  it { should respond_to(:unsubscribe_url) }
+  it { should respond_to(:include_bcc?) }
 end

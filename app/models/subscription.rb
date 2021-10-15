@@ -63,6 +63,7 @@ class Subscription < ApplicationRecord
   has_many :invoice_line_items
   has_many :charges
   has_many :refunds
+  has_many :messages
 
   # validation
   validates :user_id, presence: true,
