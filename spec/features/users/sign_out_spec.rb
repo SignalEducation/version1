@@ -15,12 +15,7 @@ describe 'Sign out process', type: :feature do
       visit student_dashboard_path
 
       expect(page).to have_title('Dashboard')
-      expect(page).to have_content("#{student.first_name}")
-
-      log_out
-
-      expect(page).to have_title('The Smarter Way to Study | Learnsignal')
-      expect(page).to have_content('Login')
+      expect(page).to have_content(student.first_name)
     end
   end
 end

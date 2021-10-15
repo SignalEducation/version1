@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class LibraryController < ApplicationController
+  before_action :logged_in_required
   before_action :check_course_available, :get_course_products_and_resources,
                 only: %i[course_show course_preview]
   layout 'marketing'
