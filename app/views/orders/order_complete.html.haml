@@ -28,7 +28,7 @@
       'event_value': "#{@product.price}"
     });
 
-    fbq('track', 'Purchase', {
+    fbq('track', 'Product Purchases', {
       value: "#{@product&.price}",
       currency: "#{@product&.currency&.iso_code}",
       product_id: "#{@product&.id}",

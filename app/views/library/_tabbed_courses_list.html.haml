@@ -1,0 +1,17 @@
+-courses.each do |course|
+  .col-lg-12.col-xl-12
+    =link_to library_special_link(course), class: 'card flex-md-row', style: 'margin-bottom: 1rem;', data: { toggle: 'tooltip', placement: 'right', animation: 'true', delay: { "show": 300, "hide": 100 }}, title: "#{course.short_description}" do
+      .card-body.d-flex.flex-column.justify-content-center
+        %div.libraryGroupWrapper-list-courseInfo
+          %div.libraryGroupWrapper-list-courseIcon{style: "border-color: #{course.highlight_colour}; background-color: #{course.highlight_colour};"}
+            %i{"aria-label" => course.icon_label, :role => "img", class: course.icon_label ? course.icon_label : 'budicon-office-bag-c', style: "color: #FFF;"}
+          %div
+            %div.libraryGroupWrapper-list-parent
+              .libraryGroupWrapper-list-levelName{style: "color: #{course.highlight_colour};"}
+                -if course.preview && course.release_date
+                  ="Coming #{course.release_date.strftime("%B, %Y")}"
+                -else
+                  =course.category_label
+            %div.courseName
+              =course.name
+          .courseArrowIcon.i.material-icons keyboard_arrow_right

@@ -11,22 +11,52 @@
     #levelsTabsContent.tab-content
       -@levels.each_with_index do |level, counter|
         .tab-pane{id: level.name_url, class: "tab-#{level.name_url} #{counter == 0 ? 'active show' : ''} ", "aria-labelledby" => "#{level.name_url}-tab", :role => "tabpanel"}
-          .row.row-lg
-            -level.courses.all_in_order.each do |course|
-              - if course.active
-                .col-lg-12.col-xl-12
-                  =link_to library_special_link(course), class: 'card flex-md-row', style: 'margin-bottom: 1rem;', data: { toggle: 'tooltip', placement: 'right', animation: 'true', delay: { "show": 300, "hide": 100 }}, title: "#{course.short_description}" do
-                    .card-body.d-flex.flex-column.justify-content-center
-                      %div.libraryGroupWrapper-list-courseInfo
-                        %div.libraryGroupWrapper-list-courseIcon{style: "border-color: #{course.highlight_colour}; background-color: #{course.highlight_colour};"}
-                          %i{"aria-label" => course.icon_label, :role => "img", class: course.icon_label ? course.icon_label : 'budicon-office-bag-c', style: "color: #FFF;"}
-                        %div
-                          %div.libraryGroupWrapper-list-parent
-                            .libraryGroupWrapper-list-levelName{style: "color: #{course.highlight_colour};"}
-                              -if course.preview && course.release_date
-                                ="Coming #{course.release_date.strftime("%B, %Y")}"
-                              -else
-                                =course.category_label
-                          %div.courseName
-                            =course.name
-                        .courseArrowIcon.i.material-icons keyboard_arrow_right
+          -if @group.name_url == 'cpd'
+            -level_units = level.courses.all_active.map(&:api_unit_label)&.uniq.compact&.sort
+            -level_hours = level.courses.all_active.map(&:hour_label)&.uniq.compact&.sort
+            .row.row-lge
+              .col-sm
+                .filter-tabbed-card
+                  .search-container
+                    =form_tag(courses_search_url, method: :post, role: 'form', class: 'form-inline', remote: true) do
+                      -if level.track == false
+                        .filter-label-select-row.filter-width-full.filter-select-top-row
+                          .filter-label-select-col.filter-select-key-area-ext
+                            =label_tag(:key_area_id, 'Choose Key Area', class: 'filter-select-label filter-select-label-top')
+                            =select_tag(:key_area_id, options_for_select( @group.key_areas.map{ |k| [k.name, k.id] }.sort), include_blank: 'All', onchange: 'jQuery(this).parent().trigger("submit")', class: 'form-control filter-select-key-area')
+                      .filter-label-select-row.filter-row-wrap.filter-width-full
+                        .filter-label-select-col.filter-width-half
+                          %label.filter-label-container
+                            %input{:checked => "checked", :name => "radio-button", :type => "radio", :value => "no", :onclick => "disableSelectBoxes('hours', #{level.id})"}/
+                            %span.filter-select-label
+                              Choose Units
+                          =select_tag(:units, options_for_select( level_units.map{ |u| [pluralize( u, 'unit'), u] }), id: "#{level.id}-units-select", include_blank: 'All', onchange: 'jQuery(this).parent().trigger("submit")', class: 'form-control filter-select-opts')
+                        .filter-label-select-col.filter-width-half.filter-pad
+                          %label.filter-label-container
+                            %input{:name => "radio-button", :type => "radio", :value => "no", :onclick => "disableSelectBoxes('units', #{level.id})"}/
+                            %span.filter-select-label
+                              Choose Hours
+                          =select_tag(:hours, options_for_select( level_hours.map{ |u| [pluralize( u, 'hour'), u] }), id: "#{level.id}-hours-select", include_blank: 'All', disabled: true, onchange: 'jQuery(this).parent().trigger("submit")', class: 'form-control filter-select-opts')
+
+                      =hidden_field_tag :level_id, level.id
+
+          .row.row-lge{id: "#{level.id}-tabbed-courses-list"}
+            =render partial: 'tabbed_courses_list', locals: { courses: level.courses.all_active.all_in_order }
+
+:javascript
+  function disableSelectBoxes(select_box, level_id) {
+    let units_el =  $("#" + level_id + "-units-select");
+    let hours_el =  $("#" + level_id + "-hours-select");
+
+      switch (select_box) {
+        case "units":
+          units_el.prop("disabled", true);
+          hours_el.prop("disabled", false);
+          break;
+        case "hours":
+          units_el.prop("disabled", false);
+          hours_el.prop("disabled", true);
+          break;
+      }
+
+  };

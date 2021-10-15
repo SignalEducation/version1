@@ -188,6 +188,18 @@ class CoursesController < ApplicationController
     render json: { error: 'Invalid course_step_log_id' }, status: :ok
   end
 
+  def search
+    @level   = Level.find(params[:level_id])
+    @courses = @level.courses.all_active
+    @courses = @courses.where(key_area_id: params[:key_area_id]) if params[:key_area_id].present?
+    @courses = @courses.where(api_unit_label: params[:units])    if params[:units].present?
+    @courses = @courses.where(hour_label: params[:hours])        if params[:hours].present?
+
+    respond_to do |format|
+      format.js
+    end
+  end
+
   private
 
   def allowed_params
