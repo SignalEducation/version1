@@ -48,7 +48,7 @@
     if ("#{@subscription.kind}" === 'new_subscription') {
       var price = "#{@discounted_price}"
 
-      gtag('event', 'purchase', {
+      gtag('event', 'Sub Purchases', {
         "transaction_id": "#{@subscription&.id}",
         "affiliation": "subscription",
         "value": "#{@subscription&.subscription_plan&.price}",
