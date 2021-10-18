@@ -1,4 +1,13 @@
 $(document).on('ready', function () {
+  if (window.location.href.indexOf("coupon") > -1) {
+    const searchParams = new URLSearchParams(window.location.search)
+    if (searchParams.has('coupon')) {
+      const code = searchParams.get('coupon')
+      $('#coupon_code').val(code)
+      validateCoupon();
+    }
+  }
+
   $('#coupon_code').on('focus', function (e) {
     couponFieldFocus(analyticsData);
   });
