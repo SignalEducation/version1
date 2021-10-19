@@ -15,6 +15,7 @@
 @import "components/master";
 @import "breakpoints";
 @import "bootstrapOverrides";
+@import "components/vue-spreadsheet/SpreadsheetEditor";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 1. Colours & Fonts
@@ -3338,6 +3339,9 @@ cite {
   display: block;
   margin-bottom: 0;
   margin-right: 0.25rem;
+}
+.wrap-tabs {
+  flex-wrap: wrap;
 }
 @media (min-width: 576px) {
   .nav-tabs .nav-item {
