@@ -3,6 +3,7 @@
 class KeyArea < ApplicationRecord
   # relationships
   belongs_to :group
+  belongs_to :level
   has_many :courses, dependent: :restrict_with_error
 
   # validations

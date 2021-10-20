@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_22_091623) do
+ActiveRecord::Schema.define(version: 2021_10_20_125555) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -727,7 +727,7 @@ ActiveRecord::Schema.define(version: 2021_10_22_091623) do
     t.integer "level_id"
     t.integer "accredible_group_id"
     t.integer "hour_label"
-    t.integer "api_unit_label"
+    t.integer "unit_hour_label"
     t.bigint "key_area_id"
     t.index ["exam_body_id"], name: "index_courses_on_exam_body_id"
     t.index ["group_id"], name: "index_courses_on_group_id"
@@ -1081,7 +1081,9 @@ ActiveRecord::Schema.define(version: 2021_10_22_091623) do
     t.bigint "group_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "level_id"
     t.index ["group_id"], name: "index_key_areas_on_group_id"
+    t.index ["level_id"], name: "index_key_areas_on_level_id"
   end
 
   create_table "levels", force: :cascade do |t|
@@ -1296,6 +1298,7 @@ ActiveRecord::Schema.define(version: 2021_10_22_091623) do
     t.text "payment_description"
     t.string "savings_label"
     t.index ["cbe_id"], name: "index_products_on_cbe_id"
+    t.index ["course_id"], name: "index_products_on_course_id"
     t.index ["currency_id"], name: "index_products_on_currency_id"
     t.index ["group_id"], name: "index_products_on_group_id"
     t.index ["mock_exam_id"], name: "index_products_on_mock_exam_id"

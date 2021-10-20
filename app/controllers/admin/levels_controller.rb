@@ -70,6 +70,13 @@ module Admin
       redirect_to admin_levels_url
     end
 
+    def by_group
+      group   = Group.find(params[:group_id])
+      @levels = group.levels
+
+      render json: Jbuilder.new { |json| json.array! @levels, :id, :name }.target!
+    end
+
     protected
 
     def set_variables
