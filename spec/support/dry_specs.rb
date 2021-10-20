@@ -5,7 +5,7 @@
 ##
 def expect_bounce_as_not_signed_in
   expect(flash[:success]).to be_nil
-  expect(flash[:error]).to eq(I18n.t('controllers.application.logged_in_required.flash_error'))
+  expect(flash[:error]).to be_nil
   expect(response.status).to eq(302)
   expect(response).to redirect_to(sign_in_url)
 end

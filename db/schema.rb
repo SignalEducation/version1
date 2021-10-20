@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_07_171118) do
+ActiveRecord::Schema.define(version: 2021_10_15_094110) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -1114,6 +1114,8 @@ ActiveRecord::Schema.define(version: 2021_10_07_171118) do
     t.hstore "template_params", default: {}
     t.string "guid"
     t.integer "onboarding_process_id"
+    t.integer "subscription_id"
+    t.integer "order_id"
     t.index ["mandrill_id"], name: "index_messages_on_mandrill_id"
     t.index ["process_at"], name: "index_messages_on_process_at"
     t.index ["user_id"], name: "index_messages_on_user_id"
@@ -1293,7 +1295,6 @@ ActiveRecord::Schema.define(version: 2021_10_07_171118) do
     t.text "payment_description"
     t.string "savings_label"
     t.index ["cbe_id"], name: "index_products_on_cbe_id"
-    t.index ["course_id"], name: "index_products_on_course_id"
     t.index ["currency_id"], name: "index_products_on_currency_id"
     t.index ["group_id"], name: "index_products_on_group_id"
     t.index ["mock_exam_id"], name: "index_products_on_mock_exam_id"

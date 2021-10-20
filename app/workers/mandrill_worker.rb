@@ -11,6 +11,7 @@ class MandrillWorker
     method_name    = message.template
     template_args  = message.template_params.values
     template_args << message.unsubscribe_url if message.unsubscribe_url
+    template_args << 'learnsignal.com+ec7befe2db@invite.trustpilot.com' if message.include_bcc?
     # The template_params are pulled out in different order than the order they were input to the hstore
 
     return unless message&.user&.email

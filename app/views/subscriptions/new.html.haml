@@ -473,5 +473,16 @@
       }
     });
 
+    // If we detect a coupon param in the URL call set it in the form field
+    // and trigger the validation method. Could not put this in the coupon.js
+    // file because there is an issue with the order of events, it must come last
+    if (window.location.href.indexOf("coupon") > -1) {
+      const searchParams = new URLSearchParams(window.location.search)
+      if (searchParams.has('coupon')) {
+        const code = searchParams.get('coupon')
+        $('#coupon_code').val(code)
+        validateCoupon();
+      }
+    }
 
   })

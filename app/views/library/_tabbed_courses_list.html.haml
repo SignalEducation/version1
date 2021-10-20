@@ -12,6 +12,11 @@
                   ="Coming #{course.release_date.strftime("%B, %Y")}"
                 -else
                   =course.category_label
+              -if course.unit_label && course.unit_label.length > 0
+                .libraryGroupWrapper-list-levelName{style: "color: #383838"}
+                  (
+                  =course.unit_label
+                  )
             %div.courseName
               =course.name
           .courseArrowIcon.i.material-icons keyboard_arrow_right

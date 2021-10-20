@@ -289,6 +289,7 @@ class Invoice < ApplicationRecord
       user_id: user_id,
       kind: :account,
       template: 'send_successful_payment_email',
+      subscription_id: subscription_id,
       template_params: {
         url: account_url,
         invoice_url: invoice_url

@@ -74,6 +74,7 @@ describe Subscription do
     it { should belong_to(:coupon) }
     it { should have_many(:charges) }
     it { should have_many(:refunds) }
+    it { should have_many(:messages) }
   end
 
   describe 'Validations' do
