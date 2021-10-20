@@ -41,7 +41,6 @@
                               %span.filter-select-label
                                 Choose Units/Hours
                             =select_tag(:units, options_for_select( level_units_hours.map{ |u| [t('models.course.hour_unit', count: u), u] }), id: "#{level.id}-units-select", include_blank: 'All', onchange: 'jQuery(this).parent().trigger("submit")', class: 'form-control filter-select-opts')
-
                       =hidden_field_tag :level_id, level.id
 
           .row.row-lge{id: "#{level.id}-tabbed-courses-list"}
