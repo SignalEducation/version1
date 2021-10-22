@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_15_094110) do
+ActiveRecord::Schema.define(version: 2021_10_22_091623) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -685,6 +685,7 @@ ActiveRecord::Schema.define(version: 2021_10_15_094110) do
     t.float "duration"
     t.string "vimeo_guid"
     t.string "dacast_id"
+    t.string "new_dacast_id"
     t.index ["course_step_id"], name: "index_course_videos_on_course_step_id"
   end
 

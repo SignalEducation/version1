@@ -10,6 +10,10 @@
     .input-group.input-group-lg
       =cme_video.text_field :dacast_id, placeholder: t('views.course_videos.form.dacast_id_placeholder'), class: 'form-control'
 
+  .form-group
+    =cme_video.label :new_dacast_id, t('views.course_videos.form.new_dacast_id')
+    .input-group.input-group-lg
+      =cme_video.text_field :new_dacast_id, placeholder: t('views.course_videos.form.new_dacast_id_placeholder'), class: 'form-control'
 
   .form-group
     =cme_video.label :duration, t('views.course_videos.form.duration')
