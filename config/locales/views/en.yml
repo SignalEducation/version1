@@ -623,6 +623,8 @@ en:
         vimeo_guid_placeholder: Vimeo ID (in the URL on Vimeo)
         dacast_id: Dacast video ID
         dacast_id_placeholder: Dacast video ID (in the URL on Dacast)
+        new_dacast_id: NEW - Dacast video ID
+        new_dacast_id_placeholder: NEW - Dacast video ID (content_id)
 
     course_tutors:
       form:
