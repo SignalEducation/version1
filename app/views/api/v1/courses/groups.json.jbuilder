@@ -48,8 +48,7 @@ json.groups do
             json.key_area       course&.key_area&.name
             json.category_label course.category_label
             json.icon_label     course.icon_label
-            json.unit_label     course.api_unit_label
-            json.hour_label     course.hour_label
+            json.unit_label     course.unit_hour_label
 
             json.exam_body do
               json.id   course.exam_body.id

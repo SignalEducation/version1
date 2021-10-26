@@ -176,7 +176,7 @@ module Admin
         :background_image, :survey_url, :quiz_pass_rate, :group_id, :accredible_group_id, :preview,
         :computer_based, :highlight_colour, :category_label, :icon_label,
         :seo_title, :seo_description, :has_correction_packs, :short_description,
-        :on_welcome_page, :unit_label, :api_unit_label, :hour_label, :level_id, :key_area_id,
+        :on_welcome_page, :unit_hour_label, :level_id, :key_area_id,
         course_sections_attributes: [
           course_lessons_attributes: [
             course_steps_attributes: [

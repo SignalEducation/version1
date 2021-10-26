@@ -1291,12 +1291,8 @@ en:
         quiz_pass_rate_placeholder: Custom Pass Rate for Quizzes
         icon_label: Icon Label
         icon_label_placeholder: Budicon Text Label
-        unit_label: Unit Label
-        unit_label_placeholder: Unit Label
-        api_unit_label: Acquisition Unit Label
-        api_unit_label_placeholder: Acquisition Unit Label
-        hour_label: Hour Label
-        hour_label_placeholder: Hour Label
+        unit_hour_label: Hours/Units Label
+        unit_hour_label_placeholder: Hours/Units
         level: Level
         key_area: Key Area
         category_label: Category Label
@@ -1436,6 +1432,8 @@ en:
         active: Active
         sorting_order: Sorting order
         group_id: Group
+        level_id: Level
+        level_select_default: Select a group first
 
       index:
         h1: Key Areas

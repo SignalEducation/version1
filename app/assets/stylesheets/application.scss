@@ -134,7 +134,7 @@ body {
   line-height: 1.5;
   color: #000;
   text-align: left;
-  background-color: #FFF;
+  background-color: #fff;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
@@ -9689,6 +9689,7 @@ button.sub-details[aria-expanded="true"]:before {
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
   margin-bottom: 2rem;
+  margin-right: 1rem;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -9714,6 +9715,10 @@ button.sub-details[aria-expanded="true"]:before {
   .filter-label-select-col {
     display: flex;
     flex-direction: column;
+    margin-bottom: 0;
+    @media (max-width: 768px) {
+      margin-bottom: 1.5rem;
+    }
   }
   .filter-width-full {
     width: 100%;
@@ -9726,7 +9731,7 @@ button.sub-details[aria-expanded="true"]:before {
   }
   .filter-row-wrap {
     flex-wrap: wrap;
-    justify-content: space-around;
+    justify-content: flex-start;
   }
   .filter-radio {
     padding: 0.25rem;
@@ -9750,6 +9755,29 @@ button.sub-details[aria-expanded="true"]:before {
     font-weight: 600;
     padding-left: 0 !important;
     cursor: pointer;
+  }
+  .filter-select-dot {
+    padding: 0.25rem;
+    margin-right: 0.75rem;
+    background-color: #ffffff;
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 9999px;
+    box-shadow: 0 0 0 5px #111827;
+
+    @media (min-width: 768px) {
+      box-shadow: 0 0 0 5px #111827;
+    }
+    .filter-inner-dot {
+      height: 12px;
+      width: 12px;
+      background-color: #111827;
+      border-radius: 50%;
+      display: flex;
+      position: relative;
+      top: 0;
+      left: 0;
+    }
   }
   .filter-select-label-top {
     line-height: 2.25;
@@ -9786,7 +9814,11 @@ button.sub-details[aria-expanded="true"]:before {
     color: rgba(156, 163, 175, var(--tw-text-opacity));
     font-weight: 600;
     width: 95%;
-    margin-left: 5%;
+    margin-left: 7.5%;
+    margin-top: 5px;
+    @media (max-width: 768px) {
+      width: 93%;
+    }
   }
   label > input[type="radio"] {
     display: none;
