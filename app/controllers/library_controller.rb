@@ -148,9 +148,15 @@ class LibraryController < ApplicationController
 
   def get_course_products_and_resources
     ip_country = IpAddress.get_country(request.remote_ip)
-    @country = ip_country || Country.find_by(name: 'United Kingdom')
-    @currency_id = @country ? @country.currency_id : Currency.all_active.all_in_order.first
+    country = ip_country || Country.find_by(name: 'United Kingdom')
     @correction_pack_products = []
+
+    @currency_id =
+      if current_user
+        current_user.get_currency(country)
+      else
+        country ? country.currency : Currency.all_active.all_in_order.first
+      end
 
     valid_products = Product.includes(:cbe).for_group(@group.id).
                        in_currency(@currency_id).all_active.all_in_order
@@ -170,7 +176,7 @@ class LibraryController < ApplicationController
 
     @course_resources = @course.course_resources.all_active.all_in_order
 
-    return unless @country && @currency_id
+    return unless country && @currency_id
 
     @subscription_plan =
       SubscriptionPlan.where(
