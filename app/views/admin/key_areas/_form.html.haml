@@ -1,6 +1,6 @@
 .box-item.form-box
   .col-sm-12
-    =form_for([:admin, @key_area], html: {class: 'form-horizontal', role: 'form'}) do |f|
+    =form_for([:admin, @key_area], html: { class: 'form-horizontal', role: 'form' }) do |f|
       =render partial: '/layouts/error_messages', locals: {thing: @key_area, message: nil}
       .row
         .col-sm-6
@@ -15,13 +15,44 @@
             %label
               =f.check_box :active
               Active
-        .col-sm-6
+        .col-sm-3
           .form-group
             =f.label :group_id, t('views.key_areas.form.group_id')
             .input-group.input-group-lg
-              =f.collection_select :group_id, @groups, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
+              =f.collection_select :group_id, @groups, :id, :name, {include_blank: t('views.general.select')}, { class: 'form-control custom-select', onchange: 'updateLevelsSelect();' }
+
+        .col-sm-3
+          .form-group
+            =f.label :level_id, t('views.key_areas.form.level_id')
+            .input-group.input-group-lg
+              =f.collection_select :level_id, @levels, :id, :name, { include_blank: t('views.general.select') }, { class: 'form-control custom-select' }
 
       .row.pt-4
         .col-md-12
           =f.submit t('views.general.save'), class: 'btn btn-primary'
           =link_to t('views.general.cancel'), admin_key_areas_path, class: 'btn btn-secondary l-margin-right-big l-padding-side-3x'
+
+:javascript
+  function updateLevelsSelect() {
+    let group =  $('#key_area_group_id').val();
+
+     $.ajax({
+      url: '/admin/levels/by_group',
+      dataType: 'json',
+      method: 'POST',
+      async: false,
+      contentType: "application/json; charset=utf-8",
+      data: JSON.stringify({'group_id': group}),
+      success: function (data) {
+        var $el = $("#key_area_level_id");
+        $el.empty(); // remove old options
+        $.each(data, function(key,value) {
+          $el.append($("<option></option>")
+            .attr("value", value['id']).text(value['name']));
+        });
+      },
+      error: function (xhr, status, error) {
+        console.error(error);
+      }
+    });
+  };

@@ -106,7 +106,6 @@ class ApplicationController < ActionController::Base
   def logged_out_required
     return unless current_user
 
-    flash[:error] = I18n.t('controllers.application.logged_out_required.flash_error')
     redirect_to root_url
     false
   end
