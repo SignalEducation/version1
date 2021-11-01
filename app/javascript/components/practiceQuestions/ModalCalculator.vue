@@ -1,26 +1,28 @@
 <template>
-    <div class="non-resizable-modal">
-      <button @click="show()" class="btn btn-settings calculator-icon-no-title components-sidebar-links" title="Calculator"></button>
-        <VueModal
-          :componentType="componentType"
-          :componentName="componentName"
-          :componentModal="componentModal"
-          :mainColor="'rgba(24, 24, 66, 0.95)'"
-          :textColor="'#ffffff'"
-          :componentWidth="600"
-        >
-        <div slot="body">
-          <div>
-            <Calculator />
-          </div>
+  <div class="non-resizable-modal">
+    <button @click="show()" class="cr-nav-link tool-btn">
+      <div class="k-icon k-i-calculator"></div>
+      Calculator
+    </button>
+    <VueModal
+      :componentType="componentType"
+      :componentName="componentName"
+      :componentModal="componentModal"
+      :mainColor="'#00b67B'"
+      :textColor="'#ffffff'"
+      :componentWidth="600"
+    >
+      <div slot="body">
+        <div>
+          <Calculator />
         </div>
-      </VueModal>
-    </div>
+      </div>
+    </VueModal>
+  </div>
 </template>
 
 <script>
-
-import Calculator from '../Calculator.vue';
+import Calculator from "../Calculator.vue";
 import eventBus from "../cbe/EventBus.vue";
 import VueModal from "../VueModal.vue";
 
@@ -28,7 +30,7 @@ export default {
   components: {
     Calculator,
     eventBus,
-    VueModal
+    VueModal,
   },
   props: {
     componentType: {
@@ -50,27 +52,34 @@ export default {
     };
   },
   created() {
-    eventBus.$on("close-modal",(status)=>{
+    eventBus.$on("close-modal", (status) => {
       this.modalIsOpen = status;
-    })
+    });
   },
   mounted() {
-    this.$nextTick(function () {
-        $('#calcModal').draggable();
-    })
+    this.$nextTick(function() {
+      $("#calcModal").draggable();
+    });
   },
   methods: {
     handleChange(value) {
       this.modalIsOpen = value;
     },
-    show () {
-      this.$modal.show("modal-"+this.componentType+"-"+this.componentName);
-      $('.components-sidebar .components div').removeClass('active-modal');
-      eventBus.$emit("update-modal-z-index", `modal-${this.componentType}-${this.componentName}`);
+    show() {
+      this.$modal.show(
+        "modal-" + this.componentType + "-" + this.componentName
+      );
+      $(".components-sidebar .components div").removeClass("active-modal");
+      eventBus.$emit(
+        "update-modal-z-index",
+        `modal-${this.componentType}-${this.componentName}`
+      );
     },
-    hide () {
-      $('.latent-modal').removeClass('active-modal');
-      this.$modal.hide("modal-"+this.componentType+"-"+this.componentName);
+    hide() {
+      $(".latent-modal").removeClass("active-modal");
+      this.$modal.hide(
+        "modal-" + this.componentType + "-" + this.componentName
+      );
     },
   },
   watch: {

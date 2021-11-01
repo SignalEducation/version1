@@ -29,19 +29,27 @@
       @document-rendered="onDocumentRendered"
       @document-errored="onDocumentErrored"
     >
-      <template v-slot:preview="{pages}">
+      <template v-slot:preview="{ pages }">
         <PDFPreview
           v-show="isPreviewEnabled"
           class="pdf-viewer__preview"
-          v-bind="{pages, scale, currentPage, pageCount, isPreviewEnabled}"
+          v-bind="{ pages, scale, currentPage, pageCount, isPreviewEnabled }"
         />
       </template>
 
-      <template v-slot:document="{pages}">
+      <template v-slot:document="{ pages }">
         <PDFDocument
           class="pdf-viewer__document"
           :class="{ 'preview-enabled': isPreviewEnabled }"
-          v-bind="{pages, scale, optimalScale, fit, currentPage, pageCount, isPreviewEnabled}"
+          v-bind="{
+            pages,
+            scale,
+            optimalScale,
+            fit,
+            currentPage,
+            pageCount,
+            isPreviewEnabled,
+          }"
           @scale-change="updateScale"
         />
       </template>
@@ -50,19 +58,19 @@
 </template>
 
 <script>
-import PreviewIcon from './assets/icon-preview.svg';
-import PDFDocument from './components/PDFDocument.vue';
-import PDFData from './components/PDFData.vue';
-import PDFPaginator from './components/PDFPaginator.vue';
-import PDFPreview from './components/PDFPreview.vue';
-import PDFZoom from './components/PDFZoom.vue';
+import PreviewIcon from "./assets/icon-preview.svg";
+import PDFDocument from "./components/PDFDocument.vue";
+import PDFData from "./components/PDFData.vue";
+import PDFPaginator from "./components/PDFPaginator.vue";
+import PDFPreview from "./components/PDFPreview.vue";
+import PDFZoom from "./components/PDFZoom.vue";
 
 function floor(value, precision) {
   const multiplier = Math.pow(10, precision || 0);
   return Math.floor(value * multiplier) / multiplier;
 }
 export default {
-  name: 'PDFViewer',
+  name: "PDFViewer",
   components: {
     PDFDocument,
     PDFData,
@@ -78,7 +86,7 @@ export default {
     },
     fileUrl: {
       type: String,
-      default: '',
+      default: "",
     },
   },
   data() {
@@ -98,12 +106,12 @@ export default {
   },
   methods: {
     onDocumentRendered() {
-      this.$emit('document-rendered', this.url);
+      this.$emit("document-rendered", this.url);
     },
     onDocumentErrored(e) {
-      this.$emit('document-errored', e);
+      this.$emit("document-errored", e);
     },
-    updateScale({scale, isOptimal = false}) {
+    updateScale({ scale, isOptimal = false }) {
       const roundedScale = floor(scale, 2);
       if (isOptimal) this.optimalScale = roundedScale;
       this.scale = roundedScale;
@@ -118,8 +126,11 @@ export default {
       this.currentPage = pageNumber;
       this.updateNotesPages(pageNumber, this.pageCount);
     },
-    updateNotesPages(page, total){
-      this.$emit('update-pages', { currentPage: this.currentPage, totalPages: this.pageCount });
+    updateNotesPages(page, total) {
+      this.$emit("update-pages", {
+        currentPage: this.currentPage,
+        totalPages: this.pageCount,
+      });
     },
     togglePreview() {
       this.isPreviewEnabled = !this.isPreviewEnabled;
@@ -159,7 +170,8 @@ header {
 .pdf-preview-toggle > a.icon > svg {
   width: 30px;
   height: 30px;
-  position: absolute;
+  position: relative;
+  top: -5px;
 }
 .pdf-viewer {
   min-height: 500px;

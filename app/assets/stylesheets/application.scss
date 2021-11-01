@@ -1797,7 +1797,10 @@ textarea.form-control {
   z-index: 1;
   p {
     padding: 0.75em 1em 0 1em;
-    font-weight: bold !important;
+    font-weight: 100;
+    font-size: 1.2em;
+    display: flex;
+    line-height: 1;
   }
   .modal-close {
     top: 0.5rem;
@@ -1813,6 +1816,7 @@ textarea.form-control {
   }
   .close {
     opacity: 1;
+    font-weight: 100;
   }
 }
 .window-header:active {
@@ -7075,7 +7079,7 @@ div#hs-eu-cookie-confirmation {
 }
 .practice-question-window-width-mgn-left {
   width: 100% !important;
-  margin-left: 5% !important;
+  margin-left: 50px !important;
 }
 .sidebar-right-content-width-mgn-left {
   width: 100% !important;
@@ -7526,10 +7530,9 @@ button.sub-details[aria-expanded="true"]:before {
 }
 
 #practice-question-window {
-  padding-bottom: 3em;
-  padding-right: 3em;
-  width: 86%;
-  margin-left: 2em;
+  padding-bottom: 1em;
+  padding-right: 0;
+  width: 100%;
 }
 
 .verification-btn {
@@ -8202,10 +8205,10 @@ button.sub-details[aria-expanded="true"]:before {
     justify-content: center;
     text-align: center;
     width: 100%;
-    max-width: 1024px;
+    max-width: 100%;
     height: calc(100% - 60px);
-    margin: 0 auto;
-    padding: 48px 0 0;
+    margin: -15px auto;
+    padding: 0;
     @include if-device(phone) {
       padding: 0;
       height: auto;
@@ -8325,6 +8328,79 @@ button.sub-details[aria-expanded="true"]:before {
   .constructed-response-form {
     overflow: auto;
     height: 100%;
+  }
+}
+.cr-practice-questions {
+  .cr-second-nav {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  .cr-title-pad {
+    padding-right: 7.5rem;
+  }
+  .cr-submit-pad {
+    padding-right: 5rem;
+  }
+  .exit-btn {
+    background-color: #dc3545;
+    position: relative;
+    top: -22px;
+    &:hover,
+    &:focus {
+      text-decoration: none;
+      background-color: #bf2d3b;
+    }
+  }
+  .question-count {
+    display: flex;
+    justify-content: center;
+  }
+  .scenario-box-nav {
+    background-color: #1e293b;
+    height: 3rem;
+  }
+  .top-btns-prac-ques {
+    .cr-navigation {
+      width: 85%;
+    }
+    .cr-nav-link {
+      font-weight: 600;
+      i {
+        position: relative;
+        top: 2px;
+      }
+    }
+    .tool-btn {
+      background-color: rgba(191, 191, 191, 0.95);
+      color: #222f3e;
+      padding: 2px 0.75rem;
+      font-weight: 600;
+      font-size: 14px;
+      text-transform: uppercase;
+      border-radius: 52px;
+      border: none;
+    }
+    button:focus {
+      outline: none;
+    }
+    .scenario-box-nav {
+      background-color: red;
+    }
+    .scenario-box-nav.scenario-box-nav-header {
+      background-color: rgb(30, 41, 59);
+      position: relative;
+      padding: 0;
+    }
+    .scenario-box-nav.scenario-box-nav-footer {
+      padding: 0;
+      position: fixed;
+      z-index: 10;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background-color: rgb(30, 41, 59);
+    }
   }
 }
 #constructed-response-window.constructed-response-window-grown {
