@@ -168,6 +168,7 @@ class Order < ApplicationRecord
         process_at: Time.zone.now,
         user_id: user_id,
         kind: :account,
+        order_id: id,
         template: 'send_mock_exam_email',
         template_params: {
           url: user_exercise_url,
@@ -180,6 +181,7 @@ class Order < ApplicationRecord
         process_at: Time.zone.now,
         user_id: user_id,
         kind: :account,
+        order_id: id,
         template: 'send_successful_order_email',
         template_params: {
           url: account_url,

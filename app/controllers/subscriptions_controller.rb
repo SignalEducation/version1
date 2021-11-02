@@ -14,7 +14,7 @@ class SubscriptionsController < ApplicationController
   end
 
   def new
-    seo_title_maker('Course Membership Payment | LearnSignal', 'Pay monthly, quarterly or yearly for learnsignal and access professional course materials, expert notes and corrected questions anytime, anywhere.', false)
+    seo_title_maker('Course Membership Payment | Learnsignal', 'Pay monthly, quarterly or yearly for learnsignal and access professional course materials, expert notes and corrected questions anytime, anywhere.', false)
   rescue Learnsignal::SubscriptionError => e
     flash[:error] = e.message
     redirect_to new_subscription_url(params.slice(:exam_body_id).to_unsafe_h)
@@ -76,7 +76,7 @@ class SubscriptionsController < ApplicationController
 
     ab_finished("#{@subscription&.subscription_plan&.exam_body&.group&.name_url}_pricing_link")
     Rails.logger.info "DataLayer Event: Subscription#personal_upgrade_complete - Subscription: #{@subscription.id} with completion_guid #{params[:completion_guid]}, Revenue: #{@subscription.subscription_plan.price}, PlanName: #{@subscription.subscription_plan.name}, Brand: #{@subscription.subscription_plan.exam_body.name}"
-    seo_title_maker('Thank You for Subscribing | LearnSignal',
+    seo_title_maker('Thank You for Subscribing | Learnsignal',
                     'Thank you for subscribing to learnsignal you can now access professional course materials, expert notes and corrected questions anytime, anywhere.',
                     false)
   end

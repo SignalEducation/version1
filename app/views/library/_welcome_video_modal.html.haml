@@ -83,7 +83,6 @@
     })
 
     function updateHubSpotContact(properties) {
-      console.log(properties)
       $.ajax({
         url: "#{user_update_hubspot_path(current_user.id)}",
         method: 'post',

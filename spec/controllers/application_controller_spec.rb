@@ -20,7 +20,6 @@ describe ApplicationController, type: :controller do
   end
 
   describe 'handling logged_in_required before_action as a basic_student' do
-
     it 'should allow access' do
       activate_authlogic
       UserSession.create!(basic_student)

@@ -1,0 +1,398 @@
+.coursePage-container {
+  .course-progress {
+    p, span {
+      font-size: 14px !important;
+      font-weight: 500 !important;
+      font-family: $sans-font !important;
+      color: #111827 !important;
+    }
+  }
+  .courseProgressWrapper {
+    display: flex;
+    flex-direction: row;
+    column-gap: 12px;
+    align-items: center;
+    width: 100%;
+    &-progress {
+      flex: 6;
+      @include if-device(phone) {
+        flex: 2
+      }
+    }
+    &-percent {
+      flex: 1;
+      text-transform: uppercase;
+      font-size: 12px;
+      font-weight: 700;
+      color: #404040;
+      background-color: #FFF;
+      padding: 2px 8px;
+      border-radius: 4px;
+      @include if-device(phone) {
+        font-size: 10px;
+        flex: 1;
+      }
+    }
+  }
+  &-header {
+    position: relative;
+  }
+  &-list {
+    column-gap: 1.5rem;
+    @include if-device(phone) {
+      flex-direction: column;
+    }
+    .levels-nav {
+      width: 25%;
+      @include if-device(phone) {
+        width: 100%;
+      }
+    }
+    .content-section {
+      width: 75%;
+      @include if-device(phone) {
+        width: 100%;
+      }
+    }
+    .nav {
+      background-color: #FFF;
+      border: 2px solid #F9FAFB;
+      box-sizing: border-box;
+      padding: 16px;
+      row-gap: 12px;
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.06), 0px 4px 6px rgba(0, 0, 0, 0.1);
+      border-radius: 12px;
+      .nav-item {
+        text-align: left;
+        .nav-link {
+          padding: 0.5rem;
+          font-size: 16px;
+          line-height: 24px;
+          font-weight: 600;
+          border-radius: 4px;
+          &.active {
+            background-color: #F0FDF4;
+            color: #00B67A;
+          }
+        }
+      }
+    }
+    .card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        word-wrap: break-word;
+        background-color: #fff;
+        background-clip: border-box;
+        transition: all 0.15s ease-in-out 0s;
+        border: none;
+        border-radius: 6px;
+        padding: 0;
+        cursor: pointer;
+        overflow: hidden;
+        min-height: auto;
+        padding: 20px;
+        box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.06), 0px 1px 10px rgba(0, 0, 0, 0.02);
+        border-radius: 8px;
+        border: 1px solid #e3e8ed;
+        &:hover, &:focus {
+          color: inherit;
+          text-decoration: none;
+          box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.06), 0px 1px 10px rgba(0, 0, 0, 0.02);
+        }
+    }
+    .card-header {
+        width: auto;
+    }
+    .card-body {
+        padding: 0;
+    }
+    .card-footer {
+        padding: 0;
+    }
+    &-courseInfo {
+        display: flex;
+        align-items: center;
+        column-gap: 16px;
+        
+    }
+    .courseLibraryWrapper-list-courseIcon {
+      border: 1px solid transparent;
+      border-radius: 6px;
+      width: 4px;
+      height: 42px;
+      padding: 7px 0;
+      background-color: #bdbebf;
+    i {
+      font-size: 20px;
+      display: none;
+    }
+  }
+  .courseLibraryWrapper-list-parent {
+    display: flex;
+    column-gap: 4px;
+    .courseLibraryWrapper-list-examName {
+      font-weight: 600;
+      font-size: 12px;
+      line-height: 15px;
+      letter-spacing: 0.25px;
+      color: #828282;
+    }
+    .courseLibraryWrapper-list-backBtn-dot {
+      font-weight: 600;
+      font-size: 16px;
+      line-height: 15px;
+      letter-spacing: 0.25px;
+      color: #D2D2D2;
+    }
+    .courseLibraryWrapper-list-levelName {
+      font-weight: 700;
+      font-size: 12px;
+      line-height: 15px;
+      letter-spacing: 0.25px;
+      color: #828282;
+    }
+  }
+  .courseArrowIcon {
+    font-size: 32px;
+    color: #d6d6d6;
+    position: absolute;
+    right: 20px;
+    @include if-device(phone) {
+      right: 0;
+    }
+  }
+  .courseName {
+    margin-top: 3px;
+    margin-bottom: 0;
+    font-size: 20px;
+    line-height: 1.5;
+    font-weight: 600;
+    @include if-device(phone) {
+      font-size: 16px;
+    }
+  }
+  .courseLibraryWrapper-list-progressText {
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 15px;
+    letter-spacing: 1px;
+    margin-right: 24px;
+    color: #979797;
+  }   
+}
+.dashboardActions {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+.dashboardTabsNav {
+    display: flex;
+    flex-wrap: wrap;
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+    justify-content: flex-start;
+    .dashboardTabsNav-navItem {
+        display: inline-block;
+        margin-bottom: 0;
+        margin-right: 0.25rem;
+    }
+    .dashboardTabsNav-navItemLink {
+        border: 0 none;
+        border-bottom-style: solid;
+        border-color: transparent;
+        border-bottom-width: 2px;
+        padding: .6rem 1rem;
+        padding-top: .7rem;
+        font-size: 16px;
+        color: #B1B1B1;
+        font-weight: 700;
+        transition: all 0.15s ease-in-out 0s;
+        &.active {
+            color: #00b67b;
+            background-color: transparent;
+            border-color: #00b67b;
+        }
+        &:hover, &:active, &:focus {
+            text-decoration: none;
+            color: #000032;
+        }
+    }
+  }
+  .preview-upgrade-btn {
+    position: absolute;
+    right: 0;
+    @include if-device(phone) {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      background-color: #FFF;
+      z-index: 97;
+      padding: 1rem;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      column-gap: 10px;
+      border-top: 1px solid #e3e8ed;
+      box-shadow: 0px -1px 2px rgba(0, 0, 0, 0.06), 0px -1px 10px rgba(0, 0, 0, 0.02);
+      > .btn {
+        position: relative;
+        flex: 0.5 1;
+      }
+    }
+  }
+ 
+}
+.coursePage-moduleDetailWrapper {
+  .course-lesson {
+    margin-left: 1.5rem;
+    
+    @include if-device(phone) {
+      margin-left: 0.75rem;
+      width: calc(100% - 1.5rem) !important;
+    }
+  }
+  .productCard {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    transition: all 0.15s ease-in-out 0s;
+    border: none;
+    border-radius: 6px;
+    padding: 0;
+    cursor: pointer;
+    overflow: hidden;
+    min-height: auto;
+    padding: 0;
+    filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.06)) drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.1));
+    border-radius: 8px;
+    @include if-device(phone) {
+      flex-direction: row;
+    }
+    &:hover, &:focus {
+      color: inherit;
+      text-decoration: none;
+      box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.06), 0px 1px 10px rgba(0, 0, 0, 0.02);
+      transform: scale(1.02);
+    }
+    &-header {
+      width: auto;
+      height: 96px;
+      background-color: #525252;
+      overflow: hidden;
+      @include if-device(phone) {
+        width: 100px;
+        height: auto;
+        svg {
+          transform: scale(0.8);
+        }
+      }
+      img {
+        height: 116px;
+        width: 116px;
+        margin-bottom: -24px;
+        @include if-device(phone) {
+          height: 60px;
+          width: 60px;
+          margin-bottom: 0;
+        }
+      }
+    }
+    &-body {
+      padding: 1rem;
+      color: #111827;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 1.5;
+      min-height: 160px;
+      display: flex;
+      align-items: flex-start !important;
+      justify-content: space-between;
+      flex-direction: column;
+
+      @include if-device(phone) {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start !important;
+        width: 100%;
+        min-height: 80px;
+      }
+    }
+    &-footer {
+      padding: 1rem;
+      font-size: 20px;
+      font-weight: 700;
+      color: #111827;
+      line-height: 1.5;
+      width: 100%;
+      padding: 1rem 0 0;
+      @include if-device(phone) {
+        width: 100%;
+        padding: 1rem 0 0;
+      }
+    }
+    &-statusLabel {
+      color: #007bff;
+      background-color: rgba(0, 123, 255, 0.05);
+      font-size: 14px;
+      border-radius: 4px;
+      padding: 0.5rem 1rem;
+      letter-spacing: 1px;
+      font-weight: 600;
+      line-height: 1;
+      display: inline-flex;
+      column-gap: 6px;
+    }
+    &.has-true-subscription {
+      .productCard-statusLabel {
+        display: none;
+      } 
+    }
+    &--buyBtn {
+      padding: 4px 16px !important;
+    }
+  }
+}
+.upgradeNudgeMini {
+  width: 100%;
+  // background-color: #111827;
+  background-color: #FCD34D;
+  padding: 2rem;
+  box-shadow: 0px 2px 4px rgba(8, 8, 8, 0.06), 0px 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  @include if-device(phone) {
+    padding: 1.5rem;
+  }
+  &-icon {
+    font-size: 48px;
+  }
+  &-title {
+    display: flex;
+    column-gap: 12px;
+    margin-bottom: 0.5rem;
+    &Text {
+      font-size: 24px;
+      line-height: 1.3;
+      // color: #FFF;
+      color: #111827;
+      font-weight: 700;
+    }
+    
+  }
+  &-desc {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #cccccc;
+  }
+  &-action {
+    margin-top: 2rem;
+  }
+}

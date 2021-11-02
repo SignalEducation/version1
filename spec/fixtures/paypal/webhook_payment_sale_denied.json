@@ -41,7 +41,7 @@
   "status": "SUCCESS",
   "transmissions": [
     {
-      "webhook_url": "https://staging.learnsignal.com/api/paypal_webhooks",
+      "webhook_url": "https://staging-app.learnsignal.com/api/paypal_webhooks",
       "response_headers": {
         "SERVER_INFO": "",
         "Status": "204 No Content",

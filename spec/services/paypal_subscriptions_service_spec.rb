@@ -331,8 +331,8 @@ describe PaypalSubscriptionsService, type: :service do
                 value: subscription.subscription_plan.price.to_s,
                 currency: subscription.subscription_plan.currency.iso_code
               },
-              return_url: "https://staging.learnsignal.com/en/subscriptions/#{subscription.id}/execute?payment_processor=paypal",
-              cancel_url: "https://staging.learnsignal.com/en/subscriptions/new?flash=It+seems+you+cancelled+your+subscription+on+Paypal.+Still+want+to+upgrade%3F"
+              return_url: "https://staging-app.learnsignal.com/subscriptions/#{subscription.id}/execute?payment_processor=paypal",
+              cancel_url: "https://staging-app.learnsignal.com/subscriptions/new?flash=It+seems+you+cancelled+your+subscription+on+Paypal.+Still+want+to+upgrade%3F"
             },
             plan: {
               id: subscription.subscription_plan.paypal_guid
@@ -359,8 +359,8 @@ describe PaypalSubscriptionsService, type: :service do
           },
           override_merchant_preferences: {
             setup_fee: {},
-            return_url: "https://staging.learnsignal.com/en/subscriptions/#{subscription.id}/execute?payment_processor=paypal",
-            cancel_url: 'https://staging.learnsignal.com/en/subscriptions/new?flash=It+seems+you+cancelled+your+subscription+on+Paypal.+Still+want+to+upgrade%3F'
+            return_url: "https://staging-app.learnsignal.com/subscriptions/#{subscription.id}/execute?payment_processor=paypal",
+            cancel_url: 'https://staging-app.learnsignal.com/subscriptions/new?flash=It+seems+you+cancelled+your+subscription+on+Paypal.+Still+want+to+upgrade%3F'
           },
           plan: {
             id: subscription.subscription_plan.paypal_guid

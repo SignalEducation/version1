@@ -248,7 +248,7 @@ class StripeApiEvent < ApplicationRecord
       subscription.cancel
       # This is to ensure the Account Suspended email is only sent when
       # the subscription is canceled by Stripe due to failed payments
-      unless cancel_at_period_end
+      unless subscription.cancelled_by_id || cancel_at_period_end
         Message.create(process_at: Time.zone.now,
                        user_id: user.id,
                        kind: :account,

@@ -23,6 +23,10 @@
               =f.check_box :active
               Active
 
+            %label
+              =f.check_box :track
+              Track
+
         .col-sm-6
           .form-group
             =f.label :highlight_colour, t('views.levels.form.highlight_colour')
@@ -32,9 +36,9 @@
                   selected: f.object.highlight_colour),
                    {include_blank: t('views.general.select')}, class: 'form-control custom-select'
           .form-group
-            =f.label :icon_label, t('views.levels.form.icon_label')
+            =f.label :sub_text, t('views.levels.form.sub_text')
             .input-group.input-group-lg
-              =f.text_field :icon_label, placeholder: t('views.levels.form.icon_label_placeholder'), class: 'form-control'
+              =f.text_field :sub_text, placeholder: t('views.levels.form.sub_text_placeholder'), class: 'form-control'
           .form-group
             =f.label :onboarding_course_heading, t('views.levels.form.onboarding_course_heading')
             .input-group.input-group-lg
@@ -48,5 +52,3 @@
         .col-md-12
           =f.submit t('views.general.save'), class: 'btn btn-primary'
           =link_to t('views.general.cancel'), admin_levels_path, class: 'btn btn-secondary l-margin-right-big l-padding-side-3x'
-
-

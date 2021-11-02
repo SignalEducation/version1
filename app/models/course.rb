@@ -44,15 +44,15 @@
 #
 
 class Course < ApplicationRecord
-  include LearnSignalModelExtras
   include Archivable
-
-  # Constants
+  include Filterable
+  include LearnSignalModelExtras
 
   # relationships
   belongs_to :exam_body
   belongs_to :group
   belongs_to :level
+  belongs_to :key_area, optional: true
   has_many :product
   has_many :course_tutors
   has_many :home_pages
@@ -104,6 +104,8 @@ class Course < ApplicationRecord
   scope :all_standard, -> { where(computer_based: false) }
   scope :all_in_order, -> { order(:sorting_order, :name) }
   scope :this_month, -> { where(created_at: Time.now.beginning_of_month..Time.now.end_of_month) }
+
+  search_scope :by_group, ->(group_id) { (where group_id: group_id) if group_id.present? }
 
   # class methods
   def self.get_by_name_url(the_name_url)
