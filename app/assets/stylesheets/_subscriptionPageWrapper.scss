@@ -1,0 +1,314 @@
+.subscriptionPageWrapper {
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow-y: scroll;
+    background-color: #FFF;
+    &-logo {
+        margin-top: 2px;
+        transform: scale(0.80);
+        margin-left: -16px;
+    }
+    &-header {
+        position: relative;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        padding: 0.25rem 1rem;
+        height: 64px;
+        background-color: transparent;
+        box-shadow: none;
+        z-index: 1000;
+        @include if-device(phone) {
+            min-height: 56px;
+            height: auto;
+            padding: 0.5rem 1.25rem;
+            box-shadow: none;
+            position: fixed;
+            z-index: 30;
+            width: 100%;
+            background-color: #FFF;
+            box-shadow: inset 0 -1px #e3e8ee;
+        }
+        .nav-login-box {
+            display: flex;
+            flex-direction: row;
+            text-align: right;
+            align-items: flex-end;
+            padding-right: 32px;
+        }
+        .navbar-login-userName {
+            display: flex;
+            flex-direction: column;
+            line-height: 18px;
+            font-size: 14px;
+        }
+        .navbar-login-userEmail {
+            padding: 0;
+            font-size: 11px;
+            text-transform: none;
+            color: rgba(26, 26, 26, 0.6);
+        }
+        .dropdown-toggle::after {
+            position: absolute;
+            right: 0;
+            top: 4px;
+        }
+        .navbar-nav .nav-item.dropdown .dropdown-menu {
+            width: 160px;
+        }
+        a {
+            text-decoration: none;
+            z-index: 1;
+        }
+        .main-header-content {
+          position: relative;
+          display: flex;
+          justify-content: center;
+          text-align: center;
+        }
+        .header-title-lesson {
+            font-size: 16px;
+            line-height: 1.3;
+            font-weight: 600;
+            text-align: left;
+            overflow: hidden;
+            cursor: pointer;
+            color: #000;
+        }
+      }
+    &-coreWrapper {
+        position: relative;
+        margin-top: 64px;
+        z-index: 20;
+        @include if-device(phone) {
+            margin-top: 56px;
+            padding-top: 16px;
+        }
+        &:after {
+            height: 100%;
+            width: 50%;
+            max-width: calc(((100% - 1120px)/2) + 396px + 48px);
+            background: #fff;
+            position: fixed;
+            z-index: 10;
+            content: " ";
+            top: 0;
+            right: 0;
+            -webkit-animation-fill-mode: both;
+            animation-fill-mode: both;
+            -webkit-transform-origin: right;
+            -ms-transform-origin: right;
+            transform-origin: right;
+            box-shadow: 15px 0 30px 0 rgba(0, 0, 0, 0.18);
+            @include if-device(phone) {
+                content: none;
+            }
+        }
+        .purchaseTitle {
+            font-size: 1rem;
+        }
+    }
+    &-notesBox {
+        background-color: transparent;
+        padding: 0;
+        font-size: 14px;
+        color: rgba(26,26,26,.6);
+        width: calc(50% - 48px);
+        @include if-device(phone) {
+            width: 100%;
+        }
+        
+    }
+    &-infoBox {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        column-gap: 96px;
+        z-index: 1000;
+        @include if-device(phone) {
+            flex-direction: column;
+            justify-content: flex-start;
+            row-gap: 48px;
+        }
+    }
+    &-detailsBox {
+        flex: 1;
+        z-index: 1000;
+    }
+    &-optionsBox {
+        flex: 1;
+        z-index: 1000;
+        max-width: 396px;
+        &-optionTabs {
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            flex-direction: row;
+            flex: 1 1;
+            align-items: center;
+            justify-content: flex-start;
+            margin-bottom: 2rem;
+            &-Tab {
+                width: auto;
+                @include if-device(phone) {
+                    width: 50%;
+                }
+                label, .tab-label {
+                    width: 100%;
+                    text-align: center;
+                    font-size: 14px;
+                    margin: 0;
+                    color: #888;
+                    font-weight: 800;
+                    cursor: pointer;
+                    border: 1px solid #e6ecf0;
+                    padding: 8px 16px;
+                    background: #fafafa;
+                    border-radius: 0;
+                    &:hover {
+                        background-color: #EFF6FF;
+                    }
+                }
+                &.active {
+                    label, .tab-label {
+                        font-size: 14px;
+                        color: #FFF;
+                        font-weight: 800;
+                        cursor: pointer;
+                        border-radius: 0;
+                        border: 1px solid #3B82F6;
+                        padding: 8px 16px;
+                        background-color: #3B82F6;
+                        &:hover {
+                            background-color: #2563EB;
+                        }
+                    }
+                }
+                &:first-child {
+                    .tab-label {
+                        border-top-left-radius: 6px;
+                        border-bottom-left-radius: 6px;
+                        overflow: hidden;
+                    }
+                }
+                &:last-child {
+                    .tab-label {
+                        border-top-right-radius: 6px;
+                        border-bottom-right-radius: 6px;
+                        overflow: hidden;
+                    }
+                }
+            }
+        }
+        .tab-logo-icon {
+            width: 16px;
+            height: 16px;
+        }
+    }
+    &-priceValue {
+        font-size: 20px;
+        line-height: 2rem;
+        color: #111827;
+        font-weight: 700;
+        @include if-device(phone) {
+            font-size: 16px;
+        }
+    }
+     
+    &-paymentOptionsWrapper {
+        position: relative;
+        display: block;
+        width: 100%;
+        height: 100%;
+        max-width: 396px;
+        min-height: 420px;
+        @include if-device(phone) {
+            min-height: auto;
+        }
+        &-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        &-optionForm {
+            width: 100%;
+            .payment-details, .subscriptionPageWrapper-paymentOptionsWrapper-header{
+                display: none;
+            }
+            
+            &.active {
+                .payment-details, .subscriptionPageWrapper-paymentOptionsWrapper-header {
+                    display: block;
+                }
+                .subscriptionPageWrapper-paymentOptionsWrapper-header {
+                    display: flex;
+                }
+            }
+        }
+
+    }
+    .coupon-code-btn {
+        font-size: 12px;
+        color: #657786;
+        font-weight: 700;
+        cursor: pointer;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        &:hover {
+            color: #1D4ED8;
+        }
+    }
+    .coupon-code-btn-hide {
+        color: #1D4ED8;
+    }
+    .coupon-input-box {
+        position: relative;
+        width: 80%;
+        text-align: right;
+        margin-left: auto;
+        padding-left: 0px;
+        input {
+            padding: 8px 16px !important;
+            height: auto !important;
+            font-size: 14px;
+            background-color: #FFFBEB;
+            border-color: #FBBF24 !important;
+            color: #78350F !important;
+            &::placeholder {
+                color: #6B7280 !important;
+            }
+        }
+        .form-control:valid.coupon-success {
+            border: 1px solid #00b67B !important;
+            background-color: #ECFDF5;
+            color: #00b67B !important;
+        }
+        .form-control:valid.coupon-error {
+            border: 1px solid #f34664 !important;
+            background-color: #FEF2F2;
+            color: #f34664 !important;
+        }
+        .coupon-code-apply-btn {
+            position: absolute;
+            right: 10px;
+            top: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            background-color: #FCD34D;
+            padding: 4px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            &:hover {
+                background-color: #F59E0B;
+            }
+        }
+    }
+}

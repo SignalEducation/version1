@@ -47,7 +47,7 @@ class CourseResource < ApplicationRecord
   # instance methods
   def available_to_user(user, valid_subscription)
     result =
-      if user.non_verified_user?
+      if user.show_verify_email_message? && !user.valid_subscription?
         { view: false, reason: 'verification-required' }
       elsif user.complimentary_user? || user.non_student_user? || user.lifetime_subscriber?(course.group) || user.course_access?(course.id)
         { view: true, reason: nil }

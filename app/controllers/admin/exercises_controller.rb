@@ -162,6 +162,8 @@ module Admin
     end
 
     def sort_exercises_arr(exercises_arr, direction)
+      direction ||= 'desc'
+
       case params[:sort_by]
       when 'due_on'
         exercises_arr.order(submitted_on: direction)

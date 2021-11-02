@@ -14,9 +14,9 @@
 #  is_video                  :boolean          default("false"), not null
 #  is_quiz                   :boolean          default("false"), not null
 #  active                    :boolean          default("true"), not null
-#  seo_description           :string(255)
-#  seo_no_index              :boolean          default("false")
 #  destroyed_at              :datetime
+#  seo_description           :string
+#  seo_no_index              :boolean          default("false")
 #  number_of_questions       :integer          default("0")
 #  duration                  :float            default("0.0")
 #  temporary_label           :string
@@ -265,13 +265,13 @@ describe CourseStep do
       it 'return Quiz' do
         allow_any_instance_of(CourseStep).to receive(:is_quiz).and_return(true)
 
-        expect(course_step_03.icon_label).to eq('playlist_add_check')
+        expect(course_step_03.icon_label).to eq('quiz')
       end
 
       it 'return Video' do
         allow_any_instance_of(CourseStep).to receive(:is_video).and_return(true)
 
-        expect(course_step_03.icon_label).to eq('ondemand_video')
+        expect(course_step_03.icon_label).to eq('smart_display')
       end
 
       it 'return Constructed Response' do
@@ -283,7 +283,7 @@ describe CourseStep do
       it 'return Notes' do
         allow_any_instance_of(CourseStep).to receive(:is_note).and_return(true)
 
-        expect(course_step_03.icon_label).to eq('insert_drive_file')
+        expect(course_step_03.icon_label).to eq('file_present')
       end
 
       it 'return Unknown' do
@@ -324,13 +324,13 @@ describe CourseStep do
       end
 
       it 'for comp_user it returns true' do
-        user = build(:comp_user)
+        user = build_stubbed(:comp_user)
 
         expect(course_step_01.available_to_user(user, nil)).to eq(view: true, reason: nil)
       end
 
       it 'for standard_student_user it returns false and invalid-subscription' do
-        user        = build(:active_student_user)
+        user        = build_stubbed(:active_student_user)
         course_step = build(:course_step, available_on_trial: false)
 
         expect(course_step.available_to_user(user, nil)).to eq(view: false, reason: 'invalid-subscription')

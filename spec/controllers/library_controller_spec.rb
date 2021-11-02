@@ -26,6 +26,10 @@ RSpec.describe LibraryController, type: :controller do
   let!(:user)              { create(:user) }
   let!(:course_log)        { create(:course_log, course_id: course_1.id, user_id: user.id) }
 
+  before do
+    allow_any_instance_of(ApplicationController).to receive(:logged_in_required).and_return(true)
+  end
+
   describe 'GET index' do
     it 'renders the index view as 2 groups are active' do
       get :index

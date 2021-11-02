@@ -23,6 +23,8 @@
 #  stripe_payment_method_id  :string
 #  stripe_payment_intent_id  :string
 #  ahoy_visit_id             :uuid
+#  cancellation_note         :text
+#  cancelled_by_id           :bigint
 #
 
 FactoryBot.define do

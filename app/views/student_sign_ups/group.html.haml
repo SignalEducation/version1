@@ -1,106 +1,154 @@
-=render partial: 'layouts/external_navbar'
+=render partial: 'layouts/navbar'
 %main
-  .container-bg.home-hero-alt-bg.bg-group{style: "background-image: url(#{@group.background_image.url});", title: "#{@group.name} Courses"}
-    .container.home-hero-container
-      %article.home-hero
+  %article.libraryGroupWrapper.bg-white
+    %header.libraryGroupWrapper-hero
+      .container.libraryGroupWrapper-heroInfoWrapper.pt-4
+        .heroTitle
+          =@group.name
+          ='Courses'
+        %p.heroDesc
+          -if @exam_body&.landing_page_paragraph.present?
+            =@exam_body.landing_page_paragraph
+        =link_to pricing_url(@group.name_url), class: 'btn btn-primary' do
+          Explore Subscriptions
+      %div.libraryGroupWrapper-heroBgWrapper{style: "background-image: url(#{@group.background_image.url});", title: "#{@group.name} Courses banner"}
 
-        .row.no-gutters
-          .col-sm-12.col-md-6
-            %header.home-hero-header.py-6
-              %h1.h1-mega.text-white
-                -if @exam_body&.landing_page_h1.present?
-                  =@exam_body.landing_page_h1
-                -else
-                  ="Prepare for your #{@exam_body.name} exam"
-              %p.p-hero.text-white.py-4
-                -if @exam_body&.landing_page_paragraph.present?
-                  =@exam_body.landing_page_paragraph
-          .col-sm-12.col-md-6
-            -if @exam_body&.logo_image.present?
-              .exam-body-img-wrap
-                =image_tag(@exam_body.logo_image, class: 'px-md-5 px-xl-0', alt: "#{@exam_body.name} Logo")
+    .bg-gray5
+      %div
+        %div.container.d-flex.libraryGroupWrapper-list.pt-4.pb-4
+          %nav.levels-nav
+            %ul.d-flex.flex-column.nav.nav-pills.nav-fill{id: 'levelsTabs', role: 'tablist'}
+              - @group.levels.all_active.all_in_order.each_with_index do |level, counter|
+                %li.nav-item{data: {tab_name: level.name, group_name: @group.name}}
+                  %a{class: "nav-link #{counter == 0 ? 'active' : ''}", id: "#{level.name_url}-tab", data: {toggle: 'tab'}, href: "##{level.name_url}", aria: {controls: "#{level.name_url}", selected: 'false'}, role: 'tab'}
+                    =level.name
 
-
-
-  .container-bg
-    .container
-      %article.py-4
-        %header.pb-sm-4.pb-md-5
-          .row.row-lg
-            -@group.courses.all_active.all_in_order.each do |course|
-              .col-lg-6.col-xl-4
-                =link_to library_special_link(course), class: 'card card-horizontal flex-row card-mint', data: { toggle: 'tooltip', placement: 'right', animation: 'true', delay: { "show": 300, "hide": 100 }}, title: "#{course.short_description}", onclick: "gtag('event', 'clicks_course_name', {'event_category': 'pre-registration', 'event_label': '#{course.name}'});" do
-                  .card-header.d-flex.justify-content-center.align-items-center
-                    -# TODO - Convert this into partial
-                    -if course.unit_label
-                      .pb-0.d-flex.flex-column.align-items-center
-                        .mb-3.mx-md-2
-                          %i{"aria-label" => course.icon_label, :role => "img", class: course.icon_label ? course.icon_label : 'budicon-office-bag-c', style: "color: #{course.highlight_colour};"}
-                        %p.m-0.text-left.text-md-center{style: "color: #{course.highlight_colour};"}
-                          =course.unit_label
-                    -else
-                      %i{"aria-label" => course.icon_label, :role => "img", class: course.icon_label ? course.icon_label : 'budicon-office-bag-c', style: "color: #{course.highlight_colour};"}
-
-                  .card-body.d-flex.flex-column.justify-content-center
-                    %small.card-category.mb-2{style: "color: #{course.highlight_colour};"}
-                      -if course.preview && course.release_date
-                        ="Coming #{course.release_date.strftime("%B, %Y")}"
-                      -else
-                        =course.category_label
-                    %h5.card-title.mb-1
-                      %span.mr-1
-                        =course.name
+          %section.container.content-section
+            %h2.sr-only List of Courses
+            #levelsTabsContent.tab-content
+              -@group.levels.each_with_index do |level, counter|
+                .tab-pane{id: level.name_url, class: "tab-#{level.name_url} #{counter == 0 ? 'active show' : ''} ", "aria-labelledby" => "#{level.name_url}-tab", :role => "tabpanel"}
+                  .row.row-lg
+                    -level.courses.all_in_order.each do |course|
+                      - if course.active
+                        .col-lg-12.col-xl-12
+                          =link_to library_special_link(course), class: 'card flex-md-row', style: 'margin-bottom: 1rem;', data: { toggle: 'tooltip', placement: 'right', animation: 'true', delay: { "show": 300, "hide": 100 }}, title: "#{course.short_description}" do
+                            .card-body.d-flex.flex-column.justify-content-center
+                              %div.libraryGroupWrapper-list-courseInfo
+                                %div.libraryGroupWrapper-list-courseIcon{style: "border-color: #{course.highlight_colour}; background-color: #{course.highlight_colour};"}
+                                  %i{"aria-label" => course.icon_label, :role => "img", class: course.icon_label ? course.icon_label : 'budicon-office-bag-c', style: "color: #FFF;"}
+                                %div
+                                  %div.libraryGroupWrapper-list-parent
+                                    .libraryGroupWrapper-list-levelName{style: "color: #{course.highlight_colour};"}
+                                      -if course.preview && course.release_date
+                                        ="Coming #{course.release_date.strftime("%B, %Y")}"
+                                      -else
+                                        =course.category_label
+                                  %div.courseName
+                                    =course.name
+                                .courseArrowIcon.i.material-icons keyboard_arrow_right
 
 
   -if @group && @subscription_plans && @subscription_plans.any?
-    .container-bg.bg-gray5
-      .container#plans
-        %article.py-6
-          %header.text-center.pb-5.pb-md-6
-            %h2.h1-mega
-              ="#{@group.name} Subscription"
-            %p.p-hero.px-lg-8
-              -if @exam_body&.subscription_page_subheading_text.present?
-                =@exam_body.subscription_page_subheading_text
+    .pricingPlansWrapper
+      .container
+        %article.py-5#library-course-pricing
+          %header.text-center.pb-4.pb-md-4
+            %div.heroSubtext
+              ="#{@group.name} Pricing"
+            %div.heroTitle
+              Our subscriptions fit your needs 💶
+            %p.heroDesc
+              -if @group.exam_body.subscription_page_subheading_text && !@group.exam_body.subscription_page_subheading_text.blank?
+                =@group.exam_body.subscription_page_subheading_text
               -else
-                ='Achieve your learning goals with a learnsignal subscription plan and enjoy professional courses delivered online so that you can study on a schedule that suits you.'
+                ='Customised pricing plans designed to fit in with your wallet and work.'
 
           .row.row-lg.justify-content-center
-            -@subscription_plans.each do |plan|
-              .col-lg-4
-                %article.card.card-primary.card-primary-alt.medium-gap
-                  -if plan.most_popular
-                    .card-banner.bg-mint
-                      %large.text-white
-                        Most popular payment plan
-                  .card-body.text-center.py-4.py-sm-5
-                    %h2.card-title
-                      =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
+            -# PREMIUM CARDS
+            .col-lg-8.px-2
+              %article.planCard.planCard-popular
+                .card-body.text-left.p-0
+                  .tab-content
+                    -if @subscription_plans.length > 1
+                      %ul.nav.nav-pills.plan-nav{id: 'planTabs', role: 'tablist', class:@subscription_plans.length < 2 && 'hidden'}
+                        -@subscription_plans.each_with_index do |navPlan, navCounter|
+                          %li.nav-item{data: {tab_name: navPlan.guid}}
+                            %a{class: "nav-link #{navCounter == @subscription_plans.length - 1 ? 'active' : ''}", id: "#{navPlan.guid}-tab", data: {toggle: 'tab'}, href: "#nav-#{navPlan.guid}", aria: {controls: "#{navPlan.guid}", selected: 'false'}, role: 'tab'}
+                              =t("views.general.payment_intervals.a#{navPlan.payment_frequency_in_months}")
+                    -@subscription_plans.each_with_index do |plan, counter|
+                      .tab-pane{id: "nav-#{plan.guid}", class: "tab-#{plan.guid} #{counter == @subscription_plans.length - 1 ? 'active' : ''} ", "aria-labelledby" => "#{plan.guid}-tab", :role => "tabpanel"}
+                        %div.planInfoWrapper
+                          %div.planTitleWrapper
+                            %div.planTitle
+                              Premium
+                              %span.greenShade=t("views.general.payment_intervals.a#{plan.payment_frequency_in_months}")
+                              Plan
+                          %p.priceValue.mb-0.pb-4{class: @subscription_plans.length < 2 && 'mt-0'}
+                            %span.priceValue-actualPrice
+                              =plan.currency.format_number(plan.price)
+                              %span.priceValue-priceSuffix=t("views.general.payment_interval_shortSuffix.a#{plan.payment_frequency_in_months}")
+                            %span.d-flex.flex-column.align-items-center
+                              -if plan.most_popular
+                                %span.priceValue-popularBadge
+                                  Most popular
+                              -if plan.monthly_percentage_off
+                                %span.priceValue-savingPill.mt-1
+                                  Save 
+                                  =plan.monthly_percentage_off
+                                  ='%'
+                        
+                        .bulletListTitle.hidden-xs ⚡️ What do you get
+                        %ul.hidden-xs.list-centered.text-left.bulletList{class:@subscription_plans.length < 2 && 'noPlanNav'}
+                          -if plan.bullet_points_list && !plan.bullet_points_list.empty?
+                            - plan.bullet_points_list.split(/, ?/).each do |bullet|
+                              %li.mb-3
+                                .bulletIcon •
+                                %span=bullet
+                          -else
+                            %li.mb-3
+                              .bulletIcon •
+                              %span="Access all #{@group.name} courses"
+                            %li.mb-3
+                              .bulletIcon •
+                              %span="Topic-by-topic lectures"
+                            %li.mb-3
+                              .bulletIcon •
+                              %span="24/7 tutor support"
 
-                    %ul.list-centered
-                      -if plan.bullet_points_list && !plan.bullet_points_list.empty?
-                        - plan.bullet_points_list.split(/, ?/).each do |bullet|
-                          %li=bullet
-                      -else
-                        %li="Access all #{@group.name} courses"
-                        %li="Topic-by-topic lectures"
-                        %li="24/7 tutor support"
+                        
+                        -unless plan.exam_body.name == "CPD"
+                          %p.text-gray2.mt-4.mb-2.text-bold
+                            Recurring Payment. Cancel Anytime
+                        .mt-auto
+                          =link_to subscription_checkout_special_link(plan.exam_body_id, plan.guid), class: "btn w-100 btn-primary choosePlanBtn", onclick: "addToCart('#{plan.currency.iso_code}', '#{plan.name}', '#{plan.id}', '#{plan.price}', '#{plan.exam_body.name}');" do
+                            ="Choose #{t("views.general.payment_intervals.a#{plan.payment_frequency_in_months}")}"
+                        %div.visible-xs.bulletListAccordianBox
+                          .faq-box.mt-3
+                            .faq-inner.narrow{onclick: '$(this).toggleClass("narrow"); $(this).find(".faq-answer").toggleClass("d-md-block"); $(this).find(".faq-answer-expanded").toggleClass("d-none"); $(this).find(".bulletListAccordianBox-openIcon").toggleClass("d-none"); $(this).find(".bulletListAccordianBox-closeIcon").toggleClass("d-none");'}
+                              .faq-title
+                                See Details
+                                %i.material-icons.ml-2.bulletListAccordianBox-openIcon{"aria-hidden" => "true"} expand_more
+                                %i.material-icons.ml-2.bulletListAccordianBox-closeIcon.d-none{"aria-hidden" => "true"} expand_less
+                              .faq-answer-expanded.d-none
+                                .bulletListTitle ⚡️ What do you get
+                                %ul.list-centered.text-left.bulletList{class:@subscription_plans.length < 2 && 'noPlanNav'}
+                                  -if plan.bullet_points_list && !plan.bullet_points_list.empty?
+                                    - plan.bullet_points_list.split(/, ?/).each do |bullet|
+                                      %li.mb-3
+                                        .bulletIcon •
+                                        %span=bullet
+                                  -else
+                                    %li.mb-3
+                                      .bulletIcon •
+                                      %span="Access all #{@group.name} courses"
+                                    %li.mb-3
+                                      .bulletIcon •
+                                      %span="Topic-by-topic lectures"
+                                    %li.mb-3
+                                      .bulletIcon •
+                                      %span="24/7 tutor support"
 
-                      -unless plan.exam_body.name == "CPD"
-                        %li{style: 'font-style: italic;'}
-                          Cancel anytime
-
-                    %p.h2.mb-0
-                      =plan.currency.format_number(plan.price)
-
-                    -if plan.monthly_percentage_off
-                      %p.h5.text-gray2
-                        Save over
-                        =plan.monthly_percentage_off
-                        ='%'
-                    .mt-auto
-                      =link_to subscription_checkout_special_link(plan.exam_body_id, plan.guid), class: 'btn btn-secondary btn-sm', onclick: "addToCart('#{plan.currency.iso_code}', '#{plan.name}', '#{plan.id}', '#{plan.price}', '#{plan.exam_body.name}');" do
-                        Choose this plan
 
 
   =render partial: 'customer_support_section'

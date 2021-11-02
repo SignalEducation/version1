@@ -44,9 +44,13 @@ RSpec.describe Api::V1::UsersController, type: :request do
                                                   address
                                                   user_group
                                                   guid
+                                                  valid_subscription
                                                   email_verification_code
                                                   email_verified_at
                                                   email_verified
+                                                  verify_remain_days
+                                                  verify_email_message
+                                                  show_verify_email_message
                                                   free_trial
                                                   terms_and_conditions
                                                   date_of_birth
@@ -66,6 +70,7 @@ RSpec.describe Api::V1::UsersController, type: :request do
                                                   country
                                                   currency
                                                   subscription_plan_category
+                                                  subscriptions
                                                   token
                                                   user_credentials])
 
@@ -138,9 +143,13 @@ RSpec.describe Api::V1::UsersController, type: :request do
                                                   address
                                                   user_group
                                                   guid
+                                                  valid_subscription
                                                   email_verification_code
                                                   email_verified_at
                                                   email_verified
+                                                  verify_remain_days
+                                                  verify_email_message
+                                                  show_verify_email_message
                                                   free_trial
                                                   terms_and_conditions
                                                   date_of_birth
@@ -159,7 +168,8 @@ RSpec.describe Api::V1::UsersController, type: :request do
                                                   profile_image_updated_at
                                                   country
                                                   currency
-                                                  subscription_plan_category])
+                                                  subscription_plan_category
+                                                  subscriptions])
       end
     end
 
@@ -273,9 +283,13 @@ RSpec.describe Api::V1::UsersController, type: :request do
                                                   address
                                                   user_group
                                                   guid
+                                                  valid_subscription
                                                   email_verification_code
                                                   email_verified_at
                                                   email_verified
+                                                  verify_remain_days
+                                                  verify_email_message
+                                                  show_verify_email_message
                                                   free_trial
                                                   terms_and_conditions
                                                   date_of_birth
@@ -294,7 +308,8 @@ RSpec.describe Api::V1::UsersController, type: :request do
                                                   profile_image_updated_at
                                                   country
                                                   currency
-                                                  subscription_plan_category])
+                                                  subscription_plan_category
+                                                  subscriptions])
       end
     end
 
@@ -369,6 +384,65 @@ RSpec.describe Api::V1::UsersController, type: :request do
         body = JSON.parse(response.body)
 
         expect(body['message']).to eq(I18n.t('controllers.users.change_password.flash.error'))
+      end
+    end
+  end
+
+  # resend_verify_user_email
+  describe 'get /api/v1/users/#user_id/resend_verify_user_email' do
+    context 'resend verify user email' do
+      before do
+        allow_any_instance_of(User).to receive(:send_verification_email).and_return(true)
+        get api_v1_user_resend_verify_user_email_path(user_id: user.id),
+            headers: { Authorization: "Bearer #{active_bearer.api_key}" }
+      end
+
+      it 'returns HTTP status 200' do
+        expect(response).to have_http_status 200
+      end
+
+      it 'returns success json message' do
+        body = JSON.parse(response.body)
+
+        expect(body['message']).to eq("A verification email was sent to #{user.email}.")
+      end
+    end
+
+    context 'error when resend verify user email' do
+      let(:no_user_email) { 'no_user@test.com' }
+
+      before do
+        get api_v1_user_resend_verify_user_email_path(user_id: user.id),
+            headers: { Authorization: "Bearer #{active_bearer.api_key}" }
+      end
+
+      it 'returns HTTP status 422' do
+        expect(response).to have_http_status 422
+      end
+
+      it 'returns success json message' do
+        body = JSON.parse(response.body)
+
+        expect(body['error']).to eq("An error ocurred when tried to send e verification email to #{user.email}.")
+      end
+    end
+
+    context 'not found a user' do
+      let(:invalid_user_id) { rand(100..999) }
+
+      before do
+        get api_v1_user_resend_verify_user_email_path(user_id: invalid_user_id),
+            headers: { Authorization: "Bearer #{active_bearer.api_key}" }
+      end
+
+      it 'returns HTTP status 422' do
+        expect(response).to have_http_status 404
+      end
+
+      it 'returns success json message' do
+        body = JSON.parse(response.body)
+
+        expect(body['error']).to eq("Couldn't find User with 'id'=#{invalid_user_id}")
       end
     end
   end

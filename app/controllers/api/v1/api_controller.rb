@@ -10,6 +10,7 @@
 module Api
   module V1
     class ApiController < Api::V1::ApplicationController
+      helper ApplicationHelper
       include ExceptionHandler
       include Response
 

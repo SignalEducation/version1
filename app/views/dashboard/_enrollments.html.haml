@@ -1,18 +1,25 @@
--@enrollments.each do |enrollment|
-  -if enrollment.course
-    .card.card-horizontal.flex-md-row{style: 'margin-bottom: 1.5rem;'}
-      .card-header.justify-content-center.align-items-center.d-none.d-sm-block
-        .pt-4.text-center
-          .h4
-            =enrollment.display_percentage_complete
-          .h4
-            Complete
-      .card-body.d-flex.flex-column.justify-content-center
-        %small.card-category.mb-2{style: "color: #{enrollment.course.highlight_colour};"}
-          ="#{enrollment.days_until_exam} days until exam"
-
-        %h5.card-title.mb-1
-          %span.mr-1
-            =enrollment.course.name
-      .card-footer.d-flex.justify-content-center.align-items-center{style: 'background-color: #fff; border-top: none;'}
-        =link_to 'Resume Course', library_special_link(enrollment.course), class: 'btn btn-primary'
+.col-md-12.col-lg-10.p-0
+  -@enrollments.each do |enrollment|
+    -if enrollment.course
+      =link_to library_special_link(enrollment.course), class: 'card card-horizontal flex-md-row', style: 'margin-bottom: 1.5rem;' do
+        .card-body.d-flex.flex-column.justify-content-center
+          %div.dashboardWrapper-courseInfo
+            %div.dashboardWrapper-courseIcon{style: "border-color: #{enrollment.course.level.highlight_colour}; background-color: #{enrollment.course.level.highlight_colour};"}
+              %i{"aria-label" => enrollment.course.level.icon_label, :role => "img", class: enrollment.course.level.icon_label ? enrollment.course.level.icon_label : 'budicon-office-bag-c', style: "color: #FFF;"}
+            %div
+              %div.dashboardWrapper-parent
+                .dashboardWrapper-examName
+                  =enrollment.course.parent.name
+                .dashboardWrapper-backBtn-dot •
+                .dashboardWrapper-levelName{style: "color: #{enrollment.course.level.highlight_colour};"}
+                  ="#{enrollment.days_until_exam} days until exam"
+              %div.courseName
+                =enrollment.course.name
+        .card-footer.d-flex.justify-content-center.align-items-center{style: 'background-color: #fff; border-top: none;'}
+          .dashboardWrapper-progressText
+            -if enrollment.percentage_complete > 0
+              %div
+                .progress
+                  .progress-bar{role: "progressbar", 'aria-valuenow': enrollment.display_percentage_complete, 'aria-valuemin': "0", 'aria-valuemax': '100', style: "width: #{enrollment.display_percentage_complete}%"}
+          .btn.btn-outline
+            Resume

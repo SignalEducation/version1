@@ -22,13 +22,13 @@
 :javascript
   $(document).ready(function(){
     window.uetq = window.uetq || [];
-    window.uetq.push('event', 'Purchase', {
+    window.uetq.push('event', 'Product Purchases', {
       'event_category': "#{@product&.product_type.humanize}",
       'event_label': "#{@product&.product_type}",
       'event_value': "#{@product.price}"
     });
 
-    fbq('track', 'Purchase', {
+    fbq('track', 'Product Purchases', {
       value: "#{@product&.price}",
       currency: "#{@product&.currency&.iso_code}",
       product_id: "#{@product&.id}",
@@ -38,7 +38,7 @@
     });
 
     if("#{@product&.url_by_type}" === "lifetime" && "#{@subscriptions.any?}" === "false") {
-      gtag('event', 'purchase', {
+      gtag('event', 'Product Purchases', {
         "transaction_id": "#{@order&.id}",
         "affiliation": "products",
         "value": "#{@product&.price}",

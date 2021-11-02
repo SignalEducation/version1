@@ -1,0 +1,90 @@
+.notificationMessageWrapper {
+    position: fixed;
+    z-index: 1000;
+    top: 64px;
+    right: 24px;
+    max-width: 400px;
+    background-color: #FFF;
+    border: 1px solid #E5E7EB;
+    box-sizing: border-box;
+    box-shadow: 0px 20px 25px rgba(0, 0, 0, 0.10), 0px 10px 10px rgba(0, 0, 0, 0.04);
+    border-radius: 16px;
+    display: flex;
+    flex-direction: row;
+    column-gap: 12px;
+    padding: 16px 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: default;
+    @include if-device(phone) {
+        top: 0;
+        right: 0;
+        margin: 0.5rem !important;
+        font-size: 14px;
+    }
+    &-closeBtn {
+        position: absolute;
+        z-index: 1000;
+        top: 0;
+        right: -16px;
+        @include if-device(phone) {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+
+    }
+    &-icon {
+        padding: 8px;
+        width: 40px;
+        height: 40px;
+        background: #D1FAE5;
+        color: #10B981;
+        border-radius: 8px;
+        &.notice {
+            background: #DBEAFE;
+            color: #3B82F6;
+        }
+        &.success {
+            background: #D1FAE5;
+            color: #10B981;
+            
+        }
+        &.alert {
+            background: #FEF3C7;
+            color: #F59E0B;
+            
+        }
+        &.warning {
+            background: #FEF3C7;
+            color: #F59E0B;
+            
+        }
+        &.error {
+            background: #FEE2E2;
+            color: #EF4444;
+            
+        }
+    }
+    &-title {
+        position: relative;
+        margin-bottom: 4px;
+        line-height: 1.5;
+        color: #111827;
+        max-width: 90%;
+        span {
+          z-index: 10;
+          position: relative;
+          padding: 0;
+          font-weight: 700;;
+        }
+        
+    }
+    &-desc {
+        font-size: 14px;
+        line-height: 1.5;
+        max-width: 90%;
+        color: #6B7280;
+        
+    }
+}

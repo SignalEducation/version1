@@ -52,6 +52,11 @@ Rails.application.routes.draw do
       end
 
       resources :courses, only: :index do
+        collection do
+          get 'groups(/:group_name)', to: 'courses#groups'
+          get 'lessons/:group_name/:course_name', to: 'courses#lessons'
+        end
+
         post 'read_note_log'
       end
 
@@ -60,12 +65,14 @@ Rails.application.routes.draw do
       end
 
       resources :exam_bodies, only: :index
+      resources :key_areas, only: :index
       resources :practice_questions, only: :index
       resources :uploads, only: :create
 
       resources :users, only: %i[show create update] do
         post 'change_password'
         get 'forgot_password', on: :collection
+        get 'resend_verify_user_email'
       end
 
       get 'pricing/', to: 'prices#index', as: :pricing
@@ -73,9 +80,9 @@ Rails.application.routes.draw do
   end
 
   # all standard, user-facing "resources" go inside this scope
-  scope "(:locale)", locale: /en/ do
-    get '404' => redirect('404-page')
+  get '404' => redirect('404-page')
 
+  scope "(:locale)", locale: /en/ do
     namespace :admin do
       resources :bearers
       resources :exercises, only: %i[index show new create edit update] do
@@ -110,7 +117,10 @@ Rails.application.routes.draw do
 
       post 'search_exercises', to: 'exercises#index', as: :search_exercises
 
-      resources :levels, concerns: :supports_reordering
+      resources :levels, concerns: :supports_reordering do
+        post :by_group, on: :collection
+      end
+      resources :key_areas, concerns: :supports_reordering
 
       get 'courses/:id/new_course_section',                                                     to: 'course_sections#new',               as: :new_course_section
       get 'courses/:id/course_section/:course_section_id/new_course_lesson',                    to: 'course_lessons#new',                as: :new_course_lesson
@@ -273,9 +283,13 @@ Rails.application.routes.draw do
       match :create_constructed_response_user_log, on: :collection, via: :post
       match :update_constructed_response_user_log, on: :collection, via: %i[put patch]
       post :update_quiz_attempts, on: :collection
+      post :units_by_key_area, on: :collection
 
-      get ':course_name_url', to: redirect('/%{locale}/library/%{course_name_url}'), on: :collection
+
+      get ':course_name_url', to: redirect('/library/%{course_name_url}'), on: :collection
     end
+
+    post 'courses/search', to: 'courses#search'
 
     get 'courses/:course_name_url/:course_section_name_url/:course_lesson_name_url(/:course_step_name_url)', to: 'courses#show', as: 'show_course'
 
@@ -339,7 +353,7 @@ Rails.application.routes.draw do
 
     resources :management_consoles
     get '/system_requirements', to: 'management_consoles#system_requirements', as: :system_requirements
-    get '/public_resources', to: 'management_consoles#public_resources', as: :public_resources
+    get '/external-content', to: 'management_consoles#public_resources', as: :public_resources
 
     # Reports
     get '/reports',                       to: 'reports#index',                            as: :reports
@@ -381,6 +395,7 @@ Rails.application.routes.draw do
     get 'course/:name_url', to: 'student_sign_ups#group', as: :group_landing
 
     root 'student_sign_ups#home'
+    get 'logout', to: redirect { Rails.application.credentials[Rails.env.to_sym][:acqusition_domain][:url] }, as: :logout_redirect
 
     # Catch-all
     get '404', to: 'footer_pages#missing_page', first_element: '404-page', as: :missing_page
@@ -390,8 +405,8 @@ Rails.application.routes.draw do
     get 'content/:content_public_url', to: 'content_pages#show', as: :footer_content_page
 
     get '(:first_element(/:second_element))', to: 'footer_pages#missing_page'
-  end
 
+  end
   # Catch-all
   get '(:first_element(/:second_element))', to: 'footer_pages#missing_page'
 end

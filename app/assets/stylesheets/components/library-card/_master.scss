@@ -70,12 +70,10 @@
   }
   .card.card-link.card-link-alt .card-link-alt-img {
     width: 40px;
-    //min-width: 40px
   }
   @media (min-width: 576px) {
     .card.card-link.card-link-alt .card-link-alt-img {
       width: 66px;
-      //min-width: 66px
     }
   }
   .card.card-link + .card-link {
@@ -98,22 +96,10 @@
     padding-right: 1.25rem
   }
   .card.card-lg {
-    //min-height: 21rem;
     padding: 0;
     padding-top: 3.75rem
   }
-  @media (min-width: 576px) {
-    .card.card-lg {
-      //min-height: 19rem
-    }
-  }
-  @media (min-width: 768px) {
-    .card.card-lg {
-      //height: 21rem
-    }
-  }
   .card.card-sm {
-    //min-height: 15rem;
     padding: 0
   }
   .card.card-sm .card-body {
