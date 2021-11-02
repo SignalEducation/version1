@@ -29,18 +29,11 @@
             =f.label :icon_label, t('views.courses.form.icon_label')
             .input-group.input-group-lg
               =f.text_field :icon_label, placeholder: t('views.courses.form.icon_label_placeholder'), class: 'form-control'
+
           .form-group
-            =f.label :unit_label, t('views.courses.form.unit_label')
+            =f.label :unit_hour_label, t('views.courses.form.unit_hour_label')
             .input-group.input-group-lg
-              =f.text_field :unit_label, placeholder: t('views.courses.form.unit_label_placeholder'), class: 'form-control'
-          .form-group
-            =f.label :api_unit_label, t('views.courses.form.api_unit_label')
-            .input-group.input-group-lg
-              =f.text_field :api_unit_label, placeholder: t('views.courses.form.api_unit_label_placeholder'), class: 'form-control'
-          .form-group
-            =f.label :hour_label, t('views.courses.form.hour_label')
-            .input-group.input-group-lg
-              =f.text_field :hour_label, placeholder: t('views.courses.form.hour_label_placeholder'), class: 'form-control'
+              =f.text_field :unit_hour_label, placeholder: t('views.courses.form.unit_hour_label_placeholder'), class: 'form-control'
 
         .col-sm-6
           .form-group

@@ -27,6 +27,7 @@ module Admin
 
     def new
       @key_area = KeyArea.new(sorting_order: 1)
+      @levels = []
     end
 
     def create
@@ -40,7 +41,9 @@ module Admin
       end
     end
 
-    def edit; end
+    def edit
+      @levels = @key_area.group.levels
+    end
 
     def update
       if @key_area.update(allowed_params)
@@ -79,9 +82,7 @@ module Admin
     end
 
     def allowed_params
-      params.require(:key_area).permit(
-        :name, :sorting_order, :active, :group_id
-      )
+      params.require(:key_area).permit(:name, :sorting_order, :active, :group_id, :level_id)
     end
   end
 end

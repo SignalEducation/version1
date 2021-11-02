@@ -117,7 +117,9 @@ Rails.application.routes.draw do
 
       post 'search_exercises', to: 'exercises#index', as: :search_exercises
 
-      resources :levels, concerns: :supports_reordering
+      resources :levels, concerns: :supports_reordering do
+        post :by_group, on: :collection
+      end
       resources :key_areas, concerns: :supports_reordering
 
       get 'courses/:id/new_course_section',                                                     to: 'course_sections#new',               as: :new_course_section
@@ -281,6 +283,8 @@ Rails.application.routes.draw do
       match :create_constructed_response_user_log, on: :collection, via: :post
       match :update_constructed_response_user_log, on: :collection, via: %i[put patch]
       post :update_quiz_attempts, on: :collection
+      post :units_by_key_area, on: :collection
+
 
       get ':course_name_url', to: redirect('/library/%{course_name_url}'), on: :collection
     end
