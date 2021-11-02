@@ -1,15 +1,21 @@
+@import "breakpoints";
+$sans-font: 'Manrope', sans-serif;
 #upgrade-subscription, #product_purchase {
   .card {
     position: relative;
-    padding: 1rem;
-    border: 0 none;
-    -webkit-box-shadow: 0 0 19px #d5dbe5;
-    box-shadow: 0 0 19px #d5dbe5;
-    -webkit-transition: all .15s ease-in 0s;
-    -o-transition: all .15s ease-in 0s;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: auto;
+    background-color: transparent;
+    border: none;
+    padding: 0 !important;
+    overflow: hidden;
+    cursor: pointer;
+    word-wrap: break-word;
+    box-shadow: none;
+    border-radius: 0;
     transition: all .15s ease-in 0s;
-
-
     &.card-link{
       border: 1px solid #e1e8ed;
       background-clip: border-box;
@@ -36,18 +42,16 @@
 
   .strike {
     position: relative;
-
     font-weight: bold;
+    color: #888;
     &:before {
       position: absolute;
-      content: '';
-      left: 6%;
-      top: 35%;
-      right: 2%;
-      border-top: 0.1em solid #fd5c63;
-      -webkit-transform: skewY(-6deg);
-      -moz-transform: skewY(-6deg);
-      transform: skewY(-6deg);
+      content: ' ';
+      left: -20px;
+      top: 14px;
+      right: -20px;
+      border-top: 2px solid #888;
+      transform: skewY(0deg);
     }
   }
 
@@ -55,9 +59,10 @@
 
 #upgrade-subscription, #product_purchase, #plans {
   font-size: 16px;
-  font-family: OakesGrotesk,sans-serif;
+  font-family: $sans-font;
   h1, h2, .h2, h3, h4 {
-    color: #424366;
+    color: #111827;
+    font-size: 1.875rem;
   }
   .h2 {
     font-weight: 500;
@@ -67,19 +72,18 @@
     font-weight: 500;
   }
   p {
-    color: #7f8599;
+    color: #000;
     font-weight: 400;
+    font-size: 14px;
   }
   #paypal_submit {
     width: 228px;
-    //height: 44px;
     padding: 0;
   }
   .btn {
-    font-family: 'OakesGrotesk',sans-serif;
     &:not(:disabled):not(.disabled) {
-      margin-left: 2px;
-      padding: .525rem .75rem;
+      margin-left: 0;
+      padding: 0.8rem 1rem;
       cursor: pointer;
     }
     &.btn-text{
@@ -140,7 +144,7 @@
   }
   .h1,
   h1 {
-    font-size: 2.25em;
+    font-size: 24px;
   }
   .h2,
   h2 {
@@ -152,14 +156,16 @@
   }
   .h4,
   h4 {
-    font-size: 1.1875em !important;
+    font-size: 20px !important;
     font-weight: 700 !important;
+    @include if-device(phone) {
+      font-size: 16px !important;
+    }
   }
   .h5,
   h5 {
     font-size: 1em;
     margin-bottom: .5em;
-    font-family: OakesGrotesk,sans-serif;
     font-weight: 500;
     line-height: 1.2;
   }
@@ -174,12 +180,12 @@
   h1,
   h2,
   h3 {
-    font-family: Montserrat,sans-serif;
     font-weight: 700;
   }
   .h1-mega {
     margin-bottom: 0.1em !important;
-    font-size: 2.25em;
+    font-size: 1.75rem;
+    font-weight: 700;
   }
   @media (min-width:576px) {
     .h1-mega {
@@ -207,20 +213,20 @@
 
 
   .form-control {
-    padding: 1.35em .75em
+    padding: 0.5rem 1rem;
   }
   @media (min-width:576px) {
     .form-control {
-      padding: 1.35em 0.75em
+      padding: 0.5rem 1rem;
     }
   }
   .form-control.coupon-error,
   .form-control:valid.coupon-error {
-    border:2px solid #f34664!important;
+    border:1px solid #f34664!important;
   }
   .form-control.coupon-success,
   .form-control:valid.coupon-success {
-    border:2px solid #00b67B!important;
+    border:1px solid #00b67B!important;
   }
 
 
@@ -232,17 +238,17 @@
   }
   .form-control.is-valid,
   .form-control:valid {
-    border-color: #f4f6fa!important;
-    -webkit-box-shadow: none;
-    box-shadow: none
+    border-color: #d1d5da!important;
+    // -webkit-box-shadow: none;
+    // box-shadow: none
   }
   .form-control.is-valid.focus,
   .form-control.is-valid:focus,
   .form-control:valid.focus,
   .form-control:valid:focus {
     border-color: #7f8599!important;
-    -webkit-box-shadow: none!important;
-    box-shadow: none!important
+    // -webkit-box-shadow: none!important;
+    // box-shadow: none!important
   }
   .change_plan {
     background-color: #fff;
@@ -336,18 +342,19 @@
     -webkit-align-self: center;
     -ms-flex-item-align: center;
     align-self: center;
-    width: 19px;
-    height: 19px;
+    width: 24px;
+    height: 24px;
     background-color: transparent;
     border: 1px solid #7f8599;
     border-radius: 2px;
+    overflow: hidden;
     -webkit-transition: all .1s linear 0s;
     -o-transition: all .1s linear 0s;
-    transition: all .1s linear 0s
+    transition: all .1s linear 0s;
   }
   .custom-control.custom-checkbox .custom-control-input + .custom-control-label:hover > .custom-check,
   .custom-control.custom-radio .custom-control-input + .custom-control-label:hover > .custom-check {
-    border-color: #00b67B
+    border-color: #02b57b;
   }
   .custom-control.custom-checkbox .custom-control-input.style-checkbox + label > .custom-check,
   .custom-control.custom-radio .custom-control-input.style-checkbox + label > .custom-check {
@@ -361,8 +368,9 @@
     left: 0;
     content: '\e5ca';
     font-family: 'Material Icons';
-    font-size: 17px;
-    color: #424366
+    font-size: 22px;
+    color: #FFF;
+    background-color: #02b57b;
   }
   .custom-control.custom-checkbox .custom-control-input.style-radio + label > .custom-check,
   .custom-control.custom-radio .custom-control-input.style-radio + label > .custom-check {
@@ -372,17 +380,17 @@
   .custom-control.custom-radio .custom-control-input.style-radio + label > .custom-check::after {
     display: none;
     position: absolute;
-    top: 7px;
-    left: 7px;
+    top: 4px;
+    left: 4px;
     content: '';
-    width: 3px;
-    height: 3px;
-    background-color: #424366;
+    width: 14px;
+    height: 14px;
+    background-color: #007bff;
     border-radius: 50%
   }
   .custom-control.custom-checkbox .custom-control-input:checked + label > .custom-check,
   .custom-control.custom-radio .custom-control-input:checked + label > .custom-check {
-    border: 1px solid #00b67B
+    border: 1px solid #007bff;
   }
   .custom-control.custom-checkbox .custom-control-input:checked + label > .custom-check::after,
   .custom-control.custom-radio .custom-control-input:checked + label > .custom-check::after {
@@ -400,14 +408,18 @@
   }
   .custom-control.custom-checkbox .custom-control-input.custom-control-input-card + label,
   .custom-control.custom-radio .custom-control-input.custom-control-input-card + label {
-    padding: .75em 1em;
+    // padding: .75em 1em;
+    padding: 10px 14px;
     border: 1px solid transparent;
-    border-radius: 0
+    border-radius: 6px;
+    @include if-device(phone) {
+      padding: 8px 12px;
+    }
   }
   @media (min-width:576px) {
     .custom-control.custom-checkbox .custom-control-input.custom-control-input-card + label,
     .custom-control.custom-radio .custom-control-input.custom-control-input-card + label {
-      padding: 1em 1.6em
+      padding: 1rem;
     }
   }
   .custom-control.custom-checkbox .custom-control-input.custom-control-input-card + label span,
@@ -483,7 +495,7 @@
   }
   .custom-control.custom-checkbox .custom-control-input.custom-control-input-card + label:hover,
   .custom-control.custom-radio .custom-control-input.custom-control-input-card + label:hover {
-    border-color: #b4bbd4
+    border-color: #d1d5db;
   }
   .custom-control.custom-checkbox .custom-control-input.custom-control-input-card + label:hover > .custom-check,
   .custom-control.custom-radio .custom-control-input.custom-control-input-card + label:hover > .custom-check {
@@ -491,12 +503,20 @@
   }
   .custom-control.custom-checkbox .custom-control-input.custom-control-input-card:checked + label,
   .custom-control.custom-radio .custom-control-input.custom-control-input-card:checked + label {
-    background-color: #fff;
-    border-color: transparent
+    // border-color: #3B82F6;
+    // background-color: transparent;
+
+    border-color: transparent;
+    background: #fafafa;
+    border-radius: 6px;
+    box-shadow: 0 0 0 1px #e0e0e0, 0 2px 4px 0 rgba(0, 0, 0, 0.07), 0 1px 1.5px 0 rgba(0, 0, 0, 0.05);
+
+
+
   }
   .custom-control.custom-checkbox .custom-control-input.custom-control-input-card:checked + label > .custom-check,
   .custom-control.custom-radio .custom-control-input.custom-control-input-card:checked + label > .custom-check {
-    border-color: #00b67B
+    border-color: #3B82F6;
   }
   .custom-control.custom-checkbox .custom-control-input.custom-control-input-card.alt + label > .custom-label-info,
   .custom-control.custom-radio .custom-control-input.custom-control-input-card.alt + label > .custom-label-info {
@@ -529,9 +549,12 @@
     }
   }
   .form-group-expandable {
-    margin-bottom: 1.25em;
-    border: 1px solid #e6eaf2;
-    border-radius: 0
+    margin-bottom: 1.5rem;
+    padding: 0.5rem;
+    background-color: #FFF;
+    transition: all 0.15s ease-in-out 0s;
+    border: 1px solid rgb(209, 213, 219);
+    border-radius: 12px;
   }
 .input-group :first-child.sr-only + * {
     border-top-left-radius: 4px;
@@ -607,9 +630,8 @@
     }
   }
   .payment {
-    padding-top: 3em;
-    padding-bottom: 3em;
-    color: #7f8599
+    padding: 2rem 0;
+    // color: #7f8599
   }
   @media (min-width:576px) {
     .payment {
@@ -617,15 +639,15 @@
       padding-bottom: 4em
     }
   }
-  .payment-details {
-    display: none;
-    padding: .5em .75em 1.5em .75em
-  }
-  @media (min-width:576px) {
-    .payment-details {
-      padding: .5em 1.5em 2.5em 1.5em
-    }
-  }
+  // .payment-details {
+  //   display: none;
+  //   padding: .5em .75em 1.5em .75em
+  // }
+  // @media (min-width:576px) {
+  //   .payment-details {
+  //     padding: .5em 1.5em 2.5em 1.5em
+  //   }
+  // }
   .payment-details .input-group {
     display: block
   }
@@ -688,5 +710,40 @@
   }
   .custom-control.custom-control-simple .custom-control-input + .custom-control-label .custom-label {
     color: #424366
+  }
+}
+
+
+.show-more-plans {
+  position: relative;
+  text-decoration: none;
+  width: 100%;
+  text-align: right;
+  padding-right: 12px;
+  &:before {
+    content: ' ';
+    position: absolute;
+    z-index: 0;
+    left: 0;
+    top: 50%;
+    height: 1px;
+    width: 100%;
+    border-bottom: 1px solid #efefef;
+  }
+  span {
+    z-index: 10;
+    background-color: #FFF;
+    position: relative;
+    padding: 0 1rem;
+  }
+}
+.paymentOptionBox {
+  background-color: transparent;
+  padding: 2rem;
+  border-radius: 16px;
+  border: none;
+  @include if-device(phone) {
+    border-radius: 0;
+    padding: 2rem 1rem;
   }
 }

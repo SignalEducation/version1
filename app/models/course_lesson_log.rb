@@ -52,7 +52,7 @@ class CourseLessonLog < ApplicationRecord
 
   # callbacks
   before_validation :create_course_section_log, unless: :course_section_log_id
-  after_create :create_onboarding_process
+  # after_create :create_onboarding_process
   after_update :update_course_section_log
 
   # scopes

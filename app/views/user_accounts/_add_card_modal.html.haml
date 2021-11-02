@@ -1,12 +1,12 @@
 #add-card-modal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "add-card-modal", :role => "dialog", :tabindex => "-1"}
   .modal-dialog{:role => "document"}
-    .modal-content
-      %button.btn.btn-text.modal-close.p-0{"data-dismiss" => "modal"}
+    .modal-content.addCard
+      %button.btn.btn-icon.modal-close{"data-dismiss" => "modal"}
         %i.material-icons{"aria-hidden" => "true"} close
-      .modal-header
-        %h3#add-card-modal.text-gray2.mb-5 Add New Card
-      .modal-body
-        =form_for(SubscriptionPaymentCard.new, method: :post, html: {class: 'py-2', role: 'form', id: 'new-subscription-payment-card-form'}, name: 'add_card_form') do |f|
+      .modal-header.p-0
+        %h3#add-card-modal.text-gray1.mb-5 Add New Card
+      .modal-body.p-0
+        =form_for(SubscriptionPaymentCard.new, method: :post, html: {class: 'py-0', role: 'form', id: 'new-subscription-payment-card-form'}, name: 'add_card_form') do |f|
           =f.hidden_field :user_id, value: current_user.id
           =f.hidden_field :stripe_token
 
@@ -22,7 +22,7 @@
                       #card-errors{role: 'alert'}
 
 
-          .pt-2.d-flex.flex-wrap.flex-sm-nowrap.justify-content-between
+          .pt-2.d-flex.flex-wrap.flex-sm-nowrap.justify-content-end
             %div
               = f.button :submit, class: 'btn btn-primary float-left mb-2', id: 'card_submit' do
                 Add Card

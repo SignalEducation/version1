@@ -1,10 +1,10 @@
-=render partial: 'layouts/external_navbar'
+=render partial: 'layouts/navbar'
 %main
   .container-bg.home-hero-default-bg{style: @home_page&.background_image.present? ? "background-image: url(#{image_url(@home_page.background_image)});" : ''}
     .container
       %article.home-hero.home-hero-default
         .row{class: "#{(@home_page.registration_form || @home_page.login_form) ? 'justify-content-between' : ''}"}
-          .col-10.offset-1.col-md-8.offset-md-2.col-lg-6.offset-lg-0.col-xl-4
+          .col-10.offset-1.col-md-8.offset-md-2.col-lg-6.offset-lg-0.col-xl-6
             %header.home-hero-header
               -if @home_page&.header_h1.present?
                 %h1.h1-hero.text-white.mb-5
@@ -48,7 +48,7 @@
           -elsif @home_page.pricing_section && @home_page.preferred_payment_frequency && @preferred_plan
             .col-lg-5.offset-lg-1.offset-xl-3.col-xl-4
               .h-100.d-flex.flex-column.justify-content-center
-                %article.card.card-primary.card-primary-alt.card-with-banner.mb-0
+                %article.card.card-primary.card-primary-alt.card-with-banner.mb-0.p-0
                   -if @preferred_plan.most_popular
                     .card-banner.bg-mint
                       %large.text-white
@@ -87,7 +87,7 @@
       .row.row-lg
         -@group.courses.all_active.all_in_order.each do |course|
           .col-sm
-            =link_to library_special_link(course), class: 'card card-horizontal flex-row card-mint', data: { toggle: 'tooltip', placement: 'right', animation: 'true', delay: { "show": 300, "hide": 100 }}, title: "#{course.short_description}" do
+            =link_to library_special_link(course), class: 'card card-horizontal flex-row card-mint p-0', data: { toggle: 'tooltip', placement: 'right', animation: 'true', delay: { "show": 300, "hide": 100 }}, title: "#{course.short_description}" do
               .card-header.d-flex.justify-content-center.align-items-center
                 -# TODO - Convert this into partial
                 -if course.unit_label
@@ -126,7 +126,7 @@
           .row.row-lg.justify-content-center
             -@subscription_plans.each do |plan|
               .col-lg-4
-                %article.card.card-primary.card-primary-alt.medium-gap
+                %article.card.card-primary.card-primary-alt.medium-gap.p-0
                   -if plan.most_popular
                     .card-banner.bg-mint
                       %large.text-white

@@ -1,15 +1,22 @@
-.row.row-lg#constructed-response-window.constructed-response-window-grown.constructed-response-window-shrunk
-  .col-xl-12.mb-5
+.row.row-lg.m-0#constructed-response-window.constructed-response-window-shrunk
+  %div.visible-xs
+    #small-screen-overlay.load-overlay{style: 'position: absolute;height: calc(100vh - 120px);z-index: 100;background-color: #fff;'}
+      .p-5
+        .h2{style: 'font-size: 72px;'} 🖥
+        .h2.text-gray1.mt-5{style: 'line-height: 1.3;'}
+          Please use a larger screen device to access CBE for a better experience.
+        =link_to 'Next Lesson', show_course_url(@course.name_url, @course_step.next_element.course_lesson.course_section.name_url, @course_step.next_element.course_lesson.name_url, @course_step.next_element.name_url), class: 'btn btn-primary btn-sm btn-sm-arrow-left mt-3 mb-3 mb-sm-0'
+  .col-xl-12
     #course-right-show-elem-notes.course-right-show-content
       .course-right-show-frame
         .start-screen-box
+          .welcome-text
+            -if @group && @group.exam_body && @group.exam_body.constructed_response_intro_heading && !@group.exam_body.constructed_response_intro_heading.blank?
+              =@group.exam_body.constructed_response_intro_heading
+            -else
+              WELCOME TO YOUR CBE CONSTRUCTED RESPONSE TOOL
           .row
             .col-sm.mb-3
-              .welcome-text
-                -if @group && @group.exam_body && @group.exam_body.constructed_response_intro_heading && !@group.exam_body.constructed_response_intro_heading.blank?
-                  =@group.exam_body.constructed_response_intro_heading
-                -else
-                  WELCOME TO YOUR CBE CONSTRUCTED RESPONSE TOOL
 
               -if @group && @group.exam_body && @group.exam_body.constructed_response_intro_text && !@group.exam_body.constructed_response_intro_text.blank?
                 =@group.exam_body.constructed_response_intro_text.html_safe
@@ -23,24 +30,7 @@
                   %li='Keep track of time to get into the exam mindset from your first attempt'
                   %li='You can make as many attempts as you like but only your most recent 8 attempts will be available to view'
 
-
-              -# -if @course_step.course_notes && @course_step.course_notes.any?
-              -#   %h6.pb-3.pt-3
-              -#     ='Help/Formulae Sheets'
-              -#   .row
-              -#     -@course_step.course_notes.each do |resource|
-              -#       .col-sm-6.pb-2
-              -#         =link_to resource.upload.url, target: '_blank' do
-              -#           .btn.btn-secondary
-              -#             =resource.name
-
             .col-sm.text-center
-              =link_to courses_constructed_response_url(course_name_url: @course_step.course_lesson.course_section.course.name_url,
-              course_section_name_url: @course_step.course_lesson.course_section.name_url,
-                course_lesson_name_url: @course_step.course_lesson.name_url,
-                course_step_name_url: @course_step.name_url), id: 'newConstructedResponseButton' do
-                .btn.btn-primary.mt-3
-                  ='New Constructed Response'
 
               .sk-circle
                 .sk-circle1.sk-child
@@ -72,6 +62,7 @@
                       -@course_step_logs.each do |cmeul|
                         %tr
                           %td
+                            %i.material-icons{style: "color: #00B67A;margin-right: 2px;font-size: 16px;top: 3px;position: relative;"} link
                             =link_to "Response-##{cmeul.constructed_response_attempt.try(:guid)}", courses_constructed_response_url(@course_step.course_lesson.course.name_url, @course_step.course_lesson.course_section.name_url, @course_step.course_lesson.name_url, @course_step.name_url, cmeul.id)
                           %td
                             =humanize_datetime(cmeul.created_at)
@@ -79,6 +70,13 @@
                             =humanize_datetime(cmeul.updated_at)
                           %td
                             =cmeul.constructed_response_attempt.status
+              
+              =link_to courses_constructed_response_url(course_name_url: @course_step.course_lesson.course_section.course.name_url,
+              course_section_name_url: @course_step.course_lesson.course_section.name_url,
+                course_lesson_name_url: @course_step.course_lesson.name_url,
+                course_step_name_url: @course_step.name_url), id: 'newConstructedResponseButton' do
+                .btn.btn-primary.mt-3
+                  ='New Constructed Response'
 
 
 

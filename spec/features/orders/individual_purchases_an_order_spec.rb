@@ -28,7 +28,7 @@ describe 'An individual purchasing a product', type: :feature do
     scenario 'can checkout using PayPal' do
       first(:link, mock.mock_exam.name).click
 
-      expect(page).to have_content('Choose a way to pay')
+      expect(page).to have_content('Pay with PayPal')
       expect(page).to have_selector('#paypal_submit')
     end
 
@@ -42,29 +42,8 @@ describe 'An individual purchasing a product', type: :feature do
       visit prep_products_path
       first(:link, mock.mock_exam.name).click
 
-      expect(page).to have_content('Choose a way to pay')
+      expect(page).to have_content('Pay with Card')
       expect(page).to have_selector('#pay-with-card')
-    end
-  end
-
-  context 'as a logged-out user' do
-    scenario 'can browse available products' do
-      visit prep_products_path
-
-      expect(page).to have_content(mock.mock_exam.name)
-
-      click_link 'Correction Packs'
-
-      expect(page).to have_content(correction.mock_exam.name)
-    end
-
-    scenario 'attempting to purchase prompts a sign-up or login' do
-      visit prep_products_path
-      first(:link, mock.mock_exam.name).click
-
-      expect(page).to have_content('Register')
-      expect(page).to have_button('Register Now')
-      expect(page).to have_content('Log In')
     end
   end
 end

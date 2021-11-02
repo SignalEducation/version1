@@ -168,12 +168,15 @@ class UsersController < ApplicationController
   end
 
   def update_hubspot
-    return if Rails.env.test?
+    course = Course.find(params[:custom_data][:course_id])
+    user = User.find(params[:user_id])
+    return if Rails.env.test? || !course && !user
 
+    user.update_attribute(:onboarding_course, course)
     response =
       HubSpot::Contacts.new.batch_create(
         Array(params[:user_id]),
-        format_hubspot_properties(params[:custom_data])
+        format_hubspot_properties(params[:custom_data]).first
       )
 
     render json: { message: response.body }, status: response.code.to_i

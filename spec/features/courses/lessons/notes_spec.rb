@@ -34,7 +34,7 @@ describe 'Notes Course Step', type: :feature do
                              course_lesson_name_url: course_note.course_step.course_lesson.name_url,
                              course_step_name_url: course_note.course_step.name_url)
 
-      expect(page).to have_title('The Smarter Way to Study | learnsignal')
+      expect(page).to have_title('The Smarter Way to Study | Learnsignal')
     end
   end
 end

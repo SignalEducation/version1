@@ -1,5 +1,5 @@
 %nav
-  %ul.nav.nav-tabs.nav-fill{id: 'scenarioTabs', role: 'tablist'}
+  %ul.nav.nav-tabs{id: 'scenarioTabs', role: 'tablist'}
     - user_log.scenarios_in_user_log.each_with_index do |scenario, scenario_index|
       %li.nav-item
         %a{class: "nav-link #{scenario_index == 0 ? 'active' : ''}", data: {toggle: 'tab'}, href: "#scenario-#{scenario.id}", aria: {controls: "#{scenario.id}", selected: 'false'}, role: 'tab'}
@@ -23,22 +23,22 @@
                   .h3
                     Score:
                     =requirement.score
-              .row
+              .row.mb-6
                 .col-sm-12
                   .accordion#resultsAccordion
-                    .card
-                      .card-header.bg-gray-light{id: "requirement-#{requirement.id}", type: "button", data:{toggle: "collapse", target: "#requirementContent#{requirement.id}"}, aria:{expanded: "true", controls: "questionCard"}, style: 'padding: 10px;'}
+                    .faq-box.card.p-0.m-0
+                      .card-header.bg-gray5{id: "requirement-#{requirement.id}", type: "button", data:{toggle: "collapse", target: "#requirementContent#{requirement.id}"}, aria:{expanded: "true", controls: "questionCard"}, style: 'padding: 10px;'}
                         %h2.mb-0
-                          .btn.btn-link
+                          .btn
                             ='Content '
                       .collapse{id: "requirementContent#{requirement.id}", aria: {labelledby: "requirement-#{requirement.id}"}, data: {parent: "#resultsAccordion"}}
                         .card-body{style: 'margin-left: 10px;'}
                           =raw(requirement.content)
 
-                    .card
-                      .card-header.bg-gray-light{id: "requirement-#{requirement.id}", type: "button", data:{toggle: "collapse", target: "#requirementSolution#{requirement.id}"}, aria:{expanded: "true", controls: "questionCard"}, style: 'padding: 10px;'}
+                    .faq-box.card.p-0.m-0
+                      .card-header.bg-gray5{id: "requirement-#{requirement.id}", type: "button", data:{toggle: "collapse", target: "#requirementSolution#{requirement.id}"}, aria:{expanded: "true", controls: "questionCard"}, style: 'padding: 10px;'}
                         %h2.mb-0
-                          .btn.btn-link
+                          .btn
                             ='Solution '
                       .collapse{id: "requirementSolution#{requirement.id}", aria: {labelledby: "requirement-#{requirement.id}"}, data: {parent: "#resultsAccordion"}}
                         .card-body{style: 'margin-left: 10px;'}
@@ -52,11 +52,11 @@
             = javascript_pack_tag 'exercise_modals'
           -# Exhibits list and modal in vue component.
 
-          .col-sm-12
+          .col-sm-12.mt-6
             .h4
               User Responses
             %nav
-              %ul.nav.nav-tabs.nav-fill{id: 'sectionTabs', role: 'tablist'}
+              %ul.nav.nav-tabs{id: 'sectionTabs', role: 'tablist'}
                 -user_responses.each_with_index do |response, index|
                   %li.nav-item
                     %a{class: "nav-link #{index == 0 ? 'active' : ''}", data: {toggle: 'tab'}, href: "#response-#{response.id}", aria: {controls: "#{response.id}", selected: 'false'}, role: 'tab'}
@@ -67,17 +67,18 @@
                   -# VueJS include
                   = javascript_pack_tag 'exercise'
 
-                  .card.card-primary{style: 'min-height: 10px;'}
+                  .p-0.m-0{style: 'min-height: 10px;'}
                     .card-body
                       .row
                         .col-sm-12
-                          ="Answer Score: #{response.score.to_i}"
+                          %div.mt-2.mb-4
+                            ="Answer Score: #{response.score.to_i}"
 
                           .accordion#resultsAccordion
-                            .card
+                            .faq-box.card.p-0.m-0
                               .card-header#questionHeading{type: "button", data:{toggle: "collapse", target: "#responseCard-#{response.id}"}, aria:{expanded: "true", controls: "responseCard"}, style: 'padding: 10px;'}
                                 %h2.mb-0
-                                  .btn.btn-link
+                                  .btn
                                     ='Content'
                               .collapse{id: "responseCard-#{response.id}", aria: {labelledby: "questionHeading"}, data: {parent: "#resultsAccordion"}}
                                 .card-body
@@ -105,10 +106,10 @@
                                                                       spreadsheet_data: response.content,
                                                                       cbe_id: response.user_log.cbe_id,
                                                                       cbe_user_log_id: response.cbe_user_log_id } }
-                            .card
+                            .faq-box.card.p-0.m-0
                               .card-header#questionHeading{type: "button", data:{toggle: "collapse", target: "#responseCard-#{response.id}"}, aria:{expanded: "true", controls: "responseCard"}, style: 'padding: 10px;'}
                                 %h2.mb-0
-                                  .btn.btn-link
+                                  .btn
                                     ='Educator Comment '
                               .collapse{id: "responseCard-#{response.id}", aria: {labelledby: "questionHeading"}, data: {parent: "#resultsAccordion"}}
                                 .card-body

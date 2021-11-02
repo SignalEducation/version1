@@ -29,6 +29,7 @@
 #  pricing_seo_title                  :string
 #  pricing_seo_description            :string
 #  hubspot_property                   :string
+#  new_onboarding                     :boolean          default("false"), not null
 #
 
 FactoryBot.define do

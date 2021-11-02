@@ -10,9 +10,13 @@ json.address                         user.address
 json.user_group                      user.user_group.name
 json.guid                            user.guid
 json.address                         user.address
+json.valid_subscription              user.valid_subscription?
 json.email_verification_code         user.email_verification_code
 json.email_verified_at               user.email_verified_at
 json.email_verified                  user.email_verified
+json.verify_remain_days              user.verify_remain_days
+json.verify_email_message            verify_email_message(remain_days)
+json.show_verify_email_message       user.show_verify_email_message?
 json.free_trial                      user.free_trial
 json.terms_and_conditions            user.terms_and_conditions
 json.date_of_birth                   user.date_of_birth
@@ -63,6 +67,20 @@ json.subscription_plan_category do
     json.available_from   user.subscription_plan_category.available_from
     json.available_from   user.subscription_plan_category.available_from
     json.sub_heading_text user.subscription_plan_category.sub_heading_text
+  else
+    json.nil!
+  end
+end
+
+json.subscriptions do
+  if user.viewable_subscriptions.present?
+    json.array! user.viewable_subscriptions.each do |subscription|
+      json.id            subscription.id
+      json.exam_body_id  subscription.subscription_plan&.exam_body_id
+      json.exam_body     subscription.subscription_plan&.exam_body&.name
+      json.plan_interval subscription.subscription_plan&.interval_name
+      json.created_at    subscription.created_at
+    end
   else
     json.nil!
   end
