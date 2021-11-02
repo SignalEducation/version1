@@ -122,7 +122,7 @@ module Paypal
       slack          = SlackService.new
       message_params = [{ fallback: "Paypay cron job cancelled subscription ##{subscription.id}.",
                           title: "Paypay cron job cancelled subscription ##{subscription.id}.",
-                          title_link: "https://learnsignal.com/en/subscription_management/#{subscription.id}",
+                          title_link: "https://app.learnsignal.com/subscription_management/#{subscription.id}",
                           color: '#7CD197',
                           footer: 'PayPal',
                           ts: subscription.cancelled_at }]

@@ -19,13 +19,13 @@ describe OrdersHelper, type: :helper do
     context 'returns product link' do
       context 'cbe product' do
         it 'pending exercise' do
-          expect(order_link(cbe_order)).to eq("<a target=\"_blank\" href=\"/en/exercises/#{exercise.id}/cbes/#{cbe.id}\">View</a>")
+          expect(order_link(cbe_order)).to eq("<a target=\"_blank\" href=\"/exercises/#{exercise.id}/cbes/#{cbe.id}\">View</a>")
         end
 
         it 'submitted exercise' do
           exercise.update(state: 'submitted')
 
-          expect(order_link(cbe_order)).to eq("<a target=\"_blank\" href=\"/en/exercises/#{exercise.id}\">View</a>")
+          expect(order_link(cbe_order)).to eq("<a target=\"_blank\" href=\"/exercises/#{exercise.id}\">View</a>")
         end
       end
 

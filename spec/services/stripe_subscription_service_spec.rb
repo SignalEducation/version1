@@ -377,6 +377,10 @@ describe StripeSubscriptionService, type: :service do
       stripe_sub = double(current_period_end: 1566209100)
       expect(subject.send(:renewal_date, stripe_sub)).to eq Time.zone.now
     end
+
+    after do
+      Timecop.return
+    end
   end
 
   describe '#update_old_subscription' do

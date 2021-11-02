@@ -29,12 +29,13 @@
 #  pricing_seo_title                  :string
 #  pricing_seo_description            :string
 #  hubspot_property                   :string
+#  new_onboarding                     :boolean          default("false"), not null
 #
 
 FactoryBot.define do
   factory :exam_body do
     sequence(:name)                    { |n| "#{Faker::Commerce.product_name} - #{n}" }
-    sequence(:hubspot_property)                    { |n| "#{Faker::Commerce.product_name} - #{n}" }
+    sequence(:hubspot_property)        { |n| "#{Faker::Commerce.product_name} - #{n}" }
     url                                { 'accaglobal.com/ie/en.html' }
     active                             { true }
     constructed_response_intro_heading { 'Intro Heading' }

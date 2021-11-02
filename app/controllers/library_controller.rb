@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class LibraryController < ApplicationController
+  before_action :logged_in_required
   before_action :check_course_available, :get_course_products_and_resources,
                 only: %i[course_show course_preview]
   layout 'marketing'
@@ -11,7 +12,7 @@ class LibraryController < ApplicationController
     redirect_to library_group_url(@groups.first.name_url) unless @groups.count > 1
 
     group_names = @groups.map(&:name).join(' and ')
-    seo_title_maker("#{group_names} Professional Courses | LearnSignal",
+    seo_title_maker('Library | Learnsignal',
                     'Discover professional courses designed by experts and delivered online so that you can study on a schedule that suits your needs.',
                     nil)
   end
@@ -20,7 +21,7 @@ class LibraryController < ApplicationController
     @group = Group.find_by(name_url: params[:group_name_url])
 
     if @group
-      @levels = @group.levels.all_active.all_in_order
+      @levels  = @group.levels.all_active.all_in_order
       @courses = @group.active_children.all_in_order
       seo_title_maker(@group.seo_title, @group.seo_description, nil)
       tag_manager_data_layer(@group.try(:name))
@@ -33,6 +34,8 @@ class LibraryController < ApplicationController
         @subscription_plans =
           SubscriptionPlan.where(subscription_plan_category_id: nil, exam_body_id: @group.exam_body_id).
             includes(:currency).in_currency(@currency_id).all_active.all_in_display_order.limit(3)
+
+        @products = Product.for_group(@group.id).where(product_type: :lifetime_access).includes(:currency).in_currency(@currency_id).all_active
       end
     else
       redirect_to root_url

@@ -1,4 +1,4 @@
-=render partial: 'layouts/external_navbar'
+=render partial: 'layouts/navbar'
 %main
   .container-bg.home-hero-alt-bg.bg-bootcamp{style: @home_page&.background_image.present? ? "background-image: url(#{image_url(@home_page.background_image)});" : ''}
     .container
@@ -41,7 +41,7 @@
       .row.row-lg
         -@group.courses.all_active.all_in_order.each do |course|
           .col-sm
-            =link_to library_special_link(course), class: 'card card-horizontal flex-row card-mint', data: { toggle: 'tooltip', placement: 'right', animation: 'true', delay: { "show": 300, "hide": 100 }}, title: "#{course.short_description}" do
+            =link_to library_special_link(course), class: 'card card-horizontal flex-row card-mint p-0', data: { toggle: 'tooltip', placement: 'right', animation: 'true', delay: { "show": 300, "hide": 100 }}, title: "#{course.short_description}" do
               .card-header.d-flex.justify-content-center.align-items-center
                 -# TODO - Convert this into partial
                 -if course.unit_label

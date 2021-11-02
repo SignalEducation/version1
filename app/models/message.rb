@@ -28,6 +28,8 @@ class Message < ApplicationRecord
   # relationships
   belongs_to :user
   belongs_to :onboarding_process, optional: true
+  belongs_to :subscription, optional: true
+  belongs_to :order, optional: true
 
   validates :user_id, presence: true
   validates :kind, inclusion: { in: Message.kinds.keys }, presence: true
@@ -76,6 +78,11 @@ class Message < ApplicationRecord
     return unless kind == 'onboarding'
 
     UrlHelper.instance.unsubscribe_url(message_guid: guid, host: LEARNSIGNAL_HOST)
+  end
+
+  def include_bcc?
+    (template == 'send_successful_payment_email' && subscription&.invoices&.count == 1) ||
+      (template == 'send_successful_order_email' && order&.product&.product_type == 'lifetime_access')
   end
 
   protected

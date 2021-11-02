@@ -111,7 +111,7 @@ Rails.application.configure do
   }
 
   config.exceptions_app = self.routes
-  config.action_dispatch.trusted_proxies = 
+  config.action_dispatch.trusted_proxies =
     (ActionDispatch::RemoteIp::TRUSTED_PROXIES +
       ENV['AWS_LOAD_BALANCERS'].split(',').map { |alp| IPAddr.new(alp) }) if ENV['AWS_LOAD_BALANCERS']
 
@@ -125,4 +125,4 @@ Rails.logger = Le.new('3101cfa2-8352-43bb-8465-ca043de116b1', # production
                       local: true # keep local logs as well
 )
 
-Rails.application.routes.default_url_options = { host: 'www.learnsignal.com' }
+Rails.application.routes.default_url_options = { host: 'app.learnsignal.com' }

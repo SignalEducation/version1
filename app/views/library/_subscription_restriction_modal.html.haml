@@ -2,24 +2,14 @@
   .modal-dialog.upgrade-modal{role: 'document'}
     .modal-content
       %button.btn.btn-icon.modal-close{'data-dismiss': 'modal'}
-        %i.material-icons.ml-1{'aria-hidden': 'true'}
+        %i.material-icons{'aria-hidden': 'true'}
           close
-      .modal-header.mb-3
-        %h3.text-red{id: 'invalidSubscription'}
-          Upgrade Your Plan
-
-      .modal-body
-        %p.mb-2
-          Enhance your study experience with these additional resources:
-        %ul.list
-          %li
-            Access all course lectures & materials for every course
-          %li
-            Unlimited 1-1 tutor support
-          %li
-            Practice questions for every exam paper
-          %li
-            Weekly student webinars
+      %h3.text-red{id: 'invalidSubscription'}
+        Unlock the
+        %span full experience
+        by getting your subcription today.
+      .upgradeIllustration
+        =image_tag('illustrations/upgrade-illustration-v1@2x.png', alt: 'upgrade')
 
 
         - if current_user&.subscription_action_required?
@@ -28,5 +18,4 @@
             =link_to 'Resolve Issue!', account_url(anchor: 'account-info')
 
       .modal-footer
-        =link_to 'Yes, upgrade my plan', subscription_checkout_special_link(@group.exam_body_id), class: 'btn btn-primary', title: 'Get Unlimited Access'
-
+        =link_to 'View Subscription Plans', pricing_url(@group.name_url), class: 'btn btn-dark upgrade-btn', title: 'Get Unlimited Access'

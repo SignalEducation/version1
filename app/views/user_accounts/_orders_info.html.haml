@@ -1,7 +1,6 @@
 %article.card
   .card-body
-    %h2.mb-4.text-gray2
-      Purchases
+  -if @orders.length > 0
     .table-responsive
       %table.table
         %thead
@@ -22,4 +21,13 @@
                   .btn.btn-link.btn-xs
                     View
               %td=order_link(order)
+  -else
+    .zeroCaseWrapper
+      .zeroCaseWrapper-image
+        =image_tag('illustrations/zero-case-illustration@2x.png', alt: 'could not find anything')
+      .zeroCaseWrapper-infoBox
+        .zeroCaseWrapper-infoBox-title
+          You haven't made any Purchase yet
+        .zeroCaseWrapper-infoBox-desc
+          Your Product purchases can be found right here.
 

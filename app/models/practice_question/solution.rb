@@ -4,14 +4,14 @@
 #
 # Table name: practice_question_solutions
 #
-#  id                    :bigint           not null, primary key
-#  name                  :string
-#  practice_question_id  :integer
-#  sorting_order         :integer
-#  kind                  :integer
-#  content               :json
-#  created_at            :datetime         not null
-#  updated_at            :datetime         not null
+#  id                   :bigint           not null, primary key
+#  name                 :string
+#  practice_question_id :integer
+#  sorting_order        :integer
+#  kind                 :integer
+#  content              :json
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
 #
 module PracticeQuestion
   class Solution < ApplicationRecord

@@ -1,12 +1,12 @@
 .payment-details.pay-pal
   .row
-    .col-sm-6.mb-2.mt-sm-4
-      %h4.m-0
-        Total:
+    .col-sm-12.mb-2.mt-3.mt-sm-4{style: 'border-top: 1px solid #e0e0e0;'}
+      %h4.m-0.mt-4.d-flex.justify-content-between
+        %span Total:
         %span.value#paypal-total-value
           =number_in_local_currency(@order.product.price, @order.product.currency)
 
-    .col-sm-6.mb-2.mt-sm-4.text-center
+    .col-sm-12.mb-2.mt-sm-4.text-right
       = f.button :submit, class: 'btn btn-img mb-4', id: 'paypal_submit' do
         =image_tag('checkout-logo-large.png', :alt => "PayPal Button")
 

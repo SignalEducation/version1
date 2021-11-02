@@ -1,5 +1,18 @@
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: practice_question_responses
+#
+#  id                   :bigint           not null, primary key
+#  practice_question_id :integer
+#  sorting_order        :integer
+#  kind                 :integer
+#  content              :json
+#  course_step_log_id   :bigint
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#
 require 'rails_helper'
 
 RSpec.describe PracticeQuestion::Response, type: :model do

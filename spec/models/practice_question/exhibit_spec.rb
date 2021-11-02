@@ -1,5 +1,22 @@
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: practice_question_exhibits
+#
+#  id                    :bigint           not null, primary key
+#  name                  :string
+#  practice_question_id  :integer
+#  sorting_order         :integer
+#  kind                  :integer
+#  content               :json
+#  document_file_name    :string
+#  document_content_type :string
+#  document_file_size    :bigint
+#  document_updated_at   :datetime
+#  created_at            :datetime         not null
+#  updated_at            :datetime         not null
+#
 require 'rails_helper'
 
 RSpec.describe PracticeQuestion::Exhibit, type: :model do

@@ -107,10 +107,15 @@ en:
         a6: Half-yearly
         a12: Pay yearly
       payment_intervals:
-        a1: Month
-        a3: Quarter
+        a1: Monthly
+        a3: Quarterly
         a6: 6 Months
-        a12: Year
+        a12: Yearly
+      payment_interval_shortSuffix:
+        a1: / mo
+        a3: / 3 mos
+        a6: / 6 mo
+        a12: / yr
       subscription_label_in_months:
         a1: Monthly Subscription Plan
         a3: Quarterly Subscription Plan
@@ -618,6 +623,8 @@ en:
         vimeo_guid_placeholder: Vimeo ID (in the URL on Vimeo)
         dacast_id: Dacast video ID
         dacast_id_placeholder: Dacast video ID (in the URL on Dacast)
+        new_dacast_id: NEW - Dacast video ID
+        new_dacast_id_placeholder: NEW - Dacast video ID (content_id)
 
     course_tutors:
       form:
@@ -925,8 +932,6 @@ en:
 
       manage_courses:
         course: Courses
-
-
 
     home_pages:
       form:
@@ -1286,9 +1291,10 @@ en:
         quiz_pass_rate_placeholder: Custom Pass Rate for Quizzes
         icon_label: Icon Label
         icon_label_placeholder: Budicon Text Label
-        unit_label: Unit Label
-        unit_label_placeholder: CPD Unit/Hours Label
+        unit_hour_label: Hours/Units Label
+        unit_hour_label_placeholder: Hours/Units
         level: Level
+        key_area: Key Area
         category_label: Category Label
         category_label_placeholder: Category Label [Applied Knowledge]
         seo_title: SEO Title
@@ -1419,6 +1425,26 @@ en:
         expired: Expired
         notifications: Notifications
 
+    key_areas:
+      form:
+        name: Name
+        name_placeholder: Key Area
+        active: Active
+        sorting_order: Sorting order
+        group_id: Group
+        level_id: Level
+        level_select_default: Select a group first
+
+      index:
+        h1: Key Areas
+        add_course: Add Key Area
+
+      new:
+        h1: New Key Area
+
+      edit:
+        h1: Edit Key Area
+
     levels:
       form:
         name: Name
@@ -1431,6 +1457,8 @@ en:
         group_id: Group
         icon_label: Icon Label
         icon_label_placeholder: Icon Label
+        sub_text: Sub Text
+        sub_text_placeholder: Sub text
         onboarding_course_subheading: Onboarding Course Subheading
         onboarding_course_subheading_placeholder: Onboarding Course Subheading
         onboarding_course_heading: Onboarding Course Heading
@@ -1667,7 +1695,7 @@ en:
         h1: New User
 
       show:
-        h1: Account
+        h1: My Account
         edit: Edit Account
         add_new_card: Update Payment Info
         new_card: Add New Card

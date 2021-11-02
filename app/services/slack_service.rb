@@ -4,7 +4,7 @@ class SlackService
   def notify_channel(channel, attachments, **options)
     message = {
       channel: "##{channel}",
-      as_user: false,
+      as_user: true,
       icon_emoji: options.fetch(:icon_emoji, ':female-student:'),
       username: options.fetch(:username, 'learnsignal bot'),
       attachments: attachments
@@ -15,7 +15,7 @@ class SlackService
   def upload_file(channel, file)
     file_data = {
       channel: "##{channel}",
-      as_user: false,
+      as_user: true,
       file: Faraday::UploadIO.new(file.path, 'text/csv'),
       title: 'Upload Test',
       filename: 'upload_test_name.csv',

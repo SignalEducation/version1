@@ -1,0 +1,135 @@
+#primary-mobile-nav
+    %div#overlay-active-shadow
+    %section.side-nav-overlay
+        .side-nav-content
+            .exit-btn-box
+                %i#exitBtn.material-icons.exit-btn-close{"aria-label" => "failed", :role => "img", :style => "margin-left:1px"} close
+            -if current_user
+                .user-item-box.mb-3
+                    %span.user-item-box-userIcon
+                        %svg{:fill => "#bfbfbf", :viewbox => "0 0 20 20", :xmlns => "http://www.w3.org/2000/svg"}
+                            %path{"clip-rule" => "evenodd", :d => "M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z", "fill-rule" => "evenodd"}
+                    .user-item-box-userInfo
+                        %span.user-item-box-userName
+                            =current_user.first_name.to_s
+                        %span.user-item-box-userEmail
+                            =current_user.email
+
+                .nav-item-box
+                    =link_to 'Dashboard', student_dashboard_url
+                .nav-item-box
+                    =link_to 'Library', library_url
+
+                -if current_user&.preferred_exam_body_id && !current_user&.valid_access_for_exam_body?(current_user&.preferred_exam_body_id, current_user&.preferred_exam_body&.group&.id)
+                    .nav-item-box.upgrade-btn
+                        =link_to 'Upgrade Now', pricing_url(current_user&.preferred_exam_body&.group&.name_url)
+
+                -if current_user.non_verified_user?
+                    .nav-verification-alert-box.mt-3
+                        .nav-verification-alert-box-icon
+                            %svg{:fill => "none", :height => "32", :viewbox => "0 0 32 32", :width => "32", :xmlns => "http://www.w3.org/2000/svg"}
+                                %rect{:fill => "#FBBF24", :height => "32", :rx => "8", :width => "32"}
+                                %path{:d => "M8 8H24C25.1 8 26 8.9 26 10V22C26 23.1 25.1 24 24 24H8C6.9 24 6 23.1 6 22V10C6 8.9 6.9 8 8 8Z", :stroke => "#FEF3C7", "stroke-linecap" => "round", "stroke-linejoin" => "round", "stroke-width" => "2"}
+                                %path{:d => "M26 10L16 17L6 10", :stroke => "#FEF3C7", "stroke-linecap" => "round", "stroke-linejoin" => "round", "stroke-width" => "2"}
+                        .nav-verification-alert-box-info
+                            .nav-verification-alert-box-title
+                                %span Verify your email
+                            .nav-verification-alert-box-desc
+                                -if current_user.verify_remain_days > 0
+                                    ="Your account will get deactivated in #{current_user.verify_remain_days} days."
+                                -else
+                                    ="Please <span>verify</span> your email address to continue using your free subscription.".html_safe
+                            -if !current_user.email_verified && current_user.email_verification_code
+                                =link_to resend_verification_mail_url(current_user.email_verification_code), method: :post, class: 'btn verification-btn btn-sm mb-3 mb-sm-0' do
+                                    ='Resend Email'
+
+                .nav-item-header
+                    General
+                .nav-item-box
+                    =link_to t('views.users.show.h1'), account_url
+
+                .nav-item-box.logout
+                    =link_to t('views.general.log_out'), sign_out_url
+            -else
+                .login-mobile-box
+                    .nav-item-box
+                        =link_to sign_in_url, class: 'nav-link btn btn-outline' do
+                            %span Login
+                    .nav-item-box
+                        =link_to new_student_url, class: 'nav-link btn btn-primary px-4' do
+                            %span Register
+                .nav-item-header
+                    Resources
+                .nav-item-box.dropdown.course-dropdown
+                    %span#navbarDropdown.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
+                        %span Courses
+                    .dropdown-menu.dropdown-menu-right.dropdown-menu-course{"aria-labelledby" => "navbarDropdown"}
+                        -@groups.each do |group|
+                            =link_to group.name, group_landing_url(group.name_url), class: 'nav-item-box', onclick: "gtag('event', 'clicks_header_courses', {'event_category': 'pre-registration', 'event_label': '#{group.name}'});"
+                -@navbar_landing_pages.each do |landing_page|
+                    .nav-item-box
+                        =navbar_landing_page_menu(landing_page)
+
+
+
+
+
+
+
+    =link_to home_url, class: 'navbar-brand logo' do
+        =image_tag('Learnsignal-Logo.svg', class: 'logo-img', alt: "LearnSignal Logo")
+    %div{onclick:'openWidget()', class: 'btn btn-outline btn-sm zendesk-mobile-btn js-zendesk-btn'}
+        %i.material-icons{style: "color: #FFF;margin-right: 2px;font-size: 18px;top: 3px;position: relative;"} support
+        %span.js-zendesk-text Help
+        .zendeskNotificationBadge.js-zendesk-badge.hidden
+    %button.material-icons.btn-side-nav{:type => "button"}menu
+
+
+    :javascript
+
+        const btnSideNavToggle = document.querySelector(".btn-side-nav");
+        const sideNavOverlay = document.querySelector(".side-nav-overlay");
+        const exitBtn = document.querySelector("#exitBtn");
+        const shadow = document.querySelector("#overlay-active-shadow");
+        const bodyEl = document.querySelector("body");
+
+        $(document).mouseup(function(e){
+            var container = $("#primary-mobile-nav > section");
+
+            // If the target of the click isn't the container
+            if(!container.is(e.target) && container.has(e.target).length === 0){
+                sideNavOverlay.classList.remove("overlay-active");
+                btnSideNavToggle.style.display = "";
+                shadow.style.opacity = "0";
+                shadow.style.visibility = "hidden";
+                shadow.style.transition = "opacity 0.3s";
+                bodyEl.classList.remove("overflow-hidden");
+
+                const btnOpacityOn = setTimeout((e) => {
+                    btnSideNavToggle.style.opacity = "1";
+                }, 10);
+            }
+        });
+
+        btnSideNavToggle.onclick = () => {
+            sideNavOverlay.classList.add("overlay-active");
+            btnSideNavToggle.style.opacity = "1";
+            btnSideNavToggle.style.transition = "opacity 0.3s";
+            shadow.style.visibility = "visible";
+            shadow.style.opacity = "1";
+            shadow.style.transition = "opacity 0.3s";
+            bodyEl.classList.add("overflow-hidden");
+        };
+
+        exitBtn.onclick = () => {
+            sideNavOverlay.classList.remove("overlay-active");
+            btnSideNavToggle.style.display = "";
+            shadow.style.opacity = "0";
+            shadow.style.visibility = "hidden";
+            shadow.style.transition = "opacity 0.3s";
+            bodyEl.classList.remove("overflow-hidden");
+
+            const btnOpacityOn = setTimeout((e) => {
+                btnSideNavToggle.style.opacity = "1";
+            }, 10);
+        };

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+require 'support/course_content'
 
 RSpec.describe 'Api::V1::CoursesController', type: :request do
   describe 'get /api/v1/courses' do
@@ -35,6 +36,141 @@ RSpec.describe 'Api::V1::CoursesController', type: :request do
       end
     end
   end
+
+  describe 'get /api/v1/courses/groups/:group_name' do
+    include_context 'course_content' # support/course_content.rb
+
+    context 'return all records' do
+      before { get '/api/v1/courses/groups' }
+
+      it 'returns HTTP status 200' do
+        expect(response).to have_http_status 200
+      end
+
+      it 'returns courses json data' do
+        body = JSON.parse(response.body)
+
+        expect(body['groups'].size).to eq(2)
+        expect(body['groups'].map { |j| j['id'] }).to include(group_1.id)
+        expect(body['groups'].map { |j| j['name'] }).to include(group_1.name)
+        expect(body['groups'].map { |j| j['name_url'] }).to include(group_1.name_url)
+        expect(body['groups'].map { |j| j['description'] }).to include(group_1.description)
+        expect(body['groups'].map { |j| j['short_description'] }).to include(group_1.short_description)
+      end
+    end
+
+    context 'return group 1 data' do
+      before { get "/api/v1/courses/groups/#{group_1.name_url}" }
+
+      it 'returns HTTP status 200' do
+        expect(response).to have_http_status 200
+      end
+
+      it 'returns courses json data' do
+        body = JSON.parse(response.body)
+
+        expect(body['groups'].size).to eq(1)
+        expect(body['groups'].map { |j| j['id'] }).to include(group_1.id)
+        expect(body['groups'].map { |j| j['name'] }).to include(group_1.name)
+        expect(body['groups'].map { |j| j['name_url'] }).to include(group_1.name_url)
+        expect(body['groups'].map { |j| j['description'] }).to include(group_1.description)
+        expect(body['groups'].map { |j| j['short_description'] }).to include(group_1.short_description)
+      end
+    end
+
+    context 'return an not found message' do
+      before { get '/api/v1/courses/groups/any_value' }
+
+      it 'returns HTTP status 240400' do
+        expect(response).to have_http_status 404
+      end
+
+      it 'returns empty data' do
+        body = JSON.parse(response.body)
+
+        expect(body['errors']).to eq('Group not found')
+        expect([body.keys]).to contain_exactly(['errors'])
+      end
+    end
+  end
+
+  describe 'get /api/v1/courses/lessons/:group_name/:course_name' do
+    include_context 'course_content' # support/course_content.rb
+
+    context 'return all records' do
+      before do
+        get "/api/v1/courses/lessons/#{group_1.name_url}/#{course_1.name_url}"
+      end
+
+      it 'returns HTTP status 200' do
+        expect(response).to have_http_status 200
+      end
+
+      it 'returns courses json data' do
+        body         = JSON.parse(response.body)
+        course       = body['course']
+        section      = course['sections'].first
+        lesson       = section['lessons'].first
+        lesson_steps = lesson['steps']
+
+        expect(course['id']).to eq(course_1.id)
+        expect(course['name']).to eq(course_1.name)
+        expect(course['name_url']).to eq(course_1.name_url)
+        expect(course['sorting_order']).to eq(course_1.sorting_order)
+        expect(course['description']).to eq(course_1.description)
+        expect(course['release_date']).to eq(course_1.release_date)
+        expect(course['level_id']).to eq(course_1.level_id)
+        expect(course.keys).to eq(%w[id
+                                     name
+                                     name_url
+                                     sorting_order
+                                     description
+                                     release_date
+                                     level_id
+                                     key_area_id
+                                     key_area
+                                     category_label
+                                     icon_label
+                                     unit_label
+                                     sections])
+
+        expect(section['id']).to eq(course_section_1.id)
+        expect(section['name']).to eq(course_section_1.name)
+        expect(section['url']).to eq(course_section_1.name_url)
+        expect(section.keys).to eq(%w[id name url lessons])
+
+        expect(lesson['id']).to eq(course_lesson_1.id)
+        expect(lesson['name']).to eq(course_lesson_1.name)
+        expect(lesson['url']).to eq(course_lesson_1.name_url)
+        expect(lesson.keys).to eq(%w[id name url free steps])
+
+        expect(lesson_steps.size).to eq(6)
+        expect(lesson_steps.map { |s| s['id'] }).to include(course_step_2.id)
+        expect(lesson_steps.map { |s| s['name'] }).to include(course_step_2.name)
+        expect(lesson_steps.map { |s| s['url'] }).to include(course_step_2.name_url)
+        expect(lesson_steps.map { |s| s['kind'] }).to include(course_step_2.type_name)
+        expect(lesson_steps.map { |s| s['video_data'] }).to include({ "dacast_id"=>course_video_1.dacast_id,
+                                                                      "duration"=>course_video_1.duration,
+                                                                      "vimeo_guid"=> course_video_1.vimeo_guid })
+      end
+    end
+
+    context 'return an not found message' do
+      before { get "/api/v1/courses/lessons/#{group_1.name_url}/any_value" }
+
+      it 'returns HTTP status 404' do
+        expect(response).to have_http_status 404
+      end
+
+      it 'returns empty data' do
+        body = JSON.parse(response.body)
+
+        expect(body['errors']).to eq('Group not found')
+        expect([body.keys]).to contain_exactly(['errors'])
+      end
+    end
+  end
+
   describe '#read_note_log' do
     let(:user_group)    { create(:student_user_group) }
     let(:student)       { create(:basic_student, :with_group, user_group: user_group) }

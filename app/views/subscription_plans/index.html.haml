@@ -44,7 +44,6 @@
                     %td=plan.currency.iso_code
                     %td=plan.price
                     %td=tick_or_cross(plan.active?)
-                    -#%td=link_to t('views.general.show'), subscription_plan_url(plan), class: 'btn btn-secondary btn-xs'
                     %td=link_to t('views.general.edit'), edit_subscription_plan_url(plan), class: 'btn btn-primary btn-xs'
                     %td
                       -if plan.destroyable?

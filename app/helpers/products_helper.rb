@@ -23,15 +23,15 @@ module ProductsHelper
 
   def product_icon(product)
     if product.cbe?
-      tag.i class: 'budicon-desktop', role: 'img'
+      tag.i class: 'budicon-desktop', role: 'img', style: 'font-size: 4rem;'
     elsif product.product_type == 'correction_pack'
-      tag.i class: 'budicon-files-tick', role: 'img'
+      tag.i class: 'budicon-files-tick', role: 'img', style: 'font-size: 4rem;'
     elsif product.product_type == 'lifetime_access'
-      tag.i class: 'budicon-web-banking', role: 'img'
+      tag.i class: 'budicon-web-banking', role: 'img', style: 'font-size: 4rem;'
     elsif product.product_type == 'course_access'
       tag.i class: product.course.icon_label, role: 'img'
     else
-      tag.i class: 'budicon-file-tick', role: 'img'
+      tag.i class: 'budicon-file-tick', role: 'img', style: 'font-size: 4rem;'
     end
   end
 end

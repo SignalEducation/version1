@@ -29,6 +29,7 @@ new Vue({
       examBodyName: data.examBodyName,
       preferredExamBodyId: data.preferredExamBodyId,
       preferredExamBodyName: data.preferredExamBodyName,
+      hasValidSubscription: data.hasValidSubscription,
       banner: data.banner,
       onboarding: data.onboarding
     },
@@ -39,10 +40,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // Course Resources Modal Window
   while (document.getElementsByClassName('pdf-files-elements').length !== 0) {
     let element = document.getElementsByClassName('pdf-files-elements').item(0);
-    (() => mountViewerElement(element, element.dataset, ModalViewer))()
+    (() => mountViewerElement(element, element.dataset, ModalViewer))();
   }
 
   // Course Notes Viewer
   const courseNotesElement = document.getElementById('course-notes-reader');
-  (() => mountViewerElement(courseNotesElement, courseNotesElement.dataset, NotesViewer))()
+  (() => mountViewerElement(courseNotesElement, courseNotesElement && courseNotesElement.dataset, NotesViewer))();
 });

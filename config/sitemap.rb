@@ -1,6 +1,6 @@
 # Change this to your host. See the readme at https://github.com/lassebunk/dynamic_sitemaps
 # for examples of multiple hosts and folders.
-host 'learnsignal.com'
+host 'app.learnsignal.com'
 
 sitemap :site do
 

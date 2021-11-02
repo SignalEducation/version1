@@ -17,7 +17,7 @@
   position: absolute;
   display: block;
   background-color: #ffffff;
-  font-family: Arial, OakesGrotesk, sans-serif;
+  font-family: Arial, 'Manrope', sans-serif;
   color: #595959;
   padding-top: 90px;
   padding-bottom: 40px;
@@ -153,6 +153,7 @@ button.flagged{
     .navbar {
       padding: .5rem;
       border-bottom: 3px solid ;
+      max-height: 2.5rem;
     }
 
     .navbar-brand {
@@ -200,6 +201,7 @@ button.flagged{
       .navbar {
         background-color: #DCDDDD;
         padding: 0;
+        max-height: 2.5rem;
       }
       .navbar-text {
         font-weight: 400;

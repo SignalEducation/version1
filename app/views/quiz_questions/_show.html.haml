@@ -1,5 +1,5 @@
 .question{style: hide_me ? 'display: none;' : '', id: "question_#{question.id}"}
-  .l-margin-bottom
+  .l-margin-bottom.mb-4.font-weight-bold
     -if question.custom_styles
       =render partial: 'quiz_contents/index', locals: {contents: question.quiz_contents}
     -else
@@ -14,9 +14,7 @@
             %div.align-quiz-text
               .col-md-1.align-dot-quiz
                 %h2=('A'..'Z').to_a[counter]
-                %i.learnsignal-letter{"aria-label" => "failed"}
-                  %span.small-dot-quiz
-              .col-md-11
+              .col-md-11.px-2
                 -if question.custom_styles
                   =render partial: 'quiz_contents/index', locals: {contents: qa.quiz_contents}
                 -else

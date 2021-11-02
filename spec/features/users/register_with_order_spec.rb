@@ -10,6 +10,7 @@ describe 'An individual purchasing a product', type: :feature do
   let!(:group) { FactoryBot.create(:group, exam_body: exam_body) }
 
   before :each do
+    allow_any_instance_of(::ApplicationController).to receive(:logged_in_required).and_return(true)
     visit prep_products_path
   end
 
@@ -26,7 +27,7 @@ describe 'An individual purchasing a product', type: :feature do
       click_button('Log In')
 
       expect(page).to have_content(mock.mock_exam.name)
-      expect(page).to have_content('Choose a way to pay')
+      expect(page).to have_content('Pay with Card')
     end
   end
 

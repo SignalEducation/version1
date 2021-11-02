@@ -29,6 +29,7 @@
 #  cancelled_by_id          :bigint
 #  kind                     :integer
 #  paypal_retry_count       :integer          default("0")
+#  total_revenue            :decimal(, )      default("0")
 #
 
 require 'rails_helper'
@@ -73,6 +74,7 @@ describe Subscription do
     it { should belong_to(:coupon) }
     it { should have_many(:charges) }
     it { should have_many(:refunds) }
+    it { should have_many(:messages) }
   end
 
   describe 'Validations' do

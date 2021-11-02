@@ -1,5 +1,18 @@
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: practice_question_responses
+#
+#  id                   :bigint           not null, primary key
+#  practice_question_id :integer
+#  sorting_order        :integer
+#  kind                 :integer
+#  content              :json
+#  course_step_log_id   :bigint
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#
 FactoryBot.define do
   factory :practice_question_responses, class: ::PracticeQuestion::Response do
     content                   { { text: Faker::Lorem.sentence } }

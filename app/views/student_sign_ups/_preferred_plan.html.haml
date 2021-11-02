@@ -1,4 +1,4 @@
-=render partial: 'layouts/external_navbar'
+=render partial: 'layouts/navbar'
 %main
   .container-bg.home-hero-alt-2{style: @home_page&.background_image.present? ? "background-image: url(#{image_url(@home_page.background_image)});" : ''}
     .container
@@ -46,7 +46,7 @@
             .col-xl-6
               .d-flex.flex-column.justify-content-center
                 .header-plan
-                  %article.card.card-primary.card-primary-alt.mb-0
+                  %article.card.card-primary.card-primary-alt.mb-0.p-0
                     -if @preferred_plan.most_popular
                       .card-banner.bg-mint
                         %large.text-white
@@ -112,7 +112,7 @@
           .row.row-lg.justify-content-center
             -@subscription_plans.each do |plan|
               .col-lg-4
-                %article.card.card-primary.card-primary-alt.medium-gap
+                %article.card.card-primary.card-primary-alt.medium-gap.p-0
                   -if plan.most_popular
                     .card-banner.bg-mint
                       %large.text-white
