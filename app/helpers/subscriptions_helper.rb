@@ -9,6 +9,12 @@ module SubscriptionsHelper
     render partial: partial, locals: { subscription: subscription, plans: plans }
   end
 
+  def is_plan_single_checkout (params, subscription, plans)
+    plan_guid      = params[:plan_guid]
+    plan_frequency = params[:prioritise_plan_frequency].to_i
+    plan_checks(plan_guid, plan_frequency, plans)
+  end
+
   private
 
   def plan_checks(plan_guid, plan_frequency, plans)

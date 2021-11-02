@@ -3,7 +3,6 @@ default: &default
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   timeout: 5000
-
 development:
   adapter: <%= ENV['DB_ADAPTER'] %>
   host: <%= ENV['DB_HOSTNAME'] %>
@@ -11,14 +10,12 @@ development:
   password: <%= ENV['DB_PASSWORD'] %>
   database: <%= ENV['DB_NAME'] %>
   # database: <%= ENV['DB_PROD_NAME'] %>
-
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
   <<: *default
   database: db/learnsignal_v3_test
-
 staging:
   <<: *default
   adapter: <%= ENV['DB_ADAPTER'] %>
@@ -26,7 +23,6 @@ staging:
   username: <%= ENV['DB_USERNAME'] %>
   password: <%= ENV['DB_PASSWORD'] %>
   database: <%= ENV['DB_NAME'] %>
-
 production:
   <<: *default
   adapter: <%= ENV['DB_ADAPTER'] %>

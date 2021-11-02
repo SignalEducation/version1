@@ -6,6 +6,11 @@ en:
       dependencies_exist: Couldn't be deleted because dependencies exist
       live_mode_error: "Live-mode error: Please contact us for help"
 
+    course:
+      hour_unit:
+        one: '%{count} unit/hour'
+        other: '%{count} units/hours'
+
     course_step:
       can_only_link_to_a_video_or_quiz_not_both: You may only link this course module element to a video OR a quiz, and not both
 

@@ -1,111 +1,109 @@
-%article.card.mb-3
-  .card-body.card-body
-    %h2.mb-5.text-gray2 Account Information
-
-    -if @subscriptions.any?
-      -@subscriptions.each do |subscription|
-        %article.card.mb-5
-          .card-body.card-body-sm
-            .row
-              .col-md-8
-                %h3.text-gray2
-                  %span.mr-1
-                    =subscription.user_readable_name
-
-                  %span.badge.badge-warning.align-middle
-                    =subscription.pending_3d_secure? ? 'Action Required' : subscription.state.capitalize
-
-                %p.mb-1
-                  Subscription Created:
-                  %span
-                    =humanize_datetime_full(subscription.created_at)
-                -if subscription.next_renewal_date
-                  %p.mb-1
-                    Next Charge:
-                    %span
-                      =humanize_date(subscription.next_renewal_date)
-                %p
-                  Payment Type:
-                  %span
-                    =subscription.stripe? ? 'Credit card' : "PayPal"
-
-              .col-md-4.text-md-right
-                -if subscription.pending_3d_secure? && subscription.pending_3ds_invoice
-                  =link_to show_invoice_url(subscription.pending_3ds_invoice&.sca_verification_guid) do
-                    .btn.btn-primary.mb-3
-                      Authenticate
-                %button.btn.btn-secondary.js-show-hide-details.collapsed.sub-details{"aria-controls" => "#sub-#{subscription.id}", "aria-expanded" => "false", "data-target" => "#sub-#{subscription.id}", "data-toggle" => "collapse"}
-
-            .collapse{id: "sub-#{subscription.id}"}
-              .pt-5.pb-4
-                -if subscription.stripe? && @default_payment_card
-                  %div
-                    %h4.mb-4.text-gray2 Payment Details
-                    %p
-                      Card ending in
-                      = succeed "." do
-                        %span.font-weight-semi-bold
-                          =@default_payment_card.last_4
-                        ='. Expires on'
-                        %span
-                          =@default_payment_card.expiry_date
-
-                    .pb-4
-                      %button.btn.btn-secondary.btn-sm.mb-4{"data-target" => "#add-card-modal", "data-toggle" => "modal"} Change card
-
-                .overflow-x.mb-5
-                  %h4.text-gray2 Invoice History
-                  .table-responsive
-                    %table.table
-                      %thead
-                        %tr
-                          %th Reference N.
-                          %th Date Created
-                          %th Amount Charged
-                          %th Status
-                          %th PDF
-                      %tbody
-                        -subscription.invoices.each do |invoice|
-                          - unless invoice.status == 'Pending' && !invoice.requires_3d_secure
-                            %tr
-                              %td=invoice.id
-                              %td=humanize_datetime(invoice.issued_at)
-                              %td=number_in_local_currency(invoice.amount_due, invoice.currency)
-                              %td
-                                %span{class: invoice.status == 'Paid' ? 'text-success' : 'text-danger'}
-                                  =invoice.status
-                              %td
-                                -if ((subscription.pending_3d_secure? && invoice.requires_3d_secure) || (invoice.status == 'Past Due' && invoice.requires_3d_secure))
-                                  =link_to show_invoice_url(invoice.sca_verification_guid) do
-                                    .btn.btn-primary.btn-xs
-                                      =invoice.requires_3d_secure ? 'Authenticate' : 'Confirm Payment'
-                                -else
-                                  =link_to subscription_invoices_url(invoice.id, format: 'pdf'), target: '_blank' do
-                                    .btn.btn-link.btn-xs
-                                      View
-
-                %div.mr-3.mb-4
-                  =link_to 'View All Invoices', user_invoices_path(current_user)
-                %div
-                  -if %w[active canceled-pending pending_cancellation].include?(subscription.state)
-                    =link_to 'Change Subscription Plan', new_subscription_plan_changes_path(subscription), class: 'btn btn-primary btn-xs', style: 'vertical-align: top;'
-                  -if subscription.active?
-                    =link_to 'Cancel Subscription', new_subscription_cancellation_path(subscription), class: 'btn btn-danger btn-xs', style: 'vertical-align: top;'
-                  -if subscription.pending_3d_secure? || subscription.past_due?
-                    =link_to 'Cancel Subscription', new_subscription_cancellation_path(subscription), data: { confirm: 'Warning: Because your latest invoice is overdue this cancellation will be immediate and full access will be removed.' }, class: 'btn btn-danger btn-xs', style: 'vertical-align: top;'
-                  -if subscription.pending_cancellation?
-                    =link_to 'Undo Subscription Cancel', un_cancel_subscription_path(subscription), data: { confirm: 'By clicking here you agree to undo the cancellation request for your current plan.' }, method: :put, class: 'btn btn-primary btn-xs', style: 'vertical-align: top;'
-                  -if subscription.cancelled?
-                    =link_to 'Renew Subscription', subscription_checkout_special_link(subscription.subscription_plan.exam_body_id), class: 'btn btn-primary btn-xs', style: 'vertical-align: top;'
-    -else
-      %article.card.mb-5
+%article.accountSubscription
+  -if @subscriptions.any?
+    -@subscriptions.each do |subscription|
+      %article.card.subscriptionCard.mb-5.p-0
         .card-body.card-body-sm
-          .row
-            .col-md-8
-              %h3.text-gray2
+          .subscriptionCard-body
+            .subscriptionCard-body-icon
+              .iconText ✨
+            .subscriptionCard-body-nameBox
+              %div.subscriptionCard-body-title
                 %span.mr-1
-                  ='Basic Membership'
+                  =subscription.user_readable_name
+              %div.m-0.text-gray1{style: 'font-size: 12px;'}
+                Next Charge:
+                %span
+                  =humanize_date(subscription.next_renewal_date)
+            .subscriptionCard-body-paymentBox
+              %div.subscriptionCard-body-title
+                %span.discount
+                  =subscription.stripe? ? 'Credit card' : "PayPal"
+              %div.m-0.text-gray1{style: 'font-size: 12px;'}
+                Payment Source
+                      
+            .subscriptionCard-body-statusBox
+              %div.h4.m-0.text-black
+                %span.subscriptionPageWrapper-priceValue.statusText
+                  =subscription.pending_3d_secure? ? 'Action Required' : subscription.state.capitalize
+            .subscriptionCard-body-actionBox
+              -if subscription.pending_3d_secure? && subscription.pending_3ds_invoice
+                =link_to show_invoice_url(subscription.pending_3ds_invoice&.sca_verification_guid) do
+                  .btn.btn-primary.mb-3
+                    Authenticate
+              %button.btn.btn-dark.js-show-hide-details.collapsed.sub-details{"aria-controls" => "#sub-#{subscription.id}", "aria-expanded" => "false", "data-target" => "#sub-#{subscription.id}", "data-toggle" => "collapse"}
 
-              %p.mb-1
-                Account created on
-                %span=humanize_datetime_full(@user.created_at)
+          .collapse.border-top.p-4.mt-2.bg-white{id: "sub-#{subscription.id}"}
+            .pt-3.pb-4
+              -if subscription.stripe? && @default_payment_card
+                %div
+                  %h4.mb-4.text-gray2 Payment Details
+                  %p
+                    Card ending in
+                    = succeed "." do
+                      %span.font-weight-semi-bold
+                        =@default_payment_card.last_4
+                      ='. Expires on'
+                      %span
+                        =@default_payment_card.expiry_date
+
+                  .pb-4
+                    %button.btn.btn-secondary.btn-sm.mb-4{"data-target" => "#add-card-modal", "data-toggle" => "modal"} Change card
+
+              .overflow-x.mb-2
+                %h4.text-gray2 Invoice History
+                .table-responsive
+                  %table.table
+                    %thead
+                      %tr
+                        %th Reference N.
+                        %th Date Created
+                        %th Amount Charged
+                        %th Status
+                        %th PDF
+                    %tbody
+                      -subscription.invoices.each do |invoice|
+                        - unless invoice.status == 'Pending' && !invoice.requires_3d_secure
+                          %tr
+                            %td=invoice.id
+                            %td=humanize_datetime(invoice.issued_at)
+                            %td=number_in_local_currency(invoice.amount_due, invoice.currency)
+                            %td
+                              %span{class: invoice.status == 'Paid' ? 'text-success' : 'text-danger'}
+                                =invoice.status
+                            %td
+                              -if ((subscription.pending_3d_secure? && invoice.requires_3d_secure) || (invoice.status == 'Past Due' && invoice.requires_3d_secure))
+                                =link_to show_invoice_url(invoice.sca_verification_guid) do
+                                  .btn.btn-primary.btn-xs
+                                    =invoice.requires_3d_secure ? 'Authenticate' : 'Confirm Payment'
+                              -else
+                                =link_to subscription_invoices_url(invoice.id, format: 'pdf'), target: '_blank' do
+                                  .btn.btn-link.btn-xs
+                                    View
+
+              %div.mr-3.mb-5.text-right
+                =link_to 'View All Invoices', user_invoices_path(current_user)
+              %div
+                -if %w[active canceled-pending pending_cancellation].include?(subscription.state)
+                  =link_to 'Change Subscription Plan', new_subscription_plan_changes_path(subscription), class: 'btn btn-primary btn-sm mb-2 mr-2', style: 'vertical-align: top;'
+                -if subscription.active?
+                  =link_to 'Cancel Subscription', new_subscription_cancellation_path(subscription), class: 'btn btn-danger btn-sm mb-2 mr-2', style: 'vertical-align: top;'
+                -if subscription.pending_3d_secure? || subscription.past_due?
+                  =link_to 'Cancel Subscription', new_subscription_cancellation_path(subscription), data: { confirm: 'Warning: Because your latest invoice is overdue this cancellation will be immediate and full access will be removed.' }, class: 'btn btn-danger btn-sm mb-2 mr-2', style: 'vertical-align: top;'
+                -if subscription.pending_cancellation?
+                  =link_to 'Undo Subscription Cancel', un_cancel_subscription_path(subscription), data: { confirm: 'By clicking here you agree to undo the cancellation request for your current plan.' }, method: :put, class: 'btn btn-primary btn-sm mb-2 mr-2', style: 'vertical-align: top;'
+                -if subscription.cancelled?
+                  =link_to 'Renew Subscription', subscription_checkout_special_link(subscription.subscription_plan.exam_body_id), class: 'btn btn-primary btn-sm mb-2', style: 'vertical-align: top;'
+  -else
+    %article.card.subscriptionCard.mb-5.p-0
+      .card-body.card-body-sm
+        .subscriptionCard-body
+          .subscriptionCard-body-icon
+            .iconText 🎉
+          .subscriptionCard-body-nameBox
+            %div.subscriptionCard-body-title
+              %span.mr-1
+                ='Basic Membership'
+            %div.m-0.text-gray1{style: 'font-size: 12px;'}
+              Account created on
+              %span=humanize_datetime_full(@user.created_at)
+            

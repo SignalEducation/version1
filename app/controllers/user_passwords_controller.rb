@@ -6,15 +6,16 @@ class UserPasswordsController < ApplicationController
   layout 'marketing', only: %i[new]
 
   def new
-    seo_title_maker('Forgot Your LearnSignal Password | LearnSignal',
+    seo_title_maker('Forgot Your LearnSignal Password | Learnsignal',
                     'Forgot your learnsignal password? No problem! Enter your email address to reset your password and access your online learning materials today.',
                     nil)
   end
 
   def create
-    User.start_password_reset_process(params[:email_address].to_s, root_url)
-    seo_title_maker('Password Reset Email Sent | LearnSignal',
-                    "Check your mailbox for further instructions. If you don't receive an email from learnsignal within a couple of minutes, check your spam folder.",
+    @response = User.start_password_reset_process(params[:email_address].to_s)
+
+    seo_title_maker('Password Reset Email Sent | Learnsignal',
+                    @response[:json][:message],
                     nil)
   end
 
@@ -24,7 +25,7 @@ class UserPasswordsController < ApplicationController
   end
 
   def edit
-    seo_title_maker('Reset Your Password | LearnSignal',
+    seo_title_maker('Reset Your Password | Learnsignal',
                     'Enter a new password for your learnsignal subscription account here to access your online learning materials and start studying today.',
                     nil)
 

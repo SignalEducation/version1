@@ -283,7 +283,7 @@ describe Paypal::SubscriptionValidation, type: :service do
         expect(Message).to receive(:create).with(
           {  process_at: Time.zone.now, user_id: sub.user.id,
              kind: :account, template: 'send_subscription_notification_email',
-             template_params: { url: 'http://localhost:3000/en/account#payment-details' } }
+             template_params: { url: 'http://localhost:3000/account#payment-details' } }
         )
 
         target_instance.send(:check_annual_renewal)

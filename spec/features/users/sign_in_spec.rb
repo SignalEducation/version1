@@ -14,7 +14,7 @@ describe 'Sign in process', type: :feature do
 
   context 'User visits the sign in page' do
     scenario 'Loading the sign in page' do
-      expect(page).to have_title('Start Studying Today | LearnSignal')
+      expect(page).to have_title('Start Studying Today | Learnsignal')
       expect(page).to have_content('Log In')
       expect(page).to have_content('Welcome Back. Login to continue your learning.')
 
@@ -34,7 +34,6 @@ describe 'Sign in process', type: :feature do
 
       expect(page).to have_title('Dashboard')
       expect(page).to have_content('Dashboard')
-      expect(page).to have_content('Activity')
     end
 
     scenario 'invalid login user data' do

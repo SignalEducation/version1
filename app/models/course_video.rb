@@ -28,7 +28,7 @@ class CourseVideo < ApplicationRecord
   validates :course_step_id, presence: true, on: :update
   validates :vimeo_guid, presence: true, length: { maximum: 255 }, on: :create
   validates :duration, presence: true, numericality: true
-  validates :vimeo_guid, :dacast_id,
+  validates :vimeo_guid,
             presence: true, if: lambda {
               course_step&.active && course_step&.is_video
             }
@@ -41,6 +41,9 @@ class CourseVideo < ApplicationRecord
     course_step
   end
 
+  def dacast_video_id
+    new_dacast_id&.present? ? new_dacast_id : (ENV['DACAST_PLAYER_KEY'] + dacast_id)
+  end
 
   def destroyable?
     true

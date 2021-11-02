@@ -59,6 +59,11 @@
 #  currency_id                     :bigint
 #  tutor_link                      :string
 #  video_player                    :integer          default("0"), not null
+#  subscriptions_revenue           :decimal(, )      default("0")
+#  orders_revenue                  :decimal(, )      default("0")
+#  home_page_id                    :integer
+#  verify_remembered_at            :datetime
+#  onboarding_course_id            :bigint
 #
 
 class User < ApplicationRecord
@@ -81,6 +86,7 @@ class User < ApplicationRecord
   belongs_to :country, optional: true
   belongs_to :currency, optional: true
   belongs_to :preferred_exam_body, class_name: 'ExamBody', optional: true
+  belongs_to :onboarding_course, class_name: 'Course', optional: true
   belongs_to :subscription_plan_category, optional: true
   belongs_to :user_group
   belongs_to :home_page, optional: true
@@ -187,21 +193,41 @@ class User < ApplicationRecord
     user.verify(country_id)
   end
 
-  def self.start_password_reset_process(the_email_address, root_url)
-    return unless the_email_address.to_s.length > 5 # a@b.co
+  def self.start_password_reset_process(email)
+    return { json: { message: 'Invalid email format.' }, status: :unprocessable_entity } unless email.match(/\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i)
 
-    user = User.find_by(email: the_email_address.to_s)
-    if user&.email_verified && !user.password_change_required?
-      user.update_attributes(password_reset_requested_at: proc { Time.zone.now }.call, password_reset_token: ApplicationController.generate_random_code(20))
+    user = User.find_by(email: email.to_s)
+    return { json: { message: 'No registered user using this email.' }, status: :not_found } if user.nil?
+
+    if user.email_verified.nil?
+      status  = :unprocessable_entity
+      message = 'User not yet verified, please check your email.'
+    elsif !user.password_change_required?
+      user.update(password_reset_requested_at: proc { Time.zone.now }.call, password_reset_token: ApplicationController.generate_random_code(20))
+
       # Send reset password email from Mandrill
-      Message.create(process_at: Time.zone.now, user_id: user&.id, kind: :account, template: 'password_reset_email',
-                     template_params: { url: UrlHelper.instance.reset_password_url(id: user.password_reset_token, host: LEARNSIGNAL_HOST) })
-    elsif user&.email_verified && user&.password_change_required?
+      url = UrlHelper.instance.reset_password_url(id: user.password_reset_token, host: LEARNSIGNAL_HOST)
+      send_reset_password_email(user, 'password_reset_email', url)
+
+      status  = :ok
+      message = "Check your mailbox for further instructions. If you don't receive an email from learnsignal within a couple of minutes, check your spam folder."
+    elsif user.password_change_required?
+      user.update(password_reset_token: ApplicationController.generate_random_code(20))
+
       # This is for users that received invite verification emails, clicked on the link which verified their account but they did not enter a PW. Now they are trying to access their account by trying to reset their PW so we send them a link for the set pw form instead of the reset pw form.
-      user.update_attribute(:password_reset_token, ApplicationController.generate_random_code(20))
-      Message.create(process_at: Time.zone.now, user_id: user&.id, kind: :account, template: 'send_set_password_email',
-                     template_params: { url: UrlHelper.instance.set_password_url(id: user.password_reset_token, host: LEARNSIGNAL_HOST) })
+      url = UrlHelper.instance.set_password_url(id: user.password_reset_token, host: LEARNSIGNAL_HOST)
+      send_reset_password_email(user, 'send_set_password_email', url)
+
+      status  = :ok
+      message = "Check your mailbox for further instructions. If you don't receive an email from learnsignal within a couple of minutes, check your spam folder."
     end
+
+    { json: { message: message }, status: status }
+  end
+
+  def self.send_reset_password_email(user, template, url)
+    Message.create(process_at: Time.zone.now, user_id: user&.id, kind: :account, template: template,
+                   template_params: { url: url })
   end
 
   def self.resend_pw_reset_email(user_id, _)
@@ -676,6 +702,24 @@ class User < ApplicationRecord
     create_stripe_customer
 
     send_verification_email(url)
+  end
+
+  # days since created minus 7
+  def verify_remain_days
+    remain_days = DAYS_TO_VERIFY_EMAIL - (Date.current - created_at.to_date).to_i
+
+    [remain_days, 0].max
+  end
+
+  def show_verify_email_message?
+    return false if email_verified
+
+    if verify_remembered_at.nil? || verify_remembered_at != current_login_at
+      update(verify_remembered_at: current_login_at)
+      true
+    else
+      false
+    end
   end
 
   private

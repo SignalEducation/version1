@@ -1,27 +1,31 @@
-%section.py-5.py-md-6
+%section.py-5.py-md-6.courseLibraryWrapper-list
   %h2.sr-only List of Courses
-  .row.row-lg
+  .row.row-lg.m-0
     -if @courses
       -@courses.each do |course|
-        .col-lg-6.col-xl-4
-          =link_to library_special_link(course), class: 'card card-horizontal flex-row card-mint', data: { toggle: 'tooltip', placement: 'right', animation: 'true', delay: { "show": 300, "hide": 100 }}, title: "#{course.short_description}" do
-            .card-header.d-flex.justify-content-center.align-items-center
-              -# TODO - Convert this into partial
-              -if course.unit_label
-                .pb-0.d-flex.flex-column.align-items-center
-                  .mb-3.mx-md-2
-                    %i{"aria-label" => course.icon_label, :role => "img", class: course.icon_label ? course.icon_label : 'budicon-office-bag-c', style: "color: #{course.highlight_colour};"}
-                  %p.m-0.text-left.text-md-center{style: "color: #{course.highlight_colour};"}
-                    =course.unit_label
-              -else
-                %i{"aria-label" => course.icon_label, :role => "img", class: course.icon_label ? course.icon_label : 'budicon-office-bag-c', style: "color: #{course.highlight_colour};"}
-
+        .col-lg-6.col-xl-6.px-2
+          =link_to library_special_link(course), class: 'card flex-md-row', style: 'margin-bottom: 1.5rem;', data: { toggle: 'tooltip', placement: 'right', animation: 'true', delay: { "show": 300, "hide": 100 }}, title: "#{course.short_description}" do
             .card-body.d-flex.flex-column.justify-content-center
-              %small.card-category.mb-2{style: "color: #{course.highlight_colour};"}
-                -if course.preview && course.release_date
-                  ="Coming #{course.release_date.strftime("%B, %Y")}"
-                -else
-                  =course.category_label
-              %h5.card-title.mb-1
-                %span.mr-1
-                  =course.name
+              %div.courseLibraryWrapper-list-courseInfo
+                %div.courseLibraryWrapper-list-courseIcon{style: "border-color: #{course.highlight_colour}; background-color: #{course.highlight_colour};"}
+                  -if course.unit_label
+                    .pb-0.d-flex.flex-column.align-items-center
+                      .mb-3.mx-md-2
+                        %i{"aria-label" => course.icon_label, :role => "img", class: course.icon_label ? course.icon_label : 'budicon-office-bag-c', style: "color: #FFF;"}
+                      %p.m-0.text-left.text-md-center{style: "color: #FFF;"}
+                        =course.unit_label
+                  -else
+                    %i{"aria-label" => course.icon_label, :role => "img", class: course.icon_label ? course.icon_label : 'budicon-office-bag-c', style: "color: #FFF;"}
+                    
+                %div
+                  %div.courseLibraryWrapper-list-parent
+                    .courseLibraryWrapper-list-examName
+                      =course.parent.name
+                    .courseLibraryWrapper-list-backBtn-dot •
+                    .courseLibraryWrapper-list-levelName{style: "color: #{course.highlight_colour};"}
+                      -if course.preview && course.release_date
+                        ="Coming #{course.release_date.strftime("%B, %Y")}"
+                      -else
+                        =course.category_label
+                  %div.courseName
+                    =course.name

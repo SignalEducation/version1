@@ -1,53 +1,69 @@
 %article.account.bg-white
-  .container
+  .container.position-relative
     %header
-      .d-flex.flex-wrap.flex-sm-nowrap.justify-content-between.align-items-center.py-5.py-md-6
+      -if current_user.non_verified_user?
+        .nav-verification-alert-box
+          .nav-verification-alert-box-icon
+            %svg{:fill => "none", :height => "32", :viewbox => "0 0 32 32", :width => "32", :xmlns => "http://www.w3.org/2000/svg"}
+              %rect{:fill => "#FBBF24", :height => "32", :rx => "8", :width => "32"}
+              %path{:d => "M8 8H24C25.1 8 26 8.9 26 10V22C26 23.1 25.1 24 24 24H8C6.9 24 6 23.1 6 22V10C6 8.9 6.9 8 8 8Z", :stroke => "#FEF3C7", "stroke-linecap" => "round", "stroke-linejoin" => "round", "stroke-width" => "2"}
+              %path{:d => "M26 10L16 17L6 10", :stroke => "#FEF3C7", "stroke-linecap" => "round", "stroke-linejoin" => "round", "stroke-width" => "2"}
+          .nav-verification-alert-box-info
+            .nav-verification-alert-box-title
+              %span Verify your email
+            .nav-verification-alert-box-desc
+              -if current_user.verify_remain_days > 0
+                ="Your account will get deactivated in #{current_user.verify_remain_days} days."
+              -else
+                ="Please <span>verify</span> your email address to continue using your free subscription.".html_safe
+            -if !current_user.email_verified && current_user.email_verification_code
+              =link_to resend_verification_mail_url(current_user.email_verification_code), method: :post, class: 'btn verification-btn btn-sm mb-3 mb-sm-0' do
+                ='Resend Email'
+      .d-flex.flex-wrap.flex-sm-nowrap.justify-content-between.align-items-start.flex-column
         .mw-0
-          %h1.mb-0.h1-hero.mr-2 Profile
+          %h1.mb-0.h1-hero.mr-2=t('views.users.show.h1')
         .mw-0
-          %h5.mb-0.text-gray2
+          %h4.mb-0.text-gray2
             =@user.full_name
-
-  -if current_user.non_verified_user?
-    .alert.alert-warning
-      Your email requires verification. You will be unable to access content until you verify your email
-      -if !current_user.email_verified && current_user.email_verification_code
-        =link_to resend_verification_mail_url(current_user.email_verification_code), method: :post, class: 'btn btn-secondary verification-btn btn-sm mb-3 mb-sm-0' do
-          ='Resend Verification Email'
+    .row.row-md
+      .col-lg-12
+        %nav.courses-nav
+          %ul#accountTabs.nav.nav-tabs{:role => "tablist"}
+            %li.nav-item
+              %a#personal-info-tab.nav-link.active{"aria-controls" => "personal-info", "aria-selected" => "true", "data-toggle" => "tab", :href => "#personal-info", :role => "tab"}
+                Personal Info
+            %li.nav-item
+              %a#orders-tab.nav-link{"aria-controls" => "orders", "aria-selected" => "false", "data-toggle" => "tab", :href => "#password-info", :role => "tab"}
+                Password
+            %li.nav-item
+              %a#account-info-tab.nav-link{"aria-controls" => "account-info", "aria-selected" => "false", "data-toggle" => "tab", :href => "#account-info", :role => "tab"}
+                Subscriptions
+                -if current_user&.subscription_action_required?
+                  %span.badge.badge-warning.align-middle
+                    ='Action Required'
+            %li.nav-item
+              %a#orders-tab.nav-link{"aria-controls" => "orders", "aria-selected" => "false", "data-toggle" => "tab", :href => "#orders", :role => "tab"}
+                Purchases
+            %li.nav-item
+              %a#payment-details-tab.nav-link{"aria-controls" => "payment-details", "aria-selected" => "false", "data-toggle" => "tab", :href => "#payment-details", :role => "tab"}
+                Card Details
+            %li.nav-item
+              %a#enrollments-tab.nav-link{"aria-controls" => "enrollments", "aria-selected" => "false", "data-toggle" => "tab", :href => "#enrollments", :role => "tab"}
+                Enrolments
 
   -if flash[:success] || flash[:warning] || flash[:error]
     =render partial: 'layouts/flash_messages'
   =render partial: '/layouts/error_messages', locals: {thing: @user, message: nil}
-  .bg-gray5.py-5
+  .account-wrapper.border-top.bg-gray5.py-4
     .container
       .row.row-md
-        .col-lg-2-7
-          %nav.mb-4.account-nav
-            %ul#accountTabs.nav.nav-tabs.nav-tabs-vertical{:role => "tablist"}
-              %li.nav-item
-                %a#personal-info-tab.nav-link.active{"aria-controls" => "personal-info", "aria-selected" => "true", "data-toggle" => "tab", :href => "#personal-info", :role => "tab"}
-                  Personal Info
-              %li.nav-item
-                %a#account-info-tab.nav-link{"aria-controls" => "account-info", "aria-selected" => "false", "data-toggle" => "tab", :href => "#account-info", :role => "tab"}
-                  Subscriptions
-                  -if current_user&.subscription_action_required?
-                    %span.badge.badge-warning.align-middle
-                      ='Action Required'
-              %li.nav-item
-                %a#orders-tab.nav-link{"aria-controls" => "orders", "aria-selected" => "false", "data-toggle" => "tab", :href => "#orders", :role => "tab"}
-                  Purchases
-              %li.nav-item
-                %a#payment-details-tab.nav-link{"aria-controls" => "payment-details", "aria-selected" => "false", "data-toggle" => "tab", :href => "#payment-details", :role => "tab"}
-                  Card Details
-              %li.nav-item
-                %a#enrollments-tab.nav-link{"aria-controls" => "enrollments", "aria-selected" => "false", "data-toggle" => "tab", :href => "#enrollments", :role => "tab"}
-                  Enrolments
-
-        .col-lg-5-7
+        .col-lg-12
           #accountTabsContent.tab-content
-
             #personal-info.tab-pane.show.active.tab-account.tab-personal-info{"aria-labelledby" => "personal-info-tab", :role => "tabpanel"}
               =render partial: 'personal_info'
+
+            #password-info.tab-pane.tab-account.tab-account-info{"aria-labelledby" => "password-info-tab", :role => "tabpanel"}
+              =render partial: 'password_info'
 
             #account-info.tab-pane.tab-account.tab-account-info{"aria-labelledby" => "account-info-tab", :role => "tabpanel"}
               =render partial: 'account_info'
