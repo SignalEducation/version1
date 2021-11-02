@@ -29,13 +29,13 @@
 :javascript
   $(document).ready(function(){
     window.uetq = window.uetq || [];
-    window.uetq.push('event', 'Purchase', {
+    window.uetq.push('event', 'Sub Purchases', {
       'event_category': "#{@subscription.subscription_plan.exam_body.name}",
       'event_label': "#{@subscription.subscription_plan.name}",
       'event_value': "#{@subscription.subscription_plan.price}"
     });
 
-    fbq('track', 'Purchase', {
+    fbq('track', 'Sub Purchases', {
       value: "#{@subscription&.subscription_plan&.price}",
       currency: "#{@subscription&.subscription_plan&.currency&.iso_code}",
       subscription_id: "#{@subscription&.id}",
@@ -48,7 +48,7 @@
     if ("#{@subscription.kind}" === 'new_subscription') {
       var price = "#{@discounted_price}"
 
-      gtag('event', 'purchase', {
+      gtag('event', 'Sub Purchases', {
         "transaction_id": "#{@subscription&.id}",
         "affiliation": "subscription",
         "value": "#{@subscription&.subscription_plan&.price}",

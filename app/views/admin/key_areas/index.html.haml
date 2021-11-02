@@ -1,0 +1,57 @@
+.container
+  %header.management-console-section
+    %h1
+      =t('views.key_areas.index.h1')
+
+  %section.pb-7
+    =render partial: 'management_consoles/course_content_nav'
+    .row
+      .col-sm-12
+        .box-item.table-box
+          .row
+            .col-sm
+              =link_to t('views.key_areas.index.add_course'), new_admin_key_area_url, class: 'btn btn-primary btn-sm', title: t('views.general.new_tooltip')
+            .col-sm
+              =form_tag(admin_key_areas_url, method: :get, role: 'form', class: 'form-horizontal') do
+                =select_tag :group_id, options_for_select(Group.all.collect {|p| [ p.name, p.id ] }, params[:group_id]), {include_blank: 'All', class: 'custom-select', onchange: 'this.form.submit(); return false;'}
+
+            .col-sm
+              .search-container
+                =form_tag(admin_key_areas_url, method: :get, role: 'form', id: 'search-form', class: 'form-inline') do
+                  =text_field_tag :search, params[:search], class: 'form-control', placeholder: t('views.general.search')
+                  %button{type: "submit"}
+                    %i{:role => "img", class: 'budicon-search-list'}
+
+          .table-responsive.pt-4
+            %table.table.sorted_table{data: {destination: admin_key_areas_url}}
+              %thead
+                %tr
+                  %th Name
+                  %th Group
+                  %th Active
+                  %th
+                  %th
+              %tbody
+                -@key_areas.each do |key_area|
+                  %tr{id: key_area.id}
+                    %td=key_area.name
+                    %td=key_area.group.name
+                    %td=tick_or_cross(key_area.active)
+                    %td=link_to t('views.general.show'), admin_key_area_url(key_area), class: 'btn btn-xs btn-secondary'
+                    %td
+                      %button.btn.btn-primary.btn-xs.dropdown-toggle{type:'button', 'data-toggle':'dropdown', 'aria-haspopup':'true', 'aria-expanded': 'false'}
+                        Edit
+                      .dropdown-menu
+                        =link_to t('views.general.edit'), edit_admin_key_area_url(key_area), class: 'dropdown-item'
+                        -if key_area.destroyable?
+                          =link_to t('views.general.delete'), admin_key_area_url(key_area), method: :delete, data: {confirm: t('views.general.delete_confirmation')}, class: 'dropdown-item', style: 'color: #dc3545;'
+                    %td
+                      %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
+
+
+:javascript
+  $(document).ready(function() {
+    $("#search").on('blur', function() {
+      $(this).parents('form').submit();
+    });
+  });

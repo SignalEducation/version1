@@ -260,6 +260,7 @@ module Admin
           :duration,
           :vimeo_guid,
           :dacast_id,
+          :new_dacast_id,
           :video_id
         ],
         course_practice_question_attributes: [

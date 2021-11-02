@@ -13,6 +13,10 @@
 #  user_id          :bigint
 #  exercise_id      :bigint
 #  educator_comment :text
+#  agreed           :boolean          default("false")
+#  current_state    :string
+#  scratch_pad      :text
+#  pages_state      :json
 #
 class Cbe
   class UserLog < ApplicationRecord

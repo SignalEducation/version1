@@ -29,6 +29,7 @@
 #  cancelled_by_id          :bigint
 #  kind                     :integer
 #  paypal_retry_count       :integer          default("0")
+#  total_revenue            :decimal(, )      default("0")
 #
 
 class Subscription < ApplicationRecord
@@ -62,6 +63,7 @@ class Subscription < ApplicationRecord
   has_many :invoice_line_items
   has_many :charges
   has_many :refunds
+  has_many :messages
 
   # validation
   validates :user_id, presence: true,

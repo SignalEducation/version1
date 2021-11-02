@@ -87,7 +87,6 @@
                             %label.tab-label{ for: 'pay-with-card' }
                               %span.custom-label-info
                                 %span.m-0
-                                  -# =image_tag('ico-card.svg', alt: 'Credit Card Icon', class: 'logo-icon mr-1')
                                   %span Credit / Debit Card
                         .subscriptionPageWrapper-optionsBox-optionTabs-Tab.js-option-wrapper-paypal
                           .custom-control.custom-radio
@@ -155,22 +154,6 @@
      subscription_plan_options: "#{@plans.map(&:id)}", sub_plan_names: planNames, selected_sub_plan_guid: selectedPlan.attr('data-guid'), selected_sub_plan_name: selectedPlan.attr('data-name'),
       selected_sub_plan_price: selectedPlan.attr('data-price'), currency: "#{@currency&.iso_code}", country: "#{current_user&.country&.name}", valid_coupon_present: $('#coupon_code').hasClass("coupon-success")};
     planOptionSelect(planData);
-
-    fbq('track', 'AddToCart', {
-      value: selectedPlan.attr('data-price'),
-      currency: "#{@subscription&.subscription_plan&.currency&.iso_code}",
-      name: "#{@subscription&.subscription_plan&.name}",
-      brand:  "#{@subscription&.subscription_plan&.exam_body&.name}",
-      subscription_interval: "#{@subscription&.subscription_plan&.interval_name}",
-      content_category: 'Subscription'
-    });
-
-    window.uetq = window.uetq || [];
-    window.uetq.push('event', 'AddToCart', {
-      'event_category': 'Subscription',
-      'event_label': '#{@subscription&.subscription_plan&.exam_body&.name}',
-      'event_value': selectedPlan.attr('data-price')
-    });
   }
 
   function intervalSummary(frequency) {
@@ -205,6 +188,20 @@
   function initializePlan() {
     var selectedPlan = $("input[name='plans']:checked").val();
     choosePlan(selectedPlan, true);
+    fbq('track', 'Initiate Checkout', {
+      value: preSelectedPlan.attr('data-price'),
+      currency: "#{@subscription&.subscription_plan&.currency&.iso_code}",
+      name: "#{@subscription&.subscription_plan&.name}",
+      brand:  "#{@subscription&.subscription_plan&.exam_body&.name}",
+      subscription_interval: "#{@subscription&.subscription_plan&.interval_name}",
+      content_category: 'Subscription'
+    });
+    window.uetq = window.uetq || [];
+    window.uetq.push('event', 'Initiate Checkout', {
+      'event_category': 'Subscription',
+      'event_label': '#{@subscription&.subscription_plan&.exam_body&.name}',
+      'event_value': preSelectedPlan.attr('data-price')
+    });
   }
 
   $(document).on('ready', function() {
@@ -468,7 +465,7 @@
         window.location.href = "/dashboard";
       } else {
         const { hostname } = new URL(document.referrer);
-        if(hostname.includes('learnsignal.com' || 'locahost')) {
+        if(hostname.includes('app.learnsignal.com' || 'locahost')) {
           window.location.href = "/dashboard";
         } else {
           history && history.back();
@@ -476,5 +473,16 @@
       }
     });
 
+    // If we detect a coupon param in the URL call set it in the form field
+    // and trigger the validation method. Could not put this in the coupon.js
+    // file because there is an issue with the order of events, it must come last
+    if (window.location.href.indexOf("coupon") > -1) {
+      const searchParams = new URLSearchParams(window.location.search)
+      if (searchParams.has('coupon')) {
+        const code = searchParams.get('coupon')
+        $('#coupon_code').val(code)
+        validateCoupon();
+      }
+    }
 
   })

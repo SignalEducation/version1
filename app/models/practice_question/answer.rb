@@ -10,6 +10,7 @@
 #  created_at                    :datetime         not null
 #  updated_at                    :datetime         not null
 #  course_step_log_id            :bigint
+#  current                       :boolean          default("false")
 #
 module PracticeQuestion
   class Answer < ApplicationRecord

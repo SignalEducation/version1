@@ -27,10 +27,10 @@
 #  onboarding_level_subheading   :text
 #  onboarding_level_heading      :string
 #  tab_view                      :boolean          default("false"), not null
+#  disclaimer                    :text
 #
 
 class Group < ApplicationRecord
-
   include LearnSignalModelExtras
   include Archivable
 
@@ -41,6 +41,7 @@ class Group < ApplicationRecord
   has_many :courses
   has_many :home_pages
   has_many :levels
+  has_many :key_areas
   has_attached_file :image, default_url: 'courses-AAT.jpg'
   has_attached_file :background_image, default_url: 'bg_library_group.jpg'
 

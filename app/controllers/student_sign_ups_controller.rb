@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class StudentSignUpsController < ApplicationController
+  before_action :logged_in_required
   before_action :check_logged_in_status, except: %i[show landing group pricing new_landing]
   before_action :get_variables
   before_action :create_user_object, only: %i[new sign_in_or_register sign_in_checkout landing new_landing]
@@ -16,7 +17,7 @@ class StudentSignUpsController < ApplicationController
       seo_title_maker(@home_page.seo_title, @home_page.seo_description, @home_page.seo_no_index)
       @footer = @home_page.footer_option
     else
-      seo_title_maker('The Smarter Way to Study | LearnSignal',
+      seo_title_maker('The Smarter Way to Study | Learnsignal',
                       'Discover learnsignal professional courses designed by experts and delivered online so that you can study on a schedule that suits your learning needs.',
                       false)
       @footer = 'white'
@@ -129,7 +130,7 @@ class StudentSignUpsController < ApplicationController
 
   def new
     @navbar = true
-    seo_title_maker('Free Basic Plan Registration | LearnSignal',
+    seo_title_maker('Free Basic Plan Registration | Learnsignal',
                     'Register for our basic membership plan to access your essential course materials and discover the smarter way to study with learnsignal.',
                     false)
   end
@@ -183,7 +184,7 @@ class StudentSignUpsController < ApplicationController
 
   def show
     @banner = nil
-    seo_title_maker('Thank You for Registering | LearnSignal',
+    seo_title_maker('Thank You for Registering | Learnsignal',
                     'Thank you for registering to our basic membership plan you can now explore our course content and discover the smarter way to study with learnsignal.',
                     false)
   end
@@ -210,7 +211,7 @@ class StudentSignUpsController < ApplicationController
       @products = Product.where(product_type: :lifetime_access).includes(:currency).in_currency(@currency.id).all_active
     end
 
-    seo_title_maker(@group&.exam_body&.pricing_seo_title ? "#{@group&.exam_body&.pricing_seo_title} | LearnSignal" : "#{@group&.name} Tuition Plans | LearnSignal",
+    seo_title_maker(@group&.exam_body&.pricing_seo_title ? "#{@group&.exam_body&.pricing_seo_title} | Learnsignal" : "#{@group&.name} Tuition Plans | Learnsignal",
                     @group&.exam_body&.pricing_seo_description ? @group&.exam_body&.pricing_seo_description : "Achieve your #{@group&.name} learning goals with a learnsignal subscription plan and enjoy professional courses delivered online so that you can study on a schedule that suits you.",
                     false)
   end

@@ -99,7 +99,6 @@ class ApplicationController < ActionController::Base
     return if current_user
 
     session[:return_to] = request.original_url
-    flash[:error] = I18n.t('controllers.application.logged_in_required.flash_error')
     redirect_to sign_in_url
     false
   end
@@ -107,7 +106,6 @@ class ApplicationController < ActionController::Base
   def logged_out_required
     return unless current_user
 
-    flash[:error] = I18n.t('controllers.application.logged_out_required.flash_error')
     redirect_to root_url
     false
   end
@@ -171,7 +169,7 @@ class ApplicationController < ActionController::Base
   end
 
   def default_url_options(options = {})
-    { locale: nil }
+    { :locale => I18n.locale == I18n.default_locale ? nil : I18n.locale  }
   end
 
   #### Session GUIDs and user tracking
@@ -395,7 +393,7 @@ class ApplicationController < ActionController::Base
   helper_method :product_checkout_special_link
 
   def seo_title_maker(seo_title, seo_description, seo_no_index)
-    @seo_title = seo_title.to_s.truncate(65) || 'Professional Finance Courses Online| LearnSignal'
+    @seo_title = seo_title.to_s.truncate(65) || 'Professional Finance Courses Online| Learnsignal'
     @seo_description = seo_description.to_s.truncate(156)
     @seo_no_index = seo_no_index
   end

@@ -21,6 +21,7 @@ class Level < ApplicationRecord
   # relationships
   belongs_to :group
   has_many :courses
+  has_many :key_areas
 
   # validations
   validates :group_id, :name, :name_url, :onboarding_course_heading, presence: true

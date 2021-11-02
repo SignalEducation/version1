@@ -1,5 +1,4 @@
 %header.header
-  -# %nav.fixed-top
   %nav
     =render partial: 'layouts/external_banner'
     .navbar.navbar-expand-lg
@@ -17,15 +16,15 @@
               %li.nav-item.mx-3
                 =link_to library_url, class: 'nav-link' do
                   %span Library
-        -else
-          #navbarNavDropdown.collapse.navbar-collapse.justify-content-start
-            %ul.navbar-nav.align-items-lg-center
-              %li.nav-item.dropdown.course-dropdown
-                %a#navbarDropdown.nav-link.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
-                  %span Courses
-                .dropdown-menu.dropdown-menu-right.dropdown-menu-course{"aria-labelledby" => "navbarDropdown"}
-                  -@groups.each do |group|
-                    =link_to group.name, group_landing_url(group.name_url), class: 'nav-link dropdown-item'
+        -# -else
+        -#   #navbarNavDropdown.collapse.navbar-collapse.justify-content-start
+        -#     %ul.navbar-nav.align-items-lg-center
+        -#       %li.nav-item.dropdown.course-dropdown
+        -#         %a#navbarDropdown.nav-link.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
+        -#           %span Courses
+        -#         .dropdown-menu.dropdown-menu-right.dropdown-menu-course{"aria-labelledby" => "navbarDropdown"}
+        -#           -@groups.each do |group|
+        -#             =link_to group.name, group_landing_url(group.name_url), class: 'nav-link dropdown-item'
 
 
         #navbarNavDropdown.collapse.navbar-collapse.justify-content-end
@@ -72,9 +71,9 @@
                       %span 🔮 Console
                   =link_to t('views.general.log_out'), sign_out_url, class: 'nav-link dropdown-item logout'
 
-            -else
-              %li.nav-item.w-100.text-center.py-2
-                =link_to 'Login', sign_in_url, {class: 'nav-link'}
-              %li.nav-item.w-100.text-center.py-2
-                =link_to new_student_url, class: 'btn btn-primary nav-link px-4' do
-                  %span Register
+            -# -else
+            -#   %li.nav-item.w-100.text-center.py-2
+            -#     =link_to 'Login', sign_in_url, {class: 'nav-link'}
+            -#   %li.nav-item.w-100.text-center.py-2
+            -#     =link_to new_student_url, class: 'btn btn-primary nav-link px-4' do
+            -#       %span Register

@@ -353,6 +353,28 @@
     let preferredExamBody = "#{current_user&.preferred_exam_body&.name}";
     let onboarding = "#{current_user&.analytics_onboarding_valid?.to_s}";
 
+    fbq('track', 'Initiate Checkout', {
+      value: productPrice,
+      preferredExamBodyId: preferredExamBodyId,
+      preferredExamBody:preferredExamBody ,
+      examBodyId: productBodyId,
+      examBodyName: productBody,
+      currency: currencyIso,
+      country: "#{current_user&.country&.name}",
+      productId: productId,
+      productPrice: productPrice,
+      productName: productName,
+      productType: productType,
+      content_category: 'Product'
+    });
+
+    window.uetq = window.uetq || [];
+    window.uetq.push('event', 'Initiate Checkout', {
+      'event_category': 'Product',
+      'event_label': productBody,
+      'event_value': productPrice
+    });
+
     analytics.page('Payment', {
       preferredExamBodyId: preferredExamBodyId,
       preferredExamBody:preferredExamBody ,
@@ -375,7 +397,7 @@
         window.location.href = "/dashboard";
       } else {
         const { hostname } = new URL(document.referrer);
-        if(hostname.includes('learnsignal.com' || 'locahost')) {
+        if(hostname.includes('app.learnsignal.com' || 'locahost')) {
           window.location.href = "/dashboard";
         } else {
           history && history.back();

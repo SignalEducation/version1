@@ -16,7 +16,7 @@ class DashboardController < ApplicationController
 
   def get_variables
     @courses = Course.all_active.all_in_order
-    seo_title_maker('Dashboard | LearnSignal', 'Progress through all your courses will be recorded here.', false)
+    seo_title_maker('Dashboard | Learnsignal', 'Progress through all your courses will be recorded here.', false)
   end
 
   def filter_cancelled_orders(user_orders)

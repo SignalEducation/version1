@@ -57,6 +57,11 @@
 #  currency_id                     :bigint
 #  tutor_link                      :string
 #  video_player                    :integer          default("0"), not null
+#  subscriptions_revenue           :decimal(, )      default("0")
+#  orders_revenue                  :decimal(, )      default("0")
+#  home_page_id                    :integer
+#  verify_remembered_at            :datetime
+#  onboarding_course_id            :bigint
 #
 require 'rails_helper'
 require Rails.root.join 'spec/concerns/user_accessable_spec.rb'
@@ -835,7 +840,8 @@ describe User do
       end
 
       it 'do not show verify email message' do
-        user.update(verify_remembered_at: Time.zone.now)
+        time_now = Time.zone.now
+        user.update(current_login_at: time_now, verify_remembered_at: time_now)
         expect(user.show_verify_email_message?).to be_falsey
       end
     end

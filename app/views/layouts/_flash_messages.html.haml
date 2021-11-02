@@ -8,8 +8,6 @@
       .notificationMessageWrapper-title
         =flash[:notice]
       .notificationMessageWrapper-desc
-    -# .alert.alert-primary
-    -#   =flash[:notice]
   -elsif flash[:success]
     .notificationMessageWrapper-icon.success
       .i.material-icons check_circle
@@ -17,8 +15,6 @@
       .notificationMessageWrapper-title
         =flash[:success]
       .notificationMessageWrapper-desc
-    -# .alert.alert-success
-    -#   =flash[:success]
   -elsif flash[:alert]
     .notificationMessageWrapper-icon.alert
       .i.material-icons check_circle
@@ -26,8 +22,6 @@
       .notificationMessageWrapper-title
         =flash[:alert]
       .notificationMessageWrapper-desc
-    -# .alert.alert-warning
-    -#   =flash[:alert]
   -elsif flash[:warning]
     .notificationMessageWrapper-icon.warning
       .i.material-icons check_circle
@@ -35,18 +29,14 @@
       .notificationMessageWrapper-title
         =flash[:warning]
       .notificationMessageWrapper-desc
-    -# .alert.alert-warning
-    -#   =flash[:warning]
   -elsif flash[:error]
     .notificationMessageWrapper-icon.error
       .i.material-icons error_outline
     %div
-      .notificationMessageWrapper-title
-        Something went wrong
+      -# .notificationMessageWrapper-title
+      -#   =flash[:error]
       .notificationMessageWrapper-desc
         =flash[:error]
-    -# .alert.alert-error
-    -#   =flash[:error]
   -elsif flash[:modal_success]
     .notificationMessageWrapper-icon.modal_success
       .i.material-icons check_circle
@@ -54,8 +44,6 @@
       .notificationMessageWrapper-title
         =flash[:modal_success]
       .notificationMessageWrapper-desc
-    -# .alert.alert-success
-    -#   =flash[:modal_success]
   -elsif flash[:modal_error]
     .notificationMessageWrapper-icon.modal_error
       .i.material-icons check_circle
@@ -63,9 +51,6 @@
       .notificationMessageWrapper-title
         =flash[:modal_error]
       .notificationMessageWrapper-desc
-    -# .alert.alert-error
-    -#   =flash[:modal_error]
-
 
 
 :javascript

@@ -154,5 +154,3 @@
         -@invoices.paginate(page: 1, per_page: 50).where('sub_total > 0').all_in_order
         =render partial: 'invoices_index'
 
-=#render partial: 'confirm_cancellation_modal'
-
