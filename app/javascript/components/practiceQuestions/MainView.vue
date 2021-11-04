@@ -1,35 +1,80 @@
 <template>
-  <section v-if="!isFetching">
-    <div class="nav-practice-questions">
-      <span>
-        <PreviousAttempts
-          :stepLogId="stepLogId"
-          :previousAttempts="previousStepLogs"
-          class="practice-ques-single-question"
-        />
-      </span>
+  <section v-if="!isFetching" class="cr-practice-questions">
+    <div class="scenario-box-nav scenario-box-nav-header">
+      <div class="cr-navigation">
+        <div class="cr-navigation-center cr-second-nav">
+          <ul>
+            <li>
+              <div>
+                <span>
+                  <PreviousAttempts
+                    :stepLogId="stepLogId"
+                    :previousAttempts="previousStepLogs"
+                  />
+                </span>
+              </div>
+            </li>
+          </ul>
+          <ul class="cr-title-pad">
+            <li class="question-count">
+              <div>Question&nbsp;</div>
+              <div v-html="this.latestQuestionInd"></div>
+              <div>&nbsp;of&nbsp;</div>
+              <div v-html="practiceQuestion.total_questions"></div>
+            </li>
+          </ul>
+          <ul class="cr-submit-pad">
+            <li>
+              <SubmitBtn
+                :totalQuestions="practiceQuestion.total_questions"
+                :questionContentArray="practiceQuestion.questions"
+                :stepLogId="stepLogId"
+                :practiceQuestionId="practiceQuestionId"
+              />
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
     <div class="top-btns-prac-ques">
-      <div class="top-btns-left-pane">
-        <ModalCalculator class="top-btns-left-pane-spc" />
-        <ModalScratchPad />
+      <div class="cr-navigation lightBg">
+        <div class="cr-navigation-left">
+          <ul>
+            <li id="open-calculator-dialog">
+              <ModalCalculator class="top-btns-left-pane-spc" />
+            </li>
+            <li id="open-scratch-pad-dialog">
+              <ModalScratchPad />
+            </li>
+          </ul>
+        </div>
+        <div class="cr-navigation-right">
+          <ul>
+            <li>
+              <span v-if="practiceQuestion.kind == 'standard'">
+                <ModalSolution
+                  :solutionTitle="practiceQuestion.course_step.name"
+                  :solutionContent="practiceQuestion.questions"
+                />
+              </span>
+              <span v-else>
+                <ModalSolutionV2
+                  :solutionContentArray="practiceQuestion.solutions_v2"
+                />
+              </span>
+            </li>
+            <li>
+              <HelpBtn :helpPdf="practiceQuestion.document.url" />
+            </li>
+          </ul>
+        </div>
       </div>
+
       <div class="top-btns-left-pane">
         <CloseAllModals
           v-if="practiceQuestion.kind != 'standard'"
           class="top-btns-left-pane-spc"
         />
-        <span v-if="practiceQuestion.kind == 'standard'">
-          <ModalSolution
-            :solutionTitle="practiceQuestion.course_step.name"
-            :solutionContent="practiceQuestion.questions"
-          />
-        </span>
-        <span v-else>
-          <ModalSolutionV2
-            :solutionContentArray="practiceQuestion.solutions_v2"
-          />
-        </span>
       </div>
     </div>
     <div class="questions" v-on:click="refreshSheetLayout()">
@@ -69,19 +114,12 @@
           />
         </span>
       </splitpanes>
-      <HelpBtn :helpPdf="practiceQuestion.document.url" />
+
       <div
         v-if="practiceQuestion.kind == 'standard'"
         :title="dynamicTitle"
         :class="{ outsidelastpage: outsideLastPage }"
-      >
-        <SubmitBtn
-          :totalQuestions="practiceQuestion.total_questions"
-          :questionContentArray="practiceQuestion.questions"
-          :stepLogId="stepLogId"
-          :practiceQuestionId="practiceQuestionId"
-        />
-      </div>
+      ></div>
       <div
         v-else
         :title="dynamicTitle"
@@ -153,6 +191,7 @@ export default {
       lastPageIndex: null,
       isFetching: true,
       latestAnswer: false,
+      latestQuestionInd: 1,
       updateAnsArr: null,
     };
   },
@@ -169,6 +208,13 @@ export default {
           this.evaluateAnsText(true);
         } else {
           this.evaluateAnsText(false);
+        }
+      }),
+      eventBus.$on("update-active-question-ind", (ans) => {
+        if (ans > 1) {
+          this.latestQuestionInd = ans;
+        } else {
+          this.latestQuestionInd = 1;
         }
       }),
       eventBus.$on("active-solution-index", (showSubmitBtn) => {
@@ -268,9 +314,9 @@ export default {
     refreshSheetLayout() {
       window.dispatchEvent(new Event("resize"));
     },
-    splitResize() { 
+    splitResize() {
       var updatedWidth = Number($("#pane_1").width()) + 5;
-      eventBus.$emit('splitpane-resize', updatedWidth.toString()  + "px")
+      eventBus.$emit("splitpane-resize", updatedWidth.toString() + "px");
     },
   },
 };

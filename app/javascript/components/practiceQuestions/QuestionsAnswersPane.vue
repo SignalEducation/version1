@@ -2,16 +2,34 @@
   <section>
     <div style="padding:15px;">
       <ul v-show="totalQuestions > 1" class="flex-container">
-        <li v-if="totalQuestions > 1" @click="prevPage" class="lightgrey nav-ques-arrow"> &laquo; </li>
-        <li v-else class="lightgrey nav-ques-arrow-shw"> &raquo; </li>
-        <li class="flex-item">Question {{this.activePage}} of {{totalQuestions}}</li>
-        <li v-if="this.activePage < totalQuestions && totalQuestions > 1" @click="nextPage(totalQuestions)" class="lightgrey nav-ques-arrow"> &raquo; </li>
-        <li v-else class="lightgrey nav-ques-arrow-shw"> &raquo; </li>
+        <li
+          v-if="totalQuestions > 1"
+          @click="prevPage"
+          class="lightgrey nav-ques-arrow"
+        >
+          &laquo;
+        </li>
+        <li v-else class="lightgrey nav-ques-arrow-shw">&raquo;</li>
+        <li class="flex-item">
+          Question {{ this.activePage }} of {{ totalQuestions }}
+        </li>
+        <li
+          v-if="this.activePage < totalQuestions && totalQuestions > 1"
+          @click="nextPage(totalQuestions)"
+          class="lightgrey nav-ques-arrow"
+        >
+          &raquo;
+        </li>
+        <li v-else class="lightgrey nav-ques-arrow-shw">&raquo;</li>
         <div id="rightPaneTopUnderline" class="right-pane-underline"></div>
       </ul>
 
       <p v-if="totalQuestions > 1" v-html="questionContent.description"></p>
-      <p v-else v-html="questionContent.description" class="practice-ques-single-question"></p>
+      <p
+        v-else
+        v-html="questionContent.description"
+        class="practice-ques-single-question"
+      ></p>
 
       <div class="prac-ques-ans-box">
         <div v-if="questionContent.kind == 'open'">
@@ -38,7 +56,6 @@
 </template>
 
 <script>
-
 function rightPaneScrolling() {
   let isScrolling;
   if ($("#pane_1").scrollTop() == 0) {
@@ -47,7 +64,7 @@ function rightPaneScrolling() {
     }, 500);
   }
   document.getElementById("rightPaneTopUnderline").style.display = "block";
-  window.clearTimeout( isScrolling );
+  window.clearTimeout(isScrolling);
 }
 
 import axios from "axios";
@@ -83,27 +100,37 @@ export default {
       questionContent: null,
       fillArr: null,
       lastTimeUpdated: new Date(),
-      spreadSheetWidth: '800px'
+      spreadSheetWidth: "800px",
     };
   },
   mounted() {
-    document.querySelector('#pane_1').addEventListener("scroll", rightPaneScrolling);
+    document
+      .querySelector("#pane_1")
+      .addEventListener("scroll", rightPaneScrolling);
     let questionChangeArr = new Array(this.totalQuestions);
     this.fillArr = questionChangeArr.fill(0);
     this.updateSubmitBtn(this.questionContentArray).then((response) => {
       if (response) {
-        eventBus.$emit("active-solution-index", [this.fillArr.every(item => item === 1), this.activePage - 1]);
-        eventBus.$emit("show-submit-btn", this.fillArr.every(item => item === 1));
+        eventBus.$emit("active-solution-index", [
+          this.fillArr.every((item) => item === 1),
+          this.activePage - 1,
+        ]);
+        eventBus.$emit(
+          "show-submit-btn",
+          this.fillArr.every((item) => item === 1)
+        );
       }
     });
 
-    this.questionContentArray.forEach((question, index) => { if (question.current === true) this.activePage = index + 1; });
+    this.questionContentArray.forEach((question, index) => {
+      if (question.current === true) this.activePage = index + 1;
+    });
   },
   async created() {
     this.questionContent = this.questionContentArray[this.activePage - 1];
     eventBus.$on("splitpane-resize", (splitWidth) => {
       this.spreadSheetWidth = splitWidth;
-    })
+    });
   },
   methods: {
     handleChange(value) {
@@ -116,7 +143,10 @@ export default {
       this.activePage = num;
     },
     convertStr2Obj(str) {
-      if ((typeof str === 'object' && str !== null) || jQuery.isEmptyObject(str)) {
+      if (
+        (typeof str === "object" && str !== null) ||
+        jQuery.isEmptyObject(str)
+      ) {
         return str;
       } else {
         return JSON.parse(str);
@@ -127,22 +157,31 @@ export default {
         document.getElementById("rightPaneTopUnderline").style.display = "none";
       }, 500);
 
-      if (this.activePage < lastQuestion) this.activePage++;
+      if (this.activePage < lastQuestion) {
+        this.activePage++;
+        eventBus.$emit("update-active-question-ind", this.activePage);
+      }
     },
     prevPage: function() {
       setTimeout(() => {
         document.getElementById("rightPaneTopUnderline").style.display = "none";
       }, 500);
 
-      if (this.activePage > 1) this.activePage--;
+      if (this.activePage > 1) {
+        this.activePage--;
+        eventBus.$emit("update-active-question-ind", this.activePage);
+      }
     },
     syncSpreadsheetData(jsonData) {
       this.questionContent.answer_content = { content: { data: jsonData } };
     },
-    autoUpdateAnswer: function(newValue, oldValue = {}){
+    autoUpdateAnswer: function(newValue, oldValue = {}) {
       const dateNow = new Date();
       // Update response data if last update is more then 10 seconds OR new value is bigger then 20 characters.
-      if (dateNow - this.lastTimeUpdated > 10000 || (newValue.length - oldValue.length > 20)) {
+      if (
+        dateNow - this.lastTimeUpdated > 10000 ||
+        newValue.length - oldValue.length > 20
+      ) {
         this.lastTimeUpdated = dateNow;
         this.updateCurrentAnswer();
       }
@@ -167,12 +206,24 @@ export default {
         }).then((data) => {
           let origDataLength = {};
           let userChangedDataLength = {};
-          if (data.kind == 'spreadsheet') {
-            if (data.content.content) { origDataLength =  Object.keys(data.content.content.data.data.dataTable).length; }
-            if (data.answer_content.content) { origDataLength =  Object.keys(data.answer_content.content.data.data.dataTable).length; }
+          if (data.kind == "spreadsheet") {
+            if (data.content.content) {
+              origDataLength = Object.keys(
+                data.content.content.data.data.dataTable
+              ).length;
+            }
+            if (data.answer_content.content) {
+              origDataLength = Object.keys(
+                data.answer_content.content.data.data.dataTable
+              ).length;
+            }
           } else {
-            if (data.content) { origDataLength = data.content.length; }
-            if (data.answer_content) { userChangedDataLength = data.answer_content.length; }
+            if (data.content) {
+              origDataLength = data.content.length;
+            }
+            if (data.answer_content) {
+              userChangedDataLength = data.answer_content.length;
+            }
           }
           if (origDataLength != userChangedDataLength) {
             this.fillArr[index] = 1;
@@ -187,23 +238,29 @@ export default {
   watch: {
     activePage: function() {
       this.questionContent = this.questionContentArray[this.activePage - 1];
-      this.questionContentArray.map(question => question.current = false);
+      this.questionContentArray.map((question) => (question.current = false));
       this.questionContent.current = true;
       this.updateCurrentAnswer();
     },
     "questionContent.answer_content": {
-       handler(newValue, oldValue) {
+      handler(newValue, oldValue) {
         this.autoUpdateAnswer(newValue, oldValue);
 
         this.updateSubmitBtn(this.questionContentArray).then((response) => {
           if (response) {
-            eventBus.$emit("active-solution-index", [this.fillArr.every(item => item === 1), this.activePage - 1]);
-            eventBus.$emit("show-submit-btn", this.fillArr.every(item => item === 1));
+            eventBus.$emit("active-solution-index", [
+              this.fillArr.every((item) => item === 1),
+              this.activePage - 1,
+            ]);
+            eventBus.$emit(
+              "show-submit-btn",
+              this.fillArr.every((item) => item === 1)
+            );
           }
         });
-       },
-      deep: true
-    }
+      },
+      deep: true,
+    },
   },
 };
 </script>

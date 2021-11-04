@@ -1,35 +1,37 @@
 <template>
-    <div class="non-resizable-modal">
-        <button @click="show()" class="btn btn-settings scratch-pad-no-title components-sidebar-links" title="Scratch Pad"></button>
-        <VueModal
-          :componentType="componentType"
-          :componentName="componentName"
-          :componentModal="componentModal"
-          :mainColor="'rgba(24, 24, 66, 0.95)'"
-          :textColor="'#ffffff'"
-          :componentHeight="475"
-        >
-        <div slot="body">
-          <div>
-            <editor
-              :api-key="apiKey"
-              :init="{
-                height: 335,
-                branding: false,
-                menubar: false,
-                statusbar: false,
-                resize: false,
-                toolbar: ['cut copy paste undo redo']
-              }"
-            />
-          </div>
+  <div class="non-resizable-modal">
+    <button @click="show()" class="cr-nav-link tool-btn" title="Scratch Pad">
+      <div class="k-icon k-i-track-changes-enable"></div>
+      Scratch Pad
+    </button>
+    <VueModal
+      :componentType="componentType"
+      :componentName="componentName"
+      :componentModal="componentModal"
+      :mainColor="'#00b67B'"
+      :textColor="'#ffffff'"
+      :componentHeight="475"
+    >
+      <div slot="body">
+        <div>
+          <editor
+            :api-key="apiKey"
+            :init="{
+              height: 335,
+              branding: false,
+              menubar: false,
+              statusbar: false,
+              resize: false,
+              toolbar: ['cut copy paste undo redo'],
+            }"
+          />
         </div>
-      </VueModal>
-    </div>
+      </div>
+    </VueModal>
+  </div>
 </template>
 
 <script>
-
 import Editor from "@tinymce/tinymce-vue";
 import eventBus from "../cbe/EventBus.vue";
 import VueModal from "../VueModal.vue";
@@ -38,7 +40,7 @@ export default {
   components: {
     Editor,
     eventBus,
-    VueModal
+    VueModal,
   },
   props: {
     componentType: {
@@ -61,27 +63,34 @@ export default {
     };
   },
   created() {
-    eventBus.$on("close-modal",(status)=>{
+    eventBus.$on("close-modal", (status) => {
       this.modalIsOpen = status;
-    })
+    });
   },
   mounted() {
-    this.$nextTick(function () {
-        $('#scratchPadModal').draggable();
-    })
+    this.$nextTick(function() {
+      $("#scratchPadModal").draggable();
+    });
   },
   methods: {
     handleChange(value) {
       this.modalIsOpen = value;
     },
-    show () {
-      this.$modal.show("modal-"+this.componentType+"-"+this.componentName);
-      $('.components-sidebar .components div').removeClass('active-modal');
-      eventBus.$emit("update-modal-z-index", `modal-${this.componentType}-${this.componentName}`);
+    show() {
+      this.$modal.show(
+        "modal-" + this.componentType + "-" + this.componentName
+      );
+      $(".components-sidebar .components div").removeClass("active-modal");
+      eventBus.$emit(
+        "update-modal-z-index",
+        `modal-${this.componentType}-${this.componentName}`
+      );
     },
-    hide () {
-      $('.latent-modal').removeClass('active-modal');
-      this.$modal.hide("modal-"+this.componentType+"-"+this.componentName);
+    hide() {
+      $(".latent-modal").removeClass("active-modal");
+      this.$modal.hide(
+        "modal-" + this.componentType + "-" + this.componentName
+      );
     },
   },
   watch: {
