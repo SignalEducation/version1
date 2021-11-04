@@ -62,8 +62,10 @@
         var $el = $(select_id);
         $el.empty(); // remove old options
         $.each(data, function(key,value) {
+          if(value == 1) { var unit_value = ' unit/hour'} else { var unit_value = ' units/hours' }
+
           $el.append($("<option></option>")
-            .attr("value", value).text(value + ' unit'));
+            .attr("value", value).text(value + unit_value));
         });
         $el.prepend("<option value='' selected='selected'>All</option>");
       },

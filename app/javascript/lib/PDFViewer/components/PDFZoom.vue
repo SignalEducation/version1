@@ -1,20 +1,28 @@
 <template>
   <div class="pdf-zoom">
-    <a @click.prevent.stop="zoomIn" class="icon" :disabled="isDisabled"><ZoomInIcon /></a>
-    <a @click.prevent.stop="zoomOut" class="icon" :disabled="isDisabled"><ZoomOutIcon /></a>
-    <a @click.prevent.stop="fitWidth" class="icon" :disabled="isDisabled"><ExpandIcon /></a>
-    <a @click.prevent.stop="fitAuto" class="icon" :disabled="isDisabled"><ShrinkIcon /></a>
+    <a @click.prevent.stop="zoomIn" class="icon" :disabled="isDisabled"
+      ><ZoomInIcon
+    /></a>
+    <a @click.prevent.stop="zoomOut" class="icon" :disabled="isDisabled"
+      ><ZoomOutIcon
+    /></a>
+    <a @click.prevent.stop="fitWidth" class="icon" :disabled="isDisabled"
+      ><ExpandIcon
+    /></a>
+    <a @click.prevent.stop="fitAuto" class="icon" :disabled="isDisabled"
+      ><ShrinkIcon
+    /></a>
   </div>
 </template>
 
 <script>
-import ZoomInIcon from '../assets/icon-zoom-in.svg';
-import ZoomOutIcon from '../assets/icon-zoom-out.svg';
-import ExpandIcon from '../assets/icon-expand.svg';
-import ShrinkIcon from '../assets/icon-shrink.svg';
+import ZoomInIcon from "../assets/icon-zoom-in.svg";
+import ZoomOutIcon from "../assets/icon-zoom-out.svg";
+import ExpandIcon from "../assets/icon-expand.svg";
+import ShrinkIcon from "../assets/icon-shrink.svg";
 
 export default {
-  name: 'PDFZoom',
+  name: "PDFZoom",
   components: {
     ZoomInIcon,
     ZoomOutIcon,
@@ -44,16 +52,16 @@ export default {
       this.updateScale(this.scale - this.increment);
     },
     updateScale(scale) {
-      this.$emit('change', {scale});
+      this.$emit("change", { scale });
     },
     fitWidth() {
-      this.$emit('fit', 'width');
+      this.$emit("fit", "width");
     },
     fitAuto() {
-      this.$emit('fit', 'auto');
+      this.$emit("fit", "auto");
     },
   },
-}
+};
 </script>
 
 <style scoped>
@@ -74,6 +82,7 @@ export default {
 .pdf-zoom > a.icon > svg {
   width: 30px;
   height: 30px;
-  position: absolute;
+  position: relative;
+  top: -5px;
 }
 </style>

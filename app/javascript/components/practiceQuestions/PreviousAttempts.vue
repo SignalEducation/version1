@@ -1,22 +1,33 @@
 <template>
   <section>
-    <div class="aselect" :data-value="value" :data-list="previousAttempts" v-click-outside="dropDownClose">
+    <div
+      class="aselect"
+      :data-value="value"
+      :data-list="previousAttempts"
+      v-click-outside="dropDownClose"
+    >
       <div class="selector" @click="toggle()">
-          <div class="label">
-            <span>
+        <div class="label">
+          <span>
+            <i class="material-icons exhibits-icon">schedule</i>
+            <p>{{ value.created }}</p>
+          </span>
+        </div>
+        <div class="arrow" :class="{ expanded: visible }"></div>
+        <div :class="{ hidden: !visible, visible }">
+          <ul>
+            <li
+              :class="{ current: log === value }"
+              class="cr-nav-previous-attempts"
+              :key="log.id"
+              v-for="log in previousAttempts"
+              @click="select(log)"
+            >
               <i class="material-icons exhibits-icon">schedule</i>
-              <p>{{ value.created }}</p>
-            </span>
-          </div>
-      <div class="arrow" :class="{ expanded : visible }"></div>
-          <div :class="{ hidden : !visible, visible }">
-              <ul>
-                <li :class="{ current : log === value }" :key="log.id" v-for="log in previousAttempts" @click="select(log)">
-                  <i class="material-icons exhibits-icon">schedule</i>
-                  <p>{{ log.created }}</p>
-                </li>
-              </ul>
-          </div>
+              <p>{{ log.created }}</p>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </section>
@@ -33,7 +44,7 @@ function rightPaneScrolling() {
     }
     document.getElementById("rightPaneTopUnderline").style.display = "block";
   }
-  window.clearTimeout( isScrolling );
+  window.clearTimeout(isScrolling);
 }
 
 import axios from "axios";
@@ -44,11 +55,11 @@ export default {
   components: {
     eventBus,
   },
-  name: 'aselect',
+  name: "aselect",
   data() {
     return {
-      value: { created: 'Previous Attempts' },
-      visible: false
+      value: { created: "Previous Attempts" },
+      visible: false,
     };
   },
   props: {
@@ -56,7 +67,7 @@ export default {
       type: [String, Number],
     },
     previousAttempts: {
-      type: [Array, Object]
+      type: [Array, Object],
     },
   },
   methods: {
@@ -83,9 +94,9 @@ export default {
       this.value = option;
       this.updateCourseStepLog(option.id);
     },
-    dropDownClose: function(){
+    dropDownClose: function() {
       this.visible = false;
-    }
+    },
   },
 };
 </script>
