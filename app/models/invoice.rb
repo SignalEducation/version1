@@ -96,6 +96,7 @@ class Invoice < ApplicationRecord
       user         = User.find_by(stripe_customer_id: stripe_data_hash[:customer])
       currency     = Currency.find_by(iso_code: stripe_data_hash[:currency].upcase)
       subscription = Subscription.in_reverse_created_order.find_by(stripe_guid: stripe_data_hash[:subscription])
+
       if user && subscription && currency
         inv = Invoice.new(
           user_id: user.id,
@@ -339,6 +340,33 @@ class Invoice < ApplicationRecord
     elsif subscription_id.present?
       subscription.update_revenue(:increment!, total)
     end
+  end
+
+  # check for yearly subscriptions with a coupoun with once duration aplied on it
+  def apply_coupon_credit
+    return if subscription.subscription_plan.interval_name != 'Yearly'
+    return if subscription.coupon.nil? || subscription.coupon.duration != 'once'
+    return if subscription.invoices.blank? || subscription.invoices.count == 1
+
+    plan        = subscription.subscription_plan
+    coupon_data = subscription.coupon_data
+    discounted  = plan.price.to_f - coupon_data[:price_discounted]
+    amount      = (discounted * 100).to_i
+    memo        = "Coupon '#{coupon_data[:code]}' applied."
+
+    StripeService.new.add_credit_note(stripe_guid, amount, memo)
+  end
+
+  def add_invoice_line_item(credit_note)
+    InvoiceLineItem.create(
+      invoice_id: id,
+      amount: credit_note[:amount] / 100.0,
+      currency_id: Currency.find_by(iso_code: credit_note[:currency].upcase).id,
+      subscription_id: subscription_id,
+      subscription_plan_id: subscription.subscription_plan_id,
+      original_stripe_data: credit_note.to_hash,
+      kind: :credit_note
+    )
   end
 
   protected

@@ -22,7 +22,8 @@
 class InvoiceLineItem < ApplicationRecord
   serialize :original_stripe_data, Hash
 
-  # Constants
+  # enums
+  enum kind: { standard: 0, credit_note: 1 }
 
   # relationships
   belongs_to :invoice
