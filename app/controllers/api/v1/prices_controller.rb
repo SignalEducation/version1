@@ -14,7 +14,7 @@ module Api
           @exam_bodies = @group.exam_body
           @subscription_plans = SubscriptionPlan.where(subscription_plan_category_id: nil, exam_body_id: @group.exam_body_id).
                                   includes(:currency).in_currency(@currency.id).all_active.all_in_display_order
-          @products = Product.for_group(@group.id).includes(:currency).in_currency(@currency.id).all_active
+          @products = Product.for_group(@group.id).includes(:currency, :group, cbe: :course, mock_exam: :course).in_currency(@currency.id).all_active
         else
           @subscription_plans = SubscriptionPlan.where(subscription_plan_category_id: nil).
                                   includes(:currency).in_currency(@currency.id).all_active.all_in_display_order
@@ -27,8 +27,8 @@ module Api
       private
 
       def user_currency(iso_code)
-        currency = Currency.find_by(iso_code: iso_code.upcase) if iso_code.present?
-        return currency if currency.present?
+        country = Country.find_by(iso_code: iso_code.upcase) if iso_code.present?
+        return country.currency if country&.currency.present?
 
         country = IpAddress.get_country(request.remote_ip) || Country.find_by(name: 'United Kingdom')
 
