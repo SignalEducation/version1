@@ -1,8 +1,8 @@
 -if @vimeo_as_main
   -if cme.course_video.vimeo_guid && current_user.video_player && current_user.country&.iso_code != 'CN'
-    =render partial: "courses/players/#{current_user.video_player}", locals: { cme: cme, responsive: responsive, autoPlay: autoPlay }
+    =render partial: "courses/players/#{current_user.video_player}", locals: { cme: cme, responsive: responsive, autoPlay: autoPlay, email: current_user.email, title: cme.name}
   -elsif cme.course_video.dacast_id
-    =render partial: 'courses/players/dacast', locals: { cme: cme }
+    =render partial: 'courses/players/dacast', locals: { cme: cme, email: current_user.email, title: cme.name }
   -else
     %h2 Sorry Unknown Content Requested
     -error_message = "views/courses/_video_player - error to rendering video. CME: #{cme.inspect}.\n"
@@ -11,4 +11,4 @@
     -Airbrake::AirbrakeLogger.new(logger).error error_message
     -Appsignal.send_error(Exception.new(error_message))
 -else
-  =render partial: 'courses/players/dacast', locals: { cme: cme }
+  =render partial: 'courses/players/dacast', locals: { cme: cme, email: current_user.email, title: cme.name }

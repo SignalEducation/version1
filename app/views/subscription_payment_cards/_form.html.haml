@@ -12,7 +12,7 @@
 
     %div.coupon-input-box.js-coupon-input-box{style: 'padding-left: 0;'}
       %input{type: 'text_field', id: 'coupon_code', class: 'form-control', placeholder: 'Coupon Code'}
-      %span.coupon-code-apply-btn.js-coupon-code-apply-btn Apply
+      %span.coupon-code-apply-btn.js-coupon-code-apply-btn#apply-coupon-code-btn Apply
         
       .invalid-code.invalid-details
         ='Invalid Code'
@@ -54,5 +54,23 @@
       $('.js-coupon-input-box').hide();
       $('.js-coupon-code-btn-hide').hide();
       $('.js-coupon-code-btn').show();
+    });
+    $("#apply-coupon-code-btn").on( "click", function() {
+      setTimeout(function(){ 
+        const coup_code = $("input[name='plans']:checked")[0].dataset; 
+        sendClickEventToSegment('applies_payment_discountCode', {email: '#{@current_user.email}', programName: '#{@exam_body&.name}', planName: coup_code.name, planPrice: coup_code.price, discountedPrice: parseFloat($("#discounted_price").val().substring(1)), discountCode: $("#coupon_code").val()})
+      }, 0);
+    });
+    $("#card_submit").on( "click", function() {
+      setTimeout(function(){ 
+        var payment_type = '';
+        if($("#payment-type-card").hasClass("active")) {
+          payment_type = 'card';
+        } else {
+          payment_type = 'paypal';
+        }
+        const coup_code = $("input[name='plans']:checked")[0].dataset; 
+        sendClickEventToSegment('clicks_payment_subscribe', {email: '#{@current_user.email}', programName: '#{@exam_body&.name}', planName: coup_code.name, planPrice: coup_code.price, discountedPrice: parseFloat($("#discounted_price").val().substring(1)), discountCode: $("#coupon_code").val(), paymentType: 'Subscription'})
+      }, 0);
     });
   });

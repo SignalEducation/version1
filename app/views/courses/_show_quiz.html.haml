@@ -51,6 +51,7 @@
             questionCount = $('.quiz-heading');
 
         function updateProgressBar() {
+          if(currentQuestion == 2) sendClickEventToSegment('quiz_intiated', {email: 'email'})
           var percentage = (currentQuestion / numberOfQuestions * 100);
           progressBar.attr('aria-valuemax', numberOfQuestions);
           progressBar.attr('aria-valuenow', currentQuestion);

@@ -30,25 +30,25 @@
         %nav.courses-nav
           %ul#accountTabs.nav.nav-tabs{:role => "tablist"}
             %li.nav-item
-              %a#personal-info-tab.nav-link.active{"aria-controls" => "personal-info", "aria-selected" => "true", "data-toggle" => "tab", :href => "#personal-info", :role => "tab"}
+              %a#personal-info-tab.nav-link.active{"aria-controls" => "personal-info", "aria-selected" => "true", "data-toggle" => "tab", :href => "#personal-info", :role => "tab", onclick: "sendClickEventToSegment('clicks_profile_personal', {email: '#{@current_user.email}'})"}
                 Personal Info
             %li.nav-item
               %a#orders-tab.nav-link{"aria-controls" => "orders", "aria-selected" => "false", "data-toggle" => "tab", :href => "#password-info", :role => "tab"}
                 Password
             %li.nav-item
-              %a#account-info-tab.nav-link{"aria-controls" => "account-info", "aria-selected" => "false", "data-toggle" => "tab", :href => "#account-info", :role => "tab"}
+              %a#account-info-tab.nav-link{"aria-controls" => "account-info", "aria-selected" => "false", "data-toggle" => "tab", :href => "#account-info", :role => "tab", onclick: "sendClickEventToSegment('clicks_profile_subscriptions', {email: '#{@current_user.email}'})"}
                 Subscriptions
                 -if current_user&.subscription_action_required?
                   %span.badge.badge-warning.align-middle
                     ='Action Required'
             %li.nav-item
-              %a#orders-tab.nav-link{"aria-controls" => "orders", "aria-selected" => "false", "data-toggle" => "tab", :href => "#orders", :role => "tab"}
+              %a#orders-tab.nav-link{"aria-controls" => "orders", "aria-selected" => "false", "data-toggle" => "tab", :href => "#orders", :role => "tab", onclick: "sendClickEventToSegment('clicks_profile_ purchases', {email: '#{@current_user.email}'})"}
                 Purchases
             %li.nav-item
-              %a#payment-details-tab.nav-link{"aria-controls" => "payment-details", "aria-selected" => "false", "data-toggle" => "tab", :href => "#payment-details", :role => "tab"}
+              %a#payment-details-tab.nav-link{"aria-controls" => "payment-details", "aria-selected" => "false", "data-toggle" => "tab", :href => "#payment-details", :role => "tab", onclick: "sendClickEventToSegment('clicks_profile_card_details', {email: '#{@current_user.email}'})"}
                 Card Details
             %li.nav-item
-              %a#enrollments-tab.nav-link{"aria-controls" => "enrollments", "aria-selected" => "false", "data-toggle" => "tab", :href => "#enrollments", :role => "tab"}
+              %a#enrollments-tab.nav-link{"aria-controls" => "enrollments", "aria-selected" => "false", "data-toggle" => "tab", :href => "#enrollments", :role => "tab", onclick: "sendClickEventToSegment('clicks_profile_enrolments', {email: '#{@current_user.email}'})"}
                 Enrolments
 
   -if flash[:success] || flash[:warning] || flash[:error]
