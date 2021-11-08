@@ -36,6 +36,7 @@
       %meta{name: 'description', content: @seo_description}
     -if @seo_no_index
       %meta{name: 'robots', content: 'noindex'}
+    %meta{name: 'robots', content: 'noindex,nofollow'}
     =render 'application/favicon'
 
     =render partial: 'layouts/cookie_banner'
