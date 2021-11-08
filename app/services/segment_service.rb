@@ -63,6 +63,26 @@ class SegmentService
     Rails.logger.error "SegmentService#track_correction_returned_event - #{e.inspect} Segment Object - #{segment}"
   end
 
+  def track_payment_complete_event(user, subscription)
+    segment = Analytics.track(
+      user_id: user.id,
+      event: 'payment_complete',
+      properties: payment_properties(subscription.subscription_plan)
+    )
+  rescue StandardError => e
+    Rails.logger.error "SegmentService#create_user - Error: #{e.inspect} - User Id #{user&.id} Segment Object - #{segment}"
+  end
+
+  def track_payment_failed_event(user, subscription, error_msg, error_code)
+    segment = Analytics.track(
+      user_id: user.id,
+      event: 'payment_failed',
+      properties: payment_properties(subscription.subscription_plan).merge!(payment_error_properties(error_msg, error_code))
+    )
+  rescue StandardError => e
+    Rails.logger.error "SegmentService#create_user - Error: #{e.inspect} - User Id #{user&.id} Segment Object - #{segment}"
+  end
+
   # PRIVATE ====================================================================
 
   private
@@ -151,6 +171,22 @@ class SegmentService
       dateOfBirth: user&.date_of_birth,
       percentageComplete: enrolment&.course_log&.percentage_complete,
       onboarding: user&.analytics_onboarding_valid?.to_s
+    }
+  end
+
+  def payment_properties(plan)
+    {
+      exam_body: plan.exam_body&.name,
+      plan_name: "#{plan.name} - #{plan.interval_name}",
+      amount: plan.amount,
+      currency: plan.currency.name
+    }
+  end
+
+  def payment_error_properties(error_msg, error_code)
+    {
+      error_code: error_code,
+      error_reason: error_msg
     }
   end
 
