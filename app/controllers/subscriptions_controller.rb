@@ -141,12 +141,16 @@ class SubscriptionsController < ApplicationController
 
     if @subscription.save
       if data[:status] == :ok
+        segment_payment_complete_event(@subscription)
         render :create
       else
+        segment_payment_failed_event(subscription, data[:error_message], data[:status])
         render json: { subscription_id: @subscription.id,
                        error: data[:error_message] }, status: data[:status]
+
       end
     else
+      segment_payment_failed_event(subscription, data[:error_message], data[:status])
       render json: { subscription_id: @subscription.id,
                      error: data[:error_message] }, status: :error
     end
@@ -157,9 +161,12 @@ class SubscriptionsController < ApplicationController
     @subscription = PaypalSubscriptionsService.new(subscription).create_and_return_subscription
 
     if @subscription.save
+      segment_payment_complete_event(@subscription)
       redirect_to subscription.paypal_approval_url
     else
-      Rails.logger.error "DEBUG: Subscription Failed to save for unknown reason - #{subscription.inspect}"
+      error_msg = "DEBUG: Subscription Failed to save for unknown reason - #{subscription.inspect}"
+      segment_payment_failed_event(subscription, error_msg, 'error')
+      Rails.logger.error error_msg
       flash[:error] = 'Your request was declined. Please contact us for assistance!'
 
       redirect_to new_subscription_url(subscription_plan_id: params[:subscription][:subscription_plan_id])
@@ -199,6 +206,18 @@ class SubscriptionsController < ApplicationController
     return if %w[stripe paypal].include?(type)
 
     raise Learnsignal::SubscriptionError, t('views.subscriptions.new_subscription.invalid_type')
+  end
+
+  def segment_payment_complete_event(subscription)
+    return if Rails.env.test?
+
+    SegmentService.new.track_payment_complete_event(current_user, subscription)
+  end
+
+  def segment_payment_failed_event(subscription, error_msg, error_code)
+    return if Rails.env.test?
+
+    SegmentService.new.track_payment_failed_event(current_user, subscription, error_msg, error_code)
   end
 
   def set_variables
