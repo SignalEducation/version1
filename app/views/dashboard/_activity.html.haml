@@ -28,7 +28,7 @@
                                                 next_step.course_lesson.course_section.name_url,
                                                 next_step.course_lesson.name_url,
                                                 next_step.name_url)
-              .btn.btn-outline.next_step_link{data: {destination: next_step_link}, id: scul.id}
+              #dashboard-course-resume.btn.btn-outline.next_step_link{data: {destination: next_step_link}, id: scul.id, onclick: "sendClickEventToSegment('clicks_activity', {email: '#{@current_user.email}', through: 'activity'})"}
                 Resume
             -else
               .courseArrowIcon.i.material-icons{style: 'color: #D9D9D9;'} keyboard_arrow_right

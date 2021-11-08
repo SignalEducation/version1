@@ -37,7 +37,7 @@ module CoursesHelper
 
   def external_pdf_link(resource, banner, user, has_valid_subscription)
     content_tag(:div, class: 'col-md-4 col-lg-3 mb-4 px-3') do
-      link_to(course_resource_special_link(resource), target: :blank, id: 'resource-window', class: "productCard external-card has-#{!!has_valid_subscription}-subscription", data: { resource_name: resource.name, resource_id: resource.id, course_name: resource.course.name, course_id: resource.course_id,
+      link_to(course_resource_special_link(resource), target: :blank, id: 'resource-window', onclick: "sendClickEventToSegment('download_resources', {email: '#{user.email}', resource_name: '#{resource.name}'})", class: "productCard external-card has-#{!!has_valid_subscription}-subscription", data: { resource_name: resource.name, resource_id: resource.id, course_name: resource.course.name, course_id: resource.course_id,
                                                                                                                                 preferred_exam_body_id: user&.preferred_exam_body_id, preferred_exam_body: user&.preferred_exam_body&.name, banner: banner,
                                                                                                                                 onboarding: user&.analytics_onboarding_valid?.to_s, exam_body_name: resource.course.exam_body.name, exam_body_id: resource.course.exam_body_id,
                                                                                                                                 resource_type: resource.type, allowed: true }) do

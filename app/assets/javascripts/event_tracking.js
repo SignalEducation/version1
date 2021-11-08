@@ -93,7 +93,12 @@ function videoPlayEvent() {
   }
 }
 
-function videoFinishedEvent(autoPlay, playbackRate) {
+function videoFinishedEvent(
+  autoPlay,
+  playbackRate,
+  duration,
+  duration_percent
+) {
   let videoLesson = $("#video-player-window"),
     stepData = videoLesson.data(),
     playerType = typeof player !== "undefined" ? "Vimeo" : "DaCast",
@@ -108,6 +113,12 @@ function videoFinishedEvent(autoPlay, playbackRate) {
   if (typeof analytics !== "undefined") {
     analytics.track("Course Step Completed", properties);
   }
+  sendClickEventToSegment("watched_duration_video", {
+    email: email,
+    video_name: properties.stepName,
+    video_duration: duration,
+    video_duration_percentage: duration_percent,
+  });
 }
 
 // Quiz Events
@@ -327,6 +338,12 @@ function exerciseResultsDownload() {
 
   if (typeof analytics !== "undefined") {
     analytics.track("Exercise Results Downloaded", properties);
+  }
+}
+
+function sendClickEventToSegment(event_name, properties) {
+  if (typeof analytics !== "undefined") {
+    analytics.track(event_name, properties);
   }
 }
 

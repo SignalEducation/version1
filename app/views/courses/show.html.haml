@@ -61,7 +61,7 @@
                data: {step_id: @course_step.id, step_name: @course_step.name, module_id: @course_lesson.id, module_name: @course_lesson.name, course_id: @course.id,
                 course_name: @course.name, section_id: @course_lesson&.course_section_id, section_name: @course_lesson&.course_section&.name,
                  exam_body_id: @group.exam_body.id, exam_body_name: @group.exam_body.name, time_triggered: @course_step.vid_end_seconds, preferred_exam_body_id: current_user&.preferred_exam_body_id,
-                  preferred_exam_body: current_user&.preferred_exam_body&.name, banner: @banner.present?.to_s, onboarding: current_user&.analytics_onboarding_valid?.to_s}
+                  preferred_exam_body: current_user&.preferred_exam_body&.name, banner: @banner.present?.to_s, onboarding: current_user&.analytics_onboarding_valid?.to_s}, onclick: "sendClickEventToSegment('clicks_upgrade_dialog', {email: '#{@current_user.email}', exam_body: '#{@group.exam_body.name}'})"
 
 - if current_user
   =render partial: 'library/subscription_restriction_modal'

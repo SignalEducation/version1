@@ -12,7 +12,7 @@
       .row.justify-content-center
         -@groups.each do |group|
           .col-md-6.col-lg-4
-            =link_to library_special_link(group), class: 'libraryMainWrapper-card' do
+            =link_to library_special_link(group), class: 'libraryMainWrapper-card', onclick: "sendClickEventToSegment('clicks_exam_body', {email: '#{@current_user.email}', exam_body: '#{group.name}'})" do
               .cardImage
                 =image_tag(group.image.url, class: 'card-img-top', alt: 'People in front of the blackboard', style: "border-bottom-color: #{group.background_colour};")
               .card-body.text-left

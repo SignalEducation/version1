@@ -1,7 +1,10 @@
 <template>
   <div class="pdf-download" v-if="fileDownload">
     <a @click.prevent.stop="downloadFile" class="icon">
-      <i class="glyphicon glyphicon-download-alt" style="font-size: 12px;margin-right: 4px;color: #999999;"></i>
+      <i
+        class="glyphicon glyphicon-download-alt"
+        style="font-size: 12px;margin-right: 4px;color: #999999;"
+      ></i>
       Download
     </a>
   </div>
@@ -9,7 +12,7 @@
 
 <script>
 export default {
-  name: 'PDFDownload',
+  name: "PDFDownload",
   props: {
     fileUrl: {
       type: String,
@@ -26,13 +29,17 @@ export default {
   },
   methods: {
     downloadFile() {
-      let link      = document.createElement("a");
-      link.href     = this.fileUrl;
-      link.target   = '_blank';
+      let link = document.createElement("a");
+      link.href = this.fileUrl;
+      link.target = "_blank";
       link.download = this.fileName;
       link.click();
+      sendClickEventToSegment("download_notes", {
+        email: "email",
+        file_name: this.fileName,
+      });
       notesDownloadEvent(this.fileType);
     },
   },
-}
+};
 </script>
