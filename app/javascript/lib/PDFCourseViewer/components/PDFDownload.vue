@@ -66,7 +66,6 @@ export default {
       link.target = "_blank";
       link.download = this.fileName;
       link.click();
-      notesDownloadEvent(this.fileType);
     },
   },
 };

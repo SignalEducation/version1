@@ -1,13 +1,12 @@
 <template>
-  <div
-    id="cbe-modals"
-    @click="sendToSegment()"
-    class="col-md-4 col-lg-3 mb-4 px-3"
-  >
+  <div id="cbe-modals" class="col-md-4 col-lg-3 mb-4 px-3">
     <div
       class="productCard internal-card"
       :class="this.hasValidSubscription && 'has-true-subscription'"
-      @click="show('modal-' + componentType + '-' + pdfFileName)"
+      @click="
+        show('modal-' + componentType + '-' + pdfFileName);
+        sendToSegment();
+      "
     >
       <div
         class="productCard-header d-flex align-items-center justify-content-center"
@@ -119,40 +118,12 @@ export default {
   methods: {
     modalOpen(data) {
       this.modalIsOpen = true;
-      courseResourceClick({
-        preferredExamBodyId: this.preferredExamBodyId,
-        preferredExamBody: this.preferredExamBodyName,
-        banner: this.banner,
-        onboarding: this.onboarding,
-        resourceName: this.pdfFileName,
-        resourceId: this.pdfFileId,
-        courseName: this.pdfCourseName,
-        courseId: this.pdfCourseId,
-        examBodyName: this.pdfExamBodyName,
-        examBodyId: this.pdfExamBodyId,
-        resourceType: this.fileType,
-        allowDownloadFile: this.allowed,
-      });
     },
     updateViewedPages(data) {
       const total = data.totalPages;
       const current = data.currentPage;
 
       if (current == total && !this.eventFired) {
-        courseResourceCompleted({
-          preferredExamBodyId: this.preferredExamBodyId,
-          preferredExamBody: this.preferredExamBodyName,
-          banner: this.banner,
-          onboarding: this.onboarding,
-          resourceName: this.pdfFileName,
-          resourceId: this.pdfFileId,
-          courseName: this.pdfCourseName,
-          courseId: this.pdfCourseId,
-          examBodyName: this.pdfExamBodyName,
-          examBodyId: this.pdfExamBodyId,
-          resourceType: this.fileType,
-          allowDownloadFile: this.allowed,
-        });
         this.eventFired = true;
       }
     },

@@ -114,20 +114,6 @@ export default {
   },
   mounted() {
     this.$store.dispatch("cbe/getCbe", this.cbe_id);
-    cbeLoaded({
-      preferredExamBodyId: this.$parent.preferred_exam_body_id,
-      preferredExamBody: this.$parent.preferred_exam_body_name,
-      banner: "false",
-      onboarding: this.$parent.onboarding,
-      cbeId: this.cbe_id,
-      cbeName: this.$parent.cbe_name,
-      productId: this.$parent.product_id,
-      productName: this.$parent.product_name,
-      courseId: this.$parent.course_id,
-      courseName: this.$parent.course_name,
-      examBodyId: this.$parent.exam_body_id,
-      examBodyName: this.$parent.exam_body_name,
-    });
   },
   methods: {
     createUserLog() {
@@ -185,21 +171,6 @@ export default {
           window.location.href = `/exercises/${this.exerciseId}`;
         })
         .catch((error) => {});
-
-      cbeSubmitted({
-        preferredExamBodyId: this.$parent.preferred_exam_body_id,
-        preferredExamBody: this.$parent.preferred_exam_body_name,
-        banner: "false",
-        onboarding: this.$parent.onboarding,
-        cbeId: this.cbe_id,
-        cbeName: this.$parent.cbe_name,
-        productId: this.$parent.product_id,
-        productName: this.$parent.product_name,
-        courseId: this.$parent.course_id,
-        courseName: this.$parent.course_name,
-        examBodyId: this.$parent.exam_body_id,
-        examBodyName: this.$parent.exam_body_name,
-      });
     },
     formatedData() {
       const data = {};

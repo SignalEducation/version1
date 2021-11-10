@@ -99,7 +99,7 @@ export default {
     quizType: {
       type: [String, Number],
     },
-    quizName: {
+    lessonName: {
       type: [String, Number],
     },
     moduleName: {
@@ -151,7 +151,7 @@ export default {
         isLoggedIn: isLoggedIn,
         sessionId: sessionId,
         quizType: "pq " + this.quizType,
-        quizName: this.moduleName,
+        lessonName: this.moduleName,
         moduleName: this.moduleName,
         courseName: this.courseName,
         programName: this.programName,

@@ -63,7 +63,7 @@
 
             .col-xl-4.mb-5
               %aside
-                %a.btn.btn-secondary.btn-sm.mb-5{"data-target" => "#ask-a-tutor-modal", "data-toggle" => "modal", :href => "#", onclick: "sendClickEventToSegment('clicks_ask_tutor', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}'})"}
+                %a.btn.btn-secondary.btn-sm.mb-5{"data-target" => "#ask-a-tutor-modal", "data-toggle" => "modal", :href => "#", onclick: "sendClickEventToSegment('clicks_ask_tutor', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', programName: '#{@course.parent.name}', courseName: '#{@course.name}'})"}
                   Ask the Tutor
 
 

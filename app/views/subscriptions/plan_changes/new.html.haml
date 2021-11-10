@@ -67,15 +67,15 @@
                       %legend.sr-only Select a Plan
                       -# subscriptions helper
                       %div
-                        -@subscription.upgrade_options.each do |plan|
+                        -@subscription.upgrade_options.each_with_index do |plan, index|
                           .form-group
                             .custom-control.custom-radio.subscriptionPageWrapper-customRadio.plan-option
                               %input.custom-control-input.custom-control-input-card.style-radio.js-radio-option{id: 'chk-plan-' + plan.id.to_s, name: 'plans', type: 'radio', value: plan.id}
-                              %label.custom-control-label.justify-content-start{for: 'chk-plan-' + plan.id.to_s}
+                              %label.custom-control-label.justify-content-start{for: 'chk-plan-' + plan.id.to_s, onclick: "sendClickEventToSegment('selects_changed_plan', {userId: '#{current_user&.id}',email: '#{current_user&.email}',hasValidSubscription: '#{current_user&.valid_subscription?}',isEmailVerified: '#{current_user&.email_verified}',preferredExamBodyId: '#{current_user&.preferred_exam_body_id}', isLoggedIn: '#{!current_user&.nil?}', sessionId: '#{session&.id}', planName: '#{plan.name}', programName: '#{plan.exam_body.group.name}'})"}
                                 %span.custom-check.mr-3
                                 .d-flex.py-0{style: 'width: calc(100% - 46px);'}
                                   .d-flex.flex-column.justify-content-between.align-items-start{style: 'width: 60% !important;'}
-                                    %div.h4.m-0.text-black
+                                    %div.h4.m-0.text-black{id: 'plan-select-' + index.to_s}
                                       =plan.exam_body.group.name
                                       &#8212;
                                       =plan.interval_name
@@ -176,10 +176,12 @@
   // UnChecks radio buttons except the one that was clicked.
   // Finds the id value of the sub plan that the radio button belongs to.
   // Sets the hidden field subscription_plan_id to that id.
+  let activePlan = 0;
   function choosePlan(theThing) {
     $('.js-radio-option[type="radio"]:checked').prop('checked', false);
     var selector = $(theThing).find('.js-radio-option[type="radio"]').prop('checked', true);
     $('#subscription_subscription_plan_id').val(selector.attr('value'));
+    activePlan = selector.attr('value');
     addToCart(theThing);
   }
 
@@ -225,6 +227,19 @@
     $(".plan-option").bind('click', function(event) {
       event.preventDefault();
       choosePlan(this);
+    });
+
+    $("#changePlan").on( "click", function() {
+      sendClickEventToSegment('clicks_change_plan_now', {
+        userId: '#{current_user&.id}',
+        email: '#{current_user&.email}',
+        hasValidSubscription: '#{current_user&.valid_subscription?}',
+        isEmailVerified: '#{current_user&.email_verified}',
+        preferredExamBodyId: '#{current_user&.preferred_exam_body_id}', 
+        isLoggedIn: '#{!current_user&.nil?}', 
+        sessionId: '#{session&.id}', 
+        programName: '#{current_user&.preferred_exam_body&.group&.name}'
+      })
     });
 
     $('.js-coupon-code-btn').on('click', function() {

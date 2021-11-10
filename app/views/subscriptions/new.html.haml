@@ -156,7 +156,6 @@
     let planData = {preferred_exam_body_id: preferredExamBodyId, preferred_exam_body: preferredExamBody, banner: banner, onboarding: onboarding, exam_body_id: "#{@exam_body&.id}", exam_body_name: "#{@exam_body&.name}",
      subscription_plan_options: "#{@plans.map(&:id)}", sub_plan_names: planNames, selected_sub_plan_guid: selectedPlan.attr('data-guid'), selected_sub_plan_name: selectedPlan.attr('data-name'),
       selected_sub_plan_price: selectedPlan.attr('data-price'), currency: "#{@currency&.iso_code}", country: "#{current_user&.country&.name}", valid_coupon_present: $('#coupon_code').hasClass("coupon-success")};
-    planOptionSelect(planData);
   }
 
   function intervalSummary(frequency) {
@@ -254,9 +253,6 @@
     });
 
     function selectPaymentMethod(paymentType, click) {
-      if (click === true) {
-        providerOptionSelect(analyticsData, paymentType);
-      }
       switch(paymentType) {
         case 'paypal':
           $('#subscription_use_paypal').val(true);
@@ -304,14 +300,9 @@
       }
     });
 
-    cardElement.on('focus', function() {
-      stripeFormFocus(analyticsData);
-    });
-
     var paypalButton = document.getElementById('paypal_submit');
 
     paypalButton.addEventListener('click', function(ev) {
-      //paypalSubmit(analyticsData);
       sendClickEventToSegment('clicks_paypal_purchase', segmentData);
       $('#plans-options').prop('disabled', true);
       $('#card_submit').prop('disabled', true);
@@ -337,7 +328,6 @@
       $(".spinner-message").html("Please wait...");
       $(".spinning-loading").show();
       $('#hidden_coupon_code').val($('#coupon_code').val());
-      stripeSubmit(analyticsData);
 
       if ($('#subscription_use_paypal').val() === 'true') {
         document.getElementById('upgrade-form').submit();
@@ -441,26 +431,6 @@
 
     if (analytics) {
       // Segment Analytics
-      analytics.page('Payment', {
-        preferredExamBodyId: preferredExamBodyId,
-        preferredExamBody:preferredExamBody ,
-        banner: banner,
-        onboarding: onboarding,
-        examBodyId: "#{@exam_body&.id}",
-        examBodyName: "#{@exam_body&.name}",
-        currency: "#{@currency&.iso_code}",
-        country: "#{current_user&.country&.name}",
-        subscriptionPlanOptions: "#{@plans.map(&:id)}",
-        subPlanNames: planNames,
-        subPlanGuid: "#{params[:plan_guid]}",
-        selectedSubPlanName: preSelectedPlan.attr('data-name'),
-        selectedSubPlanPrice: preSelectedPlan.attr('data-price'),
-        selectedSubPlanGuid: preSelectedPlan.attr('data-guid'),
-        subscriptionType: "#{@kind.to_s}",
-        paymentType: "Subscription",
-        discountedPrice: (discounted_price) ? discounted_price : '',
-        couponCode: coupon_code
-      });
       segmentData = { userId: '#{@current_user&.id}', email: '#{@current_user&.email}', hasValidSubscription: '#{@current_user&.valid_subscription?}', isEmailVerified: '#{@current_user&.email_verified}', preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', programName: '#{@exam_body&.name}', planName: preSelectedPlan.attr('data-name'), planPrice: preSelectedPlan.attr('data-price'), discountedPrice: (discounted_price) ? discounted_price : '', discountCode: (coupon_code) ? coupon_code : '', paymentType: 'Subscription' };
     }
 
@@ -471,10 +441,6 @@
     $("#pay-with-paypal").on( "click", function(event) {
       segmentData.paymentMethod = 'paypal';
       sendClickEventToSegment('clicks_payment_type_toggle', segmentData)
-    });
-
-    $("#show_all_plans").on( "click", function() {
-      showAllPlans(analyticsData);
     });
     
     $(".js-browser-back-btn").on( "click", function(event) {

@@ -51,7 +51,8 @@ describe 'An individual purchasing a product', type: :feature do
 
       click_button 'Register Now'
 
-      expect(page).to have_content(correction.mock_exam.name)
+      expect(page).to have_content('errors')
+      expect(page).to have_content('terms_and_conditions')
     end
   end
 end

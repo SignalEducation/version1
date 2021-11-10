@@ -6,13 +6,20 @@
   let prefExamBodyId = "#{current_user&.preferred_exam_body_id}";
   let prefExamBody = "#{current_user&.preferred_exam_body&.name}";
   let ob = "#{current_user&.analytics_onboarding_valid?.to_s}";
-  let programName = "#{@group ? 'Program ' + @group.name.upcase : ''}";
+  let programName = "#{@group ? @group.name.upcase : ''}";
+  let courseName = "#{@course ? @course.name : ''}";
+  let moduleName = "#{@course_step ? @course_step.course_lesson.name : ''}";
   let email                 = "#{current_user&.email || ''}";
   let userId                = "#{current_user&.id || ''}";
   let hasValidSubscription  = "#{current_user&.valid_subscription? || ''}";
   let isEmailVerified       = "#{current_user&.email_verified || ''}";
   let isLoggedIn            = "#{!current_user&.nil?}";
   let sessionId             = "#{session&.id || ''}";
+  let controllerName        = "#{controller_name}";
+  let actionName            = "#{action_name}";
+  let isCoursePage        = JSON.parse("#{@course ? true : false}");
+  let isProgramPage        = JSON.parse("#{@group ? true : false}");
+  let isContentConsumptionPage        = JSON.parse("#{@course_step ? true : false}");
   
   function capitalize(s) { return s && s[0].toUpperCase() + s.slice(1)}
 
@@ -24,30 +31,65 @@
     var name = '';
     var pageUrl = window.location.href;
     if(programName != '') {
-      name = programName;
+      switch(true) {
+        case isProgramPage && isCoursePage && isContentConsumptionPage:
+          name = "Content Consumption Page";
+          break;
+        case isProgramPage && isCoursePage && !isContentConsumptionPage:
+          name = "Course Page";
+          break;
+        case isProgramPage && !isCoursePage && !isContentConsumptionPage && controllerName == 'student_sign_ups':
+          name = "Pricing Page";
+          break;
+        case isProgramPage && !isCoursePage && !isContentConsumptionPage:
+          name = "Program Page";
+          break;
+        default: 
+          name = "Program Page";
+          break;
+      }
     } else {
-      name = capitalize(pageUrl.substring(pageUrl.lastIndexOf('/') + 1));
+      switch(true) {
+        case controllerName == 'orders' && actionName != 'order_complete':
+          name = "Orders Page";
+          break;
+        case controllerName == 'subscriptions' && actionName != 'personal_upgrade_complete':
+          name = "Subscriptions Page";
+          break;
+        case controllerName == 'orders' && actionName == 'order_complete':
+          name = "Order Purchase Complete Page";
+          break;
+        case controllerName == 'subscriptions' && actionName == 'personal_upgrade_complete':
+          name = "Subscription Purchase Complete Page";
+          break;
+        case controllerName == 'user_accounts':
+          name = "My Account Page";
+          break;
+        default: 
+          name = capitalize(pageUrl.substring(pageUrl.lastIndexOf('/') + 1));
+          break;
+      }
     }
 
-    analytics.page('Page Views', name, {
+    analytics.page('Page Views', `APP : ${name}`, {
       eventSentAt: new Date().toISOString(),
       email: email,      
-      userId: userId,           
-      hasValidSubscription: hasValidSubscription,  
-      isEmailVerified: isEmailVerified,        
+      userId: userId,                
       isLoggedIn: isLoggedIn,
       sessionId: sessionId,
-      preferredExamBodyId: prefExamBodyId,
-      preferredExamBody: prefExamBody,
       clientOs: base.clientOs,
       deviceType: base.deviceType,
       platform: base.platform,
-      onboarding: ob,
-      banner: siteBanner,
-      pageUrl: pageUrl
+      pageUrl: pageUrl,
+      name: `APP : ${name}`,
+      preferredExamBodyId: prefExamBodyId,
+      preferredExamBody: prefExamBody,
+      programName: programName,
+      courseName: courseName,
+      moduleName: moduleName
     });
 
     if ((justLoggedIn === 'true') || (justVerified === 'true')) {
-      analytics.identify("#{current_user.id}")
+      analytics.identify("#{current_user&.id}")
     }
   }}();
