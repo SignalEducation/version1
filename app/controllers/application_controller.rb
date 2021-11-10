@@ -85,6 +85,7 @@ class ApplicationController < ActionController::Base
           for_exam_body(current_user.preferred_exam_body).
           for_basic.all_in_order.first
       end
+    @exam_body = ExamBody.find(@banner.exam_body_id) if @banner
   end
 
   def management_layout

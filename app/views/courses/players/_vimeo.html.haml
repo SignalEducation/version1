@@ -8,13 +8,22 @@
   let freeLesson = "#{@course_lesson&.free || autoPlay}";
   let lastLessonStep = "#{@course_lesson&.course_steps&.all_in_order&.all_active&.last&.id}";
   let endStepVidTime = "#{cme.vid_end_seconds || ''}";
-  let email = "#{email || ''}";
+  let email                 = "#{email || ''}";
+  let userId                = "#{userId || ''}";
+  let hasValidSubscription  = "#{hasValidSubscription || ''}";
+  let isEmailVerified       = "#{isEmailVerified || ''}";
+  let preferredExamBodyId   = "#{preferredExamBodyId || ''}";
+  let isLoggedIn            = "#{isLoggedIn || ''}";
+  let sessionId             = "#{sessionId || ''}";
   let title = "#{title || ''}";
   let updateFreeLesson = #{@course_lesson&.free ? 0.30 : 0.90};
   let completionPercent = #{@course_lesson&.free ? 0.30 : 0.90};
   let responsive = "#{responsive}";
   let logId = '';
   let updateFired = false;
+  let moduleName = "#{cme.name || ''}";
+  let courseName = "#{course_name || ''}";
+  let programName = "#{program_name || ''}";
   let options = {
     id: "#{cme.course_video.vimeo_guid}",
     frameborder: 0,
@@ -29,8 +38,8 @@
 
   player.ready().then(function() {
     $('.video-preloader').addClass('hidden');
-  }).catch(function(error) {
-    $('.video-player-window').html('#{j render partial: 'courses/players/dacast', locals: { cme: cme, email: current_user.email, title: cme.name }}')
+  }).catch(function(error) {7
+    $('.video-player-window').html('#{j render partial: 'courses/players/dacast', locals: { cme: cme, course_name: @course&.name, program_name: @course&.group&.name, userId: current_user&.id, email: current_user&.email, hasValidSubscription: current_user&.valid_subscription?, isEmailVerified: current_user&.email_verified, preferredExamBodyId: current_user&.preferred_exam_body_id, isLoggedIn: !current_user&.nil?, sessionId: session&.id, title: cme.name }}')
   });
 
   let showUpgradeBtn = function(upgradeBool) {
@@ -72,7 +81,7 @@
             $("#sidebar-next-lesson-link").removeClass('d-none');
             player.getCurrentTime().then(function(seconds) { 
               player.getDuration().then(function(_seconds) { 
-                videoFinishedEvent(freeLesson, vimeoRate, ((Math.round(seconds)).toFixed(0)).toString() + " sec", ((Math.round(seconds/_seconds * 100)).toFixed(0)).toString() + "%");
+                videoFinishedEvent(freeLesson, vimeoRate, ((Math.round(seconds)).toFixed(0)).toString() + " sec", ((Math.round(seconds/_seconds * 100)).toFixed(0)).toString() + "%", moduleName, courseName, programName);
               });
             });
         },
@@ -88,7 +97,7 @@
 
   //When the player starts send JSON request to create CMEUL
   let onPlay = function(data) {
-    sendClickEventToSegment('play_video', {email: email, video_name: title})
+    sendClickEventToSegment('play_video', {userId: userId, email: email, hasValidSubscription: hasValidSubscription, isEmailVerified: isEmailVerified, preferredExamBodyId: preferredExamBodyId, isLoggedIn: isLoggedIn, sessionId: sessionId, videoName: title, moduleName: moduleName, courseName: courseName, programName: programName })
     if (logId === '') {
       $.ajax({
         headers: { 'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') },
@@ -115,7 +124,7 @@
 
   //When the user selects a specific time
   let onPause = function(data) {
-    sendClickEventToSegment('pause_video', {email: email, video_name: title})
+    sendClickEventToSegment('pause_video', {userId: userId, email: email, hasValidSubscription: hasValidSubscription, isEmailVerified: isEmailVerified, preferredExamBodyId: preferredExamBodyId, isLoggedIn: isLoggedIn, sessionId: sessionId, videoName: title, moduleName: moduleName, courseName: courseName, programName: programName})
     videoPlayerPaused(data);
   };
 

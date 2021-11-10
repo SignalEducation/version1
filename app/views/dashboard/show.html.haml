@@ -9,15 +9,15 @@
           %ul#dashboardTabs.nav.nav-tabs.dashboardTabsNav{:role => "tablist"}
             -if @enrollments.any?
               %li.nav-item.dashboardTabsNav-navItem
-                %a#enrollments-tab.nav-link.dashboardTabsNav-navItemLink.active{"aria-controls" => "enrollments", "aria-selected" => "true", "data-toggle" => "tab", :href => "#enrollments", :role => "tab", onclick: "sendClickEventToSegment('clicks_enrolments', {email: '#{@current_user&.email}'})"}
+                %a#enrollments-tab.nav-link.dashboardTabsNav-navItemLink.active{"aria-controls" => "enrollments", "aria-selected" => "true", "data-toggle" => "tab", :href => "#enrollments", :role => "tab", onclick: "sendClickEventToSegment('clicks_enrolments', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', programName: '#{@default_group.name}'})"}
                   Enrolments
               %li.nav-item.dashboardTabsNav-navItem
-                %a#activity-tab.nav-link.dashboardTabsNav-navItemLink{"aria-controls" => "activity", "aria-selected" => "false", "data-toggle" => "tab", :href => "#activity", :role => "tab", onclick: "sendClickEventToSegment('clicks_activity', {email: '#{@current_user&.email}'})"}
+                %a#activity-tab.nav-link.dashboardTabsNav-navItemLink{"aria-controls" => "activity", "aria-selected" => "false", "data-toggle" => "tab", :href => "#activity", :role => "tab", onclick: "sendClickEventToSegment('clicks_activity', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', programName: '#{@default_group.name}'})"}
                   Activity
             -else
               -if current_user.exercises.any?
                 %li.nav-item.dashboardTabsNav-navItem
-                  %a#activity-tab.nav-link.dashboardTabsNav-navItemLink.active{"aria-controls" => "activity", "aria-selected" => "false", "data-toggle" => "tab", :href => "#activity", :role => "tab", onclick: "sendClickEventToSegment('clicks_activity', {email: '#{@current_user&.email}'})"}
+                  %a#activity-tab.nav-link.dashboardTabsNav-navItemLink.active{"aria-controls" => "activity", "aria-selected" => "false", "data-toggle" => "tab", :href => "#activity", :role => "tab", onclick: "sendClickEventToSegment('clicks_activity', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', programName: '#{@default_group.name}'})"}
                     Activity
             -if current_user.exercises.any?
               %li.nav-item.dashboardTabsNav-navItem

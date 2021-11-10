@@ -1,7 +1,7 @@
 #sidebar-wrapper-student.text-center
   #sidebar
     #menu
-      =link_to navigation_special_link(@course_step), class: 'sidebar-back-btn' do
+      =link_to navigation_special_link(@course_step), class: 'sidebar-back-btn', onclick: "sendClickEventToSegment('clicks_back_to_course', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', courseName: '#{@course.name}', programName: '#{@course.group.name}', moduleName: '#{@course_step.course_lesson.name}'})" do
         .i.material-icons{:style => "font-size:16px; margin-right:6px;"} arrow_back
         Back to Course
       .menu-title
@@ -19,7 +19,7 @@
           -@course_lesson.active_children.each_with_index  do |step, index|
             - permission = step.available_to_user(current_user, @valid_subscription, @course_log)
             - if step.course_lesson.free || permission[:view]
-              =link_to course_special_link(step, @course_log) do
+              =link_to course_special_link(step, @course_log), onclick: "sendClickEventToSegment('clicks_lesson_consume', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', courseName: '#{@course.name}', programName: '#{@course.group.name}', moduleName: '#{@course_step.course_lesson.name}', lessonName: '#{@course_step.name}', lessonType: '#{@course_step.type_name}'})" do
                 .step{data: {course_step: step.id}, :class => sidepanel_border_radius(@course_step_index,index,@course_lesson.active_children.length.to_i) }
                   .step-part
                     %div{:style => "height:20px;"}
@@ -57,7 +57,7 @@
   #sidebar-bottom-menu
     .bottom-menu
       -if @course_lesson.next_module
-        =link_to course_special_link(@course_lesson&.next_module&.first_active_cme), class: 'btn btn-primary btn-lg mb-3 mb-sm-0 w-100 font-weight-bold', data: {destination_url: course_special_link(@course_lesson&.next_module&.first_active_cme), type: 'Next Module'} do
+        =link_to course_special_link(@course_lesson&.next_module&.first_active_cme), onclick: "sendClickEventToSegment('clicks_next_module', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', courseName: '#{@course.name}', programName: '#{@course.group.name}', moduleName: '#{@course_step.course_lesson.name}', lessonName: '#{@course_step.name}', nextModuleName: '#{@course_step.course_lesson.next_module ? @course_step.course_lesson.next_module.name : ''}'})", class: 'btn btn-primary btn-lg mb-3 mb-sm-0 w-100 font-weight-bold', data: {destination_url: course_special_link(@course_lesson&.next_module&.first_active_cme), type: 'Next Module'} do
           Next Module
 
 #sidebar-wrapper-student-responsive.text-left

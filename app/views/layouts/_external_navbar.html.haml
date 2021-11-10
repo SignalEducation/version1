@@ -11,7 +11,7 @@
         %ul.navbar-nav.align-items-lg-center
           -if current_user
             %li.nav-item.dropdown
-              %a#navbarDropdown.nav-link.navbar-login.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button", onclick: "sendClickEventToSegment('clicks_dashboard_profileMenu_resend', {email: '#{@current_user.email}'})"}
+              %a#navbarDropdown.nav-link.navbar-login.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button", onclick: "sendClickEventToSegment('clicks_dashboard_profileMenu_resend', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', programName: '#{@current_user&.preferred_exam_body&.group&.name}', daysLeft: '#{!@current_user&.email_verified ? @current_user&.verify_remain_days : ''}'})"}
                 %span
                   =t('views.general.user_name') + current_user.first_name.to_s
               .dropdown-menu.dropdown-menu-right{"aria-labelledby" => "navbarDropdown"}
@@ -19,8 +19,8 @@
                   =link_to 'Console', management_consoles_url, class: 'nav-link dropdown-item'
                 =link_to 'Dashboard', student_dashboard_url, class: 'nav-link dropdown-item'
                 =link_to 'Library', library_url, class: 'nav-link dropdown-item'
-                =link_to t('views.users.show.h1'), account_url, class: 'nav-link dropdown-item'
-                =link_to t('views.general.log_out'), sign_out_url, class: 'nav-link dropdown-item', onclick: "sendClickEventToSegment('logout', {email: '#{@current_user.email}'})"
+                =link_to t('views.users.show.h1'), account_url, class: 'nav-link dropdown-item', onclick: "sendClickEventToSegment('clicks_my_account', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}'})"
+                =link_to t('views.general.log_out'), sign_out_url, class: 'nav-link dropdown-item', onclick: "sendClickEventToSegment('logout', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}'})"
 
           -else
             %li.nav-item.w-100.text-center.py-2

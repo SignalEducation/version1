@@ -20,24 +20,52 @@ export default {
     fileName: {
       type: String,
     },
+    courseName: {
+      type: String,
+    },
+    programName: {
+      type: String,
+    },
+    resourceName: {
+      type: String,
+    },
     fileType: {
       type: String,
     },
     fileDownload: {
       type: Boolean,
     },
+    emailVerified: {
+      type: Boolean,
+      default: false,
+    },
   },
   methods: {
     downloadFile() {
+      if (document.getElementById("course-notes-anly")) {
+        sendClickEventToSegment(
+          "download_notes",
+          getFileAttributes("course-notes-anly")
+        );
+      } else {
+        sendClickEventToSegment("download_resources", {
+          userId: userId,
+          email: email,
+          hasValidSubscription: this.hasValidSubscription,
+          isEmailVerified: this.emailVerified,
+          preferredExamBodyId: this.preferredExamBodyId,
+          isLoggedIn: isLoggedIn,
+          sessionId: sessionId,
+          resourceName: this.resourceName,
+          courseName: this.courseName,
+          programName: this.programName,
+        });
+      }
       let link = document.createElement("a");
       link.href = this.fileUrl;
       link.target = "_blank";
       link.download = this.fileName;
       link.click();
-      sendClickEventToSegment("download_notes", {
-        email: "email",
-        file_name: this.fileName,
-      });
       notesDownloadEvent(this.fileType);
     },
   },

@@ -2,7 +2,7 @@
   %nav.levels-nav
     %ul.d-flex.flex-column.nav.nav-pills.nav-fill{id: 'levelsTabs', role: 'tablist'}
       - @levels.each_with_index do |level, counter|
-        %li.nav-item{data: {tab_name: level.name, group_name: @group.name}, onclick: "sendClickEventToSegment('selects_levels_exams', {email: '#{@current_user.email}', level_name: '#{level.name}'})"}
+        %li.nav-item{data: {tab_name: level.name, group_name: @group.name}, onclick: "sendClickEventToSegment('selects_levels_exams', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', programName: '#{@group.name}', levelName: '#{level.name}'})"}
           %a{class: "nav-link #{counter == 0 ? 'active' : ''}", id: "#{level.name_url}-tab", data: {toggle: 'tab'}, href: "##{level.name_url}", aria: {controls: "#{level.name_url}", selected: 'false'}, role: 'tab'}
             =level.name
 

@@ -4,6 +4,7 @@
       @click="
         modalIsOpen = !modalIsOpen;
         nextStepCounter();
+        cbeCompleted();
       "
       :disabled="hideSubmitBtn"
       href="#submitModal"
@@ -89,6 +90,27 @@ export default {
     practiceQuestionId: {
       type: [String, Number],
     },
+    hasValidSubscription: {
+      type: [String, Number],
+    },
+    isEmailVerified: {
+      type: [String, Number],
+    },
+    quizType: {
+      type: [String, Number],
+    },
+    quizName: {
+      type: [String, Number],
+    },
+    moduleName: {
+      type: [String, Number],
+    },
+    courseName: {
+      type: [String, Number],
+    },
+    programName: {
+      type: [String, Number],
+    },
   },
   data() {
     return {
@@ -119,6 +141,22 @@ export default {
     cancelNavigation() {
       this.stayHere = true;
       this.timerCount = 5;
+    },
+    cbeCompleted() {
+      sendClickEventToSegment("quiz_completed", {
+        userId: userId,
+        email: email,
+        hasValidSubscription: this.hasValidSubscription,
+        isEmailVerified: this.isEmailVerified,
+        preferredExamBodyId: this.preferredExamBodyId,
+        isLoggedIn: isLoggedIn,
+        sessionId: sessionId,
+        quizType: "pq " + this.quizType,
+        quizName: this.moduleName,
+        moduleName: this.moduleName,
+        courseName: this.courseName,
+        programName: this.programName,
+      });
     },
     updateCurrentAnswer: function() {
       axios

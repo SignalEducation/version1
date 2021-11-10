@@ -33,7 +33,7 @@
                     .cr-navigation-right
                       %ul
                         %li
-                          =link_to course_special_link(@course_step, @course_log), class: 'cr-nav-link exit-btn' do
+                          =link_to course_special_link(@course_step, @course_log), class: 'cr-nav-link exit-btn', onclick: "sendClickEventToSegment('quiz_completed', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', quizName: '#{@course_step&.name}', courseName: '#{@course&.name}', programName: '#{@course&.group.name}', moduleName: '#{@course_step&.name}', quizType: 'cbe'})" do
                             ='Exit'
                   .cr-navigation.lightBg
                     .cr-navigation-left
