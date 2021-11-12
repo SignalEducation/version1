@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class StudentSignUpsController < ApplicationController
-  before_action :logged_in_required
+  before_action :logged_in_required, except: :create
   before_action :check_logged_in_status, except: %i[show landing group pricing new_landing]
   before_action :get_variables
   before_action :create_user_object, only: %i[new sign_in_or_register sign_in_checkout landing new_landing]
@@ -151,7 +151,7 @@ class StudentSignUpsController < ApplicationController
 
     @user.user_registration_calbacks(params)
 
-    if verify_recaptcha(model: @user) && @user.save
+    if @user.save
       @user.handle_post_user_creation(user_verification_url(email_verification_code: @user.email_verification_code))
       handle_course_enrollment(@user, params[:course_id]) if params[:course_id]
 
@@ -245,7 +245,7 @@ class StudentSignUpsController < ApplicationController
   def student_allowed_params
     params.require(:user).permit(
       :email, :first_name, :last_name, :preferred_exam_body_id, :country_id,
-      :locale, :password, :password_confirmation, :terms_and_conditions,
+      :locale, :password, :terms_and_conditions,
       :communication_approval, :home_page_id
     )
   end

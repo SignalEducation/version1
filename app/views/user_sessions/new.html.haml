@@ -1,33 +1,61 @@
-%main
-  %article.bg-white
+%main.ls-bg-gray.ls-login-ht
+  %article
     .container.w-100
-      %header.pt-4.px-2.mb-4.text-center
-        %h1.mb-2
-          =t('views.user_sessions.new.h1')
-        %p.p-hero
-          ="Welcome Back. Login to continue your learning."
-          
-
-      %section.pb-md-6.pb-5
-        .login-section
+      %section.pb-md-4
+        #sign-in-ls.login-section
           #sign-in.form-box.p-4
+            %h1.mb-2.ls-row-title
+              =t('views.user_sessions.new.h1')
+            %p.p-hero.ls-row-subtitle 
+              ="Welcome Back. Login to continue your learning."
             =form_for(@user_session, html: {class: ''}) do |f|
               =render partial: '/layouts/error_messages', locals: {thing: @user_session, message: t('views.user_sessions.form.error_message')}
-              .row
+              .row.ls-row 
                 .col-sm-12
                   .form-group
-                    =f.label :email, t('views.user_sessions.form.email')
-                    =f.email_field :email, placeholder: 'Enter your email', class: 'form-control', autofocus: true, required: true
+                    =f.label :email, t('views.user_sessions.form.email'), class: 'ls-row-option'
+                    =f.email_field :email, placeholder: 'Enter your email', class: 'form-control ls-row-option-placeholder', autofocus: true, required: true
 
                 .col-sm-12
                   .form-group
-                    =f.label :password, t('views.user_sessions.form.password')
-                    =f.password_field :password, placeholder: 'Enter your password', class: 'form-control', required: true
+                    =f.label :password, t('views.user_sessions.form.password'), class: 'ls-row-option'
+                    =f.password_field :password, placeholder: 'Enter your password', class: 'form-control ls-row-option-placeholder', required: true
 
 
-              .d-flex.flex-wrap.flex-sm-nowrap.justify-content-between.pt-3
-                =link_to t('views.user_sessions.form.forgot_password'), forgot_password_url, id: '#forgot-password', style: 'font-size: 14px;color: #02b57b;font-weight: 700;'
-                =f.submit t('views.general.sign_in'), class: 'btn btn-primary btn-sm'
-          -# %p.mt-4.text-center
-          -#   ="Don't have an account?"
-          -#   =link_to 'Register today.', new_student_url, style: 'font-size: 14px;color: #02b57b;font-weight: 700;' 
+              .d-flex.flex-wrap.flex-sm-nowrap.justify-content-between.pt-3.ls-row
+                .ls-row-forgot-password
+                  =link_to t('views.user_sessions.form.forgot_password'), forgot_password_url, id: '#forgot-password', style: 'font-size: 14px;color: #02b57b;font-weight: 700;'
+                .ls-row-login
+                  =f.submit t('views.general.sign_in'), class: 'btn btn-primary btn-sm ls-row-login-btn'
+
+        #sign-up-section.login-section
+          .form-box.p-4
+            =render partial: '/student_sign_ups/new_student_form'
+
+        %p.mt-4.text-center.ls-login-signup-switch
+          #sign-up-ls-btn.ls-login-signup-switch
+            ="Don't have a Learnsignal account?"
+            %a{:class => "ls-login-signup-switch-btn"} Sign Up
+          #sign-in-ls-btn.ls-login-signup-switch
+            ="Already have an account?"
+            %a{:class => "ls-login-signup-switch-btn"} Log In
+
+:javascript
+  $(document).on('ready', function() {
+    $('#sign-up-section').hide();
+    $('#sign-in-ls-btn').hide();
+
+    $('#sign-in-ls-btn').on('click', function() {
+      $('#sign-up-section').hide();
+      $('#sign-in-ls').show();
+      $('#sign-in-ls-btn').hide();
+      $('#sign-up-ls-btn').show();
+    });
+
+    $('#sign-up-ls-btn').on('click', function() {
+      $('#sign-in-ls').hide();
+      $('#sign-up-section').show();
+      $('#sign-up-ls-btn').hide();
+      $('#sign-in-ls-btn').show();
+    });
+  })

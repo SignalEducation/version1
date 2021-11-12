@@ -1,0 +1,11 @@
+%header.header
+  %nav
+    =render partial: 'layouts/external_banner'
+    .navbar.navbar-expand-lg.ls-bg-gray
+      =render partial: 'layouts/mobile_nav_login_signup'
+      .container.hidden-xs
+        =link_to home_url, class: 'navbar-brand logo' do
+          =image_tag('Learnsignal-Logo.svg', class: 'logo-img', alt: "LearnSignal Logo")
+
+
+          
