@@ -1,0 +1,25 @@
+=form_for(user_session, html: {class: ''}) do |f|
+    =render partial: '/layouts/error_messages', locals: {thing: user_session, message: t('views.user_sessions.form.error_message')}
+    .row.ls-row 
+    .col-sm-12
+        %h1.mb-2.ls-row-title
+        =t('views.user_sessions.new.h1')
+        %p.p-hero.ls-row-subtitle
+        ="Welcome Back. Login to continue your learning."
+    .row
+    .col-sm-12
+        .form-group
+        =f.label :email, t('views.user_sessions.form.email'), class: 'ls-row-option'
+        =f.email_field :email, placeholder: 'Enter your email', class: 'form-control', autofocus: true, required: true
+
+    .col-sm-12
+        .form-group
+        =f.label :password, t('views.user_sessions.form.password'), class: 'ls-row-option'
+        =f.password_field :password, placeholder: 'Enter your password', class: 'form-control', required: true
+
+
+    .d-flex.flex-wrap.flex-sm-nowrap.justify-content-between.ls-row
+    .ls-row-forgot-password
+        =link_to t('views.user_sessions.form.forgot_password'), forgot_password_url, id: '#forgot-password', style: 'font-size: 14px;color: #02b57b;font-weight: 700;'
+    .ls-row-login
+        =f.submit 'Login', class: 'btn btn-primary btn-sm ls-row-login-btn'

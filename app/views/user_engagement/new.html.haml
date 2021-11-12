@@ -1,0 +1,32 @@
+%main
+  %article.ls-bg-gray
+    .container.w-100
+      %header.pt-4.px-2.mb-4
+      %section.pb-md-6.pb-5
+        .login-section
+          #sign-in-ls.form-box.p-4
+            =render partial: 'create_user_session_engagement', locals: {user_session: @user_session}
+          #sign-up-ls.form-box.p-4
+            =render partial: 'create_user_engagement', locals: {user: @user}
+          %p.mt-4.text-center
+            ="Don't have a Learnsignal account?"
+            %a#sign-up-ls-btn{:style => "font-size: 14px;color: #02b57b;font-weight: 700;cursor: pointer"} Sign Up
+            %a#sign-in-ls-btn{:style => "font-size: 14px;color: #02b57b;font-weight: 700;cursor: pointer"} Log In
+
+:javascript
+  $(document).on('ready', function() {
+    $('#sign-up-ls').hide();
+    $('#sign-in-ls-btn').hide();
+    $('#sign-in-ls-btn').on('click', function() {
+      $('#sign-up-ls').hide();
+      $('#sign-in-ls').show();
+      $('#sign-in-ls-btn').hide();
+      $('#sign-up-ls-btn').show();
+    });
+    $('#sign-up-ls-btn').on('click', function() {
+      $('#sign-in-ls').hide();
+      $('#sign-up-ls').show();
+      $('#sign-up-ls-btn').hide();
+      $('#sign-in-ls-btn').show();
+    });
+  })

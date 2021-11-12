@@ -235,9 +235,10 @@ Rails.application.routes.draw do
     post :preview_csv_upload, to: 'users#preview_csv_upload'
     post :import_csv_upload, to: 'users#import_csv_upload'
 
+    resources :user_engagement, only: :create
+    get 'login', to: 'user_engagement#new', as: :sign_in
     # User Sessions
     resources :user_sessions, only: :create
-    get 'login',    to: 'user_sessions#new',     as: :sign_in
     get 'sign_out', to: 'user_sessions#destroy', as: :sign_out
 
     # User password
