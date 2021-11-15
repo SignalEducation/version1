@@ -8,7 +8,7 @@ module Api
       def index
         @exam_bodies = ExamBody.all_active.all_in_order
         @group       = Group.find_by(name_url: params[:group])
-        @currency    = user_currency(params[:iso_code])
+        @currency    = user_currency(params[:user_id], params[:iso_code])
 
         if @group
           @exam_bodies = @group.exam_body
@@ -26,17 +26,16 @@ module Api
 
       private
 
-      def user_currency(iso_code)
-        country = Country.find_by(iso_code: iso_code.upcase) if iso_code.present?
-        return country.currency if country&.currency.present?
+      def user_currency(user_id, iso_code)
+        user    = User.find_by(id: user_id)
+        country =
+          if iso_code.present?
+            Country.find_by(iso_code: iso_code.upcase) || Country.find_by(name: 'United Kingdom')
+          else
+            IpAddress.get_country(request.remote_ip) || Country.find_by(name: 'United Kingdom')
+          end
 
-        country = IpAddress.get_country(request.remote_ip) || Country.find_by(name: 'United Kingdom')
-
-        if @current_user
-          @current_user.get_currency(country)
-        else
-          country.currency
-        end
+        user.present? ? user.get_currency(country) : country.currency
       end
     end
   end
