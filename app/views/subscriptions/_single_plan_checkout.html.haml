@@ -28,7 +28,7 @@
   -(plans.where(id: (plans.ids - [subscription.subscription_plan.id]))).each do |plan|
     .form-group
       .custom-control.custom-radio.subscriptionPageWrapper-customRadio
-        %input.custom-control-input.custom-control-input-card.style-radio{:id => plan.interval_name.downcase, :name => "plans", :type => "radio", :data => {:guid => plan.guid, :name => plan.name, :price => plan.price}, :value => plan.id, :checked => ("checked" if subscription.subscription_plan_id == plan.id), onclick: "selectedPlanCheckout('clicks_payment_type_toggle', {email: '#{@current_user.email}', programName: '#{subscription.subscription_plan.exam_body.name}', planName: '#{plan.name}', planPrice: '#{plan.price}', paymentMethod: ''})"}
+        %input.custom-control-input.custom-control-input-card.style-radio{:id => plan.interval_name.downcase, :name => "plans", :type => "radio", :data => {:guid => plan.guid, :name => plan.name, :price => plan.price, :frequency => plan.payment_frequency_in_months}, :value => plan.id, :checked => ("checked" if subscription.subscription_plan_id == plan.id), onclick: "selectedPlanCheckout('clicks_payment_type_toggle', {email: '#{@current_user.email}', programName: '#{subscription.subscription_plan.exam_body.name}', planName: '#{plan.name}', planPrice: '#{plan.price}', paymentMethod: ''})"}
         %label.custom-control-label.justify-content-start{:for => plan.interval_name.downcase}
           %span.custom-check.mr-3
           .d-flex.py-0{style: 'width: calc(100% - 46px);'}
