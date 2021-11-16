@@ -187,7 +187,7 @@ class PaypalSubscriptionsService
 
   def raise_subscription_error(err, method, type, msg = '')
     error_msg = "PaypalSubscriptionService##{method} - #{err.inspect}"
-    SegmentService.new.track_payment_failed_event(current_user, @subscription, error_msg, 'error')
+    SegmentService.new.track_payment_failed_event(@subscription.user, @subscription, error_msg, 'error')
     Rails.logger.error error_msg
     raise Learnsignal::SubscriptionError, return_message(type, msg)
   end

@@ -21,7 +21,7 @@
           -if @exam_body.has_sittings && @new_enrollment && (@computer_exam_sitting || @exam_sittings)
             %a#enrol-top{data: {target: '#enrollment-modal', toggle: 'modal'}, href: '#', class: 'btn btn-secondary btn-sm non-upgrade mr-2'}
               Enrol
-            %a{data: {target: '#enrollment-modal', toggle: 'modal'}, href: '#', class: 'btn btn-secondary btn-sm upgrade-resp-enroll-btn upgrade-btn-flt', onclick: "sendClickEventToSegment('clicks_enrol', {email: '#{@current_user.email}'})"}
+            %a{data: {target: '#enrollment-modal', toggle: 'modal'}, href: '#', class: 'btn btn-secondary btn-sm upgrade-resp-enroll-btn upgrade-btn-flt', onclick: "sendClickEventToSegment('clicks_enrol', {email: '#{@current_user&.email}'})"}
               Enrol
           -if @course_log && @course_log&.latest_course_step && @course_log&.latest_course_step&.next_element
             =link_to 'Resume', course_special_link(@course_log.latest_course_step.next_element, @course_log), class: 'btn btn-primary btn-sm'
@@ -58,18 +58,18 @@
             %li.nav-item{data: {tab_name: course_section.name, course_name: @course.name}}
               -# TODO add active to first li
               - if course_section.name_url == 'learning'
-                %a{class: "nav-link #{counter == 0 ? 'active' : ''}", id: "#{course_section.name_url}-tab", data: {toggle: 'tab'}, href: "##{course_section.name_url}", aria: {controls: "#{course_section.name_url}", selected: 'false'}, role: 'tab', onclick: "sendClickEventToSegment('clicks_course_learning', {email: '#{@current_user.email}'})"}
+                %a{class: "nav-link #{counter == 0 ? 'active' : ''}", id: "#{course_section.name_url}-tab", data: {toggle: 'tab'}, href: "##{course_section.name_url}", aria: {controls: "#{course_section.name_url}", selected: 'false'}, role: 'tab', onclick: "sendClickEventToSegment('clicks_course_learning', {email: '#{@current_user&.email}'})"}
                   =course_section.name
               - else
                 %a{class: "nav-link #{counter == 0 ? 'active' : ''}", id: "#{course_section.name_url}-tab", data: {toggle: 'tab'}, href: "##{course_section.name_url}", aria: {controls: "#{course_section.name_url}", selected: 'false'}, role: 'tab'}
                   =course_section.name
           -if @course_resources.any?
             %li.nav-item{data: {tab_name: 'Resources', course_name: @course.name}}
-              %a{href: "#resources", role: 'tab', class: 'nav-link', data: {toggle: 'tab'}, aria: {controls: "resources", selected: 'false'}, onclick: "sendClickEventToSegment('click_course_resources', {email: '#{@current_user.email}'})"}
+              %a{href: "#resources", role: 'tab', class: 'nav-link', data: {toggle: 'tab'}, aria: {controls: "resources", selected: 'false'}, onclick: "sendClickEventToSegment('click_course_resources', {email: '#{@current_user&.email}'})"}
                 ='Resources'
           -if @products && @products.any?
             %li.nav-item{data: {tab_name: 'Products', course_name: @course.name}}
-              %a{href: "#products", role: 'tab', class: 'nav-link', data: {toggle: 'tab'}, aria: {controls: "products", selected: 'false'}, onclick: "sendClickEventToSegment('click_course_product', {email: '#{@current_user.email}'})"}
+              %a{href: "#products", role: 'tab', class: 'nav-link', data: {toggle: 'tab'}, aria: {controls: "products", selected: 'false'}, onclick: "sendClickEventToSegment('click_course_product', {email: '#{@current_user&.email}'})"}
                 ='Product (Add-ons)'
 
 
