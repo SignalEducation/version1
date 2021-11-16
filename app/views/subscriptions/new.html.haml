@@ -26,7 +26,7 @@
                       =current_user.email
               .dropdown-menu.dropdown-menu-right{"aria-labelledby" => "navbarDropdown"}
                 =link_to t('views.users.show.h1'), account_url, class: 'nav-link dropdown-item'
-                =link_to t('views.general.log_out'), sign_out_url, class: 'nav-link dropdown-item logout'
+                =link_to t('views.general.log_out'), sign_out_url, class: 'nav-link dropdown-item logout', onclick: "sendClickEventToSegment('logout', {email: '#{@current_user.email}'})"
 
           -else
             %li.nav-item.w-100.text-center.py-2
@@ -81,14 +81,14 @@
                   %fieldset.card.card-payments.m-0
                     .wholeTabs
                       .subscriptionPageWrapper-optionsBox-optionTabs
-                        .subscriptionPageWrapper-optionsBox-optionTabs-Tab.active.js-option-wrapper-stripe
+                        #payment-type-card.subscriptionPageWrapper-optionsBox-optionTabs-Tab.active.js-option-wrapper-stripe
                           .custom-control.custom-radio
                             %input#pay-with-card.custom-control-input.style-radio{ name: 'payment-options', type: 'radio', value: 'stripe', checked: true }
                             %label.tab-label{ for: 'pay-with-card' }
                               %span.custom-label-info
                                 %span.m-0
                                   %span Credit / Debit Card
-                        .subscriptionPageWrapper-optionsBox-optionTabs-Tab.js-option-wrapper-paypal
+                        #payment-type-pay-pal.subscriptionPageWrapper-optionsBox-optionTabs-Tab.js-option-wrapper-paypal
                           .custom-control.custom-radio
                             %input#pay-with-paypal.custom-control-input.style-radio{name: 'payment-options', type: 'radio', value: 'paypal'}
                             %label.tab-label{for: 'pay-with-paypal'}
@@ -458,7 +458,7 @@
     $("#show_all_plans").on( "click", function() {
       showAllPlans(analyticsData);
     });
-
+    
     $(".js-browser-back-btn").on( "click", function(event) {
       event.preventDefault();
       if(document.referrer == "") {

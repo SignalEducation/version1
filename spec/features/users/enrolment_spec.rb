@@ -79,6 +79,9 @@ RSpec.describe 'Enrolment', type: :feature do
       click_button 'Save Changes'
 
       expect(page).to have_content('Enrolments')
+
+      click_link 'Enrolments'
+
       expect(page).to have_content(course_1.name)
     end
   end

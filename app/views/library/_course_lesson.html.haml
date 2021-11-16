@@ -1,5 +1,5 @@
 .card.card-collapse.mb-3
-  %a.btn.btn-text.btn-collapse.w-100.text-left.course-module-panel{data: { toggle: "collapse",panel_name: course_lesson.name, course_name: @course.name }, href: "#collapse_#{course_lesson.name_url}_#{counter}", role: "button", 'aria-expanded': "#{!count == 1}", 'aria-controls': "collapse_#{course_lesson.name_url}_#{counter}",id: course_lesson.id}
+  %a.btn.btn-text.btn-collapse.w-100.text-left.course-module-panel{data: { toggle: "collapse",panel_name: course_lesson.name, course_name: @course.name }, href: "#collapse_#{course_lesson.name_url}_#{counter}", role: "button", 'aria-expanded': "#{!count == 1}", 'aria-controls': "collapse_#{course_lesson.name_url}_#{counter}",id: course_lesson.id, onclick: "sendClickEventToSegment('clicks_module_learning', {email: '#{@current_user&.email}', course_lesson_name: '#{course_lesson&.name}'})"}
     .lesson-item.w-100{class: course_lesson_status(course_lesson, @completed_course_lesson_logs, @completed_course_lesson_ids) }
       .lesson-item-content
         .lesson-item-content-wrap.d-flex.flex-column.flex-sm-row.align-items-center.align-items-sm-center
@@ -39,7 +39,7 @@
 
               - if permission[:view]
 
-                =link_to course_special_link(cme, @course_log), class: 'btn btn-text py-2 w-100 text-left course-lesson', data: { lesson_name: cme.name, course_name: @course.name } do
+                =link_to course_special_link(cme, @course_log), class: 'btn btn-text py-2 w-100 text-left course-lesson', data: { lesson_name: cme.name, course_name: @course.name }, onclick: "sendClickEventToSegment('clicks_lesson_learning', {email: '#{@current_user&.email}', course_module_name: '#{cme.name}'})" do
                   .lesson-item.lesson-item-inner.w-100{class: @cmeuls && @cmeuls_ids.include?(cme.id) ? (@completed_cmeuls_cme_ids.include?(cme.id) ? 'completed' : 'failed') : ''}
                     -if @cmeuls && @completed_cmeuls_cme_ids.include?(cme.id)
                       %span.green-check-iconWrapper

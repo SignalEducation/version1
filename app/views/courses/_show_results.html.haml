@@ -87,6 +87,7 @@
         $( document ).ready(function() {
           allSolutions.hide();
           summaryButton.hide();
+          sendClickEventToSegment('quiz_completed', {email: '#{@current_user.email}', result: '#{@quiz_score}'})
           quizFinishEvent();
         });
 

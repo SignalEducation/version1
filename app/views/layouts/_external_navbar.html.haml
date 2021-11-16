@@ -11,7 +11,7 @@
         %ul.navbar-nav.align-items-lg-center
           -if current_user
             %li.nav-item.dropdown
-              %a#navbarDropdown.nav-link.navbar-login.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
+              %a#navbarDropdown.nav-link.navbar-login.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button", onclick: "sendClickEventToSegment('clicks_dashboard_profileMenu_resend', {email: '#{@current_user.email}'})"}
                 %span
                   =t('views.general.user_name') + current_user.first_name.to_s
               .dropdown-menu.dropdown-menu-right{"aria-labelledby" => "navbarDropdown"}
@@ -20,7 +20,7 @@
                 =link_to 'Dashboard', student_dashboard_url, class: 'nav-link dropdown-item'
                 =link_to 'Library', library_url, class: 'nav-link dropdown-item'
                 =link_to t('views.users.show.h1'), account_url, class: 'nav-link dropdown-item'
-                =link_to t('views.general.log_out'), sign_out_url, class: 'nav-link dropdown-item'
+                =link_to t('views.general.log_out'), sign_out_url, class: 'nav-link dropdown-item', onclick: "sendClickEventToSegment('logout', {email: '#{@current_user.email}'})"
 
           -else
             %li.nav-item.w-100.text-center.py-2

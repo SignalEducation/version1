@@ -91,4 +91,5 @@
       discountedPrice: discounted_price,
       couponCode: coupon_code
     });
+    sendClickEventToSegment('successful_payment', {email: '#{current_user&.email}', programName: '#{@subscription&.subscription_plan&.exam_body&.name}', planName: '#{@subscription&.subscription_plan&.interval_name}', planPrice: '#{@subscription&.subscription_plan&.price}', discountedPrice: discounted_price, discountCode: coupon_code, paymentType: "Subscription"})
   });

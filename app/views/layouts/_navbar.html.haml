@@ -32,13 +32,13 @@
             -if current_user
               -if current_user&.preferred_exam_body_id && !current_user&.valid_access_for_exam_body?(current_user&.preferred_exam_body_id, current_user&.preferred_exam_body&.group&.id)
                 %li.nav-item
-                  =link_to pricing_url(current_user&.preferred_exam_body&.group&.name_url), class: 'nav-link upgrade-btn' do
+                  =link_to pricing_url(current_user&.preferred_exam_body&.group&.name_url), class: 'nav-link upgrade-btn', onclick: "sendClickEventToSegment('clicks_dashboard_upgrade', {email: '#{current_user&.email}', exam_body: '#{current_user&.preferred_exam_body&.group&.name}'})" do
                     -if current_user&.preferred_exam_body&.group&.name
                       %span="Upgrade your #{current_user&.preferred_exam_body&.group&.name} Subscription"
                     -else
                       %span="Upgrade now"
               %li.nav-item.dropdown
-                %a#navbarDropdown.navbar-login.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
+                %a#navbarDropdown.navbar-login.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button", onclick: "sendClickEventToSegment('clicks_dashboard_profileMenu_resend', {email: '#{@current_user&.email}'})"}
                   %span.navbar-login-userIcon
                     %svg.text-gray-400{:fill => "#bfbfbf", :viewbox => "0 0 20 20", :xmlns => "http://www.w3.org/2000/svg"}
                       %path{"clip-rule" => "evenodd", :d => "M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z", "fill-rule" => "evenodd"}
@@ -62,14 +62,14 @@
                             ="Your account will get deactivated in #{current_user.verify_remain_days} days."
                           -else
                             ="Please <span>verify</span> your email address to continue using your free subscription.".html_safe
-                        -if !current_user.email_verified && current_user.email_verification_code
-                          =link_to resend_verification_mail_url(current_user.email_verification_code), method: :post, class: 'btn verification-btn btn-sm mb-3 mb-sm-0' do
+                        -if !current_user&.email_verified && current_user&.email_verification_code
+                          =link_to resend_verification_mail_url(current_user&.email_verification_code), method: :post, class: 'btn verification-btn btn-sm mb-3 mb-sm-0' do
                             ='Resend Email'
                   =link_to t('views.users.show.h1'), account_url, class: 'nav-link dropdown-item'
                   -if current_user.non_student_user?
                     =link_to management_consoles_url, class: 'nav-link dropdown-item console-btn', target: '_blank' do
                       %span 🔮 Console
-                  =link_to t('views.general.log_out'), sign_out_url, class: 'nav-link dropdown-item logout'
+                  =link_to t('views.general.log_out'), sign_out_url, class: 'nav-link dropdown-item logout', onclick: "sendClickEventToSegment('logout', {email: '#{@current_user&.email}'})"
 
             -# -else
             -#   %li.nav-item.w-100.text-center.py-2

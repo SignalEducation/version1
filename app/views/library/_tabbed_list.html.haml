@@ -2,7 +2,7 @@
   %nav.levels-nav
     %ul.d-flex.flex-column.nav.nav-pills.nav-fill{id: 'levelsTabs', role: 'tablist'}
       - @levels.each_with_index do |level, counter|
-        %li.nav-item{data: {tab_name: level.name, group_name: @group.name}}
+        %li.nav-item{data: {tab_name: level.name, group_name: @group.name}, onclick: "sendClickEventToSegment('selects_levels_exams', {email: '#{@current_user.email}', level_name: '#{level.name}'})"}
           %a{class: "nav-link #{counter == 0 ? 'active' : ''}", id: "#{level.name_url}-tab", data: {toggle: 'tab'}, href: "##{level.name_url}", aria: {controls: "#{level.name_url}", selected: 'false'}, role: 'tab'}
             =level.name
 
@@ -44,7 +44,7 @@
                       =hidden_field_tag :level_id, level.id
 
           .row.row-lge{id: "#{level.id}-tabbed-courses-list"}
-            =render partial: 'tabbed_courses_list', locals: { courses: level.courses.all_active.all_in_order }
+            =render partial: 'tabbed_courses_list', locals: { courses: level.courses.all_active.all_in_order, level_name: level.name }
 
 :javascript
   function updateKeyAreasSelect(level_id) {

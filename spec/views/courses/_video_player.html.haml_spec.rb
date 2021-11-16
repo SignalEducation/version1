@@ -3,12 +3,12 @@
 require 'rails_helper'
 
 RSpec.describe 'rendering locals in a partial' do
-  let(:gb_country)    { double(Country, iso_code: 'GB') }
-  let(:cn_country)    { double(Country, iso_code: 'CN') }
-  let(:gb_user)       { double(User, country: gb_country, video_player: :vimeo) }
-  let(:cn_user)       { double(User, country: cn_country, video_player: :vimeo) }
-  let(:vimeo_user)    { double(User, country: gb_country, video_player: :vimeo) }
-  let(:dacast_user)   { double(User, country: gb_country, video_player: :dacast) }
+  let(:gb_country)    { build_stubbed(:country, iso_code: 'GB') }
+  let(:cn_country)    { build_stubbed(:country, iso_code: 'CN') }
+  let(:gb_user)       { build_stubbed(:user, country: gb_country, video_player: :vimeo) }
+  let(:cn_user)       { build_stubbed(:user, country: cn_country, video_player: :vimeo) }
+  let(:vimeo_user)    { build_stubbed(:user, country: gb_country, video_player: :vimeo) }
+  let(:dacast_user)   { build_stubbed(:user, country: gb_country, video_player: :dacast) }
   let(:vimeo_module)  { build_stubbed(:course_step, :video_step, :vimeo) }
   let(:dacast_module) { build_stubbed(:course_step, :video_step, :dacast) }
 
@@ -30,7 +30,7 @@ RSpec.describe 'rendering locals in a partial' do
     end
   end
 
-  context 'User Preferred Player' do
+  context ':user Preferred Player' do
     it 'if it is a user has vimeo as video_player' do
       @vimeo_as_main = true
       stub_template 'courses/players/_vimeo.html.erb' => 'Vimeo partial - <%= cme.id %>'

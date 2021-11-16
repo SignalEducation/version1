@@ -9,15 +9,15 @@
           %ul#dashboardTabs.nav.nav-tabs.dashboardTabsNav{:role => "tablist"}
             -if @enrollments.any?
               %li.nav-item.dashboardTabsNav-navItem
-                %a#enrollments-tab.nav-link.dashboardTabsNav-navItemLink.active{"aria-controls" => "enrollments", "aria-selected" => "true", "data-toggle" => "tab", :href => "#enrollments", :role => "tab"}
+                %a#enrollments-tab.nav-link.dashboardTabsNav-navItemLink.active{"aria-controls" => "enrollments", "aria-selected" => "true", "data-toggle" => "tab", :href => "#enrollments", :role => "tab", onclick: "sendClickEventToSegment('clicks_enrolments', {email: '#{@current_user&.email}'})"}
                   Enrolments
               %li.nav-item.dashboardTabsNav-navItem
-                %a#activity-tab.nav-link.dashboardTabsNav-navItemLink{"aria-controls" => "activity", "aria-selected" => "false", "data-toggle" => "tab", :href => "#activity", :role => "tab"}
+                %a#activity-tab.nav-link.dashboardTabsNav-navItemLink{"aria-controls" => "activity", "aria-selected" => "false", "data-toggle" => "tab", :href => "#activity", :role => "tab", onclick: "sendClickEventToSegment('clicks_activity', {email: '#{@current_user&.email}'})"}
                   Activity
             -else
               -if current_user.exercises.any?
                 %li.nav-item.dashboardTabsNav-navItem
-                  %a#activity-tab.nav-link.dashboardTabsNav-navItemLink.active{"aria-controls" => "activity", "aria-selected" => "false", "data-toggle" => "tab", :href => "#activity", :role => "tab"}
+                  %a#activity-tab.nav-link.dashboardTabsNav-navItemLink.active{"aria-controls" => "activity", "aria-selected" => "false", "data-toggle" => "tab", :href => "#activity", :role => "tab", onclick: "sendClickEventToSegment('clicks_activity', {email: '#{@current_user&.email}'})"}
                     Activity
             -if current_user.exercises.any?
               %li.nav-item.dashboardTabsNav-navItem

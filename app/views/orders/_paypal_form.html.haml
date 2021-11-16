@@ -7,7 +7,7 @@
           =number_in_local_currency(@order.product.price, @order.product.currency)
 
     .col-sm-12.mb-2.mt-sm-4.text-right
-      = f.button :submit, class: 'btn btn-img mb-4', id: 'paypal_submit' do
+      = f.button :submit, class: 'btn btn-img mb-4', id: 'paypal_submit', onclick: "sendClickEventToSegment('clicks_paypal_purchase', {email: '#{@current_user.email}', exam_body: '#{@order.product.group.name}', plan_name: '#{@order.product.name_by_type}', amount: '#{@order.product.price}', currency: '#{@order.product.currency.iso_code}'})" do
         =image_tag('checkout-logo-large.png', :alt => "PayPal Button")
 
       .spinner-border.text-success.spinning-loading{:role => "status"}

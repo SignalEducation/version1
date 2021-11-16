@@ -4,7 +4,7 @@
       .upgradeNudgeMini-titleText
         Upgrade to unlock the complete syllabus
     .upgradeNudgeMini-action
-      %a#enrol-top{data: {target: '#pricing-modal', toggle: 'modal'}, href: '#', class: 'btn btn-dark'}
+      %a#enrol-top{data: {target: '#pricing-modal', toggle: 'modal'}, href: '#', class: 'btn btn-dark', onclick: "sendClickEventToSegment('clicks_upgrade_now', {email: '#{user.email}', exam_body: '#{@group.name}',  course: '#{@course.name}'})"}
         View Subscription Plans
 -elsif user && !user.can_view_content?(@group.exam_body_id, @group.id, @course.id)
   .upgradeNudgeMini.mb-4
@@ -12,7 +12,7 @@
       .upgradeNudgeMini-titleText
         Upgrade to unlock the complete syllabus
     .upgradeNudgeMini-action
-      =link_to pricing_url(@group.name_url), class: 'btn btn-dark upgrade' do
+      =link_to pricing_url(@group.name_url), class: 'btn btn-dark upgrade', onclick: "sendClickEventToSegment('clicks_upgrade_now', {email: '#{user.email}', exam_body: '#{@group.name}',  course: '#{@course.name}'})" do
         View Subscription Plans
 -elsif !user
   .upgradeNudgeMini.mb-4

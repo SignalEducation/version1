@@ -64,7 +64,7 @@
                               ='Reset all course progress'
 
                   .py-1
-                    =submit_tag 'Next Step', class: 'btn btn-primary', id: 'enroll_submit_button'
+                    =submit_tag 'Next Step', class: 'btn btn-primary', id: 'enroll_submit_button', onclick: "sendClickEventToSegment('completed_enrol_step1', {email: '#{@current_user&.email}'})"
                     %p#enrollment_message.text-warning.hidden Visit your account page to edit this enrolment
 
             .form-group.form-group-expandable
@@ -100,7 +100,7 @@
 
                   .pt-1
                     #submit
-                      =submit_tag 'Complete Enrolment', class: 'btn btn-primary'
+                      =submit_tag 'Complete Enrolment', class: 'btn btn-primary', onclick: "sendClickEventToSegment('completed_enrol_step2', {email: '#{@current_user&.email}'})"
 
 
 

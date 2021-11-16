@@ -70,7 +70,7 @@
                             %p.preCtaText
                               Recurring Payment. Cancel Anytime
                           .mt-auto
-                            =link_to subscription_checkout_special_link(plan.exam_body_id, plan.guid), class: "btn w-100 btn-primary choosePlanBtn", onclick: "addToCart('#{plan.currency.iso_code}', '#{plan.name}', '#{plan.id}', '#{plan.price}', '#{plan.exam_body.name}');" do
+                            =link_to subscription_checkout_special_link(plan.exam_body_id, plan.guid), class: "btn w-100 btn-primary choosePlanBtn", onclick: "addToCart('#{plan.currency.iso_code}', '#{plan.name}', '#{plan.id}', '#{plan.price}', '#{plan.exam_body.name}'); sendClickEventToSegment('clicks_choose_plan', {email: '#{@current_user.email}', payment_plan_name: '#{plan.name}', exam_body_name: '#{plan.exam_body.name}'})" do
                               ="Choose #{t("views.general.payment_intervals.a#{plan.payment_frequency_in_months}")}"
                               %span.sr-only Choose this plan
                           %div.visible-xs.bulletListAccordianBox
@@ -134,7 +134,7 @@
                       %p.preCtaText
                         One-time payment
                       .mt-auto
-                        =link_to link, class: 'btn btn-primary choosePlanBtn w-100 ', onclick: "gtag('event', 'clicks_plan', {'event_category': 'pre-registration', 'event_label': '#{name}'});" do
+                        =link_to link, class: 'btn btn-primary choosePlanBtn w-100 ', onclick: "sendClickEventToSegment('clicks_choose_plan', {email: '#{@current_user.email}', payment_plan_name: '#{name}', exam_body_name: '#{@group.name}'})" do
                           ="Choose Lifetime"
                           %span.sr-only Choose this plan
                       %div.visible-xs.bulletListAccordianBox
@@ -298,7 +298,7 @@
                               %p.text-gray2.mt-4.mb-2.text-bold
                                 One-time payment
                               .mt-auto
-                                = link_to link, class: 'btn btn-primary choosePlanBtn w-100 ', onclick: "gtag('event', 'clicks_plan', {'event_category': 'pre-registration', 'event_label': '#{name}'});" do
+                                = link_to link, class: 'btn btn-primary choosePlanBtn w-100 ', onclick: "sendClickEventToSegment('clicks_choose_plan', {email: '#{@current_user.email}', payment_plan_name: '#{name}', exam_body_name: '#{exam_body.group.name}'})" do
                                   ="Choose Lifetime"
                                   %span.sr-only Choose this plan
                               %div.visible-xs.bulletListAccordianBox
