@@ -1,9 +1,10 @@
 #sign-up-ls
   %h1.mb-2.ls-row-title
     Sign up
-  %p.p-hero.ls-row-subtitle 
+  %p.p-hero.ls-row-subtitle
     ="Sign Up to get everything you need to pass your Accounting & Finance exams in one place!"
-  =form_for @user, url: create_student_url do |f|
+  #card-errors.invalid-details{role: 'alert'}
+  =form_for @user, url: create_student_path  do |f|
     =render partial: 'layouts/error_messages', locals: {thing: @user, message: t('views.home_pages.sign_up_form.error_panel_caption')}
     =f.hidden_field :locale, value: ('en')
     =f.hidden_field :terms_and_conditions, id: 'hidden_term_and_conditions'
@@ -75,6 +76,8 @@
               .sk-circle12.sk-child
 
 :javascript
+  var form = $('#new_user');
+
   function getCookie(cname) {
     var name = cname + "=";
     var decodedCookie = decodeURIComponent(document.cookie);
@@ -98,11 +101,11 @@
 
   function submitBtnActive() {
     if(
-      $('#user_first_and_last_name').val().length > 0 && 
-      $('#user_email').val().length > 0 && 
-      $('#user_password').val().length > 0 && 
-      $('#user_exam_body').val().length > 0 && 
-      $('#terms_and_conditions').prop('checked') && 
+      $('#user_first_and_last_name').val().length > 0 &&
+      $('#user_email').val().length > 0 &&
+      $('#user_password').val().length > 0 &&
+      $('#user_exam_body').val().length > 0 &&
+      $('#terms_and_conditions').prop('checked') &&
       $('#communication_approval').prop('checked')) {
         $("#signUp").removeClass("btn-gray").addClass("btn-primary");
         console.log('Remove gray');
@@ -124,8 +127,32 @@
     ev.preventDefault();
     $("#signUp").hide();
     $(".sk-circle").show();
-    this.submit();
+
+    $.ajax({
+      type: $(form).attr('method'),
+      url: $(form).attr('action'),
+      data: $(form).serialize(),
+      dataType: 'json',
+      success: function(data, status, xhr){
+        window.location.replace(data['url']);
+      },
+      error: function(xhr,status,error){
+        showErrors(xhr.responseJSON.errors);
+      }
+    });
   });
+
+  function showErrors(errors) {
+     $("#card-errors").html("");
+
+    for (var key of Object.keys(errors)) {
+      $("#card-errors").append("<p>" + key + ", " + errors[key] + "</p>")
+    }
+
+    $("#signUp").show();
+    $('#signUp').prop('disabled', false);
+    $(".sk-circle").hide();
+  }
 
   $('#user_first_and_last_name').on('input', function(ev) {
     var fullNameEntry = $('#user_first_and_last_name').val();

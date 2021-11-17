@@ -159,27 +159,21 @@ class StudentSignUpsController < ApplicationController
       if flash[:plan_guid]
         UserSession.create(@user)
         set_current_visit(@user)
-        redirect_to new_subscription_url(plan_guid: flash[:plan_guid], exam_body_id: flash[:exam_body], registered: true)
+        render json: { url: new_subscription_url(plan_guid: flash[:plan_guid], exam_body_id: flash[:exam_body], registered: true) }, status: :ok
       elsif flash[:product_id]
         UserSession.create(@user)
         set_current_visit(@user)
-        redirect_to new_product_order_url(product_id: flash[:product_id], registered: true)
+        render json: { url: new_product_order_url(product_id: flash[:product_id], registered: true) }, status: :ok
       else
         flash[:datalayer_id] = @user.id
         flash[:datalayer_body] = @user.try(:preferred_exam_body).try(:name)
         UserSession.create(@user)
         set_current_visit(@user)
-        redirect_to student_dashboard_url
+        render json: { url: student_dashboard_url }, status: :ok
       end
-    elsif request&.referrer
-      set_session_errors(@user)
-      redirect_to request.referrer
     else
-      redirect_to root_url
+      render json: { errors: @user.errors }, status: :unprocessable_entity
     end
-  rescue ActionController::InvalidAuthenticityToken
-    flash[:error] = 'Sorry. Your sign up attempt failed. Please try again'
-    redirect_to root_url
   end
 
   def show

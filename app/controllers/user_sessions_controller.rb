@@ -18,6 +18,7 @@ class UserSessionsController < ApplicationController
   end
 
   def create
+    @user = User.new
     @user_session = UserSession.new(user_session_params.to_h)
 
     if @user_session.save
