@@ -83,6 +83,16 @@ class SegmentService
     Rails.logger.error "SegmentService#create_& - Error: #{e.inspect} - User Id #{user&.id} Segment Object - #{segment}"
   end
 
+  def track_user_account_created_event(user)
+    segment = Analytics.track(
+      user_id: user.id,
+      event: 'user_account_created',
+      properties: user_traits(user)
+    )
+  rescue StandardError => e
+    Rails.logger.error "SegmentService#create_user - Error: #{e.inspect} - User Id #{user&.id} Segment Object - #{segment}"
+  end
+
   # PRIVATE ====================================================================
 
   private

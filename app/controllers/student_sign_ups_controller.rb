@@ -154,7 +154,7 @@ class StudentSignUpsController < ApplicationController
     if verify_recaptcha(model: @user) && @user.save
       @user.handle_post_user_creation(user_verification_url(email_verification_code: @user.email_verification_code))
       handle_course_enrollment(@user, params[:course_id]) if params[:course_id]
-
+      SegmentService.new.track_user_account_created_event(@user)
       # TODO: Refactor this to not use the flash
       if flash[:plan_guid]
         UserSession.create(@user)
