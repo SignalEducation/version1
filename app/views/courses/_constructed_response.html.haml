@@ -33,7 +33,7 @@
                     .cr-navigation-right
                       %ul
                         %li
-                          =link_to course_special_link(@course_step, @course_log), class: 'cr-nav-link exit-btn', onclick: "sendClickEventToSegment('quiz_completed', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', quizName: '#{@course_step&.name}', courseName: '#{@course&.name}', programName: '#{@course&.group.name}', moduleName: '#{@course_step&.name}', quizType: 'cbe'})" do
+                          =link_to course_special_link(@course_step, @course_log), class: 'cr-nav-link exit-btn' do
                             ='Exit'
                   .cr-navigation.lightBg
                     .cr-navigation-left
@@ -132,7 +132,7 @@
                                         =flagged_for_review(question_attempt.flagged_for_review)
 
                             .final-submission.text-center
-                              =link_to submit_constructed_response_user_log_url(@course_step_log.id), onclick: 'constructedResponseCompleted();' do
+                              =link_to submit_constructed_response_user_log_url(@course_step_log.id), onclick: "sendClickEventToSegment('quiz_completed', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', quizName: '#{@course_step&.name}', courseName: '#{@course&.name}', programName: '#{@course&.group.name}', moduleName: '#{@course_step&.name}', quizType: 'cbe'})" do
                                 .btn.btn-primary.btn-secondary
                                   ='Submit Constructed Response'
 

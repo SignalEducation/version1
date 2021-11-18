@@ -68,9 +68,6 @@
         //Triggered by onclick event in page
         function logAnswer(logId, questionId, answerId, answerArray) {
           $('#answer_' + answerId).prop("onclick", null).off("click"); // remove onclick event after sent.
-          if (currentQuestion <= 1) quizStartEvent();
-
-
           createQuizAttempts(logId, questionId, answerId, answerArray);
         }
 

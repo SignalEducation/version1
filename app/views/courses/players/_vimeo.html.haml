@@ -108,7 +108,6 @@
         contentType: "application/json; charset=utf-8",
         success: function(data,status,xhr){
           logId = data.video_log_id;
-          videoPlayEvent();
         },
         error: function(xhr,status,error){
           console.log(xhr);
@@ -119,13 +118,12 @@
 
   //When the user selects a specific time
   let onResume = function(data) {
-    videoPlayerResumed(data);
+    sendClickEventToSegment('play_video', {userId: userId, email: email, hasValidSubscription: hasValidSubscription, isEmailVerified: isEmailVerified, preferredExamBodyId: preferredExamBodyId, isLoggedIn: isLoggedIn, sessionId: sessionId, videoName: title, moduleName: moduleName, courseName: courseName, programName: programName })
   };
 
   //When the user selects a specific time
   let onPause = function(data) {
     sendClickEventToSegment('pause_video', {userId: userId, email: email, hasValidSubscription: hasValidSubscription, isEmailVerified: isEmailVerified, preferredExamBodyId: preferredExamBodyId, isLoggedIn: isLoggedIn, sessionId: sessionId, videoName: title, moduleName: moduleName, courseName: courseName, programName: programName})
-    videoPlayerPaused(data);
   };
 
   //When the user selects a specific time
