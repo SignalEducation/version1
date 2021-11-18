@@ -83,14 +83,17 @@ class SegmentService
     Rails.logger.error "SegmentService#create_& - Error: #{e.inspect} - User Id #{user&.id} Segment Object - #{segment}"
   end
 
-  def track_user_account_created_event(user)
+  def track_user_account_created_event(user, analytics_attributes)
+    attributes = analytics_attributes_properties(analytics_attributes)
+    return if attributes.nil?
+
     segment = Analytics.track(
       user_id: user.id,
       event: 'user_account_created',
-      properties: user_traits(user)
+      properties: attributes
     )
   rescue StandardError => e
-    Rails.logger.error "SegmentService#create_user - Error: #{e.inspect} - User Id #{user&.id} Segment Object - #{segment}"
+    Rails.logger.error "SegmentService#user_account_created - Error: #{e.inspect} - User Id #{user&.id} Segment Object - #{segment}"
   end
 
   # PRIVATE ====================================================================
@@ -197,6 +200,27 @@ class SegmentService
     {
       error_code: error_code,
       error_reason: error_msg
+    }
+  end
+
+  def analytics_attributes_properties(analytics_attributes)
+    valid_keys = %i[category clientOs deviceType email eventSentAt isLoggedIn pageUrl platform
+                    programName sessionId sourceofRegistration]
+
+    return nil unless valid_keys.all? { |s| analytics_attributes.key? s }
+
+    {
+      category: analytics_attributes[:category],
+      plan_name: analytics_attributes[:plan_name],
+      deviceType: analytics_attributes[:deviceType],
+      email: analytics_attributes[:email],
+      eventSentAt: analytics_attributes[:eventSentAt],
+      isLoggedIn: analytics_attributes[:isLoggedIn],
+      pageUrl: analytics_attributes[:pageUrl],
+      platform: analytics_attributes[:platform],
+      programName: analytics_attributes[:programName],
+      sessionId: analytics_attributes[:sessionId],
+      sourceofRegistration: analytics_attributes[:sourceofRegistration]
     }
   end
 
