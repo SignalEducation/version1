@@ -133,7 +133,6 @@ export default {
       this.stayHere = false;
       this.timerCount = 5;
       this.updateCurrentAnswer();
-      practiceQuestionCompleted();
     },
     navigateToNextStep() {
       $(".practice-ques-next-step")[0].click();
