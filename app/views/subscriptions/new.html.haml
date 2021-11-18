@@ -379,7 +379,13 @@
 
       $(".spinner-message").html("Still processing...");
 
-      stripe.handleCardPayment(client_secret, cardElement).then(function(result) {
+      // If card is an Indian bank card
+      stripe.handleCardPayment(client_secret, cardElement,
+        {setup_future_usage: {
+          on_session: true
+        }
+      }
+      ).then(function(result) {
         if (result.error) {
           resetForm(result.error.message);
           intentStatus = 'pending';
