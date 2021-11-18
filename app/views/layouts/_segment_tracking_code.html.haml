@@ -6,15 +6,45 @@
   let prefExamBodyId = "#{current_user&.preferred_exam_body_id}";
   let prefExamBody = "#{current_user&.preferred_exam_body&.name}";
   let ob = "#{current_user&.analytics_onboarding_valid?.to_s}";
+  let programName = "#{@group ? 'Program ' + @group.name.upcase : ''}";
+  let email                 = "#{current_user&.email || ''}";
+  let userId                = "#{current_user&.id || ''}";
+  let hasValidSubscription  = "#{current_user&.valid_subscription? || ''}";
+  let isEmailVerified       = "#{current_user&.email_verified || ''}";
+  let isLoggedIn            = "#{!current_user&.nil?}";
+  let sessionId             = "#{session&.id || ''}";
+  
+  function capitalize(s) { return s && s[0].toUpperCase() + s.slice(1)}
 
   !function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","once","off","on","addSourceMiddleware","addIntegrationMiddleware","setAnonymousId","addDestinationMiddleware"];analytics.factory=function(e){return function(){var t=Array.prototype.slice.call(arguments);t.unshift(e);analytics.push(t);return analytics}};for(var e=0;e<analytics.methods.length;e++){var key=analytics.methods[e];analytics[key]=analytics.factory(key)}analytics.load=function(key,e){var t=document.createElement("script");t.type="text/javascript";t.async=!0;t.src="https://cdn.segment.com/analytics.js/v1/" + key + "/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(t,n);analytics._loadOptions=e};analytics.SNIPPET_VERSION="4.13.1";
     analytics.load(segmentKey);
 
-    analytics.page( {
+    base = baseProperties();
+
+    var name = '';
+    var pageUrl = window.location.href;
+    if(programName != '') {
+      name = programName;
+    } else {
+      name = capitalize(pageUrl.substring(pageUrl.lastIndexOf('/') + 1));
+    }
+
+    analytics.page('Page Views', name, {
+      eventSentAt: new Date().toISOString(),
+      email: email,      
+      userId: userId,           
+      hasValidSubscription: hasValidSubscription,  
+      isEmailVerified: isEmailVerified,        
+      isLoggedIn: isLoggedIn,
+      sessionId: sessionId,
       preferredExamBodyId: prefExamBodyId,
       preferredExamBody: prefExamBody,
+      clientOs: base.clientOs,
+      deviceType: base.deviceType,
+      platform: base.platform,
       onboarding: ob,
-      banner: siteBanner
+      banner: siteBanner,
+      pageUrl: pageUrl
     });
 
     if ((justLoggedIn === 'true') || (justVerified === 'true')) {

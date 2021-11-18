@@ -74,7 +74,7 @@
               =link_to courses_constructed_response_url(course_name_url: @course_step.course_lesson.course_section.course.name_url,
               course_section_name_url: @course_step.course_lesson.course_section.name_url,
                 course_lesson_name_url: @course_step.course_lesson.name_url,
-                course_step_name_url: @course_step.name_url), id: 'newConstructedResponseButton' do
+                course_step_name_url: @course_step.name_url), id: 'newConstructedResponseButton', onclick: "sendClickEventToSegment('quiz_initiated', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', quizName: '#{@course_step&.name}', courseName: '#{@course&.name}', programName: '#{@course&.group.name}', moduleName: '#{@course_step&.name}', quizType: 'cbe'})" do
                 .btn.btn-primary.mt-3
                   ='New Constructed Response'
 
@@ -95,5 +95,4 @@
       $("#newConstructedResponseButton").hide();
       $(".sk-circle").show();
     });
-    constructedResponseStartLoaded();
   });

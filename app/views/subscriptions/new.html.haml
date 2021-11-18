@@ -20,13 +20,13 @@
               %a#navbarDropdown.navbar-login.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
                 .nav-login-box
                   %span.navbar-login-userName
-                    =current_user.first_name.to_s
-                    =current_user.last_name.to_s
+                    =current_user&.first_name.to_s
+                    =current_user&.last_name.to_s
                     %span.navbar-login-userEmail
-                      =current_user.email
+                      =current_user&.email
               .dropdown-menu.dropdown-menu-right{"aria-labelledby" => "navbarDropdown"}
-                =link_to t('views.users.show.h1'), account_url, class: 'nav-link dropdown-item'
-                =link_to t('views.general.log_out'), sign_out_url, class: 'nav-link dropdown-item logout', onclick: "sendClickEventToSegment('logout', {email: '#{@current_user.email}'})"
+                =link_to t('views.users.show.h1'), account_url, class: 'nav-link dropdown-item', onclick: "sendClickEventToSegment('clicks_my_account', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}'})"
+                =link_to t('views.general.log_out'), sign_out_url, class: 'nav-link dropdown-item logout', onclick: "sendClickEventToSegment('logout', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}'})"
 
           -else
             %li.nav-item.w-100.text-center.py-2
@@ -42,7 +42,7 @@
       #upgrade-subscription
         =form_for @subscription, url: subscriptions_path, html: { id: 'upgrade-form', role: 'form' } do |f|
           =render partial: 'layouts/error_messages', locals: { thing: @subscription, message: t('views.users.upgrade_subscription.error_panel_caption') }
-          =f.hidden_field :user_id, value: current_user.id
+          =f.hidden_field :user_id, value: current_user&.id
           =f.hidden_field :subscription_plan_id, value: @subscription.subscription_plan_id
           =f.hidden_field :completion_guid
           =f.hidden_field :stripe_token
@@ -147,9 +147,12 @@
   let analyticsData = { preferred_exam_body_id: preferredExamBodyId, preferred_exam_body: preferredExamBody, banner: banner, onboarding: onboarding, exam_body_id: "#{@exam_body&.id}", exam_body_name: "#{@exam_body&.name}",
     subscription_plan_options: "#{@plans.map(&:id)}", sub_plan_names: planNames, selected_sub_plan_guid: "#{params[:plan_guid]}", selected_sub_plan_name: preSelectedPlan.attr('data-name'), selected_sub_plan_price: preSelectedPlan.attr('data-price'),
     currency: "#{@currency&.iso_code}", country: "#{current_user&.country&.name}", valid_coupon_present: $('#coupon_code').hasClass("coupon-success"), discountedPrice: '', couponCode: '' };
+  
+  let segmentData = { userId: '#{@current_user&.id}', email: '#{@current_user&.email}', hasValidSubscription: '#{@current_user&.valid_subscription?}', isEmailVerified: '#{@current_user&.email_verified}', preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', programName: '#{@exam_body&.name}', planName: preSelectedPlan.attr('data-name'), planPrice: preSelectedPlan.attr('data-price'), discountedPrice: preSelectedPlan.attr('data-price'), discountCode: preSelectedPlan.attr('data-price'), payment_type: 'subscription' };
 
   function addToCart() {
     let selectedPlan = $("input[name='plans']:checked");
+    segmentData.planName = selectedPlan.attr('data-name');
     let planData = {preferred_exam_body_id: preferredExamBodyId, preferred_exam_body: preferredExamBody, banner: banner, onboarding: onboarding, exam_body_id: "#{@exam_body&.id}", exam_body_name: "#{@exam_body&.name}",
      subscription_plan_options: "#{@plans.map(&:id)}", sub_plan_names: planNames, selected_sub_plan_guid: selectedPlan.attr('data-guid'), selected_sub_plan_name: selectedPlan.attr('data-name'),
       selected_sub_plan_price: selectedPlan.attr('data-price'), currency: "#{@currency&.iso_code}", country: "#{current_user&.country&.name}", valid_coupon_present: $('#coupon_code').hasClass("coupon-success")};
@@ -308,7 +311,8 @@
     var paypalButton = document.getElementById('paypal_submit');
 
     paypalButton.addEventListener('click', function(ev) {
-      paypalSubmit(analyticsData);
+      //paypalSubmit(analyticsData);
+      sendClickEventToSegment('clicks_paypal_purchase', segmentData);
       $('#plans-options').prop('disabled', true);
       $('#card_submit').prop('disabled', true);
       $('#paypal_submit').prop('disabled', true);
@@ -368,8 +372,12 @@
         error: function(request, status, error){
           if (request.status === 500) {
             resetForm('Something went wrong. Please try again.');
+            segmentData.errorReason = 'Something went wrong. Please try again.';
+            sendClickEventToSegment('initiate_payment_failed', segmentData);
           } else {
             resetForm(request.responseJSON.error);
+            segmentData.errorReason = request.responseJSON.error;
+            sendClickEventToSegment('initiate_payment_failed', segmentData);
           }
         }
       });
@@ -453,7 +461,17 @@
         discountedPrice: (discounted_price) ? discounted_price : '',
         couponCode: coupon_code
       });
+      segmentData = { userId: '#{@current_user&.id}', email: '#{@current_user&.email}', hasValidSubscription: '#{@current_user&.valid_subscription?}', isEmailVerified: '#{@current_user&.email_verified}', preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', programName: '#{@exam_body&.name}', planName: preSelectedPlan.attr('data-name'), planPrice: preSelectedPlan.attr('data-price'), discountedPrice: (discounted_price) ? discounted_price : '', discountCode: (coupon_code) ? coupon_code : '', paymentType: 'Subscription' };
     }
+
+    $("#pay-with-card").on( "click", function(event) {
+      segmentData.paymentMethod = 'card';
+      sendClickEventToSegment('clicks_payment_type_toggle', segmentData)
+    });
+    $("#pay-with-paypal").on( "click", function(event) {
+      segmentData.paymentMethod = 'paypal';
+      sendClickEventToSegment('clicks_payment_type_toggle', segmentData)
+    });
 
     $("#show_all_plans").on( "click", function() {
       showAllPlans(analyticsData);

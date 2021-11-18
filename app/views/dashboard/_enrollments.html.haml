@@ -1,7 +1,7 @@
 .col-md-12.col-lg-10.p-0
   -@enrollments.each do |enrollment|
     -if enrollment.course
-      =link_to library_special_link(enrollment.course), class: 'card card-horizontal flex-md-row', style: 'margin-bottom: 1.5rem;' do
+      =link_to library_special_link(enrollment.course), class: 'card card-horizontal flex-md-row', style: 'margin-bottom: 1.5rem;', onclick: "sendClickEventToSegment('clicks_course', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', programName: '#{@default_group.name}', levelName: '#{enrollment.course.level.name}', courseName: '#{enrollment.course.name}', navigationThrough: 'enrolments'})" do
         .card-body.d-flex.flex-column.justify-content-center
           %div.dashboardWrapper-courseInfo
             %div.dashboardWrapper-courseIcon{style: "border-color: #{enrollment.course.level.highlight_colour}; background-color: #{enrollment.course.level.highlight_colour};"}
@@ -21,5 +21,5 @@
               %div
                 .progress
                   .progress-bar{role: "progressbar", 'aria-valuenow': enrollment.display_percentage_complete, 'aria-valuemin': "0", 'aria-valuemax': '100', style: "width: #{enrollment.display_percentage_complete}%"}
-          .btn.btn-outline#dashboard-course-resume{onclick: "sendClickEventToSegment('clicks_activity', {email: '#{@current_user&.email}', through: 'enrolments'})"}
+          .btn.btn-outline#dashboard-course-resume
             Resume

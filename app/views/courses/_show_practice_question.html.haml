@@ -15,7 +15,7 @@
     =# VueJS include
     =stylesheet_link_tag 'splitpanes'
     =javascript_pack_tag 'practice_question'
-    #practice-question-viewer{ 'data-practice-question-id': practice_question.id, 'data-step-log-id': step_log_id, 'data-step-logs': @course_step_logs.to_json }
+    #practice-question-viewer{ 'data-practice-question-id': practice_question.id, 'data-step-log-id': step_log_id, 'data-step-logs': @course_step_logs.to_json, 'data-has-valid-subscription': current_user&.valid_subscription?.to_s, 'data-is-email-verified': current_user&.email_verified.to_s, 'data-preferred-exam-body-id': current_user&.preferred_exam_body_id, 'data-course-name': @course&.name, 'data-program-name': @group&.name, 'data-module-name': @course_step&.name }
 
   :javascript
     collapseFunc();
