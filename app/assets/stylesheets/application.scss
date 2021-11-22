@@ -7350,9 +7350,9 @@ button.sub-details[aria-expanded="true"]:before {
 }
 .vm--modal {
   overflow-y: auto !important;
+  min-width: 300px !important;
+  max-width: 1024px !important;
   min-height: 250px !important;
-  max-width: 840px !important;
-  margin: 0 auto;
   resize: both;
 
   @include if-device(phone) {

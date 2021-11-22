@@ -1,5 +1,5 @@
 <template>
-  <modal :id="normId" class="latent-modal" :name="`modal-${componentType}-${componentName}`" draggable=".window-header" :height="componentHeight" top="4rem" width="100%" :max-width="componentWidth">
+  <modal :id="normId" class="latent-modal" :name="`modal-${componentType}-${componentName}`" draggable=".window-header" :height="componentHeight" top="4rem" :width="componentWidth">
     <div @click="makeActive(normId)" class="window-header latent-modal-header" :style="{ 'background-color':mainColor }">
       <p :style="{ 'color':textColor }">{{ componentName }}</p>
       <button @click="hide()" :style="{ 'color':textColor }" type="button" class="close modal-close modal-close-solution" data-dismiss="modal" aria-hidden="true">&times;</button>
