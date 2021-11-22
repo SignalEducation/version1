@@ -6,7 +6,9 @@
   let prefExamBodyId = "#{current_user&.preferred_exam_body_id}";
   let prefExamBody = "#{current_user&.preferred_exam_body&.name}";
   let ob = "#{current_user&.analytics_onboarding_valid?.to_s}";
-  let programName = "#{@group ? 'Program ' + @group.name.upcase : ''}";
+  let programName = "#{@group ? 'Program: ' + @group.name.upcase : ''}";
+  let courseName = "#{@course ? ', Course: ' + @course.name : ''}";
+  let moduleName = "#{@course_step ? ', Module: ' + @course_step.course_lesson.name : ''}";
   let email                 = "#{current_user&.email || ''}";
   let userId                = "#{current_user&.id || ''}";
   let hasValidSubscription  = "#{current_user&.valid_subscription? || ''}";
@@ -24,7 +26,7 @@
     var name = '';
     var pageUrl = window.location.href;
     if(programName != '') {
-      name = programName;
+      name = programName + courseName + moduleName;
     } else {
       name = capitalize(pageUrl.substring(pageUrl.lastIndexOf('/') + 1));
     }

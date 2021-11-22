@@ -198,9 +198,6 @@
     });
 
     function selectPaymentMethod(paymentType, click) {
-      if (click === true) {
-        providerOptionSelect(analyticsData, paymentType);
-      }
       switch(paymentType) {
         case 'paypal':
           $('#order_use_paypal').val(true);
@@ -266,12 +263,10 @@
       $(".spinner-message").html("Please wait...");
       $(".spinning-loading").show();
       if ($('#order_use_paypal').val() === 'true') {
-        paypalSubmit(analyticsData);
         if(acceptedTerms('paypal')){
           document.getElementById('orders-form').submit();
         }
       } else {
-        stripeSubmit(analyticsData);
         if(acceptedTerms('stripe')){
           createPaymentMethod();
         }
@@ -285,10 +280,6 @@
       } else {
         displayError.textContent = '';
       }
-    });
-
-    card.on('focus', function() {
-      stripeFormFocus(analyticsData);
     });
 
     function createPaymentMethod() {

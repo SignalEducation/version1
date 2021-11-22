@@ -1,8 +1,4 @@
 $(document).on("ready", function() {
-  $("#coupon_code").on("focus", function(e) {
-    couponFieldFocus(analyticsData);
-  });
-
   // $('#coupon_code').on('input', function (e) {
   //   validateCoupon();
   // });
@@ -18,7 +14,6 @@ $(document).on("ready", function() {
       $("#coupon_code").removeClass("coupon-success");
       $(".invalid-code").hide();
     }
-    couponFieldExit(analyticsData);
   });
 });
 

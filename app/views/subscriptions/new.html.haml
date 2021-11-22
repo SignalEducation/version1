@@ -156,7 +156,6 @@
     let planData = {preferred_exam_body_id: preferredExamBodyId, preferred_exam_body: preferredExamBody, banner: banner, onboarding: onboarding, exam_body_id: "#{@exam_body&.id}", exam_body_name: "#{@exam_body&.name}",
      subscription_plan_options: "#{@plans.map(&:id)}", sub_plan_names: planNames, selected_sub_plan_guid: selectedPlan.attr('data-guid'), selected_sub_plan_name: selectedPlan.attr('data-name'),
       selected_sub_plan_price: selectedPlan.attr('data-price'), currency: "#{@currency&.iso_code}", country: "#{current_user&.country&.name}", valid_coupon_present: $('#coupon_code').hasClass("coupon-success")};
-    planOptionSelect(planData);
   }
 
   function intervalSummary(frequency) {
@@ -254,9 +253,6 @@
     });
 
     function selectPaymentMethod(paymentType, click) {
-      if (click === true) {
-        providerOptionSelect(analyticsData, paymentType);
-      }
       switch(paymentType) {
         case 'paypal':
           $('#subscription_use_paypal').val(true);
@@ -304,14 +300,9 @@
       }
     });
 
-    cardElement.on('focus', function() {
-      stripeFormFocus(analyticsData);
-    });
-
     var paypalButton = document.getElementById('paypal_submit');
 
     paypalButton.addEventListener('click', function(ev) {
-      //paypalSubmit(analyticsData);
       sendClickEventToSegment('clicks_paypal_purchase', segmentData);
       $('#plans-options').prop('disabled', true);
       $('#card_submit').prop('disabled', true);
@@ -337,7 +328,6 @@
       $(".spinner-message").html("Please wait...");
       $(".spinning-loading").show();
       $('#hidden_coupon_code').val($('#coupon_code').val());
-      stripeSubmit(analyticsData);
 
       if ($('#subscription_use_paypal').val() === 'true') {
         document.getElementById('upgrade-form').submit();
@@ -471,10 +461,6 @@
     $("#pay-with-paypal").on( "click", function(event) {
       segmentData.paymentMethod = 'paypal';
       sendClickEventToSegment('clicks_payment_type_toggle', segmentData)
-    });
-
-    $("#show_all_plans").on( "click", function() {
-      showAllPlans(analyticsData);
     });
     
     $(".js-browser-back-btn").on( "click", function(event) {

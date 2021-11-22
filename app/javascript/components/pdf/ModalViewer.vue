@@ -119,40 +119,12 @@ export default {
   methods: {
     modalOpen(data) {
       this.modalIsOpen = true;
-      courseResourceClick({
-        preferredExamBodyId: this.preferredExamBodyId,
-        preferredExamBody: this.preferredExamBodyName,
-        banner: this.banner,
-        onboarding: this.onboarding,
-        resourceName: this.pdfFileName,
-        resourceId: this.pdfFileId,
-        courseName: this.pdfCourseName,
-        courseId: this.pdfCourseId,
-        examBodyName: this.pdfExamBodyName,
-        examBodyId: this.pdfExamBodyId,
-        resourceType: this.fileType,
-        allowDownloadFile: this.allowed,
-      });
     },
     updateViewedPages(data) {
       const total = data.totalPages;
       const current = data.currentPage;
 
       if (current == total && !this.eventFired) {
-        courseResourceCompleted({
-          preferredExamBodyId: this.preferredExamBodyId,
-          preferredExamBody: this.preferredExamBodyName,
-          banner: this.banner,
-          onboarding: this.onboarding,
-          resourceName: this.pdfFileName,
-          resourceId: this.pdfFileId,
-          courseName: this.pdfCourseName,
-          courseId: this.pdfCourseId,
-          examBodyName: this.pdfExamBodyName,
-          examBodyId: this.pdfExamBodyId,
-          resourceType: this.fileType,
-          allowDownloadFile: this.allowed,
-        });
         this.eventFired = true;
       }
     },
