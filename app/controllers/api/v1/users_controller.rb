@@ -14,7 +14,7 @@ module Api
 
       def create
         @user            = User.new(user_params)
-        @user.country    = IpAddress.get_country(request.remote_ip, true)
+        @user.country    = user_country(@user, params[:iso_code])
         @user.currency   = @user&.country&.currency || Currency.find_by(iso_code: 'GBP')
         @user.user_group = UserGroup.student_group
         @user.user_registration_calbacks(params[:user])
@@ -76,6 +76,17 @@ module Api
         return if @current_user.id == @user_id
 
         json_response({ error: 'You are not allowed to update this user.' }, :unauthorized)
+      end
+
+      def user_country(user, iso_code)
+        country =
+          if iso_code.present?
+            Country.find_by(iso_code: iso_code.upcase) || Country.find_by(name: 'United Kingdom')
+          else
+            IpAddress.get_country(request.remote_ip) || Country.find_by(name: 'United Kingdom')
+          end
+
+        country
       end
 
       def user_params
