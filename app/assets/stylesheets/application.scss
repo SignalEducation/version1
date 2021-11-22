@@ -7351,6 +7351,7 @@ button.sub-details[aria-expanded="true"]:before {
 .vm--modal {
   overflow-y: auto !important;
   min-width: 300px !important;
+  max-width: 1024px !important;
   min-height: 250px !important;
   resize: both;
 
