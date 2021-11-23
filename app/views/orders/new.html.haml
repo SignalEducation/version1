@@ -393,22 +393,6 @@
       'event_value': productPrice
     });
 
-    analytics.page('Payment', {
-      preferredExamBodyId: preferredExamBodyId,
-      preferredExamBody:preferredExamBody ,
-      banner: banner,
-      onboarding: onboarding,
-      examBodyId: productBodyId,
-      examBodyName: productBody,
-      currency: currencyIso,
-      country: "#{current_user&.country&.name}",
-      productId: productId,
-      productPrice: productPrice,
-      productName: productName,
-      productType: productType,
-      paymentType: "Product"
-    });
-
     $(".js-browser-back-btn").on( "click", function(event) {
       event.preventDefault();
       if(document.referrer == "") {

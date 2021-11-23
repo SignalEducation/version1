@@ -566,7 +566,7 @@ function getFileAttributes(node) {
       preferredExamBodyId: element.getAttribute("preferredExamBodyId"),
       isLoggedIn: element.getAttribute("isLoggedIn"),
       sessionId: element.getAttribute("sessionId"),
-      fileName: element.getAttribute("file_name"),
+      lessonName: element.getAttribute("file_name"),
       moduleName: element.getAttribute("moduleName"),
       courseName: element.getAttribute("courseName"),
       programName: element.getAttribute("programName"),
