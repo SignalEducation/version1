@@ -1697,6 +1697,7 @@ ActiveRecord::Schema.define(version: 2021_12_01_074153) do
     t.bigint "onboarding_course_id"
     t.index ["country_id"], name: "index_users_on_country_id"
     t.index ["currency_id"], name: "index_users_on_currency_id"
+    t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["onboarding_course_id"], name: "index_users_on_onboarding_course_id"
     t.index ["preferred_exam_body_id"], name: "index_users_on_preferred_exam_body_id"
     t.index ["subscription_plan_category_id"], name: "index_users_on_subscription_plan_category_id"

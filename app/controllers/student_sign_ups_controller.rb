@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class StudentSignUpsController < ApplicationController
+  include ExceptionHandler
+
   before_action :logged_in_required, except: :create
   before_action :check_logged_in_status, except: %i[show landing group pricing new_landing]
   before_action :get_variables
