@@ -1,8 +1,8 @@
 -if @vimeo_as_main
   -if cme.course_video.vimeo_guid && current_user.video_player && current_user.country&.iso_code != 'CN'
-    =render partial: "courses/players/#{current_user.video_player}", locals: { cme: cme, course_name: @course&.name, program_name: @course&.group&.name, responsive: responsive, autoPlay: autoPlay, userId: current_user&.id, email: current_user&.email, hasValidSubscription: current_user&.valid_subscription?, isEmailVerified: current_user&.email_verified, preferredExamBodyId: current_user&.preferred_exam_body_id, isLoggedIn: !current_user&.nil?, sessionId: session&.id, title: cme&.name}
+    =render partial: "courses/players/#{current_user.video_player}", locals: { cme: cme, module_name: @course_step&.course_lesson&.name, course_name: @course&.name, program_name: @course&.group&.name, responsive: responsive, autoPlay: autoPlay, userId: current_user&.id, email: current_user&.email, hasValidSubscription: current_user&.valid_subscription?, isEmailVerified: current_user&.email_verified, preferredExamBodyId: current_user&.preferred_exam_body_id, isLoggedIn: !current_user&.nil?, sessionId: session&.id, title: cme&.name}
   -elsif cme.course_video.dacast_id
-    =render partial: 'courses/players/dacast', locals: { cme: cme, course_name: @course&.name, program_name: @course&.group&.name, userId: current_user&.id, email: current_user&.email, hasValidSubscription: current_user&.valid_subscription?, isEmailVerified: current_user&.email_verified, preferredExamBodyId: current_user&.preferred_exam_body_id, isLoggedIn: !current_user&.nil?, sessionId: session&.id, title: cme&.name }
+    =render partial: 'courses/players/dacast', locals: { cme: cme, module_name: @course_step&.course_lesson&.name, course_name: @course&.name, program_name: @course&.group&.name, userId: current_user&.id, email: current_user&.email, hasValidSubscription: current_user&.valid_subscription?, isEmailVerified: current_user&.email_verified, preferredExamBodyId: current_user&.preferred_exam_body_id, isLoggedIn: !current_user&.nil?, sessionId: session&.id, title: cme&.name }
   -else
     %h2 Sorry Unknown Content Requested
     -error_message = "views/courses/_video_player - error to rendering video. CME: #{cme.inspect}.\n"
@@ -11,4 +11,4 @@
     -Airbrake::AirbrakeLogger.new(logger).error error_message
     -Appsignal.send_error(Exception.new(error_message))
 -else
-  =render partial: 'courses/players/dacast', locals: { cme: cme, course_name: @course&.name, program_name: @course&.group&.name, userId: current_user&.id, email: current_user&.email, hasValidSubscription: current_user&.valid_subscription?, isEmailVerified: current_user&.email_verified, preferredExamBodyId: current_user&.preferred_exam_body_id, isLoggedIn: !current_user&.nil?, sessionId: session&.id, title: cme&.name }
+  =render partial: 'courses/players/dacast', locals: { cme: cme, module_name: @course_step&.course_lesson&.name, course_name: @course&.name, program_name: @course&.group&.name, userId: current_user&.id, email: current_user&.email, hasValidSubscription: current_user&.valid_subscription?, isEmailVerified: current_user&.email_verified, preferredExamBodyId: current_user&.preferred_exam_body_id, isLoggedIn: !current_user&.nil?, sessionId: session&.id, title: cme&.name }
