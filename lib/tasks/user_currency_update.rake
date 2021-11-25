@@ -63,7 +63,8 @@ namespace :users do
           if currency_from_order.nil?
             Rails.logger.info "=================== PROCESSING ========================="
             Rails.logger.info "======= Updating user currency from #{user.country.currency.iso_code} to #{country_data_from_mixpanel.currency.iso_code}  ========="
-            unless user.update_attribute(:currency, country_data_from_mixpanel.currency)
+            Rails.logger.info "======= Updating user country from #{user.country.iso_code} to #{country_data_from_mixpanel.iso_code}  ========="
+            unless user.update_attributes(country: country_data_from_mixpanel, currency: country_data_from_mixpanel.currency)
               Rails.logger.error "#{user.id} was not updated"
               Rails.logger.error user.errors.messages
             end
@@ -111,7 +112,8 @@ namespace :users do
           if currency_from_order.nil?
             Rails.logger.info "=================== PROCESSING ========================="
             Rails.logger.info "======= Updating user currency from #{user.country.currency.iso_code} to #{country_data_from_mixpanel.currency.iso_code}  ========="
-            unless user.update_attribute(:currency, country_data_from_mixpanel.currency)
+            Rails.logger.info "======= Updating user country from #{user.country.iso_code} to #{country_data_from_mixpanel.iso_code}  ========="
+            unless user.update_attributes(country: country_data_from_mixpanel, currency: country_data_from_mixpanel.currency)
               Rails.logger.error "#{user.id} was not updated"
               Rails.logger.error user.errors.messages
             end
