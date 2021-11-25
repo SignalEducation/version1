@@ -93,37 +93,47 @@ namespace :users do
       # email, country mp, country hs
       mixpanel_data = users_mixpanel
 
-      User.transaction do
-        mixpanel_data.each do |data|
-          email            = data.first
-          country_mixpanel = data.second
-          country_hubspot  = data.third
+      mixpanel_data.each do |data|
+        email            = data.first
+        country_mixpanel = data.second
+        country_hubspot  = data.third
 
-          user = User.find_by(email: email)
-
-          Rails.logger.info "======= User - #{email}  ========="
-          Rails.logger.info "======= Country Mix Panel #{country_mixpanel}  ========="
-          Rails.logger.info "======= Country HubSpot #{country_hubspot}  ============"
-          Rails.logger.info "======= Country Database #{user.country.name}  ========="
-
-          currency_from_order           = get_currency_from_orders_subs(user)
-          country_data_from_mixpanel    = Country.find_by(name: country_mixpanel)
-
-          if currency_from_order.nil?
-            Rails.logger.info "=================== PROCESSING ========================="
-            Rails.logger.info "======= Updating user currency from #{user.country.currency.iso_code} to #{country_data_from_mixpanel.currency.iso_code}  ========="
-            Rails.logger.info "======= Updating user country from #{user.country.iso_code} to #{country_data_from_mixpanel.iso_code}  ========="
-            unless user.update_attributes(country: country_data_from_mixpanel, currency: country_data_from_mixpanel.currency)
-              Rails.logger.error "#{user.id} was not updated"
-              Rails.logger.error user.errors.messages
-            end
-          else
-            Rails.logger.info "================= NOT PROCESSING ========================"
-            Rails.logger.info "======= User ordered using currency #{currency_from_order.iso_code}, csv data ->  #{country_mixpanel}.  ========="
-          end
-          Rails.logger.info "========================================================"
-          Rails.logger.info "========================================================"
+        user = User.find_by(email: email)
+        if user.nil?
+          Rails.logger.info "=================== ERROR ========================="
+          Rails.logger.info "=================== User #{email} not found. ========================="
+          next
         end
+
+
+        Rails.logger.info "======= User - #{email}  ========="
+        Rails.logger.info "======= Country Mix Panel #{country_mixpanel}  ========="
+        Rails.logger.info "======= Country HubSpot #{country_hubspot}  ============"
+        Rails.logger.info "======= Country Database #{user.country.name}  ========="
+
+        currency_from_order           = get_currency_from_orders_subs(user)
+        country_data_from_mixpanel    = Country.find_by(name: country_mixpanel)
+
+        if country_data_from_mixpanel.nil?
+          Rails.logger.info "=================== ERROR ========================="
+          Rails.logger.info "=================== User #{country_mixpanel} not found. ========================="
+          next
+        end
+
+        if currency_from_order.nil?
+          Rails.logger.info "=================== PROCESSING ========================="
+          Rails.logger.info "======= Updating user currency from #{user.country.currency.iso_code} to #{country_data_from_mixpanel.currency.iso_code}  ========="
+          Rails.logger.info "======= Updating user country from #{user.country.iso_code} to #{country_data_from_mixpanel.iso_code}  ========="
+          unless user.update_attributes(country: country_data_from_mixpanel, currency: country_data_from_mixpanel.currency)
+            Rails.logger.error "#{user.id} was not updated"
+            Rails.logger.error user.errors.messages
+          end
+        else
+          Rails.logger.info "================= NOT PROCESSING ========================"
+          Rails.logger.info "======= User ordered using currency #{currency_from_order.iso_code}, csv data ->  #{country_mixpanel}.  ========="
+        end
+        Rails.logger.info "========================================================"
+        Rails.logger.info "========================================================"
       end
     end
 
@@ -194,22 +204,23 @@ namespace :users do
 
     total_time = Benchmark.measure do
       # email, country mp
-      mixpanel_data        = users_mixpanel
+      mixpanel_data        = users_mixpanel.map(&:first)
       mixpanel_data_todays = users_mixpanel_todays
+        time_limit = 10
 
-      User.transaction do
         mixpanel_data.each do |data|
           email = data.first
           user  = User.find_by(email: email)
 
           if user.present?
             Rails.logger.info "=================== Trigger HubSpotContactWorker========================="
-            Rails.logger.info "=================== User #{email}. ========================="
-            HubSpotContactWorker.perform_async(user.id)
+            Rails.logger.info "=================== User #{email} in #{time_limit} seconds. ========================="
+            HubSpotContactWorker.perform_at(time_limit.seconds,user.id)
           else
              Rails.logger.info "=================== Error in Trigger HubSpotContactWorker========================="
             Rails.logger.info "=================== User #{email} not found. ========================="
           end
+          time_limit = time_limit + 10
         end
 
         mixpanel_data_todays.each do |data|
@@ -218,14 +229,14 @@ namespace :users do
 
           if user.present?
             Rails.logger.info "=================== Trigger HubSpotContactWorker========================="
-            Rails.logger.info "=================== User #{email}. ========================="
-            HubSpotContactWorker.perform_async(user.id)
+            Rails.logger.info "=================== User #{email} in #{time_limit} seconds. ========================="
+            HubSpotContactWorker.perform_at(time_limit.seconds,user.id)
           else
              Rails.logger.info "=================== Error in Trigger HubSpotContactWorker========================="
             Rails.logger.info "=================== User #{email} not found. ========================="
           end
+time_limit = time_limit + 10
         end
-      end
     end
 
     Rails.logger.info '============ Total time execution ============'
