@@ -184,6 +184,54 @@ namespace :users do
     Rails.logger.info total_time.real
     Rails.logger.info '=============================================='
   end
+
+  desc 'Update hubspot from users mixpanel files.'
+  task update_hubspot_from_mixepanel_files: :environment do
+    ActiveRecord::Base.logger = nil
+    Rails.logger = Logger.new(Rails.root.join('log', 'tasks.log'))
+    Rails.logger.info 'Updating users...'
+    return if Rails.env.test?
+
+    total_time = Benchmark.measure do
+      # email, country mp
+      mixpanel_data        = users_mixpanel
+      mixpanel_data_todays = users_mixpanel_todays
+
+      User.transaction do
+        mixpanel_data.each do |data|
+          email = data.first
+          user  = User.find_by(email: email)
+
+          if user.present?
+            Rails.logger.info "=================== Trigger HubSpotContactWorker========================="
+            Rails.logger.info "=================== User #{email}. ========================="
+            HubSpotContactWorker.perform_async(user.id)
+          else
+             Rails.logger.info "=================== Error in Trigger HubSpotContactWorker========================="
+            Rails.logger.info "=================== User #{email} not found. ========================="
+          end
+        end
+
+        mixpanel_data_todays.each do |data|
+          email = data.first
+          user  = User.find_by(email: email)
+
+          if user.present?
+            Rails.logger.info "=================== Trigger HubSpotContactWorker========================="
+            Rails.logger.info "=================== User #{email}. ========================="
+            HubSpotContactWorker.perform_async(user.id)
+          else
+             Rails.logger.info "=================== Error in Trigger HubSpotContactWorker========================="
+            Rails.logger.info "=================== User #{email} not found. ========================="
+          end
+        end
+      end
+    end
+
+    Rails.logger.info '============ Total time execution ============'
+    Rails.logger.info total_time.real
+    Rails.logger.info '=============================================='
+  end
 end
 
 def get_currency_from_orders_subs(user)
