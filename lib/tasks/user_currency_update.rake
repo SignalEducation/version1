@@ -131,6 +131,59 @@ namespace :users do
     Rails.logger.info total_time.real
     Rails.logger.info '=============================================='
   end
+
+  desc 'Update currency of users from a mixpanel_todays file.'
+  task update_currency_from_mixepanel_todays: :environment do
+    ActiveRecord::Base.logger = nil
+    Rails.logger = Logger.new(Rails.root.join('log', 'tasks.log'))
+    Rails.logger.info 'Updating users...'
+
+    total_time = Benchmark.measure do
+      # email, country mp
+      mixpanel_data = users_mixpanel_todays
+
+      User.transaction do
+        mixpanel_data.each do |data|
+          email            = data.first
+          country_mixpanel = data.second
+
+          user = User.find_by(email: email)
+
+          if user.nil?
+            Rails.logger.info "=================== ERROR ========================="
+            Rails.logger.info "=================== User #{email} not found. ========================="
+            next
+          end
+
+          Rails.logger.info "======= User - #{email}  ========="
+          Rails.logger.info "======= Country Mix Panel #{country_mixpanel}  ========="
+          Rails.logger.info "======= Country Database #{user.country.name}  ========="
+
+          currency_from_order           = get_currency_from_orders_subs(user)
+          country_data_from_mixpanel    = Country.find_by(name: country_mixpanel)
+
+          if currency_from_order.nil?
+            Rails.logger.info "=================== PROCESSING ========================="
+            Rails.logger.info "======= Updating user currency from #{user.country.currency.iso_code} to #{country_data_from_mixpanel.currency.iso_code}  ========="
+            Rails.logger.info "======= Updating user country from #{user.country.iso_code} to #{country_data_from_mixpanel.iso_code}  ========="
+            unless user.update_attributes(country: country_data_from_mixpanel, currency: country_data_from_mixpanel.currency)
+              Rails.logger.error "#{user.id} was not updated"
+              Rails.logger.error user.errors.messages
+            end
+          else
+            Rails.logger.info "================= NOT PROCESSING ========================"
+            Rails.logger.info "======= User ordered using currency #{currency_from_order.iso_code}, csv data ->  #{country_mixpanel}.  ========="
+          end
+          Rails.logger.info "========================================================"
+          Rails.logger.info "========================================================"
+        end
+      end
+    end
+
+    Rails.logger.info '============ Total time execution ============'
+    Rails.logger.info total_time.real
+    Rails.logger.info '=============================================='
+  end
 end
 
 def get_currency_from_orders_subs(user)
@@ -143,6 +196,11 @@ end
 
 def users_mixpanel
   file = Rails.root.join('lib/assets/users/mixpanel_final.csv')
+  CSV.read(file)
+end
+
+def users_mixpanel_todays
+  file = Rails.root.join('lib/assets/users/mixpanel_todays.csv')
   CSV.read(file)
 end
 
