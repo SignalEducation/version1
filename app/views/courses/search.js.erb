@@ -1,6 +1,6 @@
 var tab_id = '<%="##{@level.id}-tabbed-courses-list"%>';
 <% if @courses.present? %>
-  $(tab_id).html("<%= j render(partial: '/library/tabbed_courses_list', locals: { courses: @courses } ) %>");
+  $(tab_id).html("<%= j render(partial: '/library/tabbed_courses_list', locals: { courses: @courses, level_name: @level&.name } ) %>");
 <% else %>
   $(tab_id).html("<%= j render(partial: '/library/tabbed_empty_courses_list') %>");
 <% end%>
