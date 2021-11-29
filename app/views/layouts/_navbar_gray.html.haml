@@ -1,0 +1,8 @@
+%header.header.ls-gray-header
+  %nav.ls-bg-gray
+    =render partial: 'layouts/external_banner'
+    .navbar.navbar-expand-lg.ls-bg-gray
+      =render partial: 'layouts/mobile_nav_login_signup'
+      .container.hidden-xs.hidden-xs-tablet.hidden-xs-phone-tablet
+        =link_to home_url, class: 'navbar-brand logo' do
+          =image_tag('Learnsignal-Logo.svg', class: 'logo-img', alt: "LearnSignal Logo")

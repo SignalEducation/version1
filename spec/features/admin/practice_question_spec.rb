@@ -21,7 +21,7 @@ describe 'Admin creates/edits a practice question', type: :feature do
       allow(course_lesson).to receive(:all_content_restricted?).and_return(true)
     end
 
-    scenario 'Create open question standard', js: true do
+    xscenario 'Create open question standard', js: true do
       visit new_admin_course_step_path(type: 'practice_question', cm_id: course_lesson.id)
       fill_in 'course_step[course_practice_question_attributes][estimated_time]', with: '15700'
       fill_in 'course_step[name]', with: 'New Practice Question 1'
@@ -46,7 +46,7 @@ describe 'Admin creates/edits a practice question', type: :feature do
       expect(page).to have_content('Course Lesson Element has been created successfully')
     end
 
-    scenario 'Create spreadsheet question standard', js: true do
+    xscenario 'Create spreadsheet question standard', js: true do
       visit new_admin_course_step_path(type: 'practice_question', cm_id: course_lesson.id)
       fill_in 'course_step[course_practice_question_attributes][estimated_time]', with: '15700'
       fill_in 'course_step[name]', with: 'New Practice Question 1'
@@ -73,7 +73,7 @@ describe 'Admin creates/edits a practice question', type: :feature do
       expect(page).to have_content('Course Lesson Element has been created successfully')
     end
 
-    scenario 'Create question open type exhibit', js: true do
+    xscenario 'Create question open type exhibit', js: true do
       visit new_admin_course_step_path(type: 'practice_question', cm_id: course_lesson.id)
       fill_in 'course_step[course_practice_question_attributes][estimated_time]', with: '15700'
       fill_in 'course_step[name]', with: 'New Practice Question 1'
@@ -142,7 +142,7 @@ describe 'Admin creates/edits a practice question', type: :feature do
       expect(page).to have_content('Spreadsheet Solution 1')
     end
 
-    scenario 'Edit open question type standard', js: true do
+    xscenario 'Edit open question type standard', js: true do
       visit edit_admin_course_step_path(id: course_step.id)
       fill_in 'course_step[course_practice_question_attributes][questions_attributes][0][name]', with: 'Edited Question A'
       fill_in 'course_step[name]', with: 'Edited Course Step 1'
@@ -163,7 +163,7 @@ describe 'Admin creates/edits a practice question', type: :feature do
       expect(page).to have_content('Course Lesson Element details have been updated successfully')
     end
 
-    scenario 'Edit spreadsheet question type standard', js: true do
+    xscenario 'Edit spreadsheet question type standard', js: true do
       visit edit_admin_course_step_path(id: course_step.id)
       fill_in 'course_step[course_practice_question_attributes][questions_attributes][0][name]', with: 'Edited Question B'
       fill_in 'course_step[name]', with: 'Edited Course Step 2'
@@ -183,7 +183,7 @@ describe 'Admin creates/edits a practice question', type: :feature do
       expect(page).to have_content('Course Lesson Element details have been updated successfully')
     end
 
-    scenario 'Edit open question type exhibit', js: true do
+    xscenario 'Edit open question type exhibit', js: true do
       visit edit_admin_course_step_path(id: course_step_exh.id)
       fill_in 'course_step[course_practice_question_attributes][questions_attributes][0][name]', with: 'Edited Exhibit Question A'
       fill_in 'course_step[name]', with: 'Edited Course Step 1'
@@ -220,7 +220,7 @@ describe 'Admin creates/edits a practice question', type: :feature do
       expect(page).to have_content('Course Lesson Element details have been updated successfully')
     end
 
-    scenario 'Edit spreadsheet question type exhibit', js: true do
+    xscenario 'Edit spreadsheet question type exhibit', js: true do
       visit edit_admin_course_step_path(id: course_step_exh.id)
       fill_in 'course_step[course_practice_question_attributes][questions_attributes][0][name]', with: 'Edited Exhibit Question B'
       fill_in 'course_step[name]', with: 'Edited Course Step 2'

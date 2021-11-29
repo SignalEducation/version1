@@ -1,6 +1,6 @@
 <template>
-<div class="non-resizable-modal">
-  <VueModal
+  <div class="non-resizable-modal">
+    <VueModal
       :componentType="componentType"
       :componentName="componentName"
       :window-is-open="true"
@@ -9,31 +9,31 @@
       :componentWidth="500"
       :mainColor="'transparent'"
     >
-    <div slot="body">
-      <p v-html="cbe_data.agreement_content" />
-      <div class="agreement-modal-btns">
-        <b-button @click="acceptAgreement(true)">
-          Yes
-        </b-button>
-        <b-button @click="acceptAgreement(false)">
-          No
-        </b-button>
+      <div slot="body">
+        <p v-html="cbe_data.agreement_content" />
+        <div class="agreement-modal-btns">
+          <b-button @click="acceptAgreement(true)">
+            Yes
+          </b-button>
+          <b-button @click="acceptAgreement(false)">
+            No
+          </b-button>
+        </div>
       </div>
-    </div>
-  </VueModal>
+    </VueModal>
   </div>
 </template>
 
 <script>
-import axios from 'axios';
-import { mapGetters } from 'vuex';
-import VueModal from '../VueModal.vue';
-import eventBus from '../cbe/EventBus.vue';
+import axios from "axios";
+import { mapGetters } from "vuex";
+import VueModal from "../VueModal.vue";
+import eventBus from "../cbe/EventBus.vue";
 
 export default {
   components: {
     VueModal,
-    eventBus
+    eventBus,
   },
   props: {
     nextAction: Function,
@@ -55,18 +55,18 @@ export default {
     this.show();
   },
   computed: {
-    ...mapGetters('cbe', {
-      cbe_data: 'cbe_data',
+    ...mapGetters("cbe", {
+      cbe_data: "cbe_data",
     }),
-    ...mapGetters('userCbe', {
-      userCbeData: 'userCbeData',
+    ...mapGetters("userCbe", {
+      userCbeData: "userCbeData",
     }),
   },
   methods: {
     acceptAgreement(accepted) {
-      const navLinks = document.getElementsByClassName('page-item');
+      const navLinks = document.getElementsByClassName("page-item");
       for (const link of navLinks) {
-        link.style.display = 'block';
+        link.style.display = "block";
       }
 
       if (accepted) {
@@ -79,8 +79,8 @@ export default {
       this.toggleResetModal();
     },
     updateAgreedOnUserLog() {
-      const data   = {};
-      data.agreed  = this.userCbeData.user_agreement;
+      const data = {};
+      data.agreed = this.userCbeData.user_agreement;
 
       axios
         .post(
@@ -92,20 +92,23 @@ export default {
         )
         .then((response) => {
           this.nextAction();
-          cbeStarted({cbeId: this.$parent.$parent.cbe_id, cbeName: this.$parent.$parent.$parent.cbe_name, productId: this.$parent.$parent.$parent.product_id, productName: this.$parent.$parent.$parent.product_name, courseId: this.$parent.$parent.$parent.course_id, courseName: this.$parent.$parent.$parent.course_name, examBodyId: this.$parent.$parent.$parent.exam_body_id, examBodyName: this.$parent.$parent.$parent.exam_body_name });
         })
         .catch((error) => {});
     },
     toggleResetModal() {
       this.agreementModalIsOpen = !this.agreementModalIsOpen;
     },
-    show () {
-      this.$modal.show("modal-"+this.componentType+"-"+this.componentName);
-      $('.components-sidebar .components div').removeClass('active-modal');
+    show() {
+      this.$modal.show(
+        "modal-" + this.componentType + "-" + this.componentName
+      );
+      $(".components-sidebar .components div").removeClass("active-modal");
     },
-    hide () {
-      $('.latent-modal').removeClass('active-modal');
-      this.$modal.hide("modal-"+this.componentType+"-"+this.componentName);
+    hide() {
+      $(".latent-modal").removeClass("active-modal");
+      this.$modal.hide(
+        "modal-" + this.componentType + "-" + this.componentName
+      );
     },
   },
 };

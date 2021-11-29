@@ -35,7 +35,7 @@
                   :isEmailVerified="isEmailVerified"
                   :preferredExamBodyId="preferredExamBodyId"
                   :quizType="practiceQuestion.kind"
-                  :quizName="moduleName"
+                  :lessonName="moduleName"
                   :moduleName="moduleName"
                   :courseName="courseName"
                   :programName="programName"
@@ -290,7 +290,7 @@ export default {
         isLoggedIn: isLoggedIn,
         sessionId: sessionId,
         quizType: "pq " + pq.kind,
-        quizName: this.moduleName,
+        lessonName: this.moduleName,
         moduleName: this.moduleName,
         courseName: this.courseName,
         programName: this.programName,

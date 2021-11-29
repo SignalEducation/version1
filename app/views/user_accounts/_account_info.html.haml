@@ -30,7 +30,7 @@
                 =link_to show_invoice_url(subscription.pending_3ds_invoice&.sca_verification_guid) do
                   .btn.btn-primary.mb-3
                     Authenticate
-              %button.btn.btn-dark.js-show-hide-details.collapsed.sub-details{"aria-controls" => "#sub-#{subscription.id}", "aria-expanded" => "false", "data-target" => "#sub-#{subscription.id}", "data-toggle" => "collapse"}
+              %button.btn.btn-dark.js-show-hide-details.collapsed.sub-details{"aria-controls" => "#sub-#{subscription.id}", "aria-expanded" => "false", "data-target" => "#sub-#{subscription.id}", "data-toggle" => "collapse", onclick: "sendClickEventToSegment('clicks_show_details_subscription', {userId: '#{current_user&.id}',email: '#{current_user&.email}',hasValidSubscription: '#{current_user&.valid_subscription?}',isEmailVerified: '#{current_user&.email_verified}',preferredExamBodyId: '#{current_user&.preferred_exam_body_id}', isLoggedIn: '#{!current_user&.nil?}', sessionId: '#{session&.id}', programName: '#{subscription&.subscription_plan&.exam_body&.name}', planName: '#{subscription&.user_readable_name}'})"}
 
           .collapse.border-top.p-4.mt-2.bg-white{id: "sub-#{subscription.id}"}
             .pt-3.pb-4
@@ -47,7 +47,7 @@
                         =@default_payment_card.expiry_date
 
                   .pb-4
-                    %button.btn.btn-secondary.btn-sm.mb-4{"data-target" => "#add-card-modal", "data-toggle" => "modal"} Change card
+                    %button.btn.btn-secondary.btn-sm.mb-4{"data-target" => "#add-card-modal", "data-toggle" => "modal", onclick: "sendClickEventToSegment('clicks_change_card', {userId: '#{current_user&.id}',email: '#{current_user&.email}',hasValidSubscription: '#{current_user&.valid_subscription?}',isEmailVerified: '#{current_user&.email_verified}',preferredExamBodyId: '#{current_user&.preferred_exam_body_id}', isLoggedIn: '#{!current_user&.nil?}', sessionId: '#{session&.id}', programName: '#{subscription&.subscription_plan&.exam_body&.name}', planName: '#{subscription&.user_readable_name}'})"} Change card
 
               .overflow-x.mb-2
                 %h4.text-gray2 Invoice History
@@ -84,12 +84,11 @@
                 =link_to 'View All Invoices', user_invoices_path(current_user)
               %div
                 -if %w[active canceled-pending pending_cancellation].include?(subscription.state)
-                  =link_to 'Change Subscription Plan', new_subscription_plan_changes_path(subscription), class: 'btn btn-primary btn-sm mb-2 mr-2', style: 'vertical-align: top;'
+                  =link_to 'Change Subscription Plan', new_subscription_plan_changes_path(subscription), class: 'btn btn-primary btn-sm mb-2 mr-2', style: 'vertical-align: top;', onclick: "sendClickEventToSegment('clicks_change_subscription', {userId: '#{current_user&.id}',email: '#{current_user&.email}',hasValidSubscription: '#{current_user&.valid_subscription?}',isEmailVerified: '#{current_user&.email_verified}',preferredExamBodyId: '#{current_user&.preferred_exam_body_id}', isLoggedIn: '#{!current_user&.nil?}', sessionId: '#{session&.id}', programName: '#{subscription&.subscription_plan&.exam_body&.name}', planName: '#{subscription&.user_readable_name}'})"
                 -if subscription.active?
-                  =link_to 'Cancel Subscription', new_subscription_cancellation_path(subscription), class: 'btn btn-danger btn-sm mb-2 mr-2', style: 'vertical-align: top;'
+                  =link_to 'Cancel Subscription', new_subscription_cancellation_path(subscription), class: 'btn btn-danger btn-sm mb-2 mr-2', style: 'vertical-align: top;', onclick: "sendClickEventToSegment('clicks_change_subscription', {userId: '#{current_user&.id}',email: '#{current_user&.email}',hasValidSubscription: '#{current_user&.valid_subscription?}',isEmailVerified: '#{current_user&.email_verified}',preferredExamBodyId: '#{current_user&.preferred_exam_body_id}', isLoggedIn: '#{!current_user&.nil?}', sessionId: '#{session&.id}', programName: '#{subscription&.subscription_plan&.exam_body&.name}', planName: '#{subscription&.user_readable_name}'})"
                 -if subscription.pending_3d_secure? || subscription.past_due?
-                  =link_to 'Cancel Subscription', new_subscription_cancellation_path(subscription), data: { confirm: 'Warning: Because your latest invoice is overdue this cancellation will be immediate and full access will be removed.' }, class: 'btn btn-danger btn-sm mb-2 mr-2', style: 'vertical-align: top;'
-                -if subscription.pending_cancellation?
+                  =link_to 'Cancel Subscription', new_subscription_cancellation_path(subscription), data: { confirm: 'Warning: Because your latest invoice is overdue this cancellation will be immediate and full access will be removed.' }, class: 'btn btn-danger btn-sm mb-2 mr-2', style: 'vertical-align: top;', onclick: "sendClickEventToSegment('clicks_change_subscription', {userId: '#{current_user&.id}',email: '#{current_user&.email}',hasValidSubscription: '#{current_user&.valid_subscription?}',isEmailVerified: '#{current_user&.email_verified}',preferredExamBodyId: '#{current_user&.preferred_exam_body_id}', isLoggedIn: '#{!current_user&.nil?}', sessionId: '#{session&.id}', programName: '#{subscription&.subscription_plan&.exam_body&.name}', planName: '#{subscription&.user_readable_name}'})"
                   =link_to 'Undo Subscription Cancel', un_cancel_subscription_path(subscription), data: { confirm: 'By clicking here you agree to undo the cancellation request for your current plan.' }, method: :put, class: 'btn btn-primary btn-sm mb-2 mr-2', style: 'vertical-align: top;'
                 -if subscription.cancelled?
                   =link_to 'Renew Subscription', subscription_checkout_special_link(subscription.subscription_plan.exam_body_id), class: 'btn btn-primary btn-sm mb-2', style: 'vertical-align: top;'

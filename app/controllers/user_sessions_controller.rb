@@ -7,6 +7,7 @@ class UserSessionsController < ApplicationController
   layout 'marketing', only: %i[new]
 
   def new
+    @user = User.new
     @user_session = UserSession.new
     seo_title_maker('Log in to Start Studying Today | Learnsignal',
                     'Log in to your ACCA or CPD courses to access topic-by-topic tuition modules, explore online learning resources and kick-start your study today.',
@@ -17,6 +18,7 @@ class UserSessionsController < ApplicationController
   end
 
   def create
+    @user = User.new
     @user_session = UserSession.new(user_session_params.to_h)
 
     if @user_session.save

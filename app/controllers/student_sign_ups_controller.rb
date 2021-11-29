@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class StudentSignUpsController < ApplicationController
-  before_action :logged_in_required
+  before_action :logged_in_required, except: :create
   before_action :check_logged_in_status, except: %i[show landing group pricing new_landing]
   before_action :get_variables
   before_action :create_user_object, only: %i[new sign_in_or_register sign_in_checkout landing new_landing]
@@ -151,35 +151,31 @@ class StudentSignUpsController < ApplicationController
 
     @user.user_registration_calbacks(params)
 
-    if verify_recaptcha(model: @user) && @user.save
+    if @user.save
       @user.handle_post_user_creation(user_verification_url(email_verification_code: @user.email_verification_code))
       handle_course_enrollment(@user, params[:course_id]) if params[:course_id]
+      analytics_attributes = params[:analytics_attributes].present? ? JSON.parse(params[:analytics_attributes]) : nil
+      SegmentService.new.track_user_account_created_event(@user, analytics_attributes)
 
       # TODO: Refactor this to not use the flash
       if flash[:plan_guid]
         UserSession.create(@user)
         set_current_visit(@user)
-        redirect_to new_subscription_url(plan_guid: flash[:plan_guid], exam_body_id: flash[:exam_body], registered: true)
+        render json: { url: new_subscription_url(plan_guid: flash[:plan_guid], exam_body_id: flash[:exam_body], registered: true) }, status: :ok
       elsif flash[:product_id]
         UserSession.create(@user)
         set_current_visit(@user)
-        redirect_to new_product_order_url(product_id: flash[:product_id], registered: true)
+        render json: { url: new_product_order_url(product_id: flash[:product_id], registered: true) }, status: :ok
       else
         flash[:datalayer_id] = @user.id
         flash[:datalayer_body] = @user.try(:preferred_exam_body).try(:name)
         UserSession.create(@user)
         set_current_visit(@user)
-        redirect_to student_dashboard_url
+        render json: { url: student_dashboard_url }, status: :ok
       end
-    elsif request&.referrer
-      set_session_errors(@user)
-      redirect_to request.referrer
     else
-      redirect_to root_url
+      render json: { errors: @user.errors }, status: :unprocessable_entity
     end
-  rescue ActionController::InvalidAuthenticityToken
-    flash[:error] = 'Sorry. Your sign up attempt failed. Please try again'
-    redirect_to root_url
   end
 
   def show
@@ -245,7 +241,7 @@ class StudentSignUpsController < ApplicationController
   def student_allowed_params
     params.require(:user).permit(
       :email, :first_name, :last_name, :preferred_exam_body_id, :country_id,
-      :locale, :password, :password_confirmation, :terms_and_conditions,
+      :locale, :password, :terms_and_conditions,
       :communication_approval, :home_page_id
     )
   end

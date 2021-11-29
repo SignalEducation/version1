@@ -119,31 +119,6 @@
     sendClickEventToSegment('pause_video', {userId: userId, email: email, hasValidSubscription: hasValidSubscription, isEmailVerified: isEmailVerified, preferredExamBodyId: prefExamBodyId, isLoggedIn: isLoggedIn, sessionId: sessionId, lessonName: title, moduleName: moduleName, courseName: courseName, programName: _programName})
   };
 
-  //When the user selects a specific time
-  let timeSeeked = function(data) {
-    videoPlayerSeeked(data);
-  };
-
-  //When the user adjusts the volume
-  let volumeChange = function(data) {
-    videoVolumeChange(data);
-  };
-
-  //When the user adjusts the playback speed
-  let playbackRateChange = function(data) {
-    videoPlaybackRateChange(data);
-  };
-
-  //When the user adjusts the volume
-  let fullScreenChange = function(data) {
-    videoFullScreenChange(data);
-  };
-
-  //When the user adjusts the volume
-  let qualityChange = function(data) {
-    videoQualityChange(data);
-  };
-
   //When the user adjusts the volume
   let onVideoEnded = function(data) {
     $("#js-end-of-video-modal").fadeIn(200);removeClass('hidden');
@@ -156,9 +131,4 @@
   player.on('play', onPlay);
   player.on('pause', onPause);
   player.on('timeupdate', timeUpdate);
-  player.on('seeked', timeSeeked);
-  player.on('volumechange', volumeChange);
-  player.on('playbackratechange', playbackRateChange);
-  player.on('fullscreenchange', fullScreenChange);
-  player.on('qualitychange', qualityChange);
   player.on('ended', onVideoEnded);

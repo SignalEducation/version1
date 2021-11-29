@@ -1,83 +1,30 @@
 %footer.footer.footerMarketing{class: @footer == 'white' ? 'footer-light' : 'footer-dark'}
-  .container.position-relative.pt-5.pb-3
-    .row
-      .col-12.col-md-6.col-lg-3
-        =link_to home_url, class: 'mb-4' do
-          =image_tag('Learnsignal-Logo.svg', class: 'mb-1 logo', alt: 'LearnSignal Logo')
-        %ul.nav.nav-social.mt-2
-          %li.nav-item
-            =link_to "https://www.facebook.com/learnsignal/", class: 'nav-link social-icon', target: '_blank', rel: 'noreferrer' do
-              =image_tag('social-icons/facebook-icon@2x.png')
-              %span.hidden-xs
-                Facebook
-          %li.nav-item
-            =link_to "https://twitter.com/learnsignal", class: 'nav-link social-icon', target: '_blank', rel: 'noreferrer' do
-              =image_tag('social-icons/twitter-icon@2x.png')
-              %span.hidden-xs
-                Twitter
-          %li.nav-item
-            =link_to "https://www.linkedin.com/company/learnsignal", class: 'nav-link social-icon', target: '_blank', rel: 'noreferrer' do
-              =image_tag('social-icons/linkedin-icon@2x.png')
-              %span.hidden-xs
-                LinkedIn
-          %li.nav-item
-            =link_to "https://www.instagram.com/learnsignal_/", class: 'nav-link social-icon', target: '_blank', rel: 'noreferrer' do
-              =image_tag('social-icons/instagram-icon@2x.png')
-              %span.hidden-xs
-                Instagram
-          %li.nav-item
-            =link_to "https://www.youtube.com/user/LearnSignal", class: 'nav-link social-icon', target: '_blank', rel: 'noreferrer' do
-              =image_tag('social-icons/youtube-icon@2x.png')
-              %span.hidden-xs
-                Youtube
-
-      .col-6.col-md-3.col-lg-9.mb-4
-        .row
-          .col-lg-3
-            %ul.nav.flex-column
-              -if @groups
-                %li.nav-item.nav-item-header
-                  Courses
-                -@groups.all_in_order.each do |group|
-                  -if group.active && group.active_children.any?
-                    %li.nav-item
-                      =link_to "#{group.name} Courses", library_special_link(group), class: 'nav-link'
-          .col-lg-3
-            %ul.nav.flex-column
-              -if @groups
-                %li.nav-item.nav-item-header
-                  Products
-
-                -@groups.all_in_order.each do |group|
-                  -if group.active && group.exam_body.has_products?
-                    %li.nav-item
-                      =link_to "#{group.name} Products", exam_products_url(group.name_url), class: 'nav-link'
-          .col-lg-3
-            %ul.nav.flex-column
-              %li.nav-item.nav-item-header
-                Company
-              %li.nav-item
-                =link_to 'About Us', privacy_policy_url, class: 'nav-link'
-              %li.nav-item
-                %a{href: 'https://blog.learnsignal.com/', class: 'nav-link', target: '_blank', rel: 'noreferrer'} Blog
-              %li.nav-item
-                %a{href: '/careers', class: 'nav-link', } Careers
-              %li.nav-item
-                =link_to 'Privacy Policy', privacy_policy_url, class: 'nav-link'
-              %li.nav-item
-                =link_to 'Terms & Conditions', terms_and_conditions_url, class: 'nav-link'
-          
-          .col-lg-3
-            %ul.nav.flex-column
-              %li.nav-item.nav-item-header
-                Support
-              %li.nav-item
-                =link_to 'FAQs', public_faqs_url, class: 'nav-link'
-              %li.nav-item
-                =link_to 'Contact Us', contact_url, class: 'nav-link'
-
+  .container.position-relative.pt-4.pb-4
     .footerBottomInfo
       .footerBottomInfo-item
-        ="© Signal Education Limited, #{Time.new.year}"
+        =link_to home_url, class: 'mr-1' do
+          %svg{:height => "28", :viewbox => "0 0 180 35", :width => "100", :xmlns => "http://www.w3.org/2000/svg", style: 'margin-right: 16px;'}
+            %path{"clip-rule" => "evenodd", :d => "M154.486 7.26062C150.814 7.26062 148.447 8.88633 146.657 11.3071L150.143 13.8009C150.945 12.4525 152.379 11.1959 154.523 11.1959C157.486 11.1959 158.306 12.3601 158.4 15.0944H153.348C149.174 15.0944 145.93 16.4241 145.93 20.4337C145.93 24.2947 148.876 26.4749 152.696 26.4749C154.821 26.4749 157.3 25.5512 158.511 23.6482L158.791 26.1058H162.537V14.9095C162.537 10.4015 159.555 7.26062 154.486 7.26062ZM158.419 18.4938C158.139 20.6735 156.405 22.6689 153.609 22.6689C151.578 22.6689 150.59 21.8008 150.59 20.5811C150.59 19.4175 151.541 18.3458 153.609 18.3458H158.419V18.4938Z", :fill => "#9CA3AF", "fill-rule" => "evenodd"}
+            %path{"clip-rule" => "evenodd", :d => "M126.885 26.1056H131.433V15.9997C131.433 12.7845 133.036 11.4174 135.59 11.4174C137.92 11.4174 139.15 13.1724 139.15 15.5931V26.1056H143.697V15.0204C143.697 11.1588 141.778 7.26038 136.895 7.26038C135.068 7.26038 132.925 7.9811 131.433 9.79167V7.64882H126.885V26.1056Z", :fill => "#9CA3AF", "fill-rule" => "evenodd"}
+            %path{"clip-rule" => "evenodd", :d => "M116.806 23.2233C113.488 22.8168 111.196 22.7799 111.196 21.2653C111.196 20.84 111.363 20.5259 111.736 20.2855C112.799 20.7476 113.991 21.0062 115.277 21.0062C119.359 21.0062 122.845 18.383 122.845 14.2629C122.845 13.0619 122.565 11.972 122.043 11.0483L124.745 8.88616L122.379 6.02258L119.527 8.44273C118.278 7.68515 116.75 7.26044 115.129 7.26044C111.009 7.26044 107.487 10.0316 107.487 14.0412C107.487 15.6669 108.064 17.1265 109.033 18.2906C107.934 19.2512 107.3 20.4335 107.3 22.0592C107.3 23.8335 108.046 24.9415 109.127 25.6622L106.964 27.4728C106.927 27.6576 106.89 27.8425 106.89 28.2672C106.89 32.0545 109.947 34.8444 115.818 34.8444C120.44 34.8444 124.056 32.8489 124.056 28.6738C124.056 24.4425 120.329 23.6855 116.806 23.2233ZM115.277 10.7523C117.272 10.7523 118.334 12.1382 118.334 14.078C118.334 15.9623 117.309 17.3295 115.277 17.3295C113.264 17.3295 112.183 15.9623 112.183 14.078C112.183 12.1382 113.302 10.7523 115.277 10.7523ZM115.78 31.3712C113.525 31.3712 111.587 30.7242 111.047 28.8768L110.935 28.3778L111.941 26.7152C113.078 26.9369 114.233 27.0293 115.202 27.1218C118.297 27.4359 119.751 27.7682 119.751 29.1722C119.751 30.6505 118.185 31.3712 115.78 31.3712Z", :fill => "#9CA3AF", "fill-rule" => "evenodd"}
+            %path{"clip-rule" => "evenodd", :d => "M99.2332 26.1056H103.781V7.64886H99.2332V26.1056Z", :fill => "#9CA3AF", "fill-rule" => "evenodd"}
+            %path{"clip-rule" => "evenodd", :d => "M99.1216 4.15701H103.893V0H99.1216V4.15701Z", :fill => "#9CA3AF", "fill-rule" => "evenodd"}
+            %path{"clip-rule" => "evenodd", :d => "M88.8554 26.475C92.3781 26.475 96.1245 24.5907 96.1245 20.3226C96.1245 13.5424 86.6559 15.205 86.6559 12.4151C86.6559 11.547 87.5694 10.8263 89.0602 10.8263C91.0733 10.8263 92.1173 12.0273 92.7505 13.1727L96.2738 11.2697C94.8568 8.77525 92.4153 7.26068 89.2095 7.26068C85.6125 7.26068 82.2946 9.10811 82.2946 13.0066C82.2946 19.5281 91.651 17.4409 91.651 20.5443C91.651 21.5236 90.7374 22.7433 88.6317 22.7433C86.1531 22.7433 85.1651 21.0433 84.6617 19.713L81.0458 21.3019C81.9594 24.1473 84.9409 26.475 88.8554 26.475Z", :fill => "#9CA3AF", "fill-rule" => "evenodd"}
+            %path{"clip-rule" => "evenodd", :d => "M62.5228 26.1056H67.0706V15.9997C67.0706 12.7845 68.6735 11.4174 71.2271 11.4174C73.5571 11.4174 74.787 13.1724 74.787 15.5931V26.1056H79.3348V15.0204C79.3348 11.1588 77.415 7.26038 72.5319 7.26038C70.7048 7.26038 68.5613 7.9811 67.0706 9.79167V7.64882H62.5228V26.1056Z", :fill => "#9CA3AF", "fill-rule" => "evenodd"}
+            %path{"clip-rule" => "evenodd", :d => "M48.1747 26.1056H52.5732V18.3087C52.5732 13.6158 54.7917 11.6578 56.9163 11.6578C57.6433 11.6578 58.3332 11.8795 58.9476 12.2861L61.0167 8.59067C60.122 7.68567 58.8361 7.26038 57.6062 7.26038C55.5182 7.26038 53.4124 8.51696 52.6104 10.7522V7.64882H48.1747V26.1056Z", :fill => "#9CA3AF", "fill-rule" => "evenodd"}
+            %path{"clip-rule" => "evenodd", :d => "M36.2311 7.26062C32.5591 7.26062 30.1925 8.88633 28.4032 11.3071L31.8887 13.8009C32.6895 12.4525 34.1248 11.1959 36.2683 11.1959C39.2321 11.1959 40.0518 12.3601 40.1451 15.0944H35.0944C30.919 15.0944 27.6761 16.4241 27.6761 20.4337C27.6761 24.2947 30.621 26.4749 34.4417 26.4749C36.5669 26.4749 39.0456 25.5512 40.2572 23.6482L40.5363 26.1058H44.2827V14.9095C44.2827 10.4015 41.3012 7.26062 36.2311 7.26062ZM40.164 18.4938C39.8842 20.6735 38.1509 22.6689 35.3553 22.6689C33.3234 22.6689 32.336 21.8008 32.336 20.5811C32.336 19.4175 33.2862 18.3458 35.3553 18.3458H40.164V18.4938Z", :fill => "#9CA3AF", "fill-rule" => "evenodd"}
+            %path{"clip-rule" => "evenodd", :d => "M26.5056 16.5722C26.5056 12.4526 24.3993 7.26074 17.8762 7.26074C11.5756 7.26074 8.74286 12.1385 8.74286 16.9419C8.74286 21.9121 11.7621 26.4751 18.1743 26.4751C21.3051 26.4751 23.7844 25.3852 25.8163 23.1493L22.6849 20.4338C21.38 21.8746 19.8887 22.3918 18.2114 22.3918C15.2854 22.3918 13.9434 20.7661 13.5521 18.3459H26.3374C26.4313 18.0868 26.5056 17.3298 26.5056 16.5722ZM13.5521 15.0939C13.9806 12.7849 15.155 11.048 17.8385 11.048C19.8143 11.048 21.4172 12.0273 21.8829 13.9303C21.995 14.3 22.0322 14.6879 22.0322 15.0939H13.5521Z", :fill => "#9CA3AF", "fill-rule" => "evenodd"}
+            %path{"clip-rule" => "evenodd", :d => "M0 26.1407H4.5478V0.115845H0V26.1407Z", :fill => "#9CA3AF", "fill-rule" => "evenodd"}
+            %path{"clip-rule" => "evenodd", :d => "M166.568 26.0261H171.116V0.00177002H166.568V26.0261Z", :fill => "#9CA3AF", "fill-rule" => "evenodd"}
+            %mask#mask0{:height => "7", "mask-type" => "alpha", :maskunits => "userSpaceOnUse", :width => "6", :x => "174", :y => "20"}
+              %path{"clip-rule" => "evenodd", :d => "M174.066 20.174H179.965V26.0217H174.066V20.174Z", :fill => "white", "fill-rule" => "evenodd"}
+            %g{:mask => "url(#mask0)"}
+              %path{"clip-rule" => "evenodd", :d => "M177.016 26.0217C178.645 26.0217 179.965 24.7124 179.965 23.0978C179.965 21.4832 178.645 20.174 177.016 20.174C175.387 20.174 174.066 21.4832 174.066 23.0978C174.066 24.7124 175.387 26.0217 177.016 26.0217Z", :fill => "#00B67A", "fill-rule" => "evenodd"}
+        %span{style: "color:#9ca3af"}
+          ="© Signal Education Limited, #{Time.new.year}"
       .footerBottomInfo-item
-        %a{href: '#', class: 'iubenda-advertising-preferences-link footerBottomInfo-itemLink', } Update your advertising tracking preferences
+        %ul.d-flex.flex-row
+          %li.nav-item
+            =link_to 'Privacy Policy', 'https://www.learnsignal.com/privacy-policy', class: 'footerBottomInfo-item nav-link', target: '_blank'
+          %li.nav-item
+            =link_to 'Terms & Conditions', 'https://www.learnsignal.com/terms-and-conditions', class: 'footerBottomInfo-item nav-link', target: '_blank'

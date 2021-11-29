@@ -33,7 +33,7 @@
       "preferredExamBodyId" : '#{current_user&.preferred_exam_body_id}',
       "isLoggedIn" : '#{!current_user&.nil?}',
       "sessionId" : '#{session&.id}',
-      "moduleName" : '#{@course_step&.name}',
+      "moduleName" : '#{@course_step&.course_lesson&.name}',
       "courseName" : '#{@course&.name}',
       "programName" : '#{@course&.group.name}',
       "file_name" : '#{notes.name}'

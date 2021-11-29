@@ -43,7 +43,7 @@
         %ul.d-flex.flex-column.nav.nav-pills.nav-fill{id: 'levelsTabs', role: 'tablist'}
           - @levels.each_with_index do |level, counter|
             %li.nav-item{data: {tab_name: level.name, group_name: @default_group.name}}
-              %a{onclick: "sendClickEventToSegment('clicks_level', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', programName: '#{level.group.name}', levelName: '#{level.name}'})", class: "nav-link #{counter == 0 ? 'active' : ''}", id: "#{level.name_url}-tab", data: {toggle: 'tab'}, href: "##{level.name_url}", aria: {controls: "#{level.name_url}", selected: 'false'}, role: 'tab'}
+              %a{onclick: "sendClickEventToSegment('clicks_onboarding_level', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', programName: '#{level.group.name}', levelName: '#{level.name}'})", class: "nav-link #{counter == 0 ? 'active' : ''}", id: "#{level.name_url}-tab", data: {toggle: 'tab'}, href: "##{level.name_url}", aria: {controls: "#{level.name_url}", selected: 'false'}, role: 'tab'}
                 =level.name
     %h4.h4-hero.mb-4.mt-4.hidden-xs
       ="Get started with an #{@default_group.name} course"
@@ -52,7 +52,7 @@
         %ul.d-flex.flex-column.nav.nav-pills.nav-fill{id: 'levelsTabs', role: 'tablist'}
           - @levels.each_with_index do |level, counter|
             %li.nav-item{data: {tab_name: level.name, group_name: @default_group.name}}
-              %a{onclick: "sendClickEventToSegment('clicks_level', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', programName: '#{level.group.name}', levelName: '#{level.name}'})", class: "nav-link #{counter == 0 ? 'active' : ''}", id: "#{level.name_url}-tab", data: {toggle: 'tab'}, href: "##{level.name_url}", aria: {controls: "#{level.name_url}", selected: 'false'}, role: 'tab'}
+              %a{onclick: "sendClickEventToSegment('clicks_onboarding_level', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', programName: '#{level.group.name}', levelName: '#{level.name}'})", class: "nav-link #{counter == 0 ? 'active' : ''}", id: "#{level.name_url}-tab", data: {toggle: 'tab'}, href: "##{level.name_url}", aria: {controls: "#{level.name_url}", selected: 'false'}, role: 'tab'}
                 =level.name
 
       %section.container.content-section.p-0
@@ -64,7 +64,7 @@
                 -level.courses.all_in_order.each do |course|
                   - if course.active
                     .col-lg-12.col-xl-12
-                      =link_to library_special_link(course), class: 'card flex-md-row', style: 'margin-bottom: 1rem;', data: { toggle: 'tooltip', placement: 'right', animation: 'true', delay: { "show": 300, "hide": 100 }}, title: "#{course.short_description}" do
+                      =link_to library_special_link(course), class: 'card flex-md-row na', style: 'margin-bottom: 1rem;', data: { toggle: 'tooltip', placement: 'right', animation: 'true', delay: { "show": 300, "hide": 100 }}, title: "#{course.short_description}", onclick: "sendClickEventToSegment('clicks_onboarding_course', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', programName: '#{course&.group&.name}', levelName: '#{level&.name}', courseName: '#{course&.name}', navigationThrough: 'activity'})" do
                         .card-body.d-flex.flex-column.justify-content-center
                           %div.libraryGroupWrapper-list-courseInfo
                             %div.libraryGroupWrapper-list-courseIcon{style: "border-color: #{course.highlight_colour}; background-color: #{course.highlight_colour};"}
