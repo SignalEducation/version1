@@ -40,6 +40,11 @@
             .input-group.input-group-lg
               =f.collection_select :preferred_exam_body_id, ExamBody.all_active.all_in_order, :id, :name, {include_blank: 'Choose an exam'}, {class: 'form-control ls-row-select-placeholder ls-down-arrow', id: 'user_exam_body', required: true}
 
+          - if @show_checkbox_recaptcha
+            = recaptcha_tags callback: 'submitInvisibleRecaptchaForm'
+          - else
+            = recaptcha_v3(action: 'registration', site_key: Rails.application.credentials[Rails.env.to_sym][:google][:recaptcha][:site_key])
+
       %fieldset.pt-2
         %legend.sr-only Terms and Conditions checkboxes
         .custom-control.custom-checkbox.mb-2
@@ -87,6 +92,8 @@
                       sourceofRegistration: 'engagementSignUpForm',
                       isLoggedIn: true };
 
+  let googleRecaptchaV2 = false;
+
   function getCookie(cname) {
     var name = cname + "=";
     var decodedCookie = decodeURIComponent(document.cookie);
@@ -108,12 +115,18 @@
     var lastName = fullNameEntry.split(" ").slice(-1).join(" ");
   }
 
+  function submitInvisibleRecaptchaForm() {
+    googleRecaptchaV2 = true;
+    submitBtnActive();
+  }
+
   function submitBtnActive() {
     if(
       $('#user_first_and_last_name').val().length > 0 &&
       $('#user_email').val().length > 0 &&
       $('#user_password').val().length > 0 &&
       $('#user_exam_body').val().length > 0 &&
+      (googleRecaptchaV2 || '#{@recaptcha_v3}') &&
       $('#terms_and_conditions').prop('checked') &&
       $('#communication_approval').prop('checked')) {
         $("#signUp").removeClass("btn-gray").addClass("btn-primary");

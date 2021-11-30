@@ -7,6 +7,11 @@ class UserSessionsController < ApplicationController
   layout 'marketing', only: %i[new]
 
   def new
+    if verify_recaptcha(model: @user, action: 'registration', secret_key: Rails.application.credentials[Rails.env.to_sym][:google][:recaptcha][:secret_key]) 
+      @recaptcha_v3 = true
+    else
+      @show_checkbox_recaptcha = true
+    end
     @user = User.new
     @user_session = UserSession.new
     seo_title_maker('Log in to Start Studying Today | Learnsignal',
