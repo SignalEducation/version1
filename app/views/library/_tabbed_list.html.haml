@@ -48,7 +48,7 @@
 
 :javascript
   function onUnitSelect() {
-     let units_hours_select =  $('#12-units-select').val();
+     let units_hours_select =  event.target.value;
     sendClickEventToSegment('selects_units_dropdown', {
       userId: '#{current_user&.id}',
       email: '#{current_user&.email}',
@@ -62,7 +62,7 @@
     })
   }
   function updateKeyAreasSelect(level_id) {
-    let key_area =  $('#key_area_id').val();
+    let key_area = event.target.value;
     sendClickEventToSegment('selects_key_area_dropdown', {
       userId: '#{current_user&.id}',
       email: '#{current_user&.email}',
