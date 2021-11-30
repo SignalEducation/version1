@@ -40,11 +40,6 @@
             .input-group.input-group-lg
               =f.collection_select :preferred_exam_body_id, ExamBody.all_active.all_in_order, :id, :name, {include_blank: 'Choose an exam'}, {class: 'form-control ls-row-select-placeholder ls-down-arrow', id: 'user_exam_body', required: true}
 
-          - if @show_checkbox_recaptcha
-            = recaptcha_tags callback: 'submitInvisibleRecaptchaForm'
-          - else
-            = recaptcha_v3(action: 'registration', site_key: Rails.application.credentials[Rails.env.to_sym][:google][:recaptcha][:site_key])
-
       %fieldset.pt-2
         %legend.sr-only Terms and Conditions checkboxes
         .custom-control.custom-checkbox.mb-2
@@ -68,6 +63,7 @@
               = hidden_field_tag :hutk
               = hidden_field_tag :page_uri
               = hidden_field_tag :page_name
+              = hidden_field_tag :g_recaptcha_response_data
               = hidden_field_tag :hs_form_id, Rails.application.credentials[Rails.env.to_sym][:hubspot][:form_api][:registration_form]
               .ls-row-login
                 =f.submit 'Create Account', class: 'btn btn-gray ls-row-signup-btn', id: 'signUp'
@@ -85,7 +81,13 @@
               .sk-circle11.sk-child
               .sk-circle12.sk-child
 
+%script{:src => "https://www.google.com/recaptcha/api.js?render=#{Rails.application.credentials[Rails.env.to_sym][:google][:recaptcha][:site_key]}"}
 :javascript
+  grecaptcha.ready(function() {
+    grecaptcha.execute('#{Rails.application.credentials[Rails.env.to_sym][:google][:recaptcha][:site_key]}', {action:'registration'}).then(function(token) {
+      document.getElementById('g_recaptcha_response_data').value = token;
+    });
+  });
   var form = $('#new_user');
 
   let segmentData = { sessionId: '#{session&.id}',
@@ -115,18 +117,12 @@
     var lastName = fullNameEntry.split(" ").slice(-1).join(" ");
   }
 
-  function submitInvisibleRecaptchaForm() {
-    googleRecaptchaV2 = true;
-    submitBtnActive();
-  }
-
   function submitBtnActive() {
     if(
       $('#user_first_and_last_name').val().length > 0 &&
       $('#user_email').val().length > 0 &&
       $('#user_password').val().length > 0 &&
       $('#user_exam_body').val().length > 0 &&
-      (googleRecaptchaV2 || '#{@recaptcha_v3}') &&
       $('#terms_and_conditions').prop('checked') &&
       $('#communication_approval').prop('checked')) {
         $("#signUp").removeClass("btn-gray").addClass("btn-primary");

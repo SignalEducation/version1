@@ -151,7 +151,7 @@ class StudentSignUpsController < ApplicationController
 
     @user.user_registration_calbacks(params)
 
-    if @user.save
+    if @user.save && verify_recaptcha(response: params['g_recaptcha_response_data'], model: @user, action: 'registration', secret_key: Rails.application.credentials[Rails.env.to_sym][:google][:recaptcha][:secret_key])
       @user.handle_post_user_creation(user_verification_url(email_verification_code: @user.email_verification_code))
       handle_course_enrollment(@user, params[:course_id]) if params[:course_id]
       analytics_attributes = params[:analytics_attributes].present? ? JSON.parse(params[:analytics_attributes]) : nil
