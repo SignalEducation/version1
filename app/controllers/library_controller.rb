@@ -93,7 +93,7 @@ class LibraryController < ApplicationController
   def user_contact_form
     if invalid_email_format?(params[:email_address])
       flash[:modal_error] = 'Invalid email, please try again.'
-    elsif verify_recaptcha && check_if_params_present
+    elsif verify_recaptcha(response: params['g_recaptcha_user_response_data'], model: @user, action: 'question', secret_key: Rails.application.credentials[Rails.env.to_sym][:google][:recaptcha][:secret_key]) && check_if_params_present
       Zendesk::RequestWorker.perform_async(params[:full_name],
                                            params[:email_address],
                                            params[:type],
