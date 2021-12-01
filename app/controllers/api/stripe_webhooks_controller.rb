@@ -7,6 +7,7 @@ module Api
 
     def create
       record_webhook(@event_json) if @event_json && StripeApiEvent.should_process?(@event_json)
+
       head :no_content
     rescue StandardError => e
       slack = SlackService.new

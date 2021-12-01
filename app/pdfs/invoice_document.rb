@@ -67,10 +67,18 @@ class InvoiceDocument < Prawn::Document
 
     table_details = [['No.', 'Description', 'VAT', 'Total Price']]
     invoice.invoice_line_items.each_with_index do |line_item, index|
-      table_details << [index + 1,
-                        pdf_description(invoice, line_item),
-                        item_vat_rate(vat_rate, line_item),
-                        line_item.amount]
+      table_details <<
+        if line_item.credit_note?
+          [index + 1,
+          line_item[:original_stripe_data][:memo],
+          '-',
+          line_item.amount]
+        else
+          [index + 1,
+          pdf_description(invoice, line_item),
+          item_vat_rate(vat_rate, line_item),
+          line_item.amount]
+        end
     end
 
     table(table_details, column_widths: [40, 380, 60, 60], header: true,
@@ -86,8 +94,8 @@ class InvoiceDocument < Prawn::Document
 
     summary_details = [
       ['Subtotal', invoice.currency.format_number(invoice.sub_total)],
-      ['Discount', invoice.currency.format_number((invoice.sub_total - invoice.total))],
-      ['Total',    invoice.currency.format_number(invoice.total)]
+      ['Discount', invoice.currency.format_number((invoice.sub_total - invoice.amount_due))],
+      ['Total',    invoice.currency.format_number(invoice.amount_due)]
     ]
     font(Rails.root.join('app', 'assets', 'fonts', 'PingFangRegular.ttf')) do
       table(summary_details, column_widths: [480, 60], header: true,
