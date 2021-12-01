@@ -4,4 +4,5 @@ $('.flash-messages').html("<%= j render(:partial => 'layouts/flash_messages') %>
   document.getElementById("user_contact_form").reset();
 <% end %>
 
-$('.alert').delay(3000).fadeOut(400);
+$('.flash-messages').delay(2000).fadeOut(300);
+setTimeout(function(){ $('#contact-form-modal').modal('hide'); }, 2500);
