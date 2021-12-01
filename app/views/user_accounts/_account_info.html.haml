@@ -20,7 +20,7 @@
                   =subscription.stripe? ? 'Credit card' : "PayPal"
               %div.m-0.text-gray1{style: 'font-size: 12px;'}
                 Payment Source
-                      
+
             .subscriptionCard-body-statusBox
               %div.h4.m-0.text-black
                 %span.subscriptionPageWrapper-priceValue.statusText
@@ -105,4 +105,3 @@
             %div.m-0.text-gray1{style: 'font-size: 12px;'}
               Account created on
               %span=humanize_datetime_full(@user.created_at)
-            
