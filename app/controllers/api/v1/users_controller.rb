@@ -24,6 +24,8 @@ module Api
           @user_token       = encode_token(payload(@user))
           @user_credentials = "#{session['user_credentials']}::#{session['user_credentials_id']}" if UserSession.create(@user)
 
+          SegmentService.new.track_user_account_created_event(@user, analytics_attributes_params&.to_h) if params[:analytics_attributes].present?
+
           render 'api/v1/users/show.json', status: :created
         else
           json_response({ error: @user.errors }, :unprocessable_entity)
@@ -93,8 +95,12 @@ module Api
         params.require(:user).permit(
           :email, :first_name, :last_name, :preferred_exam_body_id, :country_id,
           :locale, :password, :password_confirmation, :terms_and_conditions,
-          :communication_approval, :home_page_id, :date_of_birth
+          :communication_approval, :home_page_id, :date_of_birth, :analytics_attributes
         )
+      end
+
+      def analytics_attributes_params
+        params.require(:analytics_attributes).permit!
       end
 
       def change_password_params

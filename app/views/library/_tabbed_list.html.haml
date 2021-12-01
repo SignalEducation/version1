@@ -2,7 +2,7 @@
   %nav.levels-nav
     %ul.d-flex.flex-column.nav.nav-pills.nav-fill{id: 'levelsTabs', role: 'tablist'}
       - @levels.each_with_index do |level, counter|
-        %li.nav-item{data: {tab_name: level.name, group_name: @group.name}}
+        %li.nav-item{data: {tab_name: level.name, group_name: @group.name}, onclick: "sendClickEventToSegment('selects_levels_exams', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', programName: '#{@group.name}', levelName: '#{level.name}'})"}
           %a{class: "nav-link #{counter == 0 ? 'active' : ''}", id: "#{level.name_url}-tab", data: {toggle: 'tab'}, href: "##{level.name_url}", aria: {controls: "#{level.name_url}", selected: 'false'}, role: 'tab'}
             =level.name
 
@@ -31,7 +31,7 @@
                                 .filter-inner-dot
                               %span.filter-select-label
                                 Choose Units/Hours
-                            =select_tag(:units, options_for_select( level_units_hours.map{ |u| [t('models.course.hour_unit', count: u), u] }), id: "#{level.id}-units-select", include_blank: 'All', onchange: 'jQuery(this).parent().trigger("submit")', class: 'form-control filter-select-opts')
+                            =select_tag(:units, options_for_select( level_units_hours.map{ |u| [t('models.course.hour_unit', count: u), u] }), id: "#{level.id}-units-select", include_blank: 'All', onchange: "onUnitSelect(); jQuery(this).parent().trigger('submit')", class: 'form-control filter-select-opts')
                       -else
                         .filter-label-select-row.filter-row-wrap.filter-width-full
                           .filter-label-select-col.filter-width-half
@@ -40,15 +40,40 @@
                                 .filter-inner-dot
                               %span.filter-select-label
                                 Choose Units/Hours
-                            =select_tag(:units, options_for_select( level_units_hours.map{ |u| [t('models.course.hour_unit', count: u), u] }), id: "#{level.id}-units-select", include_blank: 'All', onchange: 'jQuery(this).parent().trigger("submit")', class: 'form-control filter-select-opts')
+                            =select_tag(:units, options_for_select( level_units_hours.map{ |u| [t('models.course.hour_unit', count: u), u] }), id: "#{level.id}-units-select", include_blank: 'All', onchange: "onUnitSelect(); jQuery(this).parent().trigger('submit')", class: 'form-control filter-select-opts')
                       =hidden_field_tag :level_id, level.id
 
           .row.row-lge{id: "#{level.id}-tabbed-courses-list"}
-            =render partial: 'tabbed_courses_list', locals: { courses: level.courses.all_active.all_in_order }
+            =render partial: 'tabbed_courses_list', locals: { courses: level.courses.all_active.all_in_order, level_name: level.name }
 
 :javascript
+  function onUnitSelect() {
+     let units_hours_select =  event.target.value;
+    sendClickEventToSegment('selects_units_dropdown', {
+      userId: '#{current_user&.id}',
+      email: '#{current_user&.email}',
+      hasValidSubscription: '#{current_user&.valid_subscription?}',
+      isEmailVerified: '#{current_user&.email_verified}',
+      preferredExamBodyId: '#{current_user&.preferred_exam_body_id}', 
+      isLoggedIn: '#{!current_user&.nil?}', 
+      sessionId: '#{session&.id}', 
+      programName: '#{@group&.name}', 
+      value: units_hours_select
+    })
+  }
   function updateKeyAreasSelect(level_id) {
-    let key_area =  $('#key_area_id').val();
+    let key_area = event.target.value;
+    sendClickEventToSegment('selects_key_area_dropdown', {
+      userId: '#{current_user&.id}',
+      email: '#{current_user&.email}',
+      hasValidSubscription: '#{current_user&.valid_subscription?}',
+      isEmailVerified: '#{current_user&.email_verified}',
+      preferredExamBodyId: '#{current_user&.preferred_exam_body_id}', 
+      isLoggedIn: '#{!current_user&.nil?}', 
+      sessionId: '#{session&.id}', 
+      programName: '#{@group&.name}', 
+      value: key_area
+    })
 
     $.ajax({
       url: '/courses/units_by_key_area',

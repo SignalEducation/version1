@@ -12,6 +12,10 @@
   let lastLessonStep = "#{@course_lesson&.course_steps&.all_in_order&.all_active&.last&.id}";
   let endStepVidTime = "#{cme.vid_end_seconds || ''}";
   let myPlayer       = dacast(video_id, 'video-player-window');
+  let title                 = "#{title || ''}";
+  let moduleName = "#{module_name || ''}";
+  let courseName = "#{course_name || ''}";
+  let _programName = "#{program_name || ''}";
 
   let showUpgradeBtn = function() {
     $("#upgrade-subscription-modal").removeClass('video-upgrade-modal-hide');
@@ -20,6 +24,7 @@
 
   // Create a log when video start
   myPlayer.onPlay(function(){
+    sendClickEventToSegment('play_video', {userId: userId, email: email, hasValidSubscription: hasValidSubscription, isEmailVerified: isEmailVerified, preferredExamBodyId: prefExamBodyId, isLoggedIn: isLoggedIn, sessionId: sessionId, lessonName: title, moduleName: moduleName, courseName: courseName, programName: _programName})
     if (log_id === '') {
       $.ajax({
         url: '#{create_video_user_log_courses_path}',
@@ -32,7 +37,6 @@
                               'set_id': exam_track_id }),
         success: function(data,status,xhr){
           log_id = data.video_log_id;
-          videoPlayEvent();
         },
         error: function(xhr,status,error){
           console.log(xhr);

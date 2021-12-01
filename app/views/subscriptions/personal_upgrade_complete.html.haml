@@ -72,23 +72,4 @@
     let discounted_price    = "#{@discounted_price}";
     let preferredExamBody   = "#{current_user&.preferred_exam_body&.name}";
     let preferredExamBodyId = "#{current_user&.preferred_exam_body_id}";
-
-    analytics.page('Payment Complete', {
-      preferredExamBodyId: preferredExamBodyId,
-      preferredExamBody:preferredExamBody ,
-      banner: banner,
-      onboarding: onboarding,
-      examBodyId: "#{@subscription&.subscription_plan&.exam_body&.id}",
-      examBodyName: "#{@subscription&.subscription_plan&.exam_body&.name}",
-      country: "#{current_user&.country&.name}",
-      currency: "#{@subscription&.subscription_plan&.currency&.iso_code}",
-      paymentType: "Subscription",
-      subscriptionType: "#{@subscription&.kind.humanize}",
-      planInterval: "#{@subscription&.subscription_plan&.payment_frequency_in_months}",
-      planIntervalName: "#{@subscription&.subscription_plan&.interval_name}",
-      price: "#{@subscription&.subscription_plan&.price}",
-      paymentProvider: "#{@subscription&.subscription_type}",
-      discountedPrice: discounted_price,
-      couponCode: coupon_code
-    });
   });

@@ -383,8 +383,6 @@ describe PaypalSubscriptionsService, type: :service do
 
   describe '#raise_subscription_error' do
     it 'logs the error and raises' do
-      expect(Rails.logger).to receive(:error)
-
       expect{ subject.send(:raise_subscription_error, {}, 'test_method', :generic) }.to raise_error(Learnsignal::SubscriptionError)
     end
   end

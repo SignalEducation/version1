@@ -63,6 +63,39 @@ class SegmentService
     Rails.logger.error "SegmentService#track_correction_returned_event - #{e.inspect} Segment Object - #{segment}"
   end
 
+  def track_payment_complete_event(user, subscription)
+    segment = Analytics.track(
+      user_id: user.id,
+      event: 'successful_payment',
+      properties: payment_properties(subscription.subscription_plan, subscription.coupon_data, subscription.kind, user&.email)
+    )
+  rescue StandardError => e
+    Rails.logger.error "SegmentService#create_user - Error: #{e.inspect} - User Id #{user&.id} Segment Object - #{segment}"
+  end
+
+  def track_payment_failed_event(user, subscription, error_msg, error_code)
+    segment = Analytics.track(
+      user_id: user&.id,
+      event: 'payment_failed',
+      properties: payment_properties(subscription.subscription_plan, subscription.coupon_data, subscription.kind, user&.email).merge!(payment_error_properties(error_msg, error_code))
+    )
+  rescue StandardError => e
+    Rails.logger.error "SegmentService#create_& - Error: #{e.inspect} - User Id #{user&.id} Segment Object - #{segment}"
+  end
+
+  def track_user_account_created_event(user, analytics_attributes)
+    attributes = analytics_attributes_properties(analytics_attributes.with_indifferent_access)
+    return if attributes.nil?
+
+    segment = Analytics.track(
+      user_id: user.id,
+      event: 'user_account_created',
+      properties: attributes
+    )
+  rescue StandardError => e
+    Rails.logger.error "SegmentService#user_account_created - Error: #{e.inspect} - User Id #{user&.id} Segment Object - #{segment}"
+  end
+
   # PRIVATE ====================================================================
 
   private
@@ -151,6 +184,46 @@ class SegmentService
       dateOfBirth: user&.date_of_birth,
       percentageComplete: enrolment&.course_log&.percentage_complete,
       onboarding: user&.analytics_onboarding_valid?.to_s
+    }
+  end
+
+  def payment_properties(plan, coupon_data, payment_type, email)
+    {
+      email: email,
+      programName: plan.exam_body&.name,
+      planName: "#{plan.name} - #{plan.interval_name}",
+      discountedPrice: coupon_data.present? ? coupon_data[:price_discounted]&.round(2) : '',
+      discountCode: coupon_data.present? ? coupon_data[:code] : '',
+      planPrice: plan&.amount,
+      currency: plan&.currency&.name,
+      paymentType: payment_type.camelize(:lower)
+    }
+  end
+
+  def payment_error_properties(error_msg, error_code)
+    {
+      error_code: error_code,
+      error_reason: error_msg
+    }
+  end
+
+  def analytics_attributes_properties(analytics_attributes)
+    valid_keys = %i[category clientOs deviceType email eventSentAt isLoggedIn pageUrl platform
+                    programName sessionId sourceofRegistration]
+
+    return nil unless valid_keys.all? { |s| analytics_attributes.key? s }
+
+    {
+      category: analytics_attributes[:category],
+      deviceType: analytics_attributes[:deviceType],
+      email: analytics_attributes[:email],
+      eventSentAt: analytics_attributes[:eventSentAt],
+      isLoggedIn: analytics_attributes[:isLoggedIn],
+      pageUrl: analytics_attributes[:pageUrl],
+      platform: analytics_attributes[:platform],
+      programName: analytics_attributes[:programName],
+      sessionId: analytics_attributes[:sessionId],
+      sourceofRegistration: analytics_attributes[:sourceofRegistration]
     }
   end
 

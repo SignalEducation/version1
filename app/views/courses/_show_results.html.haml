@@ -87,7 +87,19 @@
         $( document ).ready(function() {
           allSolutions.hide();
           summaryButton.hide();
-          quizFinishEvent();
+          sendClickEventToSegment('quiz_completed', {
+            userId: '#{@current_user&.id}',
+            email: '#{@current_user&.email}',
+            hasValidSubscription: '#{@current_user&.valid_subscription?}',
+            isEmailVerified: '#{@current_user&.email_verified}',
+            preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', 
+            isLoggedIn: '#{!@current_user&.nil?}', 
+            sessionId: '#{session&.id}', 
+            result: '#{@course_step_log&.quiz_attempts&.where(correct: true).count.to_s + '/' + @course_step_log&.quiz_attempts&.count.to_s}', 
+            courseName: '#{@course&.name}', 
+            lessonName: '#{@course_step&.name}', 
+            moduleName: '#{@course_step&.course_lesson&.name}', 
+            programName: '#{@course&.group&.name}'})
         });
 
         function showSolution() {

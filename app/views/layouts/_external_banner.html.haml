@@ -1,5 +1,5 @@
 -if @banner
-  .notice.external-banner.text-center.with-close-btn.js-external-banner{style: "background-color: #{@banner.background_colour}; display: none;"}
+  .notice.external-banner.text-center.with-close-btn.js-external-banner{style: "background-color: #{@banner.background_colour}; display: none;", onclick:"sendClickEventToSegment('clicks_banner', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', bannerText: '#{@banner.text_content.html_safe}', programName: '#{@exam_body ? @exam_body.name : ''}'})"}
     =@banner.text_content.html_safe
     .external-banner-btn.js-lessonMenu-btn{onclick: "externalBannerClose()"}
       %i.material-icons{"aria-hidden" => "true", style: "font-size: 16px;margin-right: 4px;"} close

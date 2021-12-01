@@ -2858,6 +2858,290 @@ button.bg-black:hover {
 .bg-black-light {
   background-color: rgba(0, 0, 0, 0.1) !important;
 }
+.ls-bg-gray {
+  background-color: #f3f4f6 !important;
+  box-shadow: none !important;
+}
+.ls-gray-header {
+  padding-bottom: 40px;
+  background-color: #f3f4f6 !important;
+}
+.footer-login-signup {
+  display: flex;
+}
+.ls-login-signup-switch {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  font-size: 16px;
+  color: #111827;
+  position: relative;
+  top: -20px;
+}
+.ls-login-signup-switch-btn {
+  margin-left: 0.35rem;
+  padding-bottom: 0.2rem;
+  font-size: 16px;
+  color: #00b67a !important;
+  font-weight: 700;
+  cursor: pointer;
+}
+.ls-mobile-login-signup-switch {
+  position: relative;
+  top: -20px;
+}
+@media (max-width: 768px) {
+  .ls-bg-gray {
+    background-color: #ffffff !important;
+  }
+  .ls-gray-header {
+    padding-bottom: 0px;
+    background-color: #ffffff !important;
+  }
+  .footer-login-signup {
+    display: none;
+  }
+  .ls-login-signup-switch {
+    position: relative;
+    font-size: 14px;
+  }
+  .ls-login-signup-switch-btn {
+    font-size: 14px;
+  }
+  .ls-mobile-login-signup-switch {
+    position: fixed;
+    top: 90%;
+    width: 100%;
+    left: 0;
+    white-space: nowrap;
+  }
+}
+.ls-row {
+  display: flex;
+  flex-direction: column;
+}
+.ls-login-ht {
+  min-height: 800px;
+}
+.grecaptcha-badge {
+  visibility: hidden;
+}
+#sign-up-ls,
+#sign-up-section,
+#sign-in-ls {
+  font-family: Manrope;
+  font-style: normal;
+  ::-webkit-input-placeholder {
+    color: #9ca3af;
+  }
+  :-moz-placeholder {
+    color: #9ca3af;
+    opacity: 1;
+  }
+  ::-moz-placeholder {
+    color: #9ca3af;
+    opacity: 1;
+  }
+  :-ms-input-placeholder {
+    color: #9ca3af;
+  }
+  ::-ms-input-placeholder {
+    color: #9ca3af;
+  }
+  ::placeholder {
+    color: #9ca3af;
+  }
+  .custom-checkbox .custom-control-label::before {
+    border-radius: 4px;
+  }
+  .custom-control-label::before {
+    border: 1px solid #6b7280;
+  }
+  select {
+    -o-appearance: none;
+    -ms-appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+  .ls-down-arrow {
+    color: #374151;
+    background: #f5f8fa
+      url('data:image/svg+xml;utf8,%3Csvg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0V0z"/><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" fill="%23667785"/></svg>')
+      no-repeat right 0.75rem center;
+  }
+  .ls-custom-control-input {
+    position: absolute;
+    z-index: -1;
+    opacity: 0;
+  }
+  .ls-custom-control-input:checked ~ .custom-control-label::before {
+    color: #fff;
+    background-color: #00b67a;
+    background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
+  }
+  .custom-control-label::before {
+    border: 1px solid #6b7280;
+    width: 16px;
+    height: 16px;
+  }
+  .ls-input-append {
+    color: #374151;
+    cursor: pointer;
+    width: 32px;
+    height: 26px;
+    position: absolute;
+    right: 27px;
+    top: 30px;
+  }
+  #password-eye-off-icon,
+  #password-eye-off-icon-lg {
+    display: none;
+  }
+  .btn.btn-gray {
+    color: #fff;
+    background-color: #9ca3af;
+    border-color: #9ca3af;
+    pointer-events: none;
+  }
+  .form-box {
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.06), 0px 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    border: 1px solid #f4f4f5;
+    padding: 40px;
+  }
+  .form-group {
+    margin-bottom: 32px;
+  }
+  .ls-mobile-adjust {
+    display: flex;
+    flex-direction: column;
+  }
+  .ls-invalid-details {
+    margin: 0;
+    margin-top: 2rem;
+    margin-bottom: 0.5rem;
+    padding: 1rem;
+    background-color: #fef2f2;
+    border-radius: 0.5rem;
+    border: 1px solid rgba(254, 226, 226, 1);
+    span {
+      text-transform: capitalize;
+    }
+    p {
+      color: rgba(245, 101, 101, 1);
+      font-weight: 700;
+      font-size: 0.875rem;
+      line-height: 1.5;
+    }
+  }
+  @media (max-width: 768px) {
+    .form-box {
+      box-shadow: none;
+      border: none;
+      padding: 20px 0 0 0;
+    }
+    .ls-row-login-btn {
+      padding-left: 7rem !important;
+      padding-right: 7rem !important;
+    }
+    .ls-row-signup-btn {
+      padding-left: 4.5rem !important;
+      padding-right: 4.5rem !important;
+    }
+    .ls-mobile-adjust {
+      flex-direction: column-reverse;
+    }
+    .ls-disclaimer {
+      padding-top: 2rem !important;
+    }
+    .ls-invalid-details {
+      p {
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+      }
+    }
+  }
+  .ls-row-title {
+    font-weight: bold;
+    font-size: 24px !important;
+    line-height: 100%;
+    color: #111827;
+    padding-top: 0.5rem;
+  }
+  .ls-row-option {
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    display: flex;
+    align-items: center;
+    color: #6b7280;
+  }
+  .ls-row-checkbox {
+    padding-left: 0;
+    font-size: 14px;
+    line-height: 1.25;
+    font-weight: 500;
+  }
+  .ls-row-option-placeholder {
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 20px;
+    display: flex;
+    align-items: center;
+    color: #111827;
+    background-color: #fff;
+  }
+  .ls-row-select-placeholder {
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 20px;
+    display: flex;
+    align-items: center;
+    color: #9ca3af;
+    background-color: #fff;
+  }
+  .ls-row-subtitle {
+    font-weight: 500;
+    font-size: 14px !important;
+    line-height: 150%;
+    color: #9ca3af;
+    margin-top: 1rem !important;
+    margin-bottom: 1.5rem !important;
+  }
+  .ls-row-forgot-password {
+    display: flex;
+    flex-direction: row-reverse;
+    position: relative;
+    top: -25px;
+  }
+  .ls-disclaimer {
+    color: #6b7280;
+    font-size: 12px;
+    font-weight: 400;
+    padding-top: 0;
+  }
+  .ls-row-login {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 1rem;
+  }
+  .ls-row-login-btn {
+    padding-left: 8rem;
+    padding-right: 8rem;
+    background-color: #00b67a;
+    border-color: #00b67a;
+  }
+  .ls-row-signup-btn {
+    padding-left: 8rem;
+    padding-right: 8rem;
+    background-color: #00b67a;
+    border-color: #00b67a;
+  }
+}
 .container-bg {
   display: block;
   width: 100%;

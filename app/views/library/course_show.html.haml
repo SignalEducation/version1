@@ -19,9 +19,9 @@
       %header.coursePage-container-header
         .mw-0.preview-upgrade-btn
           -if @exam_body.has_sittings && @new_enrollment && (@computer_exam_sitting || @exam_sittings)
-            %a#enrol-top{data: {target: '#enrollment-modal', toggle: 'modal'}, href: '#', class: 'btn btn-secondary btn-sm non-upgrade mr-2'}
+            %a#enrol-top{data: {target: '#enrollment-modal', toggle: 'modal'}, href: '#', class: 'btn btn-secondary btn-sm non-upgrade mr-2', onclick: "sendClickEventToSegment('clicks_enrol', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', programName: '#{@course.group.name}', courseName: '#{@course.name}'})"}
               Enrol
-            %a{data: {target: '#enrollment-modal', toggle: 'modal'}, href: '#', class: 'btn btn-secondary btn-sm upgrade-resp-enroll-btn upgrade-btn-flt'}
+            %a{data: {target: '#enrollment-modal', toggle: 'modal'}, href: '#', class: 'btn btn-secondary btn-sm upgrade-resp-enroll-btn upgrade-btn-flt', onclick: "sendClickEventToSegment('clicks_enrol', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', programName: '#{@course.group.name}', courseName: '#{@course.name}'})"}
               Enrol
           -if @course_log && @course_log&.latest_course_step && @course_log&.latest_course_step&.next_element
             =link_to 'Resume', course_special_link(@course_log.latest_course_step.next_element, @course_log), class: 'btn btn-primary btn-sm'
@@ -57,16 +57,19 @@
           - @course.course_sections.all_active.all_in_order.each_with_index do |course_section, counter|
             %li.nav-item{data: {tab_name: course_section.name, course_name: @course.name}}
               -# TODO add active to first li
-              %a{class: "nav-link #{counter == 0 ? 'active' : ''}", id: "#{course_section.name_url}-tab", data: {toggle: 'tab'}, href: "##{course_section.name_url}", aria: {controls: "#{course_section.name_url}", selected: 'false'}, role: 'tab'}
-                =course_section.name
-
+              - if course_section.name_url == 'learning'
+                %a{class: "nav-link #{counter == 0 ? 'active' : ''}", id: "#{course_section.name_url}-tab", data: {toggle: 'tab'}, href: "##{course_section.name_url}", aria: {controls: "#{course_section.name_url}", selected: 'false'}, role: 'tab', onclick: "sendToSegmentCourseShow('#{course_section&.name}')"}
+                  =course_section.name
+              - else
+                %a{class: "nav-link #{counter == 0 ? 'active' : ''}", id: "#{course_section.name_url}-tab", data: {toggle: 'tab'}, href: "##{course_section.name_url}", aria: {controls: "#{course_section.name_url}", selected: 'false'}, role: 'tab', onclick: "sendToSegmentCourseShow('#{course_section&.name}')"}
+                  =course_section.name
           -if @course_resources.any?
             %li.nav-item{data: {tab_name: 'Resources', course_name: @course.name}}
-              %a{href: "#resources", role: 'tab', class: 'nav-link', data: {toggle: 'tab'}, aria: {controls: "resources", selected: 'false'}}
+              %a{href: "#resources", role: 'tab', class: 'nav-link', data: {toggle: 'tab'}, aria: {controls: "resources", selected: 'false'}, onclick: "sendToSegmentCourseShow('Resources')"}
                 ='Resources'
           -if @products && @products.any?
             %li.nav-item{data: {tab_name: 'Products', course_name: @course.name}}
-              %a{href: "#products", role: 'tab', class: 'nav-link', data: {toggle: 'tab'}, aria: {controls: "products", selected: 'false'}}
+              %a{href: "#products", role: 'tab', class: 'nav-link', data: {toggle: 'tab'}, aria: {controls: "products", selected: 'false'}, onclick: "sendToSegmentCourseShow('Product (Add-ons)')"}
                 ='Product (Add-ons)'
 
 
@@ -88,7 +91,7 @@
             .col-sm-4.col-xl-4.mb-4.custom-upgrade
               =render partial: 'register_upgrade_links', locals: { user: current_user }
 
-              %a{class: 'btn btn-outline btn-sm mr-2 w-100 py-3', 'data-target' => '#contact-form-modal', 'data-toggle' => 'modal', :href => '#'}
+              %a{class: 'btn btn-outline btn-sm mr-2 w-100 py-3', 'data-target' => '#contact-form-modal', 'data-toggle' => 'modal', :href => '#', onclick: "sendClickEventToSegment('clicks_ask_tutor', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', programName: '#{@course.parent.name}', courseName: '#{@course.name}'})"}
                 =@exam_body&.help_text
 
       -if @course_resources.any?
@@ -147,7 +150,7 @@
             .row.row-lg
               - @correction_pack_products.each do |product|
                 .col-md-4.col-lg-3.mb-4.px-3
-                  =link_to product_checkout_special_link(product.group.exam_body.id, product.id), class: 'productCard' do
+                  =link_to product_checkout_special_link(product.group.exam_body.id, product.id), class: 'productCard', onclick: "sendClickEventToSegment('click_course_product', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', productName: '#{product.name}', programName: '#{@course.group.name}', courseName: '#{@course.name}'})" do
                     .productCard-header.d-flex.align-items-center.justify-content-center
                       =image_tag('course-addon-icons/addon-correction-pack.svg')
                     .productCard-body.d-flex.align-items-center
@@ -162,7 +165,7 @@
 
               - @mock_exam_products.each do |product|
                 .col-md-4.col-lg-3.mb-4.px-3
-                  =link_to product_link(product, current_user), class: 'productCard' do
+                  =link_to product_link(product, current_user), class: 'productCard', onclick: "sendClickEventToSegment('click_course_product', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', productName: '#{product.name}', programName: '#{@course.group.name}', courseName: '#{@course.name}'})" do
                     .productCard-header.d-flex.align-items-center.justify-content-center
                       =image_tag('course-addon-icons/addon-exams.svg')
                     .productCard-body.d-flex.align-items-center
@@ -187,6 +190,13 @@
 -# - if @welcome_video
 -#   =render partial: 'welcome_video_modal'
 :javascript
+
+  function sendToSegmentCourseShow(tab_name) {
+    if(event.type == 'click') {
+      sendClickEventToSegment('clicks_course_tabs', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', tabName: tab_name, courseName: '#{@course&.name}', programName: '#{@course&.group&.name}'})
+    }
+  }
+
   $(document).ready(function(){
 
     hash = window.location.hash;
@@ -266,4 +276,3 @@
         }
       });
     });
-§

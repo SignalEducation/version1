@@ -1,5 +1,5 @@
 .card.card-collapse.mb-3
-  %a.btn.btn-text.btn-collapse.w-100.text-left.course-module-panel{data: { toggle: "collapse",panel_name: course_lesson.name, course_name: @course.name }, href: "#collapse_#{course_lesson.name_url}_#{counter}", role: "button", 'aria-expanded': "#{!count == 1}", 'aria-controls': "collapse_#{course_lesson.name_url}_#{counter}",id: course_lesson.id}
+  %a.btn.btn-text.btn-collapse.w-100.text-left.course-module-panel{data: { toggle: "collapse",panel_name: course_lesson.name, course_name: @course.name }, href: "#collapse_#{course_lesson.name_url}_#{counter}", role: "button", 'aria-expanded': "#{!count == 1}", 'aria-controls': "collapse_#{course_lesson.name_url}_#{counter}",id: course_lesson.id, onclick: "sendToSegmentLessonShow('#{course_lesson&.name}')"}
     .lesson-item.w-100{class: course_lesson_status(course_lesson, @completed_course_lesson_logs, @completed_course_lesson_ids) }
       .lesson-item-content
         .lesson-item-content-wrap.d-flex.flex-column.flex-sm-row.align-items-center.align-items-sm-center
@@ -38,8 +38,7 @@
               - permission = cme.available_to_user(current_user, @valid_subscription, @course_log)
 
               - if permission[:view]
-
-                =link_to course_special_link(cme, @course_log), class: 'btn btn-text py-2 w-100 text-left course-lesson', data: { lesson_name: cme.name, course_name: @course.name } do
+                =link_to course_special_link(cme, @course_log), class: 'btn btn-text py-2 w-100 text-left course-lesson', data: { lesson_name: cme.name, course_name: @course.name }, onclick: "sendClickEventToSegment('clicks_lesson_learning', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', courseName: '#{@course&.name}', programName: '#{@course&.group&.name}', moduleName: '#{cme&.course_lesson&.name}', lessonName: '#{cme&.name}', lessonType: '#{cme&.type_name}'})" do
                   .lesson-item.lesson-item-inner.w-100{class: @cmeuls && @cmeuls_ids.include?(cme.id) ? (@completed_cmeuls_cme_ids.include?(cme.id) ? 'completed' : 'failed') : ''}
                     -if @cmeuls && @completed_cmeuls_cme_ids.include?(cme.id)
                       %span.green-check-iconWrapper
@@ -108,3 +107,10 @@
                           -else
                             %span
                               =cme.number_of_questions.to_s + ' ' +  'Question'
+:javascript
+
+  function sendToSegmentLessonShow(module_name) {
+    if(event.type == 'click') {
+      sendClickEventToSegment('clicks_module_learning', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', moduleName: module_name, courseName: '#{@course&.name}', programName: '#{@course&.group&.name}'})
+    }
+  }

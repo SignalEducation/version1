@@ -40,7 +40,7 @@
                         method: :put, data: {confirm: t('views.users.show.confirm_use_this_card')}, class: 'btn btn-xs btn-secondary'
                 %td
                   -if card.destroyable?
-                    =link_to t('views.users.show.remove_this_card'), card, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-xs btn-danger'
+                    =link_to t('views.users.show.remove_this_card'), card, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-xs btn-danger', onclick: "sendClickEventToSegment('clicks_profile_add_card', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', actionTaken: 'removed'})"
 
     -else
       .zeroCaseWrapper

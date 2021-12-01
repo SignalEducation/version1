@@ -14,8 +14,7 @@
     =javascript_include_tag 'application', modernizr: :true
 
     =render partial: 'layouts/google_tag_manager'
-    -if current_user
-      =render partial: 'layouts/segment_tracking_code'
+    =render partial: 'layouts/segment_tracking_code'
 
     =yield :head
 
@@ -48,7 +47,10 @@
     =render partial: 'layouts/facebook_tracking_code'
     -if @layout == 'standard'
       -if @navbar
-        =render partial: 'layouts/navbar'
+        -if @navbar && controller_name != 'user_sessions'
+          =render partial: 'layouts/navbar'
+        -if @navbar && controller_name == 'user_sessions'
+          =render partial: 'layouts/navbar_gray'
 
       -unless controller_name == 'subscriptions' || controller_name == 'orders' || controller_name == 'footer_pages' || controller_name == 'student_sign_ups' || controller_name == 'user_accounts'
         -if flash[:success] || flash[:error] || flash[:warning]
@@ -57,17 +59,18 @@
       =yield
 
       -if @footer
-        =render partial: 'layouts/footer_minimal' if @group&.disclaimer
-        =render partial: 'layouts/footer_minimal'
-
+        =render partial: 'layouts/footer_marketing' if @group&.disclaimer && controller_name != 'user_sessions'
+        =render partial: 'layouts/footer_marketing' if controller_name != 'user_sessions'
+        =render partial: 'layouts/footer_minimal_login_signup' if @group&.disclaimer && controller_name == 'user_sessions'
+        =render partial: 'layouts/footer_minimal_login_signup' if controller_name == 'user_sessions'
     -else
       =render partial: 'layouts/navbar'
 
       -if flash[:success] || flash[:error] || flash[:warning]
         =render partial: 'layouts/flash_messages'
       =yield
-      =render partial: 'layouts/footer_minimal' if @group&.disclaimer
-      =render partial: 'layouts/footer_minimal'
+      =render partial: 'layouts/footer_marketing' if @group&.disclaimer
+      =render partial: 'layouts/footer_marketing'
 
 
     -#General partials

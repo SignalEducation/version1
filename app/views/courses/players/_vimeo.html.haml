@@ -8,11 +8,15 @@
   let freeLesson = "#{@course_lesson&.free || autoPlay}";
   let lastLessonStep = "#{@course_lesson&.course_steps&.all_in_order&.all_active&.last&.id}";
   let endStepVidTime = "#{cme.vid_end_seconds || ''}";
+  let title = "#{title || ''}";
   let updateFreeLesson = #{@course_lesson&.free ? 0.30 : 0.90};
   let completionPercent = #{@course_lesson&.free ? 0.30 : 0.90};
   let responsive = "#{responsive}";
   let logId = '';
   let updateFired = false;
+  let _moduleName = "#{module_name || ''}";
+  let _courseName = "#{course_name || ''}";
+  let _programName = "#{program_name || ''}";
   let options = {
     id: "#{cme.course_video.vimeo_guid}",
     frameborder: 0,
@@ -27,8 +31,8 @@
 
   player.ready().then(function() {
     $('.video-preloader').addClass('hidden');
-  }).catch(function(error) {
-    $('.video-player-window').html('#{j render partial: 'courses/players/dacast', locals: { cme: cme }}')
+  }).catch(function(error) {7
+    $('.video-player-window').html('#{j render partial: 'courses/players/dacast', locals: { cme: cme, module_name: @course_step&.course_lesson&.name, course_name: @course&.name, program_name: @course&.group&.name, userId: current_user&.id, email: current_user&.email, hasValidSubscription: current_user&.valid_subscription?, isEmailVerified: current_user&.email_verified, preferredExamBodyId: current_user&.preferred_exam_body_id, isLoggedIn: !current_user&.nil?, sessionId: session&.id, title: cme.name }}')
   });
 
   let showUpgradeBtn = function(upgradeBool) {
@@ -68,7 +72,11 @@
             $("#next-lesson-link").removeClass('d-none');
             $("#sidebar-next-lesson-modal").addClass('d-none');
             $("#sidebar-next-lesson-link").removeClass('d-none');
-            videoFinishedEvent(freeLesson, vimeoRate);
+            player.getCurrentTime().then(function(seconds) { 
+              player.getDuration().then(function(_seconds) { 
+                videoFinishedEvent(freeLesson, vimeoRate, ((Math.round(seconds)).toFixed(0)).toString() + " sec", ((Math.round(seconds/_seconds * 100)).toFixed(0)).toString() + "%", _moduleName, _courseName, _programName);
+              });
+            });
         },
         error: function(xhr,status,error){
           console.log(xhr);
@@ -82,6 +90,7 @@
 
   //When the player starts send JSON request to create CMEUL
   let onPlay = function(data) {
+    sendClickEventToSegment('play_video', {userId: userId, email: email, hasValidSubscription: hasValidSubscription, isEmailVerified: isEmailVerified, preferredExamBodyId: prefExamBodyId, isLoggedIn: isLoggedIn, sessionId: sessionId, lessonName: title, moduleName: _moduleName, courseName: _courseName, programName: _programName })
     if (logId === '') {
       $.ajax({
         headers: { 'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') },
@@ -92,7 +101,6 @@
         contentType: "application/json; charset=utf-8",
         success: function(data,status,xhr){
           logId = data.video_log_id;
-          videoPlayEvent();
         },
         error: function(xhr,status,error){
           console.log(xhr);
@@ -103,37 +111,12 @@
 
   //When the user selects a specific time
   let onResume = function(data) {
-    videoPlayerResumed(data);
+    sendClickEventToSegment('play_video', {userId: userId, email: email, hasValidSubscription: hasValidSubscription, isEmailVerified: isEmailVerified, preferredExamBodyId: prefExamBodyId, isLoggedIn: isLoggedIn, sessionId: sessionId, lessonName: title, moduleName: _moduleName, courseName: _courseName, programName: _programName })
   };
 
   //When the user selects a specific time
   let onPause = function(data) {
-    videoPlayerPaused(data);
-  };
-
-  //When the user selects a specific time
-  let timeSeeked = function(data) {
-    videoPlayerSeeked(data);
-  };
-
-  //When the user adjusts the volume
-  let volumeChange = function(data) {
-    videoVolumeChange(data);
-  };
-
-  //When the user adjusts the playback speed
-  let playbackRateChange = function(data) {
-    videoPlaybackRateChange(data);
-  };
-
-  //When the user adjusts the volume
-  let fullScreenChange = function(data) {
-    videoFullScreenChange(data);
-  };
-
-  //When the user adjusts the volume
-  let qualityChange = function(data) {
-    videoQualityChange(data);
+    sendClickEventToSegment('pause_video', {userId: userId, email: email, hasValidSubscription: hasValidSubscription, isEmailVerified: isEmailVerified, preferredExamBodyId: prefExamBodyId, isLoggedIn: isLoggedIn, sessionId: sessionId, lessonName: title, moduleName: _moduleName, courseName: _courseName, programName: _programName})
   };
 
   //When the user adjusts the volume
@@ -148,9 +131,4 @@
   player.on('play', onPlay);
   player.on('pause', onPause);
   player.on('timeupdate', timeUpdate);
-  player.on('seeked', timeSeeked);
-  player.on('volumechange', volumeChange);
-  player.on('playbackratechange', playbackRateChange);
-  player.on('fullscreenchange', fullScreenChange);
-  player.on('qualitychange', qualityChange);
   player.on('ended', onVideoEnded);

@@ -108,6 +108,26 @@
 
   $( document ).ready(function() {
     $('#enroll_submit_button').attr('disabled', true);
+    var sittingName = '';
+    var dateOfBirth = '';
+    $('#enroll_submit_button').on('click', function() {
+      if($('#exam_sitting_select').find(":selected").val()) {
+        sittingName = $('#exam_sitting_select').find(":selected").text();
+      } else if($('#enrollment_exam_date_1i').find(":selected").val()) {
+        sittingName = $('#enrollment_exam_date_2i').find(":selected").text() + ' ' + $('#enrollment_exam_date_3i').find(":selected").text() + ', ' + $('#enrollment_exam_date_1i').find(":selected").text();
+      } else {
+        console.log('No exam sitting');
+      }
+      sendClickEventToSegment('completed_enrol_step1', {userId: '#{@current_user&.id}', email: '#{@current_user&.email}', hasValidSubscription: '#{@current_user&.valid_subscription?}', isEmailVerified: '#{@current_user&.email_verified}', preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', programName: '#{@course.group.name}', courseName: '#{@course.name}', sittingName: sittingName})
+    });
+    $('#submit').on('click', function() {
+      if($('#user_date_of_birth_1i').find(":selected").val()) {
+        dateOfBirth = $('#user_date_of_birth_3i').find(":selected").text() + '/' + $('#user_date_of_birth_2i').find(":selected").val() + '/' + $('#user_date_of_birth_1i').find(":selected").text();
+      } else {
+        console.log('No DOB');
+      }
+      sendClickEventToSegment('completed_enrol_step2', {userId: '#{@current_user&.id}', email: '#{@current_user&.email}', hasValidSubscription: '#{@current_user&.valid_subscription?}', isEmailVerified: '#{@current_user&.email_verified}', preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', programName: '#{@course.group.name}', courseName: '#{@course.name}', sittingName: sittingName, dateOfBirth: dateOfBirth})
+    });
   });
 
   $('.form-group-expandable').on('change', '.custom-control-input[type="radio"][name="enrol-user-details-options"]', function() {

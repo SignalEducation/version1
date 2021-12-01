@@ -6,18 +6,90 @@
   let prefExamBodyId = "#{current_user&.preferred_exam_body_id}";
   let prefExamBody = "#{current_user&.preferred_exam_body&.name}";
   let ob = "#{current_user&.analytics_onboarding_valid?.to_s}";
+  let programName = "#{@group ? @group.name.upcase : ''}";
+  let courseName = "#{@course ? @course.name : ''}";
+  let moduleName = "#{@course_step ? @course_step.course_lesson.name : ''}";
+  let email                 = "#{current_user&.email || ''}";
+  let userId                = "#{current_user&.id || ''}";
+  let hasValidSubscription  = "#{current_user&.valid_subscription? || ''}";
+  let isEmailVerified       = "#{current_user&.email_verified || ''}";
+  let isLoggedIn            = "#{!current_user&.nil?}";
+  let sessionId             = "#{session&.id || ''}";
+  let controllerName        = "#{controller_name}";
+  let actionName            = "#{action_name}";
+  let isCoursePage        = JSON.parse("#{@course ? true : false}");
+  let isProgramPage        = JSON.parse("#{@group ? true : false}");
+  let isContentConsumptionPage        = JSON.parse("#{@course_step ? true : false}");
+  
+  function capitalize(s) { return s && s[0].toUpperCase() + s.slice(1)}
 
   !function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","once","off","on","addSourceMiddleware","addIntegrationMiddleware","setAnonymousId","addDestinationMiddleware"];analytics.factory=function(e){return function(){var t=Array.prototype.slice.call(arguments);t.unshift(e);analytics.push(t);return analytics}};for(var e=0;e<analytics.methods.length;e++){var key=analytics.methods[e];analytics[key]=analytics.factory(key)}analytics.load=function(key,e){var t=document.createElement("script");t.type="text/javascript";t.async=!0;t.src="https://cdn.segment.com/analytics.js/v1/" + key + "/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(t,n);analytics._loadOptions=e};analytics.SNIPPET_VERSION="4.13.1";
     analytics.load(segmentKey);
 
-    analytics.page( {
+    base = baseProperties();
+
+    var name = '';
+    var pageUrl = window.location.href;
+    if(programName != '') {
+      switch(true) {
+        case isProgramPage && isCoursePage && isContentConsumptionPage:
+          name = "Content Consumption Page";
+          break;
+        case isProgramPage && isCoursePage && !isContentConsumptionPage:
+          name = "Course Page";
+          break;
+        case isProgramPage && !isCoursePage && !isContentConsumptionPage && controllerName == 'student_sign_ups':
+          name = "Pricing Page";
+          break;
+        case isProgramPage && !isCoursePage && !isContentConsumptionPage:
+          name = "Program Page";
+          break;
+        default: 
+          name = "Program Page";
+          break;
+      }
+    } else {
+      switch(true) {
+        case controllerName == 'orders' && actionName != 'order_complete':
+          name = "Orders Page";
+          break;
+        case controllerName == 'subscriptions' && actionName != 'personal_upgrade_complete':
+          name = "Subscriptions Page";
+          break;
+        case controllerName == 'orders' && actionName == 'order_complete':
+          name = "Order Purchase Complete Page";
+          break;
+        case controllerName == 'subscriptions' && actionName == 'personal_upgrade_complete':
+          name = "Subscription Purchase Complete Page";
+          break;
+        case controllerName == 'user_accounts':
+          name = "My Account Page";
+          break;
+        default: 
+          name = capitalize(pageUrl.substring(pageUrl.lastIndexOf('/') + 1));
+          break;
+      }
+    }
+
+    analytics.page('Page Views', `APP : ${name}`, {
+      eventSentAt: new Date().toISOString(),
+      email: email,      
+      userId: userId,                
+      isLoggedIn: isLoggedIn,
+      sessionId: sessionId,
+      clientOs: base.clientOs,
+      deviceType: base.deviceType,
+      platform: base.platform,
+      pageUrl: pageUrl,
+      name: `APP : ${name}`,
       preferredExamBodyId: prefExamBodyId,
       preferredExamBody: prefExamBody,
-      onboarding: ob,
-      banner: siteBanner
+      programName: programName,
+      courseName: courseName,
+      moduleName: moduleName
     });
 
     if ((justLoggedIn === 'true') || (justVerified === 'true')) {
-      analytics.identify("#{current_user.id}")
+      analytics.identify("#{current_user&.id}")
     }
   }}();

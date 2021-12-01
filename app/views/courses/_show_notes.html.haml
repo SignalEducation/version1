@@ -12,6 +12,7 @@
             %div{style:"height:20px;margin-right: 12px;"}
               %i{class:"material-icons icon-bg-round side-nav-material-icons", style: "color: #888; "} file_present
             =@course_step.name
+      #course-notes-anly{data: {userId: current_user&.id, email: current_user&.email, hasValidSubscription: current_user&.valid_subscription?, isEmailVerified: current_user&.email_verified, preferredExamBodyId: current_user&.preferred_exam_body_id, isLoggedIn: !current_user&.nil?, sessionId: session&.id }}
       .course-right-show-frame
         =# VueJS include
         =javascript_pack_tag 'pdf_viewer'
@@ -19,4 +20,22 @@
                               'data-step-log-id': log.id,
                               'data-file-name': notes.name,
                               'data-file-download': notes.download_available.to_s,
-                              'data-file-url': notes.upload.url }
+                              'data-file-url': notes.upload.url,
+                               }
+
+:javascript
+  $(document).on("ready", function() {
+    $("#course-notes-anly").attr({
+      "userId" : '#{current_user&.id}',
+      "email" : '#{current_user&.email}',
+      "hasValidSubscription" : '#{current_user&.valid_subscription?}',
+      "isEmailVerified" : '#{current_user&.email_verified}',
+      "preferredExamBodyId" : '#{current_user&.preferred_exam_body_id}',
+      "isLoggedIn" : '#{!current_user&.nil?}',
+      "sessionId" : '#{session&.id}',
+      "moduleName" : '#{@course_step&.course_lesson&.name}',
+      "courseName" : '#{@course&.name}',
+      "programName" : '#{@course&.group.name}',
+      "file_name" : '#{notes.name}'
+    });
+  })

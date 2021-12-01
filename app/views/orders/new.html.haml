@@ -21,8 +21,8 @@
                     %span.navbar-login-userEmail
                       =current_user.email
               .dropdown-menu.dropdown-menu-right{"aria-labelledby" => "navbarDropdown"}
-                =link_to t('views.users.show.h1'), account_url, class: 'nav-link dropdown-item'
-                =link_to t('views.general.log_out'), sign_out_url, class: 'nav-link dropdown-item logout'
+                =link_to t('views.users.show.h1'), account_url, class: 'nav-link dropdown-item', onclick: "sendClickEventToSegment('clicks_my_account', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}'})"
+                =link_to t('views.general.log_out'), sign_out_url, class: 'nav-link dropdown-item logout', onclick: "sendClickEventToSegment('logout', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}'})"
 
           -else
             %li.nav-item.w-100.text-center.py-2
@@ -106,7 +106,7 @@
                                   %span Credit / Debit Card
                         .subscriptionPageWrapper-optionsBox-optionTabs-Tab.js-option-wrapper-paypal
                           .custom-control.custom-radio
-                            %input#pay-with-paypal.custom-control-input.style-radio{name: 'payment-options', type: 'radio', value: 'paypal'}
+                            %input#pay-with-paypal.custom-control-input.style-radio{name: 'payment-options', type: 'radio', value: 'paypal' }
                             %label.tab-label{for: 'pay-with-paypal'}
                               %span.custom-label-info
                                 %span.0.m-0
@@ -160,12 +160,22 @@
   let productBodyId = "#{@order.exam_body_id}";
   let productType = "#{@order.product&.product_type}";
   let analyticsData = {exam_body_id: productBodyId, exam_body_name: productBody, onboarding: "#{current_user&.onboarding_process&.active&.to_s}", product_id: productId, product_name: productName, product_price: productPrice, currency_iso_code: currencyIso};
+  let segmentData = { userId: '#{@current_user&.id}', email: '#{@current_user&.email}', hasValidSubscription: '#{@current_user&.valid_subscription?}', isEmailVerified: '#{@current_user&.email_verified}', preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', programName: productBody, planName: productName, planPrice: productPrice, paymentType: 'Product' };
 
   $(document).on('ready', function() {
 
     // $('#pay-with-card').closest('.custom-control').siblings('.payment-details').slideDown();
     // $('#pay-with-paypal').closest('.custom-control').siblings('.payment-details').slideUp();
     // selectPaymentMethod($('.form-group-expandable').val(), false);
+    $("#pay-with-card").on( "click", function(event) {
+      segmentData.paymentMethod = 'card';
+      sendClickEventToSegment('clicks_payment_type_toggle', segmentData)
+    });
+    $("#pay-with-paypal").on( "click", function(event) {
+      segmentData.paymentMethod = 'paypal';
+      sendClickEventToSegment('clicks_payment_type_toggle', segmentData)
+    });
+    
     $('.js-option-wrapper-stripe').addClass('active');
 
     $('.subscriptionPageWrapper-optionsBox-optionTabs').on('change', '.custom-control-input[type="radio"][name="payment-options"]', function() {
@@ -188,9 +198,6 @@
     });
 
     function selectPaymentMethod(paymentType, click) {
-      if (click === true) {
-        providerOptionSelect(analyticsData, paymentType);
-      }
       switch(paymentType) {
         case 'paypal':
           $('#order_use_paypal').val(true);
@@ -256,12 +263,10 @@
       $(".spinner-message").html("Please wait...");
       $(".spinning-loading").show();
       if ($('#order_use_paypal').val() === 'true') {
-        paypalSubmit(analyticsData);
         if(acceptedTerms('paypal')){
           document.getElementById('orders-form').submit();
         }
       } else {
-        stripeSubmit(analyticsData);
         if(acceptedTerms('stripe')){
           createPaymentMethod();
         }
@@ -275,10 +280,6 @@
       } else {
         displayError.textContent = '';
       }
-    });
-
-    card.on('focus', function() {
-      stripeFormFocus(analyticsData);
     });
 
     function createPaymentMethod() {
@@ -301,7 +302,15 @@
               }
             },
             error: function(xhr,status,error){
-              resetForm(xhr.responseJSON.error);
+              if (xhr.status === 500) {
+                resetForm('Something went wrong! Please contact us for assistance.');
+                segmentData.errorReason = 'Something went wrong! Please contact us for assistance.';
+                sendClickEventToSegment('initiate_payment_failed', segmentData);
+              } else {
+                resetForm(xhr.responseJSON.error);
+                segmentData.errorReason = xhr.responseJSON.error;
+                sendClickEventToSegment('initiate_payment_failed', segmentData);
+              }
             }
           });
         }
@@ -373,22 +382,6 @@
       'event_category': 'Product',
       'event_label': productBody,
       'event_value': productPrice
-    });
-
-    analytics.page('Payment', {
-      preferredExamBodyId: preferredExamBodyId,
-      preferredExamBody:preferredExamBody ,
-      banner: banner,
-      onboarding: onboarding,
-      examBodyId: productBodyId,
-      examBodyName: productBody,
-      currency: currencyIso,
-      country: "#{current_user&.country&.name}",
-      productId: productId,
-      productPrice: productPrice,
-      productName: productName,
-      productType: productType,
-      paymentType: "Product"
     });
 
     $(".js-browser-back-btn").on( "click", function(event) {

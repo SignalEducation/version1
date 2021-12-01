@@ -25,12 +25,22 @@
           </ul>
           <ul class="cr-submit-pad">
             <li>
-              <SubmitBtn
-                :totalQuestions="practiceQuestion.total_questions"
-                :questionContentArray="practiceQuestion.questions"
-                :stepLogId="stepLogId"
-                :practiceQuestionId="practiceQuestionId"
-              />
+              <div>
+                <SubmitBtn
+                  :totalQuestions="practiceQuestion.total_questions"
+                  :questionContentArray="practiceQuestion.questions"
+                  :stepLogId="stepLogId"
+                  :practiceQuestionId="practiceQuestionId"
+                  :hasValidSubscription="hasValidSubscription"
+                  :isEmailVerified="isEmailVerified"
+                  :preferredExamBodyId="preferredExamBodyId"
+                  :quizType="practiceQuestion.kind"
+                  :lessonName="moduleName"
+                  :moduleName="moduleName"
+                  :courseName="courseName"
+                  :programName="programName"
+                />
+              </div>
             </li>
           </ul>
         </div>
@@ -177,6 +187,12 @@ export default {
       previousStepLogs: this.$parent.stepLogs,
       practiceQuestionId: this.$parent.practiceQuestionId,
       practiceQuestion: null,
+      hasValidSubscription: this.$parent.hasValidSubscription,
+      isEmailVerified: this.$parent.isEmailVerified,
+      preferredExamBodyId: this.$parent.preferredExamBodyId,
+      courseName: this.$parent.courseName,
+      programName: this.$parent.programName,
+      moduleName: this.$parent.moduleName,
       zIndexArr: [
         "calcModal",
         "scratchPadModal",
@@ -260,8 +276,25 @@ export default {
             this.practiceQuestion.responses
           );
           this.stepLogId = log_id;
+          this.cbeInitialized(this.practiceQuestion);
         })
         .catch((e) => {});
+    },
+    cbeInitialized(pq) {
+      sendClickEventToSegment("quiz_initiated", {
+        userId: userId,
+        email: email,
+        hasValidSubscription: this.hasValidSubscription,
+        isEmailVerified: this.isEmailVerified,
+        preferredExamBodyId: this.preferredExamBodyId,
+        isLoggedIn: isLoggedIn,
+        sessionId: sessionId,
+        quizType: "pq " + pq.kind,
+        lessonName: this.moduleName,
+        moduleName: this.moduleName,
+        courseName: this.courseName,
+        programName: this.programName,
+      });
     },
     handleResize() {
       const headerFooter =

@@ -1,6 +1,6 @@
 -courses.each do |course|
   .col-lg-12.col-xl-12
-    =link_to library_special_link(course), class: 'card flex-md-row', style: 'margin-bottom: 1rem;', data: { toggle: 'tooltip', placement: 'right', animation: 'true', delay: { "show": 300, "hide": 100 }}, title: "#{course.short_description}" do
+    =link_to library_special_link(course), class: 'card flex-md-row', style: 'margin-bottom: 1rem;', data: { toggle: 'tooltip', placement: 'right', animation: 'true', delay: { "show": 300, "hide": 100 }}, title: "#{course.short_description}", onclick: "sendClickEventToSegment('clicks_course_name', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', programName: '#{course.group.name}', levelName: '#{level_name}', courseName: '#{course.name}'})" do
       .card-body.d-flex.flex-column.justify-content-center
         %div.libraryGroupWrapper-list-courseInfo
           %div.libraryGroupWrapper-list-courseIcon{style: "border-color: #{course.highlight_colour}; background-color: #{course.highlight_colour};"}

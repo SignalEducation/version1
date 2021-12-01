@@ -25,6 +25,7 @@
 .footerMarketing {
     background-color: #FFF;
     padding: 0 1rem;
+    border-top: 1px solid #e6ecf0;
     .logo {
         @include if-device(phone) { 
             max-width: 10rem;
@@ -86,10 +87,10 @@
     }
     .footerBottomInfo {
         width: 100%;
-        margin-top: 40px;
-        padding-top: 40px;
-        padding-bottom: 40px;
-        border-top: 1px solid #D1D5DB;
+        // margin-top: 40px;
+        // padding-top: 40px;
+        // padding-bottom: 40px;
+        // border-top: 1px solid #D1D5DB;
         display: flex;
         justify-content: space-between;
         @include if-device(phone) {

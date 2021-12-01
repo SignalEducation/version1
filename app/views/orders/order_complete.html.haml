@@ -60,21 +60,4 @@
     let preferredExamBodyId = "#{current_user&.preferred_exam_body_id}";
     let preferredExamBody = "#{current_user&.preferred_exam_body&.name}";
     let onboarding = "#{current_user&.analytics_onboarding_valid?.to_s}";
-
-    analytics.page('Payment Complete', {
-      preferredExamBodyId: preferredExamBodyId,
-      preferredExamBody:preferredExamBody ,
-      banner: banner,
-      onboarding: onboarding,
-      examBodyId: "#{@product&.group&.exam_body&.id}",
-      examBodyName: "#{@product&.group&.exam_body&.name}",
-      country: "#{current_user&.country&.name}",
-      currency: "#{@product&.currency&.iso_code}",
-      paymentType: "Product",
-      price: "#{@product&.price}",
-      productType: "#{@product&.product_type.humanize}",
-      productName: "#{@product&.name}",
-      productId: "#{@product&.id}",
-      paymentProvider: "#{@order&.payment_provider}"
-    });
   });
