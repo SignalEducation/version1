@@ -14,8 +14,8 @@
   let responsive = "#{responsive}";
   let logId = '';
   let updateFired = false;
-  let moduleName = "#{module_name || ''}";
-  let courseName = "#{course_name || ''}";
+  let _moduleName = "#{module_name || ''}";
+  let _courseName = "#{course_name || ''}";
   let _programName = "#{program_name || ''}";
   let options = {
     id: "#{cme.course_video.vimeo_guid}",
@@ -74,7 +74,7 @@
             $("#sidebar-next-lesson-link").removeClass('d-none');
             player.getCurrentTime().then(function(seconds) { 
               player.getDuration().then(function(_seconds) { 
-                videoFinishedEvent(freeLesson, vimeoRate, ((Math.round(seconds)).toFixed(0)).toString() + " sec", ((Math.round(seconds/_seconds * 100)).toFixed(0)).toString() + "%", moduleName, courseName, _programName);
+                videoFinishedEvent(freeLesson, vimeoRate, ((Math.round(seconds)).toFixed(0)).toString() + " sec", ((Math.round(seconds/_seconds * 100)).toFixed(0)).toString() + "%", _moduleName, _courseName, _programName);
               });
             });
         },
@@ -90,7 +90,7 @@
 
   //When the player starts send JSON request to create CMEUL
   let onPlay = function(data) {
-    sendClickEventToSegment('play_video', {userId: userId, email: email, hasValidSubscription: hasValidSubscription, isEmailVerified: isEmailVerified, preferredExamBodyId: prefExamBodyId, isLoggedIn: isLoggedIn, sessionId: sessionId, lessonName: title, moduleName: moduleName, courseName: courseName, programName: _programName })
+    sendClickEventToSegment('play_video', {userId: userId, email: email, hasValidSubscription: hasValidSubscription, isEmailVerified: isEmailVerified, preferredExamBodyId: prefExamBodyId, isLoggedIn: isLoggedIn, sessionId: sessionId, lessonName: title, moduleName: _moduleName, courseName: _courseName, programName: _programName })
     if (logId === '') {
       $.ajax({
         headers: { 'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') },
@@ -111,12 +111,12 @@
 
   //When the user selects a specific time
   let onResume = function(data) {
-    sendClickEventToSegment('play_video', {userId: userId, email: email, hasValidSubscription: hasValidSubscription, isEmailVerified: isEmailVerified, preferredExamBodyId: prefExamBodyId, isLoggedIn: isLoggedIn, sessionId: sessionId, lessonName: title, moduleName: moduleName, courseName: courseName, programName: _programName })
+    sendClickEventToSegment('play_video', {userId: userId, email: email, hasValidSubscription: hasValidSubscription, isEmailVerified: isEmailVerified, preferredExamBodyId: prefExamBodyId, isLoggedIn: isLoggedIn, sessionId: sessionId, lessonName: title, moduleName: _moduleName, courseName: _courseName, programName: _programName })
   };
 
   //When the user selects a specific time
   let onPause = function(data) {
-    sendClickEventToSegment('pause_video', {userId: userId, email: email, hasValidSubscription: hasValidSubscription, isEmailVerified: isEmailVerified, preferredExamBodyId: prefExamBodyId, isLoggedIn: isLoggedIn, sessionId: sessionId, lessonName: title, moduleName: moduleName, courseName: courseName, programName: _programName})
+    sendClickEventToSegment('pause_video', {userId: userId, email: email, hasValidSubscription: hasValidSubscription, isEmailVerified: isEmailVerified, preferredExamBodyId: prefExamBodyId, isLoggedIn: isLoggedIn, sessionId: sessionId, lessonName: title, moduleName: _moduleName, courseName: _courseName, programName: _programName})
   };
 
   //When the user adjusts the volume
