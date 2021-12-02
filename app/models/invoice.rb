@@ -75,7 +75,8 @@ class Invoice < ApplicationRecord
   # callbacks
   after_create :set_vat_rate
   after_create :set_issued_at
-  after_create :generate_sca_guid, :apply_coupon_credit
+  after_create :generate_sca_guid
+  after_create :apply_coupon_credit
   before_save :update_total_revenue, if: :will_save_change_to_paid?
 
   # scopes
@@ -344,6 +345,8 @@ class Invoice < ApplicationRecord
 
   # check for yearly subscriptions with a coupoun with once duration aplied on it
   def apply_coupon_credit
+    return if Rails.env.test?
+
     coupon = Coupon.find_by(code: subscription.invoices.first.original_stripe_data[:discount][:coupon][:id])
 
     return if coupon.nil? || coupon.duration != 'once'
@@ -357,9 +360,11 @@ class Invoice < ApplicationRecord
     memo        = "Coupon '#{coupon_data[:code]}' applied."
 
     stripe_line_item = Stripe::InvoiceItem.create({
-       customer: user.stripe_customer_id,
-       invoice: stripe_guid,
-       amount: amount
+      customer: user.stripe_customer_id,
+      invoice: stripe_guid,
+      amount: amount,
+      currency: currency.iso_code.downcase,
+      description: memo
     })
 
     add_invoice_line_item(stripe_line_item)
