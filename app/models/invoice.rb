@@ -76,6 +76,7 @@ class Invoice < ApplicationRecord
   after_create :set_vat_rate
   after_create :set_issued_at
   after_create :generate_sca_guid
+  after_create :apply_coupon_credit
   before_save :update_total_revenue, if: :will_save_change_to_paid?
 
   # scopes
@@ -344,6 +345,8 @@ class Invoice < ApplicationRecord
 
   # check for yearly subscriptions with a coupoun with once duration aplied on it
   def apply_coupon_credit
+    return if Rails.env.test?
+
     coupon = Coupon.find_by(code: subscription.invoices.first.original_stripe_data[:discount][:coupon][:id])
 
     return if coupon.nil? || coupon.duration != 'once'
@@ -353,20 +356,28 @@ class Invoice < ApplicationRecord
     plan        = subscription.subscription_plan
     coupon_data = { code: coupon.code, price_discounted: coupon.price_discounted(subscription.subscription_plan_id) }
     discounted  = plan.price.to_f - coupon_data[:price_discounted]
-    amount      = (discounted * 100).to_i
+    amount      = (-discounted * 100).to_i
     memo        = "Coupon '#{coupon_data[:code]}' applied."
 
-    StripeService.new.add_credit_note(stripe_guid, amount, memo)
+    stripe_line_item = Stripe::InvoiceItem.create({
+      customer: user.stripe_customer_id,
+      invoice: stripe_guid,
+      amount: amount,
+      currency: currency.iso_code.downcase,
+      description: memo
+    })
+
+    add_invoice_line_item(stripe_line_item)
   end
 
-  def add_invoice_line_item(credit_note)
+  def add_invoice_line_item(stripe_line_item)
     InvoiceLineItem.create(
       invoice_id: id,
-      amount: credit_note[:amount] / 100.0,
-      currency_id: Currency.find_by(iso_code: credit_note[:currency].upcase).id,
+      amount: stripe_line_item[:amount] / 100.0,
+      currency_id: Currency.find_by(iso_code: stripe_line_item[:currency].upcase).id,
       subscription_id: subscription_id,
       subscription_plan_id: subscription.subscription_plan_id,
-      original_stripe_data: credit_note.to_hash,
+      original_stripe_data: stripe_line_item.to_hash,
       kind: :credit_note
     )
   end

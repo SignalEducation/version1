@@ -97,8 +97,6 @@ class StripeApiEvent < ApplicationRecord
         process_payment_action_required(webhook_object[:id], webhook_object[:subscription])
       when 'invoice.updated'
         process_invoice_update(webhook_object[:id])
-      when 'invoice.finalized'
-        process_invoice_finalized(webhook_object[:id])
       when 'customer.subscription.deleted'
         process_customer_subscription_deleted(webhook_object[:customer],
                                               webhook_object[:id], webhook_object[:cancel_at_period_end])
@@ -110,8 +108,6 @@ class StripeApiEvent < ApplicationRecord
         process_charge_refunded(webhook_object[:invoice], webhook_object)
       when 'coupon.updated'
         process_coupon_updated(webhook_object[:id])
-      when 'credit_note.created'
-        process_credit_note_created(payload[:data][:object])
       else
         log_process_error "Unknown event type - #{payload[:type]}"
       end
@@ -164,16 +160,6 @@ class StripeApiEvent < ApplicationRecord
       update!(processed: true, processed_at: Time.zone.now, error: false, error_message: nil)
     else
       log_process_error(invoice&.errors&.inspect || 'Error creating invoice')
-    end
-  end
-
-  def process_invoice_finalized(stripe_inv_id)
-    invoice = Invoice.find_by(stripe_guid: stripe_inv_id)
-
-    if invoice
-      invoice.apply_coupon_credit
-    else
-      log_process_error(invoice&.errors&.inspect || 'Error finalizing invoice')
     end
   end
 
@@ -312,16 +298,6 @@ class StripeApiEvent < ApplicationRecord
               error_message: nil)
     else
       log_process_error("Error updating Coupon. Code: #{coupon_code}")
-    end
-  end
-
-  def process_credit_note_created(credit_note_data)
-    invoice = Invoice.find_by(stripe_guid: credit_note_data[:invoice])
-
-    if invoice
-      invoice.add_invoice_line_item(credit_note_data)
-    else
-      log_process_error(invoice&.errors&.inspect || 'Error creating invoice')
     end
   end
 
