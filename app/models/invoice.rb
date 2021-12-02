@@ -344,12 +344,14 @@ class Invoice < ApplicationRecord
 
   # check for yearly subscriptions with a coupoun with once duration aplied on it
   def apply_coupon_credit
+    coupon = Coupon.find_by(code: subscription.invoices.first.original_stripe_data[:discount][:coupon][:id])
+
+    return if coupon.nil? || coupon.duration != 'once'
     return if subscription.subscription_plan.interval_name != 'Yearly'
-    return if subscription.coupon.nil? || subscription.coupon.duration != 'once'
     return if subscription.invoices.blank? || subscription.invoices.count == 1
 
     plan        = subscription.subscription_plan
-    coupon_data = subscription.coupon_data
+    coupon_data = { code: coupon.code, price_discounted: coupon.price_discounted(subscription.subscription_plan_id) }
     discounted  = plan.price.to_f - coupon_data[:price_discounted]
     amount      = (discounted * 100).to_i
     memo        = "Coupon '#{coupon_data[:code]}' applied."
