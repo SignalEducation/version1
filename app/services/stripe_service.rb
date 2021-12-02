@@ -55,12 +55,6 @@ class StripeService
     Stripe::Invoice.retrieve(id: invoice_id, expand: ['payment_intent'])
   end
 
-  def add_credit_note(invoice_guid, amount, memo)
-    Stripe::CreditNote.create({ invoice: invoice_guid, amount: amount, memo: memo })
-  rescue => e
-    raise_payment_error(e, __method__.to_s, :generic)
-  end
-
   # PRIVATE ====================================================================
 
   private
