@@ -143,6 +143,7 @@
   let preferredExamBodyId = "#{current_user&.preferred_exam_body_id}";
   let preferredExamBody = "#{current_user&.preferred_exam_body&.name}";
   let onboarding = "#{current_user&.analytics_onboarding_valid?.to_s}";
+  let onSessionTrue = "#{current_user&.currency_id == 7? 'true' : ''}";
 
   let analyticsData = { preferred_exam_body_id: preferredExamBodyId, preferred_exam_body: preferredExamBody, banner: banner, onboarding: onboarding, exam_body_id: "#{@exam_body&.id}", exam_body_name: "#{@exam_body&.name}",
     subscription_plan_options: "#{@plans.map(&:id)}", sub_plan_names: planNames, selected_sub_plan_guid: "#{params[:plan_guid]}", selected_sub_plan_name: preSelectedPlan.attr('data-name'), selected_sub_plan_price: preSelectedPlan.attr('data-price'),
@@ -375,14 +376,13 @@
 
     function handlePayment(client_secret, subscription_id){
       let statusArray = ['active', 'succeeded'];
-      let intentStatus = '';
+      let intentStatus = '';      
 
       $(".spinner-message").html("Still processing...");
 
-      // If card is an Indian bank card
       stripe.handleCardPayment(client_secret, cardElement,
         {setup_future_usage: {
-          on_session: true
+          on_session: onSessionTrue
         }
       }
       ).then(function(result) {
