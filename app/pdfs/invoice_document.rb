@@ -70,7 +70,7 @@ class InvoiceDocument < Prawn::Document
       table_details <<
         if line_item.credit_note?
           [index + 1,
-          line_item[:original_stripe_data][:memo],
+          line_item[:original_stripe_data][:description],
           '-',
           line_item.amount]
         else
