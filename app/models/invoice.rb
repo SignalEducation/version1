@@ -346,6 +346,7 @@ class Invoice < ApplicationRecord
   # check for yearly subscriptions with a coupoun with once duration aplied on it
   def apply_coupon_credit
     return if Rails.env.test?
+    return if subscription.nil?
 
     coupon = Coupon.find_by(code: subscription.invoices.first.original_stripe_data[:discount][:coupon][:id])
 
