@@ -348,7 +348,7 @@ class Invoice < ApplicationRecord
     return if Rails.env.test?
     return if subscription.nil?
 
-    coupon_code = subscription.invoices.first.original_stripe_data[:discount].try(:coupon).try(:id)
+    coupon_code = subscription.invoices.first.original_stripe_data.dig(:discount, :coupon, :id)
     return if coupon_code.nil?
 
     coupon = coupon_code ? Coupon.find_by(code: coupon_code) : nil
