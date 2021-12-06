@@ -14,11 +14,9 @@ class StripeInvoiceLogWorker
   private
 
   def stripe_failed_notification(invoice_id, variable, value)
-    invoice = Invoice.find(invoice_id)
-
     [{ fallback: "Invoice ##{invoice_id} credit note log.",
        title: "#{variable}: #{value}",
-       title_link: "https://dashboard.stripe.com/events/#{invoice.stripe_guid}",
+       title_link: "https://dashboard.stripe.com/events/",
        color: '#7CD197',
        footer: 'Stripe' }]
   end
