@@ -196,7 +196,9 @@ class SegmentService
       discountCode: coupon_data.present? ? coupon_data[:code] : '',
       planPrice: plan&.amount,
       currency: plan&.currency&.name,
-      paymentType: payment_type.camelize(:lower)
+      paymentType: payment_type&.camelize(:lower),
+      subscriptionType: 'Subscription',
+      planType: plan&.interval_name&.downcase
     }
   end
 

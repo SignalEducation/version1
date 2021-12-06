@@ -79,7 +79,8 @@ class OrdersController < ApplicationController
       if @order.product.lifetime_access?
         redirect_to order_complete_url(product_id: @order.product_id,
                                        product_type: @order.product.url_by_type,
-                                       order_id: @order.id)
+                                       order_id: @order.id,
+                                       payment_processor: 'Paypal')
       else
         redirect_to user_exercises_path(current_user)
       end
@@ -95,6 +96,7 @@ class OrdersController < ApplicationController
     @order          = Order.find_by(id: params[:order_id])
     @product        = Product.find_by(id: params[:product_id])
     @subscriptions  = Subscription.where(user_id: @order.user_id).not_pending
+    @payment_processor = params[:payment_processor]
     @studies_link   =
       if @product&.lifetime_access?
         student_dashboard_url

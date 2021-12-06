@@ -56,38 +56,40 @@
         case controllerName == 'subscriptions' && actionName != 'personal_upgrade_complete':
           name = "Subscriptions Page";
           break;
-        case controllerName == 'orders' && actionName == 'order_complete':
-          name = "Order Purchase Complete Page";
-          break;
         case controllerName == 'subscriptions' && actionName == 'personal_upgrade_complete':
-          name = "Subscription Purchase Complete Page";
+          name = "skip";
+          break;
+        case controllerName == 'orders' && actionName == 'order_complete':
+          name = "skip";
           break;
         case controllerName == 'user_accounts':
           name = "My Account Page";
           break;
         default: 
-          name = capitalize(pageUrl.substring(pageUrl.lastIndexOf('/') + 1));
+          name = capitalize(pageUrl.substring(pageUrl.lastIndexOf('/') + 1)).split("?")[0];
           break;
       }
     }
 
-    analytics.page('Page Views', `APP : ${name}`, {
-      eventSentAt: new Date().toISOString(),
-      email: email,      
-      userId: userId,                
-      isLoggedIn: isLoggedIn,
-      sessionId: sessionId,
-      clientOs: base.clientOs,
-      deviceType: base.deviceType,
-      platform: base.platform,
-      pageUrl: pageUrl,
-      name: `APP : ${name}`,
-      preferredExamBodyId: prefExamBodyId,
-      preferredExamBody: prefExamBody,
-      programName: programName,
-      courseName: courseName,
-      moduleName: moduleName
-    });
+    if(name != "skip") {
+      analytics.page('Page Views', `APP : ${name}`, {
+        eventSentAt: new Date().toISOString(),
+        email: email,      
+        userId: userId,                
+        isLoggedIn: isLoggedIn,
+        sessionId: sessionId,
+        clientOs: base.clientOs,
+        deviceType: base.deviceType,
+        platform: base.platform,
+        pageUrl: pageUrl,
+        name: `APP : ${name}`,
+        preferredExamBodyId: prefExamBodyId,
+        preferredExamBody: prefExamBody,
+        programName: programName,
+        courseName: courseName,
+        moduleName: moduleName
+      });
+    }
 
     if ((justLoggedIn === 'true') || (justVerified === 'true')) {
       analytics.identify("#{current_user&.id}")

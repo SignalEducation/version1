@@ -60,4 +60,25 @@
     let preferredExamBodyId = "#{current_user&.preferred_exam_body_id}";
     let preferredExamBody = "#{current_user&.preferred_exam_body&.name}";
     let onboarding = "#{current_user&.analytics_onboarding_valid?.to_s}";
+
+    let segmentProps = {      
+      email: "#{current_user&.email}",      
+      userId: "#{current_user&.email}",                
+      isLoggedIn: "#{current_user&.email}",
+      sessionId: "#{session&.id}",
+      name: 'APP : Payment Complete',
+      preferredExamBodyId: "#{current_user&.preferred_exam_body_id}",
+      preferredExamBody: "#{current_user&.preferred_exam_body&.name}",
+      programName: "#{@product&.group&.name}",
+      productName: "#{@product&.name}",
+      planPrice: "#{@product&.price}",
+      planType: "#{@product&.product_type}",
+      paymentType: "#{@product&.product_type.humanize}",
+      subscriptionType: "Product",
+      paymentProviderType: "#{@payment_processor}"
+    };
+
+    let segmentData = createBasePropertiesSegment(segmentProps);
+
+    analytics.page('Page Views', segmentData.name, segmentData);
   });
