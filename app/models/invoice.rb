@@ -201,7 +201,7 @@ class Invoice < ApplicationRecord
                     card_country user_country hubspot_source hubspot_source_1 hubspot_source_2 first_visit_source
                     first_visit_utm_campaign first_visit_medium first_visit_date first_visit_referring_domain
                     first_visit_landing_page first_visit_referrer user_subscriptions_revenue
-                    user_orders_revenue user_total_revenue]
+                    user_orders_revenue user_total_revenue coupon_code coupon_id]
 
     CSV.generate(options) do |csv|
       csv << attributes
@@ -217,7 +217,7 @@ class Invoice < ApplicationRecord
                         invoice_type payment_interval plan_name currency_symbol plan_price sub_total total
                         card_country user_country hubspot_source hubspot_source_1 hubspot_source_2 first_visit_source
                         first_visit_utm_campaign first_visit_medium first_visit_date first_visit_referring_domain
-                        first_visit_landing_page first_visit_referrer]
+                        first_visit_landing_page first_visit_referrer coupon_code coupon_id]
     ord_attributes = %w[order_id order_created name product_name stripe_id paypal_guid state
                         product_type leading_symbol price user_country card_country]
 
