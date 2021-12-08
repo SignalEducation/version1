@@ -15,6 +15,10 @@ module UserAccessable
     student_user? && user_group&.trial_or_sub_required
   end
 
+  def bank_transfer_user?
+    user_group.name = 'bank_transfer_payments'
+  end
+
   def lifetime_subscriber?(group_id)
     orders.includes(:product).with_state(:completed).
       where(products: { product_type: :lifetime_access }).

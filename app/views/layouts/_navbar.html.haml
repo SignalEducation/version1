@@ -30,7 +30,7 @@
         #navbarNavDropdown.collapse.navbar-collapse.justify-content-end
           %ul.navbar-nav.align-items-lg-center
             -if current_user
-              -if current_user&.preferred_exam_body_id && !current_user&.valid_access_for_exam_body?(current_user&.preferred_exam_body_id, current_user&.preferred_exam_body&.group&.id)
+              -if current_user&.standard_student_user? && current_user&.preferred_exam_body_id && !current_user&.valid_access_for_exam_body?(current_user&.preferred_exam_body_id, current_user&.preferred_exam_body&.group&.id)
                 %li.nav-item
                   =link_to pricing_url(current_user&.preferred_exam_body&.group&.name_url), class: 'nav-link upgrade-btn', onclick: "sendClickEventToSegment('clicks_dashboard_upgrade', {userId: '#{current_user&.id}',email: '#{current_user&.email}',hasValidSubscription: '#{current_user&.valid_subscription?}',isEmailVerified: '#{current_user&.email_verified}',preferredExamBodyId: '#{current_user&.preferred_exam_body_id}', isLoggedIn: '#{!current_user&.nil?}', sessionId: '#{session&.id}', programName: '#{current_user&.preferred_exam_body&.group&.name}'})" do
                     -if current_user&.preferred_exam_body&.group&.name
