@@ -114,6 +114,8 @@ class Order < ApplicationRecord
     after_transition all => :completed do |order, _transition|
       order.execute_order_completion
       order.generate_exercises
+
+      SegmentService.new.track_order_payment_complete_event(order)
     end
   end
 

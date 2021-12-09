@@ -141,7 +141,6 @@ class SubscriptionsController < ApplicationController
 
     if @subscription.save
       if data[:status] == :ok
-        segment_payment_complete_event(@subscription)
         render :create
       else
         segment_payment_failed_event(subscription, data[:error_message], data[:status])
@@ -161,7 +160,6 @@ class SubscriptionsController < ApplicationController
     @subscription = PaypalSubscriptionsService.new(subscription).create_and_return_subscription
 
     if @subscription.save
-      segment_payment_complete_event(@subscription)
       redirect_to subscription.paypal_approval_url
     else
       error_msg = "DEBUG: Subscription Failed to save for unknown reason - #{subscription.inspect}"
@@ -206,12 +204,6 @@ class SubscriptionsController < ApplicationController
     return if %w[stripe paypal].include?(type)
 
     raise Learnsignal::SubscriptionError, t('views.subscriptions.new_subscription.invalid_type')
-  end
-
-  def segment_payment_complete_event(subscription)
-    return if Rails.env.test?
-
-    SegmentService.new.track_payment_complete_event(current_user, subscription)
   end
 
   def segment_payment_failed_event(subscription, error_msg, error_code)

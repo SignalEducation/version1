@@ -174,6 +174,10 @@ class Subscription < ApplicationRecord
     after_transition all => :cancelled do |subscription, _transition|
       subscription.update(cancelled_at: Time.zone.now)
     end
+
+    after_transition %i[pending pending_3d_secure] => :active do |subscription, _transition|
+      SegmentService.new.track_subscription_payment_complete_event(subscription)
+    end
   end
 
   # CLASS METHODS ==============================================================
