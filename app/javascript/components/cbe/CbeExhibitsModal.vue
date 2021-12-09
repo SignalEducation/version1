@@ -8,7 +8,7 @@
         :componentType="componentType"
         :componentName="componentName"
         :componentModal="componentModal"
-        :componentContentData="componentContentData"
+        :componentSpreadsheetData="componentSpreadsheetData"
         :componentIcon="componentIcon"
         :height="450"
         :width="800"
@@ -16,7 +16,7 @@
         <div slot="body">
           <SpreadsheetEditor
             v-if="componentType === 'spreadsheet'"
-            :initial-data="componentContentData"
+            :initial-data="componentSpreadsheetData"
           />
           <div id="pdfvuer" v-else-if="componentType === 'pdf'">
             <div
@@ -98,7 +98,7 @@ export default {
       type: Boolean,
       default: false,
     },
-    componentContentData: {
+    componentSpreadsheetData: {
       type: Object,
       default: () => ({}),
     },

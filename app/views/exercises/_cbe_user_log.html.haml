@@ -20,7 +20,7 @@
               .row
                 .col-sm-2
                   %nav.mb-4.account-nav
-                    %ul#questionTabs.nav.nav-tabs.nav-tabs-vertical{:role => "tablist"}
+                    %ul#questionTabs.nav.nav-tabs.nav-tabs-vertical.wrap-tabs{:role => "tablist"}
                       -section_questions.each_with_index do |question, index|
                         %li.nav-item
                           %a.nav-link{class: index == 0 ? 'active' : '', id: "#section-#{section.id}-question-#{question.id}", "aria-controls" => "section-#{section.id}-question-#{question.id}", "aria-selected" => "true", "data-toggle" => "tab", :href => "#section-#{section.id}-question-#{question.id}", :role => "tab"}
