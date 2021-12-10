@@ -347,31 +347,21 @@ class Invoice < ApplicationRecord
   def apply_coupon_credit
     return if Rails.env.test?
     return if subscription.nil?
-    StripeInvoiceLogWorker.perform_async(id, 'subscription', subscription.inspect)
 
     coupon_code = subscription.invoices.first.original_stripe_data.dig(:discount, :coupon, :id)
     return if coupon_code.nil?
 
-    StripeInvoiceLogWorker.perform_async(id, 'coupon_code', coupon_code.inspect)
-
     coupon = coupon_code ? Coupon.find_by(code: coupon_code) : nil
 
     return if coupon.nil? || coupon.duration != 'once'
-    StripeInvoiceLogWorker.perform_async(id, 'coupon', coupon.inspect)
-
     return if subscription.subscription_plan.interval_name != 'Yearly'
     return if subscription.invoices.blank? || subscription.invoices.count == 1
 
     plan        = subscription.subscription_plan
-    StripeInvoiceLogWorker.perform_async(id, 'plan', plan.inspect)
     coupon_data = { code: coupon.code, price_discounted: coupon.price_discounted(subscription.subscription_plan_id) }
-    StripeInvoiceLogWorker.perform_async(id, 'coupon_data', coupon_data.inspect)
     discounted  = plan.price.to_f - coupon_data[:price_discounted]
-    StripeInvoiceLogWorker.perform_async(id, 'discounted', discounted.inspect)
     amount      = (-discounted * 100).to_i
-    StripeInvoiceLogWorker.perform_async(id, 'amount', amount.inspect)
     memo        = "Coupon '#{coupon_data[:code]}' applied."
-    StripeInvoiceLogWorker.perform_async(id, 'memo', memo.inspect)
 
     stripe_line_item = Stripe::InvoiceItem.create({
       customer: user.stripe_customer_id,
@@ -380,8 +370,6 @@ class Invoice < ApplicationRecord
       currency: currency.iso_code.downcase,
       description: memo
     })
-
-    StripeInvoiceLogWorker.perform_async(id, 'stripe_line_item', stripe_line_item.inspect)
 
     add_invoice_line_item(stripe_line_item)
   rescue => e
@@ -392,7 +380,7 @@ class Invoice < ApplicationRecord
   end
 
   def add_invoice_line_item(stripe_line_item)
-    invoice_line_item = InvoiceLineItem.create(
+    InvoiceLineItem.create(
       invoice_id: id,
       amount: stripe_line_item[:amount] / 100.0,
       currency_id: Currency.find_by(iso_code: stripe_line_item[:currency].upcase).id,
@@ -401,8 +389,6 @@ class Invoice < ApplicationRecord
       original_stripe_data: stripe_line_item.to_hash,
       kind: :credit_note
     )
-
-    StripeInvoiceLogWorker.perform_async(id, 'invoice_line_item', invoice_line_item.inspect)
   rescue => e
     Rails.logger.error "StripeApiEvent#existing_guid #{e.inspect}"
     SlackService.new.notify_channel('payments',
@@ -411,14 +397,6 @@ class Invoice < ApplicationRecord
   end
 
   protected
-
-  def stripe_failed_notification(error, invoice_id)
-    [{ fallback: "Stripe credit note  to invoice ##{invoice_id} have failed.",
-       title: "Stripe credit note  to invoice  ##{invoice_id} have failed.\nError: #{error.inspect}",
-       title_link: "https://dashboard.stripe.com/invoices/#{stripe_guid}",
-       color: '#7CD197',
-       footer: 'Stripe' }]
-  end
 
   def set_vat_rate
     country = user.country
