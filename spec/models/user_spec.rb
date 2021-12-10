@@ -194,6 +194,7 @@ describe User do
   it { should respond_to(:student_user?) }
   it { should respond_to(:non_student_user?) }
   it { should respond_to(:standard_student_user?) }
+  it { should respond_to(:bank_transfer_user?) }
   it { should respond_to(:complimentary_user?) }
   it { should respond_to(:blocked_user?) }
   it { should respond_to(:system_requirements_access?) }
