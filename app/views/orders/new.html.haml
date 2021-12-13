@@ -160,7 +160,7 @@
   let productBodyId = "#{@order.exam_body_id}";
   let productType = "#{@order.product&.product_type}";
   let analyticsData = {exam_body_id: productBodyId, exam_body_name: productBody, onboarding: "#{current_user&.onboarding_process&.active&.to_s}", product_id: productId, product_name: productName, product_price: productPrice, currency_iso_code: currencyIso};
-  let segmentData = { userId: '#{@current_user&.id}', email: '#{@current_user&.email}', hasValidSubscription: '#{@current_user&.valid_subscription?}', isEmailVerified: '#{@current_user&.email_verified}', preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', programName: productBody, planName: productName, planPrice: productPrice, paymentType: 'Product' };
+  let segmentData = { userId: '#{@current_user&.id}', email: '#{@current_user&.email}', hasValidSubscription: '#{@current_user&.valid_subscription?}', isEmailVerified: '#{@current_user&.email_verified}', preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', programName: productBody, productName: productName, planPrice: productPrice, paymentType: '#{@order&.product&.product_type.humanize}', subscriptionType: 'Product', planType: productType  };
 
   $(document).on('ready', function() {
 
@@ -168,11 +168,11 @@
     // $('#pay-with-paypal').closest('.custom-control').siblings('.payment-details').slideUp();
     // selectPaymentMethod($('.form-group-expandable').val(), false);
     $("#pay-with-card").on( "click", function(event) {
-      segmentData.paymentMethod = 'card';
+      segmentData.paymentProviderType = 'Stripe';
       sendClickEventToSegment('clicks_payment_type_toggle', segmentData)
     });
     $("#pay-with-paypal").on( "click", function(event) {
-      segmentData.paymentMethod = 'paypal';
+      segmentData.paymentProviderType = 'Paypal';
       sendClickEventToSegment('clicks_payment_type_toggle', segmentData)
     });
     

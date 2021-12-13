@@ -143,12 +143,16 @@
   let preferredExamBodyId = "#{current_user&.preferred_exam_body_id}";
   let preferredExamBody = "#{current_user&.preferred_exam_body&.name}";
   let onboarding = "#{current_user&.analytics_onboarding_valid?.to_s}";
+  let coupon_code = $('#coupon_code').val();
+  let discounted_price = Number($('#discounted_price').val().replace(/[^0-9\.-]+/g,"")); 
+  coupon_code = (coupon_code) ? coupon_code : '';
+  discounted_price = (discounted_price) ? discounted_price : ''; 
 
   let analyticsData = { preferred_exam_body_id: preferredExamBodyId, preferred_exam_body: preferredExamBody, banner: banner, onboarding: onboarding, exam_body_id: "#{@exam_body&.id}", exam_body_name: "#{@exam_body&.name}",
     subscription_plan_options: "#{@plans.map(&:id)}", sub_plan_names: planNames, selected_sub_plan_guid: "#{params[:plan_guid]}", selected_sub_plan_name: preSelectedPlan.attr('data-name'), selected_sub_plan_price: preSelectedPlan.attr('data-price'),
     currency: "#{@currency&.iso_code}", country: "#{current_user&.country&.name}", valid_coupon_present: $('#coupon_code').hasClass("coupon-success"), discountedPrice: '', couponCode: '' };
   
-  let segmentData = { userId: '#{@current_user&.id}', email: '#{@current_user&.email}', hasValidSubscription: '#{@current_user&.valid_subscription?}', isEmailVerified: '#{@current_user&.email_verified}', preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', programName: '#{@exam_body&.name}', planName: preSelectedPlan.attr('data-name'), planPrice: preSelectedPlan.attr('data-price'), discountedPrice: preSelectedPlan.attr('data-price'), discountCode: preSelectedPlan.attr('data-price'), payment_type: 'subscription' };
+  let segmentData = { userId: '#{@current_user&.id}', email: '#{@current_user&.email}', hasValidSubscription: '#{@current_user&.valid_subscription?}', isEmailVerified: '#{@current_user&.email_verified}', preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', programName: '#{@exam_body&.name}', planName: preSelectedPlan.attr('data-name'), planPrice: preSelectedPlan.attr('data-price'), discountedPrice: discounted_price, discountCode: coupon_code, paymentType: '#{@subscription&.kind}', subscriptionType: 'Subscription', planType: preSelectedPlan.attr('id') };
 
   function addToCart() {
     let selectedPlan = $("input[name='plans']:checked");
@@ -426,20 +430,53 @@
     let preferredExamBodyId = "#{current_user&.preferred_exam_body_id}";
     let preferredExamBody = "#{current_user&.preferred_exam_body&.name}";
     let onboarding = "#{current_user&.analytics_onboarding_valid?.to_s}";
-    let coupon_code = $('#coupon_code').val();
-    let discounted_price = Number($('#discounted_price').val().replace(/[^0-9\.-]+/g,""));
-
-    if (analytics) {
-      // Segment Analytics
-      segmentData = { userId: '#{@current_user&.id}', email: '#{@current_user&.email}', hasValidSubscription: '#{@current_user&.valid_subscription?}', isEmailVerified: '#{@current_user&.email_verified}', preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', programName: '#{@exam_body&.name}', planName: preSelectedPlan.attr('data-name'), planPrice: preSelectedPlan.attr('data-price'), discountedPrice: (discounted_price) ? discounted_price : '', discountCode: (coupon_code) ? coupon_code : '', paymentType: 'Subscription' };
-    }
+    coupon_code = $('#coupon_code').val();
+    discounted_price = Number($('#discounted_price').val().replace(/[^0-9\.-]+/g,""));
 
     $("#pay-with-card").on( "click", function(event) {
-      segmentData.paymentMethod = 'card';
+      let selectedPlan = $("input[name='plans']:checked");
+      if (analytics) {
+        segmentData = { 
+          userId: '#{@current_user&.id}', 
+          email: '#{@current_user&.email}', 
+          hasValidSubscription: '#{@current_user&.valid_subscription?}', 
+          isEmailVerified: '#{@current_user&.email_verified}', 
+          preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', 
+          isLoggedIn: '#{!@current_user&.nil?}', 
+          sessionId: '#{session&.id}', 
+          programName: '#{@exam_body&.name}', 
+          planName: selectedPlan.attr('data-name'), 
+          planPrice: selectedPlan.attr('data-price'), 
+          discountedPrice: (discounted_price) ? discounted_price : '', 
+          discountCode: (coupon_code) ? coupon_code : '', 
+          paymentType: '#{@subscription&.kind}', 
+          paymentProviderType: 'Stripe',
+          subscriptionType: 'Subscription', 
+          planType: selectedPlan.attr('id') };
+      }
       sendClickEventToSegment('clicks_payment_type_toggle', segmentData)
     });
     $("#pay-with-paypal").on( "click", function(event) {
-      segmentData.paymentMethod = 'paypal';
+      let selectedPlan = $("input[name='plans']:checked");
+      if (analytics) {
+        segmentData = { 
+          userId: '#{@current_user&.id}', 
+          email: '#{@current_user&.email}', 
+          hasValidSubscription: '#{@current_user&.valid_subscription?}', 
+          isEmailVerified: '#{@current_user&.email_verified}', 
+          preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', 
+          isLoggedIn: '#{!@current_user&.nil?}', 
+          sessionId: '#{session&.id}', 
+          programName: '#{@exam_body&.name}', 
+          planName: selectedPlan.attr('data-name'), 
+          planPrice: selectedPlan.attr('data-price'), 
+          discountedPrice: (discounted_price) ? discounted_price : '', 
+          discountCode: (coupon_code) ? coupon_code : '', 
+          paymentType: '#{@subscription&.kind}', 
+          paymentProviderType: 'Paypal',
+          subscriptionType: 'Subscription', 
+          planType: selectedPlan.attr('id') };
+      }
       sendClickEventToSegment('clicks_payment_type_toggle', segmentData)
     });
     

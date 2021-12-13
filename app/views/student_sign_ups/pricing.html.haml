@@ -23,7 +23,7 @@
                         %ul.nav.nav-pills.plan-nav{id: 'planTabs', role: 'tablist', class:@subscription_plans.length < 2 && 'hidden'}
                           -@subscription_plans.each_with_index do |navPlan, navCounter|
                             %li.nav-item{data: {tab_name: navPlan.guid}}
-                              %a{onclick: "sendClickEventToSegment('selects_plan_duration', {email: '#{@current_user&.email}', programName: '#{@group&.name}', planName: '#{navPlan&.name}', planPrice: '#{navPlan&.price}', planType: 'Subscription'})", class: "nav-link #{navCounter == @subscription_plans.length - 1 ? 'active' : ''}", id: "#{navPlan.guid}-tab", data: {toggle: 'tab'}, href: "#nav-#{navPlan.guid}", aria: {controls: "#{navPlan.guid}", selected: 'false'}, role: 'tab'}
+                              %a{onclick: "sendClickEventToSegment('selects_plan_duration', {email: '#{@current_user&.email}', programName: '#{@group&.name}', planName: '#{navPlan&.name}', planPrice: '#{navPlan&.price}', planType: '#{navPlan&.interval_name&.downcase}', subscriptionType: 'Subscription', paymentType: 'newSubscription'})", class: "nav-link #{navCounter == @subscription_plans.length - 1 ? 'active' : ''}", id: "#{navPlan.guid}-tab", data: {toggle: 'tab'}, href: "#nav-#{navPlan.guid}", aria: {controls: "#{navPlan.guid}", selected: 'false'}, role: 'tab'}
                                 =t("views.general.payment_intervals.a#{navPlan.payment_frequency_in_months}")
                       -@subscription_plans.each_with_index do |plan, counter|
                         .tab-pane{id: "nav-#{plan.guid}", class: "tab-#{plan.guid} #{counter == @subscription_plans.length - 1 ? 'active' : ''} ", "aria-labelledby" => "#{plan.guid}-tab", :role => "tabpanel"}
@@ -70,7 +70,7 @@
                             %p.preCtaText
                               Recurring Payment. Cancel Anytime
                           .mt-auto
-                            =link_to subscription_checkout_special_link(plan.exam_body_id, plan.guid), class: "btn w-100 btn-primary choosePlanBtn", onclick: "addToCart('#{plan.currency.iso_code}', '#{plan.name}', '#{plan.id}', '#{plan.price}', '#{plan.exam_body.name}'); sendClickEventToSegment('clicks_choose_plan', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', planName: '#{plan.name}', planPrice: '#{plan.price}', programName: '#{plan.exam_body.name}', planType: 'Subscription'})" do
+                            =link_to subscription_checkout_special_link(plan.exam_body_id, plan.guid), class: "btn w-100 btn-primary choosePlanBtn", onclick: "addToCart('#{plan&.currency.iso_code}', '#{plan&.name}', '#{plan&.id}', '#{plan&.price}', '#{plan&.exam_body&.name}'); sendClickEventToSegment('clicks_choose_plan', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', planName: '#{plan&.name}', planPrice: '#{plan&.price}', programName: '#{plan&.exam_body&.name}', planType: '#{plan&.interval_name&.downcase}', subscriptionType: 'Subscription', paymentType: 'newSubscription'})" do
                               ="Choose #{t("views.general.payment_intervals.a#{plan.payment_frequency_in_months}")}"
                               %span.sr-only Choose this plan
                           %div.visible-xs.bulletListAccordianBox
@@ -134,7 +134,7 @@
                       %p.preCtaText
                         One-time payment
                       .mt-auto
-                        =link_to link, class: 'btn btn-primary choosePlanBtn w-100 ', onclick: "sendClickEventToSegment('clicks_choose_plan', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', planName: '#{name}', planPrice: '#{product.price}', programName: '#{@group.name}', planType: 'Product'})" do
+                        =link_to link, class: 'btn btn-primary choosePlanBtn w-100 ', onclick: "sendClickEventToSegment('clicks_choose_plan', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', productName: '#{name}', planPrice: '#{product&.price}', programName: '#{@group&.name}', planType: 'lifetime', subscriptionType: 'Product', paymentType: '#{product&.product_type.humanize}'})" do
                           ="Choose Lifetime"
                           %span.sr-only Choose this plan
                       %div.visible-xs.bulletListAccordianBox
@@ -165,7 +165,7 @@
               %ul.nav.nav-pills.nav-fill{id: 'levelsTabs', role: 'tablist'}
                 - @exam_bodies.each_with_index do |exam_body, counter|
                   %li.nav-item{data: {tab_name: exam_body.name}}
-                    %a{onclick: "sendClickEventToSegment('selects_plan_duration', {email: '#{@current_user.email}', programName: '#{@group.name}', planName: '#{navPlan.name}', planPrice: '#{navPlan.price}', planType: 'Subscription'})", class: "nav-link #{counter == 0 ? 'active' : ''}", id: "#{exam_body.group.name_url}-tab", data: {toggle: 'tab'}, href: "#examBodytab-#{exam_body.group.name_url}", aria: {controls: "#{exam_body.group.name_url}", selected: 'false'}, role: 'tab', onclick: "gtag('event', 'clicks_exam_body_price', {'event_category': 'pre-registration', 'event_label': '#{exam_body.name}'});"}
+                    %a{onclick: "sendClickEventToSegment('selects_plan_duration', {email: '#{@current_user.email}', programName: '#{@group&.name}', planName: '#{navPlan&.name}', planPrice: '#{navPlan&.price}', planType: '#{navPlan&.interval_name&.downcase}', subscriptionType: 'Subscription', paymentType: 'newSubscription'})", class: "nav-link #{counter == 0 ? 'active' : ''}", id: "#{exam_body.group.name_url}-tab", data: {toggle: 'tab'}, href: "#examBodytab-#{exam_body.group.name_url}", aria: {controls: "#{exam_body.group.name_url}", selected: 'false'}, role: 'tab', onclick: "gtag('event', 'clicks_exam_body_price', {'event_category': 'pre-registration', 'event_label': '#{exam_body.name}'});"}
                       =exam_body.name
 
             %section.py-3.py-md-4
@@ -185,7 +185,7 @@
                                 %ul.nav.nav-pills.plan-nav{id: 'planTabs', role: 'tablist', class:@subscription_plans.length < 2 && 'hidden'}
                                   -@subscription_plans.where(exam_body_id: exam_body.id).each_with_index do |navPlan, navCounter|
                                     %li.nav-item{data: {tab_name: navPlan.guid}}
-                                      %a{onclick: "sendClickEventToSegment('selects_plan_duration', {email: '#{@current_user&.email}', programName: '#{@group&.name}', planName: '#{navPlan&.name}', planPrice: '#{navPlan&.price}', planType: 'Subscription'})", class: "nav-link #{navCounter == @subscription_plans.where(exam_body_id: exam_body.id).length - 1 ? 'active' : ''}", id: "#{navPlan.guid}-tab", data: {toggle: 'tab'}, href: "#nav-#{navPlan.guid}", aria: {controls: "#{navPlan.guid}", selected: 'false'}, role: 'tab'}
+                                      %a{onclick: "sendClickEventToSegment('selects_plan_duration', {email: '#{@current_user&.email}', programName: '#{@group&.name}', planName: '#{navPlan&.name}', planPrice: '#{navPlan&.price}', planType: '#{navPlan&.interval_name&.downcase}', subscriptionType: 'Subscription', paymentType: 'newSubscription'})", class: "nav-link #{navCounter == @subscription_plans.where(exam_body_id: exam_body.id).length - 1 ? 'active' : ''}", id: "#{navPlan.guid}-tab", data: {toggle: 'tab'}, href: "#nav-#{navPlan.guid}", aria: {controls: "#{navPlan.guid}", selected: 'false'}, role: 'tab'}
                                         =t("views.general.payment_intervals.a#{navPlan.payment_frequency_in_months}")
                               -@subscription_plans.where(exam_body_id: exam_body.id).each_with_index do |plan, counter|
                                 .tab-pane{id: "nav-#{plan.guid}", class: "tab-#{plan.guid} #{counter == @subscription_plans.where(exam_body_id: exam_body.id).length - 1 ? 'active' : ''} ", "aria-labelledby" => "#{plan.guid}-tab", :role => "tabpanel"}
@@ -298,7 +298,7 @@
                               %p.text-gray2.mt-4.mb-2.text-bold
                                 One-time payment
                               .mt-auto
-                                = link_to link, class: 'btn btn-primary choosePlanBtn w-100 ', onclick: "sendClickEventToSegment('clicks_choose_plan', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', planName: '#{name}', planPrice: '#{product.price}', programName: '#{exam_body.group.name}', planType: 'Product'})" do
+                                = link_to link, class: 'btn btn-primary choosePlanBtn w-100 ', onclick: "sendClickEventToSegment('clicks_choose_plan', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', productName: '#{name}', planPrice: '#{product.price}', programName: '#{exam_body.group.name}', planType: 'lifetime', subscriptionType: 'Product', paymentType: '#{product&.product_type.humanize}'})" do
                                   ="Choose Lifetime"
                                   %span.sr-only Choose this plan
                               %div.visible-xs.bulletListAccordianBox
