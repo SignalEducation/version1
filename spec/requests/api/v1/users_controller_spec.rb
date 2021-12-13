@@ -186,7 +186,7 @@ RSpec.describe Api::V1::UsersController, type: :request do
       it 'returns success json message' do
         body = JSON.parse(response.body)
 
-        expect(body['error']).to eq("Couldn't find User with 'id'=9999999")
+        expect(body['errors']).to eq("Couldn't find User with 'id'=9999999")
       end
     end
   end
@@ -442,7 +442,7 @@ RSpec.describe Api::V1::UsersController, type: :request do
       it 'returns success json message' do
         body = JSON.parse(response.body)
 
-        expect(body['error']).to eq("Couldn't find User with 'id'=#{invalid_user_id}")
+        expect(body['errors']).to eq("Couldn't find User with 'id'=#{invalid_user_id}")
       end
     end
   end
