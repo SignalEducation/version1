@@ -155,4 +155,12 @@ module InvoiceReport
   def user_total_revenue
     user.total_revenue
   end
+
+  def coupon_code
+    subscription&.coupon&.code
+  end
+
+  def coupon_id
+    subscription&.coupon&.id
+  end
 end

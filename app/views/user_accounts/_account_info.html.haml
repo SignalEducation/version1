@@ -92,6 +92,23 @@
                   =link_to 'Undo Subscription Cancel', un_cancel_subscription_path(subscription), data: { confirm: 'By clicking here you agree to undo the cancellation request for your current plan.' }, method: :put, class: 'btn btn-primary btn-sm mb-2 mr-2', style: 'vertical-align: top;'
                 -if subscription.cancelled?
                   =link_to 'Renew Subscription', subscription_checkout_special_link(subscription.subscription_plan.exam_body_id), class: 'btn btn-primary btn-sm mb-2', style: 'vertical-align: top;'
+  -elsif current_user&.bank_transfer_user?
+    %article.card.subscriptionCard.mb-5.p-0
+      .card-body.card-body-sm
+        .subscriptionCard-body
+          .subscriptionCard-body-icon
+            .iconText 🎉
+          .subscriptionCard-body-nameBox
+            %div.subscriptionCard-body-title
+              %span.mr-1
+                ='Bank Transfer Account'
+            %div.m-0.text-gray1{style: 'font-size: 12px;'}
+              ='Please contact customer support for information about your payments.'
+            %div.m-0.text-gray1{style: 'font-size: 12px;'}
+              Account created on
+              %span=humanize_datetime_full(@user.created_at)
+
+
   -else
     %article.card.subscriptionCard.mb-5.p-0
       .card-body.card-body-sm

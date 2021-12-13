@@ -43,5 +43,7 @@ shared_examples_for 'invoice_report' do
     it { expect(obj.first_visit_search_keyword).to eq('') }
     it { expect(obj.first_visit_country).to eq('') }
     it { expect(obj.first_visit_utm_campaign).to eq('') }
+    it { expect(obj.coupon_code).to eq(obj.subscription&.coupon&.code) }
+    it { expect(obj.coupon_id).to eq(obj.subscription&.coupon&.id) }
   end
 end
