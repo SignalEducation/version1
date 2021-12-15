@@ -10,6 +10,7 @@ class SegmentService
     )
   rescue StandardError => e
     Rails.logger.error "SegmentService#create_user - Error: #{e.inspect} - User Id #{user&.id} Segment Object - #{segment}"
+    log_in_error(e)
   end
 
   def track_verification_event(user)
@@ -22,6 +23,7 @@ class SegmentService
     )
   rescue StandardError => e
     Rails.logger.error "SegmentService#track_verification_event - #{e.inspect} Segment Object - #{segment}"
+    log_in_error(e)
   end
 
   def track_course_enrolment_event(enrolment, reset_progress, banner)
@@ -35,6 +37,7 @@ class SegmentService
     )
   rescue StandardError => e
     Rails.logger.error "SegmentService#track_verification_event - #{e.inspect} Segment Object - #{segment}"
+    log_in_error(e)
   end
 
   def track_enrolment_expiration_event(enrolment)
@@ -48,6 +51,7 @@ class SegmentService
     )
   rescue StandardError => e
     Rails.logger.error "SegmentService#track_enrolment_expiration_event - #{e.inspect} Segment Object - #{segment}"
+    log_in_error(e)
   end
 
   def track_correction_returned_event(exercise)
@@ -61,16 +65,33 @@ class SegmentService
     )
   rescue StandardError => e
     Rails.logger.error "SegmentService#track_correction_returned_event - #{e.inspect} Segment Object - #{segment}"
+    log_in_error(e)
   end
 
-  def track_payment_complete_event(user, subscription)
+  def track_subscription_payment_complete_event(subscription)
+    user = subscription.user
+
     segment = Analytics.track(
       user_id: user.id,
       event: 'successful_payment',
-      properties: payment_properties(subscription.subscription_plan, subscription.coupon_data, subscription.kind, user&.email)
+      properties: subscription_payment_properties(subscription, user&.email)
     )
   rescue StandardError => e
     Rails.logger.error "SegmentService#create_user - Error: #{e.inspect} - User Id #{user&.id} Segment Object - #{segment}"
+    log_in_error(e)
+  end
+
+  def track_order_payment_complete_event(order)
+    user = order.user
+
+    segment = Analytics.track(
+      user_id: user.id,
+      event: 'successful_payment',
+      properties: order_payment_properties(order, user&.email)
+    )
+  rescue StandardError => e
+    Rails.logger.error "SegmentService#create_user - Error: #{e.inspect} - User Id #{user&.id} Segment Object - #{segment}"
+    log_in_error(e)
   end
 
   def track_payment_failed_event(user, subscription, error_msg, error_code)
@@ -81,6 +102,7 @@ class SegmentService
     )
   rescue StandardError => e
     Rails.logger.error "SegmentService#create_& - Error: #{e.inspect} - User Id #{user&.id} Segment Object - #{segment}"
+    log_in_error(e)
   end
 
   def track_user_account_created_event(user, analytics_attributes)
@@ -94,6 +116,7 @@ class SegmentService
     )
   rescue StandardError => e
     Rails.logger.error "SegmentService#user_account_created - Error: #{e.inspect} - User Id #{user&.id} Segment Object - #{segment}"
+    log_in_error(e)
   end
 
   # PRIVATE ====================================================================
@@ -187,16 +210,38 @@ class SegmentService
     }
   end
 
-  def payment_properties(plan, coupon_data, payment_type, email)
+  def subscription_payment_properties(subscription, email)
+    plan        = subscription.subscription_plan
+    coupon_data = subscription.coupon_data
+
     {
       email: email,
       programName: plan.exam_body&.name,
       planName: "#{plan.name} - #{plan.interval_name}",
+      planPrice: plan&.amount,
       discountedPrice: coupon_data.present? ? coupon_data[:price_discounted]&.round(2) : '',
       discountCode: coupon_data.present? ? coupon_data[:code] : '',
-      planPrice: plan&.amount,
-      currency: plan&.currency&.name,
-      paymentType: payment_type.camelize(:lower)
+      paymentType: subscription.kind.camelize(:lower),
+      subscriptionType: 'Subscription',
+      planType: plan.interval_name,
+      paymentProviderType: subscription.subscription_type
+    }
+  end
+
+  def order_payment_properties(order, email)
+    product = order.product
+
+    {
+      email: email,
+      programName: product&.course&.exam_body&.name,
+      planName: product&.name,
+      planPrice: product&.currency&.format_number(product&.price),
+      discountedPrice: '',
+      discountCode: '',
+      subscriptionType: 'Product',
+      planType: product&.product_type,
+      paymentType: product&.product_type.humanize,
+      paymentProviderType: order.payment_provider
     }
   end
 
@@ -246,5 +291,11 @@ class SegmentService
     end
 
     statuses
+  end
+
+  def log_in_error(error)
+    Airbrake.notify(error)
+    Appsignal.send_error(error)
+    true
   end
 end

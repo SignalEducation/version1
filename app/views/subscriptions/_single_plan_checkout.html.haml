@@ -1,6 +1,6 @@
 .form-group
   .custom-control.custom-radio.subscriptionPageWrapper-customRadio
-    %input.custom-control-input.custom-control-input-card.style-radio{:id => subscription.subscription_plan.interval_name.downcase, :name => "plans", :type => "radio", :data => {:price => subscription.subscription_plan.price, :frequency => subscription.subscription_plan.payment_frequency_in_months, :currency => subscription.subscription_plan.currency.iso_code, :name => subscription.subscription_plan.name, :body => subscription.subscription_plan.exam_body.name}, :value => subscription.subscription_plan.id, :checked => true, onclick: "sendClickEventToSegment('selects_payment_plan_toggle', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', programName: '#{subscription&.subscription_plan&.exam_body&.name}', planName: '#{subscription&.subscription_plan&.name}', planPrice: '#{subscription&.subscription_plan&.price}'})"}
+    %input.custom-control-input.custom-control-input-card.style-radio{:id => subscription.subscription_plan.interval_name.downcase, :name => "plans", :type => "radio", :data => {:payment_type => subscription&.kind, :subscription_type => "Subscription", :plan_type => subscription&.subscription_plan&.interval_name&.downcase, :price => subscription&.subscription_plan&.price, :frequency => subscription&.subscription_plan&.payment_frequency_in_months, :currency => subscription&.subscription_plan&.currency.iso_code, :name => subscription&.subscription_plan&.name, :body => subscription&.subscription_plan&.exam_body.name}, :value => subscription&.subscription_plan&.id, :checked => true, onclick: "_selectedPlan('#{subscription&.subscription_plan&.interval_name&.downcase}')"}
     %label.custom-control-label.justify-content-start{:for => subscription.subscription_plan.interval_name.downcase}
       %span.custom-check.mr-3
       .d-flex.py-0{style: 'width: calc(100% - 46px);'}
@@ -28,8 +28,8 @@
   -(plans.where(id: (plans.ids - [subscription.subscription_plan.id]))).each do |plan|
     .form-group
       .custom-control.custom-radio.subscriptionPageWrapper-customRadio
-        %input.custom-control-input.custom-control-input-card.style-radio{:id => plan.interval_name.downcase, :name => "plans", :type => "radio", :data => {:guid => plan.guid, :name => plan.name, :price => plan.price}, :value => plan.id, :checked => ("checked" if subscription.subscription_plan_id == plan.id), onclick: "sendClickEventToSegment('selects_payment_plan_toggle', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', programName: '#{subscription&.subscription_plan&.exam_body&.name}', planName: '#{plan&.name}', planPrice: '#{plan&.price}'})"}
-        %label.custom-control-label.justify-content-start{:for => plan.interval_name.downcase}
+        %input.custom-control-input.custom-control-input-card.style-radio{:id => plan&.interval_name&.downcase, :name => "plans", :type => "radio", :data => {:guid => plan&.guid, :name => plan&.name, :price => plan&.price}, :value => plan&.id, :checked => ("checked" if subscription&.subscription_plan_id == plan&.id), onclick: "_selectedPlan('#{plan&.interval_name&.downcase}')"}
+        %label.custom-control-label.justify-content-start{:for => plan&.interval_name&.downcase}
           %span.custom-check.mr-3
           .d-flex.py-0{style: 'width: calc(100% - 46px);'}
             .d-flex.flex-column.justify-content-between.align-items-start{style: 'width: 60% !important;'}
@@ -51,7 +51,7 @@
                       ="#{plan.monthly_percentage_off}%"
 
 -if plans.length > 1
-  %a.mb-2.show-more-plans.js-show-more-plans{:id => 'show_all_plans', :href => "#all-plans", :data => {toggle: 'collapse'}, 'aria-expanded' => false, 'aria-controls' => 'all-plans', style: 'text-decoration: none;', onclick: "sendClickEventToSegment('clicks_payment_all_plans', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', programName: '#{subscription.subscription_plan.exam_body.name}', planName: '#{subscription.subscription_plan.name}', planPrice: '#{subscription.subscription_plan.price}'})"} 
+  %a.mb-2.show-more-plans.js-show-more-plans{:id => 'show_all_plans', :href => "#all-plans", :data => {toggle: 'collapse'}, 'aria-expanded' => false, 'aria-controls' => 'all-plans', style: 'text-decoration: none;', onclick: "sendClickEventToSegment('clicks_payment_all_plans', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', programName: '#{subscription&.subscription_plan&.exam_body&.name}', planName: '#{subscription&.subscription_plan&.name}', planPrice: '#{subscription&.subscription_plan&.price}', paymentType: '#{subscription&.kind}', subscriptionType: 'Subscription', planType: '#{subscription&.subscription_plan&.interval_name&.downcase}'})"} 
     %span 
       Show all Plans
       %i.material-icons{style: 'font-size: 16px;top: 2px;position: relative;'} keyboard_arrow_down
@@ -59,6 +59,23 @@
 
 
 :javascript
+  function _selectedPlan(planType) {
+    sendClickEventToSegment('selects_payment_plan_toggle', {
+      userId: '#{@current_user&.id}',
+      email: '#{@current_user&.email}',
+      hasValidSubscription: '#{@current_user&.valid_subscription?}',
+      isEmailVerified: '#{@current_user&.email_verified}',
+      preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', 
+      isLoggedIn: '#{!@current_user&.nil?}', 
+      sessionId: '#{session&.id}', 
+      programName: '#{subscription&.subscription_plan&.exam_body&.name}', 
+      planName: '#{subscription&.subscription_plan&.name}', 
+      planPrice: '#{subscription&.subscription_plan&.price}', 
+      paymentType: '#{subscription&.kind}', 
+      subscriptionType: 'Subscription', 
+      planType: planType
+    });
+  }
   $(document).on('ready', function() {
     $('#show_all_plans').on('click', function() {
       $('#all-plans').slideDown();

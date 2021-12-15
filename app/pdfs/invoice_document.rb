@@ -92,10 +92,12 @@ class InvoiceDocument < Prawn::Document
       row(0..100).borders    = [:top, :bottom]
     end
 
+    total_due = invoice.subscription.paypal? ? invoice.total : invoice.amount_due
+
     summary_details = [
       ['Subtotal', invoice.currency.format_number(invoice.sub_total)],
-      ['Discount', invoice.currency.format_number((invoice.sub_total - invoice.amount_due))],
-      ['Total',    invoice.currency.format_number(invoice.amount_due)]
+      ['Discount', invoice.currency.format_number((invoice.sub_total - total_due))],
+      ['Total',    invoice.currency.format_number(total_due)]
     ]
     font(Rails.root.join('app', 'assets', 'fonts', 'PingFangRegular.ttf')) do
       table(summary_details, column_widths: [480, 60], header: true,
