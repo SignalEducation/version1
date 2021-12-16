@@ -92,7 +92,7 @@ class InvoiceDocument < Prawn::Document
       row(0..100).borders    = [:top, :bottom]
     end
 
-    total_due = invoice.subscription.paypal? ? invoice.total : invoice.amount_due
+    total_due = invoice&.subscription&.paypal? ? invoice.total : invoice.amount_due
 
     summary_details = [
       ['Subtotal', invoice.currency.format_number(invoice.sub_total)],
