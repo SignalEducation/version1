@@ -1945,6 +1945,12 @@ textarea.form-control {
       justify-content: center;
     }
   }
+  .flash-messages {
+    right: 35% !important;
+    top: 55%;
+    position: absolute;
+    z-index: 1;
+  }
 }
 
 #pricing-modal {
@@ -2892,6 +2898,13 @@ button.bg-black:hover {
   top: -20px;
 }
 @media (max-width: 768px) {
+  .modal-content.userForm {
+    .modal-header {
+      h3 {
+        padding: 1rem;
+      }
+    }
+  }
   .ls-bg-gray {
     background-color: #ffffff !important;
   }
