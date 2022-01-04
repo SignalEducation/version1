@@ -56,6 +56,10 @@ jobs:
             - ~/.cache/yarn
 
       - run:
+          name: Update Browsers List
+          command: npx browserslist@latest --update-db
+
+      - run:
           name: Webpacker compile
           command: bundle exec rake webpacker:compile
           no_output_timeout: 30m
