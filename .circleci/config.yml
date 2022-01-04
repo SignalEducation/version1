@@ -40,6 +40,10 @@ jobs:
           paths:
             - vendor/bundle
 
+      - run:
+          name: Clear Cache
+          command: yarn cache clean
+
       - restore_cache:
           name: Restore Yarn Package Cache
           keys:
