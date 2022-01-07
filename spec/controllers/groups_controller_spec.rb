@@ -24,14 +24,17 @@
 require 'rails_helper'
 
 describe GroupsController, type: :controller do
-  let(:content_management_user_group) { FactoryBot.create(:content_management_user_group) }
-  let(:content_management_user) { FactoryBot.create(:content_management_user, user_group_id: content_management_user_group.id) }
-
-  let!(:exam_body_1) { FactoryBot.create(:exam_body) }
-  let!(:group_1) { FactoryBot.create(:group) }
-  let!(:group_2) { FactoryBot.create(:group) }
-  let!(:valid_params) { FactoryBot.attributes_for(:group, exam_body_id: exam_body_1.id) }
-
+  let(:content_management_user_group) { create(:content_management_user_group) }
+  let(:content_management_user)       { create(:content_management_user, user_group_id: content_management_user_group.id) }
+  let!(:exam_body_1)                  { create(:exam_body) }
+  let!(:category)                     { create(:category) }
+  let!(:sub_category)                 { create(:sub_category, category: category) }
+  let!(:group_1)                      { create(:group, category: category, sub_category: sub_category) }
+  let!(:group_2)                      { create(:group, category: category, sub_category: sub_category) }
+  let!(:valid_params)                 { attributes_for(:group,
+                                                        exam_body_id: exam_body_1.id,
+                                                        category_id: category.id,
+                                                        sub_category_id: sub_category.id) }
 
   context 'Logged in as a content_management_user: ' do
     before(:each) do
@@ -111,7 +114,5 @@ describe GroupsController, type: :controller do
         expect_delete_success_with_model('group', groups_url)
       end
     end
-
   end
-
 end

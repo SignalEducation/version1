@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: groups
@@ -43,5 +45,10 @@ FactoryBot.define do
     onboarding_level_subheading  { 'Welcome Message' }
     seo_title                    { |n| "#{Faker::Internet.domain_name} - #{n}" }
     exam_body
+    category
+
+    trait :with_sub_category do
+      association :sub_category
+    end
   end
 end
