@@ -28,7 +28,7 @@
   -(plans.where(id: (plans.ids - [subscription.subscription_plan.id]))).each do |plan|
     .form-group
       .custom-control.custom-radio.subscriptionPageWrapper-customRadio
-        %input.custom-control-input.custom-control-input-card.style-radio{:id => plan&.interval_name&.downcase, :name => "plans", :type => "radio", :data => {:guid => plan&.guid, :name => plan&.name, :price => plan&.price}, :value => plan&.id, :checked => ("checked" if subscription&.subscription_plan_id == plan&.id), onclick: "_selectedPlan('#{plan&.interval_name&.downcase}')"}
+        %input.custom-control-input.custom-control-input-card.style-radio{:id => plan&.interval_name&.downcase, :name => "plans", :type => "radio", :data => {:payment_type => subscription&.kind, :subscription_type => "Subscription", :plan_type => plan&.interval_name&.downcase, :price => plan&.price, :frequency => plan&.payment_frequency_in_months, :currency => plan&.currency.iso_code, :name => plan&.name, :body => plan&.exam_body.name}, :value => plan&.id, :checked => ("checked" if subscription&.subscription_plan_id == plan&.id), onclick: "_selectedPlan('#{plan&.interval_name&.downcase}')"}        
         %label.custom-control-label.justify-content-start{:for => plan&.interval_name&.downcase}
           %span.custom-check.mr-3
           .d-flex.py-0{style: 'width: calc(100% - 46px);'}

@@ -104,7 +104,8 @@ function gaBaseProperties() {
 }
 
 function getPageUrl() {
-  return { pageUrl: window.location.href };
+  var page_url = window.location.href.replace(/'/g, "%27");
+  return { pageUrl: page_url };
 }
 function isMobile() {
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
