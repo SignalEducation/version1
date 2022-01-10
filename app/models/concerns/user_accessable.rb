@@ -25,9 +25,9 @@ module UserAccessable
       where(products: { group_id: group_id }).any?
   end
 
-  def course_access?(course_id)
+  def program_access?(course_id)
     orders.includes(:product).with_state(:completed).
-      where(products: { product_type: :course_access }).
+      where(products: { product_type: :program_access }).
       where(products: { course_id: course_id }).any?
   end
 

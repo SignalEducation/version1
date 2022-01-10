@@ -54,7 +54,7 @@ class StudentSignUpsController < ApplicationController
             country.currency_id
           end
 
-        @course_product = Product.find_by(product_type: :course_access, course_id: @course.id, active: true, currency_id: @currency_id) if @course
+        @course_product = Product.find_by(product_type: :program_access, course_id: @course.id, active: true, currency_id: @currency_id) if @course
         @lifetime_product = Product.find_by(product_type: :lifetime_access, course_id: nil, active: true, currency_id: @currency_id, group_id: @group.id)
         @subscription_plans =
           if @home_page&.subscription_plan_category&.current

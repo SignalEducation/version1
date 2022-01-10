@@ -14,7 +14,7 @@ module InvoicesHelper
       invoice.order.product.mock_exam.name.to_s.truncate(20)
     elsif invoice.order.product.cbe?
       invoice.order.product.cbe.name.to_s.truncate(20)
-    elsif invoice.order.product.lifetime_access? || invoice.order.product.course_access?
+    elsif invoice.order.product.lifetime_access? || invoice.order.product.program_access?
       invoice.order.product.name.to_s.truncate(40)
     end
   end

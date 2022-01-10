@@ -411,7 +411,7 @@ class User < ApplicationRecord
   end
 
   def valid_access_for_course?(course_id)
-    course_access?(course_id)
+    program_access?(course_id)
   end
 
   def valid_subscription?

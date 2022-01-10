@@ -22,7 +22,7 @@ class OrdersController < ApplicationController
     end
 
     @existing_order = current_user.orders.for_product(@product.id).where(state: :completed).last
-    if @existing_order && %w[lifetime_access course_access].include?(@existing_order.product.product_type)
+    if @existing_order && %w[lifetime_access program_access].include?(@existing_order.product.product_type)
       flash[:warning] = 'You have already purchased that product. You cannot purchase it twice.'
       redirect_to student_dashboard_url and return
     elsif !@product
@@ -100,7 +100,7 @@ class OrdersController < ApplicationController
     @studies_link   =
       if @product&.lifetime_access?
         student_dashboard_url
-      elsif @product&.course_access?
+      elsif @product&.program_access?
         library_course_url(@product.group.name_url, @product.course.name_url)
       else
         user_exercises_path(current_user)

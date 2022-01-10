@@ -53,7 +53,7 @@ class LibraryController < ApplicationController
 
     @subscription_plans = SubscriptionPlan.where(exam_body_id: @group.exam_body_id).
                             includes(:currency).in_currency(currency.id).all_active.all_in_display_order
-    @course_product = Product.find_by(product_type: :course_access, course_id: @course.id, active: true, currency_id: currency.id)
+    @course_product = Product.find_by(product_type: :program_access, course_id: @course.id, active: true, currency_id: currency.id)
     @lifetime_product = Product.find_by(product_type: :lifetime_access, course_id: nil, active: true, currency_id: currency.id, group_id: @group.id)
 
     if @course && @exam_body.active && !@course.preview

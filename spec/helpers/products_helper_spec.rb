@@ -7,7 +7,7 @@ describe ProductsHelper, type: :helper do
   let(:cbe_product)             { create(:product, cbe: cbe, product_type: 'cbe') }
   let(:correction_pack_product) { create(:product, cbe: cbe, product_type: 'correction_pack', correction_pack_count: 3) }
   let(:lifetime_product)        { create(:product, product_type: 'lifetime_access') }
-  let(:course_product)          { create(:product, product_type: 'course_access') }
+  let(:course_product)          { create(:product, product_type: 'program_access') }
 
   describe '#product_link' do
     context 'returns product link to a logged user' do

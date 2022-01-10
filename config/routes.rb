@@ -164,6 +164,12 @@ Rails.application.routes.draw do
           end
         end
       end
+
+      # Categories
+      resources :categories, except: :destroy
+
+      # Sub Categories
+      resources :sub_categories, except: :destroy
     end
 
     # Subscriptions
@@ -284,7 +290,6 @@ Rails.application.routes.draw do
       match :update_constructed_response_user_log, on: :collection, via: %i[put patch]
       post :update_quiz_attempts, on: :collection
       post :units_by_key_area, on: :collection
-
 
       get ':course_name_url', to: redirect('/library/%{course_name_url}'), on: :collection
     end

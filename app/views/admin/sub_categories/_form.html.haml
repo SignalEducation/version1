@@ -1,0 +1,28 @@
+.box-item.form-box
+  .col-sm-12
+    =form_for([:admin, @sub_category], html: {class: 'form-horizontal', role: 'form'}) do |f|
+      =render partial: '/layouts/error_messages', locals: {thing: @sub_category, message: nil}
+      .row
+        .col-sm-6
+          .form-group
+            =f.label :name, t('views.sub_categories.form.name')
+            .input-group.input-group-lg
+              =f.text_field :name, placeholder: t('views.sub_categories.form.name_placeholder'), class: 'form-control'
+          .form-group
+            =f.label :name_url, t('views.sub_categories.form.name_url')
+            .input-group.input-group-lg
+              =f.text_field :name_url, placeholder: t('views.sub_categories.form.name_url_placeholder'), class: 'form-control'
+          .form-group
+            =f.label :category_id, t('views.sub_categories.form.category')
+            .input-group.input-group-lg
+              =f.collection_select :category_id, @categories, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
+
+          .form-group
+            .checkbox
+              %label
+                =f.check_box :active
+                =t('views.sub_categories.form.active')
+      .row.pt-4
+        .col-md-12
+          =f.submit t('views.general.save'), class: 'btn btn-primary'
+          =link_to t('views.general.cancel'), admin_sub_categories_path, class: 'btn btn-secondary l-margin-right-big l-padding-side-3x'

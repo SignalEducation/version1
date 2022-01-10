@@ -1,0 +1,28 @@
+.box-item.form-box
+  .col-sm-12
+    =form_for([:admin, @category], html: {class: 'form-horizontal', role: 'form'}) do |f|
+      =render partial: '/layouts/error_messages', locals: {thing: @category, message: nil}
+      .row
+        .col-sm-6
+          .form-group
+            =f.label :name, t('views.categories.form.name')
+            .input-group.input-group-lg
+              =f.text_field :name, placeholder: t('views.categories.form.name_placeholder'), class: 'form-control'
+          .form-group
+            =f.label :name_url, t('views.categories.form.name_url')
+            .input-group.input-group-lg
+              =f.text_field :name_url, placeholder: t('views.categories.form.name_url_placeholder'), class: 'form-control'
+          .form-group
+            =f.label :description, t('views.categories.form.description')
+            .input-group.input-group-lg
+              =f.text_area :description, placeholder: t('views.categories.form.description_placeholder'), class: 'form-control'
+
+          .form-group
+            .checkbox
+              %label
+                =f.check_box :active
+                =t('views.categories.form.active')
+      .row.pt-4
+        .col-md-12
+          =f.submit t('views.general.save'), class: 'btn btn-primary'
+          =link_to t('views.general.cancel'), admin_categories_path, class: 'btn btn-secondary l-margin-right-big l-padding-side-3x'

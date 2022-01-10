@@ -905,6 +905,8 @@ en:
         course_count: No. of Courses
         background_colour: Background Colour
         exam_body: Exam body
+        category: Category
+        sub_category: Sub Category
         seo_title: SEO Title
         seo_title_placeholder: SEO Title
         seo_description: SEO Description
@@ -1143,6 +1145,7 @@ en:
         cbe: CBE
         course_id: Course
         product_type: Product Type
+        months_to_expiry: Expiry Date(months)
         correction_pack_count: Number of Corrections
         course: Course
         type: Type
@@ -1262,6 +1265,39 @@ en:
 
       modal:
         h4: New Card Details
+
+    categories:
+      index:
+        h1: Categories
+        add: Add Category
+      new:
+        h1: Create Category
+      edit:
+        h1: Edit Category
+      form:
+        name: Name
+        name_placeholder: Category Name
+        name_url: Name URL
+        name_url_placeholder: Category Name URL
+        description: Description
+        description_placeholder: Category Description
+        active: Active
+
+    sub_categories:
+      index:
+        h1: Sub Categories
+        add: Add Sub Category
+      new:
+        h1: Create Sub Category
+      edit:
+        h1: Edit Sub Category
+      form:
+        name: Name
+        name_placeholder: Sub Category Name
+        name_url: Name URL
+        name_url_placeholder: Sub Category Name URL
+        category: Category
+        active: Active
 
     courses:
       form:
