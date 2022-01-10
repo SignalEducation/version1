@@ -197,7 +197,7 @@ class Invoice < ApplicationRecord
   def self.to_csv(options = {})
     attributes = %w[inv_id invoice_created sub_id sub_created user_email user_created
                     payment_provider sub_stripe_guid sub_paypal_guid sub_exam_body sub_status sub_type
-                    invoice_type payment_interval plan_name currency_symbol plan_price sub_total total
+                    invoice_type payment_interval plan_name currency_symbol plan_price sub_total total amount_due
                     card_country user_country hubspot_source hubspot_source_1 hubspot_source_2 first_visit_source
                     first_visit_utm_campaign first_visit_medium first_visit_date first_visit_referring_domain
                     first_visit_landing_page first_visit_referrer user_subscriptions_revenue
@@ -214,7 +214,7 @@ class Invoice < ApplicationRecord
   def self.with_order_to_csv(orders)
     inv_attributes = %w[inv_id invoice_created sub_id sub_created user_email user_created
                         payment_provider sub_stripe_guid sub_paypal_guid sub_exam_body sub_status sub_type
-                        invoice_type payment_interval plan_name currency_symbol plan_price sub_total total
+                        invoice_type payment_interval plan_name currency_symbol plan_price sub_total total amount_due
                         card_country user_country hubspot_source hubspot_source_1 hubspot_source_2 first_visit_source
                         first_visit_utm_campaign first_visit_medium first_visit_date first_visit_referring_domain
                         first_visit_landing_page first_visit_referrer coupon_code coupon_id]
