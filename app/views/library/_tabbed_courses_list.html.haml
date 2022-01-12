@@ -14,9 +14,7 @@
                   =course.category_label
               -if course.unit_label && course.unit_label.length > 0
                 .libraryGroupWrapper-list-levelName{style: "color: #383838"}
-                  (
-                  =course.unit_label
-                  )
+                  ="(#{course.unit_hour_label} units)"
             %div.courseName
               =course.name
           .courseArrowIcon.i.material-icons keyboard_arrow_right
