@@ -38,6 +38,8 @@ class Group < ApplicationRecord
 
   # relationships
   belongs_to :exam_body
+  belongs_to :category
+  belongs_to :sub_category, optional: true
   has_many :courses
   has_many :home_pages
   has_many :levels

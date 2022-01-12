@@ -74,6 +74,6 @@ class GroupsController < ApplicationController
                                   :background_colour, :exam_body_id,
                                   :seo_title, :seo_description, :short_description,
                                   :onboarding_level_heading, :onboarding_level_subheading,
-                                  :tab_view, :disclaimer)
+                                  :tab_view, :disclaimer, :category_id, :sub_category_id)
   end
 end

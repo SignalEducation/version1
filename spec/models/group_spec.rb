@@ -61,9 +61,13 @@ describe Group do
     it { should respond_to(:onboarding_level_subheading) }
     it { should respond_to(:onboarding_level_heading) }
     it { should respond_to(:tab_view) }
+    it { should respond_to(:category_id) }
+    it { should respond_to(:sub_category_id) }
   end
 
   # relationships
+  it { should belong_to(:category) }
+  it { should belong_to(:sub_category) }
   it { should have_many(:courses) }
   it { should have_many(:home_pages) }
 

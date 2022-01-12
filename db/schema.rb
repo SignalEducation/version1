@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_01_074153) do
+ActiveRecord::Schema.define(version: 2022_01_05_100045) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -97,6 +97,15 @@ ActiveRecord::Schema.define(version: 2021_12_01_074153) do
     t.integer "image_file_size"
     t.datetime "image_updated_at"
     t.index ["home_page_id"], name: "index_blog_posts_on_home_page_id"
+  end
+
+  create_table "categories", force: :cascade do |t|
+    t.string "name"
+    t.string "name_url"
+    t.text "description"
+    t.boolean "active", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "cbe_answers", force: :cascade do |t|
@@ -933,8 +942,12 @@ ActiveRecord::Schema.define(version: 2021_12_01_074153) do
     t.string "onboarding_level_heading"
     t.boolean "tab_view", default: false, null: false
     t.text "disclaimer"
+    t.bigint "category_id"
+    t.bigint "sub_category_id"
+    t.index ["category_id"], name: "index_groups_on_category_id"
     t.index ["exam_body_id"], name: "index_groups_on_exam_body_id"
     t.index ["name"], name: "index_groups_on_name"
+    t.index ["sub_category_id"], name: "index_groups_on_sub_category_id"
   end
 
   create_table "groups_courses", id: false, force: :cascade do |t|
@@ -1501,6 +1514,17 @@ ActiveRecord::Schema.define(version: 2021_12_01_074153) do
     t.index ["home_page_id"], name: "index_student_testimonials_on_home_page_id"
   end
 
+  create_table "sub_categories", force: :cascade do |t|
+    t.string "name"
+    t.string "name_url"
+    t.text "description"
+    t.boolean "active", default: false
+    t.bigint "category_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["category_id"], name: "index_sub_categories_on_category_id"
+  end
+
   create_table "subscription_payment_cards", id: :serial, force: :cascade do |t|
     t.integer "user_id"
     t.string "stripe_card_guid", limit: 255
@@ -1770,12 +1794,15 @@ ActiveRecord::Schema.define(version: 2021_12_01_074153) do
   add_foreign_key "exercises", "products"
   add_foreign_key "exercises", "users"
   add_foreign_key "exercises", "users", column: "corrector_id"
+  add_foreign_key "groups", "categories"
   add_foreign_key "groups", "exam_bodies"
+  add_foreign_key "groups", "sub_categories"
   add_foreign_key "invoices", "orders"
   add_foreign_key "key_areas", "groups"
   add_foreign_key "practice_question_answers", "practice_question_questions"
   add_foreign_key "practice_question_questions", "course_practice_questions"
   add_foreign_key "practice_question_responses", "course_step_logs"
+  add_foreign_key "sub_categories", "categories"
   add_foreign_key "subscription_plans", "exam_bodies"
   add_foreign_key "subscriptions", "subscriptions", column: "changed_from_id"
   add_foreign_key "users", "courses", column: "onboarding_course_id"
