@@ -1,0 +1,45 @@
+.container
+  %header.management-console-section
+    %h1
+      =@sub_category.name
+
+  %section.pb-3
+    .row
+      .col-sm-12
+        =link_to 'Sub Categories', admin_sub_categories_url, class: 'btn btn-primary btn-sm btn-sm-arrow-left'
+
+  .box-item.table-box
+    .row
+      .col-sm-3
+        URL:
+        =@sub_category.name_url
+
+      .col-sm-3
+        Category:
+        =link_to @category.name, admin_category_url(@category.id)
+      .col-sm-3
+        Active:
+        =tick_or_cross(@sub_category.active)
+    .row
+      .col-sm-6
+        =@sub_category.description
+
+    - if @sub_category.groups.present?
+      .row
+        .col-md-12
+          .box-item.table-box
+            .table-responsive
+              %table.table
+                %thead
+                  %tr
+                    %th=t('views.groups.form.name')
+                    %th=t('views.groups.form.name_url')
+                    %th=t('views.groups.form.active')
+                    %th
+                %tbody
+                  -@sub_category.groups.each do |group|
+                    %tr
+                      %td=group.name
+                      %td=group.name_url
+                      %td=tick_or_cross(group.active)
+                      %td=link_to t('views.general.view'), admin_group_url(group), class: 'btn btn-xs btn-primary'

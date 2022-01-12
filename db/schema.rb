@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_05_100045) do
+ActiveRecord::Schema.define(version: 2022_01_10_101809) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -464,9 +464,9 @@ ActiveRecord::Schema.define(version: 2022_01_05_100045) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer "cme_count", default: 0
-    t.datetime "destroyed_at"
-    t.string "seo_description"
+    t.string "seo_description", limit: 255
     t.boolean "seo_no_index", default: false
+    t.datetime "destroyed_at"
     t.integer "number_of_questions", default: 0
     t.integer "course_id"
     t.float "video_duration", default: 0.0
@@ -658,9 +658,9 @@ ActiveRecord::Schema.define(version: 2022_01_05_100045) do
     t.boolean "is_video", default: false, null: false
     t.boolean "is_quiz", default: false, null: false
     t.boolean "active", default: true, null: false
-    t.datetime "destroyed_at"
-    t.string "seo_description"
+    t.string "seo_description", limit: 255
     t.boolean "seo_no_index", default: false
+    t.datetime "destroyed_at"
     t.integer "number_of_questions", default: 0
     t.float "duration", default: 0.0
     t.string "temporary_label"
@@ -1311,6 +1311,7 @@ ActiveRecord::Schema.define(version: 2022_01_05_100045) do
     t.string "payment_subheading"
     t.text "payment_description"
     t.string "savings_label"
+    t.integer "months_to_expiry"
     t.index ["cbe_id"], name: "index_products_on_cbe_id"
     t.index ["course_id"], name: "index_products_on_course_id"
     t.index ["currency_id"], name: "index_products_on_currency_id"

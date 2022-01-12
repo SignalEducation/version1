@@ -89,7 +89,7 @@ class ProductsController < ApplicationController
                                     :cbe_id, :mock_exam_id, :sorting_order,
                                     :product_type, :correction_pack_count, :group_id,
                                     :payment_heading, :payment_subheading, :payment_description,
-                                    :savings_label, :course_id,
+                                    :savings_label, :course_id, :months_to_expiry,
                                     faqs_attributes: [
                                       :id, :name, :name_url, :active, :sorting_order,
                                       :question_text, :answer_text, :pre_answer_text,

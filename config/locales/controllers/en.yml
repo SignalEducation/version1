@@ -65,6 +65,14 @@ en:
           success: Coupon has been deleted
           error: Coupon was not deleted
 
+    categories:
+      create:
+        success: Category has been created successfully.
+        error: Category has not been created successfully.
+      update:
+        success: Category has been updated successfully.
+        error: Category has not been updated successfully.
+
     courses:
       show:
         warning: "Sorry, we couldn't find the thing you were looking for"

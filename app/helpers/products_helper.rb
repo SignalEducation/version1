@@ -28,7 +28,7 @@ module ProductsHelper
       tag.i class: 'budicon-files-tick', role: 'img', style: 'font-size: 4rem;'
     elsif product.product_type == 'lifetime_access'
       tag.i class: 'budicon-web-banking', role: 'img', style: 'font-size: 4rem;'
-    elsif product.product_type == 'course_access'
+    elsif product.product_type == 'program_access'
       tag.i class: product.course.icon_label, role: 'img'
     else
       tag.i class: 'budicon-file-tick', role: 'img', style: 'font-size: 4rem;'

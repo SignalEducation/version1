@@ -178,7 +178,7 @@ class Order < ApplicationRecord
           reference_guid: reference_guid
         }
       )
-    elsif %w[lifetime_access course_access].include?(product.product_type)
+    elsif %w[lifetime_access program_access].include?(product.product_type)
       Message.create(
         process_at: Time.zone.now,
         user_id: user_id,
@@ -196,7 +196,7 @@ class Order < ApplicationRecord
   end
 
   def generate_exercises
-    return if %w[lifetime_access course_access].include?(product.product_type)
+    return if %w[lifetime_access program_access].include?(product.product_type)
 
     count = product.correction_pack_count || 1
     (1..count).each { user.exercises.create(product_id: product_id, order_id: id) }

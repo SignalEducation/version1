@@ -1,0 +1,55 @@
+.container
+  %header.management-console-section
+    %h1
+      =t('views.sub_categories.index.h1')
+
+  %section.pb-7
+    =render partial: 'management_consoles/course_content_nav'
+    .row
+      .col-sm-12
+        .box-item.table-box
+          .row
+            .col-sm
+              =link_to t('views.sub_categories.index.add'), new_admin_sub_category_url, class: 'btn btn-primary btn-sm', title: t('views.general.new_tooltip')
+
+            .col-sm
+              .search-container
+                =form_tag(admin_sub_categories_url, method: :get, role: 'form', id: 'search-form', class: 'form-inline') do
+                  =text_field_tag :search, params[:search], class: 'form-control', placeholder: t('views.general.search')
+                  %button{type: "submit"}
+                    %i{:role => "img", class: 'budicon-search-list'}
+
+          .table-responsive.pt-4
+            %table.table.sorted_table
+              %thead
+                %tr
+                  %th Name
+                  %th URL
+                  %th Category
+                  %th Active
+                  %th Actions
+                  %th
+                  %th
+              %tbody
+                -@sub_categories.each do |sub_category|
+                  %tr
+                    %td=sub_category.name
+                    %td=sub_category.name_url
+                    %td=link_to sub_category.category.name, admin_category_url(sub_category.category_id)
+                    %td=tick_or_cross(sub_category.active)
+                    %td
+                      %button.btn.btn-primary.btn-xs.dropdown-toggle{type:'button', 'data-toggle':'dropdown', 'aria-haspopup':'true', 'aria-expanded': 'false'}
+                        Links
+                      .dropdown-menu
+                        =link_to t('views.general.show'), admin_sub_category_url(sub_category), class: 'dropdown-item'
+                        =link_to t('views.general.edit'), edit_admin_sub_category_url(sub_category), class: 'dropdown-item'
+
+
+
+
+:javascript
+  $(document).ready(function() {
+    $("#search").on('blur', function() {
+      $(this).parents('form').submit();
+    });
+  });

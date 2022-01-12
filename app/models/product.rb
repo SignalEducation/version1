@@ -30,7 +30,7 @@
 class Product < ApplicationRecord
   include ActionView::Helpers::NumberHelper
 
-  enum product_type: { mock_exam: 0, correction_pack: 1, cbe: 2, lifetime_access: 3, course_access: 4 }
+  enum product_type: { mock_exam: 0, correction_pack: 1, cbe: 2, lifetime_access: 3, program_access: 4 }
 
   # Constants
 
@@ -61,6 +61,10 @@ class Product < ApplicationRecord
                                     numericality: { only_integer: true,
                                                     greater_than: 0 }, if: :correction_pack?
 
+  validates :months_to_expiry, presence: true,
+                               numericality: { only_integer: true,
+                                               greater_than: 0 }, if: :program_access?
+
   # callbacks
   after_commit :create_on_stripe, on: :create
   after_commit :update_on_stripe, on: :update
@@ -83,7 +87,7 @@ class Product < ApplicationRecord
       cbe.name
     elsif lifetime_access?
       "#{group.name} LifeTime Membership"
-    elsif course_access?
+    elsif program_access?
       course.name.to_s
     else
       mock_exam&.name || name
@@ -113,7 +117,7 @@ class Product < ApplicationRecord
   private
 
   def non_mock?
-    cbe? || lifetime_access? || course_access?
+    cbe? || lifetime_access? || program_access?
   end
 
   def create_on_stripe

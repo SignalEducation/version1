@@ -190,7 +190,7 @@ class CourseStep < ApplicationRecord
         { view: false, reason: 'verification-required' }
       elsif user.complimentary_user? || user.non_student_user? || user.lifetime_subscriber?(course.group)
         available_for_complimentary(scul)
-      elsif user.course_access?(course.id)
+      elsif user.program_access?(course.id)
         available_for_complimentary(scul)
       elsif user.standard_student_user?
         if valid_subscription

@@ -48,13 +48,14 @@ class Group < ApplicationRecord
   has_attached_file :background_image, default_url: 'bg_library_group.jpg'
 
   # validation
-  validates :name, presence: true, uniqueness: true, length: {maximum: 255}
-  validates :name_url, presence: true, uniqueness: true, length: {maximum: 255}
+  validates :name, presence: true, uniqueness: true, length: { maximum: 255 }
+  validates :name_url, presence: true, uniqueness: true, length: { maximum: 255 }
   validates :description, presence: true
-  validates :short_description, presence: true, length: {maximum: 255}
+  validates :short_description, presence: true, length: { maximum: 255 }
   validates :onboarding_level_heading, presence: true
-  validates :seo_title, presence: true, uniqueness: true, length: {maximum: 255}
-  validates :seo_description, presence: true, length: {maximum: 255}
+  validates :seo_title, presence: true, uniqueness: true, length: { maximum: 255 }
+  validates :seo_description, presence: true, length: { maximum: 255 }
+  validates :category_id, presence: true
   validates_attachment_content_type :image, content_type: /\Aimage\/.*\Z/
   validates_attachment_content_type :background_image, content_type: /\Aimage\/.*\Z/
 
@@ -79,7 +80,6 @@ class Group < ApplicationRecord
   def children
     self.try(:courses)
   end
-
 
   #######################################################################
 

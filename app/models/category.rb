@@ -8,4 +8,6 @@ class Category < ApplicationRecord
   validates :name, :name_url, presence: true
   validates :name_url, uniqueness: true
   validates :active, inclusion: { in: [true, false] }
+
+  scope :all_active, -> { where(active: true) }
 end
