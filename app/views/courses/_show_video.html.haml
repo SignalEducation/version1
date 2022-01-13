@@ -17,7 +17,7 @@
           =render partial: 'courses/video_player', locals: { cme: @course_step, responsive: false, autoPlay: false }
         .hidden.end-of-video-modal#js-end-of-video-modal
           .video-modal-actions
-            -if @course_lesson.next_module
+            -if @course_step&.next_element && @course_lesson.next_module
               =link_to show_course_url(@course.name_url, @course_step&.next_element&.course_lesson&.course_section&.name_url, @course_step&.next_element&.course_lesson&.name_url, @course_step&.next_element&.name_url), class: 'videoModal-next-btn btn btn-primary btn-sm btn-sm-arrow-right mb-3 mb-sm-0 w-auto font-weight-bold', data: {destination_url: show_course_url(@course.name_url, @course_step&.next_element&.course_lesson&.course_section&.name_url, @course_step&.next_element&.course_lesson&.name_url, @course_step&.next_element&.name_url), type: 'Next Module'} do
                 Go to Next Lesson
 
