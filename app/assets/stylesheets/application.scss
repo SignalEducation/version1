@@ -7385,6 +7385,34 @@ div#hs-eu-cookie-confirmation {
   opacity: 0;
   display: none !important;
 }
+#sidebar-menu{
+  position: absolute;
+  width: 280px;
+  height: 868px;
+  left: 16px;
+  top: 16px;
+
+  /* blueGray/50 */
+
+  background: #F8FAFC;
+  border-radius: 20px;
+}
+.body-wrapper{
+  position: absolute;
+  width: 1104px;
+  left: 320px;
+  top: 16px;
+  bottom: 16px;
+  overflow-y: scroll;
+}
+
+.top-nav-bar{
+  position: absolute;
+  height: 64px;
+  left: 0px;
+  right: 0px;
+  top: 0px;
+}
 .arrow-collapse-animation {
   -webkit-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
   -moz-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;

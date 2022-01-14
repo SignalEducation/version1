@@ -1,0 +1,65 @@
+#sidebar-menu.text-center
+  .sidebar-brand
+    .brand-logo
+      =link_to root_url do
+        =image_tag('learnsignal-Logo-white.svg', class: 'logo')
+
+
+  %nav.nav.flex-column
+    -if current_user&.standard_student_user? && current_user&.preferred_exam_body_id && !current_user&.valid_access_for_exam_body?(current_user&.preferred_exam_body_id, current_user&.preferred_exam_body&.group&.id)
+      %li.nav-item
+        =link_to pricing_url(current_user&.preferred_exam_body&.group&.name_url), class: 'nav-link upgrade-btn', onclick: "sendClickEventToSegment('clicks_dashboard_upgrade', {userId: '#{current_user&.id}',email: '#{current_user&.email}',hasValidSubscription: '#{current_user&.valid_subscription?}',isEmailVerified: '#{current_user&.email_verified}',preferredExamBodyId: '#{current_user&.preferred_exam_body_id}', isLoggedIn: '#{!current_user&.nil?}', sessionId: '#{session&.id}', programName: '#{current_user&.preferred_exam_body&.group&.name}'})" do
+          -if current_user&.preferred_exam_body&.group&.name
+            %span="Upgrade your #{current_user&.preferred_exam_body&.group&.name} Subscription"
+          -else
+            %span="Upgrade now"
+    %li.nav-item.dropdown
+      %a#navbarDropdown.navbar-login.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
+        %span.navbar-login-userIcon
+          %svg.text-gray-400{:fill => "#bfbfbf", :viewbox => "0 0 20 20", :xmlns => "http://www.w3.org/2000/svg"}
+            %path{"clip-rule" => "evenodd", :d => "M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z", "fill-rule" => "evenodd"}
+        %span.navbar-login-userName
+          =current_user.first_name.to_s
+        -if current_user.non_verified_user?
+          %span.navbar-alertBadge
+      .dropdown-menu.dropdown-menu-right{"aria-labelledby" => "navbarDropdown"}
+        -if current_user.non_verified_user?
+          .nav-verification-alert-box
+            .nav-verification-alert-box-icon
+              %svg{:fill => "none", :height => "32", :viewbox => "0 0 32 32", :width => "32", :xmlns => "http://www.w3.org/2000/svg"}
+                %rect{:fill => "#FBBF24", :height => "32", :rx => "8", :width => "32"}
+                %path{:d => "M8 8H24C25.1 8 26 8.9 26 10V22C26 23.1 25.1 24 24 24H8C6.9 24 6 23.1 6 22V10C6 8.9 6.9 8 8 8Z", :stroke => "#FEF3C7", "stroke-linecap" => "round", "stroke-linejoin" => "round", "stroke-width" => "2"}
+                %path{:d => "M26 10L16 17L6 10", :stroke => "#FEF3C7", "stroke-linecap" => "round", "stroke-linejoin" => "round", "stroke-width" => "2"}
+            .nav-verification-alert-box-info
+              .nav-verification-alert-box-title
+                %span Verify your email
+              .nav-verification-alert-box-desc
+                -if current_user.verify_remain_days > 0
+                  ="Your account will get deactivated in #{current_user.verify_remain_days} days."
+                -else
+                  ="Please <span>verify</span> your email address to continue using your free subscription.".html_safe
+              -if !current_user&.email_verified && current_user&.email_verification_code
+                =link_to resend_verification_mail_url(current_user&.email_verification_code), method: :post, onclick: "handleMenuResendClick();", class: 'btn verification-btn btn-sm mb-3 mb-sm-0' do
+                  ='Resend Email'
+        =link_to t('views.users.show.h1'), account_url, class: 'nav-link dropdown-item', onclick: "sendClickEventToSegment('clicks_my_account', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}'})"
+        -if current_user.non_student_user?
+          =link_to management_consoles_url, class: 'nav-link dropdown-item console-btn', target: '_blank' do
+            %span 🔮 Console
+        =link_to t('views.general.log_out'), sign_out_url, class: 'nav-link dropdown-item logout', onclick: "sendClickEventToSegment('logout', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}'})"
+
+
+
+:javascript
+  function handleMenuResendClick() {
+    sendClickEventToSegment('clicks_dashboard_profileMenu_resend', {
+      userId: '#{@current_user&.id}',
+      email: '#{@current_user&.email}',
+      hasValidSubscription: '#{@current_user&.valid_subscription?}',
+      isEmailVerified: '#{@current_user&.email_verified}',
+      preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}',
+      isLoggedIn: '#{!@current_user&.nil?}',
+      sessionId: '#{session&.id}',
+      programName: '#{@current_user&.preferred_exam_body&.group&.name}',
+      daysLeft: '#{!@current_user&.email_verified ? @current_user&.verify_remain_days : ''}'
+    });
+  };

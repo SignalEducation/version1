@@ -88,7 +88,7 @@
       =render partial: 'layouts/facebook_tracking_code'
       -if @layout == 'standard'
         -if @navbar && controller_name != 'user_sessions'
-          =render partial: 'layouts/navbar'
+          =render partial: 'layouts/side_navbar'
         -if @navbar && controller_name == 'user_sessions'
           =render partial: 'layouts/navbar_gray'
 
@@ -105,16 +105,16 @@
 
         =yield
 
-        -if @footer
-          -if controller_name == 'courses' || controller_name == 'course_steps' || controller_name == 'preview_course_steps' || controller_name == 'content_activations'
-            =render partial: 'layouts/footer_empty'
-          -else
-            -if current_user
-              =render partial: 'layouts/footer_marketing' if controller_name != 'user_sessions'
-              =render partial: 'layouts/footer_minimal_login_signup' if controller_name == 'user_sessions'
-            -else
-              =render partial: 'layouts/footer_marketing' if controller_name != 'user_sessions'
-              =render partial: 'layouts/footer_minimal_login_signup' if controller_name == 'user_sessions'
+        -# -if @footer
+        -#   -if controller_name == 'courses' || controller_name == 'course_steps' || controller_name == 'preview_course_steps' || controller_name == 'content_activations'
+        -#     =render partial: 'layouts/footer_empty'
+        -#   -else
+        -#     -if current_user
+        -#       =render partial: 'layouts/footer_marketing' if controller_name != 'user_sessions'
+        -#       =render partial: 'layouts/footer_minimal_login_signup' if controller_name == 'user_sessions'
+        -#     -else
+        -#       =render partial: 'layouts/footer_marketing' if controller_name != 'user_sessions'
+        -#       =render partial: 'layouts/footer_minimal_login_signup' if controller_name == 'user_sessions'
 
 
       -elsif @layout == 'management'
