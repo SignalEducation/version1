@@ -71,6 +71,8 @@ RSpec.describe Api::V1::UsersController, type: :request do
                                                   currency
                                                   subscription_plan_category
                                                   subscriptions
+                                                  enrollments
+                                                  lifetime_products
                                                   token
                                                   user_credentials])
 
@@ -169,7 +171,9 @@ RSpec.describe Api::V1::UsersController, type: :request do
                                                   country
                                                   currency
                                                   subscription_plan_category
-                                                  subscriptions])
+                                                  subscriptions
+                                                  enrollments
+                                                  lifetime_products])
       end
     end
 
@@ -309,7 +313,9 @@ RSpec.describe Api::V1::UsersController, type: :request do
                                                   country
                                                   currency
                                                   subscription_plan_category
-                                                  subscriptions])
+                                                  subscriptions
+                                                  enrollments
+                                                  lifetime_products])
       end
     end
 

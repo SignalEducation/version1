@@ -86,6 +86,37 @@ json.subscriptions do
   end
 end
 
+json.enrollments do
+  if user.enrollments.present?
+    json.array! user.enrollments.each do |enrollment|
+      json.id            enrollment.id
+      json.course        enrollment.course.name
+      json.exam_sitting  enrollment.exam_sitting.name
+      json.date          enrollment.exam_sitting.date
+      json.active        enrollment.active
+      json.exam_body_id  enrollment&.exam_body&.id
+      json.exam_body     enrollment&.exam_body&.name
+    end
+  else
+    json.nil!
+  end
+end
+
+json.lifetime_products do
+  if user.orders.for_lifetime_access.present?
+    json.array! user.orders.for_lifetime_access.each do |order|
+      product = order.product
+      json.id            product.id
+      json.exam_body_id  product.name
+      json.group         product.group.name
+      json.state         order.state
+      json.created_at    order.created_at
+    end
+  else
+    json.nil!
+  end
+end
+
 if @user_token.present?
   json.token @user_token
 end
