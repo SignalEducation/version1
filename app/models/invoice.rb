@@ -348,17 +348,19 @@ class Invoice < ApplicationRecord
     return if Rails.env.test?
     return if subscription.nil?
 
-    coupon_code = subscription.invoices.first.original_stripe_data.dig(:discount, :coupon, :id)
+    stripe_coupon_data = subscription.invoices.first.original_stripe_data
+    coupon_code = stripe_coupon_data.dig(:discount, :coupon, :id)
+    original_duration = stripe_coupon_data.dig(:discount, :coupon, :duration)
     return if coupon_code.nil?
 
     coupon = coupon_code ? Coupon.find_by(code: coupon_code) : nil
 
-    return if coupon.nil? || coupon.duration != 'once'
+    return if original_duration != 'once'
     return if subscription.subscription_plan.interval_name != 'Yearly'
     return if subscription.invoices.blank? || subscription.invoices.count == 1
 
     plan        = subscription.subscription_plan
-    coupon_data = { code: coupon.code, price_discounted: coupon.price_discounted(subscription.subscription_plan_id) }
+    coupon_data = { code: coupon_code, price_discounted: coupon_price_discounted(subscription.subscription_plan_id, stripe_coupon_data.dig(:discount, :coupon)) }
     discounted  = plan.price.to_f - coupon_data[:price_discounted]
     amount      = (-discounted * 100).to_i
     memo        = "Coupon '#{coupon_data[:code]}' applied."
@@ -377,6 +379,16 @@ class Invoice < ApplicationRecord
     SlackService.new.notify_channel('payments',
                                     stripe_failed_notification(e, id),
                                     icon_emoji: 'rotating_light')
+  end
+
+  def coupon_price_discounted(plan_id, original_stripe_data)
+    sub_plan = SubscriptionPlan.find(plan_id)
+
+    if original_stripe_data[:amount_off]
+      sub_plan.price.to_f - (original_stripe_data[:amount_off] / 100).to_f
+    elsif original_stripe_data[:percent_off]
+      sub_plan.price.to_f - ((sub_plan.price.to_f / 100) * original_stripe_data[:percent_off])
+    end
   end
 
   def add_invoice_line_item(stripe_line_item)

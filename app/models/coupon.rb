@@ -48,7 +48,6 @@ class Coupon < ApplicationRecord
 
   # callbacks
   before_create  :create_on_stripe
-  before_destroy :delete_on_stripe
   after_create   :activate
   after_update   :update_on_stripe
 
@@ -176,10 +175,5 @@ class Coupon < ApplicationRecord
     self.livemode = stripe_coupon[:livemode]
     self.times_redeemed = stripe_coupon[:times_redeemed]
     self.stripe_coupon_data = stripe_coupon.to_hash.deep_dup
-  end
-
-  def delete_on_stripe
-    stripe_coupon = Stripe::Coupon.retrieve(id: code) unless Rails.env.test?
-    stripe_coupon&.delete
   end
 end

@@ -97,22 +97,6 @@ describe CouponsController, type: :controller do
       end
     end
 
-    describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
-        delete :destroy, params: { id: coupon_subscriptions.id }
-
-        expect(flash[:success]).to be_nil
-        expect(flash[:error]).to be_present
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, params: { id: coupon_2.id }
-
-        expect(flash[:success]).to be_present
-        expect(flash[:error]).to be_nil
-      end
-    end
-
     describe "Post to 'validate_coupon'" do
       it 'should OK for valid coupon' do
         post :validate_coupon, params: { code: coupon_1.code, plan_id: subscription_plan_gbp_m.id }, format: :json

@@ -6,7 +6,7 @@ class CouponsController < ApplicationController
     ensure_user_has_access_rights(%w[stripe_management_access])
   end
   before_action :management_layout
-  before_action :set_coupon, only: %i[show edit update destroy]
+  before_action :set_coupon, only: %i[show edit update]
   before_action :form_variables, only: %i[new edit create]
 
   def index
@@ -40,16 +40,6 @@ class CouponsController < ApplicationController
       flash[:error] = I18n.t('controllers.coupons.update.flash.error')
       render action: :edit
     end
-  end
-
-  def destroy
-    if @coupon.destroy
-      flash[:success] = I18n.t('controllers.coupons.destroy.flash.success')
-    else
-      flash[:error] = I18n.t('controllers.coupons.destroy.flash.error')
-    end
-
-    redirect_to coupons_url
   end
 
   def validate_coupon

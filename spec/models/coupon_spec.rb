@@ -56,7 +56,6 @@ describe Coupon do
 
   describe 'callbacks' do
     it { should callback(:create_on_stripe).before(:create) }
-    it { should callback(:delete_on_stripe).before(:destroy) }
     it { should callback(:update_on_stripe).after(:update) }
     it { should callback(:activate).after(:create) }
   end
