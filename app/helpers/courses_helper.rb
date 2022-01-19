@@ -51,7 +51,7 @@ module CoursesHelper
           end +
           content_tag(:div, class: 'productCard-footer d-flex align-items-center justify-content-between') do
             content_tag(:div, class: '') do
-              content_tag(:span, class:'productCard-statusLabel') do
+              content_tag(:span, class: 'productCard-statusLabel') do
                 '🎉 FREE'
               end
             end +

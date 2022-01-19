@@ -29,9 +29,36 @@ module ProductsHelper
     elsif product.product_type == 'lifetime_access'
       tag.i class: 'budicon-web-banking', role: 'img', style: 'font-size: 4rem;'
     elsif product.product_type == 'program_access'
-      tag.i class: product.course.icon_label, role: 'img'
+      tag.i class: 'budicon-web-banking', role: 'img', style: 'font-size: 4rem;'
     else
       tag.i class: 'budicon-file-tick', role: 'img', style: 'font-size: 4rem;'
+    end
+  end
+
+  def pricing_card_header(product)
+    case product.product_type
+    when 'lifetime_access'
+      content_tag(:span, class: 'greenShade') { 'LifeTime' } + ' Membership'
+    when 'program_access'
+      content_tag(:span, class: 'greenShade') { 'Professional' } + ' Diploma'
+    end
+  end
+
+  def pricing_card_button(product)
+    case product.product_type
+    when 'lifetime_access'
+      'Choose Lifetime'
+    when 'program_access'
+      'Choose Program'
+    end
+  end
+
+  def pricing_card_description(product)
+    case product.product_type
+    when 'lifetime_access'
+      'Choose Lifetime'
+    when 'program_access'
+      'Choose Program'
     end
   end
 end

@@ -88,7 +88,7 @@ class Product < ApplicationRecord
     elsif lifetime_access?
       "#{group.name} LifeTime Membership"
     elsif program_access?
-      course.name.to_s
+      group.name
     else
       mock_exam&.name || name
     end
@@ -96,6 +96,16 @@ class Product < ApplicationRecord
 
   def url_by_type
     lifetime_access? ? 'lifetime' : product_type
+  end
+
+  def kind_by_type
+    if program_access?
+      'professional diploma'
+    elsif lifetime_access?
+      'lifetime'
+    else
+      product_type
+    end
   end
 
   # class methods

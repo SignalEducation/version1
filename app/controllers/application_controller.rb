@@ -282,7 +282,12 @@ class ApplicationController < ActionController::Base
   def library_special_link(the_thing)
     case the_thing
     when Group
-      library_group_url(the_thing.name_url)
+      if the_thing.gcu?
+        course = the_thing.courses.all_active.last
+        library_course_url(course.parent.name_url, course.name_url)
+      else
+        library_group_url(the_thing.name_url)
+      end
     when Course
       the_thing.parent ? library_course_url(the_thing.parent.name_url, the_thing.name_url) : library_url
     when CourseLesson

@@ -89,5 +89,7 @@
                             =@user.active_subscriptions_for_exam_body(body.id).last.state
                           -elsif @user.lifetime_subscriber?(body.group.id)
                             ='LifeTime'
+                          -elsif @user.program_access?(body.group.id)
+                            ='Professional Diploma'
                           -else
                             ='Basic'

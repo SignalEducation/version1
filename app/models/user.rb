@@ -407,7 +407,7 @@ class User < ApplicationRecord
   end
 
   def valid_access_for_exam_body?(exam_body_id, group_id = nil)
-    valid_subscription_for_exam_body?(exam_body_id) || lifetime_subscriber?(group_id)
+    valid_subscription_for_exam_body?(exam_body_id) || lifetime_subscriber?(group_id) || program_access?(group_id)
   end
 
   def valid_access_for_course?(course_id)

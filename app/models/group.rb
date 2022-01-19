@@ -95,6 +95,10 @@ class Group < ApplicationRecord
     the_list
   end
 
+  def gcu?
+    exam_body.name == 'GCU'
+  end
+
   protected
 
   def check_dependencies

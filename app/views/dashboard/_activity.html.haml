@@ -2,18 +2,18 @@
   .col-md-12.col-lg-10.p-0
     -@sculs.each do |scul|
       -if scul.course && scul.course.active
-        =link_to library_special_link(scul.course), class: 'card card-horizontal flex-md-row', style: 'margin-bottom: 1.5rem;', onclick: "sendClickEventToSegment('clicks_course', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', programName: '#{scul.course.group.name}', levelName: '#{scul.course.level.name}', courseName: '#{scul.course.name}', navigationThrough: 'activity'})" do
+        =link_to library_special_link(scul.course), class: 'card card-horizontal flex-md-row', style: 'margin-bottom: 1.5rem;', onclick: "sendClickEventToSegment('clicks_course', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', programName: '#{scul.course.group.name}', levelName: '#{scul.course.level&.name}', courseName: '#{scul.course.name}', navigationThrough: 'activity'})" do
           .card-body.d-flex.flex-column.justify-content-center
             %div.dashboardWrapper-courseInfo
-              %div.dashboardWrapper-courseIcon{style: "border-color: #{scul.course.level.highlight_colour}; background-color: #{scul.course.level.highlight_colour};"}
-                %i{"aria-label" => scul.course.level.icon_label, :role => "img", class: scul.course.level.icon_label ? scul.course.level.icon_label : 'budicon-office-bag-c', style: "color: #FFF;"}
+              %div.dashboardWrapper-courseIcon{style: "border-color: #{scul.course.level&.highlight_colour}; background-color: #{scul.course.level&.highlight_colour};"}
+                %i{"aria-label" => scul.course.level&.icon_label, :role => "img", class: scul.course.level&.icon_label ? scul.course.level&.icon_label : 'budicon-office-bag-c', style: "color: #FFF;"}
               %div
                 %div.dashboardWrapper-parent
                   .dashboardWrapper-examName
                     =scul.course.parent.name
                   .dashboardWrapper-backBtn-dot •
-                  .dashboardWrapper-levelName{style: "color: #{scul.course.level.highlight_colour};"}
-                    =scul.course.level.name
+                  .dashboardWrapper-levelName{style: "color: #{scul.course.level&.highlight_colour};"}
+                    =scul.course.level&.name
                 %div.courseName
                   =scul.course.name
           .card-footer.d-flex.justify-content-center.align-items-center{style: 'background-color: #fff; border-top: none;'}
@@ -28,7 +28,7 @@
                                                 next_step.course_lesson.course_section.name_url,
                                                 next_step.course_lesson.name_url,
                                                 next_step.name_url)
-              #dashboard-course-resume.btn.btn-outline.next_step_link{data: {destination: next_step_link}, id: scul.id, onclick: "sendClickEventToSegment('clicks_course', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', programName: '#{scul.course.group.name}', levelName: '#{scul.course.level.name}', courseName: '#{scul.course.name}', navigationThrough: 'activity'})"}
+              #dashboard-course-resume.btn.btn-outline.next_step_link{data: {destination: next_step_link}, id: scul.id, onclick: "sendClickEventToSegment('clicks_course', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', programName: '#{scul.course.group.name}', levelName: '#{scul.course.level&.name}', courseName: '#{scul.course.name}', navigationThrough: 'activity'})"}
                 Resume
             -else
               .courseArrowIcon.i.material-icons{style: 'color: #D9D9D9;'} keyboard_arrow_right
