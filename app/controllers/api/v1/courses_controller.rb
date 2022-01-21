@@ -23,8 +23,10 @@ module Api
         group   = Group.find_by(name_url: params[:group_name])
         @course = Course.find_by(name_url: params[:course_name], group: group)
 
-        if @course.nil?
+        if group.nil?
           render json: { errors: 'Group not found' }, status: :not_found
+        elsif @course.nil?
+          render json: { errors: 'Course not found' }, status: :not_found
         else
           render 'api/v1/courses/lessons.json', locals: { course: @course }
         end
