@@ -15,89 +15,90 @@
           -if @group
             .row.row-lg.justify-content-center
               -# PREMIUM CARDS
-              .col-lg-8.px-2
-                %article.planCard
-                  .card-body.text-left.p-0
-                    .tab-content
-                      -if @subscription_plans.length > 1
-                        %ul.nav.nav-pills.plan-nav{id: 'planTabs', role: 'tablist', class:@subscription_plans.length < 2 && 'hidden'}
-                          -@subscription_plans.each_with_index do |navPlan, navCounter|
-                            %li.nav-item{data: {tab_name: navPlan.guid}}
-                              %a{onclick: "sendClickEventToSegment('selects_plan_duration', {email: '#{@current_user&.email}', programName: '#{@group&.name}', planName: '#{navPlan&.name}', planPrice: '#{navPlan&.price}', planType: '#{navPlan&.interval_name&.downcase}', subscriptionType: 'Subscription', paymentType: 'newSubscription'})", class: "nav-link #{navCounter == @subscription_plans.length - 1 ? 'active' : ''}", id: "#{navPlan.guid}-tab", data: {toggle: 'tab'}, href: "#nav-#{navPlan.guid}", aria: {controls: "#{navPlan.guid}", selected: 'false'}, role: 'tab'}
-                                =t("views.general.payment_intervals.a#{navPlan.payment_frequency_in_months}")
-                      -@subscription_plans.each_with_index do |plan, counter|
-                        .tab-pane{id: "nav-#{plan.guid}", class: "tab-#{plan.guid} #{counter == @subscription_plans.length - 1 ? 'active' : ''} ", "aria-labelledby" => "#{plan.guid}-tab", :role => "tabpanel"}
-                          %div.planInfoWrapper
-                            %div.planTitleWrapper
-                              %div.planTitle
-                                Premium
-                                %span.greenShade=t("views.general.payment_intervals.a#{plan.payment_frequency_in_months}")
-                                Plan
-                            %p.priceValue.mb-0.pb-4{class: @subscription_plans.length < 2 && 'mt-0'}
-                              %span.priceValue-actualPrice
-                                =plan.currency.format_number(plan.price)
-                                %span.priceValue-priceSuffix=t("views.general.payment_interval_shortSuffix.a#{plan.payment_frequency_in_months}")
-                              %span.d-flex.flex-column.align-items-center
-                                -if plan.most_popular
-                                  %span.priceValue-popularBadge
-                                    Most popular
-                                -if plan.monthly_percentage_off
-                                  %span.priceValue-savingPill.mt-1
-                                    Save
-                                    =plan.monthly_percentage_off
-                                    ='%'
+              -if @subscription_plans.present?
+                .col-lg-8.px-2
+                  %article.planCard
+                    .card-body.text-left.p-0
+                      .tab-content
+                        -if @subscription_plans.length > 1
+                          %ul.nav.nav-pills.plan-nav{id: 'planTabs', role: 'tablist', class:@subscription_plans.length < 2 && 'hidden'}
+                            -@subscription_plans.each_with_index do |navPlan, navCounter|
+                              %li.nav-item{data: {tab_name: navPlan.guid}}
+                                %a{onclick: "sendClickEventToSegment('selects_plan_duration', {email: '#{@current_user&.email}', programName: '#{@group&.name}', planName: '#{navPlan&.name}', planPrice: '#{navPlan&.price}', planType: '#{navPlan&.interval_name&.downcase}', subscriptionType: 'Subscription', paymentType: 'newSubscription'})", class: "nav-link #{navCounter == @subscription_plans.length - 1 ? 'active' : ''}", id: "#{navPlan.guid}-tab", data: {toggle: 'tab'}, href: "#nav-#{navPlan.guid}", aria: {controls: "#{navPlan.guid}", selected: 'false'}, role: 'tab'}
+                                  =t("views.general.payment_intervals.a#{navPlan.payment_frequency_in_months}")
+                        -@subscription_plans.each_with_index do |plan, counter|
+                          .tab-pane{id: "nav-#{plan.guid}", class: "tab-#{plan.guid} #{counter == @subscription_plans.length - 1 ? 'active' : ''} ", "aria-labelledby" => "#{plan.guid}-tab", :role => "tabpanel"}
+                            %div.planInfoWrapper
+                              %div.planTitleWrapper
+                                %div.planTitle
+                                  Premium
+                                  %span.greenShade=t("views.general.payment_intervals.a#{plan.payment_frequency_in_months}")
+                                  Plan
+                              %p.priceValue.mb-0.pb-4{class: @subscription_plans.length < 2 && 'mt-0'}
+                                %span.priceValue-actualPrice
+                                  =plan.currency.format_number(plan.price)
+                                  %span.priceValue-priceSuffix=t("views.general.payment_interval_shortSuffix.a#{plan.payment_frequency_in_months}")
+                                %span.d-flex.flex-column.align-items-center
+                                  -if plan.most_popular
+                                    %span.priceValue-popularBadge
+                                      Most popular
+                                  -if plan.monthly_percentage_off
+                                    %span.priceValue-savingPill.mt-1
+                                      Save
+                                      =plan.monthly_percentage_off
+                                      ='%'
 
-                          .bulletListTitle.hidden-xs ⚡️ What do you get
-                          %ul.hidden-xs.list-centered.text-left.bulletList{class:@subscription_plans.length < 2 && 'noPlanNav'}
-                            -if plan.bullet_points_list && !plan.bullet_points_list.empty?
-                              - plan.bullet_points_list.split(/, ?/).each do |bullet|
+                            .bulletListTitle.hidden-xs ⚡️ What do you get
+                            %ul.hidden-xs.list-centered.text-left.bulletList{class:@subscription_plans.length < 2 && 'noPlanNav'}
+                              -if plan.bullet_points_list && !plan.bullet_points_list.empty?
+                                - plan.bullet_points_list.split(/, ?/).each do |bullet|
+                                  %li.mb-3
+                                    .bulletIcon •
+                                    %span=bullet
+                              -else
                                 %li.mb-3
                                   .bulletIcon •
-                                  %span=bullet
-                            -else
-                              %li.mb-3
-                                .bulletIcon •
-                                %span="Access all #{@group && @group.name} courses"
-                              %li.mb-3
-                                .bulletIcon •
-                                %span="Topic-by-topic lectures"
-                              %li.mb-3
-                                .bulletIcon •
-                                %span="24/7 tutor support"
+                                  %span="Access all #{@group && @group.name} courses"
+                                %li.mb-3
+                                  .bulletIcon •
+                                  %span="Topic-by-topic lectures"
+                                %li.mb-3
+                                  .bulletIcon •
+                                  %span="24/7 tutor support"
 
 
-                          -unless plan.exam_body.name == "CPD"
-                            %p.preCtaText
-                              Recurring Payment. Cancel Anytime
-                          .mt-auto
-                            =link_to subscription_checkout_special_link(plan.exam_body_id, plan.guid), class: "btn w-100 btn-primary choosePlanBtn", onclick: "addToCart('#{plan&.currency.iso_code}', '#{plan&.name}', '#{plan&.id}', '#{plan&.price}', '#{plan&.exam_body&.name}'); sendClickEventToSegment('clicks_choose_plan', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', planName: '#{plan&.name}', planPrice: '#{plan&.price}', programName: '#{plan&.exam_body&.name}', planType: '#{plan&.interval_name&.downcase}', subscriptionType: 'Subscription', paymentType: 'newSubscription'})" do
-                              ="Choose #{t("views.general.payment_intervals.a#{plan.payment_frequency_in_months}")}"
-                              %span.sr-only Choose this plan
-                          %div.visible-xs.bulletListAccordianBox
-                            .faq-box.mt-3
-                              .faq-inner.narrow{onclick: '$(this).toggleClass("narrow"); $(this).find(".faq-answer").toggleClass("d-md-block"); $(this).find(".faq-answer-expanded").toggleClass("d-none"); $(this).find(".bulletListAccordianBox-openIcon").toggleClass("d-none"); $(this).find(".bulletListAccordianBox-closeIcon").toggleClass("d-none");'}
-                                .faq-title
-                                  See Details
-                                  %i.material-icons.ml-2.bulletListAccordianBox-openIcon{"aria-hidden" => "true"} expand_more
-                                  %i.material-icons.ml-2.bulletListAccordianBox-closeIcon.d-none{"aria-hidden" => "true"} expand_less
-                                .faq-answer-expanded.d-none
-                                  .bulletListTitle ⚡️ What do you get
-                                  %ul.list-centered.text-left.bulletList{class:@subscription_plans.length < 2 && 'noPlanNav'}
-                                    -if plan.bullet_points_list && !plan.bullet_points_list.empty?
-                                      - plan.bullet_points_list.split(/, ?/).each do |bullet|
+                            -unless plan.exam_body.name == "CPD"
+                              %p.preCtaText
+                                Recurring Payment. Cancel Anytime
+                            .mt-auto
+                              =link_to subscription_checkout_special_link(plan.exam_body_id, plan.guid), class: "btn w-100 btn-primary choosePlanBtn", onclick: "addToCart('#{plan&.currency.iso_code}', '#{plan&.name}', '#{plan&.id}', '#{plan&.price}', '#{plan&.exam_body&.name}'); sendClickEventToSegment('clicks_choose_plan', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', planName: '#{plan&.name}', planPrice: '#{plan&.price}', programName: '#{plan&.exam_body&.name}', planType: '#{plan&.interval_name&.downcase}', subscriptionType: 'Subscription', paymentType: 'newSubscription'})" do
+                                ="Choose #{t("views.general.payment_intervals.a#{plan.payment_frequency_in_months}")}"
+                                %span.sr-only Choose this plan
+                            %div.visible-xs.bulletListAccordianBox
+                              .faq-box.mt-3
+                                .faq-inner.narrow{onclick: '$(this).toggleClass("narrow"); $(this).find(".faq-answer").toggleClass("d-md-block"); $(this).find(".faq-answer-expanded").toggleClass("d-none"); $(this).find(".bulletListAccordianBox-openIcon").toggleClass("d-none"); $(this).find(".bulletListAccordianBox-closeIcon").toggleClass("d-none");'}
+                                  .faq-title
+                                    See Details
+                                    %i.material-icons.ml-2.bulletListAccordianBox-openIcon{"aria-hidden" => "true"} expand_more
+                                    %i.material-icons.ml-2.bulletListAccordianBox-closeIcon.d-none{"aria-hidden" => "true"} expand_less
+                                  .faq-answer-expanded.d-none
+                                    .bulletListTitle ⚡️ What do you get
+                                    %ul.list-centered.text-left.bulletList{class:@subscription_plans.length < 2 && 'noPlanNav'}
+                                      -if plan.bullet_points_list && !plan.bullet_points_list.empty?
+                                        - plan.bullet_points_list.split(/, ?/).each do |bullet|
+                                          %li.mb-3
+                                            .bulletIcon •
+                                            %span=bullet
+                                      -else
                                         %li.mb-3
                                           .bulletIcon •
-                                          %span=bullet
-                                    -else
-                                      %li.mb-3
-                                        .bulletIcon •
-                                        %span="Access all #{@group.name} courses"
-                                      %li.mb-3
-                                        .bulletIcon •
-                                        %span="Topic-by-topic lectures"
-                                      %li.mb-3
-                                        .bulletIcon •
-                                        %span="24/7 tutor support"
+                                          %span="Access all #{@group.name} courses"
+                                        %li.mb-3
+                                          .bulletIcon •
+                                          %span="Topic-by-topic lectures"
+                                        %li.mb-3
+                                          .bulletIcon •
+                                          %span="24/7 tutor support"
 
               -# LIFETIME CARD
               -@products.each do |product|
@@ -109,9 +110,9 @@
                       %div.planInfoWrapper
                         %div.planTitleWrapper
                           %div.planTitle
-                            -name
-                            %span.greenShade Lifetime
-                            Membership
+                            =pricing_card_header(product)
+                            %span
+                              =name
 
                         %p.priceValue.mb-0.pb-4.mt-0
                           %span.priceValue-actualPrice
@@ -134,8 +135,8 @@
                       %p.preCtaText
                         One-time payment
                       .mt-auto
-                        =link_to link, class: 'btn btn-primary choosePlanBtn w-100 ', onclick: "sendClickEventToSegment('clicks_choose_plan', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', productName: '#{name}', planPrice: '#{product&.price}', programName: '#{@group&.name}', planType: 'lifetime', subscriptionType: 'Product', paymentType: '#{product&.product_type.humanize}'})" do
-                          ="Choose Lifetime"
+                        =link_to link, class: 'btn btn-primary choosePlanBtn w-100 ', onclick: "sendClickEventToSegment('clicks_choose_plan', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', productName: '#{name}', planPrice: '#{product&.price}', programName: '#{@group&.name}', planType: '#{product.kind_by_type}, subscriptionType: 'Product', paymentType: '#{product&.product_type.humanize}'})" do
+                          =pricing_card_button(product)
                           %span.sr-only Choose this plan
                       %div.visible-xs.bulletListAccordianBox
                         .faq-box.mt-3
@@ -152,6 +153,7 @@
                                   %span Everything in Premium plan
                                 %li.mb-3
                                   .bulletIcon •
+                                  %span="Access all #{@group.name} courses Forever"
                                   %span="Access all #{@group.name} courses Forever"
                                 %li.mb-3
                                   .bulletIcon •

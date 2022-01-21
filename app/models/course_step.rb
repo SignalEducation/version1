@@ -188,7 +188,7 @@ class CourseStep < ApplicationRecord
         { view: false, reason: 'verification-required' }
       elsif user.verify_remain_days.zero? && !user.valid_subscription? && !user.email_verified
         { view: false, reason: 'verification-required' }
-      elsif user.complimentary_user? || user.non_student_user? || user.lifetime_subscriber?(course.group)
+      elsif user.complimentary_user? || user.non_student_user? || user.lifetime_subscriber?(course.group) || user.program_access?(course.group)
         available_for_complimentary(scul)
       elsif user.program_access?(course.id)
         available_for_complimentary(scul)

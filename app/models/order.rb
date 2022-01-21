@@ -111,6 +111,10 @@ class Order < ApplicationRecord
       transition all => :cancelled
     end
 
+    event :expire do
+      transition completed: :expired
+    end
+
     after_transition all => :completed do |order, _transition|
       order.execute_order_completion
       order.generate_exercises

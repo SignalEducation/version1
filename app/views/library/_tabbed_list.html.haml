@@ -1,3 +1,4 @@
+-# -binding.pry
 %div.container.d-flex.libraryGroupWrapper-list.pt-4.pb-4
   %nav.levels-nav
     %ul.d-flex.flex-column.nav.nav-pills.nav-fill{id: 'levelsTabs', role: 'tablist'}
@@ -54,10 +55,10 @@
       email: '#{current_user&.email}',
       hasValidSubscription: '#{current_user&.valid_subscription?}',
       isEmailVerified: '#{current_user&.email_verified}',
-      preferredExamBodyId: '#{current_user&.preferred_exam_body_id}', 
-      isLoggedIn: '#{!current_user&.nil?}', 
-      sessionId: '#{session&.id}', 
-      programName: '#{@group&.name}', 
+      preferredExamBodyId: '#{current_user&.preferred_exam_body_id}',
+      isLoggedIn: '#{!current_user&.nil?}',
+      sessionId: '#{session&.id}',
+      programName: '#{@group&.name}',
       value: units_hours_select
     })
   }
@@ -68,10 +69,10 @@
       email: '#{current_user&.email}',
       hasValidSubscription: '#{current_user&.valid_subscription?}',
       isEmailVerified: '#{current_user&.email_verified}',
-      preferredExamBodyId: '#{current_user&.preferred_exam_body_id}', 
-      isLoggedIn: '#{!current_user&.nil?}', 
-      sessionId: '#{session&.id}', 
-      programName: '#{@group&.name}', 
+      preferredExamBodyId: '#{current_user&.preferred_exam_body_id}',
+      isLoggedIn: '#{!current_user&.nil?}',
+      sessionId: '#{session&.id}',
+      programName: '#{@group&.name}',
       value: key_area
     })
 

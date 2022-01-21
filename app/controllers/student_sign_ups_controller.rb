@@ -202,11 +202,11 @@ class StudentSignUpsController < ApplicationController
       @exam_body = @group.exam_body
       @subscription_plans = SubscriptionPlan.where(subscription_plan_category_id: nil, exam_body_id: @group.exam_body_id).
                               includes(:currency).in_currency(@currency.id).all_active.all_in_display_order
-      @products = Product.for_group(@group.id).where(product_type: :lifetime_access).includes(:currency).in_currency(@currency.id).all_active
+      @products = Product.for_group(@group.id).where(product_type: %i[lifetime_access program_access]).includes(:currency).in_currency(@currency.id).all_active
     else
       @subscription_plans = SubscriptionPlan.where(subscription_plan_category_id: nil).
                               includes(:currency).in_currency(@currency.id).all_active.all_in_display_order
-      @products = Product.where(product_type: :lifetime_access).includes(:currency).in_currency(@currency.id).all_active
+      @products = Product.where(product_type: %i[lifetime_access program_access]).includes(:currency).in_currency(@currency.id).all_active
     end
 
     seo_title_maker(@group&.exam_body&.pricing_seo_title ? "#{@group&.exam_body&.pricing_seo_title} | Learnsignal" : "#{@group&.name} Tuition Plans | Learnsignal",

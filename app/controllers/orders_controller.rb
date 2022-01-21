@@ -97,11 +97,12 @@ class OrdersController < ApplicationController
     @product        = Product.find_by(id: params[:product_id])
     @subscriptions  = Subscription.where(user_id: @order.user_id).not_pending
     @payment_processor = params[:payment_processor]
-    @studies_link   =
+    @studies_link =
       if @product&.lifetime_access?
         student_dashboard_url
       elsif @product&.program_access?
-        library_course_url(@product.group.name_url, @product.course.name_url)
+        # todo get the correct course
+        library_course_url(@product.group.name_url, @product.group.courses.last.name_url)
       else
         user_exercises_path(current_user)
       end

@@ -1,4 +1,4 @@
-version: 1
+sversion: 1
 cron:
  - name: "paypal-sync"
    url: "/api/cron_tasks/paypal_sync"
@@ -21,3 +21,6 @@ cron:
  - name: "monthly-orders-report"
    url: "/api/cron_tasks/monthly_orders_report"
    schedule: "0 5 1 * *"
+ - name: "daily-program-access-check"
+   url: "/api/cron_tasks/daily_program_access_check"
+   schedule: "0 1 * * *"
