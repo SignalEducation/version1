@@ -41,8 +41,8 @@ RSpec.describe 'Api::V1::PracticeQuestionsController', type: :request do
 
       it 'returns cbes json data' do
         body = JSON.parse(response.body)
-        expect(body['errors']).to include("Couldn't find CoursePracticeQuestion with")
-        expect([body.keys]).to contain_exactly(['errors'])
+        expect(body['error']).to include("Couldn't find CoursePracticeQuestion with")
+        expect([body.keys]).to contain_exactly(['error'])
       end
     end
   end
