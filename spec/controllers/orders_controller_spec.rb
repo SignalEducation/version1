@@ -163,7 +163,8 @@ describe OrdersController, type: :controller do
         expect(response.status).to eq(302)
         expect(response).to redirect_to(order_complete_url(product_id: order_3.product_id,
                                                            product_type: order_3.product.url_by_type,
-                                                           order_id: order_3.id))
+                                                           order_id: order_3.id,
+                                                           payment_processor: 'Paypal'))
       end
 
       it 'should return an error' do
