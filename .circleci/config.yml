@@ -2,6 +2,7 @@ version: 2
 jobs:
   build:
     parallelism: 1
+    resource_class: large
     docker:
       - image: circleci/ruby:2.6.5-node-browsers
         environment:
@@ -16,7 +17,7 @@ jobs:
       - image: circleci/postgres:9.6-alpine
         environment:
           POSTGRES_USER: circleci-demo-ruby
-          POSTGRES_DB: db/learnsignal_v3_test
+          POSTGRES_DB: db/learnsignal_v3_testgi
           POSTGRES_PASSWORD: ""
       - image: redis
     steps:
