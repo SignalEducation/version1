@@ -87,8 +87,10 @@
 
       =render partial: 'layouts/facebook_tracking_code'
       -if @layout == 'standard'
-        -if @navbar && controller_name != 'user_sessions'
+        -if @navbar && controller_name != 'user_sessions' && controller_name != 'dashboard'
           =render partial: 'layouts/navbar'
+        -if controller_name == 'dashboard'
+          =render partial: 'layouts/navbar_accredited'
         -if @navbar && controller_name == 'user_sessions'
           =render partial: 'layouts/navbar_gray'
 

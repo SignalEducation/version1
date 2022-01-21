@@ -1,0 +1,47 @@
+.accredited-dashboard-sidenav {
+  display: flex;
+  flex-direction: row;
+}
+
+.dashboard-article {
+  width: 100%;
+}
+
+.accredited-sidenav {
+  position: relative;
+  margin: 0.5rem;
+  width: 280px;
+  left: 16px;
+  top: 16px;
+  bottom: 16px;
+  background: #f8fafc;
+  border-radius: 20px;
+}
+
+.accredited-sidenav-logo {
+  display: flex;
+  justify-content: center;
+  margin-top: 3rem;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.accredited-sidenav-table {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.accredited-sidenav-btn {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 12px;
+  background: #e2e8f0;
+  border-radius: 8px;
+  flex: none;
+  order: 0;
+  flex-grow: 0;
+  margin: 8px 0px;
+}

@@ -1,48 +1,51 @@
 %main
-  %article.dashboard.bg-white
-    %header
-      .position-relative.container.d-flex.flex-column.flex-wrap.flex-sm-nowrap.justify-content-between
-        .mw-0
-          %h1.h1-hero.pt-6.pb-4
-            =t('views.dashboard.student.h1')
-        %nav.account-nav
-          %ul#dashboardTabs.nav.nav-tabs.dashboardTabsNav{:role => "tablist"}
-            -if @enrollments.any?
-              %li.nav-item.dashboardTabsNav-navItem
-                %a#enrollments-tab.nav-link.dashboardTabsNav-navItemLink.active{"aria-controls" => "enrollments", "aria-selected" => "true", "data-toggle" => "tab", :href => "#enrollments", :role => "tab", onclick: "sendClickEventToSegment('clicks_enrolments', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', programName: '#{@default_group.name}'})"}
-                  Enrolments
-              %li.nav-item.dashboardTabsNav-navItem
-                %a#activity-tab.nav-link.dashboardTabsNav-navItemLink{"aria-controls" => "activity", "aria-selected" => "false", "data-toggle" => "tab", :href => "#activity", :role => "tab", onclick: "sendClickEventToSegment('clicks_activity', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', programName: '#{@default_group.name}'})"}
-                  Activity
-            -else
+  .accredited-dashboard-sidenav
+    =render partial: 'accredited_side_nav.html'
+    %article.dashboard.bg-white.dashboard-article
+      =render partial: '/layouts/navbar_accredited'
+      %header
+        .position-relative.container.d-flex.flex-column.flex-wrap.flex-sm-nowrap.justify-content-between
+          .mw-0
+            %h1.h1-hero.pt-6.pb-4
+              =t('views.dashboard.student.h1')
+          %nav.account-nav
+            %ul#dashboardTabs.nav.nav-tabs.dashboardTabsNav{:role => "tablist"}
+              -if @enrollments.any?
+                %li.nav-item.dashboardTabsNav-navItem
+                  %a#enrollments-tab.nav-link.dashboardTabsNav-navItemLink.active{"aria-controls" => "enrollments", "aria-selected" => "true", "data-toggle" => "tab", :href => "#enrollments", :role => "tab", onclick: "sendClickEventToSegment('clicks_enrolments', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', programName: '#{@default_group.name}'})"}
+                    Enrolments
+                %li.nav-item.dashboardTabsNav-navItem
+                  %a#activity-tab.nav-link.dashboardTabsNav-navItemLink{"aria-controls" => "activity", "aria-selected" => "false", "data-toggle" => "tab", :href => "#activity", :role => "tab", onclick: "sendClickEventToSegment('clicks_activity', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', programName: '#{@default_group.name}'})"}
+                    Activity
+              -else
+                -if current_user.exercises.any?
+                  %li.nav-item.dashboardTabsNav-navItem
+                    %a#activity-tab.nav-link.dashboardTabsNav-navItemLink.active{"aria-controls" => "activity", "aria-selected" => "false", "data-toggle" => "tab", :href => "#activity", :role => "tab", onclick: "sendClickEventToSegment('clicks_activity', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', programName: '#{@default_group.name}'})"}
+                      Activity
               -if current_user.exercises.any?
                 %li.nav-item.dashboardTabsNav-navItem
-                  %a#activity-tab.nav-link.dashboardTabsNav-navItemLink.active{"aria-controls" => "activity", "aria-selected" => "false", "data-toggle" => "tab", :href => "#activity", :role => "tab", onclick: "sendClickEventToSegment('clicks_activity', {userId: '#{@current_user&.id}',email: '#{@current_user&.email}',hasValidSubscription: '#{@current_user&.valid_subscription?}',isEmailVerified: '#{@current_user&.email_verified}',preferredExamBodyId: '#{@current_user&.preferred_exam_body_id}', isLoggedIn: '#{!@current_user&.nil?}', sessionId: '#{session&.id}', programName: '#{@default_group.name}'})"}
-                    Activity
-            -if current_user.exercises.any?
-              %li.nav-item.dashboardTabsNav-navItem
-                %a#exercises-tab.nav-link.dashboardTabsNav-navItemLink{"aria-controls" => "exercises", "aria-selected" => "true", "data-toggle" => "tab", :href => "#exercises", :role => "tab"}
-                  Exercises
+                  %a#exercises-tab.nav-link.dashboardTabsNav-navItemLink{"aria-controls" => "exercises", "aria-selected" => "true", "data-toggle" => "tab", :href => "#exercises", :role => "tab"}
+                    Exercises
 
 
-      %section.dashboard__contentContainer.pt-4.bg-gray5
-        .container.d-flex.flex-sm-row.dashboard__wrapper
-          #dashboardTabsContent.tab-content.w-100
-            -if @enrollments.any?
-              #enrollments.tab-pane.show.active.tab-dashboard.tab-enrollments{"aria-labelledby" => "enrollments-tab", :role => "tabpanel"}
-                =render partial: 'enrollments'
+        %section.dashboard__contentContainer.pt-4.bg-gray5
+          .container.d-flex.flex-sm-row.dashboard__wrapper
+            #dashboardTabsContent.tab-content.w-100
+              -if @enrollments.any?
+                #enrollments.tab-pane.show.active.tab-dashboard.tab-enrollments{"aria-labelledby" => "enrollments-tab", :role => "tabpanel"}
+                  =render partial: 'enrollments'
 
-              #activity.tab-pane.tab-account.tab-dashboard{"aria-labelledby" => "activity-tab", :role => "tabpanel"}
-                =render partial: 'activity'
-            -else
-              #activity.tab-pane.tab-account.active.tab-dashboard{"aria-labelledby" => "activity-tab", :role => "tabpanel"}
-                =render partial: 'activity'
+                #activity.tab-pane.tab-account.tab-dashboard{"aria-labelledby" => "activity-tab", :role => "tabpanel"}
+                  =render partial: 'activity'
+              -else
+                #activity.tab-pane.tab-account.active.tab-dashboard{"aria-labelledby" => "activity-tab", :role => "tabpanel"}
+                  =render partial: 'activity'
 
-            -if current_user.exercises.any?
-              #exercises.tab-pane.show.tab-dashboard.tab-exercises{"aria-labelledby" => "exercises-tab", :role => "tabpanel"}
-                =render partial: 'exercises'
+              -if current_user.exercises.any?
+                #exercises.tab-pane.show.tab-dashboard.tab-exercises{"aria-labelledby" => "exercises-tab", :role => "tabpanel"}
+                  =render partial: 'exercises'
 
-  =show_user_verified_restriction
+    =show_user_verified_restriction
 
 :javascript
   $(document).ready(function(){
