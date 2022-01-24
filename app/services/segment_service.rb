@@ -98,7 +98,7 @@ class SegmentService
     segment = Analytics.track(
       user_id: user&.id,
       event: 'payment_failed',
-      properties: payment_properties(subscription.subscription_plan, subscription.coupon_data, subscription.kind, user&.email).merge!(payment_error_properties(error_msg, error_code))
+      properties: subscription_payment_properties(subscription, user&.email).merge!(payment_error_properties(error_msg, error_code))
     )
   rescue StandardError => e
     Rails.logger.error "SegmentService#create_& - Error: #{e.inspect} - User Id #{user&.id} Segment Object - #{segment}"
