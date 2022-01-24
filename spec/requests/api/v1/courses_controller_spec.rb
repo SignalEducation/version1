@@ -142,7 +142,7 @@ RSpec.describe 'Api::V1::CoursesController', type: :request do
         expect(lesson['id']).to eq(course_lesson_1.id)
         expect(lesson['name']).to eq(course_lesson_1.name)
         expect(lesson['url']).to eq(course_lesson_1.name_url)
-        expect(lesson.keys).to eq(%w[id name url free steps])
+        expect(lesson.keys).to eq(%w[id name url description free steps])
 
         expect(lesson_steps.size).to eq(6)
         expect(lesson_steps.map { |s| s['id'] }).to include(course_step_2.id)
@@ -155,25 +155,42 @@ RSpec.describe 'Api::V1::CoursesController', type: :request do
       end
     end
 
-    context 'return an not found message' do
-      before { get "/api/v1/courses/lessons/#{group_1.name_url}/any_value" }
+    describe 'not found errors' do
+      context 'group not found message' do
+        before { get "/api/v1/courses/lessons/any_group/any_value" }
 
-      it 'returns HTTP status 404' do
-        expect(response).to have_http_status 404
+        it 'returns HTTP status 404' do
+          expect(response).to have_http_status 404
+        end
+
+        it 'returns empty data' do
+          body = JSON.parse(response.body)
+
+          expect(body['errors']).to eq('Group not found')
+          expect([body.keys]).to contain_exactly(['errors'])
+        end
       end
 
-      it 'returns empty data' do
-        body = JSON.parse(response.body)
+      context 'course not found message' do
+        before { get "/api/v1/courses/lessons/#{group_1.name_url}/any_value" }
 
-        expect(body['errors']).to eq('Group not found')
-        expect([body.keys]).to contain_exactly(['errors'])
+        it 'returns HTTP status 404' do
+          expect(response).to have_http_status 404
+        end
+
+        it 'returns empty data' do
+          body = JSON.parse(response.body)
+
+          expect(body['errors']).to eq('Course not found')
+          expect([body.keys]).to contain_exactly(['errors'])
+        end
       end
     end
   end
 
   describe '#read_note_log' do
-    let(:user_group)    { create(:student_user_group) }
-    let(:student)       { create(:basic_student, :with_group, user_group: user_group) }
+    let(:user_group)       { create(:student_user_group) }
+    let(:student)          { create(:basic_student, :with_group, user_group: user_group) }
     let!(:course)          { create(:course) }
     let!(:course_log)      { create(:course_log, course: course, user: student) }
     let!(:course_section)  { create(:course_section, course: course) }

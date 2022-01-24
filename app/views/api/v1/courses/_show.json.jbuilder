@@ -22,14 +22,15 @@ json.course do
         json.lessons do
           if section.course_lessons.present?
             json.array! section.course_lessons.includes(:course_steps).all_active.all_in_order.each do |lesson|
-              json.id   lesson.id
-              json.name lesson.name
-              json.url  lesson.name_url
-              json.free lesson.free
+              json.id          lesson.id
+              json.name        lesson.name
+              json.url         lesson.name_url
+              json.description lesson.description
+              json.free        lesson.free
 
               json.steps do
                 if lesson.course_steps.present?
-                  json.array! lesson.course_steps.all_active.all_in_order.each do |step|
+                  json.array! lesson.course_steps.includes(:course_video).all_active.all_in_order.each do |step|
                     json.id   step.id
                     json.name step.name
                     json.url  step.name_url
