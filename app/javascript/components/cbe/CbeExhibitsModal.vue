@@ -1,14 +1,22 @@
 <template>
   <div>
-    <section :id="'cbe-exhibit-modal-'+componentInd" @click="show('cbe-exhibit-modal-'+componentInd)" class="components-sidebar-links" :class="componentIcon">
-      <div>{{ componentName }}<button v-if="loading" class="vue-loader vue-loader-cbe"></button></div>
+    <section
+      :id="'cbe-exhibit-modal-' + componentInd"
+      @click="show('cbe-exhibit-modal-' + componentInd)"
+      class="components-sidebar-links"
+      :class="componentIcon"
+    >
+      <div>
+        {{ componentName
+        }}<button v-if="loading" class="vue-loader vue-loader-cbe"></button>
+      </div>
     </section>
     <div>
       <VueModal
         :componentType="componentType"
         :componentName="componentName"
         :componentModal="componentModal"
-        :componentSpreadsheetData="componentSpreadsheetData"
+        :componentSpreadsheetData="componentContentData"
         :componentIcon="componentIcon"
         :height="450"
         :width="800"
@@ -16,7 +24,7 @@
         <div slot="body">
           <SpreadsheetEditor
             v-if="componentType === 'spreadsheet'"
-            :initial-data="componentSpreadsheetData"
+            :initial-data="componentContentData"
           />
           <div id="pdfvuer" v-else-if="componentType === 'pdf'">
             <div
@@ -79,7 +87,7 @@ export default {
   components: {
     pdf: pdfvuer,
     SpreadsheetEditor,
-    VueModal
+    VueModal,
   },
   props: {
     componentType: {
@@ -98,7 +106,7 @@ export default {
       type: Boolean,
       default: false,
     },
-    componentSpreadsheetData: {
+    componentContentData: {
       type: Object,
       default: () => ({}),
     },
@@ -127,7 +135,7 @@ export default {
       errors: [],
       scale: "page-width",
       showModal: this.componentModal,
-      loading: false
+      loading: false,
     };
   },
   computed: {
@@ -177,12 +185,12 @@ export default {
           stickyNav();
         };
 
-        if($("#buttons").length) {
+        if ($("#buttons").length) {
           var sticky = $("#buttons")[0].offsetTop;
         }
 
         function stickyNav() {
-          if($("#buttons").length) {
+          if ($("#buttons").length) {
             if (window.pageYOffset >= sticky) {
               $("#buttons")[0].classList.remove("hidden");
             } else {
@@ -212,18 +220,25 @@ export default {
     findPos(obj) {
       return obj.offsetTop;
     },
-    show (id) {
+    show(id) {
       this.loading = true;
       setTimeout(() => {
-      this.loading = false;
-      this.$modal.show("modal-"+this.componentType+"-"+this.componentName);
-      $('.components-sidebar .components div').removeClass('active-modal');
-      eventBus.$emit("update-modal-z-index", `modal-${this.componentType}-${this.componentName}`);
+        this.loading = false;
+        this.$modal.show(
+          "modal-" + this.componentType + "-" + this.componentName
+        );
+        $(".components-sidebar .components div").removeClass("active-modal");
+        eventBus.$emit(
+          "update-modal-z-index",
+          `modal-${this.componentType}-${this.componentName}`
+        );
       }, 10);
     },
-    hide (event) {
-      $('.latent-modal').removeClass('active-modal');
-      this.$modal.hide("modal-"+this.componentType+"-"+this.componentName);
+    hide(event) {
+      $(".latent-modal").removeClass("active-modal");
+      this.$modal.hide(
+        "modal-" + this.componentType + "-" + this.componentName
+      );
     },
   },
 };
