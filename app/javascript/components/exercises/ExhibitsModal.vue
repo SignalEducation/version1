@@ -9,7 +9,7 @@
           :componentName="exhibit.name"
           :componentModal="exhibit.modal"
           :currentFile="exhibit.document"
-          :componentSpreadsheetData="exhibit.content"
+          :componentContentData="exhibit.content"
         />
       </div>
     </div>
