@@ -310,6 +310,7 @@ export default {
     },
     commitUpdatedData(event, info) {
       this.$emit("spreadsheet-updated", info.sheet.toJSON());
+      eventBus.$emit("response-opt-instant-update-sheet", info.sheet.toJSON());
     },
     resetSpreadsheet() {
       this._setInitialData(this.flex);
