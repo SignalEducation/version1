@@ -1,11 +1,14 @@
 <template>
   <div>
     <section
-      :id="'cbe-response-modal-'+responseOptionId"
+      :id="'cbe-response-modal-' + responseOptionId"
       :class="`exhibits-sidebar-links ${responseOptionType}-icon`"
-      @click="show('cbe-response-modal-'+responseOptionId)"
+      @click="show('cbe-response-modal-' + responseOptionId)"
     >
-    <div>{{ responseOptionName }}<button v-if="loading" class="vue-loader vue-loader-cbe"></button></div>
+      <div>
+        {{ responseOptionName
+        }}<button v-if="loading" class="vue-loader vue-loader-cbe"></button>
+      </div>
     </section>
     <div>
       <VueModal
@@ -27,7 +30,10 @@
             class="multiple-editors"
             v-if="responseOptionType === 'multiple_open'"
           >
-            <div v-for="(response, index) in multipleResponseOption" :key="index">
+            <div
+              v-for="(response, index) in multipleResponseOption"
+              :key="index"
+            >
               <div class="slide-headers">Slide {{ index + 1 }}</div>
               <TinyEditor
                 :field-model.sync="response.speaker"
@@ -100,7 +106,7 @@ export default {
       multipleResponseOption: this.getInitialMultipleValue(
         this.responseOptionQuantity
       ),
-      loading: false
+      loading: false,
     };
   },
   watch: {
@@ -121,28 +127,44 @@ export default {
   },
   mounted() {
     this.hide();
+    eventBus.$on("response-opt-instant-update-sheet", (info) => {
+      const currentData = {
+        id: this.responseOptionId,
+        cbe_response_option_id: this.responseOptionId,
+        content: {
+          data: info,
+        },
+      };
+      if (info != null && this.responseOptionType === "spreadsheet") {
+        this.responseOption = this.switchResponseOpt(currentData);
+      }
+    });
   },
   methods: {
     handleChange(value) {
       this.showModal = value;
     },
+    switchResponseOpt(info) {
+      let ans = "";
+      if (info != null) {
+        switch (this.responseOptionType) {
+          case "open":
+            ans = info.content.data;
+            break;
+          case "spreadsheet":
+            ans = info;
+            break;
+          default:
+            ans = "";
+        }
+      }
+      return ans;
+    },
     getInitialValue() {
       const initialValue = this.$store.state.userCbe.user_cbe_data.responses[
         this.responseOptionId
       ];
-
-      if (initialValue != null) {
-        switch (this.responseOptionType) {
-          case "open":
-            return initialValue.content.data;
-            break;
-          case "spreadsheet":
-            return initialValue;
-            break;
-          default:
-            return "";
-        }
-      }
+      return this.switchResponseOpt(initialValue);
     },
     getInitialMultipleValue(quantity) {
       const initialValue = this.$store.state.userCbe.user_cbe_data.responses[
@@ -176,27 +198,37 @@ export default {
         content: {
           data: newValue,
         },
-      }
+      };
 
       this.$store.dispatch("userCbe/recordResponse", data);
       // Update answers data if last update is more then 10 seconds OR new value is bigger then 20 characters.
-      if (dateNow - this.lastTimeUpdated > 10000 || (newValue.length - oldValue.length > 20)) {
+      if (
+        dateNow - this.lastTimeUpdated > 10000 ||
+        newValue.length - oldValue.length > 20
+      ) {
         this.lastTimeUpdated = dateNow;
         eventBus.$emit("update-question-answer", data);
       }
     },
-    show (id) {
+    show(id) {
       this.loading = true;
       setTimeout(() => {
         this.loading = false;
-        this.$modal.show("modal-"+this.responseOptionType+"-"+this.responseOptionName);
-        $('.components-sidebar .components div').removeClass('active-modal');
-        eventBus.$emit("update-modal-z-index", `modal-${this.responseOptionType}-${this.responseOptionName}`);
+        this.$modal.show(
+          "modal-" + this.responseOptionType + "-" + this.responseOptionName
+        );
+        $(".components-sidebar .components div").removeClass("active-modal");
+        eventBus.$emit(
+          "update-modal-z-index",
+          `modal-${this.responseOptionType}-${this.responseOptionName}`
+        );
       }, 10);
     },
-    hide () {
-      this.$modal.hide("modal-"+this.responseOptionType+"-"+this.responseOptionName);
-    }
+    hide() {
+      this.$modal.hide(
+        "modal-" + this.responseOptionType + "-" + this.responseOptionName
+      );
+    },
   },
 };
 </script>

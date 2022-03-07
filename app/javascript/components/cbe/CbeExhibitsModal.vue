@@ -99,7 +99,7 @@ export default {
       default: "",
     },
     componentInd: {
-      type: String,
+      type: Number,
       default: "",
     },
     componentModal: {
