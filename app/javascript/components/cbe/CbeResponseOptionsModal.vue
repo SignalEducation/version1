@@ -127,6 +127,12 @@ export default {
   },
   mounted() {
     this.hide();
+    eventBus.$on("close-active-overlay", (status) => {
+      if (this.responseOptionType === "spreadsheet") {
+        this.$store.dispatch("userCbe/recordResponse", this.responseOption);
+        eventBus.$emit("update-question-answer", this.responseOption);
+      }
+    });
     eventBus.$on("response-opt-instant-update-sheet", (info) => {
       const currentData = {
         id: this.responseOptionId,
