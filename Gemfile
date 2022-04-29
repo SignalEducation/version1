@@ -13,7 +13,7 @@ gem 'authlogic', '~> 6.1.0'
 gem 'ahoy_matey', '>= 3.0.0' # visit tracking
 gem 'appsignal', '~> 2.11.0'
 gem 'uuidtools', '~> 2.1', '>= 2.1.5'
-gem 'blazer', '~> 2.1'
+gem 'blazer', '~> 2.6'
 gem 'scrypt' # S-Crypt for Authlogic
 # gem 'autoprefixer-rails', '~> 5.0.0.1' # required by bootstrap-sass
 gem 'aws-sdk-s3', '~> 1'
