@@ -325,7 +325,7 @@ GEM
     public_suffix (4.0.6)
     puma (3.12.4)
     racc (1.5.2)
-    rack (2.0.8)
+    rack (2.1.4.1)
     rack-cors (1.0.5)
       rack (>= 1.6.0)
     rack-mini-profiler (1.0.2)
@@ -652,7 +652,7 @@ DEPENDENCIES
   pry-byebug
   pry-stack_explorer
   puma (~> 3.12.4)
-  rack (= 2.0.8)
+  rack (= 2.1.4.1)
   rack-cors
   rack-mini-profiler
   rails (= 5.2.2)
