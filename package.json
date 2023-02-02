@@ -47,7 +47,7 @@
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-vue": "^5.2.3",
     "js-yaml": "^3.13.1",
-    "jszip": "^3.2.2",
+    "jszip": "^3.8.0",
     "pdfjs-dist": "2.2.228",
     "postcss-flexbugs-fixes": "^4.1.0",
     "vue-svg-loader": "^0.12.0",
