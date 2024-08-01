@@ -645,7 +645,7 @@ class User < ApplicationRecord
   end
 
   def last_purchased_course
-    orders.where(state: %i[complete]).where.not(course_id: nil).order(created_at: :asc).last
+    orders.where(state: %i[completed]).where.not(course_id: nil).order(created_at: :asc)&.last&.course
   end
 
   def onboarding_state
