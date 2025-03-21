@@ -11,6 +11,7 @@ json.paypal_state                  plan.paypal_state
 json.available_from                plan.available_from
 json.available_to                  plan.available_to
 json.most_popular                  plan.most_popular
+json.monthly_percentage_off        plan.monthly_percentage_off
 
 json.currency do
   if plan.currency.present?
