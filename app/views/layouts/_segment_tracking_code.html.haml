@@ -6,9 +6,9 @@
   let prefExamBodyId = "#{current_user&.preferred_exam_body_id}";
   let prefExamBody = "#{current_user&.preferred_exam_body&.name}";
   let ob = "#{current_user&.analytics_onboarding_valid?.to_s}";
-  let programName = "#{@group ? @group.name.upcase : ''}";
-  let courseName = "#{@course ? @course.name : ''}";
-  let moduleName = "#{@course_step ? @course_step.course_lesson.name : ''}";
+  let programName = "#{@group&.name ? @group.name.upcase : ''}";
+  let courseName = "#{@course&.name ? @course.name : ''}";
+  let moduleName = "#{@course_step&.course_lesson&.name ? @course_step.course_lesson.name : ''}";
   let email                 = "#{current_user&.email || ''}";
   let userId                = "#{current_user&.id || ''}";
   let hasValidSubscription  = "#{current_user&.valid_subscription? || ''}";
