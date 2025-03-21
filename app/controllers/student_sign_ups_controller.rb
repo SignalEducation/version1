@@ -157,7 +157,7 @@ class StudentSignUpsController < ApplicationController
       @user.handle_post_user_creation(user_verification_url(email_verification_code: @user.email_verification_code))
       handle_course_enrollment(@user, params[:course_id]) if params[:course_id]
       analytics_attributes = params[:analytics_attributes].present? ? JSON.parse(params[:analytics_attributes]) : nil
-      SegmentService.new.track_user_account_created_event(@user, analytics_attributes)
+      SegmentService.new.track_user_account_created_event(@user, session&.id, analytics_attributes)
 
       # TODO: Refactor this to not use the flash
       if flash[:plan_guid]

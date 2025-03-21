@@ -24,7 +24,7 @@ module Api
           @user_token       = encode_token(payload(@user))
           @user_credentials = "#{session['user_credentials']}::#{session['user_credentials_id']}" if UserSession.create(@user)
 
-          SegmentService.new.track_user_account_created_event(@user, analytics_attributes_params&.to_h) if params[:analytics_attributes].present?
+          SegmentService.new.track_user_account_created_event(@user, session&.id, analytics_attributes_params&.to_h) if params[:analytics_attributes].present?
 
           render 'api/v1/users/show.json', status: :created
         else

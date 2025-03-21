@@ -105,8 +105,8 @@ class SegmentService
     log_in_error(e)
   end
 
-  def track_user_account_created_event(user, analytics_attributes)
-    attributes = analytics_attributes_properties(analytics_attributes.with_indifferent_access)
+  def track_user_account_created_event(user, session_id, analytics_attributes)
+    attributes = analytics_attributes_properties(user, session_id, analytics_attributes.with_indifferent_access)
     return if attributes.nil?
 
     segment = Analytics.track(
@@ -252,7 +252,7 @@ class SegmentService
     }
   end
 
-  def analytics_attributes_properties(analytics_attributes)
+  def analytics_attributes_properties(user, session_id, analytics_attributes)
     valid_keys = %i[category clientOs deviceType email eventSentAt isLoggedIn pageUrl platform
                     programName sessionId sourceofRegistration]
 
@@ -261,13 +261,13 @@ class SegmentService
     {
       category: analytics_attributes[:category],
       deviceType: analytics_attributes[:deviceType],
-      email: analytics_attributes[:email],
+      email: user&.email,
       eventSentAt: analytics_attributes[:eventSentAt],
       isLoggedIn: analytics_attributes[:isLoggedIn],
       pageUrl: analytics_attributes[:pageUrl],
       platform: analytics_attributes[:platform],
       programName: analytics_attributes[:programName],
-      sessionId: analytics_attributes[:sessionId],
+      sessionId: session_id,
       sourceofRegistration: analytics_attributes[:sourceofRegistration]
     }
   end
